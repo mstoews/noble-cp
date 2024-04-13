@@ -1,0 +1,94 @@
+<div class="absolute inset-0 flex flex-col overflow-y-auto overflow-auto" cdkScrollable>
+    <div class="flex-auto sm:p-5">
+        <div class="h-[calc(100vh)-200px]">
+            <mat-drawer-container class="flex-col h-full">
+                <mat-drawer class="lg:w-[400px] md:w-full bg-white-100" #drawer [opened]="false" mode="over" [position]="'end'" [disableClose]="false">
+                    <mat-card>
+                        <div class="flex flex-col w-full text-gray-700 max-w-140 filter-article filter-interactive">
+                        <div class="bg-slate-600 text-justify m-2 p-2 text-white h-10 text-2xl border-l-4 border-gray-400"
+                        mat-dialog-title>
+                        {{ sTitle }}
+                    </div>
+                        <div mat-dialog-content>
+                            <form [formGroup]="accountsForm">
+
+                                <div class="flex flex-col m-1">
+                                    <section class="flex flex-col md:flex-row">
+                                        <div class="flex flex-col grow">
+                                            <mat-label class="ml-2 text-base">Account Type</mat-label>
+                                            <mat-form-field class="m-1 form-element grow" appearance="outline">
+                                                <input matInput placeholder="Type" formControlName="type" />
+                                            </mat-form-field>
+                                        </div>
+                                    </section>
+
+
+                                    <div class="flex flex-col grow">
+                                        <mat-label class="ml-2 text-base">Description</mat-label>
+                                        <mat-form-field class="m-1 form-element" appearance="outline">
+                                            <input matInput placeholder="Type Description"
+                                                formControlName="description" />
+                                        </mat-form-field>
+                                    </div>
+
+                                </div>
+                            </form>
+                        </div>
+                        <div mat-dialog-actions>
+                            <button mat-raised-button color="primary" class="m-1" (click)="onUpdate($event)"
+                                matTooltip="Update"
+                                aria-label="Button that displays a tooltip when focused or hovered over">
+                                Update
+                                <mat-icon>update</mat-icon>
+                            </button>
+                            <button mat-raised-button color="primary" class="m-1" (click)="onCreate($event)"
+                                matTooltip="Add"
+                                aria-label="Button that displays a tooltip when focused or hovered over">
+                                Add
+                                <mat-icon>add</mat-icon>
+                            </button>
+                            <button mat-raised-button color="primary" class="m-1" (click)="onDelete($event)"
+                                matTooltip="Delete"
+                                aria-label="Button that displays a tooltip when focused or hovered over">
+                                Delete
+                                <mat-icon>delete</mat-icon>
+                            </button>
+                            <button mat-raised-button color="primary" class="m-1" (click)="closeDrawer()"
+                                matTooltip="Cancel"
+                                aria-label="Button that displays a tooltip when focused or hovered over">
+                                Cancel
+                                <mat-icon>close</mat-icon>
+                            </button>
+                        </div>
+                        </div>
+                    </mat-card>
+                </mat-drawer>
+                <ng-container>
+                    @if (data$ | async; as rows) {
+                    <grid-menubar [inTitle]="'Type Maintenance'"></grid-menubar>
+                    <div class="flex flex-col h-[600px]">
+                        <dx-data-grid id="id" [wordWrapEnabled]="true" [dataSource]="rows" [showColumnLines]="true"
+                            [showRowLines]="true" [showBorders]="true" [focusedRowEnabled]="true" [focusedRowIndex]="0"
+                            keyExpr="type" [repaintChangesOnly]="true">
+
+                            <dxi-column dataField="type" width="150"></dxi-column>
+                            <dxi-column dataField="description" width="400"></dxi-column>
+                            <dxi-column dataField="create_date"></dxi-column>
+                            <dxi-column dataField="create_user"></dxi-column>
+                            <dxi-column dataField="update_date"></dxi-column>
+                            <dxi-column dataField="update_user"></dxi-column>
+
+                        </dx-data-grid>
+                    </div>
+
+                    <!-- <button mat-fab (click)="onCreate($event)" class="fixed bottom-30 right-14 rounded-full"
+                        color="primary" aria-label="Add Fab">
+                        <mat-icon>add</mat-icon>
+                    </button> -->
+
+                    }
+                </ng-container>
+            </mat-drawer-container>
+        </div>
+    </div>        
+</div>

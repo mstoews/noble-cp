@@ -1,0 +1,69 @@
+
+    <div class="absolute inset-0 flex flex-col min-w-0 overflow-y-auto -px-20" cdkScrollable>
+        <!-- Main -->
+        <div class="flex-auto p-6 sm:p-10">
+            <div class="h-full border-gray-300 rounded-2xl">
+
+                @if (dl$ | async; as dist)
+                {
+                            <div class="flex flex-col h-full">
+                            <dist-menubar [inTitle]="'Distributed Ledger Report'"
+                            (notifyParentRefresh)="onRefresh()"
+                            (notifyParentAdd)="onAdd()"
+                            (notifyParentPeriod)="onPeriodChanged($event)"
+                            (notifyParentYear)="onYearChanged($event)"
+                            [currentPeriod]="currentPeriod"
+                            [currentYear]="currentYear" >
+                            </dist-menubar>
+                            <dx-data-grid class="h-[600px]"
+                                [dataSource]="dist"
+                                [remoteOperations]="false"
+                                [allowColumnReordering]="true"
+                                [rowAlternationEnabled]="true"
+                                [showBorders]="true"
+                                [showRowLines]="true"
+                                [showColumnLines]="true"
+                                [focusedRowEnabled]="true"
+                                [focusedRowIndex]="0"
+                                (onCellDblClick)="onCellDoubleClicked($event)"
+                                [repaintChangesOnly]="false"
+                                [customizeColumns]="customizeColumns"
+                                (onExporting)="onExporting($event)"
+                                (onContentReady)="onContentReady($event)"
+                                keyExpr="child">
+                                <dxo-search-panel [visible]="true" [highlightCaseSensitive]="true"></dxo-search-panel>
+                                <dxo-group-panel [visible]="true"></dxo-group-panel>
+                                <dxo-grouping [autoExpandAll]="true"></dxo-grouping>
+                                <dxo-selection mode="multiple"></dxo-selection>
+                                <dxo-scrolling mode="virtual"></dxo-scrolling>
+
+                                <dxi-column dataField="account" [groupIndex]="0" dataType="string"></dxi-column>
+                                <dxi-column dataField="child" dataType="string" width="130"></dxi-column>
+                                <dxi-column dataField="description" dataType="string"></dxi-column>
+                                <dxi-column dataField="period" width="100" dataType="string"></dxi-column>
+                                <dxi-column dataField="period_year" width="100" dataType="string"></dxi-column>
+                                <dxi-column dataField="opening_balance" alignment="right" [customizeText]="formatNumber" width="130" ></dxi-column>
+                                <dxi-column dataField="debit_balance" alignment="right"   [customizeText]="formatNumber" width="130" ></dxi-column>
+                                <dxi-column dataField="credit_balance" alignment="right"  [customizeText]="formatNumber" width="130" ></dxi-column>
+                                <dxi-column dataField="closing_balance" alignment="right" [customizeText]="formatNumber" width="130" ></dxi-column>
+                                <dxi-column dataField="update_date" dataType="date" width="100" ></dxi-column>
+                                <dxo-export [enabled]="true" [allowExportSelectedData]="true"></dxo-export>
+                            </dx-data-grid>
+                        </div>
+                }
+        </div>
+    </div>
+
+<!--
+    account: string;
+  child: string;
+  period: string;
+  period_year: string;
+  description: string;
+  opening_balance: number;
+  debit_balance: number;
+  credit_balance: number;
+  closing_balance: number;
+  update_date: Date;
+  created_user: string;
+ -->

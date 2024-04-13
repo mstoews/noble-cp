@@ -1,0 +1,132 @@
+<div class="absolute inset-0 flex flex-col min-w-0 overflow-hidden">
+    <!-- Header -->
+    <div
+        class="flex flex-col sm:flex-row flex-0 sm:items-center sm:justify-between p-3 sm:py-8 sm:px-10 bg-card dark:bg-transparent">
+        <div class="flex-1 min-w-0">
+            <!-- Breadcrumbs -->
+            <!-- Title -->
+            <div class="mt-2">
+                <h2 class="text-3xl md:text-4xl font-extrabold tracking-tight leading-7 sm:leading-10 truncate">
+                    File Manager
+                </h2>
+            </div>
+        </div>
+    </div>
+
+    <div class="flex flex-col min-w-0 overflow-y-auto -px-10" cdkScrollable>
+        <!-- Main -->
+        <div class="flex-auto p-6 sm:p-10">
+            <div class="h-full border-gray-900 rounded-2xl">
+                <mat-drawer-container class="flex-col h-full cdkSrollable">
+                    <mat-drawer class="w-[600px] bg-white-100" #drawer [opened]="false" mode="over" [position]="'end'"
+                        [disableClose]="false">
+                        <div class="flex flex-col w-full filter-article filter-interactive text-gray-700">
+                            <div class="bg-slate-600 text-justify pt-2 text-white h-10 text-2xl m-2" mat-dialog-title>
+                                {{ sTitle }}
+                            </div>
+                            <div mat-dialog-content>
+                                <form [formGroup]="evidenceForm">
+                                    <div class="flex flex-col m-1">
+                                        <section class="flex flex-col">
+                                            <div class="flex flex-col grow">
+                                                <mat-label class="ml-2 dark:text-white text-base">Reference</mat-label>
+                                                <mat-form-field class="m-1 form-element" appearance="outline">
+                                                    <input matInput placeholder="Reference" formControlName="reference_no" />
+                                                </mat-form-field>
+                                            </div>
+
+                                            <div class="flex flex-col grow">
+                                                <mat-label
+                                                    class="ml-2 dark:text-white text-base">Description</mat-label>
+                                                <mat-form-field class="m-1 form-element grow" appearance="outline">
+                                                    <input matInput placeholder="Description"
+                                                        formControlName="description" />
+                                                </mat-form-field>
+                                            </div>
+                                            <div class="flex flex-col grow">
+                                                <mat-label
+                                                    class="ml-2 dark:text-white text-base">Location</mat-label>
+                                                <mat-form-field class="m-1 form-element grow" appearance="outline">
+                                                    <input matInput placeholder="Location"
+                                                        formControlName="location" />
+                                                </mat-form-field>
+                                            </div>                                            
+                                        </section>
+                                    </div>
+                                </form>
+                            </div>
+                            
+                            <div mat-dialog-actions>
+                                <button mat-raised-button color="primary" class="m-1" (click)="onUpdate($event)"
+                                    matTooltip="Save"
+                                    aria-label="Button that displays a tooltip when focused or hovered over">
+                                    Update
+                                    <mat-icon>update</mat-icon>
+                                </button>
+                                <button mat-raised-button color="primary" class="m-1" (click)="onCreate()"
+                                    matTooltip="Save"
+                                    aria-label="Button that displays a tooltip when focused or hovered over">
+                                    Add
+                                    <mat-icon>add</mat-icon>
+                                </button>
+                                <button mat-raised-button color="primary" class="m-1" (click)="onDelete($event)"
+                                    matTooltip="Save"
+                                    aria-label="Button that displays a tooltip when focused or hovered over">
+                                    Delete
+                                    <mat-icon>delete</mat-icon>
+                                </button>
+                                <button mat-raised-button color="primary" class="m-1" (click)="closeDrawer()"
+                                    matTooltip="Save"
+                                    aria-label="Button that displays a tooltip when focused or hovered over">
+                                    Cancel
+                                    <mat-icon>close</mat-icon>
+                                </button>
+                            </div>
+                        </div>
+                    </mat-drawer>                    
+                    @if (evidence$ | async; as rows) {
+                        <div class="flex flex-col h-full">
+                            <dx-data-grid 
+                                [dataSource]="rows" 
+                                [remoteOperations]="false" 
+                                [allowColumnReordering]="false"
+                                [rowAlternationEnabled]="true" 
+                                [showBorders]="true" 
+                                [focusedRowEnabled]="true"
+                                (onFocusedRowChanged)="onFocusedRowChanged($event)"
+                                (onCellDblClick)="onCellDoubleClicked($event)"                                
+                                [repaintChangesOnly]="true"
+                                keyExpr="id" >
+
+                    <dxo-paging [pageSize]="15"></dxo-paging>
+                    <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[15, 30, 45]"></dxo-pager>
+                    <dxo-search-panel [visible]="true" [highlightCaseSensitive]="true"></dxo-search-panel>
+                    <dxo-group-panel [visible]="true"></dxo-group-panel>
+                    <dxo-grouping [autoExpandAll]="false"></dxo-grouping>
+                    <dxo-filter-row [visible]="false"></dxo-filter-row>
+                    <dxo-state-storing [enabled]="true" type="localStorage" storageKey="journals">
+                    </dxo-state-storing>                                
+                    <dxi-column dataField="id" caption="Seq" width="50" dataType="number" alignment="left"></dxi-column>  
+                    <dxi-column dataField="reference_no" caption="Reference"    width="150" dataType="number" alignment="left"></dxi-column>  
+                    <dxi-column dataField="description"  caption="Description"  dataType="text" alignment="left"></dxi-column>  
+                    <dxi-column dataField="user_created" caption="User"         width="150" dataType="text" alignment="left"></dxi-column>  
+                    <dxi-column dataField="date_created" caption="Date"         width="150" dataType="date" alignment="left"></dxi-column>  
+                    <dxi-column dataField="location" [width]="80" cellTemplate="imageTemplate"> </dxi-column>
+                    <div *dxTemplate="let data of 'imageTemplate'">
+                        <dx-button
+                            text="Test"
+                            type="normal"
+                            [width]="120"
+                            (onClick)="openDocument($event)">
+                        </dx-button> 
+                        
+                        <mat-icon [svgIcon]="'heroicons_solid:document'"></mat-icon>
+                    </div>
+                </dx-data-grid>
+                </div>
+                }
+                </mat-drawer-container>
+            </div>
+        </div>
+    </div>
+</div>

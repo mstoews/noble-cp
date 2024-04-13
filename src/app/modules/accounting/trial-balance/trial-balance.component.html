@@ -1,0 +1,56 @@
+
+    <div class="absolute inset-0 flex flex-col min-w-0 overflow-y-auto -px-20" cdkScrollable>
+        <!-- Main -->
+        <div class="flex-auto p-6 sm:p-10">
+            <div class="h-full border-gray-300 rounded-2xl">
+                <div class="dark:text-white text-3xl mb-10">Trial Balance</div>
+                  <div class="dark:text-white text-2xl ml-20 mb-10">Assets and Liabilities</div>
+                        @if (assets$ | async; as assets) {
+                            <div class="flex flex-col ml-20">
+                            <dx-data-grid
+                                [dataSource]="assets"
+                                [remoteOperations]="false"
+                                [showBorders]="true"
+                                [showColumnLines]="true"
+                                [showRowLines]="true"
+                                [showColumnHeaders]="true"
+                                [allowColumnReordering]="true"
+                                [rowAlternationEnabled]="true"
+                                [showBorders]="true"
+                                [focusedRowEnabled]="true"
+                                [focusedRowIndex]="0"
+                                (onCellDblClick)="onCellDoubleClicked($event)"
+                                [repaintChangesOnly]="true"
+                                keyExpr="account">
+
+                                <dxo-paging [pageSize]="25"></dxo-paging>
+                                <dxo-pager [showPageSizeSelector]="true"
+                                    [allowedPageSizes]="[25, 50, 100]"></dxo-pager>
+                                <dxo-search-panel [visible]="true" [highlightCaseSensitive]="true"></dxo-search-panel>
+                                <dxo-group-panel [visible]="true"></dxo-group-panel>
+                                <dxo-grouping [autoExpandAll]="false"></dxo-grouping>
+
+                                <dxi-column dataField="account" width="100" dataType="string"></dxi-column> -->
+                                <dxi-column dataField="description" width="400" dataType="string"></dxi-column>
+                                <dxi-column dataField="type" width="100" dataType="string"></dxi-column>
+                                <dxi-column dataField="balance" dataType="number" alignment="right" format="currency"></dxi-column>
+                                <dxo-summary>
+                                    <dxi-total-item column="account" summaryType="count"> </dxi-total-item>
+
+
+                                    <dxi-total-item
+                                      column="balance"
+                                      summaryType="sum"
+                                      valueFormat="currency"
+                                    >
+                                    </dxi-total-item>
+                                  </dxo-summary>
+
+                            </dx-data-grid>
+                        </div>
+}
+
+            </div>
+        </div>
+    </div>
+

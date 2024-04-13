@@ -1,0 +1,436 @@
+
+import { RouterOutlet } from '@angular/router';
+import { CommonModule } from '@angular/common';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { CardClickEventArgs, KanbanModule } from '@syncfusion/ej2-angular-kanban';
+import { CheckBoxAllModule } from '@syncfusion/ej2-angular-buttons';
+import { Component, OnInit, ViewChild, inject } from '@angular/core';
+import { addClass } from '@syncfusion/ej2-base';
+import { KanbanComponent, ColumnsModel, CardSettingsModel, SwimlaneSettingsModel, DialogSettingsModel, CardRenderedEventArgs } from '@syncfusion/ej2-angular-kanban';
+import { IKanban, IKanbanStatus, KanbanService } from 'app/services/kanban.service';
+import { DxDataGridModule } from 'devextreme-angular';
+import { MatDrawer } from '@angular/material/sidenav';
+import { MaterialModule } from 'app/services/material.module';
+import { shareReplay } from 'rxjs';
+
+import { KanbanMenubarComponent } from './kanban-menubar/grid-menubar.component';
+import { FuseConfirmationService } from '@fuse/services/confirmation';
+
+export interface IValue {
+  value: string;
+  viewValue: string;
+}
+
+// type kanbanType = {
+//   kanban: IKanban;
+// }
+
+const imports = [
+  MaterialModule,
+  FormsModule,
+  ReactiveFormsModule,
+  DxDataGridModule,
+  CommonModule,
+  RouterOutlet,
+  CommonModule,
+  KanbanModule,
+  CheckBoxAllModule,
+  KanbanMenubarComponent
+]
+
+@Component({
+  selector: 'kanban-tasks',
+  standalone: true,
+  imports: [imports],
+  templateUrl: './tasks.component.html',
+  styleUrl: './tasks.component.scss'
+})
+export class TasksComponent {
+  @ViewChild('kanbanObj') kanbanObj!: KanbanComponent;
+  @ViewChild('drawer') drawer: MatDrawer;
+  private fb = inject(FormBuilder);
+  private kanbanService = inject(KanbanService);
+  kanbanData$: any;
+  drawOpen: 'open' | 'close' = 'open';
+  team: any[];
+  taskGroup: FormGroup;
+  sTitle = 'Add Kanban Task';
+  cPriority: string;
+  cRAG: string;
+  cType: string;
+  currentDate: Date;
+
+  private _fuseConfirmationService = inject(FuseConfirmationService)
+
+  ngOnInit(): void {
+    this.kanbanData$ = this.kanbanService.getAll();
+    this.createEmptyForm();
+  }
+
+
+  // these values should be replaced with data from the database
+
+  types: IValue[] = [
+    { value: 'Add', viewValue: 'Add' },
+    { value: 'Update', viewValue: 'Update' },
+    { value: 'Delete', viewValue: 'Delete' },
+    { value: 'Verify', viewValue: 'Verify' },
+  ];
+
+  assignees: IValue[] = [
+    { value: 'mstoews', viewValue: 'mstoews' },
+    { value: 'matthew', viewValue: 'matthew' },
+    { value: 'admin', viewValue: 'admin' },
+  ];
+
+
+  rag: IValue[] = [
+    { value: '#238823', viewValue: 'Green' },
+    { value: '#FFBF00', viewValue: 'Amber' },
+    { value: '#D2222D', viewValue: 'Red' },
+  ];
+
+  priorities: IValue[] = [
+    { value: 'Critical', viewValue: 'Critical' },
+    { value: 'High', viewValue: 'High' },
+    { value: 'Medium', viewValue: 'Medium' },
+    { value: 'Low', viewValue: 'Low' },
+  ];
+
+  OnDragStop(e: any): void {
+    const d = {
+      id: e.data[0].id,
+      status: e.data[0].status,
+      rankid: e.data[0].rankid
+    }
+    console.log('Status', e.data[0].status);
+    this.kanbanService.updateStatus(d);
+  }
+
+  OnCardDoubleClick(args: CardClickEventArgs): void {
+    this.bAdding = false;
+    args.cancel = true;
+    const kanban = {
+      id: args.data.id,
+      title: args.data.title,
+      status: args.data.status,
+      summary: args.data.summary,
+      type: args.data.type,
+      priority: args.data.priority,
+      tags: args.data.tags,
+      estimate: args.data.estimate,
+      assignee: args.data.assignee,
+      rankid: args.data.rankid,
+      color: args.data.color,
+      className: '',
+      updateUser: args.data.updateUser,
+      updateDate: args.data.updateDate
+    }
+    this.createForm(kanban)
+    this.toggleDrawer();
+  }
+
+  createEmptyForm() {
+    this.sTitle = 'Kanban Task';
+    // const sDate = new Date(task.start_date);
+    // const startDate = sDate.toISOString().split('T')[0];
+
+
+    this.taskGroup = this.fb.group({
+      title: [''],
+      status: [''],
+      summary: [''],
+      type: [''],
+      priority: [''],
+      tags: [''],
+      estimate: [''],
+      assignee: [''],
+      rankid: [''],
+      color: [''],
+      updateDate: [''],
+      updateUser: [''],
+    });
+  }
+
+
+  createForm(task: IKanban) {
+    this.sTitle = 'Kanban Task - ' + task.id;
+    const dDate = new Date(task.updateDate);
+
+    this.assignPriority(task);
+    this.assignType(task);
+    this.assignRag(task);
+
+    var assignee = this.assignAssignee(task)
+
+
+    this.taskGroup = this.fb.group({
+      id: [task.id],
+      title: [task.title],
+      status: [task.status],
+      summary: [task.summary],
+      type: this.cType,
+      priority: [this.cPriority],
+      tags: [task.tags],
+      estimate: [task.estimate],
+      assignee: assignee,
+      rankid: [task.rankid.toString()],
+      color: [this.cRAG],
+      updateDate: [dDate],
+      updateUser: [task.assignee]
+    });
+  }
+
+  private assignType(task: IKanban) {
+    if (task.type !== null && task.type !== undefined) {
+      const type = this.types.find((x) => x.value === task.type.toString());
+      if (type === undefined) {
+        this.cType = 'Add';
+      } else {
+        this.cType = type.value;
+      }
+    } else {
+      this.cType = 'Add';
+    }
+  }
+
+  private assignAssignee(task: IKanban): string {
+    var rc: string;
+    if (task.assignee !== null && task.assignee !== undefined) {
+      const assignee = this.assignees.find((x) => x.value === task.assignee.toString());
+      if (assignee === undefined) {
+        rc = 'mstoews';
+      } else {
+        rc = assignee.value;
+      }
+    } else {
+      rc = 'admin'
+    }
+    return rc
+  }
+
+  private assignRag(task: IKanban) {
+    if (task.color !== null && task.color !== undefined) {
+      const rag = this.rag.find((x) => x.value === task.color.toString());
+      if (rag === undefined) {
+        this.cRAG = '#238823';
+      } else {
+        this.cRAG = rag.value;
+      }
+    } else {
+      this.cRAG = '#238823';
+    }
+  }
+
+  private assignPriority(task: IKanban) {
+    if (this.priorities !== undefined) {
+      const priority = this.priorities.find(
+        (x) => x.value === task.priority.toString()
+      );
+      if (priority !== undefined) {
+        this.cPriority = priority.value;
+      } else {
+        this.cPriority = 'MEDIUM';
+      }
+    } else {
+      this.cPriority = 'MEDIUM';
+    }
+  }
+
+
+
+  public statusData: string[] = ['Open', 'InProgress', 'Testing', 'Close'];
+  public priorityData: string[] = ['Low', 'Normal', 'Critical', 'Release Breaker', 'High'];
+  public assigneeData: string[] = [
+    'Nancy Davloio', 'Andrew Fuller', 'Janet Leverling',
+    'Steven walker', 'Robert King', 'Margaret hamilt', 'Michael Suyama'
+  ];
+
+  public columns: ColumnsModel[] = [
+    { headerText: 'Initial', keyField: 'Open', allowToggle: true },
+    { headerText: 'In Progress', keyField: 'InProgress', allowToggle: true },
+    { headerText: 'Completed', keyField: 'Review', allowToggle: true },
+    { headerText: 'Confirmed', keyField: 'Close', allowToggle: true }
+  ];
+  public cardSettings: CardSettingsModel = {
+    headerField: 'id',
+    template: '#cardTemplate',
+    selectionType: 'Multiple'
+  };
+
+  public bAdding?: boolean = false;
+
+
+  onUpdate() {
+    // const cardIds = this.kanbanObj.kanbanData.map((obj: { [key: string]: string }) => parseInt(obj.Id.replace('', ''), 10));
+
+    this.bAdding = false
+    var data = this.taskGroup.getRawValue();
+    this.kanbanService.update(data).pipe(
+      shareReplay()).pipe()
+      .subscribe(kanban => {
+        console.log('Kanban updated', JSON.stringify(kanban))
+        // const card = this.kanbanObj.kanbanData.map()
+        this.kanbanData$ = this.kanbanService.getAll();
+      }
+      );
+    this.closeDrawer();
+  }
+
+  onCopy(e: any) {
+    var data = this.taskGroup.getRawValue()
+
+    const confirmation = this._fuseConfirmationService.open({
+        title: `Copy Task: ${data.title}`,
+        message: 'Are you sure you want to copy this task?',
+        actions: {
+            confirm: {
+                label: 'Copy',
+            },
+        },
+    });
+
+    // Subscribe to the confirmation dialog closed action
+    confirmation.afterClosed().subscribe((result) => {
+        // If the confirm button pressed...
+        if (result === 'confirmed') {
+            // Delete the list
+            this.kanbanService.create(data);
+        }
+    });
+    this.closeDrawer();
+
+  }
+
+  onDelete() {
+    var data = this.taskGroup.getRawValue()
+    this.kanbanService.delete(data);
+  }
+
+  onAssignment(data) {
+    console.log(`${data}`);
+  }
+
+  closeDrawer() {
+    this.kanbanService.getAll();
+    this.drawer.toggle();
+  }
+
+  changeType(data) {
+    // this.cType = data;
+  }
+
+  // addClick(): void {
+  //   const cardIds = this.kanbanObj.kanbanData.map((obj: { [key: string]: string }) => parseInt(obj.Id.replace('', ''), 10));
+  //   const cardCount: number = Math.max.apply(Math, cardIds) + 1;
+  //   const cardDetails = {
+  //     Id: 'Task ' + cardCount, Status: 'Open', Priority: 'Normal',
+  //     Assignee: 'Andrew Fuller', Estimate: 0, Tags: '', Summary: ''
+  //   };
+  //   this.kanbanObj.openDialog('Add', cardDetails);
+  // }
+
+
+  toggleDrawer() {
+    const opened = this.drawer.opened;
+    if (opened !== true) {
+      this.drawer.toggle();
+    } else {
+      if (this.drawOpen === 'close') {
+        this.drawer.toggle();
+      }
+    }
+  }
+
+  public swimlaneSettings: SwimlaneSettingsModel = { keyField: 'assignee' };
+
+  public getString(assignee: string): string {
+    var assign = assignee
+    if (assignee != null) {
+      return assign!.match(/\b(\w)/g).join('').toUpperCase();
+    }
+    return "";
+  }
+
+
+  cardRendered(args: CardRenderedEventArgs): void {
+    const val: string = (<{ [key: string]: Object; }>(args.data))['priority'] as string;
+    addClass([args.element], val);
+  }
+  onClear(): void {
+    document.getElementById('EventLog').innerHTML = '';
+  }
+
+  // Menu
+  onAdd() {
+    this.bAdding = true;
+    this.createEmptyForm()
+    this.toggleDrawer();
+  }
+
+  onRefresh() {
+    this.kanbanData$ = this.kanbanService.getAll()
+    // add snackbar to confirm operations ...
+  }
+  onDeleteCurrentSelection() { }
+  onUpdateCurrentSelection() { }
+
+  onAddNew() {
+    var data = this.taskGroup.getRawValue();
+    this.kanbanService.create(data)
+    this.kanbanData$ = this.kanbanService.getAll();
+    this.closeDrawer();
+  }
+
+  OnActionBegin(): void {
+
+  }
+
+  OnActionComplete(): void {
+
+  }
+
+  OnActionFailure(): void {
+
+  }
+
+  OnDataBinding(): void {
+
+  }
+
+  OnDataBound(): void {
+
+  }
+
+  OnCardRendered(args: CardRenderedEventArgs): void {
+
+  }
+
+  OnQueryCellInfo(): void {
+
+  }
+
+  OnCardClick(args: CardClickEventArgs): void {
+
+  }
+
+
+  OnDragStart(e): void {
+
+  }
+
+  OnDrag(e): void {
+
+  }
+
+
+  changeRag(e: any) {
+
+  }
+
+  changePriority(e: any) {
+
+  }
+
+
+}

@@ -1,0 +1,10 @@
+/* ----------------------------------------------------------------------------------------------------- */
+/*  @ Import/write your custom styles here.
+/*  @ Styles from this file will override 'vendors.scss' and Fuse's base styles.
+/* ----------------------------------------------------------------------------------------------------- */
+
+@import "../../node_modules/@syncfusion/ej2/tailwind.css";
+@import "../../node_modules/@syncfusion/ej2/tailwind-dark.css";
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }

@@ -1,0 +1,17 @@
+<mat-toolbar class="text-white font-sans bg-gray-500 mb-1 text-2xl">
+  {{inTitle}}
+  <!-- menu selected -->
+  <span class="flex-1"></span>
+
+
+  <button (click)="onClickAdd()" class="m-1" mat-raised-button matTooltip="Update" aria-label="Update">
+    <mat-icon class="w-3/12 flex justify-end text-white" [svgIcon]="'mat_outline:add'"></mat-icon>
+    Add
+  </button>
+
+  <button (click)="onClickRefresh()" class="m-1" mat-raised-button matTooltip="Refresh" aria-label="Add">
+    <mat-icon class="w-3/12 flex justify-end text-white" [svgIcon]="'mat_outline:refresh'"></mat-icon>
+    Refresh
+  </button>
+
+</mat-toolbar>

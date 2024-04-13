@@ -1,0 +1,50 @@
+
+<app-header [title]="'Maintenance'"> </app-header>
+<div class="h-screen">
+      <app-image-menubar></app-image-menubar>
+      <div cdkDropListGroup class="grid grid-cols-5 gap-4">
+        <!-- LIST OF IMAGES -->
+        <div class="item--1 lg-rounded" style="height: 900px; overflow-y: auto" cdkScrollable>
+          <div class="sticky top-0 z-50 image_title">Unused Images</div>
+          <div cdkDropList
+               #notused="cdkDropList"
+               [id]="IN_NOT_USED"
+               [cdkDropListData]="not_usedImages"
+               class="list drag-drop-list"
+               (cdkDropListDropped)="drop($event)" >
+            <div *ngFor="let item of not_usedImages" cdkDrag>
+              <div class="drop-placeholder" *cdkDragPlaceholder> </div>
+              <div class="text-gray-700">{{item.imageSrc}}
+                <!-- <img [ngSrc]="item.imageSrc" width="400" height="400" class="m-1 p-1"> -->
+                <div class="min-h-80 aspect-w-1 aspect-h-1 w-full overflow-hidden rounded-md bg-gray-200 group-hover:opacity-75 lg:aspect-none lg:h-80">
+                  <img [ngSrc]="item.imageSrc" alt="Front of men&#039;s Basic Tee in black." class="h-full w-full object-cover object-center lg:h-full lg:w-full" width="400" height="400">
+                </div>
+              </div>
+              <!-- <app-image-card (notifyOpenImageCard)="onOpenDrawer($event)" [url]="item.imageSrc" [file_name]="item.caption"></app-image-card> -->
+            </div>
+          </div>
+        </div>
+        <!-- IMAGE LIST -->
+        <div class="item--2 lg-rounded" style="height: 900px; overflow-y: auto" cdkScrollable >
+          <div class="sticky top-0 z-50 image_title">FEATURED</div>
+          <div
+            cdkDropList #featured="cdkDropList"
+            [id]="IN_FEATURED"
+            [cdkDropListData]="featuredImages"
+            class="list"
+            (cdkDropListDropped)="drop($event)">
+            <div *ngFor="let item of featuredImages" cdkDrag>
+              <div class="text-gray-700">{{item.imageSrc}}
+                <!-- <img [ngSrc]="item.imageSrc" width="400" height="400" class="m-1 p-1"> -->
+                <div class="min-h-80 aspect-w-1 aspect-h-1 w-full overflow-hidden rounded-md bg-gray-200 group-hover:opacity-75 lg:aspect-none lg:h-80">
+                  <img [ngSrc]="item.imageSrc" alt="Front of men&#039;s Basic Tee in black." class="h-full w-full object-cover object-center lg:h-full lg:w-full" width="400" height="400">
+                </div>
+              </div>
+              <!-- <app-image-card  [url]="item.imageSrc" [file_name]="item.caption"> </app-image-card> -->
+            </div>
+          </div>
+        </div>
+      </div>
+
+</div>
+

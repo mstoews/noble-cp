@@ -1,0 +1,47 @@
+@if ((inventoryImages$ | async); as images) {
+
+  <div class="flex items-center justify-center w-full">
+    <div
+      class="flex flex-col items-start justify-start px-4 py-0 md:w-8/12 lg:w-8/12 xl:w-full md:px-6 xl:px-20 2xl:container 2xl:mx-auto">
+      <span>
+      </span>
+      <div
+        class="transition duration-150 ease-in-out flex flex-col items-start mt-5 space-y-8 jusitfy-start xl:items-center xl:flex-row xl:space-y-0 xl:space-x-8">
+        <div class="flex flex-col items-stretch w-full mt-5 jusitfy-start xl:flex-row gap-y-4 xl:gap-y-0 xl:space-x-8">
+          <div class=" transition duration-150 ease-in-out flex flex-row items-start justify-start">
+            <ng-container>
+              <div
+                class="transition duration-150 ease-in-out grid grid-cols-8 auto-cols-max xl:grid-cols-1 justify-between gap-x-2 xl:gap-x-0 xl:gap-y-2">
+                @for (p of images; track p) {
+  
+                  <img class="rounded-lg w-24" (click)="setImage(p)" [src]="p.imageSrc" width="200" height="200"
+                    alt="image" />
+                
+}
+              </div>
+            </ng-container>
+          </div>
+              <div>
+                <img class="hidden rounded-lg w-[400px] xl:block" [src]="mainImage" width="400" height="400"
+                  alt="main-image" priority />
+                <img class="w-full xl:hidden" [src]="product.image" width="300" height="300" alt="main-image" priority />
+              </div>
+              <div class="flex flex-col items-start justify-start w-full xl:w-7/12">
+                <button mat-flat-button (click)="onUpdate()" color="primary" aria-label="Add">
+                  Set Main Image
+                  <mat-icon [svgIcon]="'mat_outline:update'"></mat-icon>
+                </button>
+                <p class="text-xl mt-2 font-garamond font-semibold leading-5 text-gray-800 lg:text-3xl xl:leading-6">{{product.description}}
+                </p>
+                <p class="mt-5 text-base leading-normal text-gray-600"
+                  [innerHTML]="product.rich_description | safe: 'html'"> </p>
+                <p class="mt-3 text-lg font-medium leading-5 text-gray-600 md:text-xl">${{product.price}}</p>
+                <div class="flex items-start w-full mt-10 space-x-4 xl:w-auto jusitfy-start">  </div>
+
+              </div>
+          </div>
+        </div>
+      </div>
+  </div>
+
+}

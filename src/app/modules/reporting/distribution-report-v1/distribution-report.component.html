@@ -1,0 +1,81 @@
+<!-- Account Distribution Report -->
+
+<div class="absolute inset-0 flex flex-col min-w-0 overflow-y-auto -px-20" cdkScrollable>
+    <!-- Main -->
+    <div class="flex-auto p-6 sm:p-10">
+        <div class="h-full border-gray-300 rounded-2xl">
+
+            @if (dl$ | async; as dist) 
+            {
+                        <div class="flex flex-col h-full">
+                        <dist-menubar [inTitle]="'Distributed Ledger'" 
+                        (notifyParentRefresh)="onRefresh()"  
+                        (notifyParentAdd)="onAdd()" 
+                        (notifyParentPeriod)="onPeriodChanged($event)"
+                        (notifyParentYear)="onYearChanged($event)"
+                        [currentPeriod]="currentPeriod"
+                        [currentYear]="currentYear"
+                        >
+                        </dist-menubar>    
+                        <dx-data-grid class="h-[600px]"
+                            [dataSource]="dist"
+                            [remoteOperations]="false"
+                            [allowColumnReordering]="true"
+                            [rowAlternationEnabled]="true"
+                            [showBorders]="true"
+                            [showRowLines]="true"
+                            [showColumnLines]="true"
+                            [focusedRowEnabled]="true"
+                            [focusedRowIndex]="0"
+                            (onCellDblClick)="onCellDoubleClicked($event)"
+                            [repaintChangesOnly]="false"
+                            [customizeColumns]="customizeColumns"
+                            (onExporting)="onExporting($event)"
+                            (onContentReady)="onContentReady($event)"
+                            keyExpr="child">
+                            
+                            <dxo-selection mode="single"></dxo-selection>
+                            <dxo-search-panel [visible]="true"></dxo-search-panel>
+                            <dxo-group-panel [visible]="true"></dxo-group-panel>
+                            <dxo-grouping [autoExpandAll]="true"></dxo-grouping>                            
+                            <dxo-scrolling mode="virtual"></dxo-scrolling>
+
+                            <dxi-column dataField="account" [groupIndex]="0" dataType="number"></dxi-column>
+                            <dxi-column dataField="child" dataType="string" width="130"></dxi-column> 
+                            <dxi-column dataField="period" width="100" dataType="number"></dxi-column>
+                            <dxi-column dataField="period_year" width="100" dataType="number"></dxi-column>
+                            <dxi-column dataField="journal_id" width="100" dataType="number"></dxi-column>
+                            <dxi-column dataField="description" width="200" dataType="string"></dxi-column>
+                            <dxi-column dataField="opening_balance"  alignment="right" width="130" ></dxi-column>
+                            <dxi-column dataField="debit"            alignment="right" width="130" ></dxi-column>
+                            <dxi-column dataField="credit"           alignment="right" width="130" ></dxi-column>
+                            <dxi-column dataField="closing_balance"  alignment="right" width="130" ></dxi-column>
+                            <dxi-column dataField="update_date" dataType="date" width="100" ></dxi-column>
+                            <dxi-column dataField="update_user" dataType="string" width="100" ></dxi-column>
+                            <dxo-master-detail [enabled]="true" template="detail"> </dxo-master-detail>
+                                <div *dxTemplate="let trans of 'detail'">
+                                    <journal-detail [key]="trans.data.child"></journal-detail>
+                                </div>
+                            <dxo-export [enabled]="true" [allowExportSelectedData]="true"></dxo-export>                                                                
+                            
+                        </dx-data-grid>
+                    </div>
+            }
+    </div>
+</div>
+
+<!-- 
+    account             integer,
+    child               integer,
+    account_description varchar(100),
+    period              integer,
+    period_year         integer,
+    journal_id          integer,
+    description         varchar(100),
+    opening_balance     numeric(16, 2),
+    debit               numeric(16, 2),
+    credit              numeric(16, 2),
+    closing_balance     numeric(16, 2),
+    create_date         date,
+    create_user         varchar(20)
+-->

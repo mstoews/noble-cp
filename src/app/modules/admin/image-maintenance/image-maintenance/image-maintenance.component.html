@@ -1,0 +1,86 @@
+<app-header [title]="'Images Maintenance'"> </app-header>
+<app-image-menubar (notifyParentRefresh)="RefreshList()" (notifyParentAdd)="createImageOnce()"
+  (notifyParentDelete)="DeleteDupes()" (notifyParentRefreshImage)="RefreshImages()"
+  [title]="'Image Buckets'"></app-image-menubar>
+<div class="h-screen">
+  <mat-drawer-container>
+    <mat-drawer class="w-3/8 lg:w-3/8 md:w-3/4 sm:w-full bg-white-100" #drawer [opened]="false" mode="over"
+      [position]="'end'" [disableClose]="false">
+    </mat-drawer>
+    <mat-drawer-content>
+      <div cdkDropListGroup class="grid grid-cols-4 gap-4">
+        <!-- NOT_USED -->
+        <div class="item--1 lg-rounded" style="height: 900px; overflow-y: auto" cdkScrollable>
+          <div class="sticky top-0 z-50 image_title">Unused Images</div>
+          <div cdkDropList #notused="cdkDropList" [id]="IN_NOT_USED" [cdkDropListData]="not_usedImages"
+            class="list drag-drop-list" (cdkDropListDropped)="drop($event)">
+            <div (click)="onImageSelected(item)" *ngFor="let item of not_usedImages" cdkDrag>
+              <div class="drop-placeholder" *cdkDragPlaceholder> </div>
+              <div class="text-gray-700">
+
+                <div
+                  class="w-full mb-1 overflow-hidden bg-gray-200 rounded-md cdk-drag-preview min-h-80 aspect-w-1 aspect-h-1 group-hover:opacity-75 lg:aspect-none lg:h-80">
+                  <img [src]="item.imageSrc" alt="NOT USED"
+                    class="object-cover object-center w-full h-full lg:h-full lg:w-full" width="400">
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+        <!-- COLLECTIONS -->
+        <div class="item--2 lg-rounded" style="height: 900px; overflow-y: auto" cdkScrollable>
+          <div class="sticky top-0 z-50 image_title">COLLECTION</div>
+          <div cdkDropList #featured="cdkDropList" [id]="IN_COLLECTION" [cdkDropListData]="collectionsImages"
+            class="list drag-drop-list" (cdkDropListDropped)="drop($event)">
+            <div *ngFor="let item of collectionsImages" cdkDrag>
+              <div class="drop-placeholder" *cdkDragPlaceholder> </div>
+              <div class="text-gray-700">
+                <div
+                  class="w-full mb-1 overflow-hidden bg-gray-200 rounded-md cdk-drag-preview min-h-80 aspect-w-1 aspect-h-1 group-hover:opacity-75 lg:aspect-none lg:h-80">
+                  <img [src]="item.imageSrc" alt="THOUGHTS"
+                    class="object-cover object-center w-full h-full lg:h-full lg:w-full" width="400" height="400">
+                  <p class="text-center text-gray-900">{{item.caption}}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- INVENTORY -->
+        <div class="item--3 lg-rounded" style="height: 900px; overflow-y: auto" cdkScrollable>
+          <div class="sticky top-0 z-50 image_title">PRODUCTS</div>
+          <div cdkDropList #creations="cdkDropList" [id]="IN_PRODUCTS" [cdkDropListData]="productsImages"
+            class="list drag-drop-list" (cdkDropListDropped)="drop($event)">
+            <div *ngFor="let item of productsImages" cdkDrag>
+              <div class="drop-placeholder" *cdkDragPlaceholder> </div>
+              <div class="text-gray-700">
+                <div
+                  class="w-full mb-1 overflow-hidden bg-gray-200 rounded-md cdk-drag-preview min-h-80 aspect-w-1 aspect-h-1 group-hover:opacity-75 lg:aspect-none lg:h-80">
+                  <img [src]="item.imageSrc" alt="IN_PRODUCTS"
+                    class="object-cover object-center w-full h-full lg:h-full lg:w-full" width="400" height="400">
+                  <p class="text-center">{{item.caption}}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- GALLERY -->
+        <div class="item--4 lg-rounded" style="height: 900px; overflow-y: auto" cdkScrollable>
+          <div class="sticky top-0 z-50 uppercase image_title lg-rounded">Gallery</div>
+          <div cdkDropList #gallerys="cdkDropList" [cdkDropListData]="galleryImages" [id]="IN_GALLERY"
+            class="list drag-drop-list" (cdkDropListDropped)="drop($event)">
+            <div *ngFor="let item of galleryImages" cdkDrag>
+              <div class="text-gray-700">
+                <div
+                  class="w-full mb-1 overflow-hidden bg-gray-200 rounded-md cdk-drag-preview min-h-80 aspect-w-1 aspect-h-1 group-hover:opacity-75 lg:aspect-none lg:h-80">
+                  <img [src]="item.imageSrc" alt="GALLERY"
+                    class="object-cover object-center w-full h-full lg:h-full lg:w-full" width="400" height="400">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </mat-drawer-content>
+  </mat-drawer-container>
+</div>

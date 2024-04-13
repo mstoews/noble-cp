@@ -1,0 +1,84 @@
+query gl_trial_balance {
+  gl_trial_balance {
+    account
+    child
+    start_date
+    end_date
+    accounting_period_id
+    description
+    type
+    debit
+    credit
+    create_date
+    create_user
+    update_date
+    update_user
+  }
+}
+
+query getAllAccounts {
+  gl_accounts {
+    account
+    child
+    description
+    balance
+    type
+    sub_type
+    special_assessment
+    capital_asset_fund
+    reserve_fund
+    comments
+    create_date
+    create_user
+  }
+}
+
+query tasks {
+ KanbanTask {
+  task_id
+  title
+  }
+}
+
+query journal_header {
+  gl_journal_header {
+    journal_id
+    description
+    booked
+    create_date
+    create_user
+    booked_date
+    booked_user
+  }
+}
+
+query  journal_detail($journal_id: Float!)
+{
+   gl_journal_detail_by_id(journal_id: $journal_id)
+  {
+    journal_id
+    journal_subid
+    account
+    child
+    description
+    debit
+    credit
+    create_date
+    create_user
+  }
+}
+
+query gl_types {
+   gl_types {
+    type
+    description
+    create_date
+    create_user
+    update_date
+    update_user
+  }
+}
+
+
+
+

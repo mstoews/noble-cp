@@ -1,0 +1,129 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+  
+     function isKnownUser() {
+      return  request.auth.token.admin == true && 
+      exists(/databases/$(database)/documents/users/$(request.auth.uid));
+    }
+    
+    match /users/{userId} {
+      allow read, write: if request.auth.uid == userId;
+      match /cart/{id}{
+      	allow read, write: if true;
+      }
+      match /wishlist/{id} {
+      	allow read, write : if true;
+      }
+      match /purchaseSessions/{id} {
+      allow read, write: if true;
+    	}
+       match /profile/{id}{
+      	allow read, write: if true;
+      }
+    } 
+    
+    match /mainpage/{id} {
+      allow read: if true;
+      allow write: if request.auth.token.admin == true;
+    }
+    
+    match /policy/{id} {
+      allow read: if true;
+      allow write: if request.auth.token.admin == true;
+    }
+    
+    match /contacts/{id} {
+     allow write: if request.auth.token.admin == true;
+     allow read: if true;
+    }
+      
+    match /inventory/{id} {
+      allow read: if true;
+      allow write: if isKnownUser();
+    }
+    
+    match /gl-accounts/{id} {
+      allow read: if true;
+      allow write: if true;
+    }
+
+
+
+    match /gl-types/{id} {
+      allow read: if true;
+      allow write: if true;
+    }
+
+
+    
+    match /blog/{id} {
+      allow read: if true;
+      allow write: if request.auth.token.admin == true;
+       match /comment/{id} {
+      	allow read, write : if true;
+      }
+    }
+    
+		match /category/{id} {
+      allow read: if true;
+      allow write: if isKnownUser();
+    }
+    
+		match /files/{id} {
+      allow read: if true;
+      allow write: if isKnownUser();
+    }
+		
+    match /images/{id} {
+      allow read: if true;
+      allow write: if isKnownUser();
+    }	
+		
+    match /imagelist/{id} {
+      allow read: if true;
+      allow write: if request.auth.token.admin == true;
+      
+    }	
+		
+		match /rawimagelist/{id} {
+      allow read: if true;
+      allow write: if request.auth.token.admin == true;
+  
+    }
+    match /roles/{id} {
+      allow read: if true;
+      allow write: if isKnownUser();
+    }
+		match /specialization/{id} {
+      allow read: if true;
+      allow write: if isKnownUser();
+    }
+	
+     match /customer/{uid} {
+      allow read: if request.auth.uid == uid;
+
+      match /checkout_sessions/{id} {
+        allow read, write: if request.auth.uid == uid;
+      }
+      match /subscriptions/{id} {
+        allow read: if request.auth.uid == uid;
+      }
+      match /payments/{id} {
+        allow read: if request.auth.uid == uid;
+      }
+    }
+
+    match /products/{id} {
+      allow read: if true;
+
+      match /prices/{id} {
+        allow read: if true;
+      }
+
+      match /tax_rates/{id} {
+        allow read: if true;
+      }
+    }
+  }
+}

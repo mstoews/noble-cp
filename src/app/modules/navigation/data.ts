@@ -1,0 +1,847 @@
+/* tslint:disable:max-line-length */
+import { FuseNavigationItem } from '@fuse/components/navigation';
+
+export const defaultNavigation: FuseNavigationItem[] = [
+    {
+        id: 'home',
+        title: 'Home Page',
+        subtitle: 'Financial and Management Accounting',
+        type: 'group',
+        icon: 'heroicons_outline:home',
+        link: '/home',
+        children: [
+            {
+                id: 'accounting.overview',
+                title: 'Dashboard',
+                type: 'basic',
+                icon: 'mat_outline:dashboard',
+                link: '/projects',
+            },
+            {
+                id: 'kanban',
+                title: 'Tasks',
+                type: 'basic',
+                icon: 'mat_outline:task',
+                link: '/kanban',
+            },
+            {
+                id: 'accounts.journals',
+                title: 'Transactions',
+                type: 'basic',
+                icon: 'heroicons_outline:banknotes',
+                link: '/journals',
+            },
+            {
+                id: 'accounts.reporting',
+                title: 'Reporting',
+                type: 'basic',
+                icon: 'mat_outline:report',
+                link: '/reporting',
+            },
+            {
+                id: 'accounting.finance',
+                title: 'Financial Analytics',
+                type: 'basic',
+                icon: 'mat_outline:money',
+                link: '/analytics',
+            },
+
+        ]
+    },
+    {
+        id      : 'pages',
+        title   : 'Pages',
+        subtitle: 'Custom made page designs',
+        type    : 'collapsable',
+        icon    : 'heroicons_outline:document',
+        children: [
+            // {
+            //     id   : 'pages.activities',
+            //     title: 'Activities',
+            //     type : 'basic',
+            //     icon : 'heroicons_outline:bars-3-bottom-left',
+            //     link : '/pages/activities',
+            // },
+            {
+                id      : 'pages.authentication',
+                title   : 'Authentication',
+                type    : 'collapsable',
+                icon    : 'heroicons_outline:lock-closed',
+                children: [
+                    {
+                        id      : 'pages.authentication.sign-in',
+                        title   : 'Sign in',
+                        type    : 'collapsable',
+                        children: [
+                            {
+                                id   : 'pages.authentication.sign-in.classic',
+                                title: 'Classic',
+                                type : 'basic',
+                                link : '/pages/authentication/sign-in/classic',
+                            },
+                            {
+                                id   : 'pages.authentication.sign-in.modern',
+                                title: 'Modern',
+                                type : 'basic',
+                                link : '/pages/authentication/sign-in/modern',
+                            },
+                            {
+                                id   : 'pages.authentication.sign-in.modern-reversed',
+                                title: 'Modern Reversed',
+                                type : 'basic',
+                                link : '/pages/authentication/sign-in/modern-reversed',
+                            },
+                            {
+                                id   : 'pages.authentication.sign-in.split-screen',
+                                title: 'Split Screen',
+                                type : 'basic',
+                                link : '/pages/authentication/sign-in/split-screen',
+                            },
+                            {
+                                id   : 'pages.authentication.sign-in.split-screen-reversed',
+                                title: 'Split Screen Reversed',
+                                type : 'basic',
+                                link : '/pages/authentication/sign-in/split-screen-reversed',
+                            },
+                            {
+                                id   : 'pages.authentication.sign-in.fullscreen',
+                                title: 'Fullscreen',
+                                type : 'basic',
+                                link : '/pages/authentication/sign-in/fullscreen',
+                            },
+                            {
+                                id   : 'pages.authentication.sign-in.fullscreen-reversed',
+                                title: 'Fullscreen Reversed',
+                                type : 'basic',
+                                link : '/pages/authentication/sign-in/fullscreen-reversed',
+                            },
+                        ],
+                    },
+                    {
+                        id      : 'pages.authentication.sign-up',
+                        title   : 'Sign up',
+                        type    : 'collapsable',
+                        link    : '/pages/authentication/sign-up',
+                        children: [
+                            {
+                                id   : 'pages.authentication.sign-up.classic',
+                                title: 'Classic',
+                                type : 'basic',
+                                link : '/pages/authentication/sign-up/classic',
+                            },
+                            {
+                                id   : 'pages.authentication.sign-up.modern',
+                                title: 'Modern',
+                                type : 'basic',
+                                link : '/pages/authentication/sign-up/modern',
+                            },
+                            {
+                                id   : 'pages.authentication.sign-up.modern-reversed',
+                                title: 'Modern Reversed',
+                                type : 'basic',
+                                link : '/pages/authentication/sign-up/modern-reversed',
+                            },
+                            {
+                                id   : 'pages.authentication.sign-up.split-screen',
+                                title: 'Split Screen',
+                                type : 'basic',
+                                link : '/pages/authentication/sign-up/split-screen',
+                            },
+                            {
+                                id   : 'pages.authentication.sign-up.split-screen-reversed',
+                                title: 'Split Screen Reversed',
+                                type : 'basic',
+                                link : '/pages/authentication/sign-up/split-screen-reversed',
+                            },
+                            {
+                                id   : 'pages.authentication.sign-up.fullscreen',
+                                title: 'Fullscreen',
+                                type : 'basic',
+                                link : '/pages/authentication/sign-up/fullscreen',
+                            },
+                            {
+                                id   : 'pages.authentication.sign-up.fullscreen-reversed',
+                                title: 'Fullscreen Reversed',
+                                type : 'basic',
+                                link : '/pages/authentication/sign-up/fullscreen-reversed',
+                            },
+                        ],
+                    },
+                    {
+                        id      : 'pages.authentication.sign-out',
+                        title   : 'Sign out',
+                        type    : 'collapsable',
+                        link    : '/pages/authentication/sign-out',
+                        children: [
+                            {
+                                id   : 'pages.authentication.sign-out.classic',
+                                title: 'Classic',
+                                type : 'basic',
+                                link : '/pages/authentication/sign-out/classic',
+                            },
+                            {
+                                id   : 'pages.authentication.sign-out.modern',
+                                title: 'Modern',
+                                type : 'basic',
+                                link : '/pages/authentication/sign-out/modern',
+                            },
+                            {
+                                id   : 'pages.authentication.sign-out.modern-reversed',
+                                title: 'Modern Reversed',
+                                type : 'basic',
+                                link : '/pages/authentication/sign-out/modern-reversed',
+                            },
+                            {
+                                id   : 'pages.authentication.sign-out.split-screen',
+                                title: 'Split Screen',
+                                type : 'basic',
+                                link : '/pages/authentication/sign-out/split-screen',
+                            },
+                            {
+                                id   : 'pages.authentication.sign-out.split-screen-reversed',
+                                title: 'Split Screen Reversed',
+                                type : 'basic',
+                                link : '/pages/authentication/sign-out/split-screen-reversed',
+                            },
+                            {
+                                id   : 'pages.authentication.sign-out.fullscreen',
+                                title: 'Fullscreen',
+                                type : 'basic',
+                                link : '/pages/authentication/sign-out/fullscreen',
+                            },
+                            {
+                                id   : 'pages.authentication.sign-out.fullscreen-reversed',
+                                title: 'Fullscreen Reversed',
+                                type : 'basic',
+                                link : '/pages/authentication/sign-out/fullscreen-reversed',
+                            },
+                        ],
+                    },
+                    {
+                        id      : 'pages.authentication.forgot-password',
+                        title   : 'Forgot password',
+                        type    : 'collapsable',
+                        link    : '/pages/authentication/forgot-password',
+                        children: [
+                            {
+                                id   : 'pages.authentication.forgot-password.classic',
+                                title: 'Classic',
+                                type : 'basic',
+                                link : '/pages/authentication/forgot-password/classic',
+                            },
+                            {
+                                id   : 'pages.authentication.forgot-password.modern',
+                                title: 'Modern',
+                                type : 'basic',
+                                link : '/pages/authentication/forgot-password/modern',
+                            },
+                            {
+                                id   : 'pages.authentication.forgot-password.modern-reversed',
+                                title: 'Modern Reversed',
+                                type : 'basic',
+                                link : '/pages/authentication/forgot-password/modern-reversed',
+                            },
+                            {
+                                id   : 'pages.authentication.forgot-password.split-screen',
+                                title: 'Split Screen',
+                                type : 'basic',
+                                link : '/pages/authentication/forgot-password/split-screen',
+                            },
+                            {
+                                id   : 'pages.authentication.forgot-password.split-screen-reversed',
+                                title: 'Split Screen Reversed',
+                                type : 'basic',
+                                link : '/pages/authentication/forgot-password/split-screen-reversed',
+                            },
+                            {
+                                id   : 'pages.authentication.forgot-password.fullscreen',
+                                title: 'Fullscreen',
+                                type : 'basic',
+                                link : '/pages/authentication/forgot-password/fullscreen',
+                            },
+                            {
+                                id   : 'pages.authentication.forgot-password.fullscreen-reversed',
+                                title: 'Fullscreen Reversed',
+                                type : 'basic',
+                                link : '/pages/authentication/forgot-password/fullscreen-reversed',
+                            },
+                        ],
+                    },
+                    {
+                        id      : 'pages.authentication.reset-password',
+                        title   : 'Reset password',
+                        type    : 'collapsable',
+                        link    : '/pages/authentication/reset-password',
+                        children: [
+                            {
+                                id   : 'pages.authentication.reset-password.classic',
+                                title: 'Classic',
+                                type : 'basic',
+                                link : '/pages/authentication/reset-password/classic',
+                            },
+                            {
+                                id   : 'pages.authentication.reset-password.modern',
+                                title: 'Modern',
+                                type : 'basic',
+                                link : '/pages/authentication/reset-password/modern',
+                            },
+                            {
+                                id   : 'pages.authentication.reset-password.modern-reversed',
+                                title: 'Modern Reversed',
+                                type : 'basic',
+                                link : '/pages/authentication/reset-password/modern-reversed',
+                            },
+                            {
+                                id   : 'pages.authentication.reset-password.split-screen',
+                                title: 'Split Screen',
+                                type : 'basic',
+                                link : '/pages/authentication/reset-password/split-screen',
+                            },
+                            {
+                                id   : 'pages.authentication.reset-password.split-screen-reversed',
+                                title: 'Split Screen Reversed',
+                                type : 'basic',
+                                link : '/pages/authentication/reset-password/split-screen-reversed',
+                            },
+                            {
+                                id   : 'pages.authentication.reset-password.fullscreen',
+                                title: 'Fullscreen',
+                                type : 'basic',
+                                link : '/pages/authentication/reset-password/fullscreen',
+                            },
+                            {
+                                id   : 'pages.authentication.reset-password.fullscreen-reversed',
+                                title: 'Fullscreen Reversed',
+                                type : 'basic',
+                                link : '/pages/authentication/reset-password/fullscreen-reversed',
+                            },
+                        ],
+                    },
+                    {
+                        id      : 'pages.authentication.unlock-session',
+                        title   : 'Unlock session',
+                        type    : 'collapsable',
+                        link    : '/pages/authentication/unlock-session',
+                        children: [
+                            {
+                                id   : 'pages.authentication.unlock-session.classic',
+                                title: 'Classic',
+                                type : 'basic',
+                                link : '/pages/authentication/unlock-session/classic',
+                            },
+                            {
+                                id   : 'pages.authentication.unlock-session.modern',
+                                title: 'Modern',
+                                type : 'basic',
+                                link : '/pages/authentication/unlock-session/modern',
+                            },
+                            {
+                                id   : 'pages.authentication.unlock-session.modern-reversed',
+                                title: 'Modern Reversed',
+                                type : 'basic',
+                                link : '/pages/authentication/unlock-session/modern-reversed',
+                            },
+                            {
+                                id   : 'pages.authentication.unlock-session.split-screen',
+                                title: 'Split Screen',
+                                type : 'basic',
+                                link : '/pages/authentication/unlock-session/split-screen',
+                            },
+                            {
+                                id   : 'pages.authentication.unlock-session.split-screen-reversed',
+                                title: 'Split Screen Reversed',
+                                type : 'basic',
+                                link : '/pages/authentication/unlock-session/split-screen-reversed',
+                            },
+                            {
+                                id   : 'pages.authentication.unlock-session.fullscreen',
+                                title: 'Fullscreen',
+                                type : 'basic',
+                                link : '/pages/authentication/unlock-session/fullscreen',
+                            },
+                            {
+                                id   : 'pages.authentication.unlock-session.fullscreen-reversed',
+                                title: 'Fullscreen Reversed',
+                                type : 'basic',
+                                link : '/pages/authentication/unlock-session/fullscreen-reversed',
+                            },
+                        ],
+                    },
+                    {
+                        id      : 'pages.authentication.confirmation-required',
+                        title   : 'Confirmation required',
+                        type    : 'collapsable',
+                        link    : '/pages/authentication/confirmation-required',
+                        children: [
+                            {
+                                id   : 'pages.authentication.confirmation-required.classic',
+                                title: 'Classic',
+                                type : 'basic',
+                                link : '/pages/authentication/confirmation-required/classic',
+                            },
+                            {
+                                id   : 'pages.authentication.confirmation-required.modern',
+                                title: 'Modern',
+                                type : 'basic',
+                                link : '/pages/authentication/confirmation-required/modern',
+                            },
+                            {
+                                id   : 'pages.authentication.confirmation-required.modern-reversed',
+                                title: 'Modern Reversed',
+                                type : 'basic',
+                                link : '/pages/authentication/confirmation-required/modern-reversed',
+                            },
+                            {
+                                id   : 'pages.authentication.confirmation-required.split-screen',
+                                title: 'Split Screen',
+                                type : 'basic',
+                                link : '/pages/authentication/confirmation-required/split-screen',
+                            },
+                            {
+                                id   : 'pages.authentication.confirmation-required.split-screen-reversed',
+                                title: 'Split Screen Reversed',
+                                type : 'basic',
+                                link : '/pages/authentication/confirmation-required/split-screen-reversed',
+                            },
+                            {
+                                id   : 'pages.authentication.confirmation-required.fullscreen',
+                                title: 'Fullscreen',
+                                type : 'basic',
+                                link : '/pages/authentication/confirmation-required/fullscreen',
+                            },
+                            {
+                                id   : 'pages.authentication.confirmation-required.fullscreen-reversed',
+                                title: 'Fullscreen Reversed',
+                                type : 'basic',
+                                link : '/pages/authentication/confirmation-required/fullscreen-reversed',
+                            },
+                        ],
+                    },
+                ],
+            },
+            {
+                id      : 'pages.coming-soon',
+                title   : 'Coming Soon',
+                type    : 'collapsable',
+                icon    : 'heroicons_outline:clock',
+                link    : '/pages/coming-soon',
+                children: [
+                    {
+                        id   : 'pages.coming-soon.classic',
+                        title: 'Classic',
+                        type : 'basic',
+                        link : '/pages/coming-soon/classic',
+                    },
+                    {
+                        id   : 'pages.coming-soon.modern',
+                        title: 'Modern',
+                        type : 'basic',
+                        link : '/pages/coming-soon/modern',
+                    },
+                    {
+                        id   : 'pages.coming-soon.modern-reversed',
+                        title: 'Modern Reversed',
+                        type : 'basic',
+                        link : '/pages/coming-soon/modern-reversed',
+                    },
+                    {
+                        id   : 'pages.coming-soon.split-screen',
+                        title: 'Split Screen',
+                        type : 'basic',
+                        link : '/pages/coming-soon/split-screen',
+                    },
+                    {
+                        id   : 'pages.coming-soon.split-screen-reversed',
+                        title: 'Split Screen Reversed',
+                        type : 'basic',
+                        link : '/pages/coming-soon/split-screen-reversed',
+                    },
+                    {
+                        id   : 'pages.coming-soon.fullscreen',
+                        title: 'Fullscreen',
+                        type : 'basic',
+                        link : '/pages/coming-soon/fullscreen',
+                    },
+                    {
+                        id   : 'pages.coming-soon.fullscreen-reversed',
+                        title: 'Fullscreen Reversed',
+                        type : 'basic',
+                        link : '/pages/coming-soon/fullscreen-reversed',
+                    },
+                ],
+            },
+            {
+                id      : 'pages.error',
+                title   : 'Error',
+                type    : 'collapsable',
+                icon    : 'heroicons_outline:exclamation-circle',
+                children: [
+                    {
+                        id   : 'pages.error.404',
+                        title: '404',
+                        type : 'basic',
+                        link : '/pages/error/404',
+                    },
+                    {
+                        id   : 'pages.error.500',
+                        title: '500',
+                        type : 'basic',
+                        link : '/pages/error/500',
+                    },
+                ],
+            },
+            {
+                id      : 'pages.invoice',
+                title   : 'Invoice',
+                type    : 'collapsable',
+                icon    : 'heroicons_outline:calculator',
+                children: [
+                    {
+                        id      : 'pages.invoice.printable',
+                        title   : 'Printable',
+                        type    : 'collapsable',
+                        children: [
+                            {
+                                id   : 'pages.invoice.printable.compact',
+                                title: 'Compact',
+                                type : 'basic',
+                                link : '/pages/invoice/printable/compact',
+                            },
+                            {
+                                id   : 'pages.invoice.printable.modern',
+                                title: 'Modern',
+                                type : 'basic',
+                                link : '/pages/invoice/printable/modern',
+                            },
+                        ],
+                    },
+                ],
+            },
+            {
+                id   : 'pages.maintenance',
+                title: 'Maintenance',
+                type : 'basic',
+                icon : 'heroicons_outline:exclamation-triangle',
+                link : '/pages/maintenance',
+            },
+            {
+                id      : 'pages.pricing',
+                title   : 'Pricing',
+                type    : 'collapsable',
+                icon    : 'heroicons_outline:banknotes',
+                children: [
+                    {
+                        id   : 'pages.pricing.modern',
+                        title: 'Modern',
+                        type : 'basic',
+                        link : '/pages/pricing/modern',
+                    },
+                    {
+                        id   : 'pages.pricing.simple',
+                        title: 'Simple',
+                        type : 'basic',
+                        link : '/pages/pricing/simple',
+                    },
+                    {
+                        id   : 'pages.pricing.single',
+                        title: 'Single',
+                        type : 'basic',
+                        link : '/pages/pricing/single',
+                    },
+                    {
+                        id   : 'pages.pricing.table',
+                        title: 'Table',
+                        type : 'basic',
+                        link : '/pages/pricing/table',
+                    },
+                ],
+            },
+            {
+                id   : 'pages.profile',
+                title: 'Profile',
+                type : 'basic',
+                icon : 'heroicons_outline:user-circle',
+                link : '/pages/profile',
+            },
+            {
+                id   : 'pages.settings',
+                title: 'Settings',
+                type : 'basic',
+                icon : 'heroicons_outline:cog-8-tooth',
+                link : '/pages/settings',
+            },
+        ],
+    },
+    {
+        id: 'settings',
+        title: 'Setting',
+        subtitle: 'Application Data Maintenance',
+        type: 'group',
+        icon: 'heroicons_outline:home',
+        children: [
+            {
+                id: 'accounting.general-ledger',
+                title: 'Accounting',
+                type: 'basic',
+                icon: 'heroicons_outline:bookmark',
+                link: '/gl',
+            },
+            {
+                id: 'settings.tasks',
+                title: 'Tasks',
+                type: 'basic',
+                icon: 'mat_outline:settings_input_component',
+                link: '/kanban-settings',
+            },
+            {
+                id: 'property.document-management',
+                title: 'Documents',
+                type: 'basic',
+                icon: 'heroicons_outline:document-magnifying-glass',
+                link: '/doc_management',
+            },
+
+        ],
+    },
+    {
+        id: 'property',
+        title: 'Support',
+        subtitle: 'Documentation and Help Center',
+        type: 'group',
+        icon: 'heroicons_outline:home',
+        children: [
+            {
+                id: 'help-center',
+                title: 'Help Center',
+                type: 'basic',
+                icon: 'mat_outline:help_center',
+                link: '/help',
+            },
+            {
+                id: 'accounting.settings',
+                title: 'Settings',
+                type: 'basic',
+                icon: 'mat_outline:settings',
+                link: '/settings',
+            },
+        ],
+    },
+];
+export const compactNavigation: FuseNavigationItem[] = [
+    {
+        id: 'home',
+        title: 'Home Page',
+        type: 'basic',
+        icon: 'heroicons_outline:home',
+        link: '/home',
+    },
+    {
+        id: 'accounting',
+        title: 'Dashboards',
+        subtitle: 'Unique dashboard designs',
+        type: 'group',
+        icon: 'heroicons_outline:home',
+        children: [
+            {
+                id: 'dashboards.project',
+                title: 'Project',
+                type: 'basic',
+                icon: 'heroicons_outline:clipboard-check',
+                link: '/dashboards/project',
+            },
+            {
+                id: 'dashboards.analytics',
+                title: 'Analytics',
+                type: 'basic',
+                icon: 'heroicons_outline:chart-pie',
+                link: '/dashboards/analytics',
+            },
+            {
+                id: 'dashboards.finance',
+                title: 'Finance',
+                type: 'basic',
+                icon: 'heroicons_outline:cash',
+                link: '/dashboards/finance',
+            },
+            {
+                id: 'dashboards.crypto',
+                title: 'Crypto',
+                type: 'basic',
+                icon: 'heroicons_outline:currency-dollar',
+                link: '/dashboards/crypto',
+            },
+        ],
+    },
+    {
+        id: 'property',
+        title: 'Property Management',
+        subtitle: 'Administering Property and Assets',
+        type: 'group',
+        icon: 'heroicons_outline:home',
+        children: [
+            {
+                id: 'property.real-estate',
+                title: 'Real Estate',
+                type: 'basic',
+                icon: 'heroicons_outline:clipboard-check',
+                link: '/general_ledger',
+            },
+        ],
+    },
+];
+export const futuristicNavigation: FuseNavigationItem[] = [
+    {
+        id: 'home',
+        title: 'Home Page',
+        type: 'basic',
+        icon: 'heroicons_outline:home',
+        link: '/home',
+    },
+    {
+        id: 'accounting',
+        title: 'Dashboards',
+        subtitle: 'Unique dashboard designs',
+        type: 'group',
+        icon: 'heroicons_outline:home',
+        children: [
+            {
+                id: 'dashboards.project',
+                title: 'Project',
+                type: 'basic',
+                icon: 'heroicons_outline:clipboard-check',
+                link: '/dashboards/project',
+            },
+            {
+                id: 'dashboards.analytics',
+                title: 'Analytics',
+                type: 'basic',
+                icon: 'heroicons_outline:chart-pie',
+                link: '/dashboards/analytics',
+            },
+            {
+                id: 'dashboards.finance',
+                title: 'Finance',
+                type: 'basic',
+                icon: 'heroicons_outline:cash',
+                link: '/dashboards/finance',
+            },
+            {
+                id: 'dashboards.crypto',
+                title: 'Crypto',
+                type: 'basic',
+                icon: 'heroicons_outline:currency-dollar',
+                link: '/dashboards/crypto',
+            },
+        ],
+    },
+    {
+        id: 'property',
+        title: 'Property Management',
+        subtitle: 'Administering Property and Assets',
+        type: 'group',
+        icon: 'heroicons_outline:home',
+        children: [
+            {
+                id: 'property.real-estate',
+                title: 'Real Estate',
+                type: 'basic',
+                icon: 'heroicons_outline:clipboard-check',
+                link: '/general_ledger',
+            },
+        ],
+    },
+];
+export const horizontalNavigation: FuseNavigationItem[] = [
+    {
+        id: 'home',
+        title: 'Home Page',
+        type: 'group',
+        icon: 'heroicons_outline:home',
+        link: '/home',
+        children: [
+            {
+                icon: 'heroicons_outline:home',
+                title: 'Main Page',
+                link: '/landing',
+                type: 'basic',
+            },
+        ]
+    },
+    {
+        id: 'accounting',
+        title: 'Accounting',
+
+        type: 'group',
+        icon: 'heroicons_outline:home',
+        children: [
+            {
+                id: 'accounting.overview',
+                title: 'Dashboard',
+                type: 'basic',
+                icon: 'heroicons_outline:currency-dollar',
+                link: '/home',
+            },
+
+            {
+                id: 'accounting.general-ledger',
+                title: 'General Ledger',
+                type: 'basic',
+                icon: 'heroicons_outline:bookmark',
+                link: '/gl',
+            },
+            {
+                id: 'accounts.journals',
+                title: 'Transaction Entry',
+                type: 'basic',
+                icon: 'heroicons_outline:banknotes',
+                link: '/journals',
+            },
+            {
+                id: 'accounts.tabs',
+                title: 'Transation Analysis',
+                type: 'basic',
+                icon: 'heroicons_outline:chart-pie',
+                link: '/analysis',
+            },
+            {
+                id: 'accounting.finance',
+                title: 'Finance',
+                type: 'basic',
+                icon: 'heroicons_outline:banknotes',
+                link: '/accounts/test',
+            }
+        ],
+    },
+    {
+        id: 'property',
+        title: 'Property Management',
+
+        type: 'group',
+        icon: 'heroicons_outline:home',
+        children: [
+            {
+                id: 'property.real-estate',
+                title: 'Real Estate',
+                type: 'basic',
+                icon: 'heroicons_outline:building-office',
+                link: '/general_ledger',
+            },
+            {
+                id: 'apps.scrumboard',
+                title: 'Workflow Tasks',
+                type: 'basic',
+                icon: 'heroicons_outline:view-columns',
+                link: '/scrumboard',
+            },
+            {
+                id: 'apps.help-center',
+                title: 'Help Center',
+                type: 'basic',
+                icon: 'heroicons_outline:view-columns',
+                link: '/help',
+            },
+
+
+        ],
+    },
+];

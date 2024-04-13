@@ -1,0 +1,36 @@
+<div class="h-full border-gray-300 rounded-2xl">
+    <ng-container>
+        <div class="flex flex-col h-full mb-2">
+            @if (details$ | async; as journal_details) {
+            <dx-data-grid id="journal_child_id" [wordWrapEnabled]="true" [dataSource]="journal_details"
+                [showColumnLines]="true" [showRowLines]="true" [showBorders]="true" [focusedRowEnabled]="true"
+                keyExpr="journal_subid" [repaintChangesOnly]="true">
+
+                <dxi-column dataField="journal_subid" caption="ID" width="100" alignment="middle"> </dxi-column>
+                <dxi-column dataField="account" width="100"> </dxi-column>
+                <dxi-column dataField="child" width="100"> </dxi-column>
+                <dxi-column dataField="sub_type" caption="Sub Type" width="120"> </dxi-column>
+                <dxi-column dataField="description"> </dxi-column>
+                <dxi-column dataField="debit" dataType="number" width="120" alignment="right"  [customizeText]="formatNumber"> </dxi-column>
+                <dxi-column dataField="credit" dataType="number" alignment="right" [customizeText]="formatNumber" width="120"> </dxi-column>
+                <dxi-column dataField="create_date" caption="Date" width="120"> </dxi-column>
+                <dxi-column dataField="create_user" caption="User" width="100"> </dxi-column>
+
+            </dx-data-grid>
+            }
+        </div>
+    </ng-container>
+</div>
+
+<!--
+  journal_id    : number,
+  journal_subid : number,
+  account       : string,
+  child         : string,
+  sub_type      : string,
+  description   : string,
+  debit         : number,
+  credit        : number,
+  create_date   : string,
+  create_user   : string
+-->

@@ -1,0 +1,299 @@
+$Broadridge_Blue: #00578e;
+
+.kanban_title {
+  height: 4rem;
+  padding: 4px;
+  border-left: solid 6px $Broadridge_Blue;
+  color: white;
+  background-color: #00578e;
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+  justify-content: space-between;
+  box-sizing: border-box;
+  cursor: move;
+  font-size: 16px;
+  margin: 1px;
+  text-transform: uppercase;
+
+  &__heading {
+    font-size: 1rem;
+    font-weight: 300;
+    text-transform: uppercase;
+    text-align: left-center;
+    background-color: rgb(235, 195, 215);
+    position: absolute;
+    top: 0rem;
+    right: 2rem;
+    width: 75%;
+  }
+}
+
+.container {
+  width: 100%;
+  // background-color: rgb(131, 36, 36);
+  background: rgb(245, 246, 250);
+  display: grid;
+
+  grid-template-columns: repeat(auto-fit, minmax(270px, 2fr));
+  // grid-auto-rows: 400px;
+  grid-template-rows: 1600px;
+
+  .item {
+    color: rgb(14, 1, 1);
+    font-family: sans-serif;
+    font-size: 30px;
+    &--1 {
+      background: rgb(245, 246, 250);
+    }
+
+    &--2 {
+      background: rgb(245, 246, 250);
+    }
+
+    &--3 {
+      background: rgb(245, 246, 250);
+    }
+
+    &--4 {
+      background: rgb(245, 246, 250);
+    }
+  }
+}
+
+
+
+.list {
+  // border: dashed 1px rgb(81, 50, 139);
+  background: rgb(245, 246, 250);
+  font-size: 10px;
+  overflow: hidden;
+  min-height: 60vh;
+  display: block;
+  margin: 0;
+  align-items: left;
+}
+
+.cdk-drop-list {
+  padding: 0.5rem;
+}
+
+.cdk-drag-preview {
+  box-sizing: border-box;
+  border-radius: 4px;
+  box-shadow: 8px 8px 10px 1px rgba(155, 34, 34, 0.14)
+}
+
+.cdk-drag-placeholder {
+  opacity: 0;
+}
+
+.cdk-drag-animating {
+  transition: transform 500ms cubic-bezier(0.2, 0.2, 0.2, 0.2);
+}
+
+.list.cdk-drop-list-dragging .box:not(.cdk-drag-placeholder) {
+  transition: transform 500ms cubic-bezier(1, 1, 0.2, 1);
+}
+
+.side-drawer {
+  width: 600px;
+}
+
+.ag-grid-container {
+  width: 100%;
+  margin: 1px auto;
+  background: rgb(245, 246, 250);
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+
+  grid-template-rows: 1fr;
+  grid-column-gap: 10px;
+  min-height: 100vh;
+
+  .item {
+    padding: 0px;
+    background-color: white;
+    font-family: sans-serif;
+    font-size: 30px;
+    background-color: orangered;
+
+    &--1 {
+      background-color: orangered;
+    }
+
+    &--2 {
+      background-color: yellowgreen;
+    }
+
+    &--3 {
+      background-color: blueviolet;
+    }
+
+    &--4 {
+      background-color: palevioletred;
+    }
+  }
+}
+
+.mat-drawer {
+  background: rgb(245, 246, 250);
+}
+
+.mat-raise-button {
+  margin: 5px;
+}
+.mat-button {
+  margin: 5px;
+}
+.mat-flat-button {
+  margin: 5px;
+}
+
+.mat-card {
+  margin: 10px;
+  width: 500px;
+}
+.mat-radio-button {
+  margin: 5px;
+}
+
+.kanban-overview.e-kanban .header-template-wrap {
+    display: inline-flex;
+    font-size: 15px;
+    font-weight: 500;
+  }
+  
+  .kanban-overview.e-kanban .header-template-wrap .header-icon {
+    font-family: 'Kanban priority icons';
+    margin-top: 3px;
+    width: 10%;
+  }
+  
+  .kanban-overview.e-kanban .header-template-wrap .header-text {
+    margin-left: 15px;
+  }
+  
+  .kanban-overview.e-kanban.e-rtl .header-template-wrap .header-text {
+    margin-right: 15px;
+  }
+  
+  .kanban-overview.e-kanban.e-rtl .e-card-avatar {
+    left: 12px;
+    right: auto;
+  }
+  
+  .kanban-overview.e-kanban .e-card-avatar {
+    width: 30px;
+    height: 30px;
+    text-align: center;
+    background-color: gainsboro;
+    color: #10131a52;
+    border-radius: 50%;
+    position: absolute;
+    right: 12px;
+    bottom: 10px;
+    font-size: 12px;
+    font-weight: 400;
+    padding: 10px 0px 0px 1px;
+  }
+  
+  .kanban-overview.e-kanban .Open::before {
+    content: '\e700';
+    color: #0251cc;
+    font-size: 16px;
+  }
+  
+  .kanban-overview.e-kanban .InProgress::before {
+    content: '\e703';
+    color: #ea9713;
+    font-size: 16px;
+  }
+  
+  .kanban-overview.e-kanban .e-image img {
+    background: #ececec;
+    border: 1px solid #c8c8c8;
+    border-radius: 50%;
+  }
+  
+  .kanban-overview.e-kanban .Review::before {
+    content: '\e701';
+    color: #8e4399;
+    font-size: 16px;
+  }
+  
+  .kanban-overview.e-kanban .Close::before {
+    content: '\e702';
+    color: #63ba3c;
+    font-size: 16px;
+  }
+  
+  .kanban-overview.e-kanban .e-card .e-card-tag-field {
+    background: #ececec;
+    color: #6b6b6b;
+    margin-right: 5px;
+    line-height: 1.1;
+    font-size: 13px;
+    border-radius: 3px;
+    padding: 4px;
+  }
+  
+  .kanban-overview.e-kanban .e-card-custom-footer {
+    display: flex;
+    padding: 0px 12px 12px;
+    line-height: 1;
+    height: 35px;
+  }
+  .kanban-overview.e-kanban .e-kanban-content .e-content-row .e-content-cells .e-card-wrapper .e-card.Low.e-selection:hover,
+  .kanban-overview.e-kanban .e-kanban-content .e-content-row .e-content-cells .e-card-wrapper .e-card.Low,
+  .kanban-overview.e-kanban.e-rtl .e-kanban .e-kanban-content .e-content-row .e-content-cells .e-card-wrapper .e-card.Low {
+      border-left: 3px solid #1F88E5;
+  }
+  .kanban-overview.e-kanban .e-kanban-content .e-content-row .e-content-cells .e-card-wrapper .e-card.High.e-selection:hover,
+  .kanban-overview.e-kanban .e-kanban-content .e-content-row .e-content-cells .e-card-wrapper .e-card.High,
+  .kanban-overview.e-kanban.e-rtl .e-kanban .e-kanban-content .e-content-row .e-content-cells .e-card-wrapper .e-card.High {
+      border-left: 3px solid #673AB8;
+  }
+  .kanban-overview.e-kanban .e-kanban-content .e-content-row .e-content-cells .e-card-wrapper .e-card.Normal.e-selection:hover,
+  .kanban-overview.e-kanban .e-kanban-content .e-content-row .e-content-cells .e-card-wrapper .e-card.Normal,
+  .kanban-overview.e-kanban.e-rtl .e-kanban .e-kanban-content .e-content-row .e-content-cells .e-card-wrapper .e-card.Normal {
+      border-left: 3px solid #02897B;
+  }
+  .kanban-overview.e-kanban .e-kanban-content .e-content-row .e-content-cells .e-card-wrapper .e-card.Critical.e-selection:hover,
+  .kanban-overview.e-kanban .e-kanban-content .e-content-row .e-content-cells .e-card-wrapper .e-card.Critical,
+  .kanban-overview.e-kanban.e-rtl .e-kanban .e-kanban-content .e-content-row .e-content-cells .e-card-wrapper .e-card.Critical {
+      border-left: 3px solid #E64A19;
+  }
+  
+  .kanban-overview.e-kanban.e-rtl .e-kanban .e-kanban-content .e-content-row .e-content-cells .e-card-wrapper .e-card {
+    border-left: none;
+  }
+  .fluent-dark .kanban-overview.e-kanban .e-card .e-card-tag-field ,
+  .bootstrap5-dark .kanban-overview.e-kanban .e-card .e-card-tag-field ,
+  .tailwind-dark .kanban-overview.e-kanban .e-card .e-card-tag-field ,
+  .material-dark .kanban-overview.e-kanban .e-card .e-card-tag-field ,
+  .fabric-dark .kanban-overview.e-kanban .e-card .e-card-tag-field ,
+  .bootstrap-dark .kanban-overview.e-kanban .e-card .e-card-tag-field ,
+  .highcontrast .kanban-overview.e-kanban .e-card .e-card-tag-field  {
+      background: #4b5563;
+      color: #fff;
+  }
+  .fluent-dark .kanban-overview.e-kanban .e-card-avatar,
+  .bootstrap5-dark .kanban-overview.e-kanban .e-card-avatar,
+  .tailwind-dark .kanban-overview.e-kanban .e-card-avatar,
+  .material-dark .kanban-overview.e-kanban .e-card-avatar,
+  .fabric-dark .kanban-overview.e-kanban .e-card-avatar,
+  .bootstrap-dark .kanban-overview.e-kanban .e-card-avatar,
+  .highcontrast .kanban-overview.e-kanban .e-card-avatar {
+      background: #4b5563;
+      color: #fff;
+  }
+  
+  @font-face {
+    font-family: 'Kanban priority icons';
+    src:
+      url(data:application/x-font-ttf;charset=utf-8;base64,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) format('truetype');
+    font-weight: normal;
+    font-style: normal;
+  }
+  
