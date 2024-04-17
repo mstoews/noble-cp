@@ -77,6 +77,8 @@ export class DistributionReportComponent implements OnInit {
         // this.dlService.writeDistributionReportFromHash();
     }
 
+    
+
     onYearChanged(e: any) {
         this.currentYear = Number(e);
         this.onRefresh();

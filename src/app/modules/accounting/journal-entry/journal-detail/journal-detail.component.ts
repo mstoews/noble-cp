@@ -1,12 +1,12 @@
 import { AfterViewInit, Component, Input, OnInit, ViewChild, inject } from '@angular/core';
-import { DxBulletModule, DxDataGridModule, DxTemplateModule } from 'devextreme-angular';
+import { DxDataGridModule, DxDataGridTypes } from 'devextreme-angular/ui/data-grid';
+import { DxNumberBoxModule, DxTemplateModule } from 'devextreme-angular';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { IJournalDetail, JournalService } from 'app/services/journal.service';
 import { MatDrawer, MatSidenavModule } from '@angular/material/sidenav';
 
 import { CommonModule } from '@angular/common';
 import { DndComponent } from 'app/modules/drag-n-drop/loaddnd/dnd.component';
-import { DxNumberBoxModule } from 'devextreme-angular';
 import { FuseConfirmationService } from '@fuse/services/confirmation';
 import { MatDialog } from '@angular/material/dialog';
 import { MaterialModule } from 'app/services/material.module';
@@ -69,8 +69,8 @@ export class JournalDetailComponent implements OnInit {
             comments: ['', Validators.required],
         });
     }
-
-
+    
+    
     getType($event: any) {
         throw new Error('Method not implemented.');
     }
@@ -179,6 +179,7 @@ export class JournalDetailComponent implements OnInit {
 
         });
     }
+
 
     closeDialog() {
         throw new Error('Method not implemented.');

@@ -16,7 +16,7 @@ import { shareReplay } from 'rxjs';
   })
 export class DistributionLedgerService {
     hashDistributionLedger = new Map<string, IDistributionLedger>();
-    hashDistributionReport = new Map<number, IDistributionReport>();
+    hashDistributionReport = new Map<number, IDistributionLedger>();
 
     rootUrl = environment.baseUrl;
     private bLoading = false;
@@ -26,22 +26,22 @@ export class DistributionLedgerService {
     constructor() {
         this.hashDistributionLedger.clear();
         this.hashDistributionReport.clear();
-        this.createDistributionReportMap(1,2024);
+        //this.createDistributionReportMap(1,2024);
     }
 
-    createDistributionReportMap(prd: number, prdYear: number) {
-        const report$ = this.getDistributionReportByPrdAndYear(prd, prdYear);
-        report$.subscribe( report => {
-                report.forEach(data => this.hashDistributionReport.set(data.child, data))
-        });
-    }
+    // createDistributionReportMap(prd: number, prdYear: number) {
+    //     const report$ = this.getDistributionReportByPrdAndYear(prd, prdYear);
+    //     report$.subscribe( report => {
+    //             report.forEach(data => this.hashDistributionReport.set(data.child, data))
+    //     });
+    // }
 
     getDistributionReportByPrdAndYear(period: number , periodYear: number) {
         const params = {
             "period": period,
             "period_year": periodYear
         }
-        return this.http.post<IDistributionReport[]>(`${this.rootUrl}/v1/dist_list_by_prd`, params)
+        return this.http.post<IDistributionLedger[]>(`${this.rootUrl}/v1/dist_list_by_prd`, params)
         .pipe(shareReplay());
     }
 

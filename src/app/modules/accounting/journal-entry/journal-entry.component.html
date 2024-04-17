@@ -57,49 +57,54 @@
                                             @if (details$ | async; as journal_details) {
                                             <dx-data-grid id="journal_child_id" [wordWrapEnabled]="true" [dataSource]="journal_details"
                                                 [showColumnLines]="true" [showRowLines]="true" [showBorders]="true"
-                                                [focusedRowEnabled]="true" keyExpr="journal_subid" [repaintChangesOnly]="true">
+                                                [focusedRowEnabled]="true" keyExpr="journal_subid" [repaintChangesOnly]="true" 
+                                                (onFocusedRowChanged)="onFocusedRowChanged($event)"
+                                                 >
                                                 <dxi-column dataField="child" caption="Account" width="100"> </dxi-column>
                                                 <dxi-column dataField="fund" caption="Fund" width="120"> </dxi-column>
                                                 <dxi-column dataField="description"> </dxi-column>
                                                 <dxi-column dataField="debit" dataType="number" width="120" alignment="right" [customizeText]="formatNumber"> </dxi-column>
                                                 <dxi-column dataField="credit" dataType="number" alignment="right" [customizeText]="formatNumber" width="120"> </dxi-column>
                                                 <dxo-summary>
-                                                    <dxi-total-item column="child" summaryType="count"> </dxi-total-item>
-                                                    <dxi-total-item
-                                                      column="debit"
-                                                      summaryType="sum"
-                                                      [valueFormat]="{
-                                                      type: 'currency',
-                                                      precision: 2,
-                                                      useCurrencyAccountingStyle: true
-                                                     }"
-                                                     displayFormat="{0}"
-                                                    >
-                                                    </dxi-total-item>
-                                                    <dxi-total-item
-                                                      column="credit"
-                                                      summaryType="sum"
-                                                      [valueFormat]="{
-                                                        type: 'currency',
-                                                        precision: 2,
-                                                        useCurrencyAccountingStyle: true
-                                                       }"
-                                                      displayFormat="{0}"
-                                                    >
-                                                    </dxi-total-item>
-                                                  </dxo-summary>
-
+                                                    <dxi-total-item column="child"  summaryType="count"> </dxi-total-item>
+                                                    <dxi-total-item column="debit"  summaryType="sum" [valueFormat]="{ type: 'currency', precision: 2, useCurrencyAccountingStyle: true}" displayFormat="{0}"></dxi-total-item>                                                    
+                                                    <dxi-total-item column="credit" summaryType="sum" [valueFormat]="{ type: 'currency', precision: 2, useCurrencyAccountingStyle: true}" displayFormat="{0}"> </dxi-total-item>
+                                                </dxo-summary>
                                             </dx-data-grid>
                                             }
                                         </div>
 
-                                    <div class="flex flex-col grow ml-1">
-                                        <mat-form-field class="flex-start m1-2 mr-2">
-                                            <mat-label class="ml-2 text-base">Entry Description</mat-label>
-                                            <input #myInput matInput placeholder="Entry Description"
-                                                formControlName="entry_description" />
+                                    
+                                    <section class="flex flex-col md:flex-row">
+                                        <div class="flex flex-col grow ml-1">
+                                            <mat-form-field class="flex-start m1-2 mr-2">
+                                                <mat-label class="ml-2 text-base">Entry Description</mat-label>
+                                                <input #myInput matInput placeholder="Entry Description"
+                                                    formControlName="entry_description" />
+                                            </mat-form-field>
+                                        </div>
+                                        <div class="flex flex-col grow">
+                                        @if (funds$ | async; as funds) {
+                                        <mat-form-field class="m-1 grow">
+                                            <mat-label class="ml-2 text-base">Fund</mat-label>
+                                            <mat-select placeholder="Fund" formControlName="fund"
+                                                (selectionChange)="changeFund($event)">
+                                                @for (item of funds; track item)
+                                                { <mat-option [value]="item.fund"> {{
+                                                    item.fund }} </mat-option>
+                                                }
+                                            </mat-select>
                                         </mat-form-field>
-                                    </div>
+                                        }
+                                        @else {
+                                        <mat-form-field class="m-1 flex-start">
+                                            <mat-label class="ml-2 text-base">Fund</mat-label>
+                                            <input #myInput matInput placeholder="Fund"
+                                                formControlName="fund" />
+                                        </mat-form-field>
+                                        }
+                                        </div>
+                                    </section>
                                     <section class="flex flex-col md:flex-row">
                                         <div class="flex flex-col grow">
                                             @if (accounts$ | async; as accounts) {
@@ -121,32 +126,8 @@
                                                     formControlName="child" />
                                             </mat-form-field>
                                             }
-
                                         </div>
-                                        <div class="flex flex-col grow">
-                                            @if (funds$ | async; as funds) {
-                                            <mat-form-field class="m-1 grow">
-                                                <mat-label class="ml-2 text-base">Fund</mat-label>
-                                                <mat-select placeholder="Fund" formControlName="fund"
-                                                    (selectionChange)="changeFund($event)">
-                                                    @for (item of funds; track item)
-                                                    { <mat-option [value]="item.fund"> {{
-                                                        item.fund }} </mat-option>
-                                                    }
-                                                </mat-select>
-                                            </mat-form-field>
-                                            }
-                                            @else {
-                                            <mat-form-field class="m-1 flex-start">
-                                                <mat-label class="ml-2 text-base">Fund</mat-label>
-                                                <input #myInput matInput placeholder="Fund"
-                                                    formControlName="fund" />
-                                            </mat-form-field>
-                                            }
-
-
-                                        </div>
-
+                                        
                                         <div class="flex flex-col w-[150px]">
                                             <mat-form-field class="mr-2 ml-1 mb-1 mt-1 grow">
                                                 <mat-label class="ml-2 text-base text-right">Debit</mat-label>

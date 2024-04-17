@@ -84,6 +84,7 @@ export class JournalEntryComponent {
         // await this.updateBooked()
     }
 
+    
     changeType(e) {
         console.log('changeType ', JSON.stringify(e));
     }
@@ -253,7 +254,7 @@ export class JournalEntryComponent {
     }
 
     onFocusedRowChanged(e: any) {
-        console.log(`selectionChanged ${JSON.stringify(e.data)}`);
+        console.debug(`selectionChanged ${JSON.stringify(e.row.data)}`);
     }
 
     openDrawer() {

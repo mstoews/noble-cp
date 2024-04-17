@@ -1,4 +1,3 @@
-import { CardClickEventArgs, KanbanModule } from '@syncfusion/ej2-angular-kanban';
 import { CardRenderedEventArgs, CardSettingsModel, ColumnsModel, DialogSettingsModel, KanbanComponent, SwimlaneSettingsModel } from '@syncfusion/ej2-angular-kanban';
 import { Component, OnInit, ViewChild, inject } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -7,8 +6,9 @@ import { IKanban, IKanbanStatus, KanbanService } from 'app/services/kanban.servi
 import { CheckBoxAllModule } from '@syncfusion/ej2-angular-buttons';
 import { CommonModule } from '@angular/common';
 import { DxDataGridModule } from 'devextreme-angular';
+import { KanbanExComponent } from './example/kanban-ex.component';
+import { KanbanModule } from '@syncfusion/ej2-angular-kanban';
 import { KanbanTypesComponent } from './types.component';
-import { MatDrawer } from '@angular/material/sidenav';
 import { MaterialModule } from 'app/services/material.module';
 import { RouterOutlet } from '@angular/router';
 import { TasksComponent } from './tasks.component';
@@ -32,7 +32,9 @@ const imports = [
   CommonModule,
   KanbanModule,
   CheckBoxAllModule,
-  KanbanTypesComponent
+  KanbanTypesComponent,
+  KanbanExComponent,
+  TasksComponent
 ]
 
 @Component({

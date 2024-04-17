@@ -149,6 +149,19 @@ export const appRoutes: Route[] = [
                     import('app/modules/reporting/reporting.routes'),
             },
             {
+                path: 'income-statements',
+                loadChildren: () =>
+                    import('app/modules/reporting/spread/spreadsheet.routes'),
+            },
+
+            {
+                path: 'expense-reports',
+                loadChildren: () =>
+                    import('app/modules/reporting/expense/expense.routes'),
+            },
+
+
+            {
                 path: 'kanban',
                 loadChildren: () =>
                     import('app/modules/kanban/kanban.routes'),

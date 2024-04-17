@@ -8,14 +8,8 @@ export class TokenService {
   auth = inject(AUTH)
   private token!: string
 
-  constructor() {
-    this.auth.currentUser?.getIdToken().then( (token) => {
-      this.token = token;
-      localStorage.setItem('token', token);
-    })
-  }
-
   async getRefreshToken(): Promise<string> {
+    await sleep(500);
     var token =  await this.auth.currentUser?.getIdToken()
     localStorage.setItem('token', token);
     this.token = token;
@@ -23,18 +17,18 @@ export class TokenService {
   }
 
   async  isExpired(): Promise<boolean> {
-    var token =  this.getToken();
+    var token =  await this.getToken();
     if (token === null) {
-      return true;
+      return false;
     }
-    token.then((jwt) => {
-        var tokenInfo = jwtDecode(jwt); // decode token
-        console.log(tokenInfo); // show decoded token object in console
-        const expireDate = tokenInfo.exp; // get token expiration dateTime
-        if (expireDate === undefined) {
-            return true;
-        }
-    });
+    
+    var tokenInfo = await jwtDecode(token); // decode token
+    console.log(tokenInfo); // show decoded token object in console
+    const expireDate = tokenInfo.exp; // get token expiration dateTime
+     if (expireDate === undefined) {
+        return false;    
+     }
+     return true;
   }
 
   async getToken(): Promise<string> {
@@ -45,3 +39,9 @@ export class TokenService {
   }
 
 }
+
+async function sleep(ms : number ) {
+  return new Promise(resolve => 
+    setTimeout(resolve, ms));
+}
+

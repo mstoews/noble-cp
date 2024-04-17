@@ -1,5 +1,5 @@
-import { Injectable, computed, inject, signal } from '@angular/core';
-import { Observable, Subject, catchError, from, map, shareReplay } from 'rxjs';
+import { BehaviorSubject, Observable, Subject, catchError, from, map, shareReplay } from 'rxjs';
+import { Injectable, OnDestroy, computed, inject, signal } from '@angular/core';
 
 import { AUTH } from 'app/app.config';
 import { HttpClient } from '@angular/common/http';
@@ -41,8 +41,8 @@ export interface IStatus {
 }
 
 export interface IPriority {
-  priority: string,
-  description: string,
+  Priority: string,
+  Description: string,
   updatedte: string,
   updateusr: string
 }
@@ -54,6 +54,14 @@ export interface IType {
   updateusr: string
 }
 
+// 'Id': 'Task 1',
+// 'Title': 'Task - 29001',
+// 'Status': 'Open',
+// 'Summary': 'Analyze customer requirements.',
+// 'Priority': 'High',
+// 'Tags': 'Bug, Release Bug',
+// 'RankId': 1,
+// 'Assignee': 'Nancy Davloio'
 
 export interface IKanban {
   id: string,
@@ -76,9 +84,13 @@ export interface IKanban {
   providedIn: 'root',
 })
 export class KanbanService {
+  
   private httpClient = inject(HttpClient);
   private authService = inject(AUTH);
   private baseUrl = environment.baseUrl;
+  private subject = new BehaviorSubject<IKanban[]>([]);
+
+  tasks$ : Observable<IKanban[]> = this.subject.asObservable();
 
   error$ = new Subject<string>();
   kanbans = computed(() => this.state().kanbans);
@@ -114,6 +126,17 @@ export class KanbanService {
       shareReplay());
   }
 
+  getKanbanTaskList() {
+    var url = this.baseUrl + '/v1/tasks_list';
+    this.tasks$ = this.httpClient.get<IKanban[]>(url).pipe(
+      shareReplay());
+      this.tasks$.subscribe((kanbans) => { 
+      this.subject.next(kanbans)
+      kanbans.forEach(kanban => console.log(kanban))
+    });
+  
+    return this.tasks$;  
+  }
 
   create(k: IKanban) {
     var url = this.baseUrl + '/v1/task_create';
@@ -122,17 +145,18 @@ export class KanbanService {
     const updateDate = dDate.toISOString().split('T')[0];
 
     var data: any = {
+      id: k.id,
       title: k.title,
       status: k.status,
       summary: k.summary,
       type: k.type,
       priority: k.priority,
       tags: k.tags,
-      estimate: k.estimate,
       assignee: k.assignee,
       rankid: k.rankid,
       color: k.color,
-      className: k.className,
+      estimate: k.estimate,
+      ClassName: 'class',
       updateDate: updateDate,
       updateUser: email,
     }
@@ -151,9 +175,6 @@ export class KanbanService {
       shareReplay());
   }
 
-  getAll() {
-    return this.read();
-  }
 
   // Update
   update(k: IKanban) {
@@ -170,16 +191,20 @@ export class KanbanService {
       type: k.type,
       priority: k.priority,
       tags: k.tags,
-      estimate: k.estimate,
       assignee: k.assignee,
       rankid: k.rankid,
       color: k.color,
-      className: 'classna',
+      estimate: k.estimate,
+      className: 'class',
       updateDate: updateDate,
       updateUser: email,
     }
 
-    return this.httpClient.post<IKanban>(url, data);
+    this.httpClient.post<IKanban>(url, data).pipe(
+      shareReplay()).subscribe(
+        kanban => console.log(JSON.stringify(kanban),
+        error => console.log('Error', error))
+    );
 
   }
 
@@ -193,6 +218,7 @@ export class KanbanService {
       id: k.id,
       status: k.status,
       rankid: k.rankid,
+      priority:  k.priority
     }
 
     return this.httpClient.post<IKanban>(url, data)

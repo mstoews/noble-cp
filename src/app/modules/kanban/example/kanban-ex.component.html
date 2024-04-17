@@ -1,0 +1,239 @@
+<!-- <div class="absolute inset-0 flex flex-col min-w-0 overflow-hidden">
+  <div
+    class="flex flex-col sm:flex-row flex-0 sm:items-center sm:justify-between sm:py-8 sm:px-5 dark:bg-transparent bg-transparent">
+    <div class="flex-1 min-w-0">
+
+      <div class="text-3xl md:text-4xl font-extrabold tracking-tight leading-5 sm:leading-10 truncate bg-transparent">
+        Task Manager
+      </div>
+
+    </div>
+  </div>
+  <kanban-menubar class="pl-2 pr-2" [inTitle]="'Tasks'" (notifyParentRefresh)="onRefresh()" (notifyParentAdd)="onAdd()"
+    (notifyParentDelete)="onDeleteCurrentSelection()"
+    (notifyParentUpdate)="onUpdateCurrentSelection()">
+  </kanban-menubar>
+  <div class="flex flex-col min-w-0 overflow-y-auto bg-transparent" cdkScrollable>
+
+    <div class="flex-auto p-3">
+      <div class="h-full rounded-2xl">
+        <mat-drawer class="w-128" #drawer [opened]="false" mode="over" [position]="'end'" [disableClose]="false">
+          <mat-card>
+            <div mat-card-title class="font-semibold text-3xl text-gray-100 bg-gray-500 p-1 border-white">
+              {{sTitle}} </div>
+            <div mat-card-content class="border-r-green-500">
+              <form [formGroup]="taskGroup" class="form">
+
+                <div class="flex flex-col m-1">
+                  <div class="flex flex-col grow">
+                    <mat-form-field class="mt-1 flex-start">
+                      <mat-label class="ml-2 text-base">Title</mat-label>
+                      <input #myInput matInput placeholder="Kanban Task Title" formControlName="title" />
+                    </mat-form-field>
+                  </div>
+
+                  <section class="flex flex-col md:flex-row">
+                    <div class="flex-col grow">
+                      <mat-form-field class="m-1 grow">
+                        <mat-label class="ml-2 text-base">RAG Rating</mat-label>
+                        <mat-select class="flex-col grow" placeholder="RAG" formControlName="color"
+                          (selectionChange)="changeRag($event)">
+                          <mat-option *ngFor="let p of rag" [value]="p.value">
+                            {{ p.viewValue }} </mat-option>
+                        </mat-select>
+                      </mat-form-field>
+
+                      <mat-form-field class="m-1 grow">
+                        <mat-label class="ml-2 text-base">Type</mat-label>
+                        <mat-select placeholder="Type" formControlName="type" (selectionChange)="changeType($event)">
+                          <mat-option *ngFor="let p of types" [value]="p.value">
+                            {{p.viewValue }} </mat-option>
+                        </mat-select>
+                      </mat-form-field>
+
+                      <mat-form-field class="m-1 grow">
+                        <mat-label class="ml-2 text-base">Priority</mat-label>
+                        <mat-select placeholder="Priority" formControlName="priority"
+                          (selectionChange)="changePriority($event.value)">
+                          <mat-option *ngFor="let p of priorities" [value]="p.value">
+                            {{ p.viewValue }} </mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                    </div>
+                  </section>
+
+                  <mat-form-field class="m-1 grow">
+                    <mat-label class="ml-2 text-base">Tags</mat-label>
+                    <input matInput placeholder="Tags" formControlName="tags" />
+                  </mat-form-field>
+
+                  <mat-form-field class="form-element">
+                    <mat-label class="ml-2 text-base">Estimate (Days)</mat-label>
+                    <input matInput placeholder="Estimate (Days)" formControlName="estimate" />
+                  </mat-form-field>
+
+                  <mat-form-field class="form-element">
+                    <mat-label class="ml-2 text-base">Assignee</mat-label>
+                    <mat-select placeholder="Assigned" formControlName="assignee"
+                      (selectionChange)="changeType($event.value)">
+                      <mat-option *ngFor="let p of assignees" [value]="p.value"> {{
+                        p.viewValue }}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+
+                  <mat-form-field class="mat-form-field">
+                    <mat-label class="ml-2 text-base">Task Summary</mat-label>
+                    <textarea matInput placeholder="Summary" formControlName="summary"> </textarea>
+                  </mat-form-field>
+                </div>
+              </form>
+
+              <div mat-card-actions class="mb-3">
+                @if (bAdding == false) {
+                <button mat-icon-button (click)="onUpdate()" color="primary" class="m-1">
+                  <mat-icon>update</mat-icon>
+                </button>
+                <button mat-raised-button (click)="onCopy($event)" color="primary" class="m-1">
+                  <mat-icon>copy</mat-icon>
+                </button>
+                <button mat-raised-button (click)="onDelete()" color="primary" class="m-1">
+                  <mat-icon>delete</mat-icon>
+                </button>
+                }
+                @else
+                {
+                <button mat-raised-button (click)="onAddNew()" color="primary" class="m-1">
+                  <mat-icon>new</mat-icon>
+                </button>
+                }
+                <button mat-raised-button (click)="closeDrawer()" color="warn" class="m-1">
+                  <mat-icon>close</mat-icon>
+                </button>
+              </div>
+
+            </div>
+          </mat-card>
+        </mat-drawer>
+        <mat-drawer-container>
+          <mat-drawer-content>
+            @if (kanbanData$ | async; as kanbanData) {
+            <div class="m-2" cdkScrollable>
+              <div class="control-section">
+                <div class="content-wrapper">
+
+                  <ejs-kanban #kanbanObj cssClass='kanban-overview' 
+                    keyField="status" 
+                    [dataSource]='kanbanData'
+                    [cardSettings]='cardSettings' 
+                    enableTooltip='true' 
+                    enablePersistence='true'
+                    [swimlaneSettings]='swimlaneSettings'
+                    (dataBound)='OnDataBound()'
+                    (queryCellInfo)='OnQueryCellInfo()'
+                    (cardClick)='OnCardClick($event)'                     
+                    (cardDoubleClick)='OnCardDoubleClick($event)'                     
+                    (cardRendered)='cardRendered($event)'>
+                    <e-columns>
+                      <e-column *ngFor="let column of columns;" headerText={{column.headerText}}
+                        keyField='{{column.keyField}}' allowToggle='{{column.allowToggle}}'>
+                        <ng-template #template let-data>
+                          <div class="header-template-wrap">
+                            <div class="header-icon e-icons {{data.keyField}}"></div>
+                            <div class="header-text text-white">{{data.headerText}}</div>
+                          </div>
+                        </ng-template>
+                      </e-column>
+                    </e-columns>
+                    <ng-template #cardSettingsTemplate let-data>
+                      <div class='card-template'>
+                        <div class='e-card-header'>
+                          <div class='e-card-header-caption'>
+                            <div class='e-card-header-title e-tooltip-text'>{{data.title}}</div>
+                          </div>
+                        </div>
+                        <div class='e-card-content e-tooltip-text'>
+                          <div class='e-text'>{{data.summary}}</div>
+                        </div>
+                        <div class='e-card-custom-footer'>
+                          <div class="e-card-tag-field e-tooltip-text" *ngFor="let tag of data.tags.split(',');">{{tag}}
+                          </div>
+                          <div class='e-card-avatar'>{{getString(data.assignee)}}</div>
+                        </div>
+                      </div>
+                    </ng-template>
+                  </ejs-kanban>
+                </div>
+              </div>
+            </div>
+            } @else
+            {
+            <div class="flex flex-col items-center justify-center h-screen mat-spinner-color w-full bg-white">
+              <mat-spinner class="text-gray-100 bg-white" [diameter]="80"></mat-spinner>
+              <p class="text-gray-100 text-2xl">Loading...</p>
+            </div>
+            }
+          </mat-drawer-content>
+        </mat-drawer-container>
+      </div>
+    </div>
+  </div>
+</div>
+ -->
+
+@if (kanbanData$ | async; as kanbanData) {
+  <div class="m-2" cdkScrollable>
+    <div class="control-section">
+      <div class="content-wrapper">
+
+        <ejs-kanban #kanbanObj cssClass='kanban-overview' 
+          keyField="status" 
+          [dataSource]='kanbanData'
+          [cardSettings]='cardSettings' 
+          enableTooltip='true' 
+          enablePersistence='true'
+          [swimlaneSettings]='swimlaneSettings'
+          (dataBound)='OnDataBound()'
+          (queryCellInfo)='OnQueryCellInfo()'
+          (cardClick)='OnCardClick($event)'                     
+          (cardDoubleClick)='OnCardDoubleClick($event)'                     
+          (cardRendered)='cardRendered($event)'>
+          <e-columns>
+            <e-column *ngFor="let column of columns;" headerText={{column.headerText}}
+              keyField='{{column.keyField}}' allowToggle='{{column.allowToggle}}'>
+              <ng-template #template let-data>
+                <div class="header-template-wrap">
+                  <div class="header-icon e-icons {{data.keyField}}"></div>
+                  <div class="header-text text-white">{{data.headerText}}</div>
+                </div>
+              </ng-template>
+            </e-column>
+          </e-columns>
+          <ng-template #cardSettingsTemplate let-data>
+            <div class='card-template'>
+              <div class='e-card-header'>
+                <div class='e-card-header-caption'>
+                  <div class='e-card-header-title e-tooltip-text'>{{data.title}}</div>
+                </div>
+              </div>
+              <div class='e-card-content e-tooltip-text'>
+                <div class='e-text'>{{data.summary}}</div>
+              </div>
+              <div class='e-card-custom-footer'>
+                <div class="e-card-tag-field e-tooltip-text" *ngFor="let tag of data.tags.split(',');">{{tag}}
+                </div>
+                <div class='e-card-avatar'>{{getString(data.assignee)}}</div>
+              </div>
+            </div>
+          </ng-template>
+        </ejs-kanban>
+      </div>
+    </div>
+  </div>
+  } @else
+  {
+  <div class="flex flex-col items-center justify-center h-screen mat-spinner-color w-full bg-white">
+    <mat-spinner class="text-gray-100 bg-white" [diameter]="80"></mat-spinner>
+    <p class="text-gray-100 text-2xl">Loading...</p>
+  </div>
+  }

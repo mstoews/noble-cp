@@ -1,17 +1,16 @@
-
 import { RouterOutlet } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CardClickEventArgs, KanbanModule } from '@syncfusion/ej2-angular-kanban';
 import { CheckBoxAllModule } from '@syncfusion/ej2-angular-buttons';
-import { Component, OnInit, ViewChild, inject } from '@angular/core';
+import { Component, OnInit, ViewChild, ViewEncapsulation, inject } from '@angular/core';
 import { addClass } from '@syncfusion/ej2-base';
-import { KanbanComponent, ColumnsModel, CardSettingsModel, SwimlaneSettingsModel, DialogSettingsModel, CardRenderedEventArgs } from '@syncfusion/ej2-angular-kanban';
+import { KanbanComponent, ColumnsModel, CardSettingsModel, SwimlaneSettingsModel, CardRenderedEventArgs } from '@syncfusion/ej2-angular-kanban';
 import { IKanban, IKanbanStatus, KanbanService } from 'app/services/kanban.service';
 import { DxDataGridModule } from 'devextreme-angular';
 import { MatDrawer } from '@angular/material/sidenav';
 import { MaterialModule } from 'app/services/material.module';
-import { shareReplay } from 'rxjs';
+
 
 import { KanbanMenubarComponent } from './kanban-menubar/grid-menubar.component';
 import { FuseConfirmationService } from '@fuse/services/confirmation';
@@ -20,10 +19,6 @@ export interface IValue {
   value: string;
   viewValue: string;
 }
-
-// type kanbanType = {
-//   kanban: IKanban;
-// }
 
 const imports = [
   MaterialModule,
@@ -39,8 +34,9 @@ const imports = [
 ]
 
 @Component({
-  selector: 'kanban-tasks',
+  selector: 'kanban',
   standalone: true,
+  encapsulation: ViewEncapsulation.None,
   imports: [imports],
   templateUrl: './tasks.component.html',
   styleUrl: './tasks.component.scss'
@@ -63,7 +59,7 @@ export class TasksComponent {
   private _fuseConfirmationService = inject(FuseConfirmationService)
 
   ngOnInit(): void {
-    this.kanbanData$ = this.kanbanService.getAll();
+    this.kanbanData$ = this.kanbanService.read();
     this.createEmptyForm();
   }
 
@@ -101,11 +97,16 @@ export class TasksComponent {
     const d = {
       id: e.data[0].id,
       status: e.data[0].status,
-      rankid: e.data[0].rankid
+      rankid: e.data[0].rankid,
+      priority: 'Normal'
     }
     console.log('Status', e.data[0].status);
+    if (e.data[0].status === 'Close') {
+
+    }
     this.kanbanService.updateStatus(d);
   }
+
 
   OnCardDoubleClick(args: CardClickEventArgs): void {
     this.bAdding = false;
@@ -132,9 +133,6 @@ export class TasksComponent {
 
   createEmptyForm() {
     this.sTitle = 'Kanban Task';
-    // const sDate = new Date(task.start_date);
-    // const startDate = sDate.toISOString().split('T')[0];
-
 
     this.taskGroup = this.fb.group({
       title: [''],
@@ -153,6 +151,8 @@ export class TasksComponent {
   }
 
 
+  
+
   createForm(task: IKanban) {
     this.sTitle = 'Kanban Task - ' + task.id;
     const dDate = new Date(task.updateDate);
@@ -162,7 +162,6 @@ export class TasksComponent {
     this.assignRag(task);
 
     var assignee = this.assignAssignee(task)
-
 
     this.taskGroup = this.fb.group({
       id: [task.id],
@@ -252,6 +251,7 @@ export class TasksComponent {
     { headerText: 'Completed', keyField: 'Review', allowToggle: true },
     { headerText: 'Confirmed', keyField: 'Close', allowToggle: true }
   ];
+
   public cardSettings: CardSettingsModel = {
     headerField: 'id',
     template: '#cardTemplate',
@@ -266,14 +266,8 @@ export class TasksComponent {
 
     this.bAdding = false
     var data = this.taskGroup.getRawValue();
-    this.kanbanService.update(data).pipe(
-      shareReplay()).pipe()
-      .subscribe(kanban => {
-        console.log('Kanban updated', JSON.stringify(kanban))
-        // const card = this.kanbanObj.kanbanData.map()
-        this.kanbanData$ = this.kanbanService.getAll();
-      }
-      );
+    this.kanbanService.update(data)
+    this.kanbanData$ = this.kanbanService.read();
     this.closeDrawer();
   }
 
@@ -312,7 +306,7 @@ export class TasksComponent {
   }
 
   closeDrawer() {
-    this.kanbanService.getAll();
+    this.kanbanService.read();
     this.drawer.toggle();
   }
 
@@ -352,11 +346,11 @@ export class TasksComponent {
     return "";
   }
 
-
   cardRendered(args: CardRenderedEventArgs): void {
     const val: string = (<{ [key: string]: Object; }>(args.data))['priority'] as string;
     addClass([args.element], val);
   }
+  
   onClear(): void {
     document.getElementById('EventLog').innerHTML = '';
   }
@@ -369,7 +363,7 @@ export class TasksComponent {
   }
 
   onRefresh() {
-    this.kanbanData$ = this.kanbanService.getAll()
+    this.kanbanData$ = this.kanbanService.read()
     // add snackbar to confirm operations ...
   }
   onDeleteCurrentSelection() { }
@@ -378,7 +372,7 @@ export class TasksComponent {
   onAddNew() {
     var data = this.taskGroup.getRawValue();
     this.kanbanService.create(data)
-    this.kanbanData$ = this.kanbanService.getAll();
+    this.kanbanData$ = this.kanbanService.read();
     this.closeDrawer();
   }
 
@@ -411,7 +405,7 @@ export class TasksComponent {
   }
 
   OnCardClick(args: CardClickEventArgs): void {
-
+    console.log(args.data);
   }
 
 

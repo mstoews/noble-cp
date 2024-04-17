@@ -1,14 +1,15 @@
 import { Component, OnInit, ViewChild, inject } from '@angular/core';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 
 import { CommonModule } from '@angular/common';
+import { DistMenuStandaloneComponent } from './distributed-ledger/dist-menubar/grid-menubar.component';
 import { DistributedLedgerComponent } from './distributed-ledger/distributed-ledger.component';
 import { DistributionReportComponent } from './distribution-report/distribution-report.component';
 import { DxDataGridModule } from 'devextreme-angular';
-import { MatDrawer } from '@angular/material/sidenav';
 import { MaterialModule } from 'app/services/material.module';
 import { ReportComponent } from './report.component';
 import { RouterOutlet } from '@angular/router';
+import { SpreadsheetRptComponent } from './spread/spreadsheet-rpt.component';
 import { TransactionAnalysisComponent } from './transaction-analysis/transaction-analysis.component';
 
 export interface IValue {
@@ -27,7 +28,9 @@ const imports = [
   DistributedLedgerComponent,
   ReportComponent,
   DistributionReportComponent,
-  TransactionAnalysisComponent
+  TransactionAnalysisComponent,
+  SpreadsheetRptComponent,
+  DistMenuStandaloneComponent,
 ]
 
 @Component({
