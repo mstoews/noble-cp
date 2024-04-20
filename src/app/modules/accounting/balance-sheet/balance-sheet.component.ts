@@ -67,8 +67,8 @@ export class BalanceSheetComponent implements OnInit {
 
     customizeTooltip = (pointsInfo: { originalValue: string; }) => ({ text: `${parseInt(pointsInfo.originalValue)}%` });
     accountsForm!: FormGroup;
-    assets$ = this.accountApiService.getAll().pipe(map((income) => income.filter((inc) => inc.type === 'Assets')));
-    liabilities$ = this.accountApiService.getAll().pipe(map((income) => income.filter((inc) => inc.type === 'Liability')));
+    assets$ = this.accountApiService.read().pipe(map((income) => income.filter((inc) => inc.type === 'Assets')));
+    liabilities$ = this.accountApiService.read().pipe(map((income) => income.filter((inc) => inc.type === 'Liability')));
 
     ngOnInit() {
         this.createEmptyForm();

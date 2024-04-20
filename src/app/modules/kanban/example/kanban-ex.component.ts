@@ -97,7 +97,9 @@ export class KanbanExComponent implements OnInit {
       color: args.data.color,
       className: '',
       updateUser: args.data.updateUser,
-      updateDate: args.data.updateDate
+      updateDate: args.data.updateDate,
+      startDate: args.data.startDate,
+      estimateDate: args.data.estimateDate
     }
     this.createForm(kanban)     
     }   

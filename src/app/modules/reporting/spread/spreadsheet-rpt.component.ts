@@ -12,6 +12,10 @@ import { DistributionLedgerService } from 'app/services/distribution.ledger.serv
   imports: [SpreadsheetModule, CommonModule, DistMenuStandaloneComponent],
   encapsulation: ViewEncapsulation.None,
   templateUrl: './spreadsheet-rpt.component.html',
+  styles:`::ng-deep .e-grid .e-gridheader { 
+    display: none; 
+  } 
+  `
 })
 
 export class SpreadsheetRptComponent implements OnInit, OnDestroy {

@@ -4,16 +4,16 @@
 <!-- Navigation -->
 @if (isScreenSmall) {
 
-    <fuse-vertical-navigation class="dark bg-gray-900 print:hidden" [mode]="'over'" [name]="'mainNavigation'"
-        [navigation]="navigation.default" [opened]="false">
-        <!-- Navigation header hook -->
-        <ng-container fuseVerticalNavigationContentHeader>
-            <!-- Logo -->
-            <div class="flex items-center h-10 pt-6 px-8">
-                <img class="w-4" src="assets/images/logo/nobleledger.jpg" alt="Logo image">
-            </div>
-        </ng-container>
-    </fuse-vertical-navigation>
+<fuse-vertical-navigation class="dark bg-gray-900 print:hidden" [mode]="'over'" [name]="'mainNavigation'"
+    [navigation]="navigation.default" [opened]="false">
+    <!-- Navigation header hook -->
+    <ng-container fuseVerticalNavigationContentHeader>
+        <!-- Logo -->
+        <div class="flex items-center h-10 pt-6 px-8">
+            <img class="w-4" src="assets/images/logo/nobleledger.jpg" alt="Logo image">
+        </div>
+    </ng-container>
+</fuse-vertical-navigation>
 
 }
 
@@ -29,23 +29,25 @@
                 <!-- Logo -->
                 @if (!isScreenSmall) {
 
-                    <div class="flex items-center mx-2">
-                        <!-- Light version -->
-                        <img class="w-10 dark:hidden border-2 border-gray-700" src="assets/images/logo/nobleledger.jpg" alt="Logo image">
-                        <!-- Dark version -->
-                        <img class="hidden dark:flex w-10 border-2 border-gray-700" src="assets/images/logo/nobleledger.jpg" alt="Logo image">
-                    </div>
-                    NobleLedger
-                
-}
+                <div class="flex items-center mx-2">
+                    <!-- Light version -->
+                    <img class="w-10 dark:hidden border-2 border-gray-700" src="assets/images/logo/nobleledger.jpg"
+                        alt="Logo image">
+                    <!-- Dark version -->
+                    <img class="hidden dark:flex w-10 border-2 border-gray-700" src="assets/images/logo/nobleledger.jpg"
+                        alt="Logo image">
+                </div>
+                Noble Ledger
+
+                }
                 <!-- Navigation toggle button -->
                 @if (isScreenSmall) {
 
-                    <button mat-icon-button (click)="toggleNavigation('mainNavigation')">
-                        <mat-icon [svgIcon]="'heroicons_outline:bars-3'"></mat-icon>
-                    </button>
-                
-}
+                <button mat-icon-button (click)="toggleNavigation('mainNavigation')">
+                    <mat-icon [svgIcon]="'heroicons_outline:bars-3'"></mat-icon>
+                </button>
+
+                }
                 <!-- Components -->
                 <div class="flex items-center pl-2 ml-auto space-x-1 sm:space-x-2">
                     <!-- <languages></languages> -->
@@ -60,12 +62,12 @@
             <!-- Bottom bar -->
             @if (!isScreenSmall) {
 
-                <div class="relative flex flex-auto flex-0 items-center h-16 px-4">
-                    <fuse-horizontal-navigation [name]="'mainNavigation'"
-                        [navigation]="navigation.horizontal"></fuse-horizontal-navigation>
-                </div>
-            
-}
+            <div class="relative flex flex-auto flex-0 items-center h-16 px-4">
+                <fuse-horizontal-navigation [name]="'mainNavigation'"
+                    [navigation]="navigation.horizontal"></fuse-horizontal-navigation>
+            </div>
+
+            }
         </div>
     </div>
 
@@ -75,8 +77,8 @@
             <!-- *ngIf="true" hack is required here for router-outlet to work correctly.
                  Otherwise, layout changes won't be registered and the view won't be updated! -->
             @if (true) {
-<router-outlet></router-outlet>
-}
+            <router-outlet></router-outlet>
+            }
         </div>
     </div>
 
@@ -84,7 +86,7 @@
     <div class="relative flex justify-center w-full z-49 print:hidden">
         <div
             class="flex items-center max-w-360 w-full h-14 sm:h-20 px-6 md:px-8 sm:shadow-xl border-t bg-card dark:bg-default">
-            <span class="font-medium text-secondary">NobleLedger &copy; {{currentYear}}</span>
+            <span class="font-medium text-secondary">Noble Ledger &copy; {{currentYear}}</span>
         </div>
     </div>
 

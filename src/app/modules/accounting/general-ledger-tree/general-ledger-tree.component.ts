@@ -81,7 +81,7 @@ export class GeneralLedgerTreeComponent implements OnInit, OnDestroy {
 
   customizeTooltip = (pointsInfo: { originalValue: string; }) => ({ text: `${parseInt(pointsInfo.originalValue)}%` });
   accountsForm!: FormGroup;
-  accounts$ = this.accountApiService.getAll();
+  accounts$ = this.accountApiService.read();
   types$ = this.typesApiService.read();
   keyField: any;
 

@@ -1,7 +1,8 @@
 import { Injectable, inject } from '@angular/core';
-import { map, Observable, shareReplay } from 'rxjs';
-import { IAccounts } from '../models';
+import { Observable, map, shareReplay } from 'rxjs';
+
 import { HttpClient } from '@angular/common/http';
+import { IAccounts } from '../models';
 import { environment } from 'environments/environment.prod';
 
 @Injectable({
@@ -14,7 +15,7 @@ export class GLAccountsService {
     private baseUrl = environment.baseUrl;
 
     //Query
-    getAll() {
+    read() {
         var url = this.baseUrl + '/v1/account_list';
         return this.httpClient.get<IAccounts[]>(url)
             .pipe(

@@ -2,7 +2,7 @@ import { Component, ViewChild, inject } from '@angular/core';
 import { DxDataGridModule, DxTemplateModule } from 'devextreme-angular';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { IJournalDetail, JournalService } from 'app/services/journal.service';
-import { Observable, filter, map } from 'rxjs';
+import { Observable, map } from 'rxjs';
 
 import { CommonModule } from '@angular/common';
 import { DndComponent } from 'app/modules/drag-n-drop/loaddnd/dnd.component';
@@ -12,6 +12,7 @@ import { GLAccountsService } from 'app/services/accounts.service';
 import { GlTransactionsService } from 'app/services/gltransaction.service';
 import { GridMenubarStandaloneComponent } from '../grid-menubar/grid-menubar.component';
 import { JournalDetailComponent } from './journal-detail/journal-detail.component';
+import { JournalUpdateComponent } from './journal-update/journal-update.component';
 import { MatDrawer } from '@angular/material/sidenav';
 import { MaterialModule } from 'app/services/material.module';
 import { SubTypeService } from 'app/services/subtype.service';
@@ -29,8 +30,8 @@ const imports = [
     FormsModule,
     JournalDetailComponent,
     DndComponent,
-    GridMenubarStandaloneComponent
-
+    GridMenubarStandaloneComponent,
+    JournalUpdateComponent
 ];
 
 @Component({
@@ -56,29 +57,32 @@ export class JournalEntryComponent {
     private accountService = inject(GLAccountsService);
     public currentDate: string;
     public journal_details: any[];
+    public bOpenDetail: boolean = false;
 
     journalHeader$ = this.journalService.listJournalHeader();
-    types$ = this.typeService.getAll();
-    funds$ = this.fundService.getAll();
+    types$ = this.typeService.read();
+    funds$ = this.fundService.read();
     subtypes$ = this.subtypeService.getAll();
-    accounts$ = this.accountService.getAll().pipe(map((child) => child.filter((parent) => parent.parent_account === false)));
+    accounts$ = this.accountService.read().pipe(map((child) => child.filter((parent) => parent.parent_account === false)));
     details$: Observable<IJournalDetail[]>;
 
     @ViewChild('drawer') drawer!: MatDrawer;
     collapsed = false;
     sTitle = 'Journal Entry';
     selectedItemKeys: any[] = [];
+    public nJournal = 0;
+    public description = '';
+    public transaction_date = '';
 
     drawOpen: 'open' | 'close' = 'open';
 
     customizeTooltip = (pointsInfo: { originalValue: string; }) => ({ text: `${parseInt(pointsInfo.originalValue)}%` });
     journalForm!: FormGroup;
-
     keyField: any;
     // accountsForm!: FormGroup;
 
     async ngOnInit() {
-        this.createEmptyForm();
+        // this.createEmptyForm();
         const dDate = new Date();
         this.currentDate = dDate.toISOString().split('T')[0];
         // await this.updateBooked()
@@ -142,7 +146,6 @@ export class JournalEntryComponent {
             maximumFractionDigits: 2,
         };
         const formattedWithOptions = e.value.toLocaleString('en-US', options);
-
         return formattedWithOptions;
     }
 
@@ -209,19 +212,7 @@ export class JournalEntryComponent {
         });
     }
 
-    createEmptyForm() {
-        this.journalForm = this.fb.group({
-            description: ['',Validators.required],
-            child: ['',Validators.required],
-            fund: ['',Validators.required],
-            type: ['',Validators.required],
-            sub_type: ['',Validators.required],
-            amount: ['',Validators.required],
-        });
-    }
-
-    onCreate() {
-        this.createEmptyForm();
+    onCreate() {    
         this.openDrawer();
     }
 
@@ -232,29 +223,52 @@ export class JournalEntryComponent {
     }
 
     onCellDoubleClicked(e: any) {
+        
         if (e.data.booked === undefined || e.data.booked === '') {
             e.data.booked = false;
             e.data.booked_date = '';
         }
-
-        this.details$ = this.journalService.getJournalDetail(e.data.journal_id);
-
-        this.journalForm = this.fb.group({
-            journal_id: [e.data.journal_id],
-            description: [e.data.description],
-            booked: [e.data.booked],
-            account: [e.data.account],
-            amount: [e.data.amount],
-            create_date: [e.data.create_date],
-            create_user: [e.data.create_user],
-            booked_user: [e.data.booked_user],
-            booked_date: [e.data.booked_date]
-        });
+        
+        // this.details$ = this.journalService.getJournalDetail(e.data.journal_id);        
+        // this.journalForm = this.fb.group({
+        //     journal_id: [e.data.journal_id],
+        //     description: [e.data.description, Validators.required],            
+        //     cdate: [e.data.create_date, Validators.required],
+        //     entry: ['',Validators.required] ,
+        //     account: ['',Validators.required] ,
+        //     fund:['',Validators.required] ,
+        //     debit:['',Validators.required] ,
+        //     credit:['',Validators.required],                       
+        // });
+        
+        this.bOpenDetail = true;
+        this.nJournal = e.data.journal_id;
+        this.description = e.data.description;
+        this.transaction_date = e.data.create_date;
         this.openDrawer();
     }
 
+    onFocusedDetailRowChanged(e: any) {
+        console.log('onFocusRowChanged :', JSON.stringify(e.row.data))
+        
+        var description = e.row.data.description;
+        var fund = e.row.data.fund;
+        var child = e.row.data.child;
+        var debit =  e.row.data.debit;
+        var credit = e.row.data.credit;
+
+        this.journalForm = this.fb.group({           
+            entry: [description, Validators.required] ,
+            child: [child,Validators.required] ,
+            fund:[fund,Validators.required] ,
+            debit:[debit,Validators.required] ,
+            credit:[credit,Validators.required],                       
+        });
+        
+    }
+
     onFocusedRowChanged(e: any) {
-        console.debug(`selectionChanged ${JSON.stringify(e.row.data)}`);
+        console.log('onFocusRowChanged :', JSON.stringify(e.row.data))            
     }
 
     openDrawer() {
@@ -267,6 +281,7 @@ export class JournalEntryComponent {
     }
 
     closeDrawer() {
+        this.bOpenDetail = true;
         const opened = this.drawer.opened;
         if (opened === true) {
             this.drawer.toggle();

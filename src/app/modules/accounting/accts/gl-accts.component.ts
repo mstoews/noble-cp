@@ -62,9 +62,8 @@ export class GlAccountsComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
         this.createEmptyForm();
-        this.data$ = this.accountService.getAll();
-        this.subscriptionType = this.typeService.getAll().subscribe((types) => (this.types = types));
-
+        this.data$ = this.accountService.read();
+        this.subscriptionType = this.typeService.read().subscribe((types) => (this.types = types));
     }
 
     ngOnDestroy(): void {
@@ -155,7 +154,7 @@ export class GlAccountsComponent implements OnInit, OnDestroy {
     }
 
     onRefresh() {
-        this.data$ = this.accountService.getAll();
+        this.data$ = this.accountService.read();
     }
 
     onAdd() {

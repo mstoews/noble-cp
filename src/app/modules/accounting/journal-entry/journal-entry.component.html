@@ -11,10 +11,8 @@
         </div>
     </div>
 
-    <grid-menubar class="pl-5 pr-5" [inTitle]="'Journal Entry'"
-        (notifyParentRefresh)="onRefresh()"
-        (notifyParentAdd)="onAdd()"
-        (notifyParentDelete)="onDeleteSelection()"
+    <grid-menubar class="pl-5 pr-5" [inTitle]="'Journal Entry'" (notifyParentRefresh)="onRefresh()"
+        (notifyParentAdd)="onAdd()" (notifyParentDelete)="onDeleteSelection()"
         (notifyParentUpdate)="onUpdateSelection()">
     </grid-menubar>
 
@@ -23,151 +21,13 @@
 
         <div class="flex-auto p-5">
             <div class="h-full border-gray-300 rounded-2xl">
-                <mat-drawer class="w-[50%] bg-white-100" #drawer [opened]="false" mode="over" [position]="'end'" [disableClose]="false">
-                    <div class="flex flex-col w-full filter-article filter-interactive text-gray-700">
-                        <div class="bg-slate-600 text-justify m-2 p-2 text-white h-10 text-2xl border-l-4 border-gray-400" mat-dialog-title>
-                            {{ sTitle }}
-                        </div>
-
-                        <div mat-dialog-content>
-                            <form [formGroup]="journalForm">
-                                <div class="flex flex-col">
-                                    <mat-card class="m-2 mat-elevation-z8">
-                                        <section class="flex flex-col md:flex-row">
-                                            <div class="flex flex-col grow">
-                                                <mat-form-field class="m-1 flex-start">
-                                                    <mat-label class="ml-2 text-base">Description</mat-label>
-                                                    <input #myInput matInput placeholder="Journal Description"
-                                                        formControlName="description" />
-                                                </mat-form-field>
-                                            </div>
-                                            <div class="flex flex-col w-[150px]">
-                                                <mat-form-field class="m-1 flex-start">
-                                                    <mat-label class="ml-2 text-base">Transaction Date</mat-label>
-                                                    <input #myInput matInput placeholder="Date"
-                                                        formControlName="create_date" />
-                                                </mat-form-field>
-                                            </div>
-
-                                        </section>
-                                    </mat-card>
-                                    <mat-card class="m-2 mat-elevation-z8">
-                                        <div class="ml-2 text-gray-800">Transaction Details</div>
-                                        <div class="flex flex-col h-full m-2 ">
-                                            @if (details$ | async; as journal_details) {
-                                            <dx-data-grid id="journal_child_id" [wordWrapEnabled]="true" [dataSource]="journal_details"
-                                                [showColumnLines]="true" [showRowLines]="true" [showBorders]="true"
-                                                [focusedRowEnabled]="true" keyExpr="journal_subid" [repaintChangesOnly]="true" 
-                                                (onFocusedRowChanged)="onFocusedRowChanged($event)"
-                                                 >
-                                                <dxi-column dataField="child" caption="Account" width="100"> </dxi-column>
-                                                <dxi-column dataField="fund" caption="Fund" width="120"> </dxi-column>
-                                                <dxi-column dataField="description"> </dxi-column>
-                                                <dxi-column dataField="debit" dataType="number" width="120" alignment="right" [customizeText]="formatNumber"> </dxi-column>
-                                                <dxi-column dataField="credit" dataType="number" alignment="right" [customizeText]="formatNumber" width="120"> </dxi-column>
-                                                <dxo-summary>
-                                                    <dxi-total-item column="child"  summaryType="count"> </dxi-total-item>
-                                                    <dxi-total-item column="debit"  summaryType="sum" [valueFormat]="{ type: 'currency', precision: 2, useCurrencyAccountingStyle: true}" displayFormat="{0}"></dxi-total-item>                                                    
-                                                    <dxi-total-item column="credit" summaryType="sum" [valueFormat]="{ type: 'currency', precision: 2, useCurrencyAccountingStyle: true}" displayFormat="{0}"> </dxi-total-item>
-                                                </dxo-summary>
-                                            </dx-data-grid>
-                                            }
-                                        </div>
-
-                                    
-                                    <section class="flex flex-col md:flex-row">
-                                        <div class="flex flex-col grow ml-1">
-                                            <mat-form-field class="flex-start m1-2 mr-2">
-                                                <mat-label class="ml-2 text-base">Entry Description</mat-label>
-                                                <input #myInput matInput placeholder="Entry Description"
-                                                    formControlName="entry_description" />
-                                            </mat-form-field>
-                                        </div>
-                                        <div class="flex flex-col grow">
-                                        @if (funds$ | async; as funds) {
-                                        <mat-form-field class="m-1 grow">
-                                            <mat-label class="ml-2 text-base">Fund</mat-label>
-                                            <mat-select placeholder="Fund" formControlName="fund"
-                                                (selectionChange)="changeFund($event)">
-                                                @for (item of funds; track item)
-                                                { <mat-option [value]="item.fund"> {{
-                                                    item.fund }} </mat-option>
-                                                }
-                                            </mat-select>
-                                        </mat-form-field>
-                                        }
-                                        @else {
-                                        <mat-form-field class="m-1 flex-start">
-                                            <mat-label class="ml-2 text-base">Fund</mat-label>
-                                            <input #myInput matInput placeholder="Fund"
-                                                formControlName="fund" />
-                                        </mat-form-field>
-                                        }
-                                        </div>
-                                    </section>
-                                    <section class="flex flex-col md:flex-row">
-                                        <div class="flex flex-col grow">
-                                            @if (accounts$ | async; as accounts) {
-                                            <mat-form-field class="m-1 grow">
-                                                <mat-label class="ml-2 text-base">Account</mat-label>
-                                                <mat-select placeholder="Account" formControlName="account"
-                                                    (selectionChange)="changeChildAccount($event)">
-                                                    @for (account of accounts; track account)
-                                                    { <mat-option [value]="account.child"> {{
-                                                        account.child }} - {{account.description}} </mat-option>
-                                                    }
-                                                </mat-select>
-                                            </mat-form-field>
-                                            }
-                                            @else {
-                                            <mat-form-field class="m-1 flex-start">
-                                                <mat-label class="ml-2 text-base">Account</mat-label>
-                                                <input #myInput matInput placeholder="Account"
-                                                    formControlName="child" />
-                                            </mat-form-field>
-                                            }
-                                        </div>
-                                        
-                                        <div class="flex flex-col w-[150px]">
-                                            <mat-form-field class="mr-2 ml-1 mb-1 mt-1 grow">
-                                                <mat-label class="ml-2 text-base text-right">Debit</mat-label>
-                                                <input #myAmount matInput style="text-align: right;" placeholder="Debit" formControlName="debit" />
-                                            </mat-form-field>
-                                        </div>
-
-                                        <div class="flex flex-col w-[150px]">
-                                            <mat-form-field class="mr-2 ml-1 mb-1 mt-1 grow">
-                                                <mat-label class="ml-2 text-base text-right" >Credit</mat-label>
-                                                <input #myAmount matInput style="text-align: right;" placeholder="Credit" formControlName="credit" />
-                                            </mat-form-field>
-                                        </div>
-                                    </section>
-                                    <div mat-dialog-actions class="m-2">
-                                        <button mat-icon-button color="primary" class="m-1 bg-slate-200 text-gray-100"
-                                            (click)="onUpdate($event)" matTooltip="Update"
-                                            aria-label="hovered over">
-                                            <mat-icon>update</mat-icon>
-                                        </button>
-                                        <button mat-icon-button color="primary" class="m-1 bg-slate-200 text-gray-100"
-                                            (click)="onCreate()" matTooltip="Add" aria-label="hovered over">
-                                            <mat-icon>add</mat-icon>
-                                        </button>
-                                        <button mat-icon-button color="primary" class="m-1 bg-slate-200 text-gray-100"
-                                            (click)="onDelete($event)" matTooltip="Delete"
-                                            aria-label="hovered over">
-                                            <mat-icon>delete</mat-icon>
-                                        </button>
-                                        <button mat-icon-button color="primary" class="m-1 bg-slate-200 text-gray-100"
-                                            (click)="closeDrawer()" matTooltip="Cancel" aria-label="hovered over">
-                                            <mat-icon>close</mat-icon>
-                                        </button>
-                                    </div>
-                                </mat-card>
-
-                                </div>
-                            </form>
-                        </div>
-                    </div>
+                <mat-drawer class="w-4/5 bg-white-100" #drawer [opened]="false" mode="over" [position]="'end'" [disableClose]="false">   
+                    @if (bOpenDetail === true) {                
+                        <journal-update [journal_id]="nJournal" [description]="description" [transaction_date]="transaction_date" [sTitle]="'Journal Entry Detail'"
+                        (notifyDrawerClose) = "closeDrawer()"
+                        ></journal-update>
+                    }
+     
                 </mat-drawer>
                 <mat-drawer-container class="flex-col h-full">
 
@@ -175,16 +35,14 @@
                         @if (journalHeader$ | async; as rows) {
 
                         <div class="flex flex-col">
-                            <dx-data-grid class="h-[600px]" [dataSource]="rows" [remoteOperations]="false"
+                            <dx-data-grid class="h-[680px]" [dataSource]="rows" [remoteOperations]="false"
                                 [allowColumnReordering]="true" [rowAlternationEnabled]="true" [showBorders]="true"
                                 [focusedRowEnabled]="true" [focusedRowIndex]="1" [repaintChangesOnly]="true"
                                 keyExpr="journal_id" (onExporting)="onExporting($event)"
-                                (onFocusedRowChanged)="onFocusedRowChanged($event)"
-                                (onCellDblClick)="onCellDoubleClicked($event)">
-
-                                <dxo-paging [pageSize]="10"></dxo-paging>
+                                (onFocusedRowChanged)="onFocusedDetailRowChanged($event)"
+                                (onCellDblClick)="onCellDoubleClicked($event)">                                
+                                
                                 <dxo-scrolling mode="virtual"></dxo-scrolling>
-                                <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[10, 15, 25]"></dxo-pager>
                                 <dxo-search-panel [visible]="true" [highlightCaseSensitive]="true"></dxo-search-panel>
                                 <dxo-group-panel [visible]="true"></dxo-group-panel>
                                 <dxo-grouping [autoExpandAll]="false"></dxo-grouping>
@@ -195,9 +53,10 @@
                                     alignment="left"></dxi-column>
                                 <!-- <dxi-column dataField="type" caption="Type" width="150" dataType="string"></dxi-column> -->
                                 <dxi-column dataField="description" width="350" dataType="string"></dxi-column>
-                                <dxi-column dataField="amount" width="150" [customizeText]="formatNumber" dataType="number"></dxi-column>
+                                <dxi-column dataField="amount" width="150" [customizeText]="formatNumber"
+                                    dataType="number"></dxi-column>
                                 <dxi-column dataField="create_user"></dxi-column>
-                                <dxi-column dataField="create_date" dataType="date"></dxi-column>
+                                <dxi-column dataField="create_date" caption="Transaction D" dataType="date"></dxi-column>
                                 <dxi-column dataField="booked_user" dataType="string"></dxi-column>
                                 <dxi-column dataField="booked_date" dataType="date"></dxi-column>
                                 <dxi-column dataField="booked" dataType="boolean" template="book"></dxi-column>

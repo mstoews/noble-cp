@@ -1,23 +1,22 @@
 import { ChangeDetectionStrategy, Component, OnInit, ViewChild, inject } from '@angular/core';
 import { CommonModule, NgFor } from '@angular/common';
 import {
-    DxDataGridModule,
     DxBulletModule,
+    DxDataGridModule,
     DxTemplateModule,
 } from 'devextreme-angular';
-
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatDrawer, MatSidenavModule } from '@angular/material/sidenav';
+
+import { GLAccountsService } from 'app/services/accounts.service';
+import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
-import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
-import { MatFormFieldModule } from "@angular/material/form-field";
-import { MatCheckboxModule } from '@angular/material/checkbox';
-import { MatButtonModule } from '@angular/material/button';
-import { GLAccountsService } from 'app/services/accounts.service';
 import { MatSelectModule } from '@angular/material/select';
-import { map, reduce } from 'rxjs';
-
+import { map } from 'rxjs';
 
 const imports = [
     CommonModule,
@@ -63,10 +62,9 @@ export class TrialBalanceComponent implements OnInit{
 
     revenue: any[] = [{account: '', description: 'Total Revenue', balance: 1530, type: ''}];
 
-
     customizeTooltip = (pointsInfo: { originalValue: string; }) => ({ text: `${parseInt(pointsInfo.originalValue)}%` });
     accountsForm!: FormGroup;
-    assets$ = this.accountApiService.getAll().pipe(map((income) => income.filter((inc) => inc.type === 'Assets' || inc.type === 'Liability')));
+    assets$ = this.accountApiService.read().pipe(map((income) => income.filter((inc) => inc.type === 'Assets' || inc.type === 'Liability')));
 
     ngOnInit() {
         this.createEmptyForm();

@@ -1,0 +1,102 @@
+<div class="flex flex-col w-full filter-article filter-interactive text-gray-700">
+    <div class="bg-slate-600 text-justify m-2 p-2 text-white h-10 text-2xl border-l-4 border-gray-400" mat-dialog-title>
+        {{ sTitle }} Editing: {{journal_id}}
+    </div>
+
+        <form [formGroup]="journalForm">
+            <div class="flex flex-col">
+                <mat-card class="m-2 mat-elevation-z8">
+                    <section class="flex flex-col md:flex-row">
+                        <div class="flex flex-col grow">
+                            <mat-form-field class="m-1 flex-start">
+                                <mat-label class="ml-2 text-base">Journal Description</mat-label>
+                                <input matInput placeholder="Journal Description" formControlName="description" />
+                            </mat-form-field>
+                        </div>
+                        <div class="flex flex-col w-[150px]">
+                            <mat-form-field class="m-1 flex-start">
+                                <mat-label class="ml-2 text-base">Transaction Date</mat-label>
+                                <input matInput placeholder="Date" formControlName="transaction_date" />
+                            </mat-form-field>
+                        </div>
+                    </section>
+
+                    <journal-table class="ml-2 mr-2"></journal-table>
+                
+                    <!-- <div class="flex flex-col h-full m-2 text-gray-800">
+                        <mat-label class="ml-2 text-bold text-left">Transaction Details</mat-label>
+
+                        @if (details$ | async; as journal_details) {
+                        <dx-data-grid id="journal_id" 
+                            [wordWrapEnabled]="true" 
+                            [dataSource]="journal_details"
+                            [showColumnLines]="true" 
+                            [showRowLines]="true" 
+                            [showBorders]="true"
+                            [focusedRowEnabled]="true" 
+                            keyExpr="journal_subid"                             
+                            (onFocusedRowChanged)="onDetailRowSelected($event)"
+                            [repaintChangesOnly]="true">
+                           
+                            <dxi-column dataField="child" caption="Account" width="100">  </dxi-column>                               
+                            <dxi-column dataField="fund" caption="Fund" width="120"> </dxi-column>
+                            <dxi-column dataField="description"> </dxi-column>
+                            <dxi-column dataField="debit" dataType="number" width="120" alignment="right"
+                                [customizeText]="formatNumber"> </dxi-column>
+                            <dxi-column dataField="credit" dataType="number" alignment="right"
+                                [customizeText]="formatNumber" width="120"> </dxi-column>
+                                
+                            <dxo-master-detail [enabled]="true" template="detail"> </dxo-master-detail>
+                                <div *dxTemplate="let jl of 'detail'">
+                                    {{jl.description}}
+                                    <journal-edit 
+                                            [journal_no]="jl.journal_id" 
+                                            [journal_subid]="jl.journal_subid" 
+                                            [child]="child"
+                                            [fund]="fund"                                        
+                                            [description]="child_description"
+                                            [debit]="debit"
+                                            [credit]="credit"
+                                            >
+                                    </journal-edit>
+                                </div>    
+                            <dxo-summary>
+                                <dxi-total-item column="child" summaryType="count">
+                                </dxi-total-item>
+                                <dxi-total-item column="debit" summaryType="sum"
+                                    [valueFormat]="{ type: 'currency', precision: 2, useCurrencyAccountingStyle: true}"
+                                    displayFormat="{0}"></dxi-total-item>
+                                <dxi-total-item column="credit" summaryType="sum"
+                                    [valueFormat]="{ type: 'currency', precision: 2, useCurrencyAccountingStyle: true}"
+                                    displayFormat="{0}"> </dxi-total-item>
+                            </dxo-summary>
+                        </dx-data-grid>
+                        } -->
+                        <div mat-dialog-actions class="m-2">
+                            <button mat-icon-button color="primary" class="m-1 bg-slate-200 text-gray-100"
+                                (click)="onUpdate($event)" matTooltip="Update Transaction" aria-label="hovered over">
+                                <mat-icon>update</mat-icon>
+                            </button>
+                            <button mat-icon-button color="primary" class="m-1 bg-slate-200 text-gray-100"
+                                (click)="onCreate()" matTooltip="Add New Transaction" aria-label="hovered over">
+                                <mat-icon>add</mat-icon>
+                            </button>
+                            <button mat-icon-button color="primary" class="m-1 bg-slate-200 text-gray-100"
+                                (click)="onDelete($event)" matTooltip="Delete Transaction" aria-label="hovered over">
+                                <mat-icon>delete</mat-icon>
+                            </button>
+                            <button mat-icon-button color="primary" class="m-1 bg-slate-200 text-gray-100"
+                                (click)="closeDrawer()" matTooltip="Cancel" aria-label="hovered over">
+                                <mat-icon>close</mat-icon>
+                            </button>
+                        </div>
+                    
+                    
+                </mat-card>
+
+            </div>
+            
+        </form>
+</div>
+
+

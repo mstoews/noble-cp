@@ -54,17 +54,8 @@ export interface IType {
   updateusr: string
 }
 
-// 'Id': 'Task 1',
-// 'Title': 'Task - 29001',
-// 'Status': 'Open',
-// 'Summary': 'Analyze customer requirements.',
-// 'Priority': 'High',
-// 'Tags': 'Bug, Release Bug',
-// 'RankId': 1,
-// 'Assignee': 'Nancy Davloio'
-
 export interface IKanban {
-  id: string,
+  id: number,
   title: string,
   status: string,
   summary: string,
@@ -73,11 +64,13 @@ export interface IKanban {
   tags: string,
   estimate: string,
   assignee: string,
-  rankid: string,
+  rankid: number,
   color: string,
   className: string,
   updateUser: string,
-  updateDate: string
+  updateDate: string,
+  startDate: string,
+  estimateDate: string
 }
 
 @Injectable({
@@ -144,7 +137,7 @@ export class KanbanService {
     const dDate = new Date();
     const updateDate = dDate.toISOString().split('T')[0];
 
-    var data: any = {
+    var data: IKanban = {
       id: k.id,
       title: k.title,
       status: k.status,
@@ -156,9 +149,12 @@ export class KanbanService {
       rankid: k.rankid,
       color: k.color,
       estimate: k.estimate,
-      ClassName: 'class',
+      className: 'class',
       updateDate: updateDate,
       updateUser: email,
+      startDate : k.startDate,
+      estimateDate : k.estimateDate
+
     }
 
     return this.httpClient.post(url, data)
@@ -183,7 +179,25 @@ export class KanbanService {
     const dDate = new Date();
     const updateDate = dDate.toISOString().split('T')[0];
 
-    var data: IKanban = {
+    // var dt = {
+    //     "id": 1,
+    //     "estimate_date" : "2024-05-10",
+    //     "priority" : "Critical",
+    //     "rankid": 3,
+    //     "estimate": 1.5,
+    //     "start_date": "2024-04-18",
+    //     "status": "Review",
+    //     "summary": "Month end expenses updates ... ",
+    //     "tags":"weekly",
+    //     "color": "#238823",
+    //     "assignee": "mstoews",
+    //     "title":"Create Initial Journal Entries",
+    //     "type": "Update",
+    //     "updatedate": "2024-03-29",
+    //     "updateuser": "mstoews@hotmail.com"
+    // }
+    
+    var data = {
       id: k.id,
       title: k.title,
       status: k.status,
@@ -192,19 +206,16 @@ export class KanbanService {
       priority: k.priority,
       tags: k.tags,
       assignee: k.assignee,
-      rankid: k.rankid,
+      rankid: 1,
       color: k.color,
-      estimate: k.estimate,
-      className: 'class',
+      estimate: 1.2,
       updateDate: updateDate,
       updateUser: email,
+      startDate: k.startDate,
+      estimateDate: k.estimateDate
     }
 
-    this.httpClient.post<IKanban>(url, data).pipe(
-      shareReplay()).subscribe(
-        kanban => console.log(JSON.stringify(kanban),
-        error => console.log('Error', error))
-    );
+    this.httpClient.post<any>(url, data).pipe(shareReplay()).subscribe();
 
   }
 

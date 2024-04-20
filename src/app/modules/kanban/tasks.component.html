@@ -19,11 +19,9 @@
             <div class="h-full rounded-2xl">
                 <mat-drawer class="w-128" #drawer [opened]="false" mode="over" [position]="'end'" [disableClose]="false">
                     <mat-card>
-                        <div mat-card-title class="font-semibold text-3xl text-gray-100 bg-gray-500 p-1 border-white">
-                            {{sTitle}} </div>
+                        <div mat-card-title class="font-semibold text-3xl text-gray-100 bg-gray-500 p-1 border-white"> {{sTitle}} </div>
                         <div mat-card-content class="border-r-green-500">
                             <form [formGroup]="taskGroup" class="form">
-
                                 <div class="flex flex-col m-1">
                                     <div class="flex flex-col grow">
                                         <mat-form-field class="mt-1 flex-start">
@@ -39,8 +37,7 @@
                                                 <mat-label class="ml-2 text-base">RAG Rating</mat-label>
                                                 <mat-select class="flex-col grow" placeholder="RAG"
                                                     formControlName="color" (selectionChange)="changeRag($event)">
-                                                    <mat-option *ngFor="let p of rag" [value]="p.value"> 
-                                                    {{ p.viewValue }} </mat-option>
+                                                    <mat-option *ngFor="let p of rag" [value]="p.value">  {{ p.viewValue }} </mat-option>
                                                 </mat-select>
                                             </mat-form-field>
 
@@ -69,7 +66,28 @@
                                         <input matInput placeholder="Tags" formControlName="tags" />
                                     </mat-form-field>
 
-                                    <mat-form-field class="form-element">
+                                    
+
+                                    <mat-form-field>
+                                        <mat-label>Completion Duration</mat-label>
+                                        <mat-date-range-input [rangePicker]="picker">
+                                          <input matStartDate formControlName="startDate" placeholder="Start date">
+                                          <input matEndDate formControlName="estimateDate" placeholder="End date">
+                                        </mat-date-range-input>                                        
+                                        <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                                        <mat-date-range-picker #picker></mat-date-range-picker>
+                                      
+                                        @if (taskGroup.controls.startDate.hasError('matStartDateInvalid')) {
+                                          <mat-error>Invalid start date</mat-error>
+                                        }
+                                        @if (taskGroup.controls.estimateDate.hasError('matEndDateInvalid')) {
+                                          <mat-error>Invalid end date</mat-error>
+                                        }
+                                      </mat-form-field>
+                                      
+                                      <!-- <p>Selected range: {{taskGroup.value.startDate | json}}</p> -->
+
+                                      <mat-form-field class="form-element">
                                         <mat-label class="ml-2 text-base">Estimate (Days)</mat-label>
                                         <input matInput placeholder="Estimate (Days)" formControlName="estimate" />
                                     </mat-form-field>
@@ -96,22 +114,22 @@
                                     <button mat-icon-button (click)="onUpdate()" color="primary" class="m-1"> 
                                         <mat-icon>update</mat-icon>
                                     </button>
-                                    <button mat-raised-button (click)="onCopy($event)" color="primary" class="m-1">
-                                        <mat-icon>copy</mat-icon>
+                                    <button mat-icon-button (click)="onCopy($event)" color="primary" class="m-1">
+                                        <mat-icon>content_copy</mat-icon>
                                     </button>
-                                    <button mat-raised-button (click)="onDelete()" color="primary" class="m-1">
+                                    <button mat-icon-button (click)="onDelete()" color="primary" class="m-1">
                                         <mat-icon>delete</mat-icon>
+                                    </button>
+                                    <button mat-icon-button (click)="closeDrawer()" color="warn" class="m-1">
+                                        <mat-icon>close</mat-icon>
                                     </button>
                                 }
                                 @else
                                 {
-                                    <button mat-raised-button (click)="onAddNew()" color="primary" class="m-1">
+                                    <button mat-icon-button (click)="onAddNew()" color="primary" class="m-1">
                                         <mat-icon>new</mat-icon>
-                                    </button>
-                                    }
-                                    <button mat-raised-button (click)="closeDrawer()" color="warn" class="m-1">
-                                        <mat-icon>close</mat-icon>
-                                    </button>
+                                    </button>                                    
+                                }
                             </div>
 
                         </div>
@@ -123,12 +141,11 @@
                         <div class="m-2" cdkScrollable>
                             <div class="control-section">
                             <div class="content-wrapper">
-                                
+                                <!-- <p>Selected range: {{kanbanData | json}}</p> -->
                                 <ejs-kanban #kanbanObj cssClass='kanban-overview' keyField="status"
                                     [dataSource]='kanbanData' 
                                     [cardSettings]='cardSettings' 
-                                    enableTooltip='false'
-                                    enablePersistence='true'
+                                    enableTooltip='false'                                    
                                     [swimlaneSettings]='swimlaneSettings' 
                                     (actionBegin)='OnActionBegin()'
                                     (actionComplete)='OnActionComplete()' 

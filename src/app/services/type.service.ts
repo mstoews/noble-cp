@@ -1,9 +1,10 @@
 import { Injectable, computed, inject, signal } from '@angular/core';
-import { shareReplay, Subject } from 'rxjs';
-import { HttpClient } from '@angular/common/http';
-import { environment } from 'environments/environment.prod';
-import { UserService } from 'app/modules/user/user/user.service';
+import { Subject, shareReplay } from 'rxjs';
+
 import { AUTH } from 'app/app.config';
+import { HttpClient } from '@angular/common/http';
+import { UserService } from 'app/modules/user/user/user.service';
+import { environment } from 'environments/environment.prod';
 
 interface TypeState {
   types: IType[];
@@ -64,10 +65,6 @@ export class TypeService {
     var url = this.baseUrl + '/v1/type_list';
     return this.httpClient.get<IType[]>(url).pipe(
       shareReplay())
-  }
-
-  getAll() {
-    return this.read();
   }
 
 

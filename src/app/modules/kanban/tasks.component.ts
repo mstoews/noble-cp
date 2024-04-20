@@ -3,17 +3,17 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CardClickEventArgs, KanbanModule } from '@syncfusion/ej2-angular-kanban';
 import { CheckBoxAllModule } from '@syncfusion/ej2-angular-buttons';
-import { Component, OnInit, ViewChild, ViewEncapsulation, inject } from '@angular/core';
+import { Component, ViewChild, ViewEncapsulation, inject } from '@angular/core';
 import { addClass } from '@syncfusion/ej2-base';
 import { KanbanComponent, ColumnsModel, CardSettingsModel, SwimlaneSettingsModel, CardRenderedEventArgs } from '@syncfusion/ej2-angular-kanban';
-import { IKanban, IKanbanStatus, KanbanService } from 'app/services/kanban.service';
+import { IKanban, KanbanService } from 'app/services/kanban.service';
 import { DxDataGridModule } from 'devextreme-angular';
 import { MatDrawer } from '@angular/material/sidenav';
 import { MaterialModule } from 'app/services/material.module';
-
-
 import { KanbanMenubarComponent } from './kanban-menubar/grid-menubar.component';
 import { FuseConfirmationService } from '@fuse/services/confirmation';
+import { provideNativeDateAdapter } from '@angular/material/core';
+
 
 export interface IValue {
   value: string;
@@ -39,7 +39,8 @@ const imports = [
   encapsulation: ViewEncapsulation.None,
   imports: [imports],
   templateUrl: './tasks.component.html',
-  styleUrl: './tasks.component.scss'
+  styleUrl: './tasks.component.scss',
+  providers: [provideNativeDateAdapter()]
 })
 export class TasksComponent {
   @ViewChild('kanbanObj') kanbanObj!: KanbanComponent;
@@ -89,7 +90,7 @@ export class TasksComponent {
   priorities: IValue[] = [
     { value: 'Critical', viewValue: 'Critical' },
     { value: 'High', viewValue: 'High' },
-    { value: 'Medium', viewValue: 'Medium' },
+    { value: 'Normal', viewValue: 'Normal' },
     { value: 'Low', viewValue: 'Low' },
   ];
 
@@ -98,15 +99,14 @@ export class TasksComponent {
       id: e.data[0].id,
       status: e.data[0].status,
       rankid: e.data[0].rankid,
-      priority: 'Normal'
+      priority: e.data[0].priority,
     }
     console.log('Status', e.data[0].status);
     if (e.data[0].status === 'Close') {
-
+      d.priority = 'Normal'
     }
     this.kanbanService.updateStatus(d);
   }
-
 
   OnCardDoubleClick(args: CardClickEventArgs): void {
     this.bAdding = false;
@@ -123,9 +123,11 @@ export class TasksComponent {
       assignee: args.data.assignee,
       rankid: args.data.rankid,
       color: args.data.color,
-      className: '',
+      className:  args.data.className,
       updateUser: args.data.updateUser,
-      updateDate: args.data.updateDate
+      updateDate: args.data.updateDate,
+      startDate: args.data.start_date,
+      estimateDate: args.data.estimate_date
     }
     this.createForm(kanban)
     this.toggleDrawer();
@@ -147,6 +149,8 @@ export class TasksComponent {
       color: [''],
       updateDate: [''],
       updateUser: [''],
+      startDate: [''],
+      estimateDate: ['']
     });
   }
 
@@ -156,8 +160,8 @@ export class TasksComponent {
   createForm(task: IKanban) {
     this.sTitle = 'Kanban Task - ' + task.id;
     const dDate = new Date(task.updateDate);
-
-    this.assignPriority(task);
+    
+    const priority = this.assignPriority(task);
     this.assignType(task);
     this.assignRag(task);
 
@@ -169,18 +173,20 @@ export class TasksComponent {
       status: [task.status],
       summary: [task.summary],
       type: this.cType,
-      priority: [this.cPriority],
+      priority: [priority],
       tags: [task.tags],
       estimate: [task.estimate],
       assignee: assignee,
       rankid: [task.rankid.toString()],
       color: [this.cRAG],
       updateDate: [dDate],
-      updateUser: [task.assignee]
+      updateUser: [task.assignee],
+      startDate: [task.startDate],
+      estimateDate: [task.estimateDate]
     });
   }
 
-  private assignType(task: IKanban) {
+  private assignType(task: IKanban): string {
     if (task.type !== null && task.type !== undefined) {
       const type = this.types.find((x) => x.value === task.type.toString());
       if (type === undefined) {
@@ -191,6 +197,7 @@ export class TasksComponent {
     } else {
       this.cType = 'Add';
     }
+    return this.cType;
   }
 
   private assignAssignee(task: IKanban): string {
@@ -208,7 +215,7 @@ export class TasksComponent {
     return rc
   }
 
-  private assignRag(task: IKanban) {
+  private assignRag(task: IKanban): string {
     if (task.color !== null && task.color !== undefined) {
       const rag = this.rag.find((x) => x.value === task.color.toString());
       if (rag === undefined) {
@@ -219,9 +226,10 @@ export class TasksComponent {
     } else {
       this.cRAG = '#238823';
     }
+    return this.cRAG;
   }
 
-  private assignPriority(task: IKanban) {
+  private assignPriority(task: IKanban): string {
     if (this.priorities !== undefined) {
       const priority = this.priorities.find(
         (x) => x.value === task.priority.toString()
@@ -229,21 +237,13 @@ export class TasksComponent {
       if (priority !== undefined) {
         this.cPriority = priority.value;
       } else {
-        this.cPriority = 'MEDIUM';
+        this.cPriority = 'Normal';
       }
     } else {
-      this.cPriority = 'MEDIUM';
+      this.cPriority = 'Normal';
     }
+    return this.cPriority
   }
-
-
-
-  public statusData: string[] = ['Open', 'InProgress', 'Testing', 'Close'];
-  public priorityData: string[] = ['Low', 'Normal', 'Critical', 'Release Breaker', 'High'];
-  public assigneeData: string[] = [
-    'Nancy Davloio', 'Andrew Fuller', 'Janet Leverling',
-    'Steven walker', 'Robert King', 'Margaret hamilt', 'Michael Suyama'
-  ];
 
   public columns: ColumnsModel[] = [
     { headerText: 'Initial', keyField: 'Open', allowToggle: true },
@@ -263,10 +263,17 @@ export class TasksComponent {
 
   onUpdate() {
     // const cardIds = this.kanbanObj.kanbanData.map((obj: { [key: string]: string }) => parseInt(obj.Id.replace('', ''), 10));
-
     this.bAdding = false
-    var data = this.taskGroup.getRawValue();
-    this.kanbanService.update(data)
+    const updateDate = new Date().toISOString().split('T')[0];
+    var task = this.taskGroup.getRawValue();
+    task.priority = this.assignPriority(task);
+    task.rag = this.assignRag(task);
+    task.assignee =  this.assignAssignee(task);
+    task.type = this.assignType(task);
+    task.updateDate = updateDate;
+    task.startDate =  task.startDate.split('T')[0];
+    task.estimateDate = task.estimateDate;
+    this.kanbanService.update(task);
     this.kanbanData$ = this.kanbanService.read();
     this.closeDrawer();
   }
@@ -284,21 +291,37 @@ export class TasksComponent {
         },
     });
 
-    // Subscribe to the confirmation dialog closed action
+    
     confirmation.afterClosed().subscribe((result) => {
-        // If the confirm button pressed...
         if (result === 'confirmed') {
-            // Delete the list
             this.kanbanService.create(data);
         }
     });
+    
     this.closeDrawer();
 
   }
 
   onDelete() {
     var data = this.taskGroup.getRawValue()
-    this.kanbanService.delete(data);
+    
+    const confirmation = this._fuseConfirmationService.open({
+        title: `Delete Task: ${data.title}`,
+        message: 'Are you sure you want to delete this task?',
+        actions: {
+            confirm: {
+                label: 'Delete',
+            },
+        },
+    });
+
+    confirmation.afterClosed().subscribe((result) => {
+        if (result === 'confirmed') {            
+            this.kanbanService.delete(data);
+        }
+    });
+    
+    this.closeDrawer();
   }
 
   onAssignment(data) {
@@ -306,23 +329,12 @@ export class TasksComponent {
   }
 
   closeDrawer() {
-    this.kanbanService.read();
     this.drawer.toggle();
   }
 
   changeType(data) {
     // this.cType = data;
   }
-
-  // addClick(): void {
-  //   const cardIds = this.kanbanObj.kanbanData.map((obj: { [key: string]: string }) => parseInt(obj.Id.replace('', ''), 10));
-  //   const cardCount: number = Math.max.apply(Math, cardIds) + 1;
-  //   const cardDetails = {
-  //     Id: 'Task ' + cardCount, Status: 'Open', Priority: 'Normal',
-  //     Assignee: 'Andrew Fuller', Estimate: 0, Tags: '', Summary: ''
-  //   };
-  //   this.kanbanObj.openDialog('Add', cardDetails);
-  // }
 
 
   toggleDrawer() {
@@ -363,10 +375,11 @@ export class TasksComponent {
   }
 
   onRefresh() {
-    this.kanbanData$ = this.kanbanService.read()
-    // add snackbar to confirm operations ...
+    this.kanbanData$ = this.kanbanService.read();
   }
+
   onDeleteCurrentSelection() { }
+  
   onUpdateCurrentSelection() { }
 
   onAddNew() {

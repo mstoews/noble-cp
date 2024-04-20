@@ -2,16 +2,17 @@
     <div class="relative z-20 mx-auto">
         <nav class="z-50 flex items-center justify-between text-2xl text-gray-900">
             <button (click)="login()" class="pl-10 visiable xl:visible">
-                <img class="p-1.5 w-40 h-40 m-2 bg-slate-700 rounded-lg shadow hover:caret-context-menu" src="favicon-32x32.png" />
+                <img class="p-1.5 w-40 h-40 m-2 bg-slate-700 rounded-lg shadow hover:caret-context-menu"
+                    src="favicon-32x32.png" />
                 <div class="p-1 text-3xl text-gray-900 dark:text-gray-100 font-garamond hover:border-b">
-                    NobleLedger
+                    Noble Ledger
                 </div>
             </button>
 
             <div class="flex-row">
                 <div class="hidden md:flex flex-1 h-10 mr-4 text-3xl md:space-x-6">
                     <div class="text-gray-700 uppercase dark:text-gray- text-1xl group">
-                          <button (click)="onScrollTo('features')"
+                        <button (click)="onScrollTo('features')"
                             class="p-2 -mt-5 uppercase rounded-lg dark:text-gray-200 font-garamond hover:border-b hover:text-gray-100 hover:bg-gray-600">
                             Features
                         </button>
@@ -19,31 +20,31 @@
 
                     <div class="text-gray-700 uppercase dark:text-gray-100 text-1xl group">
                         <button (click)="onScrollTo('services')"
-                        class="p-2 -mt-5 uppercase rounded-lg dark:text-gray-200 font-garamond hover:border-b hover:text-gray-100 hover:bg-gray-600">
+                            class="p-2 -mt-5 uppercase rounded-lg dark:text-gray-200 font-garamond hover:border-b hover:text-gray-100 hover:bg-gray-600">
                             Services
                         </button>
                     </div>
 
                     <div class="text-gray-700 uppercase dark:text-gray-100 50 group font-garamond">
                         <button (click)="onScrollTo('about-us')"
-                        class="p-2 -mt-5 uppercase rounded-lg dark:text-gray-200 font-garamond hover:border-b hover:text-gray-100 hover:bg-gray-600">
+                            class="p-2 -mt-5 uppercase rounded-lg dark:text-gray-200 font-garamond hover:border-b hover:text-gray-100 hover:bg-gray-600">
                             About Us
                         </button>
                     </div>
                     @if(authService.user() !== undefined) {
-                        <div class="text-gray-700 uppercase dark:text-gray-100 text-1xl group">
-                            <button (click)="logout()"
+                    <div class="text-gray-700 uppercase dark:text-gray-100 text-1xl group">
+                        <button (click)="logout()"
                             class="p-2 -mt-5 uppercase rounded-lg dark:text-gray-200 font-garamond hover:border-b hover:text-gray-100 hover:bg-gray-600">
-                              logout
-                            </button>
-                        </div>
+                            logout
+                        </button>
+                    </div>
                     } @else {
-                        <div class="text-gray-700 uppercase dark:text-gray-100 text-1xl group">
-                            <button (click)="login()"
+                    <div class="text-gray-700 uppercase dark:text-gray-100 text-1xl group">
+                        <button (click)="login()"
                             class="p-2 -mt-5 uppercase rounded-lg dark:text-gray-200 font-garamond hover:border-b hover:text-gray-100 hover:bg-gray-600">
                             login
-                            </button>
-                        </div>
+                        </button>
+                    </div>
                     }
                 </div>
             </div>
@@ -67,7 +68,8 @@
                     </div>
                 </div>
                 <div class="hidden -mt-4 md:flex items-center w-2/5 h-64 m-auto overflow-hidden sm:w-3/5 md:h-auto">
-                    <img class="p-1.5 rounded-md w-[900px] overflow-hidden shadow bg-slate-700" src="assets/account-noble-ledger.png" alt="avatar" role="img" />
+                    <img class="p-1.5 rounded-md w-[900px] overflow-hidden shadow bg-slate-700"
+                        src="assets/account-noble-ledger.png" alt="avatar" role="img" />
                 </div>
             </div>
         </div>
@@ -75,7 +77,7 @@
     <!-- <section id="features" class="h-screen">
         <div class="relative justify-center my-1 mb-20 md:justify-between">
             <p class="text-4xl text-center uppercase  md:text-left md:text-5xl font-garamond">
-              Features of NobleLedger
+              Features of Noble Ledger
             </p>
 
             <div class="hidden md:block sm:block">
@@ -262,19 +264,19 @@
             </div>
 
             <div class="hidden md:block sm:block">
-              <button (click)="onScrollTo('about-us')" class="uppercase"
-                class="absolute top-0 items-center text-2xl font-normal text-gray-700 align-middle rounded-lg right-10 btn hover:text-white hover:bg-gray-700 dark:hover:bg-gray-700"
-                mat-icon-button>
-                <mat-icon [svgIcon]="'heroicons_solid:arrow-down'"></mat-icon>
-              </button>
+                <button (click)="onScrollTo('about-us')" class="uppercase"
+                    class="absolute top-0 items-center text-2xl font-normal text-gray-700 align-middle rounded-lg right-10 btn hover:text-white hover:bg-gray-700 dark:hover:bg-gray-700"
+                    mat-icon-button>
+                    <mat-icon [svgIcon]="'heroicons_solid:arrow-down'"></mat-icon>
+                </button>
 
-              <button (click)="onScrollTo('features')" class="uppercase"
-                class="absolute top-0 items-center text-2xl font-normal text-gray-700 align-middle rounded-lg right-1 btn hover:text-white hover:bg-gray-700 dark:hover:bg-gray-700"
-                mat-icon-button>
-                <mat-icon [svgIcon]="'heroicons_solid:arrow-up'"></mat-icon>
-              </button>
+                <button (click)="onScrollTo('features')" class="uppercase"
+                    class="absolute top-0 items-center text-2xl font-normal text-gray-700 align-middle rounded-lg right-1 btn hover:text-white hover:bg-gray-700 dark:hover:bg-gray-700"
+                    mat-icon-button>
+                    <mat-icon [svgIcon]="'heroicons_solid:arrow-up'"></mat-icon>
+                </button>
             </div>
-          </div>
+        </div>
         <div class="mt-10 bg-white dark:bg-gray-900">
             <div class="px-6 mx-auto max-w-7xl lg:px-8">
                 <div
@@ -422,7 +424,7 @@
     <!-- <section id="about-us" class="h-screen">
         <div class="relative justify-center my-1 mb-20 md:justify-between">
             <div class="text-4xl text-center uppercase  md:text-left md:text-5xl font-garamond mt-20">
-              About NobleLedger
+              About Noble Ledger
             </div>
 
             <div class="hidden md:block sm:block">
@@ -441,7 +443,7 @@
                         Everything you need to deploy your app
                     </div>
                     <div class="mt-6 text-lg leading-8 text-gray-600">
-                        NobleLedger is a platform that helps you manage your non-profit condominium or housing association.
+                        Noble Ledger is a platform that helps you manage your non-profit condominium or housing association.
                     </div>
                 </div>
                 <div class="max-w-2xl mx-auto mt-16 sm:mt-20 lg:mt-24 lg:max-w-4xl">

@@ -1,11 +1,10 @@
 import { Injectable, computed, inject, signal } from '@angular/core';
-import { IFunds } from '../models';
+import { Subject, shareReplay } from 'rxjs';
 
 import { AUTH } from 'app/app.config';
-
 import { HttpClient } from '@angular/common/http';
+import { IFunds } from '../models';
 import { environment } from 'environments/environment.prod';
-import { Subject, shareReplay } from 'rxjs';
 
 interface FundState {
     types: IFunds[];
@@ -52,9 +51,6 @@ export class FundsService {
       shareReplay())
   }
 
-  getAll() {
-    this.read();
-  }
 
   // Read
   read() {
