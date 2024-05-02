@@ -12,6 +12,7 @@
                 <dxi-column dataField="child" width="100"> </dxi-column>
                 <dxi-column dataField="sub_type" caption="Sub Type" width="120"> </dxi-column>
                 <dxi-column dataField="description"> </dxi-column>
+                <dxi-column dataField="reference"> </dxi-column>
                 <dxi-column dataField="debit" dataType="number" width="120" alignment="right"  [customizeText]="formatNumber"> </dxi-column>
                 <dxi-column dataField="credit" dataType="number" alignment="right" [customizeText]="formatNumber" width="120"> </dxi-column>
                 <dxi-column dataField="create_date" caption="Date" width="120"> </dxi-column>
@@ -53,33 +54,33 @@
             <div class="flex flex-col m-1">
                 <section class="flex flex-col md:flex-row">
                     <div class="flex flex-col grow">
-                        <mat-form-field class="m-1 form-element grow" appearance="outline">
+                        <mat-form-field class="m-1 form-element grow">
                             <mat-label class="ml-2 text-base dark:text-gray-100">Account Code</mat-label>
                             <input matInput placeholder="Account" formControlName="account" />
                         </mat-form-field>
                     </div>
 
                     <div class="flex flex-col grow">
-                        <mat-form-field class="m-1 form-element grow" appearance="outline">
+                        <mat-form-field class="m-1 form-element grow" >
                             <mat-label class="ml-2 text-base dark:text-gray-100">Description</mat-label>
                             <input matInput placeholder="Description" formControlName="account" />
                         </mat-form-field>
                     </div>
                     <div class="flex flex-col grow">
-                        <mat-form-field class="m-1 form-element grow" appearance="outline">
+                        <mat-form-field class="m-1 form-element grow" >
                             <mat-label class="ml-2 text-base dark:text-gray-100">Type</mat-label>
                             <input matInput placeholder="Type" formControlName="account" />
                         </mat-form-field>
                     </div>
 
                     <div class="flex flex-col grow">
-                        <mat-form-field class="m-1 form-element grow" appearance="outline">
+                        <mat-form-field class="m-1 form-element grow" >
                             <mat-label class="ml-2 text-base dark:text-gray-100">Fund</mat-label>
                             <input matInput placeholder="Account" formControlName="account" />
                         </mat-form-field>
                     </div>
                     <div class="flex flex-col grow">
-                        <mat-form-field class="m-1 form-element" appearance="outline">
+                        <mat-form-field class="m-1 form-element" >
                             <mat-label class="ml-2 text-base dark:text-gray-100">Amount</mat-label>
                             <input matInput placeholder="Amount" formControlName="description" />
                         </mat-form-field>

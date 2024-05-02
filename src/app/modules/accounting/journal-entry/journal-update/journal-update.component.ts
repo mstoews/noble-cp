@@ -13,9 +13,10 @@ import { JournalDetailComponent } from '../journal-detail/journal-detail.compone
 import { MaterialModule } from 'app/services/material.module';
 import { SubTypeService } from 'app/services/subtype.service';
 import { TypeService } from 'app/services/type.service';
-import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field';
+// import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field';
 import { JournalEditComponent } from './journal-edit.component';
 import { JournalTableComponent } from '../journal-table/journal-table.component';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 
 const imports = [
   CommonModule,
@@ -68,6 +69,7 @@ export class JournalUpdateComponent implements OnInit{
   private subtypeService = inject(SubTypeService);
   private fundService = inject(FundsService);
   private accountService = inject(GLAccountsService);
+  private dialog = inject(MatDialog);
   public currentDate: string;
   public journal_details: any[];
   public journalForm!: FormGroup;
@@ -80,18 +82,54 @@ export class JournalUpdateComponent implements OnInit{
   details$: Observable<IJournalDetail[]>;
     
   ngOnInit(): void {
-    if (this.journal_id !== null || this.journal_id  !== undefined) {
-       this.details$ = this.journalService.getJournalDetail(this.journal_id);
-    }
-    this.createEmptyForm();
-    
+    this.refresh();    
+    this.openForm();
+
   }
 
-  createEmptyForm  () {
-    this.journalForm = this.fb.group({                 
+  refresh()  {
+    if (this.journal_id !== null || this.journal_id  !== undefined) {
+      this.details$ = this.journalService.getJournalDetail(this.journal_id);
+      this.journalHeader$.pipe(map((child) => child.filter((parent) => parent.journal_id === this.journal_id))).subscribe(header => {        
+         this.description = header[0].description;
+         this.transaction_date = header[0].transaction_date;
+         this.journalForm = this.fb.group({                       
+           description: [ this.description , Validators.required] ,
+           transaction_date: [this.transaction_date, Validators.required] ,      
+         });
+     } )    
+   }
+
+  }
+
+
+  onCellDoubleClicked(e: any){
+
+      const dialogConfig = new MatDialogConfig();
+      dialogConfig.disableClose = true;
+      dialogConfig.autoFocus = true;
+      dialogConfig.data = e.data;
+      dialogConfig.width = "450px";
+
+      const dialogRef = this.dialog.open( JournalEditComponent, dialogConfig);
+
+      dialogRef.afterClosed().subscribe(
+          val => {
+            console.log("Dialog output:", val)         
+            this.refresh();         
+          }  
+      );
+     
+  }
+
+  openForm  () {
+    console.log('Open Form ...');
+    
+    this.journalForm = this.fb.group({                       
       description: [this.description, Validators.required] ,
       transaction_date: [this.transaction_date, Validators.required] ,      
     });
+
   }
   
   closeDrawer() {
@@ -118,7 +156,8 @@ export class JournalUpdateComponent implements OnInit{
       debit         : e.debit,
       credit        : e.credit,
       create_date   : e.create_date,
-      create_user   : e.create_user
+      create_user   : e.create_user,
+      reference     : e.reference,
     }
     this.journalService.updateJournalDetail(detail)
   }

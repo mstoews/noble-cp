@@ -6,6 +6,8 @@
         <form [formGroup]="journalForm">
             <div class="flex flex-col">
                 <mat-card class="m-2 mat-elevation-z8">
+                    @if(journalHeader$ | async; as header)
+                    {
                     <section class="flex flex-col md:flex-row">
                         <div class="flex flex-col grow">
                             <mat-form-field class="m-1 flex-start">
@@ -20,10 +22,10 @@
                             </mat-form-field>
                         </div>
                     </section>
-
-                    <journal-table class="ml-2 mr-2"></journal-table>
+                   }
+                    
                 
-                    <!-- <div class="flex flex-col h-full m-2 text-gray-800">
+                    <div class="flex flex-col h-full m-2 text-gray-800">
                         <mat-label class="ml-2 text-bold text-left">Transaction Details</mat-label>
 
                         @if (details$ | async; as journal_details) {
@@ -36,17 +38,20 @@
                             [focusedRowEnabled]="true" 
                             keyExpr="journal_subid"                             
                             (onFocusedRowChanged)="onDetailRowSelected($event)"
+                            (onCellDblClick)="onCellDoubleClicked($event)"
                             [repaintChangesOnly]="true">
                            
                             <dxi-column dataField="child" caption="Account" width="100">  </dxi-column>                               
                             <dxi-column dataField="fund" caption="Fund" width="120"> </dxi-column>
+                            <dxi-column dataField="sub_type" caption="Sub Type" width="120"> </dxi-column>
                             <dxi-column dataField="description"> </dxi-column>
+                            <dxi-column dataField="reference"> </dxi-column>
                             <dxi-column dataField="debit" dataType="number" width="120" alignment="right"
                                 [customizeText]="formatNumber"> </dxi-column>
                             <dxi-column dataField="credit" dataType="number" alignment="right"
                                 [customizeText]="formatNumber" width="120"> </dxi-column>
                                 
-                            <dxo-master-detail [enabled]="true" template="detail"> </dxo-master-detail>
+                            <!-- <dxo-master-detail [enabled]="true" template="detail"> </dxo-master-detail>
                                 <div *dxTemplate="let jl of 'detail'">
                                     {{jl.description}}
                                     <journal-edit 
@@ -59,7 +64,7 @@
                                             [credit]="credit"
                                             >
                                     </journal-edit>
-                                </div>    
+                                </div>     -->
                             <dxo-summary>
                                 <dxi-total-item column="child" summaryType="count">
                                 </dxi-total-item>
@@ -71,7 +76,7 @@
                                     displayFormat="{0}"> </dxi-total-item>
                             </dxo-summary>
                         </dx-data-grid>
-                        } -->
+                        }
                         <div mat-dialog-actions class="m-2">
                             <button mat-icon-button color="primary" class="m-1 bg-slate-200 text-gray-100"
                                 (click)="onUpdate($event)" matTooltip="Update Transaction" aria-label="hovered over">
@@ -90,7 +95,7 @@
                                 <mat-icon>close</mat-icon>
                             </button>
                         </div>
-                    
+                    </div>
                     
                 </mat-card>
 

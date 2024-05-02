@@ -14,7 +14,7 @@ export const defaultNavigation: FuseNavigationItem[] = [
                 id: 'accounting.overview',
                 title: 'Dashboard',
                 type: 'basic',
-                icon: 'mat_outline:dashboard',
+                icon: 'mat_outline:insights',
                 link: '/projects',
             },
             {
@@ -32,13 +32,13 @@ export const defaultNavigation: FuseNavigationItem[] = [
                 link: '/journals',
             },
         
-            {
-                id: 'accounting.finance',
-                title: 'Financial Analytics',
-                type: 'basic',
-                icon: 'mat_outline:money',
-                link: '/analytics',
-            },
+            // {
+            //     id: 'accounting.finance',
+            //     title: 'Financial Analytics',
+            //     type: 'basic',
+            //     icon: 'mat_outline:money',
+            //     link: '/analytics',
+            // },
 
         ]
     },
@@ -47,7 +47,7 @@ export const defaultNavigation: FuseNavigationItem[] = [
         title   : 'Reporting',
         subtitle: 'Management and Financial',
         type    : 'collapsable',
-        icon    : 'heroicons_outline:document',
+        icon    : 'heroicons_outline:document-text',
                 children: [
                     {
                         id      : 'pages.authentication.sign-in',
@@ -93,7 +93,7 @@ export const defaultNavigation: FuseNavigationItem[] = [
             },
             {
                 id: 'property.document-management',
-                title: 'Documents',
+                title: 'Evidence',
                 type: 'basic',
                 icon: 'heroicons_outline:document-magnifying-glass',
                 link: '/doc_management',
@@ -102,7 +102,7 @@ export const defaultNavigation: FuseNavigationItem[] = [
         ],
     },
     {
-        id: 'property',
+        id: 'support',
         title: 'Support',
         subtitle: 'Documentation and Help Center',
         type: 'group',
@@ -121,6 +121,13 @@ export const defaultNavigation: FuseNavigationItem[] = [
                 type: 'basic',
                 icon: 'mat_outline:settings',
                 link: '/settings',
+            },
+            {
+                id: 'accounting.learning',
+                title: 'Learning',
+                type: 'basic',
+                icon: 'heroicons_outline:academic-cap',
+                link: '/learning',
             },
         ],
     },

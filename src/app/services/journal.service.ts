@@ -24,15 +24,16 @@ export interface IJournalHeader {
 export interface IJournalDetail {
   journal_id    : number,
   journal_subid : number,
-  account       : string,
-  child         : string,
+  account       : number,
+  child         : number,
   fund?         : string,
   sub_type?      : string,
   description   : string,
   debit         : number,
   credit        : number,
   create_date   : string,
-  create_user   : string
+  create_user   : string,
+  reference     :string,
 }
 
 export interface IAccounts {
@@ -201,16 +202,14 @@ export class JournalService {
       amount: header.amount
     }
 
-    return this.httpClient.post<IJournalHeader>(url,
-      {
-        journal: journalHeader
-      },
-      ).pipe(
-      shareReplay())
+    return this.httpClient.post<IJournalHeader>(url, journalHeader).pipe(shareReplay())
   }
 
 
-  updateJournalDetail(detail: IJournalDetail){ }
+  updateJournalDetail(detail: IJournalDetail){ 
+    var url = this.baseUrl + '/v1/update_jd';
+    return this.httpClient.post<IJournalHeader>(url, detail).pipe(shareReplay())
+  }
 
   deleteJournalDetail(journal_id: number){ }
 

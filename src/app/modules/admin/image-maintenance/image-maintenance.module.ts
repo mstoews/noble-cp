@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule, NgOptimizedImage } from '@angular/common';
-import { MaterialModule } from 'app/material.module';
+
 import { ImageMaintenanceComponent } from './image-maintenance/image-maintenance.component';
 import { ImageSelectionComponent } from './products-image-selection/image-selection.component';
 import { ImageCardComponent } from '../image-card/image-card.component';
@@ -31,6 +31,7 @@ import {
   hasCustomClaim,
 } from '@angular/fire/auth-guard';
 import { ImageMaintenanceRoutingModule } from './image-maintenance-routing.module';
+import { MaterialModule } from 'app/services/material.module';
 
 const adminOnly = () => hasCustomClaim('admin');
 

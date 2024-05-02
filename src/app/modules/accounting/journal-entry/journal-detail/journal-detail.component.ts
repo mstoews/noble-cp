@@ -65,8 +65,8 @@ export class JournalDetailComponent implements OnInit {
             child: [''],
             description: ['', Validators.required],
             balance: ['', Validators.required],
-            type: ['', Validators.required],
-            comments: ['', Validators.required],
+            sub_type: ['', Validators.required],
+            reference: ['', Validators.required],
         });
     }
     

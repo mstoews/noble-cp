@@ -21,13 +21,10 @@
 
         <div class="flex-auto p-5">
             <div class="h-full border-gray-300 rounded-2xl">
-                <mat-drawer class="w-4/5 bg-white-100" #drawer [opened]="false" mode="over" [position]="'end'" [disableClose]="false">   
-                    @if (bOpenDetail === true) {                
-                        <journal-update [journal_id]="nJournal" [description]="description" [transaction_date]="transaction_date" [sTitle]="'Journal Entry Detail'"
-                        (notifyDrawerClose) = "closeDrawer()"
-                        ></journal-update>
-                    }
-     
+                <mat-drawer class="w-[1200px] bg-white-100" #drawer [opened]="false" mode="over" [position]="'end'" [disableClose]="false">   
+                @if (bOpenDetail === true) {                
+                        <journal-update [journal_id]="nJournal" [sTitle]="'Journal Entry Detail'" (notifyDrawerClose) = "closeDrawer()" ></journal-update>
+                }     
                 </mat-drawer>
                 <mat-drawer-container class="flex-col h-full">
 
@@ -49,18 +46,15 @@
                                 <dxo-filter-row [visible]="false"></dxo-filter-row>
                                 <dxo-state-storing [enabled]="false" type="localStorage" storageKey="journals">
                                 </dxo-state-storing>
-                                <dxi-column dataField="journal_id" caption="ID" width="100" dataType="number"
-                                    alignment="left"></dxi-column>
+                                <dxi-column dataField="journal_id" caption="ID" width="100" dataType="number" alignment="left"></dxi-column>
                                 <!-- <dxi-column dataField="type" caption="Type" width="150" dataType="string"></dxi-column> -->
                                 <dxi-column dataField="description" width="350" dataType="string"></dxi-column>
-                                <dxi-column dataField="amount" width="150" [customizeText]="formatNumber"
-                                    dataType="number"></dxi-column>
+                                <dxi-column dataField="amount" width="150" [customizeText]="formatNumber" dataType="number"></dxi-column>
                                 <dxi-column dataField="create_user"></dxi-column>
                                 <dxi-column dataField="create_date" caption="Transaction D" dataType="date"></dxi-column>
                                 <dxi-column dataField="booked_user" dataType="string"></dxi-column>
                                 <dxi-column dataField="booked_date" dataType="date"></dxi-column>
                                 <dxi-column dataField="booked" dataType="boolean" template="book"></dxi-column>
-
                                 <dxo-master-detail [enabled]="true" template="detail"> </dxo-master-detail>
                                 <div *dxTemplate="let journal of 'detail'">
                                     <journal-detail [key]="journal.data.journal_id"></journal-detail>

@@ -8,7 +8,7 @@ import { isAuthenticatedGuard } from './shared/guards/auth.guard';
 /* eslint-disable max-len */
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 export const appRoutes: Route[] = [
-    { path: '', pathMatch: 'full', redirectTo: 'landing' },
+    { path: '', pathMatch: 'full', redirectTo: 'auth/login' },
     { path: 'signed-in-redirect', pathMatch: 'full', redirectTo: 'landing' },
     {
         path: 'auth',
@@ -170,6 +170,11 @@ export const appRoutes: Route[] = [
                 path: 'kanban-settings',
                 loadChildren: () =>
                     import('app/modules/kanban/kanban-settings.routes'),
+            },
+            {
+                path: 'learning',
+                loadChildren: () =>
+                    import('app/modules/admin/academy/academy.routes'),
             },
 
             // {

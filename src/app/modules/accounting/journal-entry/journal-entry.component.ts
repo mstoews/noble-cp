@@ -62,7 +62,6 @@ export class JournalEntryComponent {
     journalHeader$ = this.journalService.listJournalHeader();
     types$ = this.typeService.read();
     funds$ = this.fundService.read();
-    subtypes$ = this.subtypeService.getAll();
     accounts$ = this.accountService.read().pipe(map((child) => child.filter((parent) => parent.parent_account === false)));
     details$: Observable<IJournalDetail[]>;
 
@@ -243,8 +242,6 @@ export class JournalEntryComponent {
         
         this.bOpenDetail = true;
         this.nJournal = e.data.journal_id;
-        this.description = e.data.description;
-        this.transaction_date = e.data.create_date;
         this.openDrawer();
     }
 

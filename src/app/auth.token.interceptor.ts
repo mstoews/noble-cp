@@ -15,8 +15,6 @@ export const authTokenInterceptor: HttpInterceptorFn = (req, next) => {
     jwt = token
   });
 
- //const expired  = tokenService.isExpired() ? tokenService.getRefreshToken() : jwt;
-
   if (req.url.indexOf('oauthCallback') > -1) {
     return next(req)
   }
