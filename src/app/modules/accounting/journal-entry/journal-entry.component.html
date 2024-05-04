@@ -1,15 +1,3 @@
-<div class="absolute inset-0 flex flex-col min-w-0 overflow-hidden">
-    <div
-        class="flex flex-col sm:flex-row flex-0 sm:items-center sm:justify-between sm:py-8 sm:px-5 dark:bg-transparent bg-transparent">
-        <div class="flex-1 min-w-0">
-
-            <div
-                class="text-3xl md:text-4xl font-extrabold tracking-tight leading-5 sm:leading-10 truncate bg-transparent">
-                Transactions
-            </div>
-
-        </div>
-    </div>
 
     <grid-menubar class="pl-5 pr-5" [inTitle]="'Journal Entry'" (notifyParentRefresh)="onRefresh()"
         (notifyParentAdd)="onAdd()" (notifyParentDelete)="onDeleteSelection()"
@@ -19,11 +7,13 @@
     <div class="flex flex-col min-w-0 overflow-y-auto -px-10" cdkScrollable>
         <!-- Main -->
 
-        <div class="flex-auto p-5">
+        <div class="flex-auto">
             <div class="h-full border-gray-300 rounded-2xl">
                 <mat-drawer class="w-[1200px] bg-white-100" #drawer [opened]="false" mode="over" [position]="'end'" [disableClose]="false">   
                 @if (bOpenDetail === true) {                
-                        <journal-update [journal_id]="nJournal" [sTitle]="'Journal Entry Detail'" (notifyDrawerClose) = "closeDrawer()" ></journal-update>
+                        <journal-update [journal_id]="nJournal" [sTitle]="'Journal Entry Detail'" (notifyDrawerClose) = "closeDrawer()" 
+                        
+                        ></journal-update>
                 }     
                 </mat-drawer>
                 <mat-drawer-container class="flex-col h-full">
@@ -57,7 +47,7 @@
                                 <dxi-column dataField="booked" dataType="boolean" template="book"></dxi-column>
                                 <dxo-master-detail [enabled]="true" template="detail"> </dxo-master-detail>
                                 <div *dxTemplate="let journal of 'detail'">
-                                    <journal-detail [key]="journal.data.journal_id"></journal-detail>
+                                    <journal-detail [key]="journal.data.journal_id" (notifyTransactionEdit)="onEdit()" ></journal-detail>
                                 </div>
                                 <dxo-export [enabled]="true" [allowExportSelectedData]="true"></dxo-export>
                             </dx-data-grid>
@@ -69,4 +59,3 @@
             </div>
         </div>
     </div>
-</div>

@@ -1,4 +1,4 @@
-import { CurrencyPipe, NgClass, NgFor, NgIf } from '@angular/common';
+import { CommonModule, CurrencyPipe, NgClass, NgFor, NgIf } from '@angular/common';
 import {
     ChangeDetectionStrategy,
     Component,
@@ -44,6 +44,7 @@ import { AuthService } from 'app/shared/data-access/auth.service';
         MatTableModule,
         NgClass,
         CurrencyPipe,
+        CommonModule
         
     ],
 })
@@ -60,7 +61,11 @@ export class ProjectComponent implements OnInit, OnDestroy {
     authService = inject(AuthService);
     private _router = inject(Router);
     private _projectService = inject(ProjectService);
-    
+
+    public cashReserves =  18223.23;
+    public fundCount = 3;
+    public caption_1 = 'Cash Reserves Total';
+
 
     constructor() {
         effect(() => {

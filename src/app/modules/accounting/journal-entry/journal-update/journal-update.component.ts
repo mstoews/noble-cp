@@ -18,6 +18,7 @@ import { JournalEditComponent } from './journal-edit.component';
 import { JournalTableComponent } from '../journal-table/journal-table.component';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 
+
 const imports = [
   CommonModule,
   DxDataGridModule,
@@ -29,7 +30,7 @@ const imports = [
   DndComponent,
   GridMenubarStandaloneComponent,
   JournalEditComponent,
-  JournalTableComponent
+  JournalTableComponent,
 ];
 
 
@@ -82,13 +83,13 @@ export class JournalUpdateComponent implements OnInit{
   details$: Observable<IJournalDetail[]>;
     
   ngOnInit(): void {
-    this.refresh();    
+    this.refresh(this.journal_id);    
     this.openForm();
 
   }
 
-  refresh()  {
-    if (this.journal_id !== null || this.journal_id  !== undefined) {
+  public refresh(journal_id: number)  {
+    if (journal_id > 0) {
       this.details$ = this.journalService.getJournalDetail(this.journal_id);
       this.journalHeader$.pipe(map((child) => child.filter((parent) => parent.journal_id === this.journal_id))).subscribe(header => {        
          this.description = header[0].description;
@@ -98,6 +99,15 @@ export class JournalUpdateComponent implements OnInit{
            transaction_date: [this.transaction_date, Validators.required] ,      
          });
      } )    
+   }
+   else {
+      this.description = '';
+      this.transaction_date = '';
+      this.details$ = this.journalService.getJournalDetail(0);
+      this.journalForm = this.fb.group({                       
+        description: [ this.description , Validators.required] ,
+        transaction_date: [this.transaction_date, Validators.required] ,      
+      });
    }
 
   }
@@ -116,10 +126,9 @@ export class JournalUpdateComponent implements OnInit{
       dialogRef.afterClosed().subscribe(
           val => {
             console.log("Dialog output:", val)         
-            this.refresh();         
+            this.refresh(this.journal_id);         
           }  
-      );
-     
+      );     
   }
 
   openForm  () {
@@ -144,22 +153,22 @@ export class JournalUpdateComponent implements OnInit{
     
   }
 
-  onUpdate(e: IJournalDetail) {
-    const detail  = {
-      journal_id    : e.journal_id,
-      journal_subid : e.journal_subid,
-      account       : e.account,
-      child         : e.child,
-      fund          : e.fund,
-      sub_type      : e.sub_type,
-      description   : e.description,
-      debit         : e.debit,
-      credit        : e.credit,
-      create_date   : e.create_date,
-      create_user   : e.create_user,
-      reference     : e.reference,
-    }
-    this.journalService.updateJournalDetail(detail)
+  onUpdate(e: any) {
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = true;
+    dialogConfig.autoFocus = true;
+    dialogConfig.data = e.data;
+    dialogConfig.width = "450px";
+
+    const dialogRef = this.dialog.open( JournalEditComponent, dialogConfig);
+
+    dialogRef.afterClosed().subscribe(
+        val => {
+          console.log("Dialog output:", val)         
+          this.refresh(0);         
+        }  
+    );
+
   }
 
   changeFund($event: any) {

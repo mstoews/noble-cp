@@ -1,27 +1,13 @@
-
-import { BalanceSheetComponent } from '../balance-sheet/balance-sheet.component';
 import { CdkScrollable } from '@angular/cdk/scrolling';
-import { DistributedLedgerComponent } from '../../reporting/distributed-ledger/distributed-ledger.component';
-import { FundsComponent } from '../funds/funds.component';
-import { GeneralLedgerTreeComponent } from '../general-ledger-tree/general-ledger-tree.component';
-import { GlAccountsComponent } from '../accts/gl-accts.component';
-import { GlTypesComponent } from '../types/types.component';
 import { HttpClient } from '@angular/common/http';
-import { MatButtonModule } from '@angular/material/button';
-import { MatIconModule } from '@angular/material/icon';
-import { MatTabsModule } from '@angular/material/tabs';
-import { PeriodsComponent } from '../periods/periods.component';
+
 import { RouterLink } from '@angular/router';
-import { TransactionAnalysisComponent } from '../../reporting/transaction-analysis/transaction-analysis.component';
-import { TrialBalanceComponent } from '../trial-balance/trial-balance.component';
 import { Subject, takeUntil } from 'rxjs';
 import { MatDrawer } from '@angular/material/sidenav';
 import { FuseMediaWatcherService } from '@fuse/services/media-watcher';
 import { NgClass, NgFor, NgSwitch, NgSwitchCase } from '@angular/common';
 
-
 import {
-
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
@@ -29,41 +15,34 @@ import {
     ViewEncapsulation,
 } from '@angular/core';
 import { MaterialModule } from 'app/services/material.module';
-import { GlSubTypeComponent } from '../subtype/subtype.component';
+import { TasksComponent } from './task/tasks.component';
+import { KanbanTypesComponent } from './types/types.component';
 
 @Component({
     selector: 'gl-main',
-    templateUrl: './gl.main.component.html',
+    templateUrl: './kanban-panel.component.html',
     encapsulation: ViewEncapsulation.None,
     standalone: true,
     imports: [
         MaterialModule,
         RouterLink,
         CdkScrollable,        
-        BalanceSheetComponent,
-        TrialBalanceComponent,
-        DistributedLedgerComponent,
-        TransactionAnalysisComponent,
-        FundsComponent,
-        GeneralLedgerTreeComponent,
-        GlAccountsComponent,
-        GlTypesComponent,
-        PeriodsComponent,
-        GlSubTypeComponent,
         NgFor, 
         NgClass, 
         NgSwitch, 
-        NgSwitchCase
+        NgSwitchCase,
+        TasksComponent,
+        KanbanTypesComponent
         ],
     providers: [HttpClient],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class GlMainComponent {
+export class KanbanPanelComponent {
     @ViewChild('drawer') drawer: MatDrawer;
     drawerMode: 'over' | 'side' = 'side';
     drawerOpened: boolean = true;
     panels: any[] = [];
-    selectedPanel: string = 'accounts';
+    selectedPanel: string = 'kanban';
     private _unsubscribeAll: Subject<any> = new Subject<any>();
 
     /**
@@ -88,48 +67,43 @@ export class GlMainComponent {
         // Setup available panels
         this.panels = [
             {
-                id         : 'accounts',
+                id         : 'kanban',
                 icon       : 'heroicons_outline:currency-dollar',
-                title      : 'General Ledger Accounts',
-                description: 'General ledger list of accounts in a hierarchy',
+                title      : 'Kanban Task Management',
+                description: 'Kanban drag and drop management of tasks',
             },
             {
-                id         : 'types',
+                id         : 'priority',
                 icon       : 'heroicons_outline:banknotes',
-                title      : 'General Ledger Types',
-                description: 'Type definitions for accounts',
+                title      : 'Priority',
+                description: 'List of key prioritization levels for each tasks to accommodate effective sorting',
             },
             {
-                id         : 'subtypes',
+                id         : 'status',
                 icon       : 'heroicons_outline:calculator',
-                title      : 'General Ledger Subtypes',
-                description: 'Sub type definitions for account reporting',
+                title      : 'Status',
+                description: 'Status of each tasks',
             } ,
             {
-                id         : 'funds',
+                id         : 'task',
                 icon       : 'heroicons_outline:building-office',
-                title      : 'Reserve Funds',
-                description: 'Reserve fund definitions for transactions',
-            },
-            {
-                id         : 'periods',
-                icon       : 'heroicons_outline:building-office',
-                title      : 'Accounting Periods',
-                description: 'Start and end date of each accounting period',
+                title      : 'Tasks',
+                description: 'Comprehensive list of all tasks with history',
             },
             {
                 id         : 'team',
                 icon       : 'heroicons_outline:building-office',
-                title      : 'Accounting Team',
-                description: 'List of accounting team members',
-            }
-            ,
+                title      : 'Team',
+                description: 'List of team members to assign tasks',
+            },
             {
-                id         : 'roles',
+                id         : 'type',
                 icon       : 'heroicons_outline:building-office',
-                title      : 'Role Definitions',
-                description: 'List of  assignable roles for team members',
-            }                       
+                title      : 'Kanban Types',
+                description: 'Type of assignments to categorize the work being completed',
+            }
+            
+            
         ];
 
         // Subscribe to media changes

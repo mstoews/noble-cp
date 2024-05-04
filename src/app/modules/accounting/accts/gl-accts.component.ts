@@ -11,7 +11,7 @@ import { GLAccountsService } from 'app/services/accounts.service';
 import { GLAcctDetailComponent } from './gl-accts-detail/gl-accts-detail.component';
 import { GridMenubarStandaloneComponent } from '../grid-menubar/grid-menubar.component';
 import { IAccounts } from 'app/models';
-import { IValue } from 'app/modules/kanban/kanban.component';
+import { IValue } from 'app/modules/kanban/kanban/kanban.component';
 import { MatDrawer } from '@angular/material/sidenav';
 import { MaterialModule } from 'app/services/material.module';
 import { Subscription } from 'rxjs';
@@ -31,7 +31,7 @@ const imports = [
 const keyExpr = ["account", "child"];
 
 @Component({
-    selector: 'gl-accounts',
+    selector: 'glaccounts',
     standalone: true,
     imports: [imports],
     templateUrl: './gl-accts.component.html',

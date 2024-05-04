@@ -35,7 +35,7 @@ const imports = [
 ];
 
 @Component({
-    selector: 'app-journal-entry',
+    selector: 'transactions',
     standalone: true,
     imports: [imports],
     templateUrl: './journal-entry.component.html',
@@ -58,6 +58,7 @@ export class JournalEntryComponent {
     public currentDate: string;
     public journal_details: any[];
     public bOpenDetail: boolean = false;
+    @ViewChild(JournalUpdateComponent) journalUpdate!: JournalUpdateComponent
 
     journalHeader$ = this.journalService.listJournalHeader();
     types$ = this.typeService.read();
@@ -107,8 +108,10 @@ export class JournalEntryComponent {
 
 
     onAdd() {
-        console.debug('add a new transaction ....');
+        this.bOpenDetail = true;
+        this.nJournal = 0;
         this.openDrawer()
+        this.journalUpdate.refresh(this.nJournal);        
     }
 
     onRefresh() {
@@ -221,47 +224,24 @@ export class JournalEntryComponent {
         this.selectedItemKeys = data.selectedRowKeys;
     }
 
-    onCellDoubleClicked(e: any) {
-        
-        if (e.data.booked === undefined || e.data.booked === '') {
-            e.data.booked = false;
-            e.data.booked_date = '';
-        }
-        
-        // this.details$ = this.journalService.getJournalDetail(e.data.journal_id);        
-        // this.journalForm = this.fb.group({
-        //     journal_id: [e.data.journal_id],
-        //     description: [e.data.description, Validators.required],            
-        //     cdate: [e.data.create_date, Validators.required],
-        //     entry: ['',Validators.required] ,
-        //     account: ['',Validators.required] ,
-        //     fund:['',Validators.required] ,
-        //     debit:['',Validators.required] ,
-        //     credit:['',Validators.required],                       
-        // });
-        
+    onCellDoubleClicked(e: any) {             
         this.bOpenDetail = true;
         this.nJournal = e.data.journal_id;
         this.openDrawer();
+        this.journalUpdate.refresh(this.nJournal);
+        
     }
 
-    onFocusedDetailRowChanged(e: any) {
-        console.log('onFocusRowChanged :', JSON.stringify(e.row.data))
-        
-        var description = e.row.data.description;
-        var fund = e.row.data.fund;
-        var child = e.row.data.child;
-        var debit =  e.row.data.debit;
-        var credit = e.row.data.credit;
 
-        this.journalForm = this.fb.group({           
-            entry: [description, Validators.required] ,
-            child: [child,Validators.required] ,
-            fund:[fund,Validators.required] ,
-            debit:[debit,Validators.required] ,
-            credit:[credit,Validators.required],                       
-        });
-        
+    onEdit() {             
+        this.bOpenDetail = true;        
+        this.journalUpdate.refresh(this.nJournal);
+        this.openDrawer();
+    }
+
+
+    onFocusedDetailRowChanged(e: any) {
+        this.nJournal = e.row.data.journal_id;
     }
 
     onFocusedRowChanged(e: any) {

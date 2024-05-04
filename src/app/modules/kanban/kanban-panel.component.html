@@ -7,12 +7,12 @@
             <div class="flex items-center justify-between m-8 mr-6 sm:my-10">
                 <!-- Title -->
                 <div class="text-4xl font-extrabold tracking-tight leading-none">
-                    Settings
+                    Kanban Tasks
                 </div>
                 <!-- Close button -->
                 <div class="lg:hidden">
                     <button mat-icon-button (click)="drawer.close()">
-                        <mat-icon [svgIcon]="'heroicons_outline:academic-cap-mark'"></mat-icon>
+                        <mat-icon [svgIcon]="'heroicons_outline:academic-cap'"></mat-icon>
                     </button>
                 </div>
             </div>
@@ -72,36 +72,13 @@
                 <div class="mt-8">
 
                     @switch (selectedPanel) {
-                    <!-- Account -->
-                    @case ('account') {
-
-                    <settings-account></settings-account>
-
-                    }
-                    <!-- Security -->
-                    @case ('security') {
-
-                    <settings-security></settings-security>
-
-                    }
-                    <!-- Plan & Billing -->
-                    @case ('plan-billing') {
-
-                    <settings-plan-billing></settings-plan-billing>
-
-                    }
-                    <!-- Notifications -->
-                    @case ('notifications') {
-
-                    <settings-notifications></settings-notifications>
-
-                    }
-                    <!-- Team -->
-                    @case ('team') {
-
-                    <settings-team></settings-team>
-
-                    }
+                    
+                    @case ('kanban')   { <kanban></kanban> }                        
+                    @case ('priority') {  }
+                    @case ('status')   {  }
+                    @case ('tasks')    {  }
+                    @case ('team')     {  }
+                    @case ('type')     { <kanban-types></kanban-types> }
                     }
 
                 </div>

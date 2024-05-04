@@ -27,7 +27,7 @@ export interface IJournalDetail {
   account       : number,
   child         : number,
   fund?         : string,
-  sub_type?      : string,
+  sub_type?     : string,
   description   : string,
   debit         : number,
   credit        : number,
@@ -48,13 +48,15 @@ export interface IAccounts {
   create_date   : string,
   create_user   : string,
   update_date   : string,
-  update_user   : string
+  update_user   : string,
+  period?       : number,
+  period_year?  : number,
 }
 
 
 export interface IJournalViewDetails {
-    period          : number,
-    period_year     : number,
+    period?          : number,
+    period_year?     : number,
     journal_id      : number,
     journal_subid   : number,
     account         : number,
@@ -65,7 +67,8 @@ export interface IJournalViewDetails {
     credit          : number,
     create_date     : Date,
     create_user     : string,
-    fund            : string
+    fund            : string,
+    reference       : string,
 }
 
 @Injectable({
@@ -208,7 +211,7 @@ export class JournalService {
 
   updateJournalDetail(detail: IJournalDetail){ 
     var url = this.baseUrl + '/v1/update_jd';
-    return this.httpClient.post<IJournalHeader>(url, detail).pipe(shareReplay())
+    return this.httpClient.post<IJournalDetail>(url, detail).pipe(shareReplay())
   }
 
   deleteJournalDetail(journal_id: number){ }

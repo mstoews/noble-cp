@@ -136,7 +136,7 @@ export const appRoutes: Route[] = [
             {
                 path: 'analytics',
                 loadChildren: () =>
-                    import('app/modules/admin/analytics/analytics.routes'),
+                    import('app/modules/admin/finance/finance.routes'),                
             },
             {
                 path: 'projects',
@@ -159,29 +159,16 @@ export const appRoutes: Route[] = [
                 loadChildren: () =>
                     import('app/modules/reporting/expense/expense.routes'),
             },
-
-
             {
                 path: 'kanban',
                 loadChildren: () =>
-                    import('app/modules/kanban/kanban.routes'),
-            },
-            {
-                path: 'kanban-settings',
-                loadChildren: () =>
-                    import('app/modules/kanban/kanban-settings.routes'),
+                    import('app/modules/kanban/kanban/kanban.routes'),
             },
             {
                 path: 'learning',
                 loadChildren: () =>
                     import('app/modules/admin/academy/academy.routes'),
             },
-
-            // {
-            //     path: 'sync_financials',
-            //     loadChildren: () => import('app/modules/spread/spread.module').then(m => m.SpreadModule),
-
-            // },
             {
                 path: 'general_ledger',
                 loadChildren: () =>

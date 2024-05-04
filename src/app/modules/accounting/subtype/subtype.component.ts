@@ -15,6 +15,7 @@ import { HttpClient } from '@angular/common/http';
 import { IType } from 'app/models';
 import { MatDrawer } from '@angular/material/sidenav';
 import { MaterialModule } from 'app/services/material.module';
+import { SubTypeService } from 'app/services/subtype.service';
 
 const imports = [
     CommonModule,
@@ -28,21 +29,22 @@ const imports = [
 ];
 
 @Component({
-    selector: 'gl-types',
+    selector: 'subtypes',
     standalone: true,
     imports: [imports],
-    templateUrl: './gl-subtypes.component.html',
+    templateUrl: './subtype.component.html',
     styles: `::ng-deep .dx-datagrid .dx-datagrid-rowsview .dx-row-focused.dx-data-row:not(.dx-edit-row) > td:not(.dx-focused) {
         background-color: rgb(195, 199, 199);
         border-color: #ada6a7;
         }`,
-    providers: [FilterService, VirtualScrollService]
+    providers: []
 })
 export class GlSubTypeComponent implements OnInit {
 
     private client = inject(HttpClient);
     private _fuseConfirmationService = inject(FuseConfirmationService);
     private fb = inject(FormBuilder);
+    private subtypeService = inject(SubTypeService)
     @ViewChild('drawer') drawer!: MatDrawer;
 
     public sTitle = 'General Ledger Sub Types';
@@ -52,7 +54,7 @@ export class GlSubTypeComponent implements OnInit {
 
     ngOnInit() {
         this.createEmptyForm();
-        this.data$ = this.getAll();
+        this.data$ = this.subtypeService.read();
         this.createEmptyForm()
     }
 
@@ -126,17 +128,5 @@ export class GlSubTypeComponent implements OnInit {
 
         this.closeDrawer();
     }
-
-    public focusIn(target: HTMLElement | any): void {
-        (target as any).parentElement.classList.add('e-input-focus');
-    }
-
-    public focusOut(target: HTMLElement | any): void {
-        (target as any).parentElement.classList.remove('e-input-focus');
-    }
-
-    get OrderID(): AbstractControl { return (this as any).orderForm.get('OrderID'); }
-
-    get CustomerID(): AbstractControl { return (this as any).orderForm.get('CustomerID'); }
 
 }

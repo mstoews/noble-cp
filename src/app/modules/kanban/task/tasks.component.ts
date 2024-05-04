@@ -10,9 +10,9 @@ import { IKanban, KanbanService } from 'app/services/kanban.service';
 import { DxDataGridModule } from 'devextreme-angular';
 import { MatDrawer } from '@angular/material/sidenav';
 import { MaterialModule } from 'app/services/material.module';
-import { KanbanMenubarComponent } from './kanban-menubar/grid-menubar.component';
 import { FuseConfirmationService } from '@fuse/services/confirmation';
 import { provideNativeDateAdapter } from '@angular/material/core';
+import { KanbanMenubarComponent } from '../kanban/kanban-menubar/grid-menubar.component';
 
 
 export interface IValue {

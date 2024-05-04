@@ -11,18 +11,11 @@ export const defaultNavigation: FuseNavigationItem[] = [
         link: '/home',
         children: [
             {
-                id: 'accounting.overview',
+                id: 'accounting.dashboard',
                 title: 'Dashboard',
                 type: 'basic',
                 icon: 'mat_outline:insights',
                 link: '/projects',
-            },
-            {
-                id: 'kanban',
-                title: 'Tasks',
-                type: 'basic',
-                icon: 'mat_outline:task',
-                link: '/kanban',
             },
             {
                 id: 'accounts.journals',
@@ -31,14 +24,20 @@ export const defaultNavigation: FuseNavigationItem[] = [
                 icon: 'heroicons_outline:banknotes',
                 link: '/journals',
             },
-        
-            // {
-            //     id: 'accounting.finance',
-            //     title: 'Financial Analytics',
-            //     type: 'basic',
-            //     icon: 'mat_outline:money',
-            //     link: '/analytics',
-            // },
+            {
+                id: 'kanban',
+                title: 'Tasks',
+                type: 'basic',
+                icon: 'mat_outline:task',
+                link: '/kanban',
+            },        
+            {
+                id: 'accounting.finance',
+                title: 'Financial Analytics',
+                type: 'basic',
+                icon: 'mat_outline:money',
+                link: '/analytics',
+            },
 
         ]
     },
@@ -84,13 +83,13 @@ export const defaultNavigation: FuseNavigationItem[] = [
                 icon: 'heroicons_outline:bookmark',
                 link: '/gl',
             },
-            {
-                id: 'settings.tasks',
-                title: 'Tasks',
-                type: 'basic',
-                icon: 'mat_outline:settings_input_component',
-                link: '/kanban-settings',
-            },
+            // {
+            //     id: 'settings.tasks',
+            //     title: 'Tasks',
+            //     type: 'basic',
+            //     icon: 'mat_outline:settings_input_component',
+            //     link: '/kanban-settings',
+            // },
             {
                 id: 'property.document-management',
                 title: 'Evidence',

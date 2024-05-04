@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, Input, OnInit, ViewChild, inject } from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, Input, OnInit, Output, ViewChild, inject } from '@angular/core';
 import { DxDataGridModule, DxDataGridTypes } from 'devextreme-angular/ui/data-grid';
 import { DxNumberBoxModule, DxTemplateModule } from 'devextreme-angular';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -37,6 +37,11 @@ const imports = [
 export class JournalDetailComponent implements OnInit {
     @Input() key: string;
     @Input() journal_id: string;
+    @Output() notifyTransactionAdd: EventEmitter<any> = new EventEmitter();
+    @Output() notifyTransactionDelete: EventEmitter<any> = new EventEmitter();
+    @Output() notifyTransactionEvidence: EventEmitter<any> = new EventEmitter();
+    @Output() notifyTransactionEdit: EventEmitter<any> = new EventEmitter();
+
 
     isModifiable: boolean = false;
     private fb = inject(FormBuilder);
@@ -62,28 +67,26 @@ export class JournalDetailComponent implements OnInit {
         this.journalForm = this.fb.group({
             journal_id: ['', Validators.required],
             account: ['', Validators.required],
-            child: [''],
+            child: ['', Validators.required],
             description: ['', Validators.required],
             balance: ['', Validators.required],
             sub_type: ['', Validators.required],
             reference: ['', Validators.required],
         });
     }
-    
-    
+
+
     getType($event: any) {
         throw new Error('Method not implemented.');
     }
 
     onDelete($event: any) {
         this.isModifiable = false;
+        this.notifyTransactionDelete.emit();
     }
 
-    onUpdate($event: any) {
-
-    }
-
-    onEdit() {
+    onUpdate() {
+        this.notifyTransactionEdit.emit();
 
     }
 
@@ -123,7 +126,25 @@ export class JournalDetailComponent implements OnInit {
 
 
     onCreateTemplate() {
-        console.log('onCreateTemplate');
+        const confirmation = this.fuseConfirmationService.open({
+            title: 'Create Template',
+            message: 'Would you like to create a template based upon the current transaction? ',
+            actions: {
+                confirm: {
+                    label: 'Journal Template',
+                },
+            },
+        });
+
+        // Subscribe to the confirmation dialog closed action
+        confirmation.afterClosed().subscribe((result) => {
+            // If the confirm button pressed...
+            if (result === 'confirmed') {
+                // Delete the list
+                //this.transactionService.bookJournal(this.key);
+            }
+        });
+
     }
 
     onAddEvidence() {

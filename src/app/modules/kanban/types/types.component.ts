@@ -1,22 +1,14 @@
-import {
-    AbstractControl,
-    FormBuilder,
-    FormGroup,
-    FormsModule,
-    ReactiveFormsModule,
-} from '@angular/forms';
-import { Component, OnInit, ViewChild, inject } from '@angular/core';
+import { AbstractControl, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { Component, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
 import { DxBulletModule, DxDataGridModule, DxTemplateModule } from 'devextreme-angular';
-
 import { CommonModule } from '@angular/common';
 import { FuseConfirmationService } from '@fuse/services/confirmation';
-import { GridMenubarStandaloneComponent } from '../grid-menubar/grid-menubar.component';
-import { HttpClient } from '@angular/common/http';
 import { IType } from 'app/models';
+import { KanbanService } from 'app/services/kanban.service';
 import { MatDrawer } from '@angular/material/sidenav';
 import { MaterialModule } from 'app/services/material.module';
-import { TypeService } from 'app/services/type.service';
-import { environment } from 'environments/environment.prod';
+import { GridMenubarStandaloneComponent } from 'app/modules/accounting/grid-menubar/grid-menubar.component';
+import { Subject, map, takeUntil } from 'rxjs';
 
 const imports = [
     CommonModule,
@@ -30,36 +22,46 @@ const imports = [
 ];
 
 @Component({
-    selector: 'gl-types',
+    selector: 'kanban-types',
     standalone: true,
     imports: [imports],
-    templateUrl: './gl-types.component.html',
+    templateUrl: 'types.component.html',
     styles: `::ng-deep .dx-datagrid .dx-datagrid-rowsview .dx-row-focused.dx-data-row:not(.dx-edit-row) > td:not(.dx-focused) {
         background-color: rgb(195, 199, 199);
         border-color: #ada6a7;
         }`,
     providers: []
 })
-export class GlTypesComponent implements OnInit {
+export class KanbanTypesComponent implements OnInit, OnDestroy {
     public data: any;
-    private url = environment.baseUrl + '/v1/type_list'
-
-    private client = inject(HttpClient);
     private _fuseConfirmationService = inject(FuseConfirmationService);
     private fb = inject(FormBuilder);
-    private typeService = inject(TypeService)
+    private kanbanService = inject(KanbanService)
     @ViewChild('drawer') drawer!: MatDrawer;
 
-    public sTitle = 'General Ledger Types';
+    public sTitle = 'Kanban Types';
     public accountsForm!: FormGroup;
     public data$: any
     public typeForm?: FormGroup | any;
+    private _unsubscribeAll: Subject<any> = new Subject<any>();
+    
 
     ngOnInit() {
         this.createEmptyForm();
-        this.data$ = this.typeService.read();
+        this.data$ = this.kanbanService.readTypes();
+        // this.data$.pipe(takeUntil(this._unsubscribeAll)).subscribe(data => {
+        //     data.forEach(d => {
+        //         console.log(d);
+        //     })
+        // });        
         this.createEmptyForm()
     }
+
+    ngOnDestroy(): void {
+        this._unsubscribeAll.next(null);
+        this._unsubscribeAll.complete();
+    }
+
 
     onCreate(e: any) {
         this.createEmptyForm();
@@ -93,13 +95,8 @@ export class GlTypesComponent implements OnInit {
         this.accountsForm = this.fb.group({
             type: [''],
             description: [''],
-            create_date: [''],
-            create_user: [''],
-            update_date: [''],
-            update_user: [''],
         });
     }
-
 
 
     openDrawer() {
@@ -127,23 +124,13 @@ export class GlTypesComponent implements OnInit {
         const rawData = {
             type: account.type,
             description: account.description,
-            update_date: updateDate,
-            update_user: 'admin_update',
         };
 
         this.closeDrawer();
     }
 
-    public focusIn(target: HTMLElement | any): void {
-        (target as any).parentElement.classList.add('e-input-focus');
-    }
+    // get OrderID(): AbstractControl { return (this as any).orderForm.get('OrderID'); }
 
-    public focusOut(target: HTMLElement | any): void {
-        (target as any).parentElement.classList.remove('e-input-focus');
-    }
-
-    get OrderID(): AbstractControl { return (this as any).orderForm.get('OrderID'); }
-
-    get CustomerID(): AbstractControl { return (this as any).orderForm.get('CustomerID'); }
+    // get CustomerID(): AbstractControl { return (this as any).orderForm.get('CustomerID'); }
 
 }

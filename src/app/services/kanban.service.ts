@@ -101,7 +101,7 @@ export class KanbanService {
       shareReplay());
   }
 
-  getTypeList() {
+  readTypes() {
     var url = this.baseUrl + '/v1/task_type_list';
     return this.httpClient.get<IType[]>(url).pipe(
       shareReplay());
@@ -113,7 +113,7 @@ export class KanbanService {
       shareReplay());
   }
 
-  getTeamList() {
+  readTeams() {
     var url = this.baseUrl + '/v1/task_team_list';
     return this.httpClient.get<ITeam[]>(url).pipe(
       shareReplay());

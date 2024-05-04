@@ -7,7 +7,7 @@
             <div class="flex items-center justify-between m-8 mr-6 sm:my-10">
                 <!-- Title -->
                 <div class="text-4xl font-extrabold tracking-tight leading-none">
-                    Settings
+                    Transactions
                 </div>
                 <!-- Close button -->
                 <div class="lg:hidden">
@@ -72,36 +72,13 @@
                 <div class="mt-8">
 
                     @switch (selectedPanel) {
-                    <!-- Account -->
-                    @case ('account') {
+                    <!-- Transaction list -->
+                    @case ('listing') {  <transactions></transactions>   }
+                    <!-- entry -->
+                    @case ('entry') { <journal-update></journal-update>  }
+                    <!-- Build and maintain Templates -->
+                    @case ('template') {  }
 
-                    <settings-account></settings-account>
-
-                    }
-                    <!-- Security -->
-                    @case ('security') {
-
-                    <settings-security></settings-security>
-
-                    }
-                    <!-- Plan & Billing -->
-                    @case ('plan-billing') {
-
-                    <settings-plan-billing></settings-plan-billing>
-
-                    }
-                    <!-- Notifications -->
-                    @case ('notifications') {
-
-                    <settings-notifications></settings-notifications>
-
-                    }
-                    <!-- Team -->
-                    @case ('team') {
-
-                    <settings-team></settings-team>
-
-                    }
                     }
 
                 </div>

@@ -6,8 +6,8 @@ const now = DateTime.now();
 /* tslint:disable:max-line-length */
 export const finance = {
     accountBalance    : {
-        growRate: 38.33,
-        ami     : 45332,
+        growRate: 18.33,
+        ami     : 1332,
         series  : [
             {
                 name: 'Predicted',

@@ -1,6 +1,6 @@
 import { Component, Input, OnInit, ViewChild, inject } from '@angular/core';
 import { DxBulletModule, DxDataGridModule, DxTemplateModule } from 'devextreme-angular';
-import { IJournalViewDetails, JournalService } from 'app/services/journal.service';
+import { IJournalDetail, JournalService } from 'app/services/journal.service';
 import { Observable, map } from 'rxjs';
 
 import { CommonModule } from '@angular/common';
@@ -40,14 +40,14 @@ export class TransactionDetailComponent implements OnInit {
 
     selectedItemKeys: any[] = [];
 
-    details$: Observable<IJournalViewDetails[]>;
+    details$: Observable<IJournalDetail[]>;
     ngOnInit() {
         var period = this.period;
         var year = this.year;
         var account = this.account;
         this.details$ = this.journalService.getJournalAccountsByPeriod(period, year).pipe(map((data: any) => {
             return data.filter((item: any) => item.child === account)
-         }
+        }
         ));
     }
 

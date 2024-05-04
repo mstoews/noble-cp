@@ -29,7 +29,7 @@ import { CacheService } from 'src/app/common/cache.service'
 import { $enum } from 'ts-enum-util'
 
 import { Role } from '../../auth/auth.enum'
-import { AuthService } from '../../auth/auth.servicea'
+import { AuthService } from '../../auth/auth.service'
 import { BaseFormDirective } from '../../common/base-form.class'
 import { UiService } from '../../common/ui.service'
 import {

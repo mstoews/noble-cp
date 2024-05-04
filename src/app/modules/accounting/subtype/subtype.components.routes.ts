@@ -1,5 +1,5 @@
 import { Routes } from '@angular/router';
-import { GlSubTypeComponent } from './gl-subtype.component';
+import { GlSubTypeComponent } from './subtype.component';
 
 export default [
     {

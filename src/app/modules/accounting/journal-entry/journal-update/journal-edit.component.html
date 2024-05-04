@@ -69,26 +69,41 @@
                     }
                 </section>
 
+                <div class="flex flex-col grow m-1">
+                    <mat-form-field class="form-element" >
+                        <mat-label class="text-base dark:text-gray-100">Reference</mat-label>
+                        <input matInput placeholder="Reference" formControlName="reference" />
+                        
+                    </mat-form-field>
+                </div>
+
+
                 <section class="flex flex-row">
                 <div class="flex flex-col grow">
                     <mat-form-field class="form-element mr-1">
                         <mat-label class="text-base dark:text-gray-100">Debit</mat-label>
-                        <input matInput placeholder="Debit" formControlName="debit" />
+                        <input type="text" mask="separator.2"   [leadZero]="true" thousandSeparator="," class="text-right" matInput placeholder="Debit" formControlName="debit" />
                     </mat-form-field>
                 </div>
                     <div class="flex flex-col grow">
                         <mat-form-field class="form-element ml-1" >
                         <mat-label class="text-base dark:text-gray-100">Credit</mat-label>
-                        <input matInput placeholder="Credit" formControlName="credit" />
+                        <input type="text" mask="separator.2"   [leadZero]="true" thousandSeparator="," class="text-right" matInput placeholder="Credit" formControlName="credit"/>                        
                         </mat-form-field>
                     </div>
+
+                    <!-- <div class="flex flex-col grow ml-1">
+                        <mat-label class="text-bold dark:text-gray-100 ml-1">Debit*</mat-label>                        
+                        <ejs-numerictextbox cssClass="border-width: 0px;" [showSpinButton]='false' class="text-right bg-white text-gray-900" [(value)]="debit"></ejs-numerictextbox>
+                    </div>                    
+                
+                    <div class="flex flex-col grow mr-1">
+                        <mat-label class="ml-1 text-bold dark:text-gray-100">Credit*</mat-label>
+                        <ejs-numerictextbox cssClass="border-width: 0px;" [showSpinButton]='false' class="text-right bg-white text-gray-900" [(value)]="credit"></ejs-numerictextbox>
+                    </div> -->
+
+
                 </section>
-                <div class="flex flex-col grow">
-                    <mat-form-field class="form-element" >
-                        <mat-label class="text-base dark:text-gray-100">Reference</mat-label>
-                        <input matInput placeholder="Reference" formControlName="reference" />
-                    </mat-form-field>
-                </div>
 
             </section>
         </div>
