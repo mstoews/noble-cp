@@ -1,0 +1,26 @@
+@if (data$ | async; as rows) {
+    <grid-menubar [inTitle]="'Kanban List'"></grid-menubar>
+    <div class="flex flex-col h-[640px]">
+        <dx-data-grid id="id" [wordWrapEnabled]="true" [dataSource]="rows" [showColumnLines]="true"
+            [showRowLines]="true" [showBorders]="true" [focusedRowEnabled]="true" [focusedRowIndex]="0"
+            keyExpr="id" [repaintChangesOnly]="true">
+            <dxi-column dataField="id"  width="50"></dxi-column>
+            <dxi-column dataField="title"  ></dxi-column>
+            <dxi-column dataField="status" width="70"  ></dxi-column>
+            <dxi-column dataField="summary"  ></dxi-column>
+            <dxi-column dataField="type" width="70"  ></dxi-column>
+            <dxi-column dataField="priority" width="70" ></dxi-column>
+            <dxi-column dataField="tags" width="120" ></dxi-column>
+            <dxi-column dataField="estimate"width="70" ></dxi-column>
+            <dxi-column dataField="assignee" width="70" ></dxi-column>
+            <dxi-column dataField="rankid " width="70" ></dxi-column>
+            <dxi-column dataField="color" width="70"  ></dxi-column>
+            <!-- <dxi-column dataField="className "  ></dxi-column>
+            <dxi-column dataField="updateUser"  ></dxi-column>
+            <dxi-column dataField="updateDate"  ></dxi-column>
+            <dxi-column dataField="startDate"  ></dxi-column>
+            <dxi-column dataField="estimateDate"  ></dxi-column> -->
+
+        </dx-data-grid>
+    </div>
+}

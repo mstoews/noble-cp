@@ -17,6 +17,8 @@ import {
 import { MaterialModule } from 'app/services/material.module';
 import { TasksComponent } from './task/tasks.component';
 import { KanbanTypesComponent } from './types/types.component';
+import { StatusComponent } from './status/status.component';
+import { KanbanListComponent } from './kanban-list.component';
 
 @Component({
     selector: 'gl-main',
@@ -32,7 +34,9 @@ import { KanbanTypesComponent } from './types/types.component';
         NgSwitch, 
         NgSwitchCase,
         TasksComponent,
-        KanbanTypesComponent
+        KanbanTypesComponent,
+        StatusComponent,
+        KanbanListComponent
         ],
     providers: [HttpClient],
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -85,7 +89,7 @@ export class KanbanPanelComponent {
                 description: 'Status of each tasks',
             } ,
             {
-                id         : 'task',
+                id         : 'tasks',
                 icon       : 'heroicons_outline:building-office',
                 title      : 'Tasks',
                 description: 'Comprehensive list of all tasks with history',

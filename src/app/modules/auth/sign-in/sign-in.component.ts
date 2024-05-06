@@ -6,7 +6,6 @@ import {
     FormsModule,
     NgForm,
     ReactiveFormsModule,
-    UntypedFormBuilder,
     UntypedFormGroup,
     Validators,
 } from '@angular/forms';
@@ -50,6 +49,13 @@ var components = [
 export class AuthSignInComponent implements OnInit {
     @ViewChild('signInNgForm') signInNgForm: NgForm;
 
+    public  _activatedRoute = inject(ActivatedRoute);
+    public  _loginService = inject(LoginService);
+    public  _authService = inject(AuthService);
+    private _router = inject(Router);
+    private _formBuilder = inject(FormBuilder);
+    
+
     alert: { type: FuseAlertType; message: string } = {
         type: 'success',
         message: '',
@@ -59,17 +65,11 @@ export class AuthSignInComponent implements OnInit {
 
     constructor() {
         effect(() => {
-            if (this._authService.user()) {
+            if (this._authService.user()) {            
               this._router.navigate(['home']);
             }
           });
     }
-
-   public  _activatedRoute = inject(ActivatedRoute);
-   public  _loginService = inject(LoginService);
-   public  _authService = inject(AuthService);
-   private _router = inject(Router);
-   private _formBuilder = inject(FormBuilder);
 
     ngOnInit(): void {
         // Create the form

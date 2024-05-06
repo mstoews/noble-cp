@@ -9,6 +9,8 @@ import { MatDrawer } from '@angular/material/sidenav';
 import { MaterialModule } from 'app/services/material.module';
 import { GridMenubarStandaloneComponent } from 'app/modules/accounting/grid-menubar/grid-menubar.component';
 import { Subject, map, takeUntil } from 'rxjs';
+import { DxButtonModule } from 'devextreme-angular';
+import { DxDataGridTypes } from 'devextreme-angular/ui/data-grid';
 
 const imports = [
     CommonModule,
@@ -18,6 +20,7 @@ const imports = [
     DxDataGridModule,
     DxBulletModule,
     DxTemplateModule,
+    DxButtonModule,
     GridMenubarStandaloneComponent
 ];
 
@@ -33,6 +36,7 @@ const imports = [
     providers: []
 })
 export class KanbanTypesComponent implements OnInit, OnDestroy {
+    
     public data: any;
     private _fuseConfirmationService = inject(FuseConfirmationService);
     private fb = inject(FormBuilder);
@@ -43,6 +47,7 @@ export class KanbanTypesComponent implements OnInit, OnDestroy {
     public accountsForm!: FormGroup;
     public data$: any
     public typeForm?: FormGroup | any;
+    public selectedItemKeys: string[] = [];
     private _unsubscribeAll: Subject<any> = new Subject<any>();
     
 
@@ -67,6 +72,16 @@ export class KanbanTypesComponent implements OnInit, OnDestroy {
         this.createEmptyForm();
         this.openDrawer();
     }
+     onSelectionChanged({ selectedRowKeys }: DxDataGridTypes.SelectionChangedEvent) {
+        this.selectedItemKeys = selectedRowKeys;
+      }
+    
+      deleteRecords() {
+        this.selectedItemKeys.forEach((key) => {
+          
+        });
+        this.kanbanService.readTypes();
+      }
 
     onDelete(e: any) {
         console.debug(`onDelete ${JSON.stringify(e)}`);
@@ -129,8 +144,5 @@ export class KanbanTypesComponent implements OnInit, OnDestroy {
         this.closeDrawer();
     }
 
-    // get OrderID(): AbstractControl { return (this as any).orderForm.get('OrderID'); }
-
-    // get CustomerID(): AbstractControl { return (this as any).orderForm.get('CustomerID'); }
 
 }

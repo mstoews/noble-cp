@@ -47,7 +47,7 @@ export class AuthService {
         ...state,
         user,
       }))
-    );
+    );    
   }
 
   login(credentials: Credentials) {

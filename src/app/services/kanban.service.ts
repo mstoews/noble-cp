@@ -1,4 +1,4 @@
-import { BehaviorSubject, Observable, Subject, catchError, from, map, shareReplay } from 'rxjs';
+import { BehaviorSubject, Observable, Subject, catchError, from, map, mergeMap, retry, shareReplay, toArray } from 'rxjs';
 import { Injectable, OnDestroy, computed, inject, signal } from '@angular/core';
 
 import { AUTH } from 'app/app.config';
@@ -36,8 +36,9 @@ export interface IKanbanType {
 export interface IStatus {
   status: string,
   description: string,
-  updatedte: string,
-  updateusr: string
+  fullDescription?: string,
+  updatedte?: string,
+  updateusr?: string
 }
 
 export interface IPriority {
@@ -50,8 +51,9 @@ export interface IPriority {
 export interface IType {
   type: string,
   description: string,
-  updatedte: string,
-  updateusr: string
+  fullDescrition?: string,
+  updatedte?: string,
+  updateusr?: string
 }
 
 export interface IKanban {
@@ -107,11 +109,41 @@ export class KanbanService {
       shareReplay());
   }
 
-  getStatusList() {
+  readFullTypes() {
+    var url = this.baseUrl + '/v1/task_type_list';
+    return this.httpClient.get<IType[]>(url).pipe(
+      mergeMap(data => data),
+      map((type) => {
+        return <IType> {
+          type: type.type,
+          description: type.description,
+          fullDescription: `${type.type} - ${type.description}`,          
+        }
+      }
+    ),
+    toArray());
+  }
+
+  readStatus() {
+    var url = this.baseUrl + '/v1/task_status_list';
+    return this.httpClient.get<IStatus[]>(url).pipe(retry(3));    
+  }
+
+  readFullStatus() {
     var url = this.baseUrl + '/v1/task_status_list';
     return this.httpClient.get<IStatus[]>(url).pipe(
-      shareReplay());
+      mergeMap(data => data),
+      map((s) => {
+        return <IStatus> {
+          status: s.status,
+          description: s.description,
+          fullDescription: `${s.status} - ${s.description}`,          
+        }
+      }
+    ),
+    toArray());
   }
+
 
   readTeams() {
     var url = this.baseUrl + '/v1/task_team_list';
@@ -121,14 +153,9 @@ export class KanbanService {
 
   getKanbanTaskList() {
     var url = this.baseUrl + '/v1/tasks_list';
-    this.tasks$ = this.httpClient.get<IKanban[]>(url).pipe(
-      shareReplay());
-      this.tasks$.subscribe((kanbans) => { 
-      this.subject.next(kanbans)
-      kanbans.forEach(kanban => console.log(kanban))
-    });
-  
-    return this.tasks$;  
+    return this.httpClient.get<IKanban[]>(url).pipe(
+      retry(3));
+    
   }
 
   create(k: IKanban) {

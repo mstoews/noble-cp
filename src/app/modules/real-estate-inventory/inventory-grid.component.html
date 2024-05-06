@@ -3,7 +3,6 @@
 
     @if (allProducts$ | async; as rows) {
 
-
       <div class="m-4 h-full">
         <dx-data-grid flex id="inventoryGrid"
           [wordWrapEnabled]="true"
@@ -31,7 +30,6 @@
           <dxi-column dataField="price" [width]="100"> </dxi-column>
           <dxi-column dataField="description" [width]="300"> </dxi-column>
           <dxi-column dataField="short_description"></dxi-column>
-          <!-- <dxi-column dataField="rich_description" cellTemplate="richTemplate"> </dxi-column> -->
           <dxi-column dataField="purchases_allowed" caption="Sell" [width]="100" type="boolean"> </dxi-column>
           <dxi-column dataField="quantity_required" caption="Per Quantity" [width]="100" type="boolean"> </dxi-column>
           <div *dxTemplate="let data of 'imageTemplate'">

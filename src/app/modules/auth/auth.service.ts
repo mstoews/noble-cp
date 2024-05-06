@@ -59,11 +59,6 @@ export class AuthService {
     );
   }
 
-  sendRestAPI() {
-        this.http.get("http://localhost:33201/dist");
-  }
-
-
   logout() {
     signOut(this.auth);
   }

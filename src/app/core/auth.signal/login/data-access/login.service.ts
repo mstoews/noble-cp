@@ -38,12 +38,14 @@ export class LoginService {
   // selectors
   status = computed(() => this.state().status);
 
+  
+
   constructor() {
     // reducers
     this.userAuthenticated$
       .pipe(takeUntilDestroyed())
       .subscribe(() =>
-        this.state.update((state) => ({ ...state, status: 'success' }))
+        this.state.update((state) => ({ ...state, status: 'success'  }))
       );
 
     this.login$

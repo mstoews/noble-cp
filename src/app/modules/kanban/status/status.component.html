@@ -1,1 +1,9 @@
-<p>status works!</p>
+@if (status$ | async; as types) {                                 
+    <grid-menubar [inTitle]="'Status Maintenance'"></grid-menubar>
+    <ejs-grid [dataSource]='types' allowPaging='true' [pageSettings]='pageSettings' [allowSorting]='true' [editSettings]='editSettings' [toolbar]='toolbar' (actionBegin)='actionBegin($event)' (actionComplete)='actionComplete($event)'>
+        <e-columns>
+            <e-column field='status' headerText='Status' width='120' [isPrimaryKey]='true'></e-column>
+            <e-column field='description' editType='dropdownedit' [edit]='priorityParams' headerText='Description'></e-column>            
+        </e-columns>        
+    </ejs-grid>
+}

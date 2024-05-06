@@ -48,18 +48,17 @@ export class TransactionMainComponent {
         // Setup available panels
         this.panels = [
             {
-                id         : 'entry',
-                icon       : 'heroicons_outline:currency-dollar',
-                title      : 'Entry',
-                description: 'Create transactions and add evidence for each transaction on a granual basis.',
-            },
-            {
                 id         : 'listing',
                 icon       : 'heroicons_outline:banknotes',
                 title      : 'Transaction Listing',
                 description: 'Manage your transactions and documentation',
             },
-
+            {
+                id         : 'entry',
+                icon       : 'heroicons_outline:currency-dollar',
+                title      : 'Entry',
+                description: 'Create transactions and add evidence for each transaction on a granual basis.',
+            },
             {
                 id         : 'template',
                 icon       : 'heroicons_outline:calculator',

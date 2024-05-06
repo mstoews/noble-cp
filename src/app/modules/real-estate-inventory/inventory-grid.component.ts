@@ -138,11 +138,6 @@ export class InventoryComponent implements OnInit, OnDestroy {
     newProduct.image = results.data.url;
     this.productService.update(newProduct);
     this.prdGroup.setValue(newProduct);
-    // this.afs
-    //   .collection('inventory')
-    //   .doc(newProduct.id)
-    //   .collection('images')
-    //   .add(results.data);
   }
 
   changeCategory(category: any) {

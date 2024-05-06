@@ -22,18 +22,30 @@
                         @if (journalHeader$ | async; as rows) {
 
                         <div class="flex flex-col">
-                            <dx-data-grid class="h-[680px]" [dataSource]="rows" [remoteOperations]="false"
+                            <dx-data-grid class="h-[620px]" [dataSource]="rows" [remoteOperations]="false"
                                 [allowColumnReordering]="true" [rowAlternationEnabled]="true" [showBorders]="true"
                                 [focusedRowEnabled]="true" [focusedRowIndex]="1" [repaintChangesOnly]="true"
                                 keyExpr="journal_id" (onExporting)="onExporting($event)"
                                 (onFocusedRowChanged)="onFocusedDetailRowChanged($event)"
-                                (onCellDblClick)="onCellDoubleClicked($event)">                                
+                                (onCellDblClick)="onCellDoubleClicked($event)">      
                                 
+                                <dxo-scrolling rowRenderingMode="virtual"> </dxo-scrolling>
+                                <dxo-paging [pageSize]="15"> </dxo-paging>
+                                <dxo-pager
+                                    [visible]="true"
+                                    [allowedPageSizes]="allowedPageSizes"
+                                    [displayMode]="displayMode"
+                                    [showPageSizeSelector]="showPageSizeSelector"
+                                    [showInfo]="showInfo"
+                                    [showNavigationButtons]="showNavButtons"
+                                >
+                                </dxo-pager>
+                                                                
                                 <dxo-scrolling mode="virtual"></dxo-scrolling>
                                 <dxo-search-panel [visible]="true" [highlightCaseSensitive]="true"></dxo-search-panel>
-                                <dxo-group-panel [visible]="true"></dxo-group-panel>
+                                <dxo-group-panel [visible]="false"></dxo-group-panel>
                                 <dxo-grouping [autoExpandAll]="false"></dxo-grouping>
-                                <dxo-filter-row [visible]="false"></dxo-filter-row>
+                                <dxo-filter-row [visible]="true"></dxo-filter-row>
                                 <dxo-state-storing [enabled]="false" type="localStorage" storageKey="journals">
                                 </dxo-state-storing>
                                 <dxi-column dataField="journal_id" caption="ID" width="100" dataType="number" alignment="left"></dxi-column>
