@@ -1,4 +1,4 @@
-        <div class="h-[calc(100vh)-200px] ">
+        <div class="h-[calc(100vh)-100px] ">
             <mat-drawer-container class="flex-col">
                 <mat-drawer class="w-[450px]" #drawer [opened]="false" mode="over" [position]="'end'" [disableClose]="false">
                     <mat-card class="m-2">
@@ -124,8 +124,18 @@
                             <dxo-search-panel [visible]="true" [highlightCaseSensitive]="true"></dxo-search-panel>
                             <dxo-group-panel [visible]="true"></dxo-group-panel>
                             <dxo-grouping [autoExpandAll]="true"></dxo-grouping>
-                            <dxo-filter-row [visible]="false"></dxo-filter-row>
-                            <dxo-scrolling mode="virtual"></dxo-scrolling>
+                            <dxo-filter-row [visible]="false"></dxo-filter-row>                            
+                            <dxo-scrolling rowRenderingMode="virtual"> </dxo-scrolling>
+                            <dxo-paging [pageSize]="10"> </dxo-paging>
+                            <dxo-pager
+                                [visible]="true"
+                                [allowedPageSizes]="allowedPageSizes"
+                                [displayMode]="displayMode"
+                                [showPageSizeSelector]="showPageSizeSelector"
+                                [showInfo]="showInfo"
+                                [showNavigationButtons]="showNavButtons"
+                            >
+                            </dxo-pager>
 
                             <dxi-column dataField="account" width="100"> </dxi-column>
                             <dxi-column dataField="child" width="100"> </dxi-column>
@@ -145,8 +155,9 @@
                     </div>
                     } @else
                     {
-                    <div class="text-center">No Data found ... refresh the page...</div>
-                    <button class="center" mat-raised-button color="primary">Refresh</button>
+                    <div class="container w-200">
+                    <button class="flex flex-auto snap-center" mat-raised-button color="primary">Refresh</button>
+                    </div>                    
                 }
                 </ng-container>
             </mat-drawer-container>

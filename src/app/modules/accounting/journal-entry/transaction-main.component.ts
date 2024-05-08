@@ -23,7 +23,7 @@ export class TransactionMainComponent {
     drawerMode: 'over' | 'side' = 'side';
     drawerOpened: boolean = true;
     panels: any[] = [];
-    selectedPanel: string = 'entry';
+    selectedPanel: string = 'listing';
     private _unsubscribeAll: Subject<any> = new Subject<any>();
 
     /**
@@ -56,7 +56,7 @@ export class TransactionMainComponent {
             {
                 id         : 'entry',
                 icon       : 'heroicons_outline:currency-dollar',
-                title      : 'Entry',
+                title      : 'Transaction Add/Amend',
                 description: 'Create transactions and add evidence for each transaction on a granual basis.',
             },
             {

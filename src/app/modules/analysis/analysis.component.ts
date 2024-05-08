@@ -5,7 +5,9 @@ import { MatIconModule } from '@angular/material/icon';
 
 import { SalesGraphComponent } from '../admin/sales-graph/sales-graph.component';
 import { Router } from '@angular/router';
-import { AuthService } from 'app/shared/data-access/auth.service';
+import { AuthService } from '../auth/auth.service';
+
+// import { AuthService } from 'app/shared/data-access/auth.service';
 
 
 const imports = [

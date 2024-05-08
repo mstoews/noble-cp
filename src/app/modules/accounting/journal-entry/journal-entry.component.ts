@@ -73,10 +73,10 @@ export class JournalEntryComponent {
     public nJournal = 0;
     public description = '';
     public transaction_date = '';
-    readonly allowedPageSizes = [15, 20, 'all'];
+    readonly allowedPageSizes = [10, 20, 'all'];
 
     readonly displayModes = [{ text: "Display Mode 'full'", value: 'full' }, { text: "Display Mode 'compact'", value: 'compact' }];
-    displayMode = 'full';
+    displayMode = 'compact';
     showPageSizeSelector = true;
     showInfo = true;
     showNavButtons = true;

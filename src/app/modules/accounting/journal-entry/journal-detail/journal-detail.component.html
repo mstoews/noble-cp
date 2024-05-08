@@ -7,15 +7,16 @@
                 keyExpr="journal_subid" [repaintChangesOnly]="true"
                 
                 >                                
-                <dxi-column dataField="journal_subid" caption="ID" width="100" alignment="middle"> </dxi-column>
-                <dxi-column dataField="account" width="100"> </dxi-column>
-                <dxi-column dataField="child" width="100"> </dxi-column>
-                <dxi-column dataField="sub_type" caption="Sub Type" width="120"> </dxi-column>
+                <dxi-column dataField="journal_subid" caption="ID" width="70" alignment="middle"> </dxi-column>                
+                <dxi-column dataField="child" caption="Account" width="100"> </dxi-column>
+
+                <dxi-column dataField="fund" caption="Fund" width="100"> </dxi-column>
+                <dxi-column dataField="sub_type" caption="Sub Type" width="100"> </dxi-column>
                 <dxi-column dataField="description"> </dxi-column>
-                <dxi-column dataField="reference"> </dxi-column>
+                <dxi-column dataField="reference" width="120"> </dxi-column>
                 <dxi-column dataField="debit" dataType="number" width="120" alignment="right"  [customizeText]="formatNumber"> </dxi-column>
                 <dxi-column dataField="credit" dataType="number" alignment="right" [customizeText]="formatNumber" width="120"> </dxi-column>
-                <dxi-column dataField="create_date" caption="Date" width="120"> </dxi-column>
+                
                 <dxi-column dataField="create_user" caption="User" width="100"> </dxi-column>
                 <dxo-summary>
                     <dxi-total-item column="child"  summaryType="count"> </dxi-total-item>

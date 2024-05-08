@@ -6,7 +6,7 @@ import { $enum } from 'ts-enum-util'
 import { IUser, User } from '../user/user/user'
 import { Role } from './auth.enum'
 import { GET_ME, LOGIN } from './auth.graphql.queries'
-import { AuthService, IAuthStatus, IServerAuthResponse } from './auth.servicea'
+import { AuthService, IAuthStatus, IServerAuthResponse } from './auth.service'
 
 interface IJwtToken {
   email: string

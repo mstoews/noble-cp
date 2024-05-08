@@ -1,6 +1,6 @@
 
 import { provideHttpClient, withFetch, withInterceptors } from '@angular/common/http';
-import { ApplicationConfig } from '@angular/core';
+import { APP_INITIALIZER, ApplicationConfig } from '@angular/core';
 import { LuxonDateAdapter } from '@angular/material-luxon-adapter';
 import { DateAdapter, MAT_DATE_FORMATS } from '@angular/material/core';
 import { provideAnimations } from '@angular/platform-browser/animations';
@@ -13,7 +13,7 @@ import { mockApiServices } from 'app/mock-api';
 import { environment } from 'environments/environment';
 import { InjectionToken } from '@angular/core';
 import { authTokenInterceptor } from './auth.token.interceptor';
-import { TokenService } from './token.service';
+// import { TokenService } from './token.service';
 
 
 import {
@@ -80,12 +80,23 @@ export const AUTH = new InjectionToken('Firebase auth', {
   },
 });
 
+const CoreProviders = [
+  provideHttpClient(withInterceptors([authTokenInterceptor])),
+  {
+    provide: APP_INITIALIZER,
+    // dummy factory
+    useFactory: () => () => {},
+    multi: true,
+    // injected dependencies, this will be constructed immediately
+    deps: [AuthService],
+  },
+];
+
+
 export const appConfig: ApplicationConfig = {
   providers: [
     provideAnimations(),
-    TokenService,
-    provideHttpClient(withInterceptors([authTokenInterceptor])),
-    // provideHttpClient(),
+    ...CoreProviders,
     provideRouter(appRoutes,
       withPreloading(PreloadAllModules),
       withInMemoryScrolling({ scrollPositionRestoration: 'enabled' }),

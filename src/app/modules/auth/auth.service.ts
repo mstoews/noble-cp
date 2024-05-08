@@ -1,17 +1,18 @@
 import { Injectable, computed, inject, signal } from '@angular/core';
-import { from, defer } from 'rxjs';
+import { from, defer, switchMap, tap, BehaviorSubject, Observable } from 'rxjs';
 import {
   User,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   signOut,
 } from 'firebase/auth';
-import { authState } from 'rxfire/auth';
+import { authState , idToken} from 'rxfire/auth';
 
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { HttpClient } from '@angular/common/http';
 import { Credentials } from 'app/shared/interfaces/credentials';
 import { AUTH } from 'app/app.config';
+
 
 
 export type AuthUser = User | null | undefined;
@@ -26,6 +27,8 @@ interface AuthState {
 export class AuthService {
   private auth = inject(AUTH);
   private http = inject(HttpClient)
+  private token: BehaviorSubject<string> = new BehaviorSubject(null);
+  token$: Observable<string> = this.token.asObservable();
 
   // sources
   private user$ = authState(this.auth);
@@ -37,6 +40,7 @@ export class AuthService {
 
   // selectors
   user = computed(() => this.state().user);
+  authState: any;
 
   constructor() {
     this.user$.pipe(takeUntilDestroyed()).subscribe((user) =>
@@ -45,6 +49,11 @@ export class AuthService {
         user,
       }))
     );
+    idToken(this.auth).subscribe({
+      next: (token) => {
+        this.UpdateState(token);
+      },
+    });
   }
 
   login(credentials: Credentials) {
@@ -55,12 +64,26 @@ export class AuthService {
           credentials.email,
           credentials.password
         )
-      )
-    );
+      ).pipe(
+        // get the token
+        switchMap((auth) => (<any>auth).user.getIdToken()),
+        tap((token) => {
+          // save state as well
+          this.authState.UpdateState(token);
+        })
+    ));
   }
 
   logout() {
     signOut(this.auth);
+  }
+
+  GetToken() {
+    return this.token.getValue();
+  }
+
+  UpdateState(token: string) {
+    this.token.next(token);
   }
 
   createAccount(credentials: Credentials) {

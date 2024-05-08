@@ -17,6 +17,7 @@ import { TypeService } from 'app/services/type.service';
 import { JournalEditComponent } from './journal-edit.component';
 import { JournalTableComponent } from '../journal-table/journal-table.component';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { NgxMaskDirective, NgxMaskPipe, provideNgxMask } from 'ngx-mask';
 
 
 const imports = [
@@ -31,6 +32,8 @@ const imports = [
   GridMenubarStandaloneComponent,
   JournalEditComponent,
   JournalTableComponent,
+  NgxMaskDirective, 
+  NgxMaskPipe
 ];
 
 
@@ -39,6 +42,7 @@ const imports = [
   standalone: true,
   imports: [imports],
   templateUrl: './journal-update.component.html',
+  providers: [provideNgxMask()],
   styles: ``,
 })
 export class JournalUpdateComponent implements OnInit{
@@ -53,10 +57,12 @@ export class JournalUpdateComponent implements OnInit{
   }
 
   child_desciption = ''
+  reference = '';
   child = '';
-  debit = 0;
-  credit = 0;
+  debit = 0.0;
+  credit = 0.0;
   fund = '';
+  sub_type = '';
   
   @Output() notifyDrawerClose: EventEmitter<any> = new EventEmitter();  
   @Input() public sTitle: string;
@@ -75,11 +81,14 @@ export class JournalUpdateComponent implements OnInit{
   public journal_details: any[];
   public journalForm!: FormGroup;
 
+  funds$ = this.fundService.read();
+  subtype$ = this.subtypeService.read();
+  accounts$ = this.accountService.read().pipe(map((child) => child.filter((parent) => parent.parent_account === false)));
+  
+
   journalHeader$ = this.journalService.listJournalHeader();
   types$ = this.typeService.read();
-  funds$ = this.fundService.read();
   subtypes$ = this.subtypeService.read();
-  accounts$ = this.accountService.read().pipe(map((child) => child.filter((parent) => parent.parent_account === false)));
   details$: Observable<IJournalDetail[]>;
     
   ngOnInit(): void {
@@ -88,6 +97,9 @@ export class JournalUpdateComponent implements OnInit{
 
   }
 
+  onFocusedDetailRowChanged(e: any) {
+    this.updateForm(e.row.data)
+}
   public refresh(journal_id: number)  {
     if (journal_id > 0) {
       this.details$ = this.journalService.getJournalDetail(this.journal_id);
@@ -112,6 +124,9 @@ export class JournalUpdateComponent implements OnInit{
 
   }
 
+  changeSubtype(e: any) {
+    console.log('Subytype :', e.value);
+  }
 
   onCellDoubleClicked(e: any){
 
@@ -131,12 +146,33 @@ export class JournalUpdateComponent implements OnInit{
       );     
   }
 
+  updateForm(row: any){
+    console.log('Open Form ...');
+    
+    this.journalForm = this.fb.group({                       
+      description: [row.description, Validators.required] ,
+      transaction_date: [row.transaction_date, Validators.required],      
+      account: [row.child],
+      fund: [row.fund],
+      sub_type: [row.sub_type],
+      reference: [row.reference],
+      debit: [row.debit],
+      credit: [row.credit]
+    });
+  }
+
   openForm  () {
     console.log('Open Form ...');
     
     this.journalForm = this.fb.group({                       
       description: [this.description, Validators.required] ,
-      transaction_date: [this.transaction_date, Validators.required] ,      
+      transaction_date: [this.transaction_date, Validators.required],      
+      account: [this.child],
+      fund: [this.fund],
+      sub_type: [this.sub_type],
+      reference: [this.reference],
+      debit: [this.debit],
+      credit: [this.credit]
     });
 
   }
