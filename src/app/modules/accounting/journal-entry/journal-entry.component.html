@@ -9,18 +9,18 @@
 
         <div class="flex-auto">
             <div class="h-full border-gray-300 rounded-2xl">
-                <mat-drawer class="w-[1200px] bg-white-100" #drawer [opened]="false" mode="over" [position]="'end'" [disableClose]="false">   
+                <mat-drawer class="w-[1100px] bg-white-100" #drawer [opened]="false" mode="push" [position]="'end'" [disableClose]="false">   
                 @if (bOpenDetail === true) {                
-                        <journal-update [journal_id]="nJournal" [sTitle]="'Journal Entry Detail'" (notifyDrawerClose) = "closeDrawer()" 
-                        
-                        ></journal-update>
+                        <journal-update 
+                        [journal_id]="nJournal" 
+                        [sTitle]="'Journal Entry Detail'"
+                        (notifyDrawerClose) = "closeDrawer()">
+                        </journal-update>
                 }     
                 </mat-drawer>
                 <mat-drawer-container class="flex-col h-full">
-
                     <ng-container>
                         @if (journalHeader$ | async; as rows) {
-
                         <div class="flex flex-col">
                             <dx-data-grid class="h-[620px]" [dataSource]="rows" [remoteOperations]="false"
                                 [allowColumnReordering]="true" [rowAlternationEnabled]="true" [showBorders]="true"
