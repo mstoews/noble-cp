@@ -86,13 +86,10 @@ export class JournalEntryComponent {
     customizeTooltip = (pointsInfo: { originalValue: string; }) => ({ text: `${parseInt(pointsInfo.originalValue)}%` });
     journalForm!: FormGroup;
     keyField: any;
-    // accountsForm!: FormGroup;
-
+    
     async ngOnInit() {
-        // this.createEmptyForm();
         const dDate = new Date();
-        this.currentDate = dDate.toISOString().split('T')[0];
-        // await this.updateBooked()
+        this.currentDate = dDate.toISOString().split('T')[0];        
     }
 
     
@@ -122,23 +119,23 @@ export class JournalEntryComponent {
     }
 
     onRefresh() {
-        throw new Error('Method not implemented.');
+        console.log('Refresh')
     }
 
     onDeleteSelection() {
-
+        console.log('Delete Selection')
     }
 
     onUpdateSelection() {
-
+        console.log('onUpdateSelection')
     }
 
     onDelete(e: any) {
-        throw new Error('Method not implemented.');
+        console.log('onDelete')
     }
 
     onUpdate($event: any) {
-        throw new Error('Method not implemented.');
+        console.log('onUpdate')
     }
 
     onBooked(booked: boolean) {
@@ -160,7 +157,7 @@ export class JournalEntryComponent {
 
     onExporting(e: DxDataGridTypes.ExportingEvent) {
         const workbook = new Workbook();
-        const worksheet = workbook.addWorksheet('Dist Ledger');
+        const worksheet = workbook.addWorksheet('Distribution Ledger');
 
         exportDataGrid({
             component: e.component,

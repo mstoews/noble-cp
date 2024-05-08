@@ -58,31 +58,34 @@
 
                 </div>
 
-          
-
             <div mat-dialog-actions class="m-1">
                 <button mat-icon-button color="primary" class="m-1 bg-slate-200 text-gray-100"
-                    (click)="onUpdate($event)" matTooltip="Update Transaction" aria-label="hovered over">
-                    <mat-icon>update</mat-icon>
+                    (click)="onUpdate($event)" matTooltip="Update" aria-label="hovered over">
+                    <mat-icon [svgIcon]="'feather:refresh-cw'"></mat-icon>
                 </button>
                 <button mat-icon-button color="primary" class="m-1 bg-slate-200 text-gray-100"
-                    (click)="onCreate()" matTooltip="Add New Transaction" aria-label="hovered over">
-                    <mat-icon>add</mat-icon>
+                    (click)="onCreate()" matTooltip="Add Line" aria-label="hovered over">
+                    <mat-icon [svgIcon]="'feather:file-plus'"></mat-icon>
                 </button>
                 <button mat-icon-button color="primary" class="m-1 bg-slate-200 text-gray-100"
-                    (click)="onDelete($event)" matTooltip="Delete Transaction" aria-label="hovered over">
-                    <mat-icon>delete</mat-icon>
+                    (click)="onDelete($event)" matTooltip="Remove Line" aria-label="hovered over">                    
+                    <mat-icon [svgIcon]="'feather:trash'"></mat-icon>
                 </button>
+                <button mat-icon-button color="primary" (click)="onAddEvidence()"  class="bg-gray-200 ml-1" matTooltip="Add Evidence" aria-label="Evidence">
+                    <mat-icon [svgIcon]="'feather:image'"></mat-icon>
+                </button>
+            
+                <button mat-icon-button color="primary" (click)="onCreateTemplate()" class="bg-gray-200 ml-1" matTooltip="Create Template" aria-label="Template">
+                    <mat-icon [svgIcon]="'feather:layout'"></mat-icon>
+                </button>
+            
                 <button mat-icon-button color="primary" class="m-1 bg-slate-200 text-gray-100"
                     (click)="closeDrawer()" matTooltip="Cancel" aria-label="hovered over">
                     <mat-icon>close</mat-icon>
                 </button>
             </div>
         </mat-card>
-
         </div>
-
-
         <!-- <mat-card class="m-2 mat-elevation-z8">            
             <div class="flex flex-col">                                
                     <div class="text-3xl m-2 text-gray-100 p-2  bg-slate-600">Detail Update</div>                    

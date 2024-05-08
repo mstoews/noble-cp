@@ -1,3 +1,4 @@
+@defer() {
 <div [formGroup]="journalDetailEditForm">
         <div class="flex flex-col">
             <section class="flex flex-col">
@@ -92,17 +93,6 @@
                         </mat-form-field>
                     </div>
 
-                    <!-- <div class="flex flex-col grow ml-1">
-                        <mat-label class="text-bold dark:text-gray-100 ml-1">Debit*</mat-label>                        
-                        <ejs-numerictextbox cssClass="border-width: 0px;" [showSpinButton]='false' class="text-right bg-white text-gray-900" [(value)]="debit"></ejs-numerictextbox>
-                    </div>                    
-                
-                    <div class="flex flex-col grow mr-1">
-                        <mat-label class="ml-1 text-bold dark:text-gray-100">Credit*</mat-label>
-                        <ejs-numerictextbox cssClass="border-width: 0px;" [showSpinButton]='false' class="text-right bg-white text-gray-900" [(value)]="credit"></ejs-numerictextbox>
-                    </div> -->
-
-
                 </section>
 
             </section>
@@ -130,4 +120,4 @@
         </button>
     </div>
 </div>
-
+}

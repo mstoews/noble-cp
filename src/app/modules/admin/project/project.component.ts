@@ -21,6 +21,7 @@ import { ProjectService } from './project.service';
 import { ApexOptions, NgApexchartsModule } from 'ng-apexcharts';
 import { Subject, takeUntil } from 'rxjs';
 import { AuthService } from 'app/shared/data-access/auth.service';
+import { SummaryCardComponent } from './summary-card.component';
 
 
 
@@ -44,8 +45,8 @@ import { AuthService } from 'app/shared/data-access/auth.service';
         MatTableModule,
         NgClass,
         CurrencyPipe,
-        CommonModule
-        
+        CommonModule,
+        SummaryCardComponent        
     ],
 })
 export class ProjectComponent implements OnInit, OnDestroy {
@@ -64,7 +65,7 @@ export class ProjectComponent implements OnInit, OnDestroy {
 
     public cashReserves =  18223.23;
     public fundCount = 3;
-    public caption_1 = 'Cash Reserves Total';
+    public caption_1 = 'Fund Total';
 
 
     constructor() {

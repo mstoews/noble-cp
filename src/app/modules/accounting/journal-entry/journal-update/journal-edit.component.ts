@@ -5,7 +5,7 @@ import { GLAccountsService } from 'app/services/accounts.service';
 import { FundsService } from 'app/services/funds.service';
 import { IJournalDetail, JournalService } from 'app/services/journal.service';
 import { MaterialModule } from 'app/services/material.module';
-import { map, Observable, tap } from 'rxjs';
+import { map, Observable, Subject, takeUntil, tap } from 'rxjs';
 import { JournalTableComponent } from '../journal-table/journal-table.component';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { SubTypeService } from 'app/services/subtype.service';
@@ -99,11 +99,8 @@ export class JournalEditComponent  {
     console.log('Subytype :', e.value);
   }
 
-
-  onDelete(e: any) {
-
-  }
-
+  private _unsubscribeAll: Subject<any> = new Subject<any>();
+  
   onUpdate() {
     const dDate = new Date();
     const User = this.auth.currentUser;
@@ -123,20 +120,46 @@ export class JournalEditComponent  {
       reference: journal_details.reference,
       fund: journal_details.fund
     }
-    console.log(JSON.stringify(rawData));
     this.journalService.updateJournalDetail(rawData).pipe(
       takeUntilDestroyed(this.destroyRef)
-    )
-    .subscribe()
-    this.dialogRef.close();
+    ).subscribe()
+    this.dialogRef.close('Update');
   }
 
   onClose() {
-    this.dialogRef.close();
+    this.dialogRef.close('Close');
   }
 
   onCreate() {
-    this.dialogRef.close();
+    const dDate = new Date();
+    const User = this.auth.currentUser;
+    const createDate = dDate.toISOString().split('T')[0];
+    const journal_details = { ...this.journalDetailEditForm.value } as IJournalDetail;
+    const rawData = {
+      journal_id: this.journal_id,
+      journal_subid: this.journal_subid,
+      account: this.account,
+      child: journal_details.child,
+      description: journal_details.description,
+      create_date: createDate,
+      create_user: User.email,
+      sub_type: journal_details.sub_type,
+      debit: journal_details.debit,
+      credit: journal_details.credit,
+      reference: journal_details.reference,
+      fund: journal_details.fund
+    }
+    this.journalService.createJournalDetail(rawData).pipe(
+      takeUntilDestroyed(this.destroyRef)
+    ).subscribe()
+    this.dialogRef.close('Update');
+    this.dialogRef.close('Create');
+
   }
+
+  onDelete(e: any) {
+    this.dialogRef.close('Delete')
+  }
+
 
 }

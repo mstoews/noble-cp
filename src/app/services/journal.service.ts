@@ -55,8 +55,8 @@ export interface IAccounts {
 
 
 export interface IJournalViewDetails {
-    period?          : number,
-    period_year?     : number,
+    period?         : number,
+    period_year?    : number,
     journal_id      : number,
     journal_subid   : number,
     account         : number,
@@ -79,7 +79,6 @@ export class JournalService {
   private baseUrl = environment.baseUrl;
   constructor() { }
 
-  // Header
   getJournalHeader(journal_id: number) {
     var url = this.baseUrl + '/v1/get_jh/'+ journal_id.toString();
     return this.httpClient.post<IJournalHeader>(url,
@@ -146,32 +145,25 @@ export class JournalService {
       shareReplay())
   }
 
-
   updateJournalHeader(header: IJournalHeader) {
     var url = this.baseUrl + '/v1/update_jh';
 
     var journalHeader: IJournalHeader = {
-      journal_id: 0,
-      description: '',
+      journal_id: header.journal_id,
+      description: header.description,
       booked: false,
-      booked_date: '',
-      booked_user: '',
-      create_date: '',
-      create_user: '',
-      period: 0,
-      period_year: 0,
-      transaction_date: '',
-      status: '',
-      type: '',
-      amount: 0
+      booked_date: header.booked_date,
+      booked_user: header.booked_user,
+      create_date: header.create_date,
+      create_user: header.create_user,
+      period: header.period,
+      period_year: header.period_year,
+      transaction_date: header.transaction_date,
+      status: header.status,
+      type: header.type,
+      amount: header.amount
     }
-
-    return this.httpClient.post<IJournalHeader>(url,
-      {
-        journal: journalHeader
-      },
-      ).pipe(
-      shareReplay())
+    return this.httpClient.post<IJournalHeader>(url, journalHeader).pipe(shareReplay());
   }
 
   deleteJournalHeader(journal_id: number) {
@@ -214,34 +206,31 @@ export class JournalService {
     return this.httpClient.post<IJournalDetail>(url, detail).pipe(shareReplay())
   }
 
-  deleteJournalDetail(journal_id: number){ }
 
-  createJournalDetail(detail: IJournalDetail) {}
+  deleteJournalDetail(journal_id: number){ 
+    var url = this.baseUrl + '/v1/create_jd';
+    return this.httpClient.post<IJournalDetail>(url, journal_id).pipe(shareReplay())
+  }
 
-  // Book Journals
-  // Summary Journal Outstanding
-  // Create TrialBalance
-  // Roll Period
 
+  createJournalDetail(detail: IJournalDetail) {
+    var url = this.baseUrl + '/v1/create_jd';
+    var journalDetail: IJournalDetail = {
+      journal_id: journalDetail.journal_id,
+      journal_subid: detail.journal_subid,
+      account: detail.account,
+      child: detail.child,
+      description: detail.description,
+      create_date: detail.create_date,
+      create_user: detail.create_user,
+      sub_type: detail.sub_type,
+      debit: detail.debit,
+      credit: detail.credit,
+      reference: detail.reference,
+      fund: detail.fund
+    }
+
+    return this.httpClient.post<IJournalDetail>(url, journalDetail).pipe(shareReplay())
+  }
 }
 
-/*
-create table public.gl_journal_detail
-(
-    journal_id    integer not null,
-    journal_subid integer not null,
-    account       integer,
-    child         integer,
-    sub_type      varchar(30),
-    description   varchar(100),
-    debit         numeric(16, 2),
-    credit        numeric(16, 2),
-    create_date   date,
-    create_user   varchar(20),
-    constraint gl_journal_detail_pk
-        primary key (journal_id, journal_subid)
-);
-
-alter table public.gl_journal_detail
-    owner to mstoews;
-*/

@@ -60,8 +60,7 @@ export class JournalDetailComponent implements OnInit {
     glaccts$ = this.journalService.listAccounts();
 
     // details$ = this.transactionService.getAllTransactions();
-    ngOnInit() {
-        console.debug('JournalDetailComponent ngOnInit: ', this.key);
+    ngOnInit() {        
         const journalNo = Number(this.key)
         this.details$ = this.journalService.getJournalDetail(journalNo);
         this.journalForm = this.fb.group({
@@ -80,14 +79,13 @@ export class JournalDetailComponent implements OnInit {
         throw new Error('Method not implemented.');
     }
 
-    onDelete($event: any) {
+    onDelete() {
         this.isModifiable = false;
         this.notifyTransactionDelete.emit();
     }
 
     onUpdate() {
         this.notifyTransactionEdit.emit();
-
     }
 
 

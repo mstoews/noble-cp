@@ -36,8 +36,8 @@
         <mat-icon [svgIcon]="'heroicons_outline:document-plus'"></mat-icon>
     </button>
 
-    <button mat-icon-button color="primary" (click)="onCreateTemplate()" class="bg-gray-200 ml-1" matTooltip="Create Template" aria-label="Template">
-        <mat-icon [svgIcon]="'mat_outline:content_copy'"></mat-icon>
+    <button mat-icon-button color="primary" (click)="onDelete()" class="bg-gray-200 ml-1" matTooltip="Create Template" aria-label="Template">
+        <mat-icon [svgIcon]="'mat_outline:delete'"></mat-icon>
     </button>
 
     <button mat-icon-button color="primary" (click)="onUpdate()" class="bg-gray-200 ml-1" matTooltip="Edit" aria-label="Template">
@@ -97,7 +97,7 @@
                             <mat-icon>update</mat-icon>
                         </button>
 
-                        <button mat-raised-button color="primary" class="m-1" (click)="onDelete($event)"
+                        <button mat-raised-button color="primary" class="m-1" (click)="onDelete()"
                             matTooltip="Cancel"
                             aria-label="Button that displays a tooltip when focused or hovered over">
                             Cancel
