@@ -54,7 +54,7 @@
                             <dxi-column dataField="update_user" dataType="string" width="100" ></dxi-column>
                             <dxo-master-detail [enabled]="true" template="detail"> </dxo-master-detail>
                                 <div *dxTemplate="let trans of 'detail'">
-                                    <journal-detail [key]="trans.data.child"></journal-detail>
+                                    <journal-details [key]="trans.data.child"></journal-details>
                                 </div>
                             <dxo-export [enabled]="true" [allowExportSelectedData]="true"></dxo-export>                                                                
                             

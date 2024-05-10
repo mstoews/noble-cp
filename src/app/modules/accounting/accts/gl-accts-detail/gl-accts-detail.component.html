@@ -1,5 +1,5 @@
 <div class="h-full border-gray-300 rounded-2xl">
-    <!-- @if (!isModifiable) {
+    @if (!isModifiable) {
 
         <button mat-raised-button color="primary" class="mb-2 mr-1" (click)="onAmendJournal()" matTooltip="Save"
             aria-label="Button that displays a tooltip when focused or hovered over">
@@ -74,8 +74,7 @@
             </div>
         </div>
     </mat-card>
-    } -->
-
+    } 
     <ng-container>
         <div class="flex flex-col h-full">
             @if (accounts$ | async; as accounts) {

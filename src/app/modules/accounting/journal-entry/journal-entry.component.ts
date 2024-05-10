@@ -232,7 +232,7 @@ export class JournalEntryComponent {
         this.bOpenDetail = true;
         this.nJournal = e.data.journal_id;
         this.openDrawer();
-        this.journalUpdate.refresh(this.nJournal);
+       //  this.journalUpdate.refresh(this.nJournal);
         
     }
 

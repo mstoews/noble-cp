@@ -52,7 +52,6 @@ export class GLAcctDetailComponent implements OnInit{
     private fb = inject(FormBuilder);
     private transactionService = inject(GlTransactionsService);
     private glAccountsService = inject(GLAccountsService);
-
     private fuseConfirmationService = inject(FuseConfirmationService);
     @Input() account: string;
 

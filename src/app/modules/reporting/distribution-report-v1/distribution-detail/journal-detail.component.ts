@@ -40,7 +40,7 @@ const imports = [
 ];
 
 @Component({
-    selector: 'journal-detail',
+    selector: 'journal-details',
     standalone: true,
     imports: [imports],
     templateUrl: './journal-detail.component.html',

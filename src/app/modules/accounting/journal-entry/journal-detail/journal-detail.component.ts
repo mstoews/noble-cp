@@ -79,7 +79,7 @@ export class JournalDetailComponent implements OnInit {
         throw new Error('Method not implemented.');
     }
 
-    onDelete() {
+    onDeleteTransaction() {
         this.isModifiable = false;
         this.notifyTransactionDelete.emit();
     }

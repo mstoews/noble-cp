@@ -12,7 +12,7 @@
                 <!-- Close button -->
                 <div class="lg:hidden">
                     <button mat-icon-button (click)="drawer.close()">
-                        <mat-icon [svgIcon]="'heroicons_outline:academic-cap-mark'"></mat-icon>
+                        <mat-icon [svgIcon]="'heroicons_outline:academic-cap'"></mat-icon>
                     </button>
                 </div>
             </div>
@@ -75,7 +75,7 @@
                     <!-- Transaction list -->
                     @case ('listing') {  <transactions></transactions>   }
                     <!-- entry -->
-                    @case ('entry') { <journal-update></journal-update>  }
+                    @case ('entry') { <journal-update [bNewTransaction]="false"></journal-update>  }
                     <!-- Build and maintain Templates -->
                     @case ('template') {  }
 
