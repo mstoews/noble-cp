@@ -74,7 +74,7 @@ export class JournalEntryComponent {
     readonly allowedPageSizes = [10, 20, 'all'];
     currentRowData: any;
 
-    readonly displayModes = [{ text: "Display Mode 'full'", value: 'full' }, { text: "Display Mode 'compact'", value: 'compact' }];
+    readonly displayModes = [{ text: "Display Mode 'compact'", value: 'compact' }];
     displayMode = 'compact';
     showPageSizeSelector = true;
     showInfo = true;

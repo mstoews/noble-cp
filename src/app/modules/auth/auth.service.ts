@@ -1,5 +1,5 @@
 import { Injectable, computed, inject, signal } from '@angular/core';
-import { from, defer, switchMap, tap, BehaviorSubject, Observable } from 'rxjs';
+import { from, defer, switchMap, tap, BehaviorSubject, Observable, of } from 'rxjs';
 import {
   User,
   createUserWithEmailAndPassword,
@@ -54,6 +54,15 @@ export class AuthService {
         this.UpdateState(token);
       },
     });
+  }
+
+  refreshToken(): Observable<string> {
+    idToken(this.auth).subscribe({
+      next: (token) => {
+        this.UpdateState(token);
+      },
+    });
+    return of(this.GetToken());
   }
 
   login(credentials: Credentials) {

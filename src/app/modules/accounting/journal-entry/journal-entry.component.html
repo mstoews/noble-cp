@@ -1,13 +1,15 @@
+<div class="sm:hide md:visible">
 <grid-menubar class="pl-5 pr-5" [inTitle]="'Journal Entry'" (notifyParentRefresh)="onRefresh()"
     (notifyParentAdd)="onAdd()" (notifyParentDelete)="onDeleteSelection()" (notifyParentUpdate)="onUpdateSelection()">
 </grid-menubar>
+</div>
 
 <div class="flex flex-col min-w-0 overflow-y-auto -px-10" cdkScrollable>
     <!-- Main -->
 
     <div class="flex-auto">
         <div class="h-full border-gray-300 rounded-2xl">
-            <mat-drawer class="w-[1400px] bg-white-100" #drawer [opened]="false" mode="push" [position]="'end'"
+            <mat-drawer class="w-full" #drawer [opened]="false" mode="push" [position]="'end'"
                 [disableClose]="false">
                 @if (bOpenDetail === true) {
                 <journal-update 
@@ -24,7 +26,7 @@
                 <ng-container>
                     @if (journalHeader$ | async; as rows) {
                     <div class="flex flex-1 flex-col overflow-auto">
-                        <dx-data-grid class=" h-[calc(1200px - 200px)]" [dataSource]="rows" [remoteOperations]="false"
+                        <dx-data-grid class=" lg:w-full" [dataSource]="rows" [remoteOperations]="false"
                             [allowColumnReordering]="true" [rowAlternationEnabled]="true" [showBorders]="true"
                             [focusedRowEnabled]="true" [focusedRowIndex]="0" [repaintChangesOnly]="true"                            
                             keyExpr="journal_id" (onExporting)="onExporting($event)"
@@ -43,7 +45,7 @@
                             </dxo-pager>
 
                             <dxi-column dataField="journal_id" caption="ID" width="100" dataType="number" alignment="left"></dxi-column>                            
-                            <dxi-column dataField="description" width="350" dataType="string"></dxi-column>
+                            <dxi-column dataField="description" width="300" dataType="string"></dxi-column>
                             <dxi-column dataField="amount" width="150" [customizeText]="formatNumber" dataType="number"></dxi-column>
                             <dxi-column dataField="create_user"></dxi-column>
                             <dxi-column dataField="create_date" caption="Date" dataType="date"></dxi-column>

@@ -1,6 +1,6 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
-import { catchError, filter, shareReplay, throwError } from 'rxjs';
+import { catchError, filter, retry, shareReplay, throwError } from 'rxjs';
 
 import { environment } from 'environments/environment.prod';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -128,7 +128,7 @@ export class JournalService {
 
   listJournalHeader() {
     var url = this.baseUrl + '/v1/list_jh';
-    return this.httpClient.get<IJournalHeader[]>(url).pipe(
+    return this.httpClient.get<IJournalHeader[]>(url).pipe(retry(3)).pipe(
       catchError(err => {
           const message = "Could not retrieve journals ...";
           console.debug(message, err);

@@ -3,6 +3,7 @@ import { TokenService } from './token.service';
 import { environment } from 'environments/environment.prod'
 import { inject } from '@angular/core';
 import { AuthService } from './modules/auth/auth.service';
+import { catchError, switchMap } from 'rxjs';
 
 const getHeaders = (): any => {
   const authState = inject(AuthService);
@@ -19,21 +20,8 @@ const getHeaders = (): any => {
 
 
 export const authTokenInterceptor: HttpInterceptorFn = (req, next) => {
-
-  const baseUrl = environment.baseUrl
-  // const tokenService = inject(TokenService);
-  // var jwt: string;
-
-  // jwt = localStorage.getItem('token');
-  // if (req.url.startsWith(baseUrl)) {
-  //   tokenService.getToken().then((token) => {
-  //     jwt = token
-  //     if (jwt !== undefined)
-  //       {
-  //         localStorage.setItem('token', jwt);
-  //       }
-  //   });
-  // }
+  const authService = inject(AuthService);
+  const baseUrl = environment.baseUrl  
    if (req.url.indexOf('oauthCallback') > -1) {
      return next(req)
    }
@@ -43,6 +31,24 @@ export const authTokenInterceptor: HttpInterceptorFn = (req, next) => {
       setHeaders: getHeaders(),
     });
   }
-  return next(req);
-
-};
+  return next(req).pipe(
+    catchError ( error => {  
+      if (error.status === 401) {
+        // Unauthorized - JWT Token expired
+        return authService.refreshToken().pipe(
+          switchMap((tokenReceived) => {            
+            let token : String = tokenReceived;
+            if (token != '') {
+              req = req.clone({
+                setHeaders: {
+                  'Accept' : 'application/json',
+                  'Authorization' : `Bearer ${token}`,
+                },
+              })
+          }
+            return next(req);
+        })
+    )}
+    })
+  )
+}

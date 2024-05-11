@@ -68,6 +68,8 @@
                       </div>
                 }
                 </div>
+                @if (editing === true)
+                {
                 <div class="text-3xl m-1 text-gray-100 p-2 mt-2  bg-slate-600">Update Details {{journal_subid}}</div>
                 <section class="flex flex-col md:flex-row mt-2">
                     
@@ -151,9 +153,12 @@
                         </mat-form-field>
                     </div>
                 </section>            
+                }
             </div>
+                
         </form>
     </div>
+    
 
     <div mat-dialog-actions class="m-1">
         <button mat-icon-button color="primary" class="m-1 bg-slate-200 text-gray-100" (click)="onUpdateJournalEntry()"

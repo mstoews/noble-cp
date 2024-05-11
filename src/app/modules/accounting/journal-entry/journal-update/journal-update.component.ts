@@ -86,6 +86,7 @@ export class JournalUpdateComponent implements OnInit {
   subtypes$ = this.subtypeService.read();
   currentRowData: any;
   journal_subid: any;
+  editing = false;
 
   ngOnInit(): void {
     this.createEmptyForm();
@@ -97,6 +98,7 @@ export class JournalUpdateComponent implements OnInit {
     this.currentRowData = e.row.data;
     this.journal_subid = e.row.data.journal_subid;
     this.updateForm(e.row.data)
+    this.editing = true;
   }
 
 
@@ -218,6 +220,7 @@ export class JournalUpdateComponent implements OnInit {
       debit: ['', Validators.required],
       credit: ['', Validators.required]
     });
+    this._change.markForCheck();
   }
 
   closeDrawer() {
@@ -232,6 +235,7 @@ export class JournalUpdateComponent implements OnInit {
   }
 
   onUpdateJournalEntry() {
+    this.editing = false;
     var header = this.journalForm.getRawValue();
     var detail = this.journalDetailForm.getRawValue();
 
