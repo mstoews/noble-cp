@@ -12,15 +12,16 @@ import { CommonModule } from '@angular/common';
 import { FundsService } from 'app/services/funds.service';
 import { FuseConfirmationService } from '@fuse/services/confirmation';
 import { GridMenubarStandaloneComponent } from '../grid-menubar/grid-menubar.component';
-import { IType } from 'app/models';
+
 import { MaterialModule } from 'app/services/material.module';
+import { IFund } from 'app/services/kanban.service';
+
 
 const imports = [
     CommonModule,
     MaterialModule,
     ReactiveFormsModule,
     FormsModule,
-
     DxDataGridModule,
     DxBulletModule,
     DxTemplateModule,
@@ -85,9 +86,7 @@ export class FundsComponent implements OnInit {
     createEmptyForm() {
         this.accountsForm = this.fb.group({
             fund: [''],
-            description: [''],
-            create_date: [''],
-            create_user: [''],
+            description: ['']        
         });
     }
 
@@ -113,10 +112,10 @@ export class FundsComponent implements OnInit {
     onUpdate(e: any) {
         const dDate = new Date();
         const updateDate = dDate.toISOString().split('T')[0];
-        const account = { ...this.accountsForm.value } as IType;
+        const fund = { ...this.accountsForm.value } as IFund;
         const rawData = {
-            fund: account.type,
-            description: account.description,
+            fund: fund.fund,
+            description: fund.description,
             update_date: updateDate,
             update_user: 'admin_update',
         };

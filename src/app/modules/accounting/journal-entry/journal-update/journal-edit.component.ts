@@ -120,9 +120,8 @@ export class JournalEditComponent  {
       reference: journal_details.reference,
       fund: journal_details.fund
     }
-    this.journalService.updateJournalDetail(rawData).pipe(
-      takeUntilDestroyed(this.destroyRef)
-    ).subscribe()
+    this.journalService.updateJournalDetail(rawData);
+    
     this.dialogRef.close('Update');
   }
 

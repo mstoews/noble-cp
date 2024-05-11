@@ -1,5 +1,4 @@
 import {
-    AbstractControl,
     FormBuilder,
     FormGroup,
     FormsModule,
@@ -11,11 +10,11 @@ import { DxBulletModule, DxDataGridModule, DxTemplateModule } from 'devextreme-a
 import { CommonModule } from '@angular/common';
 import { FuseConfirmationService } from '@fuse/services/confirmation';
 import { GridMenubarStandaloneComponent } from '../grid-menubar/grid-menubar.component';
-import { HttpClient } from '@angular/common/http';
-import { IType } from 'app/models';
+
 import { MatDrawer } from '@angular/material/sidenav';
 import { MaterialModule } from 'app/services/material.module';
 import { SubTypeService } from 'app/services/subtype.service';
+import { IType } from 'app/services/type.service';
 
 const imports = [
     CommonModule,
@@ -41,8 +40,7 @@ const imports = [
 })
 export class GlSubTypeComponent implements OnInit {
 
-    private client = inject(HttpClient);
-    private _fuseConfirmationService = inject(FuseConfirmationService);
+    private fuseConfirmationService = inject(FuseConfirmationService);
     private fb = inject(FormBuilder);
     private subtypeService = inject(SubTypeService)
     @ViewChild('drawer') drawer!: MatDrawer;
@@ -65,7 +63,7 @@ export class GlSubTypeComponent implements OnInit {
 
     onDelete(e: any) {
         console.debug(`onDelete ${JSON.stringify(e)}`);
-        const confirmation = this._fuseConfirmationService.open({
+        const confirmation = this.fuseConfirmationService.open({
             title: 'Delete Type?',
             message: 'Are you sure you want to delete this type? ',
             actions: {
@@ -89,11 +87,7 @@ export class GlSubTypeComponent implements OnInit {
     createEmptyForm() {
         this.accountsForm = this.fb.group({
             sub_type: [''],
-            description: [''],
-            create_date: [''],
-            create_user: [''],
-            update_date: [''],
-            update_user: [''],
+            description: [''],            
         });
     }
 

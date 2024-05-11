@@ -19,6 +19,7 @@ import { TasksComponent } from './task/tasks.component';
 import { KanbanTypesComponent } from './types/types.component';
 import { StatusComponent } from './status/status.component';
 import { KanbanListComponent } from './kanban-list.component';
+import { KanbanPriorityComponent } from './priority/priority.component';
 
 @Component({
     selector: 'gl-main',
@@ -36,7 +37,8 @@ import { KanbanListComponent } from './kanban-list.component';
         TasksComponent,
         KanbanTypesComponent,
         StatusComponent,
-        KanbanListComponent
+        KanbanListComponent,
+        KanbanPriorityComponent,
         ],
     providers: [HttpClient],
     changeDetection: ChangeDetectionStrategy.OnPush,

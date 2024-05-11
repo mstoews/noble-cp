@@ -1,5 +1,5 @@
-import { BehaviorSubject, Observable, Subject, catchError, from, map, mergeMap, retry, shareReplay, toArray } from 'rxjs';
-import { Injectable, OnDestroy, computed, inject, signal } from '@angular/core';
+import { BehaviorSubject, Observable, Subject, map, mergeMap, retry, shareReplay, toArray } from 'rxjs';
+import { Injectable, computed, inject, signal } from '@angular/core';
 
 import { AUTH } from 'app/app.config';
 import { HttpClient } from '@angular/common/http';
@@ -51,9 +51,32 @@ export interface IPriority {
 export interface IType {
   type: string,
   description: string,
-  fullDescrition?: string,
-  updatedte?: string,
-  updateusr?: string
+  fullDescription?: string,
+  updatedte: string,
+  updateusr: string
+}
+
+export interface IFund {
+  fund: string,
+  description: string,
+  fullDescription?: string,
+  updatedte: string,
+  updateusr: string
+}
+
+
+export interface ITeam {
+  id?: string;
+  type: string;
+  reporting: string;
+  description: string;
+  email: string;
+  image: string;
+  uid: string;
+  updateDate: string;
+  updateUsr: string;  
+  update_dte: string,
+  update_usr: string
 }
 
 export interface IKanban {
@@ -143,7 +166,6 @@ export class KanbanService {
     ),
     toArray());
   }
-
 
   readTeams() {
     var url = this.baseUrl + '/v1/task_team_list';

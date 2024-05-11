@@ -39,6 +39,15 @@ export interface CategorySnap extends ICategory {
   category: ICategory[];
 }
 
+export type IType = {
+  id?: string;
+  type: string;
+  description: string;
+  create_date: string;
+  create_user: string;
+  update_date: string;
+  update_user: string;  
+}
 
 export type NobleLedgerUser = {
   photoURL: string | null;
@@ -138,19 +147,6 @@ export interface IDistributionLedgerReport {
   create_user:         string;
 }
 
-
-
-
-export interface IType {
-  id?: string;
-  type: string;
-  reporting: string;
-  description: string;
-  createDate: string;
-  createUsr: string;
-  updateDate: string;
-  updateUsr: string;
-}
 
 export interface IFunds {
   id?: string;

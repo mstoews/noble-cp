@@ -1,73 +1,71 @@
+<grid-menubar class="pl-5 pr-5" [inTitle]="'Journal Entry'" (notifyParentRefresh)="onRefresh()"
+    (notifyParentAdd)="onAdd()" (notifyParentDelete)="onDeleteSelection()" (notifyParentUpdate)="onUpdateSelection()">
+</grid-menubar>
 
-    <grid-menubar class="pl-5 pr-5" [inTitle]="'Journal Entry'" (notifyParentRefresh)="onRefresh()"
-        (notifyParentAdd)="onAdd()" (notifyParentDelete)="onDeleteSelection()"
-        (notifyParentUpdate)="onUpdateSelection()">
-    </grid-menubar>
+<div class="flex flex-col min-w-0 overflow-y-auto -px-10" cdkScrollable>
+    <!-- Main -->
 
-    <div class="flex flex-col min-w-0 overflow-y-auto -px-10" cdkScrollable>
-        <!-- Main -->
+    <div class="flex-auto">
+        <div class="h-full border-gray-300 rounded-2xl">
+            <mat-drawer class="w-[1400px] bg-white-100" #drawer [opened]="false" mode="push" [position]="'end'"
+                [disableClose]="false">
+                @if (bOpenDetail === true) {
+                <journal-update 
+                   [journal_id]="nJournal" 
+                   [sTitle]="'Journal Entry Detail'"
+                   [description]="description"
+                   [transaction_date]="transaction_date"
+                   [details$]="details$"
+                    (notifyDrawerClose)="closeDrawer()">
+                </journal-update>
+                }
+            </mat-drawer>
+            <mat-drawer-container class="flex-col h-full">
+                <ng-container>
+                    @if (journalHeader$ | async; as rows) {
+                    <div class="flex flex-1 flex-col overflow-auto">
+                        <dx-data-grid class=" h-[calc(1200px - 200px)]" [dataSource]="rows" [remoteOperations]="false"
+                            [allowColumnReordering]="true" [rowAlternationEnabled]="true" [showBorders]="true"
+                            [focusedRowEnabled]="true" [focusedRowIndex]="0" [repaintChangesOnly]="true"
+                            keyExpr="journal_id" (onExporting)="onExporting($event)"
+                            (onFocusedRowChanged)="onFocusedDetailRowChanged($event)"
+                            (onCellDblClick)="onCellDoubleClicked($event)">
 
-        <div class="flex-auto">
-            <div class="h-full border-gray-300 rounded-2xl">
-                <mat-drawer class="w-[full] bg-white-100" #drawer [opened]="false" mode="push" [position]="'end'" [disableClose]="false">   
-                @if (bOpenDetail === true) {                
-                        <journal-update 
-                        [journal_id]="nJournal" 
-                        [sTitle]="'Journal Entry Detail'"
-                        (notifyDrawerClose) = "closeDrawer()">
-                        </journal-update>
-                }     
-                </mat-drawer>
-                <mat-drawer-container class="flex-col h-full">
-                    <ng-container>
-                        @if (journalHeader$ | async; as rows) {
-                        <div class="flex flex-1 flex-col overflow-auto">
-                            <dx-data-grid class=" h-[calc(1200px - 200px)]" [dataSource]="rows" [remoteOperations]="false"
-                                [allowColumnReordering]="true" [rowAlternationEnabled]="true" [showBorders]="true"
-                                [focusedRowEnabled]="true" [focusedRowIndex]="1" [repaintChangesOnly]="true"
-                                keyExpr="journal_id" (onExporting)="onExporting($event)"
-                                (onFocusedRowChanged)="onFocusedDetailRowChanged($event)"
-                                (onCellDblClick)="onCellDoubleClicked($event)">      
-                                
-                                <dxo-scrolling rowRenderingMode="virtual"> </dxo-scrolling>
-                                <dxo-paging [pageSize]="20"> </dxo-paging>
-                                <dxo-pager
-                                    [visible]="true"
-                                    [allowedPageSizes]="allowedPageSizes"
-                                    [displayMode]="displayMode"
-                                    [showPageSizeSelector]="showPageSizeSelector"
-                                    [showInfo]="showInfo"
-                                    [showNavigationButtons]="showNavButtons"
-                                >
-                                </dxo-pager>
-                                                                
-                                <dxo-scrolling mode="virtual"></dxo-scrolling>
-                                <dxo-search-panel [visible]="true" [highlightCaseSensitive]="true"></dxo-search-panel>
-                                <dxo-group-panel [visible]="true"></dxo-group-panel>
-                                <dxo-grouping [autoExpandAll]="false"></dxo-grouping>
-                                <dxo-filter-row [visible]="false"></dxo-filter-row>
-                                <dxo-state-storing [enabled]="false" type="localStorage" storageKey="journals">
-                                </dxo-state-storing>
-                                <dxi-column dataField="journal_id" caption="ID" width="100" dataType="number" alignment="left"></dxi-column>
-                                <!-- <dxi-column dataField="type" caption="Type" width="150" dataType="string"></dxi-column> -->
-                                <dxi-column dataField="description" width="350" dataType="string"></dxi-column>
-                                <dxi-column dataField="amount" width="150" [customizeText]="formatNumber" dataType="number"></dxi-column>
-                                <dxi-column dataField="create_user"></dxi-column>
-                                <dxi-column dataField="create_date" caption="Transaction D" dataType="date"></dxi-column>
-                                <dxi-column dataField="booked_user" dataType="string"></dxi-column>
-                                <dxi-column dataField="booked_date" dataType="date"></dxi-column>
-                                <dxi-column dataField="booked" dataType="boolean" template="book"></dxi-column>
-                                <dxo-master-detail [enabled]="true" template="detail"> </dxo-master-detail>
-                                <div *dxTemplate="let journal of 'detail'">
-                                    <journal-detail [key]="journal.data.journal_id" (notifyTransactionEdit)="onEdit()" ></journal-detail>
-                                </div>
-                                <dxo-export [enabled]="true" [allowExportSelectedData]="true"></dxo-export>
-                            </dx-data-grid>
-                        </div>
-                        }
+                            <dxo-search-panel [visible]="true" [highlightCaseSensitive]="true"></dxo-search-panel>
+                            <dxo-group-panel [visible]="true"></dxo-group-panel>
+                            <dxo-grouping [autoExpandAll]="true"></dxo-grouping>
+                            <dxo-filter-row [visible]="false"></dxo-filter-row>
+                            <dxo-scrolling rowRenderingMode="virtual"> </dxo-scrolling>
+                            <dxo-paging [pageSize]="10"> </dxo-paging>
+                            <dxo-pager [visible]="true" [allowedPageSizes]="allowedPageSizes"
+                                [displayMode]="displayMode" [showPageSizeSelector]="showPageSizeSelector"
+                                [showInfo]="showInfo" [showNavigationButtons]="showNavButtons">
+                            </dxo-pager>
 
-                    </ng-container>
-                </mat-drawer-container>
-            </div>
+                            <dxi-column dataField="journal_id" caption="ID" width="100" dataType="number" alignment="left"></dxi-column>                            
+                            <dxi-column dataField="description" width="350" dataType="string"></dxi-column>
+                            <dxi-column dataField="amount" width="150" [customizeText]="formatNumber" dataType="number"></dxi-column>
+                            <dxi-column dataField="create_user"></dxi-column>
+                            <dxi-column dataField="create_date" caption="Date" dataType="date"></dxi-column>
+                            <dxi-column dataField="booked_user" dataType="string"></dxi-column>
+                            <dxi-column dataField="booked_date" dataType="date"></dxi-column>
+                            <dxi-column dataField="booked" dataType="boolean" template="book"></dxi-column>
+                            <dxo-master-detail [enabled]="true" template="detail"> </dxo-master-detail>
+                            <div *dxTemplate="let journal of 'detail'">
+                                <journal-detail 
+                                    [key]="journal.data.journal_id" 
+                                    [description]="journal.data.description"
+                                    [transaction_date]="journal.data.transaction_date"                                    
+                                    (notifyTransactionEdit)="onEdit()">
+                                </journal-detail>
+                            </div>
+                            <dxo-export [enabled]="true" [allowExportSelectedData]="true"></dxo-export>
+                        </dx-data-grid>
+                    </div>
+                    }
+
+                </ng-container>
+            </mat-drawer-container>
         </div>
     </div>
+</div>

@@ -1,12 +1,137 @@
-import { Component } from '@angular/core';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { Component, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
+import { DxBulletModule, DxDataGridModule, DxTemplateModule } from 'devextreme-angular';
+import { CommonModule } from '@angular/common';
+import { FuseConfirmationService } from '@fuse/services/confirmation';
+import { ITeam, KanbanService } from 'app/services/kanban.service';
+import { MatDrawer } from '@angular/material/sidenav';
+import { MaterialModule } from 'app/services/material.module';
+import { GridMenubarStandaloneComponent } from 'app/modules/accounting/grid-menubar/grid-menubar.component';
+import { Subject, map, takeUntil } from 'rxjs';
+import { DxButtonModule } from 'devextreme-angular';
+import { DxDataGridTypes } from 'devextreme-angular/ui/data-grid';
+
+const imports = [
+  CommonModule,
+  MaterialModule,
+  ReactiveFormsModule,
+  FormsModule,
+  DxDataGridModule,
+  DxBulletModule,
+  DxTemplateModule,
+  DxButtonModule,
+  GridMenubarStandaloneComponent
+];
 
 @Component({
-  selector: 'app-team',
+  selector: 'kanban-teams',
   standalone: true,
-  imports: [],
-  templateUrl: './team.component.html',
-  styles: ``
+  imports: [imports],
+  templateUrl: 'team.component.html',
+  styles: `::ng-deep .dx-datagrid .dx-datagrid-rowsview .dx-row-focused.dx-data-row:not(.dx-edit-row) > td:not(.dx-focused) {
+        background-color: rgb(195, 199, 199);
+        border-color: #ada6a7;
+        }`,
+  providers: []
 })
-export class TeamComponent {
+export class KanbanTypesComponent implements OnInit, OnDestroy {
+
+  public data: any;
+
+  private _fuseConfirmationService = inject(FuseConfirmationService);
+  private _unsubscribeAll: Subject<any> = new Subject<any>();
+
+  private fb = inject(FormBuilder);
+  private kanbanService = inject(KanbanService)
+  @ViewChild('drawer') drawer!: MatDrawer;
+
+  public sTitle = 'Team';
+  public accountsForm!: FormGroup;
+  public data$: any
+  public typeForm?: FormGroup | any;
+  public selectedItemKeys: string[] = [];
+
+  ngOnInit() {
+    this.createEmptyForm();
+    this.data$ = this.kanbanService.readTeams();
+  }
+
+  ngOnDestroy(): void {
+    this._unsubscribeAll.next(null);
+    this._unsubscribeAll.complete();
+  }
+
+  onCreate(e: any) {
+    this.createEmptyForm();
+    this.openDrawer();
+  }
+
+  onSelectionChanged({ selectedRowKeys }: DxDataGridTypes.SelectionChangedEvent) {
+    this.selectedItemKeys = selectedRowKeys;
+  }
+
+  deleteRecords() {
+    this.selectedItemKeys.forEach((key) => {
+
+    });
+    this.kanbanService.readTeams();
+  }
+
+  onDelete(e: any) {
+    console.debug(`onDelete ${JSON.stringify(e)}`);
+    const confirmation = this._fuseConfirmationService.open({
+      title: 'Delete Type?',
+      message: 'Are you sure you want to delete this team? ',
+      actions: {
+        confirm: {
+          label: 'Delete',
+        },
+      },
+    });
+
+    confirmation.afterClosed().subscribe((result) => {
+      if (result === 'confirmed') {
+      }
+    });
+    this.closeDrawer();
+  }
+
+  createEmptyForm() {
+    this.accountsForm = this.fb.group({
+      team: [''],
+      description: [''],
+    });
+  }
+
+  openDrawer() {
+    const opened = this.drawer.opened;
+    if (opened !== true) {
+      this.drawer.toggle();
+    } else {
+      return;
+    }
+  }
+
+  closeDrawer() {
+    const opened = this.drawer.opened;
+    if (opened === true) {
+      this.drawer.toggle();
+    } else {
+      return;
+    }
+  }
+
+  onUpdate(e: any) {
+    const dDate = new Date();
+    const updateDate = dDate.toISOString().split('T')[0];
+    const team = { ...this.accountsForm.value } as ITeam;
+    const rawData = {
+      ...team,
+      create_date: updateDate,
+    };
+
+    this.closeDrawer();
+  }
+
 
 }

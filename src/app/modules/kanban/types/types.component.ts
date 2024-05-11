@@ -1,10 +1,9 @@
-import { AbstractControl, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Component, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
 import { DxBulletModule, DxDataGridModule, DxTemplateModule } from 'devextreme-angular';
 import { CommonModule } from '@angular/common';
 import { FuseConfirmationService } from '@fuse/services/confirmation';
-import { IType } from 'app/models';
-import { KanbanService } from 'app/services/kanban.service';
+import { IType, KanbanService } from 'app/services/kanban.service';
 import { MatDrawer } from '@angular/material/sidenav';
 import { MaterialModule } from 'app/services/material.module';
 import { GridMenubarStandaloneComponent } from 'app/modules/accounting/grid-menubar/grid-menubar.component';

@@ -36,7 +36,8 @@ const imports = [
 })
 export class JournalDetailComponent implements OnInit {
     @Input() key: string;
-    @Input() journal_id: string;
+    @Input() journal_description: string;
+    @Input() journal_date: string;
     @Output() notifyTransactionAdd: EventEmitter<any> = new EventEmitter();
     @Output() notifyTransactionDelete: EventEmitter<any> = new EventEmitter();
     @Output() notifyTransactionEvidence: EventEmitter<any> = new EventEmitter();

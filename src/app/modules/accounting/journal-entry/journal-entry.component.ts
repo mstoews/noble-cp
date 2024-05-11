@@ -47,17 +47,15 @@ const imports = [
 })
 
 export class JournalEntryComponent {
-
-    private fb = inject(FormBuilder);
     private transactionService = inject(GlTransactionsService);
     private journalService = inject(JournalService);
     private typeService = inject(TypeService);
     private subtypeService = inject(SubTypeService);
     private fundService = inject(FundsService);
     private accountService = inject(GLAccountsService);
-    public currentDate: string;
-    public journal_details: any[];
-    public bOpenDetail: boolean = false;
+    public  currentDate: string;
+    public  journal_details: any[];
+    public  bOpenDetail: boolean = false;
     @ViewChild(JournalUpdateComponent) journalUpdate!: JournalUpdateComponent
 
     journalHeader$ = this.journalService.listJournalHeader();
@@ -74,6 +72,7 @@ export class JournalEntryComponent {
     public description = '';
     public transaction_date = '';
     readonly allowedPageSizes = [10, 20, 'all'];
+    currentRowData: any;
 
     readonly displayModes = [{ text: "Display Mode 'full'", value: 'full' }, { text: "Display Mode 'compact'", value: 'compact' }];
     displayMode = 'compact';
@@ -91,6 +90,19 @@ export class JournalEntryComponent {
         const dDate = new Date();
         this.currentDate = dDate.toISOString().split('T')[0];        
     }
+
+    onCellDoubleClicked(e: any) {                     
+        this.bOpenDetail = true;
+        this.nJournal = e.data.journal_id;
+        this.description = e.data.description;
+        this.transaction_date = e.data.create_date;
+        this.details$ = this.journalService.getJournalDetail(this.nJournal);       
+        if (this.journalUpdate !== undefined)  {
+            this.journalUpdate.refresh(this.nJournal, this.description, this.transaction_date);
+        }
+        this.openDrawer();        
+    }
+
 
     
     changeType(e) {
@@ -115,7 +127,7 @@ export class JournalEntryComponent {
         this.bOpenDetail = true;
         this.nJournal = 0;
         this.openDrawer()
-        this.journalUpdate.refresh(this.nJournal);        
+        this.journalUpdate.refresh(this.nJournal, this.description, this.transaction_date);      
     }
 
     onRefresh() {
@@ -228,24 +240,18 @@ export class JournalEntryComponent {
         this.selectedItemKeys = data.selectedRowKeys;
     }
 
-    onCellDoubleClicked(e: any) {             
-        this.bOpenDetail = true;
-        this.nJournal = e.data.journal_id;
-        this.openDrawer();
-       //  this.journalUpdate.refresh(this.nJournal);
-        
-    }
 
 
     onEdit() {             
         this.bOpenDetail = true;        
-        this.journalUpdate.refresh(this.nJournal);
+        // this.refresh(this.hJournal, this.description, this.transaction_date);
         this.openDrawer();
     }
 
 
     onFocusedDetailRowChanged(e: any) {
         this.nJournal = e.row.data.journal_id;
+        this.currentRowData = e.row.data;
     }
 
     onFocusedRowChanged(e: any) {

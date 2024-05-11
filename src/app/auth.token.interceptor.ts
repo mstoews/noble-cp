@@ -41,9 +41,6 @@ export const authTokenInterceptor: HttpInterceptorFn = (req, next) => {
   if (req.url.startsWith(baseUrl)) { 
     req = req.clone({
       setHeaders: getHeaders(),
-      // setHeaders: {
-      //   Authorization: `Bearer ${jwt}`
-      // }
     });
   }
   return next(req);

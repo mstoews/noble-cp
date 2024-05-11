@@ -12,10 +12,10 @@ import { CommonModule } from '@angular/common';
 import { FuseConfirmationService } from '@fuse/services/confirmation';
 import { GridMenubarStandaloneComponent } from '../grid-menubar/grid-menubar.component';
 import { HttpClient } from '@angular/common/http';
-import { IType } from 'app/models';
+
 import { MatDrawer } from '@angular/material/sidenav';
 import { MaterialModule } from 'app/services/material.module';
-import { TypeService } from 'app/services/type.service';
+import { IType, TypeService } from 'app/services/type.service';
 import { environment } from 'environments/environment.prod';
 
 const imports = [
@@ -142,8 +142,5 @@ export class GlTypesComponent implements OnInit {
         (target as any).parentElement.classList.remove('e-input-focus');
     }
 
-    get OrderID(): AbstractControl { return (this as any).orderForm.get('OrderID'); }
-
-    get CustomerID(): AbstractControl { return (this as any).orderForm.get('CustomerID'); }
 
 }

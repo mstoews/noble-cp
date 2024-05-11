@@ -1,8 +1,9 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
-import { filter, shareReplay } from 'rxjs';
+import { catchError, filter, shareReplay, throwError } from 'rxjs';
 
 import { environment } from 'environments/environment.prod';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 export interface IJournalHeader {
     journal_id?: number,
@@ -76,6 +77,7 @@ export interface IJournalViewDetails {
 })
 export class JournalService {
   httpClient = inject(HttpClient)
+  snackBar = inject(MatSnackBar);
   private baseUrl = environment.baseUrl;
   constructor() { }
 
@@ -127,7 +129,14 @@ export class JournalService {
   listJournalHeader() {
     var url = this.baseUrl + '/v1/list_jh';
     return this.httpClient.get<IJournalHeader[]>(url).pipe(
-      shareReplay())
+      catchError(err => {
+          const message = "Could not retrieve journals ...";
+          console.debug(message, err);
+          this.message(message); 
+          return throwError(() => new Error(`${ JSON.stringify(err) }`));         
+      }),
+      shareReplay()
+    )
   }
 
 
@@ -163,7 +172,15 @@ export class JournalService {
       type: header.type,
       amount: header.amount
     }
-    return this.httpClient.post<IJournalHeader>(url, journalHeader).pipe(shareReplay());
+    return this.httpClient.post<IJournalHeader>(url, journalHeader).pipe(
+      catchError(err => {
+          const message = "Could not save journal header ...";
+          console.debug(message, err);
+          this.message(message); 
+          return throwError(() => new Error(`Invalid time ${ err }`));         
+      }),
+      shareReplay()
+    ).subscribe();
   }
 
   deleteJournalHeader(journal_id: number) {
@@ -203,7 +220,27 @@ export class JournalService {
 
   updateJournalDetail(detail: IJournalDetail){ 
     var url = this.baseUrl + '/v1/update_jd';
-    return this.httpClient.post<IJournalDetail>(url, detail).pipe(shareReplay())
+    return this.httpClient.post<IJournalDetail>(url, detail)
+    .pipe(
+      catchError(err => {
+          const message = "Could not save journal detail";
+          console.debug(message, err);
+          this.message(message); 
+          return throwError(() => new Error(`Invalid time ${ err }`));         
+      }),
+      shareReplay()
+    ).subscribe();
+
+  }
+
+
+  message(msg: string){
+    this.snackBar.open(msg, 'OK', {
+      verticalPosition: 'top',
+      horizontalPosition: 'right',
+      panelClass: 'bg-danger',
+      duration: 2000,
+    });
   }
 
 

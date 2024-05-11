@@ -1,9 +1,10 @@
 import { Routes } from '@angular/router';
-import { GlMainComponent  } from './kanban-panel.component';
+import { KanbanPanelComponent } from './kanban-panel.component';
+
 
 export default [
     {
         path     : '',
-        component: GlMainComponent,
+        component: KanbanPanelComponent,
     },
 ] as Routes;
