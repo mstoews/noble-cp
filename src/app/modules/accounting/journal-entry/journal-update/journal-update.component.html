@@ -26,6 +26,7 @@
             <div class="flex flex-col">
                 <div class="text-3xl m-1 text-gray-100 p-2  bg-slate-600">Details</div>
                 <div class="flex flex-col h-full ml-1 mr-1 text-gray-800">
+                    @if ( loading === false) {
                     @if (details$ | async; as journal_details) {
                     <dx-data-grid id="journal_subid" [wordWrapEnabled]="false" [dataSource]="journal_details"
                         [showColumnLines]="true" [showRowLines]="true" [showBorders]="true" [focusedRowEnabled]="true"
@@ -54,6 +55,18 @@
                         </dxo-summary>
                     </dx-data-grid>
                     }
+                }
+                @else {
+                    <div class="flex justify-center">
+                        <div>
+                          <mat-progress-spinner
+                            diameter="60"
+                            [value]="value"
+                            mode="indeterminate">
+                            </mat-progress-spinner>
+                        </div>
+                      </div>
+                }
                 </div>
                 <div class="text-3xl m-1 text-gray-100 p-2 mt-2  bg-slate-600">Update Details {{journal_subid}}</div>
                 <section class="flex flex-col md:flex-row mt-2">

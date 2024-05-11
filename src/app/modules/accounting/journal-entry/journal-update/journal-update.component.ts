@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, In
 import { DxDataGridModule, DxTemplateModule } from 'devextreme-angular';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { IJournalDetail, IJournalHeader, JournalService } from 'app/services/journal.service';
-import { Observable, map } from 'rxjs';
+import { Observable, Subscription, interval, map, take } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { DndComponent } from 'app/modules/drag-n-drop/loaddnd/dnd.component';
 import { FundsService } from 'app/services/funds.service';
@@ -72,7 +72,10 @@ export class JournalUpdateComponent implements OnInit {
   public journalForm!: FormGroup;
   public journalDetailForm!: FormGroup;
   public matDialog = inject(MatDialog);
-  
+
+  public value = 0;
+  public loading = false;
+
   funds$ = this.fundService.read();
   subtype$ = this.subtypeService.read();
   accounts$ = this.accountService.read().pipe(map((child) => child.filter((parent) => parent.parent_account === false)));
@@ -153,37 +156,6 @@ export class JournalUpdateComponent implements OnInit {
   changeSubtype(e: any) {
     console.log('Subytype :', e.value);
   }
-
-  // onCellDoubleClicked(e: any) {
-
-  //   const dialogConfig = new MatDialogConfig();
-  //   dialogConfig.disableClose = true;
-  //   dialogConfig.autoFocus = true;
-  //   dialogConfig.data = e.data;
-  //   dialogConfig.width = "450px";
-
-  //   const dialogRef = this.dialog.open(JournalEditComponent, dialogConfig);
-
-  //   dialogRef.afterClosed().subscribe(
-  //     val => {
-  //       switch (val) {
-  //         case 'Close':
-  //           break;
-  //         case 'Update':
-  //           this.refresh(this.journal_id, this.description, this.transaction_date);
-  //           break;
-  //         case 'Create':
-  //           this.refresh(this.journal_id, this.description, this.transaction_date);
-  //           break;
-  //         case 'Delete':
-  //           this.refresh(this.journal_id, this.description, this.transaction_date);
-  //           break;
-  //         default:
-  //           break;
-  //       }
-  //     }
-  //   );
-  // }
 
 
   onCreateTemplate() {
@@ -319,10 +291,8 @@ export class JournalUpdateComponent implements OnInit {
       duration: 2000,
     });
 
-
-
-    this.journalDetailForm.reset()
-    this.details$ = null;
+    this.journalDetailForm.reset()    
+    this.loadContent();
     this.details$ = this.journalService.getJournalDetail(this.journal_id);
 
   }
@@ -334,7 +304,90 @@ export class JournalUpdateComponent implements OnInit {
 
 
   onCreate() {
-    console.debug('on create journal entry');
+    var header = this.journalForm.getRawValue();
+    var detail = this.journalDetailForm.getRawValue();
+
+    if (detail.detail_description === '' || detail.detail_description === undefined || detail.detail_description === null)
+      {
+        this.snackBar.open('Please select a row to edit', 'OK', {
+          verticalPosition: 'top',
+          horizontalPosition: 'right',
+          duration: 2000,
+        });        
+        return;    
+      }
+
+    var debit: number;
+    var credit: number;
+
+    debit = Number(detail.debit);
+    credit = Number(detail.credit);
+    
+    const journalDetail = {
+      "journal_id": this.currentRowData.journal_id ,
+      "journal_subid": this.currentRowData.journal_subid,
+      "account": this.currentRowData.account,
+      "child": detail.child,
+      "description": detail.detail_description,
+      "create_date":"2024-02-12",	
+      "create_user":"mstoews@hotmail.com",
+      "sub_type": detail.sub_type,
+      "debit": debit,
+      "credit": credit,
+      "reference": detail.reference,
+      "fund": detail.fund
+    }
+    
+    const journalHeader: IJournalHeader = {
+        journal_id: header.journal_id,
+        description: header.description,
+        booked: false,
+        booked_date: header.booked_date,
+        booked_user: header.booked_user,
+        create_date: header.create_date,
+        create_user: header.create_user,
+        period: header.period,
+        period_year: header.period_year,
+        transaction_date: header.transaction_date,
+        status: header.status,
+        type: header.type,
+        amount: header.amount
+    }
+      
+    var rc = this.journalService.updateJournalDetail(journalDetail);
+    // this.journalService.updateJournalHeader(journalHeader);
+    
+    this.snackBar.open('Journal Entry Updated', 'OK', {
+      verticalPosition: 'top',
+      horizontalPosition: 'right',
+      duration: 2000,
+    });
+
+
+    this.loadContent();
+
+    this.journalDetailForm.reset()
+    this.details$ = null;
+    this.details$ = this.journalService.getJournalDetail(this.journal_id);
+
+  }
+
+  
+  loadContent() {
+    this.loading = true;
+    var value = 0;
+    const numbers = interval(300);
+    const take4 = numbers.pipe(take(6))
+    const subs$: Subscription = take4.subscribe(res => {
+      value = value + 20;
+      console.debug('spinner  :',  value );
+      if(value === 120) {        
+        this.loading = false;        
+        subs$.unsubscribe();        
+        this._change.markForCheck();
+        
+      }
+    });
   }
 
   onUpdate(e: any) {
