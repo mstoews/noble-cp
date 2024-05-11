@@ -82,6 +82,7 @@ export class JournalUpdateComponent implements OnInit {
   types$ = this.typeService.read();
   subtypes$ = this.subtypeService.read();
   currentRowData: any;
+  journal_subid: any;
 
   ngOnInit(): void {
     this.createEmptyForm();
@@ -91,6 +92,7 @@ export class JournalUpdateComponent implements OnInit {
 
   onFocusedDetailRowChanged(e: any) {
     this.currentRowData = e.row.data;
+    this.journal_subid = e.row.data.journal_subid;
     this.updateForm(e.row.data)
   }
 
@@ -261,6 +263,16 @@ export class JournalUpdateComponent implements OnInit {
     var header = this.journalForm.getRawValue();
     var detail = this.journalDetailForm.getRawValue();
 
+    if (detail.detail_description === '' || detail.detail_description === undefined || detail.detail_description === null)
+      {
+        this.snackBar.open('Please select a row to edit', 'OK', {
+          verticalPosition: 'top',
+          horizontalPosition: 'right',
+          duration: 2000,
+        });        
+        return;    
+      }
+
     var debit: number;
     var credit: number;
 
@@ -299,15 +311,15 @@ export class JournalUpdateComponent implements OnInit {
     }
       
     var rc = this.journalService.updateJournalDetail(journalDetail);
-    //this.journalService.updateJournalHeader(journalHeader);
-
-    
+    // this.journalService.updateJournalHeader(journalHeader);
     
     this.snackBar.open('Journal Entry Updated', 'OK', {
       verticalPosition: 'top',
       horizontalPosition: 'right',
       duration: 2000,
     });
+
+
 
     this.journalDetailForm.reset()
     this.details$ = null;

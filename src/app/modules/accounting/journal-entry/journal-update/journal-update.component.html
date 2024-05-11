@@ -31,7 +31,7 @@
                         [showColumnLines]="true" [showRowLines]="true" [showBorders]="true" [focusedRowEnabled]="true"
                         keyExpr="journal_subid" (onFocusedRowChanged)="onFocusedDetailRowChanged($event)"                        
                         [repaintChangesOnly]="false">
-
+                        <dxi-column dataField="journal_subid" caption="ID" width="60"> </dxi-column>
                         <dxi-column dataField="child" caption="Account" width="90"> </dxi-column>
                         <dxi-column dataField="fund" caption="Fund" width="90"> </dxi-column>
                         <dxi-column dataField="sub_type" caption="Sub Type" width="120"> </dxi-column>
@@ -55,7 +55,7 @@
                     </dx-data-grid>
                     }
                 </div>
-                <div class="text-3xl m-1 text-gray-100 p-2 mt-2  bg-slate-600">Update Details</div>
+                <div class="text-3xl m-1 text-gray-100 p-2 mt-2  bg-slate-600">Update Details {{journal_subid}}</div>
                 <section class="flex flex-col md:flex-row mt-2">
                     
 

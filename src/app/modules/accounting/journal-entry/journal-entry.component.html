@@ -26,12 +26,12 @@
                     <div class="flex flex-1 flex-col overflow-auto">
                         <dx-data-grid class=" h-[calc(1200px - 200px)]" [dataSource]="rows" [remoteOperations]="false"
                             [allowColumnReordering]="true" [rowAlternationEnabled]="true" [showBorders]="true"
-                            [focusedRowEnabled]="true" [focusedRowIndex]="0" [repaintChangesOnly]="true"
+                            [focusedRowEnabled]="true" [focusedRowIndex]="0" [repaintChangesOnly]="true"                            
                             keyExpr="journal_id" (onExporting)="onExporting($event)"
                             (onFocusedRowChanged)="onFocusedDetailRowChanged($event)"
                             (onCellDblClick)="onCellDoubleClicked($event)">
 
-                            <dxo-search-panel [visible]="true" [highlightCaseSensitive]="true"></dxo-search-panel>
+                            <dxo-search-panel [visible]="true"></dxo-search-panel>
                             <dxo-group-panel [visible]="true"></dxo-group-panel>
                             <dxo-grouping [autoExpandAll]="true"></dxo-grouping>
                             <dxo-filter-row [visible]="false"></dxo-filter-row>
