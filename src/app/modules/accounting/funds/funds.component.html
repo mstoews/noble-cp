@@ -61,7 +61,7 @@
                     @if (data$ | async; as rows) {
                         <grid-menubar [inTitle]="'Fund Maintenance'"></grid-menubar>
                         <div class="flex flex-col h-screen">
-                            <dx-data-grid id="id" [wordWrapEnabled]="true"
+                            <dx-data-grid id="id" [columnHidingEnabled]="true" [wordWrapEnabled]="true"
                             [dataSource]="rows" [showColumnLines]="true" [showRowLines]="true" [showBorders]="true"
                             [focusedRowEnabled]="true" [focusedRowIndex]="0" keyExpr="fund" [repaintChangesOnly]="true">
                             

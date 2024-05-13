@@ -9,6 +9,7 @@ import { DndDirective } from './dnd.directive';
 import { ReactiveFormsModule } from '@angular/forms';
 import { STORAGE } from 'app/app.config';
 
+
 import { EvidenceService, IEvidence } from 'app/services/evidence.service';
 import { DateTime } from 'luxon';
 import { MaterialModule } from 'app/services/material.module';
@@ -41,14 +42,13 @@ export class DndComponent implements OnDestroy {
   private evidenceService = inject(EvidenceService)
   private _unsubscribeAll: Subject<any> = new Subject<any>();
 
+
   @ViewChild('fileDropRef', { static: false })
   downloadUrl: Observable<string | null>;
 
   files: any[] = [];
   upLoadFiles: File[] = [];
   formGroup!: FormGroup;
-
-  VERSION_NO = 1;
   percentageChange$: Observable<number | undefined>;
 
   createForm() {
@@ -141,24 +141,24 @@ export class DndComponent implements OnDestroy {
       },
       () => {
 
-        const now = DateTime.now().toFormat('yyyyMMdd');
+        const updateDate = DateTime.now().toFormat('yyyy-MM-dd');
 
-        getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-          console.log('File available at', downloadURL);
-          var evidence: IEvidence = {
-            "reference_no": this.imageData.reference_no.toString(),
-            "description": this.imageData.description,
-            "location": downloadURL,
-            "user_created": "murray",
-            "date_created": now
-          }
-          this.evidenceService.createEvidence(evidence).subscribe()
-        });
+        getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {          
+          const update = {
+          "journal_id": this.imageData.journal_id, 
+          "reference": this.imageData.reference_no.toString(), 
+          "description": this.imageData.description,
+          "location": downloadURL,
+          "user_created": "admin",
+          "date_created": updateDate }
+          console.debug(update);        
+          this.evidenceService.createEvidence(update);
+          this.closeDialog();
+        });        
       }
     );
 
   }
-
 
   async onCreate() {
     let data = this.imageData;

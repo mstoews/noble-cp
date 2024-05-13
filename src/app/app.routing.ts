@@ -185,10 +185,8 @@ export const appRoutes: Route[] = [
                 loadChildren: () =>
                     import('app/modules/pages/settings/settings.routes'),
             },
-
-
             {
-                path: 'doc_management',
+                path: 'docs',
                 loadChildren: () =>
                     import('app/modules/file-manager/file-manager.routes'),
             },

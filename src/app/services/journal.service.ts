@@ -54,6 +54,15 @@ export interface IAccounts {
   period_year?  : number,
 }
 
+export interface IJournalTemplate {
+    template_ref: string,    
+    description: string,
+    type: string,
+    debit_percentage:  number,
+    credit_percentage: number,
+    create_date:       Date,
+    create_user:       string
+}
 
 export interface IJournalViewDetails {
     period?         : number,
@@ -80,6 +89,12 @@ export class JournalService {
   snackBar = inject(MatSnackBar);
   private baseUrl = environment.baseUrl;
   constructor() { }
+
+  readJournalTemplate() {
+    var url = this.baseUrl + '/v1/read_journal_template/';
+    return this.httpClient.get<IJournalHeader>(url).pipe(shareReplay());
+  }
+
 
   getJournalHeader(journal_id: number) {
     var url = this.baseUrl + '/v1/get_jh/'+ journal_id.toString();

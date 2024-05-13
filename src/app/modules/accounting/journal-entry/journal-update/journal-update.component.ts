@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, inject } from '@angular/core';
 import { DxDataGridModule, DxTemplateModule } from 'devextreme-angular';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { IJournalDetail, IJournalHeader, JournalService } from 'app/services/journal.service';
-import { Observable, Subscription, interval, map, take } from 'rxjs';
+import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { IAccounts, IJournalDetail, IJournalHeader, JournalService } from 'app/services/journal.service';
+import { Observable, Subscription, interval, map, startWith, take } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { DndComponent } from 'app/modules/drag-n-drop/loaddnd/dnd.component';
 import { FundsService } from 'app/services/funds.service';
@@ -18,7 +18,8 @@ import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { NgxMaskDirective, NgxMaskPipe, provideNgxMask } from 'ngx-mask';
 import { FuseConfirmationService } from '@fuse/services/confirmation';
 import { MatSnackBar } from '@angular/material/snack-bar';
-
+import { ComboBoxModule } from '@syncfusion/ej2-angular-dropdowns';
+import { FileManagerComponent } from 'app/modules/file-manager/file-manager.component';
 
 
 const imports = [
@@ -27,6 +28,7 @@ const imports = [
   DxTemplateModule,
   ReactiveFormsModule,
   MaterialModule,
+  ComboBoxModule, 
   FormsModule,
   JournalDetailComponent,
   DndComponent,
@@ -34,7 +36,9 @@ const imports = [
   JournalEditComponent,
   JournalTableComponent,
   NgxMaskDirective,
-  NgxMaskPipe
+  NgxMaskPipe,
+  FileManagerComponent
+
 ];
 
 
@@ -56,6 +60,7 @@ export class JournalUpdateComponent implements OnInit {
   @Input() public description: string;
   @Input() public transaction_date:string;
   @Input() public bNewTransaction = true;
+
   @Input() details$: Observable<IJournalDetail[]>;
 
   private fb = inject(FormBuilder);
@@ -72,9 +77,12 @@ export class JournalUpdateComponent implements OnInit {
   public journalForm!: FormGroup;
   public journalDetailForm!: FormGroup;
   public matDialog = inject(MatDialog);
+  public localFields: Object = { text: 'description', value: 'child' };
+  public localWaterMark: string = 'Select an account';
 
   public value = 0;
   public loading = false;
+  public height: string = '250px';
 
   funds$ = this.fundService.read();
   subtype$ = this.subtypeService.read();
@@ -87,12 +95,19 @@ export class JournalUpdateComponent implements OnInit {
   currentRowData: any;
   journal_subid: any;
   editing = false;
+  child = new FormControl('');
+
+  myControl = new FormControl('');
+  accounts: IAccounts[];
+  accountOptions:  Observable<string[]>;
+  
 
   ngOnInit(): void {
     this.createEmptyForm();
     this.refresh(this.journal_id, this.description, this.transaction_date);
-    this._change.markForCheck();
+    
   }
+
 
   onFocusedDetailRowChanged(e: any) {
     this.currentRowData = e.row.data;
@@ -120,11 +135,8 @@ export class JournalUpdateComponent implements OnInit {
     });
   }
 
-
   public refresh(journal_id: number, description: string, transaction_date: string) {
 
-    //this.createEmptyForm();
-    
     this.description = description;
     this.transaction_date = transaction_date;
 
@@ -186,8 +198,9 @@ export class JournalUpdateComponent implements OnInit {
     const dialogRef = this.matDialog.open(DndComponent, {
       width: '600px',
       data: {
+        journal_id : this.journal_id,
         reference_no: this.journal_id,
-        description: "description",
+        description: this.description,
       },
     });
 

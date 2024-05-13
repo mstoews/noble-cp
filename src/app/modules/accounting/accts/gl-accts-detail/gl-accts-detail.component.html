@@ -78,7 +78,7 @@
     <ng-container>
         <div class="flex flex-col h-full">
             @if (accounts$ | async; as accounts) {
-            <dx-data-grid id="child" [wordWrapEnabled]="true"
+            <dx-data-grid id="child" [columnHidingEnabled]="true" [wordWrapEnabled]="true"
                 [dataSource]="accounts" [showColumnLines]="true" [showRowLines]="true" [showBorders]="true"
                 [focusedRowEnabled]="true" [focusedRowIndex]="0" keyExpr="child" [repaintChangesOnly]="true"
                 (onFocusedRowChanged)="onFocusedRowChanged($event)" (onCellDblClick)="onCellDoubleClicked($event)"

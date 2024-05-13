@@ -7,7 +7,7 @@
             <!-- Title -->
             <div class="mt-2">
                 <h2 class="text-3xl md:text-4xl font-extrabold tracking-tight leading-7 sm:leading-10 truncate">
-                    File Manager
+                    Artifact Manager
                 </h2>
             </div>
         </div>
@@ -15,11 +15,16 @@
 
     <div class="flex flex-col min-w-0 overflow-y-auto -px-10" cdkScrollable>
         <!-- Main -->
+        <div class="sm:hide md:visible">
+            <grid-menubar class="pl-5 pr-5" [inTitle]="'Artifact Maintenance'" (notifyParentRefresh)="onRefresh()"
+                (notifyParentAdd)="onAdd()" (notifyParentDelete)="onDeleteSelection()" (notifyParentUpdate)="onUpdateSelection()">
+            </grid-menubar>
+            </div>
+            
         <div class="flex-auto p-6 sm:p-10">
             <div class="h-full border-gray-900 rounded-2xl">
                 <mat-drawer-container class="flex-col h-full cdkSrollable">
-                    <mat-drawer class="w-[600px] bg-white-100" #drawer [opened]="false" mode="over" [position]="'end'"
-                        [disableClose]="false">
+                <mat-drawer class="w-[600px] bg-white-100" #drawer [opened]="false" mode="over" [position]="'end'"  [disableClose]="false">
                         <div class="flex flex-col w-full filter-article filter-interactive text-gray-700">
                             <div class="bg-slate-600 text-justify pt-2 text-white h-10 text-2xl m-2" mat-dialog-title>
                                 {{ sTitle }}
@@ -83,47 +88,15 @@
                                 </button>
                             </div>
                         </div>
-                    </mat-drawer>                    
-                    @if (evidence$ | async; as rows) {
-                        <div class="flex flex-col h-full">
-                            <dx-data-grid 
-                                [dataSource]="rows" 
-                                [remoteOperations]="false" 
-                                [allowColumnReordering]="false"
-                                [rowAlternationEnabled]="true" 
-                                [showBorders]="true" 
-                                [focusedRowEnabled]="true"
-                                (onFocusedRowChanged)="onFocusedRowChanged($event)"
-                                (onCellDblClick)="onCellDoubleClicked($event)"                                
-                                [repaintChangesOnly]="true"
-                                keyExpr="id" >
-
-                    <dxo-paging [pageSize]="15"></dxo-paging>
-                    <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[15, 30, 45]"></dxo-pager>
-                    <dxo-search-panel [visible]="true" [highlightCaseSensitive]="true"></dxo-search-panel>
-                    <dxo-group-panel [visible]="true"></dxo-group-panel>
-                    <dxo-grouping [autoExpandAll]="false"></dxo-grouping>
-                    <dxo-filter-row [visible]="false"></dxo-filter-row>
-                    <dxo-state-storing [enabled]="true" type="localStorage" storageKey="journals">
-                    </dxo-state-storing>                                
-                    <dxi-column dataField="id" caption="Seq" width="50" dataType="number" alignment="left"></dxi-column>  
-                    <dxi-column dataField="reference_no" caption="Reference"    width="150" dataType="number" alignment="left"></dxi-column>  
-                    <dxi-column dataField="description"  caption="Description"  dataType="text" alignment="left"></dxi-column>  
-                    <dxi-column dataField="user_created" caption="User"         width="150" dataType="text" alignment="left"></dxi-column>  
-                    <dxi-column dataField="date_created" caption="Date"         width="150" dataType="date" alignment="left"></dxi-column>  
-                    <dxi-column dataField="location" [width]="80" cellTemplate="imageTemplate"> </dxi-column>
-                    <div *dxTemplate="let data of 'imageTemplate'">
-                        <dx-button
-                            text="Test"
-                            type="normal"
-                            [width]="120"
-                            (onClick)="openDocument($event)">
-                        </dx-button> 
-                        
-                        <mat-icon [svgIcon]="'heroicons_solid:document'"></mat-icon>
-                    </div>
-                </dx-data-grid>
-                </div>
+                </mat-drawer>                    
+                    @if (evidence$ | async; as rows) { 
+                    <ul>
+                        <li class="grid grid-cols-1 mx-10 gap-y-10 gap-x-6 sm:grid-cols-3 lg:grid-cols-4 xl:gap-x-8">
+                        @for (evidence of rows; track evidence.journal_no) {
+                            <evidence-card [evidence]="evidence" ></evidence-card>
+                        }
+                        </li>                       
+                    </ul>
                 }
                 </mat-drawer-container>
             </div>

@@ -116,7 +116,7 @@
                     </grid-menubar>
 
                     <div class="flex flex-col">
-                        <dx-data-grid class="h-[550px]" id="id" [wordWrapEnabled]="false" [dataSource]="rows"
+                        <dx-data-grid class="h-full" [columnHidingEnabled]="true" id="id" [wordWrapEnabled]="false" [dataSource]="rows"
                             [showColumnLines]="true" [showRowLines]="true" [showBorders]="true"
                             [focusedRowEnabled]="true" [repaintChangesOnly]="true"
                             (onCellDblClick)="onDoubleClicked($event)" keyExpr="child">

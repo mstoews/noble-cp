@@ -26,11 +26,18 @@
                 <ng-container>
                     @if (journalHeader$ | async; as rows) {
                     <div class="flex flex-1 flex-col overflow-auto">
-                        <dx-data-grid class=" lg:w-full" [dataSource]="rows" [remoteOperations]="false"
-                            [allowColumnReordering]="true" [rowAlternationEnabled]="true" [showBorders]="true"
-                            [focusedRowEnabled]="true" [focusedRowIndex]="0" [repaintChangesOnly]="true"                            
-                            keyExpr="journal_id" (onExporting)="onExporting($event)"
+                        <dx-data-grid class="w-full lg:w-full" [dataSource]="rows" 
+                            [columnHidingEnabled]="true"
+                            [allowColumnReordering]="true" 
+                            [rowAlternationEnabled]="true" 
+                            [showBorders]="true"
+                            [focusedRowEnabled]="true" 
+                            [focusedRowIndex]="0" 
+                            [repaintChangesOnly]="true"                            
+                            keyExpr="journal_id" 
+                            (onExporting)="onExporting($event)"
                             (onFocusedRowChanged)="onFocusedDetailRowChanged($event)"
+                            [width]="'100%'"
                             (onCellDblClick)="onCellDoubleClicked($event)">
 
                             <dxo-search-panel [visible]="true"></dxo-search-panel>
@@ -44,14 +51,16 @@
                                 [showInfo]="showInfo" [showNavigationButtons]="showNavButtons">
                             </dxo-pager>
 
-                            <dxi-column dataField="journal_id" caption="ID" width="100" dataType="number" alignment="left"></dxi-column>                            
+                            <dxi-column dataField="journal_id" caption="ID" width="50" dataType="number" alignment="left"></dxi-column>                            
+                            <dxi-column dataField="booked" dataType="boolean" template="book"></dxi-column>                            
+                            <dxi-column dataField="amount" width="100" [customizeText]="formatNumber" dataType="number"></dxi-column>
                             <dxi-column dataField="description" width="300" dataType="string"></dxi-column>
-                            <dxi-column dataField="amount" width="150" [customizeText]="formatNumber" dataType="number"></dxi-column>
+                            <dxi-column dataField="booked_date" dataType="date"></dxi-column>                                                        
+                            <dxi-column dataField="booked_user" dataType="string"></dxi-column>
                             <dxi-column dataField="create_user"></dxi-column>
                             <dxi-column dataField="create_date" caption="Date" dataType="date"></dxi-column>
-                            <dxi-column dataField="booked_user" dataType="string"></dxi-column>
-                            <dxi-column dataField="booked_date" dataType="date"></dxi-column>
-                            <dxi-column dataField="booked" dataType="boolean" template="book"></dxi-column>
+                            
+                            
                             <dxo-master-detail [enabled]="true" template="detail"> </dxo-master-detail>
                             <div *dxTemplate="let journal of 'detail'">
                                 <journal-detail 

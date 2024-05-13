@@ -14,24 +14,21 @@ import { MatSelectModule } from '@angular/material/select';
 
 import { DndComponent } from 'app/modules/drag-n-drop/loaddnd/dnd.component';
 import { EvidenceService } from 'app/services/evidence.service';
-// import { ThoughtsImageSelectionComponent } from 'app/modules/admin/image-maintenance/thoughts-image-selection/thoughts-image-selection.component';
+import { EvidenceCardComponent } from './shop-card/evidence-card.component';
+import { GridMenubarStandaloneComponent } from '../accounting/grid-menubar/grid-menubar.component';
+import { MaterialModule } from 'app/services/material.module';
 
 const imports = [
     CommonModule,
+    MaterialModule,
     DxDataGridModule,
     DxBulletModule,
     DxTemplateModule,
-    MatSidenavModule,
-    MatCardModule,
     ReactiveFormsModule,
-    MatIconModule,
-    FormsModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatCheckboxModule,
-    MatSelectModule,
-    MatButtonModule,
-    DndComponent
+    FormsModule,    
+    DndComponent,
+    EvidenceCardComponent,
+    GridMenubarStandaloneComponent,
 ];
 
 @Component({
@@ -56,7 +53,14 @@ export class FileManagerComponent {
     sTitle='File Management';
     selectedItemKeys: any[] = [];
 
-    evidence$ = this.evidenceServer.listEvidence();
+    evidence$ = this.evidenceServer.readEvidence();
+
+    onRefresh() {}
+    onAdd(){}
+    onUpdateSelection() {}
+    onDeleteSelection() {}
+
+
 
     drawOpen: 'open' | 'close' = 'open';
 
@@ -86,6 +90,7 @@ export class FileManagerComponent {
 
     createEmptyForm() {
         this.evidenceForm = this.fb.group({
+            journal_id: [''],
             reference_no :[''],
             description:[''],            
             location:[''],

@@ -10,6 +10,7 @@ const getHeaders = (): any => {
   //  authorization here
   let headers: any = {};
   const _auth = authState.GetToken();
+  console.debug(_auth);
   if (_auth && _auth !== '') {
     headers['Authorization'] = `Bearer ${_auth}`;
   }

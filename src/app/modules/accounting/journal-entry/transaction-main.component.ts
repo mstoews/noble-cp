@@ -6,12 +6,13 @@ import { MaterialModule } from 'app/services/material.module';
 import { Subject, takeUntil } from 'rxjs';
 import { JournalEntryComponent } from './journal-entry.component';
 import { JournalUpdateComponent } from './journal-update/journal-update.component';
+import { FileManagerComponent } from 'app/modules/file-manager/file-manager.component';
 
 
 @Component({
   selector: 'transaction-main',
   standalone: true,
-  imports        : [MaterialModule, NgFor, NgClass, NgSwitch, NgSwitchCase, JournalEntryComponent, JournalUpdateComponent],
+  imports        : [MaterialModule, NgFor, NgClass, NgSwitch, NgSwitchCase, JournalEntryComponent, JournalUpdateComponent, FileManagerComponent],
   encapsulation  : ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './transaction-main.component.html',
@@ -66,7 +67,7 @@ export class TransactionMainComponent {
                 description: 'Manage your accounting patterns to automate, reduce effort and provide consistency in accounting.',
             } ,
             {
-                id         : 'evidence',
+                id         : 'artifact',
                 icon       : 'heroicons_outline:building-office',
                 title      : 'Artifact Management',
                 description: 'Manage the documentation of transactions.',

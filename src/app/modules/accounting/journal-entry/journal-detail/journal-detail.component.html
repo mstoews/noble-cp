@@ -2,7 +2,7 @@
     <ng-container>
         <div class="flex flex-col h-full mb-2">
             @if (details$ | async; as journal_details) {
-            <dx-data-grid id="journal_child_id" [wordWrapEnabled]="true" [dataSource]="journal_details"
+            <dx-data-grid id="journal_child_id" [columnHidingEnabled]="true" [wordWrapEnabled]="true" [dataSource]="journal_details"
                 [showColumnLines]="true" [showRowLines]="true" [showBorders]="true" [focusedRowEnabled]="true"
                 keyExpr="journal_subid" [repaintChangesOnly]="true"
                 
@@ -43,7 +43,9 @@
     <button mat-icon-button color="primary" (click)="onUpdate()" class="bg-gray-200 ml-1" matTooltip="Edit" aria-label="Template">
         <mat-icon [svgIcon]="'mat_outline:edit'"></mat-icon>
     </button>
+    
     }
+    
     @else {
     <mat-card>
         <div class="bg-slate-600 text-justify pt-2 text-white h-10 text-2xl m-2" mat-dialog-title>

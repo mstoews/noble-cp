@@ -13,7 +13,7 @@
                         <div class="flex flex-col m-1">
                             <section class="flex flex-col md:flex-row">
                                 <div class="flex flex-col grow">
-                                    <mat-label class="ml-2 text-base">Type</mat-label>
+                                    <mat-label class="ml-2 text-base">Team</mat-label>
                                     <mat-form-field class="m-1 form-element grow" appearance="outline">
                                         <input matInput placeholder="Type" formControlName="type" />
                                     </mat-form-field>
@@ -68,7 +68,7 @@
                 [allowDeleting]="false"
               >
               </dxo-editing>
-                <dxi-column dataField="type" caption="Kanban Type" width="150"></dxi-column>
+                <dxi-column dataField="team" caption="Kanban Type" width="150"></dxi-column>
                 <dxi-column dataField="description"></dxi-column>                
             </dx-data-grid>
         </div>

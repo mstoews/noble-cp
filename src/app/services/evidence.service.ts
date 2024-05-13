@@ -5,7 +5,8 @@ import { shareReplay } from 'rxjs';
 
 
 export interface IEvidence {
-  reference_no  : string,
+  journal_id?:  number,
+  reference  : string,
 	description   : string,
 	location      : string,
 	user_created  : string,
@@ -27,7 +28,8 @@ export class EvidenceService {
     var url = this.baseUrl + '/v1/create_evidence';
 
     var data: IEvidence = {
-      reference_no : evidence.reference_no,
+      journal_id: evidence.journal_id,
+      reference : evidence.reference,
       description : evidence.description,
       location : evidence.location,
       user_created : evidence.user_created,
@@ -36,11 +38,11 @@ export class EvidenceService {
 
     return this.httpClient.post<IEvidence>(url,data)
       .pipe(
-      shareReplay()) 
+      shareReplay()).subscribe() 
   }
   
-  listEvidence() {
-    var url = this.baseUrl + '/v1/list_evidence';
+   readEvidence() {
+    var url = this.baseUrl + '/v1/read_evidence';
     return this.httpClient.get<IEvidence[]>(url)
     .pipe(
     shareReplay()) 

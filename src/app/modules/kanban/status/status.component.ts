@@ -1,102 +1,141 @@
-import { Component, OnInit, ViewChild, ElementRef, inject } from '@angular/core';
-import { EditService, ToolbarService, PageService, DialogEditEventArgs, SaveEventArgs, GridModule, SortService } from '@syncfusion/ej2-angular-grids';
-import { DataManager, DataUtil, Query } from '@syncfusion/ej2-data';
-import { FormGroup, ReactiveFormsModule, FormsModule } from '@angular/forms';
-import { DropDownListModule } from '@syncfusion/ej2-angular-dropdowns';
-import { DatePickerModule } from '@syncfusion/ej2-angular-calendars';
-import { NumericTextBoxModule } from '@syncfusion/ej2-angular-inputs';
-import { CommonModule, NgClass } from '@angular/common';
-import { IStatus, KanbanService } from 'app/services/kanban.service';
-import { IEditCell } from '@syncfusion/ej2-angular-grids';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { Component, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
+import { DxBulletModule, DxDataGridModule, DxTemplateModule } from 'devextreme-angular';
+import { FuseConfirmationService } from '@fuse/services/confirmation';
+import { MatDrawer } from '@angular/material/sidenav';
+import { MaterialModule } from 'app/services/material.module';
+import { Subject, map, takeUntil } from 'rxjs';
+import { DxButtonModule } from 'devextreme-angular';
+import { DxDataGridTypes } from 'devextreme-angular/ui/data-grid';
 import { GridMenubarStandaloneComponent } from 'app/modules/accounting/grid-menubar/grid-menubar.component';
-
+import { CommonModule } from '@angular/common';
+import { IStatus, KanbanService } from 'app/services/kanban.service';
 
 const imports = [
-  GridMenubarStandaloneComponent,
-  CommonModule, 
-  GridModule, 
-  ReactiveFormsModule, FormsModule, NgClass, NumericTextBoxModule, DatePickerModule, DropDownListModule
-]
+    CommonModule,
+    MaterialModule,
+    ReactiveFormsModule,
+    FormsModule,
+    DxDataGridModule,
+    DxBulletModule,
+    DxTemplateModule,
+    DxButtonModule,
+    GridMenubarStandaloneComponent
+];
 
-/**
- * Template driven Forms sample
- */
 @Component({
     selector: 'kanban-status',
-    templateUrl: './status.component.html',
-    providers: [ToolbarService, EditService, PageService, SortService],
     standalone: true,
-    imports: [imports]
+    imports: [imports],
+    templateUrl: 'status.component.html',
+    styles: `::ng-deep .dx-datagrid .dx-datagrid-rowsview .dx-row-focused.dx-data-row:not(.dx-edit-row) > td:not(.dx-focused) {
+        background-color: rgb(195, 199, 199);
+        border-color: #ada6a7;
+        }`,
+    providers: []
 })
-export class StatusComponent implements OnInit {
-    public data: Object[];
-    public statusList: Object[];
-    public editSettings: Object;
-    public toolbar: string[];
-    public pageSettings: Object;
-    public priorityParams?: IEditCell;
+export class StatusComponent implements OnInit, OnDestroy {
     
-    public data$: any;
-    public status$: any;
-    public statusData: any;
-    
-    public editparams: Object;
+    public data: any;
+    private _fuseConfirmationService = inject(FuseConfirmationService);
+    private fb = inject(FormBuilder);
     private kanbanService = inject(KanbanService)
+    @ViewChild('drawer') drawer!: MatDrawer;
+
+    public sTitle = 'Kanban Types';
+    public accountsForm!: FormGroup;
+    public data$: any
+    public typeForm?: FormGroup | any;
+    public selectedItemKeys: string[] = [];
+    private _unsubscribeAll: Subject<any> = new Subject<any>();
     
-    public ngOnInit(): void {        
-        
-        this.status$ = this.kanbanService.readStatus();        
-        this.editSettings = { allowEditing: true, allowAdding: true, allowDeleting: true, mode: 'Normal' };
-        this.toolbar = ['Add', 'Edit', 'Delete', 'Update', 'Cancel'];
-        this.pageSettings = { pageCount: 5};
-      //   this.kanbanService.readFullStatus().subscribe(data =>  {
-      //     this.statusList = data;
-      //  })        
 
-       this.priorityParams = {
-        params: {
-            actionComplete: () => false,
-            allowFiltering: true,
-            // dataSource: new DataManager(this.statusList),
-            // fields: { text: 'fullDescription', value: 'description' },
-            // query: new Query()
-        }
-      };
-        
+    ngOnInit() {
+        this.createEmptyForm();
+        this.data$ = this.kanbanService.readFullStatus();         
+        this.createEmptyForm()
     }
 
-    actionBegin(args: SaveEventArgs): void {
-        if (args.requestType === 'beginEdit' || args.requestType === 'add') {
-            this.statusData = Object.assign({}, args.rowData);
-        }
-        // if (args.requestType === 'save') {
-        //     if (this.orderForm.valid) {
-        //         args.data = this.statusData;
-        //     } else {
-        //         args.cancel = true;
-        //     }
-        // }
-    } 
+    ngOnDestroy(): void {
+        this._unsubscribeAll.next(null);
+        this._unsubscribeAll.complete();
+    }
 
-    actionComplete(args: DialogEditEventArgs): void {
-        if (args.requestType === 'beginEdit' || args.requestType === 'add') {
-            // Set initail Focus
-            if (args.requestType === 'beginEdit') {
-                (args.form.elements.namedItem('CustomerName') as HTMLInputElement).focus();
-            } else if (args.requestType === 'add') {
-                (args.form.elements.namedItem('OrderID') as HTMLInputElement).focus();
+
+    onCreate(e: any) {
+        this.createEmptyForm();
+        this.openDrawer();
+    }
+     onSelectionChanged({ selectedRowKeys }: DxDataGridTypes.SelectionChangedEvent) {
+        this.selectedItemKeys = selectedRowKeys;
+      }
+    
+      deleteRecords() {
+        this.selectedItemKeys.forEach((key) => {
+          
+        });
+        this.kanbanService.readTypes();
+      }
+
+    onDelete(e: any) {
+        console.debug(`onDelete ${JSON.stringify(e)}`);
+        const confirmation = this._fuseConfirmationService.open({
+            title: 'Delete Type?',
+            message: 'Are you sure you want to delete this type? ',
+            actions: {
+                confirm: {
+                    label: 'Delete',
+                },
+            },
+        });
+
+        // Subscribe to the confirmation dialog closed action
+        confirmation.afterClosed().subscribe((result) => {
+            // If the confirm button pressed...
+            if (result === 'confirmed') {
+                // Delete the list
+                // this.typeApiService.delete(this.typeId);
             }
+        });
+        this.closeDrawer();
+    }
 
+    createEmptyForm() {
+        this.accountsForm = this.fb.group({
+            type: [''],
+            description: [''],
+        });
+    }
+
+
+    openDrawer() {
+        const opened = this.drawer.opened;
+        if (opened !== true) {
+            this.drawer.toggle();
+        } else {
+            return;
         }
     }
 
-    public focusIn(target: HTMLElement): void {
-        target.parentElement.classList.add('e-input-focus');
+    closeDrawer() {
+        const opened = this.drawer.opened;
+        if (opened === true) {
+            this.drawer.toggle();
+        } else {
+            return;
+        }
     }
 
-    public focusOut(target: HTMLElement): void {
-        target.parentElement.classList.remove('e-input-focus');
+    onUpdate(e: any) {
+        const dDate = new Date();
+        const updateDate = dDate.toISOString().split('T')[0];
+        const account = { ...this.accountsForm.value } as IStatus;
+        const rawData = {
+            status: account.status,
+            description: account.description
+        };
+        this.closeDrawer();
     }
+
 
 }
-

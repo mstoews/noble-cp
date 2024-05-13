@@ -92,10 +92,10 @@ export const defaultNavigation: FuseNavigationItem[] = [
             // },
             {
                 id: 'property.document-management',
-                title: 'Evidence',
+                title: 'Artifacts',
                 type: 'basic',
                 icon: 'heroicons_outline:document-magnifying-glass',
-                link: '/doc_management',
+                link: '/docs',
             },
 
         ],

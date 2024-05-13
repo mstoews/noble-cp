@@ -67,4 +67,9 @@ export class AuthService {
     return this.http.post('/user', customClaims);
     // map to getTokenIdResults
   }
+
+  public UserName(): string {
+    return this.auth.currentUser?.email
+  }
+
 }
