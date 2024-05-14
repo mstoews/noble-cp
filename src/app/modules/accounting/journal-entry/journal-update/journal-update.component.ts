@@ -89,7 +89,7 @@ export class JournalUpdateComponent implements OnInit {
   accounts$ = this.accountService.read().pipe(map((child) => child.filter((parent) => parent.parent_account === false)));
   private fuseConfirmationService = inject(FuseConfirmationService);
 
-  header$ = this.journalService.listJournalHeader();
+  // header$ = this.journalService.readJournalHeader();
   types$ = this.typeService.read();
   subtypes$ = this.subtypeService.read();
   currentRowData: any;
@@ -300,7 +300,7 @@ export class JournalUpdateComponent implements OnInit {
     }
       
     var rc = this.journalService.updateJournalDetail(journalDetail);
-    // this.journalService.updateJournalHeader(journalHeader);
+    this.journalService.updateJournalHeader(journalHeader);
     
     this.snackBar.open('Journal Entry Updated', 'OK', {
       verticalPosition: 'top',
@@ -314,9 +314,9 @@ export class JournalUpdateComponent implements OnInit {
 
   }
 
-  onAddLineJournalDetail() {
-    var detail = this.journalDetailForm.getRawValue();
-    console.debug(detail);
+  onAddLineJournalDetail() {    
+    this.editing = true;
+    // console.debug(detail);
   }
 
 

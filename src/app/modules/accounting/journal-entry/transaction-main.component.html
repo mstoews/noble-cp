@@ -75,7 +75,7 @@
                     <!-- Transaction list -->
                     @case ('listing') {  <transactions></transactions>   }
                     <!-- entry -->
-                    @case ('entry') { <journal-update [bNewTransaction]="false"></journal-update>  }
+                    @case ('entry') { <entry-wizard></entry-wizard>  }
                     <!-- Build and maintain Templates -->
                     @case ('template') {  }
                     @case ('artifact') { <app-file-manager></app-file-manager>}

@@ -141,9 +141,9 @@ export class JournalService {
   }
 
 
-  listJournalHeader() {
-    var url = this.baseUrl + '/v1/list_jh';
-    return this.httpClient.get<IJournalHeader[]>(url).pipe(retry(3)).pipe(
+  readJournalHeader() {
+    var url = this.baseUrl + '/v1/read_journal_header';
+    return this.httpClient.get<IJournalHeader[]>(url).pipe(
       catchError(err => {
           const message = "Could not retrieve journals ...";
           console.debug(message, err);

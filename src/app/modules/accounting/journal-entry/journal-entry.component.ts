@@ -58,7 +58,7 @@ export class JournalEntryComponent {
     public  bOpenDetail: boolean = false;
     @ViewChild(JournalUpdateComponent) journalUpdate!: JournalUpdateComponent
 
-    journalHeader$ = this.journalService.listJournalHeader();
+    journalHeader$ = this.journalService.readJournalHeader();
     types$ = this.typeService.read();
     funds$ = this.fundService.read();
     accounts$ = this.accountService.read().pipe(map((child) => child.filter((parent) => parent.parent_account === false)));

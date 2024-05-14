@@ -7,12 +7,25 @@ import { Subject, takeUntil } from 'rxjs';
 import { JournalEntryComponent } from './journal-entry.component';
 import { JournalUpdateComponent } from './journal-update/journal-update.component';
 import { FileManagerComponent } from 'app/modules/file-manager/file-manager.component';
+import { EntryWizardComponent } from './entry-wizard.component';
 
+
+const imports = [
+    MaterialModule, 
+    NgFor, 
+    NgClass, 
+    NgSwitch, 
+    NgSwitchCase, 
+    JournalEntryComponent, 
+    JournalUpdateComponent, 
+    FileManagerComponent, 
+    EntryWizardComponent
+]
 
 @Component({
   selector: 'transaction-main',
   standalone: true,
-  imports        : [MaterialModule, NgFor, NgClass, NgSwitch, NgSwitchCase, JournalEntryComponent, JournalUpdateComponent, FileManagerComponent],
+  imports        : [imports],
   encapsulation  : ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './transaction-main.component.html',

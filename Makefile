@@ -7,6 +7,7 @@ build:
 ## up_build: stops docker-compose (if running), builds all projects and starts docker compose
 deploy:
 	@echo "Deploy hosting"
+	ng build --optimization 
 	firebase deploy --only hosting
 
 ## up_build: stops docker-compose (if running), builds all projects and starts docker compose

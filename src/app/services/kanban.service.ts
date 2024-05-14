@@ -176,8 +176,7 @@ export class KanbanService {
   getKanbanTaskList() {
     var url = this.baseUrl + '/v1/tasks_list';
     return this.httpClient.get<IKanban[]>(url).pipe(
-      retry(3));
-    
+      retry(3)).pipe(shareReplay());    
   }
 
   create(k: IKanban) {

@@ -47,7 +47,6 @@ export class JournalEditComponent  {
 
   journalDetailEditForm?: FormGroup;
   journalDetail$?: Observable<IJournalDetail[]>
-
   funds$ = this.fundService.read();
   subtype$ = this.subtypeService.read();
   accounts$ = this.accountService.read().pipe(map((child) => child.filter((parent) => parent.parent_account === false)));
