@@ -1,8 +1,9 @@
-import { Component, ViewChild, inject } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
 import { DxDataGridModule, DxTemplateModule } from 'devextreme-angular';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { IJournalDetail, JournalService } from 'app/services/journal.service';
-import { Observable, map } from 'rxjs';
+import { Observable, ReplaySubject, Subject, map, takeUntil } from 'rxjs';
+import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 
 import { CommonModule } from '@angular/common';
 import { DndComponent } from 'app/modules/drag-n-drop/loaddnd/dnd.component';
@@ -31,8 +32,38 @@ const imports = [
     JournalDetailComponent,
     DndComponent,
     GridMenubarStandaloneComponent,
-    JournalUpdateComponent
+    JournalUpdateComponent,
+    NgxMatSelectSearchModule
 ];
+
+
+export interface Bank {
+    id: string;
+    name: string;
+  }
+
+export const BANKS: Bank[] = [
+    {name: 'Bank A (Switzerland)', id: 'A'},
+    {name: 'Bank B (Switzerland)', id: 'B'},
+    {name: 'Bank C (France)', id: 'C'},
+    {name: 'Bank D (France)', id: 'D'},
+    {name: 'Bank E (France)', id: 'E'},
+    {name: 'Bank F (Italy)', id: 'F'},
+    {name: 'Bank G (Italy)', id: 'G'},
+    {name: 'Bank H (Italy)', id: 'H'},
+    {name: 'Bank I (Italy)', id: 'I'},
+    {name: 'Bank J (Italy)', id: 'J'},
+    {name: 'Bank Kolombia (United States of America)', id: 'K'},
+    {name: 'Bank L (Germany)', id: 'L'},
+    {name: 'Bank M (Germany)', id: 'M'},
+    {name: 'Bank N (Germany)', id: 'N'},
+    {name: 'Bank O (Germany)', id: 'O'},
+    {name: 'Bank P (Germany)', id: 'P'},
+    {name: 'Bank Q (Germany)', id: 'Q'},
+    {name: 'Bank R (Germany)', id: 'R'}
+  ];
+  
+
 
 @Component({
     selector: 'transactions',
@@ -45,8 +76,7 @@ const imports = [
        border-color: #ada6a7;
     }`
 })
-
-export class JournalEntryComponent {
+export class JournalEntryComponent implements OnInit, OnDestroy {
     private transactionService = inject(GlTransactionsService);
     private journalService = inject(JournalService);
     private typeService = inject(TypeService);
@@ -58,11 +88,12 @@ export class JournalEntryComponent {
     public  bOpenDetail: boolean = false;
     @ViewChild(JournalUpdateComponent) journalUpdate!: JournalUpdateComponent
 
-    journalHeader$ = this.journalService.readJournalHeader();
-    types$ = this.typeService.read();
-    funds$ = this.fundService.read();
-    accounts$ = this.accountService.read().pipe(map((child) => child.filter((parent) => parent.parent_account === false)));
-    details$: Observable<IJournalDetail[]>;
+    public journalHeader$ = this.journalService.readJournalHeader();
+    public types$ = this.typeService.read();
+    public subtypes$ = this.subtypeService.read()
+    public funds$ = this.fundService.read();
+    public accounts$ = this.accountService.read().pipe(map((child) => child.filter((parent) => parent.parent_account === false)));
+    public details$: Observable<IJournalDetail[]>;
 
     @ViewChild('drawer') drawer!: MatDrawer;
     collapsed = false;
@@ -79,18 +110,49 @@ export class JournalEntryComponent {
     showPageSizeSelector = true;
     showInfo = true;
     showNavButtons = true;
+    
+    public bankFilterCtrl: FormControl<string> = new FormControl<string>('');
+    public bankCtrl: FormControl<Bank> = new FormControl<Bank>(null);
+    public filteredBanks: ReplaySubject<Bank[]> = new ReplaySubject<Bank[]>(1);
+    protected filterBanks() {
+        if (!this.banks) {
+          return;
+        }
+        // get the search keyword
+        let search = this.bankFilterCtrl.value;
+        if (!search) {
+          this.filteredBanks.next(this.banks.slice());
+          return;
+        } else {
+          search = search.toLowerCase();
+        }
+        // filter the banks
+        this.filteredBanks.next(
+          this.banks.filter(bank => bank.name.toLowerCase().indexOf(search) > -1)
+        );
+    }
+
 
     drawOpen: 'open' | 'close' = 'open';
 
     customizeTooltip = (pointsInfo: { originalValue: string; }) => ({ text: `${parseInt(pointsInfo.originalValue)}%` });
     journalForm!: FormGroup;
     keyField: any;
+    protected _onDestroy = new Subject<void>();
     
+    protected banks: Bank[];
+        
     async ngOnInit() {
         const dDate = new Date();
-        this.currentDate = dDate.toISOString().split('T')[0];        
+        this.currentDate = dDate.toISOString().split('T')[0];    
+        this.bankFilterCtrl.valueChanges
+            .pipe(takeUntil(this._onDestroy))
+            .subscribe(() => {
+            this.filterBanks();
+      });    
     }
 
+    
     onCellDoubleClicked(e: any) {                     
         this.bOpenDetail = true;
         this.nJournal = e.data.journal_id;
@@ -275,6 +337,11 @@ export class JournalEntryComponent {
         } else {
             return;
         }
+    }
+    
+    ngOnDestroy() {
+        this._onDestroy.next();
+        this._onDestroy.complete();
     }
 
 }

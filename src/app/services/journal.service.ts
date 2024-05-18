@@ -1,25 +1,25 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
-import { catchError, filter, retry, shareReplay, throwError } from 'rxjs';
+import { Observable, catchError, filter, retry, shareReplay, throwError } from 'rxjs';
 
 import { environment } from 'environments/environment.prod';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 export interface IJournalHeader {
-    journal_id?: number,
-    description?: string,
-    booked?: boolean,
-    booked_date?: string,
-    booked_user?: string,
-    create_date?: string,
-    create_user?: string,
-    period?: number,
-    period_year?: number,
-    transaction_date?: string,
-    status?: string,
-    type?: string,
-    sub_type?: string,
-    amount?: number
+    journal_id: number,
+    description: string,
+    booked: boolean,
+    booked_date: string,
+    booked_user: string,
+    create_date: string,
+    create_user: string,
+    period: number,
+    period_year: number,
+    transaction_date: string,
+    status: string,
+    type: string,
+    sub_type: string,
+    amount: number
 }
 
 export interface IJournalDetail {
@@ -91,10 +91,22 @@ export class JournalService {
   constructor() { }
 
   readJournalTemplate() {
-    var url = this.baseUrl + '/v1/read_journal_template/';
+    var url = this.baseUrl + '/v1/read_journal_template';
     return this.httpClient.get<IJournalHeader>(url).pipe(shareReplay());
   }
 
+  getLastJournalNo(): Observable<number | Object> {
+    var url = this.baseUrl + '/v1/read_last_journal_no';
+    return this.httpClient.get(url).pipe(
+      catchError(err => {
+          const message = "Could not retrieve id ...";
+          console.debug(message, err);
+          this.message(message); 
+          return throwError(() => new Error(`${ JSON.stringify(err) }`));         
+      }),
+      shareReplay()
+    );
+  }
 
   getJournalHeader(journal_id: number) {
     var url = this.baseUrl + '/v1/get_jh/'+ journal_id.toString();
@@ -184,6 +196,7 @@ export class JournalService {
       period_year: header.period_year,
       transaction_date: header.transaction_date,
       status: header.status,
+      sub_type: header.sub_type,
       type: header.type,
       amount: header.amount
     }
@@ -208,29 +221,23 @@ export class JournalService {
       shareReplay())
   }
 
-
+ // set the sub_type 
 
   createJournalHeader(header: IJournalHeader) {
     var url = this.baseUrl + '/v1/create_jh';
+    var jn: number;
+    jn = header.journal_id;
 
-    var journalHeader: IJournalHeader = {
-      journal_id: 0,
+    var journalHeader: any = {
       description: header.description,
-      booked: false,
-      booked_date: header.booked_date,
-      booked_user: header.booked_user,
-      create_date: header.create_date,
-      create_user: header.create_user,
-      period: header.period,
-      period_year: header.period_year,
       transaction_date: header.transaction_date,
-      status: header.status,
-      type: header.type,
       amount: header.amount
     }
 
     return this.httpClient.post<IJournalHeader>(url, journalHeader).pipe(shareReplay())
   }
+
+
 
 
   updateJournalDetail(detail: IJournalDetail){ 

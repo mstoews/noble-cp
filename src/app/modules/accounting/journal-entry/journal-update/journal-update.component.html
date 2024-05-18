@@ -72,15 +72,13 @@
 
 
                     <div class="flex flex-col grow">
-                        <mat-form-field class="mt-1 mr-1 form-element grow">
-                            <mat-label class="text-base dark:text-gray-100">Description</mat-label>
+                        <mat-form-field class="mt-1 mr-1 form-element grow">                            
                             <input matInput placeholder="Description" formControlName="detail_description" />
                         </mat-form-field>
                     </div>
 
                     <div class="flex flex-col grow">
                         <mat-form-field class="mt-1 form-element grow">
-                            <mat-label class="text-base dark:text-gray-100">Reference</mat-label>
                             <input matInput placeholder="Reference" formControlName="reference" />
                         </mat-form-field>
                     </div>
@@ -91,7 +89,7 @@
                     <div class="flex flex-col grow">
                         @if (accounts$ | async; as accounts) {
                         <mat-form-field class="flex-col grow">
-                            <mat-label class="text-base">Account</mat-label>
+                            
                             <mat-select class="text-gray-800" placeholder="Account" formControlName="child"
                                 (selectionChange)="changeChildAccount($event)">
                                 @for (account of accounts; track account) {
@@ -107,7 +105,7 @@
                         @if (subtype$ | async; as subtypes)
                         {
                         <mat-form-field class="flex-col ml-1 grow">
-                            <mat-label class="text-base">Sub Types</mat-label>
+                            
                             <mat-select class="text-gray-800" placeholder="Sub Type" formControlName="sub_type"
                                 (selectionChange)="changeSubtype($event)">
                                 @for (item of subtypes; track item) {
@@ -117,13 +115,13 @@
                         </mat-form-field>
                         }
                     </div>
-
+                    
 
                     <div class="flex flex-col w-[180px]">
                         @if (funds$ | async; as funds)
                         {
                         <mat-form-field class="flex-col ml-1 grow">
-                            <mat-label class="text-base">Funds</mat-label>
+                            
                             <mat-select class="text-gray-800" placeholder="Fund" formControlName="fund"
                                 (selectionChange)="changeFund($event)">
                                 @for (item of funds; track item) {
@@ -136,14 +134,14 @@
 
                     <div class="flex flex-col grow">
                         <mat-form-field class="flex-col ml-1 grow">
-                            <mat-label class="text-base dark:text-gray-100">Debit</mat-label>
+                            
                             <input type="text" mask="separator.2" [leadZero]="true" thousandSeparator=","
                                 class="text-right" matInput placeholder="Debit" formControlName="debit" />
                         </mat-form-field>
                     </div>
                     <div class="flex flex-col grow">
                         <mat-form-field class="flex-col ml-1 grow">
-                            <mat-label class="text-base dark:text-gray-100">Credit</mat-label>
+                            
                             <input type="text" mask="separator.2" [leadZero]="true" thousandSeparator=","
                                 class="text-right" matInput placeholder="Credit" formControlName="credit" />
                         </mat-form-field>

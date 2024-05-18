@@ -39,6 +39,7 @@ export const authTokenInterceptor: HttpInterceptorFn = (req, next) => {
         return authService.refreshToken().pipe(
           switchMap((tokenReceived) => {            
             let token : String = tokenReceived;
+            console.debug(token);
             if (token != '') {
               req = req.clone({
                 setHeaders: {

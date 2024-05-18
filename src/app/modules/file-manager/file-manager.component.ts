@@ -14,7 +14,7 @@ import { MatSelectModule } from '@angular/material/select';
 
 import { DndComponent } from 'app/modules/drag-n-drop/loaddnd/dnd.component';
 import { EvidenceService } from 'app/services/evidence.service';
-import { EvidenceCardComponent } from './shop-card/evidence-card.component';
+import { EvidenceCardComponent } from './file-manager-card/evidence-card.component';
 import { GridMenubarStandaloneComponent } from '../accounting/grid-menubar/grid-menubar.component';
 import { MaterialModule } from 'app/services/material.module';
 
@@ -36,10 +36,12 @@ const imports = [
   standalone: true,
   imports: [imports],
   templateUrl: './file-manager.component.html',
-  styles: `::ng-deep .dx-datagrid .dx-datagrid-rowsview .dx-row-focused.dx-data-row:not(.dx-edit-row) > td:not(.dx-focused) {
+  styles: `
+        ::ng-deep .dx-datagrid .dx-datagrid-rowsview .dx-row-focused.dx-data-row:not(.dx-edit-row) > td:not(.dx-focused) {
         background-color: rgb(195, 199, 199);
         border-color: #878283;
-        }`
+        } 
+        `
   })
 
 export class FileManagerComponent {

@@ -1,362 +1,252 @@
 <div class="flex flex-col flex-auto min-w-0">
 
     <!-- Main -->
+    <div class="max-w-5xl lx:max-w-6xl">
 
-        <div class="max-w-5xl">
+        <form class="p-4 bg-card shadow rounded overflow-hidden" [formGroup]="journalEntryForm">
+            <mat-vertical-stepper [linear]="true" #verticalStepper>
+                <mat-step [formGroupName]="'step1'" [stepControl]="journalEntryForm.get('step1')" #verticalStepperStep1>
+                    <ng-template matStepLabel>Transaction Item Information</ng-template>
 
-            <!-- Vertical stepper -->
-            
-
-            <form
-                class="p-4 bg-card shadow rounded overflow-hidden"
-                [formGroup]="verticalStepperForm">
-                <mat-vertical-stepper
-                    [linear]="true"
-                    #verticalStepper>
-                    <mat-step
-                        [formGroupName]="'step1'"
-                        [stepControl]="verticalStepperForm.get('step1')"
-                        #verticalStepperStep1>
-                        <ng-template matStepLabel>Transaction Item Information</ng-template>
-                        
-                        <div class="flex">
+                    <div class="flex">
+                        <mat-form-field class="flex-auto gap-2">
+                            <input matInput [formControlName]="'description'" [placeholder]="'Description'" required>
+                            <mat-icon class="icon-size-5" matPrefix [svgIcon]="'heroicons_solid:calculator'"></mat-icon>
+                        </mat-form-field>
+                    </div>
+                    <div class="flex flex-col lg:flex-row grow gap-2">                    
                             <mat-form-field class="flex-auto">
-                                <input
-                                    matInput
-                                    [formControlName]="'description'"
-                                    [placeholder]="'Description'"
-                                    required>
-                                <mat-icon
-                                    class="icon-size-5"
-                                    matPrefix
-                                    [svgIcon]="'heroicons_solid:calculator'"></mat-icon>
-                            </mat-form-field>
-                        </div>
-                        <div class="flex flex-col gt-xs:flex-row">
-                            <mat-form-field class="flex-auto">
-                                <input matInput formControlName="transaction_date" [matDatepicker]="picker" [placeholder]="'Transaction Date'">
-                                <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                                <input matInput formControlName="transaction_date" [matDatepicker]="picker"
+                                    [placeholder]="'Transaction Date'">
+                                <mat-datepicker-toggle matIconPrefix [for]="picker"></mat-datepicker-toggle>
                                 <mat-datepicker #picker></mat-datepicker>
                             </mat-form-field>
+
                             <mat-form-field class="flex-auto">
                                 <input type="text" mask="separator.2" [leadZero]="true" thousandSeparator=","
-                                    class="text-right" matInput placeholder="Debit" formControlName="amount" [placeholder]="'Transaction Total'" />
-                                    <mat-icon
-                                    class="icon-size-5"
-                                    matPrefix
+                                    class="text-right" matInput placeholder="Amount" formControlName="amount"
+                                    [placeholder]="'Transaction Total'" />
+                                <mat-icon class="icon-size-5" matPrefix
                                     [svgIcon]="'heroicons_solid:building-office-2'"></mat-icon>
-                            </mat-form-field>
-                        </div>
-                        <div class="flex justify-end">
-                            <button
-                                class="px-8"
-                                mat-flat-button
-                                [color]="'primary'"
-                                [disabled]="verticalStepperStep1.stepControl.pristine || verticalStepperStep1.stepControl.invalid"
-                                type="button"
-                                matStepperNext>
-                                Next
-                            </button>
-                        </div>
-                    </mat-step>
+                            </mat-form-field>                    
+                    </div>
+                    
+                    <div class="flex justify-end">
+                        <button class="px-8" mat-flat-button [color]="'primary'" (click)="onUpdateHeader()"
+                            [disabled]="verticalStepperStep1.stepControl.pristine || verticalStepperStep1.stepControl.invalid"
+                            type="button" matStepperNext>
+                            Next
+                        </button>
+                    </div>
+                </mat-step>
 
-                    <mat-step
-                        [formGroupName]="'step2'"
-                        [stepControl]="verticalStepperForm.get('step2')"
-                        #verticalStepperStep2>
-                        <ng-template matStepLabel>Line Entry</ng-template>
-                        
-                        <div class="flex flex-col grow">
-                            @if (accounts$ | async; as accounts) {
-                                <mat-form-field class="flex-auto">                                    
-                                    <mat-select class="text-gray-800" [placeholder]="'Account'" formControlName="child" (selectionChange)="changeChildAccount($event)">
-                                        @for (account of accounts; track account)
-                                        { <mat-option [value]="account.child"> {{ account.child }} - {{account.description}}  </mat-option>
-                                        }                        
-                                    </mat-select>
-                                    <mat-icon
-                                    class="icon-size-5"
-                                    matPrefix
+                <mat-step [formGroupName]="'step2'" [stepControl]="journalEntryForm.get('step2')" #verticalStepperStep2>
+                    <ng-template matStepLabel>Transaction Details</ng-template>
+                    <section class="flex flex-row">
+                        <div class="flex flex-col md:flex-row grow">
+                            <mat-form-field class="flex-col grow mr-1">
+                                <input matInput placeholder="Description" formControlName="detail_description"
+                                    [placeholder]="'Line Description'" />
+                                <mat-icon class="icon-size-5" matPrefix
                                     [svgIcon]="'heroicons_solid:calculator'"></mat-icon>
-                                </mat-form-field>
-                                }
-                                @else {
-                                <mat-form-field class="m-1 flex-start">
-                                    <mat-label class="ml-2 text-account">Account</mat-label>
-                                    <input #myInput matInput placeholder="Account" formControlName="child" />
-                                </mat-form-field>
-                                }
-                        </div>
-                        <div class="flex">
-                            <mat-form-field class="flex-auto gt-xs:pr-3">                                    
-                                <input matInput placeholder="Description" formControlName="detail_description"  [placeholder]="'Line Description'" />
-                                <mat-icon
-                                class="icon-size-5"
-                                matPrefix
-                                [svgIcon]="'heroicons_solid:calculator'"></mat-icon>
                             </mat-form-field>
                         </div>
-        
-                        <div class="flex">
-                                <mat-form-field class="flex-auto gt-xs:pr-3">                                                                    
-                                    <input matInput placeholder="Reference" formControlName="reference" [placeholder]="'Reference'" />                                    
-                                    <mat-icon
-                                    class="icon-size-5"
-                                    matPrefix
+
+                        <div class="flex flex-col md:flex-row grow">
+                            <mat-form-field class="flex-col grow mr-1">
+                                <input matInput placeholder="Reference" formControlName="reference"
+                                    [placeholder]="'Reference'" />
+                                <mat-icon class="icon-size-5" matPrefix
                                     [svgIcon]="'heroicons_solid:document'"></mat-icon>
-                                </mat-form-field>
+                            </mat-form-field>
                         </div>
-                        <section>
+                    </section>
+                    <section class="flex flex-row">
                         @if (subtype$ | async; as subtypes) {
-                            <div class="flex flex-col grow">
-                            <mat-form-field class="flex-col">
-                                <mat-select class="text-gray-800"  [placeholder]="'Sub Type'" formControlName="sub_type" (selectionChange)="changeSubtype($event)">
-                                    <mat-icon
-                                    class="icon-size-5"
-                                    matPrefix
-                                    [svgIcon]="'heroicons_solid:document'"></mat-icon>
+                        <div class="flex flex-col md:flex-row grow">
+                            <mat-form-field class="flex-col grow ">
+                                <mat-select class="text-gray-800" placeholder="Sub Type" formControlName="sub_type"
+                                    (selectionChange)="changeSubtype($event)">
                                     @for (item of subtypes; track item)
-                                    { <mat-option [value]="item.subtype"> {{
-                                        item.subtype }} </mat-option>
+                                    { <mat-option [value]="item.subtype"> {{ item.subtype }} </mat-option>
                                     }
                                 </mat-select>
-                                <mat-icon
-                                class="icon-size-5"
-                                matPrefix
-                                [svgIcon]="'heroicons_solid:document'"></mat-icon>
+                                <mat-icon class="icon-size-5" matPrefix
+                                    [svgIcon]="'heroicons_solid:document'"></mat-icon>
                             </mat-form-field>
-                            </div>
-                            }
-                            @else {
-                            <mat-form-field class="flex-start m1-2 mr-2">
+                        </div>
+                        }
 
-                                <input #myInput matInput placeholder="Fund" formControlName="fund" />
-                            </mat-form-field>
-                            }
-        
                         @if (funds$ | async; as funds) {
-                            <div class="flex flex-col grow">
-                            <mat-form-field class="flex-col">
-
-                                <mat-select class="text-gray-800"  placeholder="Fund" formControlName="fund" (selectionChange)="changeFund($event)">
+                        <div class="flex flex-col md:flex-row grow">
+                            <mat-form-field class="flex-col grow  ml-1">
+                                <mat-select class="text-gray-800" placeholder="Fund" formControlName="fund"
+                                    (selectionChange)="changeFund($event)">
                                     @for (item of funds; track item)
-                                    { <mat-option [value]="item.fund"> {{
-                                        item.fund }} </mat-option>
+                                    { <mat-option [value]="item.fund"> {{ item.fund }} - {{item.description}}
+                                    </mat-option>
                                     }
                                 </mat-select>
-                                <mat-icon
-                                class="icon-size-5"
-                                matPrefix
-                                [svgIcon]="'heroicons_solid:document'"></mat-icon>
+                                <mat-icon class="icon-size-5" matPrefix
+                                    [svgIcon]="'heroicons_solid:document'"></mat-icon>
                             </mat-form-field>
-                            </div>
-                            }
-                            @else {
-                            <mat-form-field class="flex-start m1-2 mr-2">
-                                <mat-label class="ml-2 text-base">Funding</mat-label>
-                                <input #myInput matInput placeholder="Fund" formControlName="fund" />
+                        </div>
+                        }
+                    </section>
+
+                    <section class="flex flex-row">
+                        @if (accounts$ | async; as accounts) {
+                        <div class="flex flex-col grow ">
+                            <mat-form-field class="flex-col">
+                                <mat-select class="text-gray-800" [placeholder]="'Account'" formControlName="child">
+                                    @for (item of accounts; track item)
+                                    { <mat-option [value]="item.child"> {{item.child}} -
+                                        {{item.description}}</mat-option>
+                                    }
+                                </mat-select>
+                                <mat-icon class="icon-size-5" matPrefix
+                                    [svgIcon]="'heroicons_solid:document'"></mat-icon>
                             </mat-form-field>
-                            }
-                        </section>
-        
-                       <section class="flex flex-row">
+                        </div>
+                        }
                         <div class="flex flex-col grow">
-                            <mat-form-field class="form-element mr-1">
-
-                                <input type="text" mask="separator.2"   [leadZero]="true" thousandSeparator="," class="text-right" matInput placeholder="Debit" formControlName="debit" />
-                                <mat-icon
-                                class="icon-size-5"
-                                matPrefix
-                                [svgIcon]="'heroicons_solid:currency-dollar'"></mat-icon>
+                            <mat-form-field class="form-element ml-1">
+                                <input type="text" mask="separator.2" [leadZero]="true" thousandSeparator=","
+                                    class="text-right" matInput [placeholder]="'Debit'" formControlName="debit" />
+                                <mat-icon class="icon-size-5" matPrefix
+                                    [svgIcon]="'heroicons_solid:currency-dollar'"></mat-icon>
                             </mat-form-field>
                         </div>
-                            <div class="flex flex-col grow">
-                                <mat-form-field class="form-element ml-1" >
+                    </section>
 
-                                <input type="text" mask="separator.2"   [leadZero]="true" thousandSeparator="," class="text-right" matInput placeholder="Credit" formControlName="credit"/>                        
-                                <mat-icon
-                                class="icon-size-5"
-                                matPrefix
-                                [svgIcon]="'heroicons_solid:currency-dollar'"></mat-icon>
-                                </mat-form-field>
-                            </div>
-        
-                        </section>
-                        <ng-container>
-                            <div class="flex flex-col h-full mb-2">
-                                @if (details$ | async; as journal_details) {
-                                <dx-data-grid id="journal_child_id" [columnHidingEnabled]="true" [wordWrapEnabled]="true" [dataSource]="journal_details"
-                                    [showColumnLines]="true" [showRowLines]="true" [showBorders]="true" [focusedRowEnabled]="true"
-                                    keyExpr="journal_subid" [repaintChangesOnly]="true"
-                                    
-                                    >                                
-                                    <dxi-column dataField="journal_subid" caption="ID" width="70" alignment="middle"> </dxi-column>                
-                                    <dxi-column dataField="child" caption="Account" width="80"> </dxi-column>                    
-                                    <dxi-column dataField="fund" caption="Fund" width="80"> </dxi-column>
-                                    <dxi-column dataField="sub_type" caption="Sub Type"> </dxi-column>
-                                    <dxi-column dataField="description"> </dxi-column>
-                                    <dxi-column dataField="reference"> </dxi-column>
-                                    <dxi-column dataField="debit" dataType="number" width="100" alignment="right"  [customizeText]="formatNumber"> </dxi-column>
-                                    <dxi-column dataField="credit" dataType="number" alignment="right" [customizeText]="formatNumber" width="100"> </dxi-column>
-                                    
-                                    <dxo-summary>
-                                        <dxi-total-item column="child"  summaryType="count"> </dxi-total-item>
-                                        <dxi-total-item column="debit"  summaryType="sum" [valueFormat]="{ type: 'currency', precision: 2, useCurrencyAccountingStyle: true}" displayFormat="{0}"></dxi-total-item>                                                    
-                                        <dxi-total-item column="credit" summaryType="sum" [valueFormat]="{ type: 'currency', precision: 2, useCurrencyAccountingStyle: true}" displayFormat="{0}"> </dxi-total-item>
-                                    </dxo-summary>
-                                </dx-data-grid>
-                                }
-                            </div>
-                        </ng-container>
-        
-                        <div mat-dialog-actions>
-                            <button mat-icon-button color="primary" class="m-1 bg-slate-200 text-gray-100"
-                                (click)="onUpdate()" matTooltip="Update" aria-label="hovered over">
-                                <mat-icon>add</mat-icon>
-                            </button>
-                            
-                            <button mat-icon-button color="primary" class="m-1 bg-slate-200 text-gray-100"
-                                (click)="onDelete($event)" matTooltip="Delete" aria-label="hovered over">
-                                <mat-icon
-                                class="icon-size-5"
-                                matPrefix
-                                [svgIcon]="'heroicons_solid:trash'"></mat-icon>
-                            </button>
-                            
-                        </div>   
-                        
-                        <!-- <div class="flex">
-                            <mat-form-field class="flex-auto">
-                                <input
-                                    matInput
-                                    [formControlName]="'userName'"
-                                    [placeholder]="'Username'"
-                                    required>
-                                <span matPrefix>www.example.com/</span>
+                    <section class="flex flex-row">
+                        @if (accounts$ | async; as accounts) {
+                        <div class="flex flex-col grow ">
+                            <mat-form-field class="flex-col">
+                                <mat-select class="text-gray-800" [placeholder]="'Account'"
+                                    formControlName="child_credit">
+                                    @for (item of accounts; track item)
+                                    { <mat-option [value]="item.child"> {{item.child}} -
+                                        {{item.description}}</mat-option>
+                                    }
+                                </mat-select>
+                                <mat-icon class="icon-size-5" matPrefix
+                                    [svgIcon]="'heroicons_solid:document'"></mat-icon>
                             </mat-form-field>
                         </div>
-                         -->
-                        <div class="flex justify-end">
-                            <button
-                                class="px-8 mr-2"
-                                mat-flat-button
-                                [color]="'accent'"
-                                type="button"
-                                matStepperPrevious>
-                                Back
-                            </button>
-                            <button
-                                class="px-8"
-                                mat-flat-button
-                                [color]="'primary'"
-                                [disabled]="verticalStepperStep2.stepControl.pristine || verticalStepperStep2.stepControl.invalid"
-                                type="button"
-                                matStepperNext>
-                                Next
-                            </button>
+                        }
+                        <div class="flex flex-col grow">
+                            <mat-form-field class="form-element ml-1">
+                                <input type="text" mask="separator.2" [leadZero]="true" thousandSeparator=","
+                                    class="text-right" matInput [placeholder]="'Credit'" formControlName="credit" />
+                                <mat-icon class="icon-size-5" matPrefix
+                                    [svgIcon]="'heroicons_solid:currency-dollar'"></mat-icon>
+                            </mat-form-field>
                         </div>
-                    </mat-step>
+                    </section>
+                    <div class="flex justify-end">
+                        <button class="px-8 mr-2" mat-flat-button [color]="'accent'" type="button" matStepperPrevious>
+                            Back
+                        </button>
+                        <button class="px-8" mat-flat-button [color]="'primary'" (click)="onUpdate()"
+                            [disabled]="verticalStepperStep2.stepControl.pristine || verticalStepperStep2.stepControl.invalid"
+                            type="button" matStepperNext>
+                            Next
+                        </button>
+                    </div>
 
-                    <mat-step
-                        [formGroupName]="'step3'"
-                        [stepControl]="verticalStepperForm.get('step3')">
-                        <ng-template matStepLabel>Confirmation</ng-template>
-                        
-                        <div class="flex flex-col gt-sm:flex-row">
-                            <div class="flex flex-col">
-                                <span class="font-medium mb-2">By Email</span>
-                                <div
-                                    class="flex flex-col"
-                                    [formGroupName]="'byEmail'">
-                                    <mat-checkbox
-                                        class="mb-1"
-                                        [color]="'primary'"
-                                        [formControlName]="'companyNews'">
-                                        Company News
-                                    </mat-checkbox>
-                                    <mat-checkbox
-                                        class="mb-1"
-                                        [color]="'primary'"
-                                        [formControlName]="'featuredProducts'">
-                                        Featured Products
-                                    </mat-checkbox>
-                                    <mat-checkbox
-                                        [color]="'primary'"
-                                        [formControlName]="'messages'">
-                                        Messages
-                                    </mat-checkbox>
-                                </div>
-                            </div>
-                            <div class="flex flex-col mt-8 gt-sm:mt-0 gt-sm:ml-16">
-                                <span class="font-medium mb-2">Push Notifications</span>
-                                <mat-radio-group
-                                    class="flex flex-col"
-                                    [color]="'primary'"
-                                    [formControlName]="'pushNotifications'">
-                                    <mat-radio-button
-                                        class="mb-2"
-                                        [value]="'everything'">
-                                        Everything
-                                    </mat-radio-button>
-                                    <mat-radio-button
-                                        class="mb-2"
-                                        [value]="'just-good'">
-                                        Just the good stuff
-                                    </mat-radio-button>
-                                    <mat-radio-button [value]="'no-push'">
-                                        No push notifications
-                                    </mat-radio-button>
-                                </mat-radio-group>
-                            </div>
-                        </div>
-                        <div class="flex justify-end mt-8">
-                            <button
-                                class="px-8 mr-2"
-                                mat-flat-button
-                                [color]="'accent'"
-                                type="button"
-                                matStepperPrevious>
-                                Back
-                            </button>
-                            <button
-                                class="px-8"
-                                mat-flat-button
-                                [color]="'primary'"
-                                type="button"
-                                matStepperNext>
-                                Next
-                            </button>
-                        </div>
-                    </mat-step>
+                </mat-step>
 
-                    <mat-step>
-                        <ng-template matStepLabel>Completed</ng-template>
-                        
-                        <div class="flex justify-end mt-8">
-                            <button
-                                class="px-8 mr-2"
-                                mat-flat-button
-                                [color]="'accent'"
-                                type="button"
-                                matStepperPrevious>
-                                Back
-                            </button>
-                            <button
-                                class="px-8"
-                                mat-flat-button
-                                [color]="'primary'"
-                                type="reset"
-                                (click)="verticalStepper.reset();">
-                                Reset
-                            </button>
-                        </div>
-                    </mat-step>
-                </mat-vertical-stepper>
-            </form>
+                <mat-step [formGroupName]="'step3'" [stepControl]="journalEntryForm.get('step4')">
+                    <ng-template matStepLabel>Post/Edit Transaction</ng-template>
 
-        </div>
+                    @if (journalHeader) {
+                    <div class="text-gray-700 text-xl3 m-1">Confirm Transaction</div>
+                    <div class="flex">
+                        <div class="text-gray-600 m-1">Description : {{journalHeader.description}}</div>
+                    </div>
+                    <div class="flex">
+                        <div class="text-gray-600 m-1">Transaction Date : {{journalHeader.transaction_date}}</div>
+                    </div>
+                    <div class="flex">
+                        <div class="text-gray-600 m-1">Amount : {{journalHeader.amount}}</div>
+                    </div>
+
+                    }
+                    <ng-container>
+                        <!-- @if (details$ | async) {
+                        <journal-update [journal_id]="journalHeader.journal_id" [sTitle]="'Journal Entry Detail'"
+                            [description]="journalHeader.description"
+                            [transaction_date]="journalHeader.transaction_date" [details$]="details$">
+                        </journal-update>
+                        } -->
+                        <div class="flex flex-col h-full mb-2">
+                            @if (journalDetails) {
+                            <dx-data-grid id="journal_child_id" [columnHidingEnabled]="true" [wordWrapEnabled]="true"
+                                [dataSource]="journalDetails" [showColumnLines]="true" [showRowLines]="true"
+                                [showBorders]="true" [focusedRowEnabled]="true" keyExpr="journal_subid"
+                                [repaintChangesOnly]="true">
+                                <dxi-column dataField="journal_subid" caption="ID" width="70" alignment="middle">
+                                </dxi-column>
+                                <dxi-column dataField="child" caption="Account" width="80"> </dxi-column>
+                                <dxi-column dataField="fund" caption="Fund" width="80"> </dxi-column>
+                                <dxi-column dataField="sub_type" caption="Sub Type"> </dxi-column>
+                                <dxi-column dataField="description"> </dxi-column>
+                                <dxi-column dataField="reference"> </dxi-column>
+                                <dxi-column dataField="debit" dataType="number" width="100" alignment="right"
+                                    [customizeText]="formatNumber"> </dxi-column>
+                                <dxi-column dataField="credit" dataType="number" alignment="right"
+                                    [customizeText]="formatNumber" width="100"> </dxi-column>
+
+                                <dxo-summary>
+                                    <dxi-total-item column="child" summaryType="count"> </dxi-total-item>
+                                    <dxi-total-item column="debit" summaryType="sum"
+                                        [valueFormat]="{ type: 'currency', precision: 2, useCurrencyAccountingStyle: true}"
+                                        displayFormat="{0}"></dxi-total-item>
+                                    <dxi-total-item column="credit" summaryType="sum"
+                                        [valueFormat]="{ type: 'currency', precision: 2, useCurrencyAccountingStyle: true}"
+                                        displayFormat="{0}"> </dxi-total-item>
+                                </dxo-summary>
+                            </dx-data-grid>
+                            }
+                        </div>
+                    </ng-container>
+
+                    <div class="flex justify-end mt-8">
+                        <button class="px-8 mr-2" mat-flat-button [color]="'accent'" type="button" matStepperPrevious>
+                            Back
+                        </button>
+                        <button class="px-8" mat-flat-button [color]="'primary'" type="button"
+                            (click)="postTransaction()" matStepperNext>
+                            Post Transaction
+                        </button>
+                    </div>
+                </mat-step>
+
+                <mat-step>
+                    <ng-template matStepLabel>Completed</ng-template>
+
+                    <ng-container>
+                        <div class="flex flex-col h-full mb-2">
+                            <mat-icon class="icon-size-20 text-green-700" matPrefix
+                                [svgIcon]="'feather:check'"></mat-icon>
+                        </div>
+                    </ng-container>
+
+
+                    <div class="flex justify-end mt-8">
+                        <button class="px-8 mr-2" mat-flat-button [color]="'accent'" type="button" matStepperPrevious>
+                            Back
+                        </button>
+                        <button class="px-8" mat-flat-button [color]="'primary'" type="reset"
+                            (click)="verticalStepper.reset();">
+                            Reset
+                        </button>
+                    </div>
+                </mat-step>
+            </mat-vertical-stepper>
+        </form>
 
     </div>
 
-
-
+</div>

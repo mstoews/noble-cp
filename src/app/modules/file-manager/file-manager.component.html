@@ -7,7 +7,7 @@
             <!-- Title -->
             <div class="mt-2">
                 <h2 class="text-3xl md:text-4xl font-extrabold tracking-tight leading-7 sm:leading-10 truncate">
-                    Artifact Manager
+                    Artifacts 
                 </h2>
             </div>
         </div>
@@ -21,6 +21,7 @@
             </grid-menubar>
             </div>
             
+        @defer {
         <div class="flex-auto p-6 sm:p-10">
             <div class="h-full border-gray-900 rounded-2xl">
                 <mat-drawer-container class="flex-col h-full cdkSrollable">
@@ -101,5 +102,11 @@
                 </mat-drawer-container>
             </div>
         </div>
+        }
+        @placeholder(minimum 1.5s) {
+            <div class="fixed z-[1031] -translate-x-2/4 -translate-y-2/4 left-2/4 top-2/4">
+                <mat-spinner></mat-spinner>
+            </div>
+        }
     </div>
 </div>

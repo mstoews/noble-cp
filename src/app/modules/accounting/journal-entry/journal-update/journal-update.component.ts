@@ -247,6 +247,83 @@ export class JournalUpdateComponent implements OnInit {
 
   }
 
+  onAddLineJournalDetail() {    
+    this.editing = true;
+
+    var header = this.journalForm.getRawValue();
+    var detail = this.journalDetailForm.getRawValue();
+
+    if (detail.detail_description === '' || detail.detail_description === undefined || detail.detail_description === null)
+      {
+        this.snackBar.open('Please select a row to edit', 'OK', {
+          verticalPosition: 'top',
+          horizontalPosition: 'right',
+          duration: 2000,
+        });        
+        return;    
+      }
+
+    var debit: number;
+    var credit: number;
+
+    debit = Number(detail.debit);
+    credit = Number(detail.credit);
+    var journalDetail: IJournalDetail;
+    
+
+    if (debit && credit){
+      if (detail.journal_subid === undefined)
+        detail.journal_subid = 1
+       journalDetail = {
+          "journal_id": header.journal_id,
+          "journal_subid": detail.journal_subid,
+           "account": detail.account,
+           "child": detail.child,
+           "description": detail.detail_description,
+           "create_date":"2024-02-12",	
+           "create_user":"mstoews@hotmail.com",
+           "sub_type": detail.sub_type,
+           "debit": debit,
+           "credit": credit,
+           "reference": detail.reference,
+           "fund": detail.fund
+         }
+    }
+    
+    const journalHeader: IJournalHeader = {
+        journal_id: header.journal_id,
+        description: header.description,
+        booked: false,
+        booked_date: header.booked_date,
+        booked_user: header.booked_user,
+        create_date: header.create_date,
+        create_user: header.create_user,
+        period: header.period,
+        period_year: header.period_year,
+        transaction_date: header.transaction_date,
+        status: header.status,
+        type: header.type,
+        sub_type: header.sub_type,
+        amount: header.amount
+    }
+      
+    
+    this.journalService.updateJournalHeader(journalHeader);
+    this.currentRowData.journal_subid
+    
+    this.snackBar.open('Journal Entry Updated', 'OK', {
+      verticalPosition: 'top',
+      horizontalPosition: 'right',
+      duration: 2000,
+    });
+
+    this.journalDetailForm.reset()    
+    this.loadContent();
+    this.details$ = this.journalService.getJournalDetail(this.journal_id);
+
+  }
+
+
   onUpdateJournalEntry() {
     this.editing = false;
     var header = this.journalForm.getRawValue();
@@ -267,20 +344,42 @@ export class JournalUpdateComponent implements OnInit {
 
     debit = Number(detail.debit);
     credit = Number(detail.credit);
+    var journalDetail: IJournalDetail;
     
-    const journalDetail = {
-      "journal_id": this.currentRowData.journal_id ,
-      "journal_subid": this.currentRowData.journal_subid,
-      "account": this.currentRowData.account,
-      "child": detail.child,
-      "description": detail.detail_description,
-      "create_date":"2024-02-12",	
-      "create_user":"mstoews@hotmail.com",
-      "sub_type": detail.sub_type,
-      "debit": debit,
-      "credit": credit,
-      "reference": detail.reference,
-      "fund": detail.fund
+    // if (this.currentRowData) {
+    // const journalDetail = {
+    //   "journal_id": this.currentRowData.journal_id ,
+    //   "journal_subid": this.currentRowData.journal_subid,
+    //   "account": this.currentRowData.account,
+    //   "child": detail.child,
+    //   "description": detail.detail_description,
+    //   "create_date":"2024-02-12",	
+    //   "create_user":"mstoews@hotmail.com",
+    //   "sub_type": detail.sub_type,
+    //   "debit": debit,
+    //   "credit": credit,
+    //   "reference": detail.reference,
+    //   "fund": detail.fund
+    //   }
+    // }
+
+    if (debit && credit){
+      if (detail.journal_subid === undefined)
+        detail.journal_subid = 1
+       journalDetail = {
+          "journal_id": header.journal_id ,
+          "journal_subid": detail.journal_subid,
+           "account": detail.account,
+           "child": detail.child,
+           "description": detail.detail_description,
+           "create_date":"2024-02-12",	
+           "create_user":"mstoews@hotmail.com",
+           "sub_type": detail.sub_type,
+           "debit": debit,
+           "credit": credit,
+           "reference": detail.reference,
+           "fund": detail.fund
+         }
     }
     
     const journalHeader: IJournalHeader = {
@@ -296,11 +395,13 @@ export class JournalUpdateComponent implements OnInit {
         transaction_date: header.transaction_date,
         status: header.status,
         type: header.type,
+        sub_type: header.sub_type,
         amount: header.amount
     }
       
-    var rc = this.journalService.updateJournalDetail(journalDetail);
+    
     this.journalService.updateJournalHeader(journalHeader);
+    this.currentRowData.journal_subid
     
     this.snackBar.open('Journal Entry Updated', 'OK', {
       verticalPosition: 'top',
@@ -313,12 +414,6 @@ export class JournalUpdateComponent implements OnInit {
     this.details$ = this.journalService.getJournalDetail(this.journal_id);
 
   }
-
-  onAddLineJournalDetail() {    
-    this.editing = true;
-    // console.debug(detail);
-  }
-
 
   onCreate() {
     var header = this.journalForm.getRawValue();
@@ -368,6 +463,7 @@ export class JournalUpdateComponent implements OnInit {
         transaction_date: header.transaction_date,
         status: header.status,
         type: header.type,
+        sub_type: header.sub_type,
         amount: header.amount
     }
       

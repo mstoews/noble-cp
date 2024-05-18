@@ -31,8 +31,7 @@
                 
                 @if (subtype$ | async; as subtypes) {
                     <div class="flex flex-col grow">
-                    <mat-form-field class="flex-col ml-1">
-                        <mat-label class="ml-2 text-base">Sub Types</mat-label>
+                    <mat-form-field class="flex-col ml-1">                        
                         <mat-select class="text-gray-800"  placeholder="Sub Type" formControlName="sub_type" (selectionChange)="changeSubtype($event)">
                             @for (item of subtypes; track item)
                             { <mat-option [value]="item.subtype"> {{
@@ -51,8 +50,7 @@
 
                 @if (funds$ | async; as funds) {
                     <div class="flex flex-col grow">
-                    <mat-form-field class="flex-col ml-1">
-                        <mat-label class="ml-2 text-base">Funds</mat-label>
+                    <mat-form-field class="flex-col ml-1">                        
                         <mat-select class="text-gray-800"  placeholder="Fund" formControlName="fund" (selectionChange)="changeFund($event)">
                             @for (item of funds; track item)
                             { <mat-option [value]="item.fund"> {{
@@ -64,7 +62,7 @@
                     }
                     @else {
                     <mat-form-field class="flex-start m1-2 mr-2">
-                        <mat-label class="ml-2 text-base">Funding</mat-label>
+                        
                         <input #myInput matInput placeholder="Fund" formControlName="fund" />
                     </mat-form-field>
                     }
