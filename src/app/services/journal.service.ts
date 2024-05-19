@@ -5,6 +5,24 @@ import { Observable, catchError, filter, retry, shareReplay, throwError } from '
 import { environment } from 'environments/environment.prod';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
+export interface IPeriod {
+  period_id: number,
+  period_year: number,
+}
+
+export interface IJournalDetailDelete {
+  journal_id: number,
+  journal_subid: number
+
+}
+
+export interface  IJournalHeaderUpdate {
+  journal_id: number,
+  description: string,
+  transaction_date: string,
+  amount: number
+}
+
 export interface IJournalHeader {
     journal_id: number,
     description: string,
@@ -54,6 +72,12 @@ export interface IAccounts {
   period_year?  : number,
 }
 
+export interface ITransactionDate {
+  start_date: string,
+  end_date: string
+}
+
+
 export interface IJournalTemplate {
     template_ref: string,    
     description: string,
@@ -92,7 +116,7 @@ export class JournalService {
 
   readJournalTemplate() {
     var url = this.baseUrl + '/v1/read_journal_template';
-    return this.httpClient.get<IJournalHeader>(url).pipe(shareReplay());
+    return this.httpClient.get<IJournalTemplate>(url).pipe(shareReplay());
   }
 
   getLastJournalNo(): Observable<number | Object> {
@@ -108,11 +132,24 @@ export class JournalService {
     );
   }
 
+  readPeriodFromTransactionDate(transaction_date: ITransactionDate): any  {
+    var url = this.baseUrl + '/v1/read_period_from_transaction';
+    this.httpClient.post<IPeriod>(url, transaction_date ).pipe(
+      catchError(err => {
+        const message = "Could not retrieve id ...";
+        console.debug(message, err);
+        this.message(message); 
+        return throwError(() => new Error(`${ JSON.stringify(err) }`));         
+    }),
+      shareReplay());      
+  }
+
   getJournalHeader(journal_id: number) {
-    var url = this.baseUrl + '/v1/get_jh/'+ journal_id.toString();
+    var url = this.baseUrl + '/v1/read_journal_header_by_id';
     return this.httpClient.post<IJournalHeader>(url,
       {
-        journal_id: journal_id
+        journal_id: journal_id,
+        status: "Open"
       },
       ).pipe(
       shareReplay())
@@ -181,26 +218,16 @@ export class JournalService {
       shareReplay())
   }
 
-  updateJournalHeader(header: IJournalHeader) {
-    var url = this.baseUrl + '/v1/update_jh';
+  updateJournalHeader(header: IJournalHeaderUpdate) {
+    var url = this.baseUrl + '/v1/update_journal_header';
 
-    var journalHeader: IJournalHeader = {
+    var journalHeaderUpdate: IJournalHeaderUpdate = {
       journal_id: header.journal_id,
       description: header.description,
-      booked: false,
-      booked_date: header.booked_date,
-      booked_user: header.booked_user,
-      create_date: header.create_date,
-      create_user: header.create_user,
-      period: header.period,
-      period_year: header.period_year,
       transaction_date: header.transaction_date,
-      status: header.status,
-      sub_type: header.sub_type,
-      type: header.type,
       amount: header.amount
     }
-    return this.httpClient.post<IJournalHeader>(url, journalHeader).pipe(
+    return this.httpClient.post<any>(url, journalHeaderUpdate).pipe(
       catchError(err => {
           const message = "Could not save journal header ...";
           console.debug(message, err);
@@ -254,8 +281,6 @@ export class JournalService {
     ).subscribe();
 
   }
-
-
   message(msg: string){
     this.snackBar.open(msg, 'OK', {
       verticalPosition: 'top',
@@ -265,31 +290,14 @@ export class JournalService {
     });
   }
 
-
-  deleteJournalDetail(journal_id: number){ 
-    var url = this.baseUrl + '/v1/create_jd';
-    return this.httpClient.post<IJournalDetail>(url, journal_id).pipe(shareReplay())
+  deleteJournalDetail(detail: any){ 
+    var url = this.baseUrl + '/v1/delete_journal_details';
+    return this.httpClient.post<IJournalDetailDelete>(url, detail ).pipe(shareReplay())
   }
 
-
   createJournalDetail(detail: IJournalDetail) {
-    var url = this.baseUrl + '/v1/create_jd';
-    var journalDetail: IJournalDetail = {
-      journal_id: journalDetail.journal_id,
-      journal_subid: detail.journal_subid,
-      account: detail.account,
-      child: detail.child,
-      description: detail.description,
-      create_date: detail.create_date,
-      create_user: detail.create_user,
-      sub_type: detail.sub_type,
-      debit: detail.debit,
-      credit: detail.credit,
-      reference: detail.reference,
-      fund: detail.fund
-    }
-
-    return this.httpClient.post<IJournalDetail>(url, journalDetail).pipe(shareReplay())
+    var url = this.baseUrl + '/v1/create_journal_detail';
+    return this.httpClient.post<IJournalDetail>(url, detail ).pipe(shareReplay())
   }
 }
 

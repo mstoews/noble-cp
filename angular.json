@@ -97,15 +97,16 @@
           },
           "defaultConfiguration": "production"
         },
-        "serve": {
+        "serve": {          
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "nobleledger:build:production"
+              "buildTarget": "nobleledger:build:production",
+              "port": 43221
             },
-            "development": {
-              "port": 43221,
-              "buildTarget": "nobleledger:build:development"
+            "development": {              
+              "buildTarget": "nobleledger:build:development",
+              "port": 43221
             }
           },
           "defaultConfiguration": "development"

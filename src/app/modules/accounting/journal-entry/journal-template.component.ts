@@ -38,7 +38,7 @@ const imports = [
     selector: 'journal-template',
     standalone: true,
     imports: [imports],
-    templateUrl: './journal-entry.component.html',
+    templateUrl: './journal-template.component.html',
     styles: `::ng-deep .dx-datagrid .dx-datagrid-rowsview .dx-row-focused.dx-data-row:not(.dx-edit-row) > td:not(.dx-focused)
     {
        background-color: rgb(195, 199, 199);

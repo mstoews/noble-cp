@@ -1,5 +1,5 @@
 <div class="sm:hide md:visible">
-    <grid-menubar class="pl-5 pr-5" [inTitle]="'Journal Entry'" (notifyParentRefresh)="onRefresh()"
+    <grid-menubar class="pl-5 pr-5" [inTitle]="'Journal Booking Rules'" (notifyParentRefresh)="onRefresh()"
         (notifyParentAdd)="onAdd()" (notifyParentDelete)="onDeleteSelection()" (notifyParentUpdate)="onUpdateSelection()">
     </grid-menubar>
     </div>
@@ -12,14 +12,14 @@
                 <mat-drawer class="w-full" #drawer [opened]="false" mode="push" [position]="'end'"
                     [disableClose]="false">
                     @if (bOpenDetail === true) {
-                    <journal-update 
+                    <!-- <journal-update 
                        [journal_id]="nJournal" 
                        [sTitle]="'Journal Entry Detail'"
                        [description]="description"
                        [transaction_date]="transaction_date"
                        [details$]="details$"
                         (notifyDrawerClose)="closeDrawer()">
-                    </journal-update>
+                    </journal-update> -->
                     }
                 </mat-drawer>
                 <mat-drawer-container class="flex-col h-full">
@@ -30,7 +30,7 @@
                                 [columnHidingEnabled]="true"
                                 [allowColumnReordering]="true" [rowAlternationEnabled]="true" [showBorders]="true"
                                 [focusedRowEnabled]="true" [focusedRowIndex]="0" [repaintChangesOnly]="true"                            
-                                keyExpr="journal_id" (onExporting)="onExporting($event)"
+                                keyExpr="template_ref" (onExporting)="onExporting($event)"
                                 (onFocusedRowChanged)="onFocusedDetailRowChanged($event)"
                                 [width]="'100%'"
                                 (onCellDblClick)="onCellDoubleClicked($event)">
@@ -45,24 +45,15 @@
                                     [displayMode]="displayMode" [showPageSizeSelector]="showPageSizeSelector"
                                     [showInfo]="showInfo" [showNavigationButtons]="showNavButtons">
                                 </dxo-pager>
-    
-                                <dxi-column dataField="journal_id" caption="ID" width="50" dataType="number" alignment="left"></dxi-column>                                                            
-                                <dxi-column dataField="amount" width="100" [customizeText]="formatNumber" dataType="number"></dxi-column>
-                                <dxi-column dataField="description" dataType="string"></dxi-column>
-                                <dxi-column dataField="create_user" caption="User"></dxi-column>
-                                <dxi-column dataField="create_date" caption="Date" dataType="date"></dxi-column>
-                                
-                                
-                                <dxo-master-detail [enabled]="true" template="detail"> </dxo-master-detail>
-                                <div *dxTemplate="let journal of 'detail'">
-                                    <journal-detail 
-                                        [key]="journal.data.journal_id" 
-                                        [description]="journal.data.description"
-                                        [transaction_date]="journal.data.transaction_date"                                    
-                                        (notifyTransactionEdit)="onEdit()">
-                                    </journal-detail>
-                                </div>
-                                <dxo-export [enabled]="true" [allowExportSelectedData]="true"></dxo-export>
+                                    
+                                <dxi-column dataField="template_ref" width="100" caption="Reference" dataType="number" alignment="left"></dxi-column>    
+                                <dxi-column dataField="description" dataType="number" alignment="left"></dxi-column>    
+                                <dxi-column dataField="type" dataType="number" alignment="left"></dxi-column>    
+                                <dxi-column dataField="debit_percentage" dataType="number" alignment="left"></dxi-column>    
+                                <dxi-column dataField="credit_percentage" dataType="number" alignment="left"></dxi-column>    
+                                <dxi-column dataField="create_date" dataType="number" alignment="left"></dxi-column>    
+                                <dxi-column dataField="create_user" dataType="number" alignment="left"></dxi-column>                                                                   
+                             <dxo-export [enabled]="true" [allowExportSelectedData]="true"></dxo-export>
                             </dx-data-grid>
                         </div>
                         }

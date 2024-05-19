@@ -42,7 +42,7 @@
 
                 <mat-step [formGroupName]="'step2'" [stepControl]="journalEntryForm.get('step2')" #verticalStepperStep2>
                     <ng-template matStepLabel>Transaction Details</ng-template>
-                    <section class="flex flex-row">
+                    <section class="flex flex-row mt-2">
                         <div class="flex flex-col md:flex-row grow">
                             <mat-form-field class="flex-col grow mr-1">
                                 <input matInput placeholder="Description" formControlName="detail_description"
@@ -98,7 +98,7 @@
                         @if (accounts$ | async; as accounts) {
                         <div class="flex flex-col grow ">
                             <mat-form-field class="flex-col">
-                                <mat-select class="text-gray-800" [placeholder]="'Account'" formControlName="child">
+                                <mat-select class="text-gray-800" [placeholder]="'Debit Account'" formControlName="child">
                                     @for (item of accounts; track item)
                                     { <mat-option [value]="item.child"> {{item.child}} -
                                         {{item.description}}</mat-option>
@@ -112,18 +112,18 @@
                         <div class="flex flex-col grow">
                             <mat-form-field class="form-element ml-1">
                                 <input type="text" mask="separator.2" [leadZero]="true" thousandSeparator=","
-                                    class="text-right" matInput [placeholder]="'Debit'" formControlName="debit" />
+                                    class="text-right" matInput [placeholder]="'Debit Amount'" formControlName="debit" />
                                 <mat-icon class="icon-size-5" matPrefix
                                     [svgIcon]="'heroicons_solid:currency-dollar'"></mat-icon>
                             </mat-form-field>
                         </div>
                     </section>
 
-                    <section class="flex flex-row">
+                    <section class="flex flex-row gap-2">
                         @if (accounts$ | async; as accounts) {
                         <div class="flex flex-col grow ">
                             <mat-form-field class="flex-col">
-                                <mat-select class="text-gray-800" [placeholder]="'Account'"
+                                <mat-select class="text-gray-800" [placeholder]="'Credit Account'"
                                     formControlName="child_credit">
                                     @for (item of accounts; track item)
                                     { <mat-option [value]="item.child"> {{item.child}} -
@@ -138,7 +138,7 @@
                         <div class="flex flex-col grow">
                             <mat-form-field class="form-element ml-1">
                                 <input type="text" mask="separator.2" [leadZero]="true" thousandSeparator=","
-                                    class="text-right" matInput [placeholder]="'Credit'" formControlName="credit" />
+                                    class="text-right" matInput [placeholder]="'Credit Amount'" formControlName="credit" />
                                 <mat-icon class="icon-size-5" matPrefix
                                     [svgIcon]="'heroicons_solid:currency-dollar'"></mat-icon>
                             </mat-form-field>
@@ -174,14 +174,8 @@
 
                     }
                     <ng-container>
-                        <!-- @if (details$ | async) {
-                        <journal-update [journal_id]="journalHeader.journal_id" [sTitle]="'Journal Entry Detail'"
-                            [description]="journalHeader.description"
-                            [transaction_date]="journalHeader.transaction_date" [details$]="details$">
-                        </journal-update>
-                        } -->
                         <div class="flex flex-col h-full mb-2">
-                            @if (journalDetails) {
+                            @if (journalDetails !== null) {
                             <dx-data-grid id="journal_child_id" [columnHidingEnabled]="true" [wordWrapEnabled]="true"
                                 [dataSource]="journalDetails" [showColumnLines]="true" [showRowLines]="true"
                                 [showBorders]="true" [focusedRowEnabled]="true" keyExpr="journal_subid"
@@ -210,7 +204,7 @@
                             </dx-data-grid>
                             }
                         </div>
-                    </ng-container>
+                    </ng-container> 
 
                     <div class="flex justify-end mt-8">
                         <button class="px-8 mr-2" mat-flat-button [color]="'accent'" type="button" matStepperPrevious>
@@ -232,15 +226,30 @@
                                 [svgIcon]="'feather:check'"></mat-icon>
                         </div>
                     </ng-container>
+                    @if (journalHeader) {
+                        <div class="text-gray-700 text-xl3 m-1">Confirm Transaction</div>
+                        <div class="flex">
+                            <div class="text-gray-600 m-1">Description : {{journalHeader.description}}</div>
+                        </div>
+                        <div class="flex">
+                            <div class="text-gray-600 m-1">Transaction Date : {{journalHeader.transaction_date}}</div>
+                        </div>
+                        <div class="flex">
+                            <div class="text-gray-600 m-1">Amount : {{journalHeader.amount}}</div>
+                        </div>
 
-
+                        <div class="flex">
+                            <div class="text-gray-600 m-1">The transaction has been completed. Please add a digital artifact to confirm the transation.</div>
+                        </div>
+    
+                    }
                     <div class="flex justify-end mt-8">
-                        <button class="px-8 mr-2" mat-flat-button [color]="'accent'" type="button" matStepperPrevious>
-                            Back
+                        <button class="px-8 mr-2" mat-flat-button [color]="'accent'" type="button" (click)="onAddArtifact()">
+                            Add an Artifact
                         </button>
                         <button class="px-8" mat-flat-button [color]="'primary'" type="reset"
                             (click)="verticalStepper.reset();">
-                            Reset
+                            Clear and Restart
                         </button>
                     </div>
                 </mat-step>

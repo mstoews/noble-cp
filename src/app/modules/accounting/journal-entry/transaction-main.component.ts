@@ -8,6 +8,7 @@ import { JournalEntryComponent } from './journal-entry.component';
 import { JournalUpdateComponent } from './journal-update/journal-update.component';
 import { FileManagerComponent } from 'app/modules/file-manager/file-manager.component';
 import { EntryWizardComponent } from './entry-wizard.component';
+import { JournalTemplateComponent } from './journal-template.component';
 
 
 const imports = [
@@ -19,7 +20,9 @@ const imports = [
     JournalEntryComponent, 
     JournalUpdateComponent, 
     FileManagerComponent, 
-    EntryWizardComponent
+    EntryWizardComponent,
+    JournalTemplateComponent
+    
 ]
 
 @Component({
@@ -64,26 +67,26 @@ export class TransactionMainComponent {
             {
                 id         : 'listing',
                 icon       : 'heroicons_outline:banknotes',
-                title      : 'Transaction Listing',
+                title      : 'Transaction Maintenance',
                 description: 'Manage your transactions and documentation',
             },
             {
                 id         : 'entry',
                 icon       : 'heroicons_outline:currency-dollar',
-                title      : 'Transaction Add/Amend',
-                description: 'Create transactions and add evidence for each transaction on a granual basis.',
+                title      : 'Add Transaction',
+                description: 'Create transactions and append digital artifacts for each transaction',
             },
             {
                 id         : 'template',
                 icon       : 'heroicons_outline:calculator',
                 title      : 'Templates',
-                description: 'Manage your accounting patterns to automate, reduce effort and provide consistency in accounting.',
+                description: 'Manage your accounting patterns to automate, reduce effort and provide consistency in accounting',
             } ,
             {
                 id         : 'artifact',
                 icon       : 'heroicons_outline:building-office',
                 title      : 'Artifact Management',
-                description: 'Manage the documentation of transactions.',
+                description: 'Manage the documentation of transactions',
             }                       
         ];
 
