@@ -1,6 +1,6 @@
-import { HttpClient, HttpParams } from '@angular/common/http';
-import { Injectable, inject } from '@angular/core';
-import { Observable, catchError, filter, retry, shareReplay, throwError } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
+import { Injectable, OnDestroy, inject } from '@angular/core';
+import { Observable, Subject, Subscription, catchError, shareReplay, takeUntil, throwError } from 'rxjs';
 
 import { environment } from 'environments/environment.prod';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -108,11 +108,12 @@ export interface IJournalViewDetails {
 @Injectable({
   providedIn: 'root'
 })
-export class JournalService {
+export class JournalService implements OnDestroy  {
+  
   httpClient = inject(HttpClient)
   snackBar = inject(MatSnackBar);
   private baseUrl = environment.baseUrl;
-  constructor() { }
+  ngDestroy$ = new Subject();
 
   readJournalTemplate() {
     var url = this.baseUrl + '/v1/read_journal_template';
@@ -156,16 +157,15 @@ export class JournalService {
   }
 
   getJournalDetail(journal_id: number) {
-    var url = this.baseUrl + '/v1/get_jd/' + journal_id.toString();
+    var url = this.baseUrl + '/v1/get_journal_detail/' + journal_id.toString();
     return this.httpClient.post<IJournalDetail[]>(url, {
        journal_id: journal_id
       }).pipe(
       shareReplay());
   }
 
-  getJournalAccountsByPeriod(period:  number , periodYear: number)
-    {
-        var url = this.baseUrl + '/v2/get_jrn_by_acct';
+  getJournalAccountsByPeriod(period:  number , periodYear: number) {
+        var url = this.baseUrl + '/v1/get_jrn_by_acct';
         return this.httpClient.post(url, {
          period: period,
          period_year: periodYear
@@ -181,7 +181,7 @@ export class JournalService {
   }
 
   getJournalDetailByPeriod(period: number, period_year: number){
-    var url = this.baseUrl + '/v1/get_jd_by_period/';
+    var url = this.baseUrl + '/v1/read_journal_header_by_id/';
     return this.httpClient.post<IJournalDetail[]>(url, {
        period: period,
        period_year: period_year
@@ -203,17 +203,14 @@ export class JournalService {
     )
   }
 
-
   listAccounts() {
     var url = this.baseUrl + '/v1/list_accounts';
     return this.httpClient.get<IAccounts[]>(url).pipe(
       shareReplay())
   }
 
-
-
   listJournalDetail() {
-    var url = this.baseUrl + '/v1/list_hd';
+    var url = this.baseUrl + '/v1/read_journal_detail';
     return this.httpClient.get<IJournalDetail[]>(url).pipe(
       shareReplay())
   }
@@ -235,25 +232,25 @@ export class JournalService {
           return throwError(() => new Error(`Invalid time ${ err }`));         
       }),
       shareReplay()
-    ).subscribe();
+    )
+    .subscribe();
   }
 
   deleteJournalHeader(journal_id: number) {
-    var url = this.baseUrl + '/v1/delete_jh' + journal_id.toString();
+    var url = this.baseUrl + '/v1/delete_journal_header';
     return this.httpClient.post<IJournalHeader>(url,
       {
         journal_id: journal_id
       },
       ).pipe(
       shareReplay())
+      .subscribe();
   }
 
  // set the sub_type 
 
   createJournalHeader(header: IJournalHeader) {
-    var url = this.baseUrl + '/v1/create_jh';
-    var jn: number;
-    jn = header.journal_id;
+    var url = this.baseUrl + '/v1/create_journal_header';
 
     var journalHeader: any = {
       description: header.description,
@@ -264,28 +261,31 @@ export class JournalService {
     return this.httpClient.post<IJournalHeader>(url, journalHeader).pipe(shareReplay())
   }
 
-
-
-
-  updateJournalDetail(detail: IJournalDetail){ 
-    var url = this.baseUrl + '/v1/update_jd';
-    return this.httpClient.post<IJournalDetail>(url, detail)
+  updateJournalDetail(detail: IJournalDetail){         
+    var url = this.baseUrl + '/v1/update_journal_detail';    
+    this.httpClient.post<IJournalDetail>(url, detail)
     .pipe(
       catchError(err => {
-          const message = "Could not save journal detail";
-          console.debug(message, err);
-          this.message(message); 
+          this.message("Could not save journal detail"); 
           return throwError(() => new Error(`Invalid time ${ err }`));         
       }),
       shareReplay()
-    ).subscribe();
-
+    ).pipe(takeUntil(this.ngDestroy$)).subscribe(data => {
+      this.snackBar.open('Journal details updated ... ' + data.journal_id, 'OK', {
+        verticalPosition: 'top',
+        horizontalPosition: 'right',
+        duration: 2000,
+      });
+    });
+    
   }
+  
+  
   message(msg: string){
     this.snackBar.open(msg, 'OK', {
       verticalPosition: 'top',
       horizontalPosition: 'right',
-      panelClass: 'bg-danger',
+      panelClass: 'bg-white',
       duration: 2000,
     });
   }
@@ -299,5 +299,11 @@ export class JournalService {
     var url = this.baseUrl + '/v1/create_journal_detail';
     return this.httpClient.post<IJournalDetail>(url, detail ).pipe(shareReplay())
   }
+  
+  ngOnDestroy(): void {
+    this.ngDestroy$.next(true);
+    this.ngDestroy$.complete();
+  }
+
 }
 

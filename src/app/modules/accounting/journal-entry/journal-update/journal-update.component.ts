@@ -1,8 +1,8 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output, inject } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild, inject } from '@angular/core';
 import { DxDataGridModule, DxTemplateModule } from 'devextreme-angular';
 import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { IAccounts, IJournalDetail, IJournalDetailDelete, IJournalHeader, JournalService } from 'app/services/journal.service';
-import { Observable, Subscription, interval, map, startWith, take } from 'rxjs';
+import { IJournalDetail, IJournalDetailDelete, IJournalHeader, JournalService } from 'app/services/journal.service';
+import { Observable, ReplaySubject, Subject, Subscription, interval, map, startWith, take, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { DndComponent } from 'app/modules/drag-n-drop/loaddnd/dnd.component';
 import { FundsService } from 'app/services/funds.service';
@@ -21,6 +21,14 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { ComboBoxModule } from '@syncfusion/ej2-angular-dropdowns';
 import { FileManagerComponent } from 'app/modules/file-manager/file-manager.component';
 import { AUTH } from 'app/app.config';
+import { MatSelect } from '@angular/material/select';
+import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
+
+export interface Account {
+  account: string,
+  child: string;
+  description: string;
+}
 
 
 const imports = [
@@ -38,10 +46,9 @@ const imports = [
   JournalTableComponent,
   NgxMaskDirective,
   NgxMaskPipe,
-  FileManagerComponent
-
+  FileManagerComponent,
+  NgxMatSelectSearchModule
 ];
-
 
 @Component({
   selector: 'journal-update',
@@ -52,15 +59,14 @@ const imports = [
   changeDetection: ChangeDetectionStrategy.OnPush,
   styles: ``,
 })
-export class JournalUpdateComponent implements OnInit, OnDestroy {
-
-
+export class JournalUpdateComponent implements OnInit, OnDestroy, AfterViewInit {
 
   @Output() notifyDrawerClose: EventEmitter<any> = new EventEmitter();
   @Input() public sTitle: string;
   @Input() public journal_id: number;
   @Input() public description: string;
   @Input() public transaction_date: string;
+  @Input() public amount: string;
   @Input() public bNewTransaction = true;
 
   @Input() details$: Observable<IJournalDetail[]>;
@@ -91,6 +97,7 @@ export class JournalUpdateComponent implements OnInit, OnDestroy {
   funds$ = this.fundService.read();
   subtype$ = this.subtypeService.read();
   accounts$ = this.accountService.read().pipe(map((child) => child.filter((parent) => parent.parent_account === false)));
+
   private fuseConfirmationService = inject(FuseConfirmationService);
 
   // header$ = this.journalService.readJournalHeader();
@@ -101,36 +108,89 @@ export class JournalUpdateComponent implements OnInit, OnDestroy {
   journal_subid: any;
   editing = false;
   child = new FormControl('');
-
   myControl = new FormControl('');
-  accounts: IAccounts[];
   accountOptions: Observable<string[]>;
-  public accountList = [];
+  
   public journalDetailList = [];
   public accountsListSubject: Subscription;
   public detailsSubject: Subscription;
   private journalDetailUpdateSubject: Subscription;
   private journalDetailDeleteSubject: Subscription;
 
+  // drop down searchable list
+  public accountList: Account[] = [];
+  public accountCtrl: FormControl<Account> = new FormControl<Account>(null);
+  public accountFilterCtrl: FormControl<string> = new FormControl<string>('');
+  public filteredAccounts: ReplaySubject<Account[]> = new ReplaySubject<Account[]>(1);
 
+  @ViewChild('singleSelect', { static: true }) singleSelect: MatSelect;
+  protected _onDestroy = new Subject<void>();
   
-  ngOnInit(): void {
+  ngOnInit(): void {    
+    this.accountsListSubject = this.accounts$.subscribe(accounts => {
+        accounts.forEach(acct =>{          
+          var list = {            
+            account: acct.account,
+            child: acct.child,
+            description: acct.child + ' - ' +acct.description
+          }
+          this.accountList.push(list)
+        })        
+        this.filteredAccounts.next(this.accountList.slice());
+        console.log('Length of array: ',this.accountList.length)
+     });
+
     this.updateDetailList();
     this.createEmptyForm();
     this.refresh(this.journal_id, this.description, this.transaction_date);
-    this.accountsListSubject = this.accountService.read().subscribe(accounts => {
-      this.accountList = accounts;
+    
+    this.accountFilterCtrl.valueChanges.pipe(takeUntil(this._onDestroy))
+    .subscribe(() => {
+      this.filterAccounts();
     });
-
-
   }
 
+  protected setInitialValue() {
+  
+    this.filteredAccounts
+      .pipe(take(1), takeUntil(this._onDestroy))
+      .subscribe(() => {
+        // setting the compareWith property to a comparison function
+        // triggers initializing the selection according to the initial value of
+        // the form control (i.e. _initializeSelection())
+        // this needs to be done after the filteredBanks are loaded initially
+        // and after the mat-option elements are available
+        this.singleSelect.compareWith = (a: Account, b: Account) => a && b && a.child === b.child;
+      });
+  }
+
+  ngAfterViewInit() {
+    this.setInitialValue();
+  }
+
+  protected filterAccounts() {
+    if (!this.accountList) {
+      return;
+    }
+    // get the search keyword
+    let search = this.accountFilterCtrl.value;
+    if (!search) {
+      this.filteredAccounts.next(this.accountList.slice());
+      return;
+    } else {
+      search = search.toLowerCase();
+    }
+    // filter the banks
+    this.filteredAccounts.next(
+      this.accountList.filter(account => account.description.toLowerCase().indexOf(search) > -1)      
+    );
+  }
+  
   onFocusedDetailRowChanged(e: any) {
     this.currentRowData = e.row.data;
     this.journal_subid = e.row.data.journal_subid;
     this.updateForm(e.row.data)
     this.editing = true;
-
     this.journalService.getJournalHeader(this.journal_id).subscribe(journal => {
       this.journalHeaderData = journal;
     });
@@ -142,6 +202,7 @@ export class JournalUpdateComponent implements OnInit, OnDestroy {
     this.journalForm.reset();
     this.journalForm = this.fb.group({
       description: [this.description, Validators.required],
+      amount: [this.amount, Validators.required],
       transaction_date: [this.transaction_date, Validators.required]
     });
 
@@ -154,6 +215,10 @@ export class JournalUpdateComponent implements OnInit, OnDestroy {
       debit: [row.debit, Validators.required],
       credit: [row.credit, Validators.required]
     });
+    
+    const index = this.accountList.findIndex(account => account.child == row.child);
+    this.accountCtrl.setValue(this.accountList[index]);
+
   }
 
   updateDetailList() {
@@ -250,6 +315,7 @@ export class JournalUpdateComponent implements OnInit, OnDestroy {
     this.journalForm = this.fb.group({
       description: [this.description, Validators.required],
       transaction_date: [this.transaction_date, Validators.required],
+      amount: [this.amount, Validators.required]
     });
     this.journalDetailForm = this.fb.group({
       detail_description: ['', Validators.required],
@@ -360,8 +426,8 @@ export class JournalUpdateComponent implements OnInit, OnDestroy {
       journalDetail = {
         "journal_id": this.currentRowData.journal_id,
         "journal_subid": journal_subid,
-        "account": acct.account,
-        "child": acct.child,
+        "account": Number(acct.account),
+        "child": Number(acct.child),
         "description": detail.detail_description,
         "create_date": updateDate,
         "create_user": email,
@@ -422,17 +488,16 @@ export class JournalUpdateComponent implements OnInit, OnDestroy {
       return;
     }
 
-
     var journalDetail: IJournalDetail;
 
-    var acct = this.accountList.find(x => x.child == detail.child);
+    var childAccount = this.accountCtrl.getRawValue()
 
     if (debit !== undefined && credit !== undefined) {
       journalDetail = {
         "journal_id": this.currentRowData.journal_id,
         "journal_subid": this.currentRowData.journal_subid,
-        "account": acct.account,
-        "child": acct.child,
+        "account": Number(childAccount.account),
+        "child": Number(childAccount.child),
         "description": detail.detail_description,
         "create_date": updateDate,
         "create_user": email,
@@ -443,6 +508,9 @@ export class JournalUpdateComponent implements OnInit, OnDestroy {
         "fund": detail.fund
       }
     }
+    
+    console.debug('Journal Details : \n',JSON.stringify(journalDetail));
+    
     this.journalService.updateJournalDetail(journalDetail);
 
     const journalHeader: any = {

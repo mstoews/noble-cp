@@ -1,25 +1,43 @@
 <div class="flex flex-col w-full filter-article filter-interactive text-gray-700">
 
     <div class="flex flex-col m-2">
-        <div class="text-3xl m-1 text-gray-100 p-2  bg-slate-600">Transaction : {{journal_id}}</div>
+        <div class="text-3xl gap-2 m-1 text-gray-100 p-2  bg-slate-600">Transaction : {{journal_id}}</div>
 
         <form [formGroup]="journalForm">
             <section class="flex flex-col md:flex-row">
                 <div class="flex flex-col grow">
-                    <mat-form-field class="mt-1 flex-start">
-                        <mat-label class="ml-2 text-base">Journal Description</mat-label>
+                    <mat-form-field class="mt-1 mr-1 flex-start">                        
                         <input matInput placeholder="Journal Description" formControlName="description" />
                     </mat-form-field>
                 </div>
                 <div class="flex flex-col w-[150px]">
-                    <mat-form-field class="mt-1 flex-start">
-                        <mat-label class="ml-1 -mr-1 text-base">Transaction Date</mat-label>
+                    <mat-form-field class="mt-1 flex-start mr-1">                        
+                        <input matInput placeholder="Journal Amount" formControlName="amount" />
+                    </mat-form-field>
+                </div>
+                <div class="flex flex-col w-[150px]">
+                    <mat-form-field class="mt-1 flex-start mr-1">
                         <input matInput formControlName="transaction_date" [matDatepicker]="picker">
                         <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
                         <mat-datepicker #picker></mat-datepicker>
                     </mat-form-field>
                 </div>
             </section>
+            
+            <!-- <div class="flex flex-col w-[300px]">
+            <mat-form-field>
+                    <mat-select [formControl]="accountCtrl" placeholder="Account" #singleSelect>
+                    <mat-option>
+                        <ngx-mat-select-search [formControl]="accountFilterCtrl" [noEntriesFoundLabel]="'No entries found'" [placeholderLabel]="'Search'"></ngx-mat-select-search>
+                    </mat-option>
+                    <mat-option *ngFor="let account of filteredAccounts | async" [value]="account">
+                        {{account.description}} 
+                    </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>    
+            <div class="h1">Selected Account : {{accountCtrl.value?.child}} {{accountCtrl.value?.description}} </div>     -->
+            
         </form>
 
         <form [formGroup]="journalDetailForm">
@@ -69,8 +87,6 @@
                 {
                 <div class="text-3xl m-1 text-gray-100 p-2 mt-2  bg-slate-600">Update Details {{journal_subid}}</div>
                 <section class="flex flex-col md:flex-row mt-2">
-
-
                     <div class="flex flex-col grow">
                         <mat-form-field class="mt-1 mr-1 form-element grow">                            
                             <input matInput placeholder="Description" formControlName="detail_description" />
@@ -85,21 +101,20 @@
                 </section>
 
                 <section class="flex flex-col md:flex-row mt-2">
-
-                    <div class="flex flex-col grow">
-                        @if (accounts$ | async; as accounts) {
-                        <mat-form-field class="flex-col grow">
-                            
-                            <mat-select class="text-gray-800" placeholder="Account" formControlName="child"
-                                (selectionChange)="changeChildAccount($event)">
-                                @for (account of accounts; track account) {
-                                <mat-option [value]="account.child"> {{ account.child }} - {{account.description}}
+                     <div class="flex flex-col w-[350px]">
+                        @if (filteredAccounts | async; as accounts ) {
+                        <mat-form-field>
+                                <mat-select [formControl]="accountCtrl" placeholder="Account" #singleSelect>
+                                <mat-option>
+                                    <ngx-mat-select-search [formControl]="accountFilterCtrl" [noEntriesFoundLabel]="'No entries found'" [placeholderLabel]="'Search'"></ngx-mat-select-search>
                                 </mat-option>
-                                }
-                            </mat-select>
-                        </mat-form-field>
+                                @for (account of accounts; track account) {
+                                    <mat-option [value]="account">{{account.description}}</mat-option>
+                                }   
+                                </mat-select>
+                            </mat-form-field>
                         }
-                    </div>
+                    </div>    
 
                     <div class="flex flex-col w-[180px]">
                         @if (subtype$ | async; as subtypes)
@@ -127,7 +142,10 @@
                                 @for (item of funds; track item) {
                                 <mat-option [value]="item.fund"> {{ item.fund }} </mat-option>
                                 }
+                                
                             </mat-select>
+                            <mat-icon class="icon-size-5" matPrefix
+                                    [svgIcon]="'heroicons_solid:briefcase'"></mat-icon>
                         </mat-form-field>
                         }
                     </div>
@@ -137,6 +155,9 @@
                             
                             <input type="text" mask="separator.2" [leadZero]="true" thousandSeparator=","
                                 class="text-right" matInput placeholder="Debit" formControlName="debit" />
+                                <mat-icon class="icon-size-5" matPrefix
+                                [svgIcon]="'heroicons_solid:currency-dollar'"></mat-icon>
+
                         </mat-form-field>
                     </div>
                     <div class="flex flex-col grow">
@@ -144,6 +165,9 @@
                             
                             <input type="text" mask="separator.2" [leadZero]="true" thousandSeparator=","
                                 class="text-right" matInput placeholder="Credit" formControlName="credit" />
+                                <mat-icon class="icon-size-5" matPrefix
+                                [svgIcon]="'heroicons_solid:currency-dollar'"></mat-icon>
+
                         </mat-form-field>
                     </div>
                 </section>
@@ -154,34 +178,38 @@
     </div>
 
 
-    <div mat-dialog-actions class="m-1">
-        <button mat-icon-button color="primary" class="m-1 bg-slate-200 text-gray-100 hover:bg-slate-400" (click)="onUpdateJournalEntry()"
+    <div mat-dialog-actions class="m-1 gap-2">
+        <button mat-icon-button color="primary" class=" bg-slate-200 text-gray-100 hover:bg-slate-400 ml-1" (click)="onUpdateJournalEntry()"
             matTooltip="Update Line Item" aria-label="hover over">
             <mat-icon [svgIcon]="'feather:refresh-cw'"></mat-icon>
         </button>
 
-        <button mat-icon-button color="primary" class="m-1 bg-slate-200 text-gray-100 hover:bg-slate-400"
+        <button mat-icon-button color="primary" class="bg-slate-200 text-gray-100 hover:bg-slate-400 ml-1"
             (click)=" onAddLineJournalDetail()" matTooltip="Add Line" aria-label="hovered over">
             <mat-icon [svgIcon]="'feather:file-plus'"></mat-icon>
         </button>
 
-        <button mat-icon-button color="primary" class="m-1 bg-slate-200 text-gray-100 hover:bg-slate-400" (click)="onDelete()"
+        <button mat-icon-button color="primary" class=" bg-slate-200 text-gray-100 hover:bg-slate-400 ml-1"
+            (click)="onDelete()"
             matTooltip="Remove Line" aria-label="hovered over">
             <mat-icon [svgIcon]="'feather:trash'"></mat-icon>
         </button>
 
-        <button mat-icon-button color="primary" (click)="onAddEvidence()" class="bg-gray-200  hover:bg-slate-400"
+        <button mat-icon-button color="primary"  class="bg-gray-200  hover:bg-slate-400 ml-1"
+            (click)="onAddEvidence()"
             matTooltip="Add Evidence" aria-label="Evidence">
             <mat-icon [svgIcon]="'feather:image'"></mat-icon>
         </button>
 
-        <button mat-icon-button color="primary" (click)="onCreateTemplate()" class="bg-gray-200  hover:bg-slate-400"
+        <button mat-icon-button color="primary"  class="bg-gray-200  hover:bg-slate-400 ml-1"
+            (click)="onCreateTemplate()"
             matTooltip="Create Template" aria-label="Template">
             <mat-icon [svgIcon]="'feather:layout'"></mat-icon>
         </button>
 
         @if (bNewTransaction === true) {
-        <button mat-icon-button color="primary" class=" bg-slate-200 text-gray-100 hover:bg-slate-400" (click)="closeDrawer()"
+        <button mat-icon-button color="primary" class=" bg-slate-200 text-gray-100 hover:bg-slate-400 ml-1" 
+            (click)="closeDrawer()"
             matTooltip="Cancel" aria-label="hovered over">
             <mat-icon>close</mat-icon>
         </button>

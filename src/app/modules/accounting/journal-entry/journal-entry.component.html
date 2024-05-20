@@ -17,6 +17,7 @@
                    [sTitle]="'Journal Entry Detail'"
                    [description]="description"
                    [transaction_date]="transaction_date"
+                   [amount]="amount"
                    [details$]="details$"
                     (notifyDrawerClose)="closeDrawer()">
                 </journal-update>
@@ -66,7 +67,8 @@
                                 <journal-detail 
                                     [key]="journal.data.journal_id" 
                                     [description]="journal.data.description"
-                                    [transaction_date]="journal.data.transaction_date"                                    
+                                    [transaction_date]="journal.data.transaction_date"    
+                                    [amount]="journal.data.amount"
                                     (notifyTransactionEdit)="onEdit()">
                                 </journal-detail>
                             </div>

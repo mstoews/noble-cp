@@ -72,7 +72,7 @@
                                     }
                                 </mat-select>
                                 <mat-icon class="icon-size-5" matPrefix
-                                    [svgIcon]="'heroicons_solid:document'"></mat-icon>
+                                    [svgIcon]="'feather:pen-tool'"></mat-icon>
                             </mat-form-field>
                         </div>
                         }
@@ -88,7 +88,7 @@
                                     }
                                 </mat-select>
                                 <mat-icon class="icon-size-5" matPrefix
-                                    [svgIcon]="'heroicons_solid:document'"></mat-icon>
+                                    [svgIcon]="'heroicons_solid:briefcase'"></mat-icon>
                             </mat-form-field>
                         </div>
                         }
@@ -96,7 +96,7 @@
 
                     <section class="flex flex-row">
                         @if (accounts$ | async; as accounts) {
-                        <div class="flex flex-col grow ">
+                        <div class="flex flex-col grow gap-2">
                             <mat-form-field class="flex-col">
                                 <mat-select class="text-gray-800" [placeholder]="'Debit Account'" formControlName="child">
                                     @for (item of accounts; track item)
@@ -105,7 +105,7 @@
                                     }
                                 </mat-select>
                                 <mat-icon class="icon-size-5" matPrefix
-                                    [svgIcon]="'heroicons_solid:document'"></mat-icon>
+                                    [svgIcon]="'feather:file-text'"></mat-icon>
                             </mat-form-field>
                         </div>
                         }
@@ -131,12 +131,12 @@
                                     }
                                 </mat-select>
                                 <mat-icon class="icon-size-5" matPrefix
-                                    [svgIcon]="'heroicons_solid:document'"></mat-icon>
+                                    [svgIcon]="'feather:file-text'"></mat-icon>
                             </mat-form-field>
                         </div>
                         }
                         <div class="flex flex-col grow">
-                            <mat-form-field class="form-element ml-1">
+                            <mat-form-field class="form-element">
                                 <input type="text" mask="separator.2" [leadZero]="true" thousandSeparator=","
                                     class="text-right" matInput [placeholder]="'Credit Amount'" formControlName="credit" />
                                 <mat-icon class="icon-size-5" matPrefix
