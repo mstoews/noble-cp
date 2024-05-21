@@ -1,7 +1,7 @@
 import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild, inject } from '@angular/core';
 import { DxDataGridModule, DxTemplateModule } from 'devextreme-angular';
 import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { IJournalDetail, IJournalDetailDelete, IJournalHeader, JournalService } from 'app/services/journal.service';
+import { IJournalDetail, IJournalDetailDelete, JournalService } from 'app/services/journal.service';
 import { Observable, ReplaySubject, Subject, Subscription, interval, map, startWith, take, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { DndComponent } from 'app/modules/drag-n-drop/loaddnd/dnd.component';
@@ -23,12 +23,8 @@ import { FileManagerComponent } from 'app/modules/file-manager/file-manager.comp
 import { AUTH } from 'app/app.config';
 import { MatSelect } from '@angular/material/select';
 import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
+import { IDropDownAccounts } from 'app/models';
 
-export interface Account {
-  account: string,
-  child: string;
-  description: string;
-}
 
 
 const imports = [
@@ -118,12 +114,13 @@ export class JournalUpdateComponent implements OnInit, OnDestroy, AfterViewInit 
   private journalDetailDeleteSubject: Subscription;
 
   // drop down searchable list
-  public accountList: Account[] = [];
-  public accountCtrl: FormControl<Account> = new FormControl<Account>(null);
+  public accountList: IDropDownAccounts[] = [];
+  public accountCtrl: FormControl<IDropDownAccounts> = new FormControl<IDropDownAccounts>(null);
   public accountFilterCtrl: FormControl<string> = new FormControl<string>('');
-  public filteredAccounts: ReplaySubject<Account[]> = new ReplaySubject<Account[]>(1);
+  public filteredAccounts: ReplaySubject<IDropDownAccounts[]> = new ReplaySubject<IDropDownAccounts[]>(1);
 
   @ViewChild('singleSelect', { static: true }) singleSelect: MatSelect;
+
   protected _onDestroy = new Subject<void>();
   
   ngOnInit(): void {    
@@ -160,7 +157,7 @@ export class JournalUpdateComponent implements OnInit, OnDestroy, AfterViewInit 
         // the form control (i.e. _initializeSelection())
         // this needs to be done after the filteredBanks are loaded initially
         // and after the mat-option elements are available
-        this.singleSelect.compareWith = (a: Account, b: Account) => a && b && a.child === b.child;
+        this.singleSelect.compareWith = (a: IDropDownAccounts, b: IDropDownAccounts) => a && b && a.child === b.child;
       });
   }
 
@@ -676,5 +673,8 @@ export class JournalUpdateComponent implements OnInit, OnDestroy, AfterViewInit 
     if (this.journalDetailDeleteSubject) {
        this.journalDetailDeleteSubject.unsubscribe();
     }
+    
+    this._onDestroy.next();
+    this._onDestroy.complete();
   }
 }

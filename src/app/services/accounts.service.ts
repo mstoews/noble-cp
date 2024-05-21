@@ -2,7 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { Observable, map, shareReplay } from 'rxjs';
 
 import { HttpClient } from '@angular/common/http';
-import { IAccounts } from '../models';
+import { IAccounts, IDropDownAccounts } from '../models';
 import { environment } from 'environments/environment.prod';
 
 @Injectable({
@@ -22,6 +22,13 @@ export class GLAccountsService {
                 shareReplay())
     }
 
+    readDropDownChild() {
+        var url = this.baseUrl + '/v1/read_child_accounts';
+        return this.httpClient.get<IDropDownAccounts[]>(url)
+            .pipe(
+                shareReplay())
+    }
+
     getParents(): Observable<IAccounts[]> {
         var url = this.baseUrl + '/v1/account_parent_list';
         return this.httpClient.get<IAccounts[]>(url)
@@ -29,8 +36,7 @@ export class GLAccountsService {
                 shareReplay())
     }
 
-    getChildren(parent: string) {
-        console.log(`getChildren : ${parent} `);
+    getChildren(parent: string) {        
         var url = this.baseUrl + '/v1/account_children_list/' + parent;
         
         return this.httpClient.get<IAccounts[]>(url)

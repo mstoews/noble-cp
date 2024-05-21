@@ -4,11 +4,13 @@ import { Observable, Subject, Subscription, catchError, shareReplay, takeUntil, 
 
 import { environment } from 'environments/environment.prod';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { IDropDownAccounts } from 'app/models';
 
 export interface IPeriod {
   period_id: number,
   period_year: number,
 }
+
 
 export interface IJournalDetailDelete {
   journal_id: number,
@@ -299,6 +301,7 @@ export class JournalService implements OnDestroy  {
     var url = this.baseUrl + '/v1/create_journal_detail';
     return this.httpClient.post<IJournalDetail>(url, detail ).pipe(shareReplay())
   }
+
   
   ngOnDestroy(): void {
     this.ngDestroy$.next(true);

@@ -1,6 +1,6 @@
 <div class="flex flex-col flex-auto min-w-0">
+    
 
-    <!-- Main -->
     <div class="max-w-5xl lx:max-w-6xl">
 
         <form class="p-4 bg-card shadow rounded overflow-hidden" [formGroup]="journalEntryForm">
@@ -30,6 +30,9 @@
                                     [svgIcon]="'heroicons_solid:building-office-2'"></mat-icon>
                             </mat-form-field>                    
                     </div>
+
+                    
+                    
                     
                     <div class="flex justify-end">
                         <button class="px-8" mat-flat-button [color]="'primary'" (click)="onUpdateHeader()"
@@ -95,7 +98,7 @@
                     </section>
 
                     <section class="flex flex-row">
-                        @if (accounts$ | async; as accounts) {
+                        <!-- @if (accounts$ | async; as accounts) {
                         <div class="flex flex-col grow gap-2">
                             <mat-form-field class="flex-col">
                                 <mat-select class="text-gray-800" [placeholder]="'Debit Account'" formControlName="child">
@@ -108,7 +111,21 @@
                                     [svgIcon]="'feather:file-text'"></mat-icon>
                             </mat-form-field>
                         </div>
-                        }
+                        } -->
+                        <div class="flex flex-col grow">
+                            @if (filteredDebitAccounts | async; as accounts )  {
+                            <mat-form-field>
+                                <mat-select [formControl]="debitCtrl" placeholder="Debit Account" #singleDebitSelect>
+                                    <mat-option>
+                                        <ngx-mat-select-search [formControl]="debitAccountFilterCtrl" [noEntriesFoundLabel]="'No entries found'" [placeholderLabel]="'Search'"></ngx-mat-select-search>
+                                    </mat-option>
+                                    @for (account of accounts; track account) {
+                                        <mat-option [value]="account">{{account.description}}</mat-option>
+                                    }   
+                                </mat-select>
+                            </mat-form-field>
+                            }
+                        </div>    
                         <div class="flex flex-col grow">
                             <mat-form-field class="form-element ml-1">
                                 <input type="text" mask="separator.2" [leadZero]="true" thousandSeparator=","
@@ -119,8 +136,10 @@
                         </div>
                     </section>
 
+                    
+
                     <section class="flex flex-row gap-2">
-                        @if (accounts$ | async; as accounts) {
+                        <!-- @if (accounts$ | async; as accounts) {
                         <div class="flex flex-col grow ">
                             <mat-form-field class="flex-col">
                                 <mat-select class="text-gray-800" [placeholder]="'Credit Account'"
@@ -134,7 +153,21 @@
                                     [svgIcon]="'feather:file-text'"></mat-icon>
                             </mat-form-field>
                         </div>
-                        }
+                        } -->
+                        <div class="flex flex-col grow">
+                            @if (filteredCreditAccounts | async; as accounts )  {
+                            <mat-form-field>
+                                <mat-select [formControl]="creditCtrl" placeholder="Credit Account" #singleCreditSelect>
+                                    <mat-option>
+                                        <ngx-mat-select-search [formControl]="creditAccountFilterCtrl" [noEntriesFoundLabel]="'No entries found'" [placeholderLabel]="'Search'"></ngx-mat-select-search>
+                                    </mat-option>
+                                    @for (account of accounts; track account) {
+                                        <mat-option [value]="account">{{account.description}}</mat-option>
+                                    }   
+                                </mat-select>
+                            </mat-form-field>
+                            }
+                        </div>    
                         <div class="flex flex-col grow">
                             <mat-form-field class="form-element">
                                 <input type="text" mask="separator.2" [leadZero]="true" thousandSeparator=","
@@ -255,7 +288,5 @@
                 </mat-step>
             </mat-vertical-stepper>
         </form>
-
     </div>
-
 </div>

@@ -86,6 +86,12 @@ export interface AccountsPayableDetail {
   updateUsr: string;
 }
 
+export interface IDropDownAccounts {
+  account: string;
+  child: string;
+  description: string;
+}
+
 export interface IAccounts {
   account: string;
   child: string;
