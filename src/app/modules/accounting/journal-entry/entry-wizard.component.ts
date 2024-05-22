@@ -56,10 +56,10 @@ export class EntryWizardComponent implements OnInit, OnDestroy, AfterViewInit {
     private fundService = inject(FundsService);
     private accountService = inject(GLAccountsService);
     private snackBar = inject(MatSnackBar);
-    private _formBuilder = inject(FormBuilder);
+    private formBuilder = inject(FormBuilder);
     private changeDesctionRef = inject(ChangeDetectorRef);
-    public matDialog = inject(MatDialog);
-    public description: string;
+    public  matDialog = inject(MatDialog);
+    public  description: string;
 
     private subAccountDebit: Subscription;
     private subAccountCredit: Subscription;
@@ -116,13 +116,13 @@ export class EntryWizardComponent implements OnInit, OnDestroy, AfterViewInit {
         });        
         
         // Vertical stepper form
-        this.journalEntryForm = this._formBuilder.group({
-            step1: this._formBuilder.group({
+        this.journalEntryForm = this.formBuilder.group({
+            step1: this.formBuilder.group({
                 description: ['', Validators.required],
                 transaction_date: ['', Validators.required],
                 amount: ['', Validators.required],
             }),
-            step2: this._formBuilder.group({
+            step2: this.formBuilder.group({
                 debitCtrl: [''],
                 creditCtrl: [''],
                 detail_description: ['', Validators.required],
@@ -133,7 +133,7 @@ export class EntryWizardComponent implements OnInit, OnDestroy, AfterViewInit {
                 credit: ['', Validators.required],
                 
             }),
-            step3: this._formBuilder.group({
+            step3: this.formBuilder.group({
                 
             })
         });
@@ -458,21 +458,27 @@ export class EntryWizardComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     ngOnDestroy(): void {
+
         if (this.accountsListSubject) {
             this.accountsListSubject.unsubscribe();
         }
+    
         if (this.subAccountDebit) {
             this.subAccountDebit.unsubscribe();
         }
+    
         if (this.subAccountCredit) {
             this.subAccountCredit.unsubscribe();
         }
+    
         if (this._onDestroyDebitAccountFilter) {
            this._onDestroyDebitAccountFilter.unsubscribe();
         }
+    
         if (this._onDestroyCreditAccountFilter) {
           this._onDestroyCreditAccountFilter.unsubscribe();
         }
+    
         this._onDestroy.next();
         this._onDestroy.complete();
     }

@@ -55,15 +55,32 @@ export const project = {
     taskDistribution  : {
         overview: {
             'this-week': {
-                'new'      : 22,
-                'completed': 5
+                'new'      : 10250,
+                'completed': 2562
             },
             'last-week': {
-                'new'      : 25,
-                'completed': 3
+                'new'      : 20525,
+                'completed': 15020
             }
         },
-        labels  : ['API', 'Backend', 'Frontend', 'Issues'],
+        labels  : ['Revenue', 'Expense', 'Assets', 'Liabilities'],
+        series  : {
+            'this-week': [15, 20, 38, 27],
+            'last-week': [19, 16, 42, 23]
+        }
+    },
+    expenseDistribution  : {
+        overview: {
+            'this-week': {
+                'new'      : 10250,
+                'completed': 2562
+            },
+            'last-week': {
+                'new'      : 20525,
+                'completed': 15020
+            }
+        },
+        labels  : ['Revenue', 'Expense', 'Assets', 'Liabilities'],
         series  : {
             'this-week': [15, 20, 38, 27],
             'last-week': [19, 16, 42, 23]

@@ -354,6 +354,7 @@ export class JournalUpdateComponent implements OnInit, OnDestroy, AfterViewInit 
             if (result === 'confirmed') {
                 // Delete the list
                 this.delete(journalDetail);
+                
             }
         });
 
@@ -374,6 +375,8 @@ export class JournalUpdateComponent implements OnInit, OnDestroy, AfterViewInit 
     this.journalDetailForm.reset()
     this.loadContent();
     this.details$ = this.journalService.getJournalDetail(this.currentRowData.journal_id);
+    this.editing=false;
+    this._change.markForCheck();                
   } 
 
   onAddLineJournalDetail() {
@@ -529,6 +532,8 @@ export class JournalUpdateComponent implements OnInit, OnDestroy, AfterViewInit 
     this.journalDetailForm.reset()
     this.loadContent();
     this.details$ = this.journalService.getJournalDetail(this.currentRowData.journal_id);
+    this.editing = false;
+    this._change.markForCheck();
 
   }
 

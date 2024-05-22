@@ -1,4 +1,4 @@
-<div class="bg-slate-200">
+<div class="bg-slate-50">
   <div class="flex">
     <img class="flex-none w-10 h-10 p-2" src='assets/img/dnd/ic-upload-file.svg' alt="dnd">
     <span class="flex-1 text-3xl text-black mt-1">Transaction Evidence</span>
@@ -36,12 +36,12 @@
       </div>
     </form>
 
-    <button mat-icon-button class="mr-1 bg-gray-400 text-white w-300" (click)="onCreate()" matTooltip="Update"
+    <button mat-icon-button color="primary" class="mr-1 bg-gray-100" (click)="onCreate()" matTooltip="Update"
       aria-label="Update">
       <mat-icon [svgIcon]="'mat_outline:system_update'"></mat-icon>
     </button>
 
-    <button mat-icon-button class="mr-1 bg-gray-400 font-white w-300" (click)="closeDialog()" matTooltip="Close"
+    <button mat-icon-button color="primary" class="mr-1 bg-gray-100" (click)="closeDialog()" matTooltip="Close"
       aria-label="Amend">
       <mat-icon [svgIcon]="'mat_outline:close'"></mat-icon>
     </button>

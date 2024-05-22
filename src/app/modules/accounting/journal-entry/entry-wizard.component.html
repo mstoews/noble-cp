@@ -98,20 +98,6 @@
                     </section>
 
                     <section class="flex flex-row">
-                        <!-- @if (accounts$ | async; as accounts) {
-                        <div class="flex flex-col grow gap-2">
-                            <mat-form-field class="flex-col">
-                                <mat-select class="text-gray-800" [placeholder]="'Debit Account'" formControlName="child">
-                                    @for (item of accounts; track item)
-                                    { <mat-option [value]="item.child"> {{item.child}} -
-                                        {{item.description}}</mat-option>
-                                    }
-                                </mat-select>
-                                <mat-icon class="icon-size-5" matPrefix
-                                    [svgIcon]="'feather:file-text'"></mat-icon>
-                            </mat-form-field>
-                        </div>
-                        } -->
                         <div class="flex flex-col grow">
                             @if (filteredDebitAccounts | async; as accounts )  {
                             <mat-form-field>
@@ -194,7 +180,7 @@
                     <ng-template matStepLabel>Post/Edit Transaction</ng-template>
 
                     @if (journalHeader) {
-                    <div class="text-gray-700 text-xl3 m-1">Confirm Transaction</div>
+                    <div class="text-gray-800 text-3xl m-1">Confirm Transaction</div>
                     <div class="flex">
                         <div class="text-gray-600 m-1">Description : {{journalHeader.description}}</div>
                     </div>
@@ -202,7 +188,7 @@
                         <div class="text-gray-600 m-1">Transaction Date : {{journalHeader.transaction_date}}</div>
                     </div>
                     <div class="flex">
-                        <div class="text-gray-600 m-1">Amount : {{journalHeader.amount}}</div>
+                        <div class="text-gray-600 m-1">Amount : {{journalHeader.amount  | number: '1.2-2' }}</div>
                     </div>
 
                     }
@@ -260,7 +246,7 @@
                         </div>
                     </ng-container>
                     @if (journalHeader) {
-                        <div class="text-gray-700 text-xl3 m-1">Confirm Transaction</div>
+                        <div class="text-gray-800 text-bold text-3xl m-1">Confirm Transaction</div>
                         <div class="flex">
                             <div class="text-gray-600 m-1">Description : {{journalHeader.description}}</div>
                         </div>
@@ -268,7 +254,7 @@
                             <div class="text-gray-600 m-1">Transaction Date : {{journalHeader.transaction_date}}</div>
                         </div>
                         <div class="flex">
-                            <div class="text-gray-600 m-1">Amount : {{journalHeader.amount}}</div>
+                            <div class="text-gray-600 m-1">Amount : {{journalHeader.amount | number: '1.2-2'}}</div>
                         </div>
 
                         <div class="flex">
