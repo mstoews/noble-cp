@@ -11,37 +11,39 @@
                         {{sTitle}} </div>
                     <div mat-card-content class="border-r-green-500">
                         <form [formGroup]="taskGroup" class="form">
+
                             <div class="flex flex-col m-1">
                                 <div class="flex flex-col grow">
-                                    <mat-form-field class="mt-1 flex-start">
-                                        <mat-label class="ml-2 text-base">Title</mat-label>
-                                        <input #myInput matInput placeholder="Kanban Task Title"
+                                    <mat-form-field class="flex-start">
+                                        <input #myInput matInput placeholder="Task Title"
                                             formControlName="title" />
                                     </mat-form-field>
                                 </div>
 
-                                <section class="flex flex-col md:flex-row">
-                                    <div class="flex-col grow">
-                                        <mat-form-field class="m-1 grow">
-                                            <mat-label class="ml-2 text-base">RAG Rating</mat-label>
-                                            <mat-select class="flex-col grow" placeholder="RAG" formControlName="color"
+                                <section class="flex flex-col md:flex-row gap-1">
+                                    <!-- <div class="flex flex-col grow">
+                                        <mat-form-field class="flex ">
+                                            <mat-select placeholder="RAG" formControlName="color"
                                                 (selectionChange)="changeRag($event)">
                                                 <mat-option *ngFor="let p of rag" [value]="p.value"> {{ p.viewValue }}
                                                 </mat-option>
                                             </mat-select>
                                         </mat-form-field>
+                                    </div> -->
 
-                                        <mat-form-field class="m-1 grow">
-                                            <mat-label class="ml-2 text-base">Type</mat-label>
+                                    <div class="flex flex-col grow">
+                                        <mat-form-field class="flex">
                                             <mat-select placeholder="Type" formControlName="type"
                                                 (selectionChange)="changeType($event)">
                                                 <mat-option *ngFor="let p of types" [value]="p.value">
                                                     {{p.viewValue }} </mat-option>
                                             </mat-select>
                                         </mat-form-field>
+                                    </div>
 
-                                        <mat-form-field class="m-1 grow">
-                                            <mat-label class="ml-2 text-base">Priority</mat-label>
+                                    <div class="flex flex-col grow">
+                                        <mat-form-field class="flex-col">
+
                                             <mat-select placeholder="Priority" formControlName="priority"
                                                 (selectionChange)="changePriority($event.value)">
                                                 <mat-option *ngFor="let p of priorities" [value]="p.value">
@@ -51,20 +53,16 @@
                                     </div>
                                 </section>
 
-                                <mat-form-field class="m-1 grow">
-                                    <mat-label class="ml-2 text-base">Tags</mat-label>
+                                <mat-form-field class="grow">
                                     <input matInput placeholder="Tags" formControlName="tags" />
                                 </mat-form-field>
 
-
-
                                 <mat-form-field>
-                                    <mat-label>Completion Duration</mat-label>
                                     <mat-date-range-input [rangePicker]="picker">
                                         <input matStartDate formControlName="startDate" placeholder="Start date">
                                         <input matEndDate formControlName="estimateDate" placeholder="End date">
                                     </mat-date-range-input>
-                                    <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                                    <mat-datepicker-toggle matIconPrefix [for]="picker"></mat-datepicker-toggle>
                                     <mat-date-range-picker #picker></mat-date-range-picker>
 
                                     @if (taskGroup.controls.startDate.hasError('matStartDateInvalid')) {
@@ -78,12 +76,11 @@
                                 <!-- <p>Selected range: {{taskGroup.value.startDate | json}}</p> -->
 
                                 <mat-form-field class="form-element">
-                                    <mat-label class="ml-2 text-base">Estimate (Days)</mat-label>
+
                                     <input matInput placeholder="Estimate (Days)" formControlName="estimate" />
                                 </mat-form-field>
 
                                 <mat-form-field class="form-element">
-                                    <mat-label class="ml-2 text-base">Assignee</mat-label>
                                     <mat-select placeholder="Assigned" formControlName="assignee"
                                         (selectionChange)="changeType($event.value)">
                                         <mat-option *ngFor="let p of assignees" [value]="p.value"> {{
@@ -93,33 +90,32 @@
                                 </mat-form-field>
 
                                 <mat-form-field class="mat-form-field">
-                                    <mat-label class="ml-2 text-base">Task Summary</mat-label>
+
                                     <textarea matInput placeholder="Summary" formControlName="summary"> </textarea>
                                 </mat-form-field>
                             </div>
                         </form>
 
                         <div mat-card-actions class="mb-3">
-                            @if (bAdding == false) {
-                            <button mat-icon-button (click)="onUpdate()" color="primary" class="m-1">
+                            <button mat-icon-button (click)="onAddNew()" color="primary" class="m-1"
+                                matTooltip="New Task">
+                                <mat-icon>add</mat-icon>
+                            </button>
+                            <button mat-icon-button (click)="onUpdate()" color="primary" class="m-1"
+                                matTooltip="Update">
                                 <mat-icon>update</mat-icon>
                             </button>
-                            <button mat-icon-button (click)="onCopy($event)" color="primary" class="m-1">
+                            <button mat-icon-button (click)="onCopy($event)" color="primary" class="m-1"
+                                matTooltip="Copy Task">
                                 <mat-icon>content_copy</mat-icon>
                             </button>
-                            <button mat-icon-button (click)="onDelete()" color="primary" class="m-1">
+                            <button mat-icon-button (click)="onDelete()" color="primary" class="m-1"
+                                matTooltip="Delete">
                                 <mat-icon>delete</mat-icon>
                             </button>
-                            <button mat-icon-button (click)="closeDrawer()" color="warn" class="m-1">
+                            <button mat-icon-button (click)="closeDrawer()" color="warn" class="m-1" matTooltip="Close">
                                 <mat-icon>close</mat-icon>
                             </button>
-                            }
-                            @else
-                            {
-                            <button mat-icon-button (click)="onAddNew()" color="primary" class="m-1">
-                                <mat-icon>new</mat-icon>
-                            </button>
-                            }
                         </div>
 
                     </div>

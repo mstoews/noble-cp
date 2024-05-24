@@ -1,4 +1,4 @@
-import { BehaviorSubject, Observable, Subject, map, mergeMap, retry, shareReplay, toArray } from 'rxjs';
+import { BehaviorSubject, Observable, Subject, map, mergeMap, retry, shareReplay, take, toArray } from 'rxjs';
 import { Injectable, computed, inject, signal } from '@angular/core';
 
 import { AUTH } from 'app/app.config';
@@ -87,7 +87,7 @@ export interface IKanban {
   type: string,
   priority: string,
   tags: string,
-  estimate: string,
+  estimate: number,
   assignee: string,
   rankid: number,
   color: string,
@@ -196,7 +196,7 @@ export class KanbanService {
       assignee: k.assignee,
       rankid: k.rankid,
       color: k.color,
-      estimate: k.estimate,
+      estimate: Number(k.estimate),
       className: 'class',
       updateDate: updateDate,
       updateUser: email,
@@ -205,9 +205,11 @@ export class KanbanService {
 
     }
 
+    console.log(JSON.stringify(data));
+
     return this.httpClient.post(url, data)
       .pipe(
-      shareReplay()).pipe().subscribe(kanban =>
+      shareReplay()).pipe(take(1)).subscribe(kanban =>
         console.log(JSON.stringify(kanban))
       );
   }

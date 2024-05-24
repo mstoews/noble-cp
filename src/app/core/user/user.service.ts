@@ -5,7 +5,7 @@ import { map, Observable, ReplaySubject, tap } from 'rxjs';
 
 @Injectable({providedIn: 'root'})
 export class UserService
-{
+{ 
     private _user: ReplaySubject<User> = new ReplaySubject<User>(1);
 
     /**

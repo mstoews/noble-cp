@@ -15,7 +15,7 @@ import { provideNativeDateAdapter } from '@angular/material/core';
 import { KanbanMenubarComponent } from '../kanban/kanban-menubar/grid-menubar.component';
 
 
-export interface IValue {
+interface IValue {
   value: string;
   viewValue: string;
 }
@@ -260,7 +260,7 @@ export class TasksComponent {
 
   public bAdding?: boolean = false;
 
-
+  
   onUpdate() {
     // const cardIds = this.kanbanObj.kanbanData.map((obj: { [key: string]: string }) => parseInt(obj.Id.replace('', ''), 10));
     this.bAdding = false
@@ -290,7 +290,6 @@ export class TasksComponent {
             },
         },
     });
-
     
     confirmation.afterClosed().subscribe((result) => {
         if (result === 'confirmed') {
@@ -389,51 +388,13 @@ export class TasksComponent {
     this.closeDrawer();
   }
 
-  OnActionBegin(): void {
-
-  }
-
-  OnActionComplete(): void {
-
-  }
-
-  OnActionFailure(): void {
-
-  }
-
-  OnDataBinding(): void {
-
-  }
-
-  OnDataBound(): void {
-
-  }
-
-  OnCardRendered(args: CardRenderedEventArgs): void {
-
-  }
-
-  OnQueryCellInfo(): void {
-
-  }
-
+  
+  
   OnCardClick(args: CardClickEventArgs): void {
     console.log(args.data);
   }
 
 
-  OnDragStart(e): void {
-
-  }
-
-  OnDrag(e): void {
-
-  }
-
-
-  changeRag(e: any) {
-
-  }
 
   changePriority(e: any) {
 

@@ -59,8 +59,8 @@
         <grid-menubar [inTitle]="'Kanban Priority Maintenance'"></grid-menubar>
         <div class="flex flex-col h-[600px]">
             <dx-data-grid id="id" [wordWrapEnabled]="true" [columnHidingEnabled]="true" [columnHidingEnabled]="true" [dataSource]="rows" [showColumnLines]="true"
-                [showRowLines]="true" [showBorders]="true" [focusedRowEnabled]="true" [focusedRowIndex]="0"
-                keyExpr="type" [repaintChangesOnly]="true">
+                [showRowLines]="true" [showBorders]="true" [focusedRowEnabled]="true" [focusedRowIndex]="0" 
+                keyExpr="priority" [repaintChangesOnly]="true">
                 <dxo-editing
                 mode="cell"
                 [allowUpdating]="true"
