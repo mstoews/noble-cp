@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { HttpClientTestingModule } from '@angular/common/http/testing'
+import {} from '@angular/common/http/testing'
 import { SecurityContext } from '@angular/core'
 import { ReactiveFormsModule } from '@angular/forms'
 import { SafeResourceUrl, SafeValue } from '@angular/platform-browser'
