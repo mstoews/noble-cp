@@ -16,6 +16,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Observable } from 'rxjs';
 import { DxNumberBoxModule } from 'devextreme-angular';
 import { FuseConfirmationService } from '@fuse/services/confirmation';
+import { IAccounts } from 'app/services/journal.service';
 
 
 const imports = [
@@ -53,18 +54,16 @@ export class GLAcctDetailComponent implements OnInit{
     private transactionService = inject(GlTransactionsService);
     private glAccountsService = inject(GLAccountsService);
     private fuseConfirmationService = inject(FuseConfirmationService);
-    @Input() account: string;
+    @Input() account!: string;
 
     selectedItemKeys: any[] = [];
     customizeTooltip = (pointsInfo: { originalValue: string; }) => ({ text: `${parseInt(pointsInfo.originalValue)}%` });
     journalForm!: FormGroup;
     sTitle = 'General Ledger Accounts';
+    accounts$ = this.glAccountsService.getChildren(this.account);
 
-    accounts$: Observable<any[]>;
-
-    // details$ = this.transactionService.getAllTransactions();
     ngOnInit() {        
-        this.accounts$ = this.glAccountsService.getChildren(this.account);
+        
         this.journalForm = this.fb.group({
             account: ['', Validators.required],
             parent_account: ['', Validators.required],
@@ -173,10 +172,24 @@ export class GLAcctDetailComponent implements OnInit{
         this.createEmptyForm();
     }
 
-    selectionChanged(data: any) {
-        console.log(`selectionChanged ${JSON.stringify(data.data)}`);
-        this.selectedItemKeys = data.selectedRowKeys;
+    selectionChanged(e: any) {
+        if (e.data.booked === undefined || e.data.booked === '') {
+            e.data.booked = false;
+            e.data.booked_date = '';
+        }
+
+        this.journalForm = this.fb.group({
+            journal_id :[e.data.journal_id],
+            description:[e.data.description],
+            parent_account: [e.data.parent_account],
+            booked:[e.data.booked],
+            create_date:[e.data.create_date],
+            create_user:[e.data.create_user],
+            booked_user:[e.data.booked_user],
+            booked_date:[e.data.booked_date]
+          });
     }
+    
     onCellDoubleClicked(e: any) {
         if (e.data.booked === undefined || e.data.booked === '') {
             e.data.booked = false;
@@ -186,6 +199,7 @@ export class GLAcctDetailComponent implements OnInit{
         this.journalForm = this.fb.group({
             journal_id :[e.data.journal_id],
             description:[e.data.description],
+            parent_account: [e.data.parent_account],
             booked:[e.data.booked],
             create_date:[e.data.create_date],
             create_user:[e.data.create_user],
@@ -195,7 +209,21 @@ export class GLAcctDetailComponent implements OnInit{
     }
 
     onFocusedRowChanged(e: any) {
-        console.log(`selectionChanged ${JSON.stringify(e.data)}`);
+        if (e.data.booked === undefined || e.data.booked === '') {
+            e.data.booked = false;
+            e.data.booked_date = '';
+        }
+
+        this.journalForm = this.fb.group({
+            journal_id :[e.data.journal_id],
+            description:[e.data.description],
+            parent_account: [e.data.parent_account],
+            booked:[e.data.booked],
+            create_date:[e.data.create_date],
+            create_user:[e.data.create_user],
+            booked_user:[e.data.booked_user],
+            booked_date:[e.data.booked_date]
+          });
     }
 
 

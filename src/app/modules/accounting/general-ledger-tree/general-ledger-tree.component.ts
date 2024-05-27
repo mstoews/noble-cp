@@ -211,10 +211,10 @@ export class GeneralLedgerTreeComponent implements OnInit, OnDestroy {
     }
   }
 
-  getType(type: string) {
-    this.types$.pipe(filter((val) => !!val)).pipe(takeUntil(this._unsubscribeAll))
-      .subscribe((val) => console.debug('new inventory item', val));
-  }
+  // getType(type: string) {
+  //   this.types$.pipe(filter((val) => !!val)).pipe(takeUntil(this._unsubscribeAll))
+  //     .subscribe((val) => console.debug('new inventory item', val));
+  // }
 
   ngOnDestroy(): void {
     this._unsubscribeAll.next(null);

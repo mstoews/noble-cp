@@ -8,25 +8,24 @@
                     {{ sTitle }}
                 </div>
                 <div mat-dialog-content>
-                    <form [formGroup]="accountsForm">
+                    <form [formGroup]="priorityForm">
 
                         <div class="flex flex-col m-1">
                             <section class="flex flex-col md:flex-row">
                                 <div class="flex flex-col grow">
-                                    <mat-label class="ml-2 text-base">Type</mat-label>
+                                    <mat-label class="ml-2 text-base">Priority</mat-label>
                                     <mat-form-field class="m-1 form-element grow" appearance="outline">
-                                        <input matInput placeholder="Type" formControlName="type" />
+                                        <input matInput placeholder="Priority" formControlName="priority" />
+                                    </mat-form-field>
+                                </div>
+
+                                <div class="flex flex-col grow">
+                                    <mat-label class="ml-2 text-base">Description</mat-label>
+                                    <mat-form-field class="m-1 form-element" appearance="outline">
+                                        <input matInput placeholder="Description" formControlName="description" />
                                     </mat-form-field>
                                 </div>
                             </section>
-
-                            <div class="flex flex-col grow">
-                                <mat-label class="ml-2 text-base">Description</mat-label>
-                                <mat-form-field class="m-1 form-element" appearance="outline">
-                                    <input matInput placeholder="Type Description" formControlName="description" />
-                                </mat-form-field>
-                            </div>
-
                         </div>
                     </form>
                 </div>
@@ -58,18 +57,12 @@
         @if (data$ | async; as rows) {
         <grid-menubar [inTitle]="'Kanban Priority Maintenance'"></grid-menubar>
         <div class="flex flex-col h-[600px]">
-            <dx-data-grid id="id" [wordWrapEnabled]="true" [columnHidingEnabled]="true" [columnHidingEnabled]="true" [dataSource]="rows" [showColumnLines]="true"
-                [showRowLines]="true" [showBorders]="true" [focusedRowEnabled]="true" [focusedRowIndex]="0"
-                keyExpr="type" [repaintChangesOnly]="true">
-                <dxo-editing
-                mode="cell"
-                [allowUpdating]="true"
-                [allowAdding]="true"
-                [allowDeleting]="false"
-              >
-              </dxo-editing>
+            <dx-data-grid id="id" [wordWrapEnabled]="true" [columnHidingEnabled]="true" [columnHidingEnabled]="true"
+                [dataSource]="rows" [showColumnLines]="true" [showRowLines]="true" [showBorders]="true"
+                [focusedRowEnabled]="true" [focusedRowIndex]="0" keyExpr="priority" [repaintChangesOnly]="true">
+
                 <dxi-column dataField="priority" caption="Kanban Type" width="150"></dxi-column>
-                <dxi-column dataField="description"></dxi-column>                
+                <dxi-column dataField="description"></dxi-column>
             </dx-data-grid>
         </div>
         }

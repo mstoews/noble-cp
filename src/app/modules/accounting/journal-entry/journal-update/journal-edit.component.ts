@@ -49,7 +49,7 @@ export class JournalEditComponent  {
   journalDetail$?: Observable<IJournalDetail[]>
   funds$ = this.fundService.read();
   subtype$ = this.subtypeService.read();
-  accounts$ = this.accountService.read().pipe(map((child) => child.filter((parent) => parent.parent_account === false)));
+  accounts$ = this.accountService.readChildren();
   childAccount: 'account';
   account: number;
 
@@ -147,9 +147,7 @@ export class JournalEditComponent  {
       reference: journal_details.reference,
       fund: journal_details.fund
     }
-    this.journalService.createJournalDetail(rawData).pipe(
-      takeUntilDestroyed(this.destroyRef)
-    ).subscribe()
+    this.journalService.createJournalDetail(rawData);
     this.dialogRef.close('Update');
     this.dialogRef.close('Create');
 

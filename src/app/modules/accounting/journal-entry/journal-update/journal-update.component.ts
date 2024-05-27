@@ -1,7 +1,7 @@
 import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild, inject } from '@angular/core';
 import { DxDataGridModule, DxTemplateModule } from 'devextreme-angular';
 import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { IJournalDetail, IJournalDetailDelete, JournalService } from 'app/services/journal.service';
+import { IJournalDetail, IJournalDetailDelete, IJournalHeader, JournalService } from 'app/services/journal.service';
 import { Observable, ReplaySubject, Subject, Subscription, interval, map, startWith, take, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { DndComponent } from 'app/modules/drag-n-drop/loaddnd/dnd.component';
@@ -65,7 +65,7 @@ export class JournalUpdateComponent implements OnInit, OnDestroy, AfterViewInit 
   @Input() public amount: string;
   @Input() public bNewTransaction = true;
 
-  @Input() details$: Observable<IJournalDetail[]>;
+  
 
   private fb = inject(FormBuilder);
   private journalService = inject(JournalService);
@@ -92,7 +92,10 @@ export class JournalUpdateComponent implements OnInit, OnDestroy, AfterViewInit 
 
   funds$ = this.fundService.read();
   subtype$ = this.subtypeService.read();
-  accounts$ = this.accountService.read().pipe(map((child) => child.filter((parent) => parent.parent_account === false)));
+  accounts$ = this.accountService.readChildren();
+  dropDownChildren$ = this.accountService.readChildren()
+  
+  detailsListSignal = this.journalService.getJournalDetail(0);
 
   private fuseConfirmationService = inject(FuseConfirmationService);
 
@@ -119,17 +122,18 @@ export class JournalUpdateComponent implements OnInit, OnDestroy, AfterViewInit 
   public accountFilterCtrl: FormControl<string> = new FormControl<string>('');
   public filteredAccounts: ReplaySubject<IDropDownAccounts[]> = new ReplaySubject<IDropDownAccounts[]>(1);
 
-  @ViewChild('singleSelect', { static: true }) singleSelect: MatSelect;
+  @ViewChild('singleSelect', { static: true }) 
+  singleSelect: MatSelect;
 
   protected _onDestroy = new Subject<void>();
   
   ngOnInit(): void {    
-    this.accountsListSubject = this.accounts$.subscribe(accounts => {
+    this.accountsListSubject = this.dropDownChildren$.subscribe(accounts => {
         accounts.forEach(acct =>{          
           var list = {            
             account: acct.account,
             child: acct.child,
-            description: acct.child + ' - ' +acct.description
+            description: acct.description
           }
           this.accountList.push(list)
         })        
@@ -139,7 +143,7 @@ export class JournalUpdateComponent implements OnInit, OnDestroy, AfterViewInit 
 
     this.updateDetailList();
     this.createEmptyForm();
-    this.refresh(this.journal_id, this.description, this.transaction_date);
+    this.refresh(this.journal_id, this.description, this.transaction_date, this.amount);
     
     this.accountFilterCtrl.valueChanges.pipe(takeUntil(this._onDestroy))
     .subscribe(() => {
@@ -148,17 +152,7 @@ export class JournalUpdateComponent implements OnInit, OnDestroy, AfterViewInit 
   }
 
   protected setInitialValue() {
-  
-    this.filteredAccounts
-      .pipe(take(1), takeUntil(this._onDestroy))
-      .subscribe(() => {
-        // setting the compareWith property to a comparison function
-        // triggers initializing the selection according to the initial value of
-        // the form control (i.e. _initializeSelection())
-        // this needs to be done after the filteredBanks are loaded initially
-        // and after the mat-option elements are available
-        this.singleSelect.compareWith = (a: IDropDownAccounts, b: IDropDownAccounts) => a && b && a.child === b.child;
-      });
+        this.detailsListSignal = this.journalService.getJournalDetail(this.journal_id);
   }
 
   ngAfterViewInit() {
@@ -188,9 +182,12 @@ export class JournalUpdateComponent implements OnInit, OnDestroy, AfterViewInit 
     this.journal_subid = e.row.data.journal_subid;
     this.updateForm(e.row.data)
     this.editing = true;
-    this.journalService.getJournalHeader(this.journal_id).subscribe(journal => {
-      this.journalHeaderData = journal;
-    });
+    
+    this.journalHeaderData = this.journalService.readJournalHeaderById(this.journal_id);
+
+    // this.journalService.getJournalHeader(this.journal_id).subscribe(journal => {
+    //   this.journalHeaderData = journal;
+    // });
 
   }
 
@@ -219,37 +216,40 @@ export class JournalUpdateComponent implements OnInit, OnDestroy, AfterViewInit 
   }
 
   updateDetailList() {
-    this.detailsSubject = this.details$.subscribe(details => {
-      this.journalDetailList = details;
-    })
+    // this.detailsSubject = this.detailsListSignal.subscribe(details => {
+    //   this.journalDetailList = details;
+    // })
   }
 
-  public refresh(journal_id: number, description: string, transaction_date: string) {
+  public refresh(journal_id: number, description: string, transaction_date: string, amount: string) {
 
     this.description = description;
     this.transaction_date = transaction_date;
+    this.amount = amount;
 
     this.journalForm = this.fb.group({
       description: [this.description, Validators.required],
+      header_amount: [this.amount, Validators.required],
       transaction_date: [this.transaction_date, Validators.required]
     });
 
     if (journal_id === undefined) {
       this.description = '';
       this.transaction_date = '';
-      this.details$ = this.journalService.getJournalDetail(0);
+      this.detailsListSignal = this.journalService.getJournalDetail(0);
 
       return;
     }
     else if (journal_id > 0) {
-      //this.details$ = this.journalService.getJournalDetail(this.journal_id);
+      //this.detailsListSignal = this.journalService.getJournalDetail(this.journal_id);
     }
     else {
       this.description = '';
       this.transaction_date = '';
-      this.details$ = this.journalService.getJournalDetail(0);
+      this.detailsListSignal = this.journalService.getJournalDetail(0);
       this.journalForm = this.fb.group({
         description: [this.description, Validators.required],
+        header_amount: [this.amount, Validators.required],
         transaction_date: [this.transaction_date, Validators.required],
       });
     }
@@ -311,8 +311,8 @@ export class JournalUpdateComponent implements OnInit, OnDestroy, AfterViewInit 
   createEmptyForm() {
     this.journalForm = this.fb.group({
       description: [this.description, Validators.required],
-      transaction_date: [this.transaction_date, Validators.required],
-      amount: [this.amount, Validators.required]
+      header_amount: [this.amount, Validators.required],
+      transaction_date: [this.transaction_date, Validators.required]
     });
     this.journalDetailForm = this.fb.group({
       detail_description: ['', Validators.required],
@@ -357,26 +357,10 @@ export class JournalUpdateComponent implements OnInit, OnDestroy, AfterViewInit 
                 
             }
         });
-
-    
   }
 
   delete(journal: IJournalDetailDelete) {
-    this.journalDetailDeleteSubject = this.journalService.deleteJournalDetail(journal).subscribe(jrl => {
-      console.debug(`The journal ${journal.journal_id}-${journal.journal_subid} is ${jrl}`);      
-    });
-    
-    this.snackBar.open('Journal has been deleted', 'OK', {
-      verticalPosition: 'top',
-      horizontalPosition: 'right',
-      duration: 2000,
-    });
-
-    this.journalDetailForm.reset()
-    this.loadContent();
-    this.details$ = this.journalService.getJournalDetail(this.currentRowData.journal_id);
-    this.editing=false;
-    this._change.markForCheck();                
+    this.journalService.deleteJournalDetail(journal);
   } 
 
   onAddLineJournalDetail() {
@@ -390,7 +374,7 @@ export class JournalUpdateComponent implements OnInit, OnDestroy, AfterViewInit 
 
     var detail = this.journalDetailForm.getRawValue();
 
-    var journal_subid = this.journalDetailList.length + 1;
+    var journal_subid = this.detailsListSignal().length + 1;
 
     if (detail.detail_description === '' || detail.detail_description === undefined || detail.detail_description === null) {
       this.snackBar.open('Please select a row to edit', 'OK', {
@@ -412,7 +396,6 @@ export class JournalUpdateComponent implements OnInit, OnDestroy, AfterViewInit 
       });
       return;
     }
-
 
     var journalDetail: IJournalDetail;
 
@@ -440,17 +423,8 @@ export class JournalUpdateComponent implements OnInit, OnDestroy, AfterViewInit 
     }
 
     if (journalDetail !== undefined) {
-      this.journalDetailUpdateSubject = this.journalService.createJournalDetail(journalDetail).subscribe(update => {
-        console.log('updated completed', update);
-      });
-      this.snackBar.open('Journal Line Added', 'OK', {
-        verticalPosition: 'top',
-        horizontalPosition: 'right',
-        duration: 2000,
-      });
+      this.journalService.createJournalDetail(journalDetail)
       this.journalDetailForm.reset()
-      this.loadContent();
-      this.details$ = this.journalService.getJournalDetail(this.currentRowData.journal_id);
     }
 
   }
@@ -468,11 +442,32 @@ export class JournalUpdateComponent implements OnInit, OnDestroy, AfterViewInit 
     var detail = this.journalDetailForm.getRawValue();
 
     if (detail.detail_description === '' || detail.detail_description === undefined || detail.detail_description === null) {
-      this.snackBar.open('Please select a row to edit', 'OK', {
-        verticalPosition: 'top',
-        horizontalPosition: 'right',
-        duration: 2000,
-      });
+      
+      const journalHeader: any = {
+        journal_id: this.journal_id,
+        description: header.description,
+        transaction_date: header.transaction_date,
+        amount: header.header_amount
+      }
+
+      if (journalHeader !== undefined )
+      { 
+
+        this.journalService.updateJournalHeader(journalHeader);
+        this.snackBar.open('Journal header details updated ... ', 'OK', {
+          verticalPosition: 'top',
+          horizontalPosition: 'right',
+          duration: 2000,
+        });
+        return
+      }
+      else {
+        this.snackBar.open('Please select a row to edit', 'OK', {
+          verticalPosition: 'top',
+          horizontalPosition: 'right',
+          duration: 2000,
+        });  
+      }
       return;
     }
 
@@ -517,7 +512,7 @@ export class JournalUpdateComponent implements OnInit, OnDestroy, AfterViewInit 
       journal_id: this.journalHeaderData.journal_id,
       description: header.description,
       transaction_date: header.transaction_date,
-      amount: this.journalHeaderData.amount
+      amount: header.header_amount
     }
 
     this.journalService.updateJournalHeader(journalHeader);
@@ -530,8 +525,8 @@ export class JournalUpdateComponent implements OnInit, OnDestroy, AfterViewInit 
     });
 
     this.journalDetailForm.reset()
-    this.loadContent();
-    this.details$ = this.journalService.getJournalDetail(this.currentRowData.journal_id);
+    //this.loadContent();
+    //this.detailsListSignal = this.journalService.getJournalDetail(this.currentRowData.journal_id);
     this.editing = false;
     this._change.markForCheck();
 
@@ -600,11 +595,11 @@ export class JournalUpdateComponent implements OnInit, OnDestroy, AfterViewInit 
     });
 
 
-    this.loadContent();
+    // this.loadContent();
 
     this.journalDetailForm.reset()
-    this.details$ = null;
-    this.details$ = this.journalService.getJournalDetail(this.journal_id);
+    this.detailsListSignal = null;
+    this.detailsListSignal = this.journalService.getJournalDetail(this.journal_id);
 
   }
 
@@ -641,7 +636,7 @@ export class JournalUpdateComponent implements OnInit, OnDestroy, AfterViewInit 
     dialogRef.afterClosed().subscribe(
       val => {
         console.log("Dialog output:", val)
-        this.refresh(this.journal_id, this.description, this.transaction_date);
+        this.refresh(this.journal_id, this.description, this.transaction_date, this.amount);
       }
     );
 
@@ -661,6 +656,8 @@ export class JournalUpdateComponent implements OnInit, OnDestroy, AfterViewInit 
       minimumFractionDigits: 2,
       maximumFractionDigits: 2,
     };
+    if (e.value === null)
+      e.value = 0.0;
     const formattedWithOptions = e.value.toLocaleString('en-US', options);
     return formattedWithOptions;
   }

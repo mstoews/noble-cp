@@ -40,7 +40,8 @@ export class TransactionDetailComponent implements OnInit {
 
     selectedItemKeys: any[] = [];
 
-    details$: Observable<IJournalDetail[]>;
+    details$ = this.journalService.getJournalAccountsByPeriod(1, 2024)
+    
     ngOnInit() {
         var period = this.period;
         var year = this.year;

@@ -20,9 +20,10 @@ import { KanbanTypesComponent } from './types/types.component';
 import { StatusComponent } from './status/status.component';
 import { KanbanListComponent } from './kanban-list.component';
 import { KanbanPriorityComponent } from './priority/priority.component';
+import { ScheduleNobleComponent } from './schedule/schedule.component';
 
 @Component({
-    selector: 'gl-main',
+    selector: 'gl-kanban-panel',
     templateUrl: './kanban-panel.component.html',
     encapsulation: ViewEncapsulation.None,
     standalone: true,
@@ -39,6 +40,7 @@ import { KanbanPriorityComponent } from './priority/priority.component';
         StatusComponent,
         KanbanListComponent,
         KanbanPriorityComponent,
+        ScheduleNobleComponent
         ],
     providers: [HttpClient],
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -74,13 +76,19 @@ export class KanbanPanelComponent {
         this.panels = [
             {
                 id         : 'kanban',
-                icon       : 'heroicons_outline:currency-dollar',
+                icon       : 'heroicons_outline:table-cells',
                 title      : 'Kanban Task Management',
                 description: 'Kanban drag and drop management of tasks',
             },
+            // {
+            //     id         : 'scheduler',
+            //     icon       : 'heroicons_outline:calendar',
+            //     title      : 'Schedule',
+            //     description: 'Update calendar items and important dates in the accounting and management cycle.',
+            // },
             {
                 id         : 'priority',
-                icon       : 'heroicons_outline:banknotes',
+                icon       : 'heroicons_outline:queue-list',
                 title      : 'Priority',
                 description: 'List of key prioritization levels for each tasks to accommodate effective sorting',
             },
@@ -92,19 +100,19 @@ export class KanbanPanelComponent {
             } ,
             {
                 id         : 'tasks',
-                icon       : 'heroicons_outline:building-office',
+                icon       : 'heroicons_outline:document-check',
                 title      : 'Tasks',
                 description: 'Comprehensive list of all tasks with history',
             },
             {
                 id         : 'team',
-                icon       : 'heroicons_outline:building-office',
+                icon       : 'heroicons_outline:chart-bar-square',
                 title      : 'Team',
                 description: 'List of team members to assign tasks',
             },
             {
                 id         : 'type',
-                icon       : 'heroicons_outline:building-office',
+                icon       : 'heroicons_outline:chart-bar',
                 title      : 'Kanban Types',
                 description: 'Type of assignments to categorize the work being completed',
             }

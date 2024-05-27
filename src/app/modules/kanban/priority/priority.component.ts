@@ -44,17 +44,15 @@ export class KanbanPriorityComponent implements OnInit, OnDestroy {
     @ViewChild('drawer') drawer!: MatDrawer;
 
     public sTitle = 'Kanban Types';
-    public accountsForm!: FormGroup;
+    public priorityForm!: FormGroup;
     public data$: any
-    public typeForm?: FormGroup | any;
     public selectedItemKeys: string[] = [];
     private _unsubscribeAll: Subject<any> = new Subject<any>();
     
-
-    ngOnInit() {
-        this.createEmptyForm();
-        this.data$ = this.kanbanService.getPriorityList();        
+    
+    async ngOnInit() {        
         this.createEmptyForm()
+        this.data$ = await this.kanbanService.getPriorityList();                    
     }
 
     ngOnDestroy(): void {
@@ -102,8 +100,8 @@ export class KanbanPriorityComponent implements OnInit, OnDestroy {
     }
 
     createEmptyForm() {
-        this.accountsForm = this.fb.group({
-            type: [''],
+        this.priorityForm = this.fb.group({
+            priority: [''],
             description: [''],
         });
     }
@@ -130,11 +128,13 @@ export class KanbanPriorityComponent implements OnInit, OnDestroy {
     onUpdate(e: any) {
         const dDate = new Date();
         const updateDate = dDate.toISOString().split('T')[0];
-        const account = { ...this.accountsForm.value } as IPriority;
+        const priority = { ...this.priorityForm.value } as IPriority;
         const rawData = {
-            Priority: account.Priority,
-            Description: account.Description
+            Priority: priority.Priority,
+            Description: priority.Description
         };
+
+        // this.kanbanService.updatePriority(rawData)
 
         this.closeDrawer();
     }

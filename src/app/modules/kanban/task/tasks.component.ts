@@ -13,6 +13,7 @@ import { MaterialModule } from 'app/services/material.module';
 import { FuseConfirmationService } from '@fuse/services/confirmation';
 import { provideNativeDateAdapter } from '@angular/material/core';
 import { KanbanMenubarComponent } from '../kanban/kanban-menubar/grid-menubar.component';
+import { AUTH } from 'app/app.config';
 
 
 export interface IValue {
@@ -47,7 +48,6 @@ export class TasksComponent {
   @ViewChild('drawer') drawer: MatDrawer;
   private fb = inject(FormBuilder);
   private kanbanService = inject(KanbanService);
-  kanbanData$: any;
   drawOpen: 'open' | 'close' = 'open';
   team: any[];
   taskGroup: FormGroup;
@@ -56,11 +56,14 @@ export class TasksComponent {
   cRAG: string;
   cType: string;
   currentDate: Date;
+  auth = inject(AUTH);
+  
+  kanbanData = this.kanbanService.read();
 
   private _fuseConfirmationService = inject(FuseConfirmationService)
 
   ngOnInit(): void {
-    this.kanbanData$ = this.kanbanService.read();
+    this.bAdding = true;
     this.createEmptyForm();
   }
 
@@ -110,8 +113,13 @@ export class TasksComponent {
 
   OnCardDoubleClick(args: CardClickEventArgs): void {
     this.bAdding = false;
+    const email = this.auth.currentUser.email;
+    const dDate = new Date()
+    var currentDate = dDate.toISOString().split('T')[0];
+    
+
     args.cancel = true;
-    const kanban = {
+    const kanban = { 
       id: args.data.id,
       title: args.data.title,
       status: args.data.status,
@@ -124,8 +132,8 @@ export class TasksComponent {
       rankid: args.data.rankid,
       color: args.data.color,
       className:  args.data.className,
-      updateUser: args.data.updateUser,
-      updateDate: args.data.updateDate,
+      updateUser: email,
+      updateDate: currentDate,
       startDate: args.data.start_date,
       estimateDate: args.data.estimate_date
     }
@@ -134,6 +142,7 @@ export class TasksComponent {
   }
 
   createEmptyForm() {
+    this.bAdding = true;
     this.sTitle = 'Kanban Task';
 
     this.taskGroup = this.fb.group({
@@ -159,13 +168,19 @@ export class TasksComponent {
 
   createForm(task: IKanban) {
     this.sTitle = 'Kanban Task - ' + task.id;
-    const dDate = new Date(task.updateDate);
+    const user = this.auth.currentUser;
+    
+    const dDate = new Date()
+    var currentDate = dDate.toISOString().split('T')[0];
     
     const priority = this.assignPriority(task);
     this.assignType(task);
     this.assignRag(task);
 
     var assignee = this.assignAssignee(task)
+
+    if (task.estimateDate === null)
+      task.estimateDate = currentDate;
 
     this.taskGroup = this.fb.group({
       id: [task.id],
@@ -179,10 +194,11 @@ export class TasksComponent {
       assignee: assignee,
       rankid: [task.rankid.toString()],
       color: [this.cRAG],
-      updateDate: [dDate],
-      updateUser: [task.assignee],
+      updateDate: [currentDate],
+      updateUser: [user.email],
       startDate: [task.startDate],
       estimateDate: [task.estimateDate]
+      
     });
   }
 
@@ -258,24 +274,20 @@ export class TasksComponent {
     selectionType: 'Multiple'
   };
 
-  public bAdding?: boolean = false;
+  public bAdding?: boolean = true;
 
-
-  onUpdate() {
-    // const cardIds = this.kanbanObj.kanbanData.map((obj: { [key: string]: string }) => parseInt(obj.Id.replace('', ''), 10));
-    this.bAdding = false
-    const updateDate = new Date().toISOString().split('T')[0];
-    var task = this.taskGroup.getRawValue();
-    task.priority = this.assignPriority(task);
-    task.rag = this.assignRag(task);
-    task.assignee =  this.assignAssignee(task);
-    task.type = this.assignType(task);
-    task.updateDate = updateDate;
-    task.startDate =  task.startDate.split('T')[0];
-    task.estimateDate = task.estimateDate;
-    this.kanbanService.update(task);
-    this.kanbanData$ = this.kanbanService.read();
-    this.closeDrawer();
+  onUpdate() {    
+    const data = this.taskGroup.getRawValue()
+    if (data.id === null || data.id === undefined) {
+      this.onAddNew()
+      return 
+    }
+    else {
+      this.bAdding = false;
+      this.kanbanService.update(this.taskGroup.getRawValue());
+      //this.kanbanData = this.kanbanService.read();
+      this.closeDrawer();
+    }
   }
 
   onCopy(e: any) {
@@ -375,7 +387,7 @@ export class TasksComponent {
   }
 
   onRefresh() {
-    this.kanbanData$ = this.kanbanService.read();
+    this.kanbanData = this.kanbanService.read();
   }
 
   onDeleteCurrentSelection() { }
@@ -384,8 +396,33 @@ export class TasksComponent {
 
   onAddNew() {
     var data = this.taskGroup.getRawValue();
-    this.kanbanService.create(data)
-    this.kanbanData$ = this.kanbanService.read();
+    const startDate = new Date(data.startDate).toISOString().split('T')[0];
+    const estimateDate = new Date(data.estimateDate).toISOString().split('T')[0];
+
+    var dt = 
+      {
+         title: data.title ,
+         status: "Open",
+         summary: data.summary,
+         type: data.type,
+         priority: data.priority,
+         tags: data.tags,
+         assignee: data.assignee,
+         rankid: 1,
+         color:"#238823",
+         estimate: Number(data.estimate) ,
+         estimateDate: estimateDate,
+         className: "class",
+         updateDate: estimateDate,
+         updateUser: "mstoews",
+         startDate: startDate
+      }
+      
+    var sub = this.kanbanService.create(dt).subscribe(kanban => {      
+        var kanbanList = kanban;
+        this.kanbanService.updateKanbanList(kanbanList)
+    })
+
     this.closeDrawer();
   }
 
@@ -418,7 +455,7 @@ export class TasksComponent {
   }
 
   OnCardClick(args: CardClickEventArgs): void {
-    console.log(args.data);
+    // console.log(args.data);
   }
 
 

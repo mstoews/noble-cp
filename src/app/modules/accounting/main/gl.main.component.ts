@@ -101,32 +101,32 @@ export class GlMainComponent {
             },
             {
                 id         : 'subtypes',
-                icon       : 'heroicons_outline:calculator',
-                title      : 'General Ledger Subtypes',
-                description: 'Sub type definitions for account reporting',
+                icon       : 'heroicons_outline:clipboard-document',
+                title      : 'Transaction Subtypes',
+                description: 'Sub type definitions for tranaction reporting',
             } ,
             {
                 id         : 'funds',
-                icon       : 'heroicons_outline:building-office',
+                icon       : 'heroicons_outline:clipboard',
                 title      : 'Reserve Funds',
                 description: 'Reserve fund definitions for transactions',
             },
             {
                 id         : 'periods',
-                icon       : 'heroicons_outline:building-office',
+                icon       : 'heroicons_outline:calendar',
                 title      : 'Accounting Periods',
                 description: 'Start and end date of each accounting period',
             },
             {
                 id         : 'team',
-                icon       : 'heroicons_outline:building-office',
+                icon       : 'heroicons_outline:user',
                 title      : 'Accounting Team',
                 description: 'List of accounting team members',
             }
             ,
             {
                 id         : 'roles',
-                icon       : 'heroicons_outline:building-office',
+                icon       : 'heroicons_outline:user-circle',
                 title      : 'Role Definitions',
                 description: 'List of  assignable roles for team members',
             }                       

@@ -36,7 +36,6 @@ const imports = [
 })
 export class KanbanTypesComponent implements OnInit, OnDestroy {
     
-    public data: any;
     private _fuseConfirmationService = inject(FuseConfirmationService);
     private fb = inject(FormBuilder);
     private kanbanService = inject(KanbanService)
@@ -44,21 +43,14 @@ export class KanbanTypesComponent implements OnInit, OnDestroy {
 
     public sTitle = 'Kanban Types';
     public accountsForm!: FormGroup;
-    public data$: any
-    public typeForm?: FormGroup | any;
     public selectedItemKeys: string[] = [];
     private _unsubscribeAll: Subject<any> = new Subject<any>();
+    
+    typesList = this.kanbanService.readTypes()
     
 
     ngOnInit() {
         this.createEmptyForm();
-        this.data$ = this.kanbanService.readTypes();
-        // this.data$.pipe(takeUntil(this._unsubscribeAll)).subscribe(data => {
-        //     data.forEach(d => {
-        //         console.log(d);
-        //     })
-        // });        
-        this.createEmptyForm()
     }
 
     ngOnDestroy(): void {

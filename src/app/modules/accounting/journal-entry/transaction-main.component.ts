@@ -66,25 +66,25 @@ export class TransactionMainComponent {
         this.panels = [
             {
                 id         : 'listing',
-                icon       : 'heroicons_outline:banknotes',
+                icon       : 'heroicons_outline:document-check',
                 title      : 'Transaction Maintenance',
                 description: 'Manage your transactions and documentation',
             },
             {
                 id         : 'entry',
-                icon       : 'heroicons_outline:currency-dollar',
+                icon       : 'heroicons_outline:document-plus',
                 title      : 'Add Transaction',
                 description: 'Create transactions and append digital artifacts for each transaction',
             },
             {
                 id         : 'template',
-                icon       : 'heroicons_outline:calculator',
+                icon       : 'heroicons_outline:document-duplicate',
                 title      : 'Templates',
                 description: 'Manage your accounting patterns to automate, reduce effort and provide consistency in accounting',
             } ,
             {
                 id         : 'artifact',
-                icon       : 'heroicons_outline:building-office',
+                icon       : 'feather:image',
                 title      : 'Artifact Management',
                 description: 'Manage the documentation of transactions',
             }                       

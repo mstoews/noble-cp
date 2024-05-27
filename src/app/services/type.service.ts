@@ -1,10 +1,10 @@
 import { Injectable, computed, inject, signal } from '@angular/core';
-import { Subject, shareReplay } from 'rxjs';
+import { Subject, catchError, of, shareReplay, take, tap, throwError } from 'rxjs';
 
 import { AUTH } from 'app/app.config';
 import { HttpClient } from '@angular/common/http';
-import { UserService } from 'app/modules/user/user/user.service';
 import { environment } from 'environments/environment.prod';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 interface TypeState {
   types: IType[];
@@ -32,21 +32,14 @@ export class TypeService {
   private baseUrl = environment.baseUrl;
 
   error$ = new Subject<string>();
-  
-  types = computed(() => this.state().types);
-  error = computed(() => this.state().error);
 
-  private state = signal<TypeState>({
-    types: [],
-    error: null,
-  });
+  private typeList = signal<IType[]>([])
 
-  
   create(t: IType) {
     var url = this.baseUrl + '/v1/type_create';
-    var email = this.authService.currentUser.email;  
+    var email = this.authService.currentUser.email;
     const dDate = new Date();
-    
+
     var data: IType = {
       type: t.type,
       description: t.description,
@@ -62,9 +55,20 @@ export class TypeService {
 
   // Read
   read() {
-    var url = this.baseUrl + '/v1/type_list';
-    return this.httpClient.get<IType[]>(url).pipe(
-      shareReplay())
+    if (this.typeList().length === 0) {
+      var url = this.baseUrl + '/v1/type_list';
+      this.httpClient.get<IType[]>(url).pipe(
+        tap(data => this.typeList.set(data)),
+        take(1),
+        catchError(err => {
+          const message = "Could not retrieve journals ...";
+          console.debug(message, err);
+          return throwError(() => new Error(`${JSON.stringify(err)}`));
+        }),
+        shareReplay()
+      ).subscribe();
+    }
+    return this.typeList;
   }
 
 
@@ -94,7 +98,5 @@ export class TypeService {
     return this.httpClient.post<IType[]>(url, data).pipe(
       shareReplay())
   }
-
-
 
 }

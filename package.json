@@ -34,6 +34,8 @@
     "@syncfusion/ej2-angular-inputs": "^25.1.42",
     "@syncfusion/ej2-angular-kanban": "^25.1.35",
     "@syncfusion/ej2-angular-navigations": "^25.1.42",
+    "@syncfusion/ej2-angular-schedule": "^25.2.4",
+    "@syncfusion/ej2-angular-splitbuttons": "^25.2.4",
     "@syncfusion/ej2-angular-spreadsheet": "^25.1.38",
     "@syncfusion/ej2-base": "^25.1.35",
     "@syncfusion/ej2-data": "^25.1.35",

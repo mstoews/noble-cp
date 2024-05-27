@@ -5,7 +5,7 @@ import { ISubType, SubTypeService } from 'app/services/subtype.service';
 import { IType, TypeService } from 'app/services/type.service';
 
 import { AUTH } from 'app/app.config';
-import { CommonModule } from '@angular/common';
+import { CommonModule, JsonPipe } from '@angular/common';
 import { FuseConfirmationService } from '@fuse/services/confirmation';
 import { GLAccountsService } from 'app/services/accounts.service';
 import { GLAcctDetailComponent } from './gl-accts-detail/gl-accts-detail.component';
@@ -25,7 +25,8 @@ const imports = [
     DxBulletModule,
     DxTemplateModule,
     GridMenubarStandaloneComponent,
-    GLAcctDetailComponent
+    GLAcctDetailComponent,
+    JsonPipe
 ];
 
 const keyExpr = ["account", "child"];
@@ -40,7 +41,7 @@ const keyExpr = ["account", "child"];
 export class GlAccountsComponent implements OnInit, OnDestroy {
     @ViewChild('drawer') drawer!: MatDrawer;
     accountsForm!: FormGroup;
-    public data$: any;
+    
     private _fuseConfirmationService = inject(FuseConfirmationService);
     private fb = inject(FormBuilder);
 
@@ -57,25 +58,22 @@ export class GlAccountsComponent implements OnInit, OnDestroy {
     showPageSizeSelector = true;
     showInfo = true;
     showNavButtons = true;
-
-
-    types: IType[];
     subTypes: ISubType[];
     subscriptionType: Subscription;
     subscriptionSubType: Subscription;
-
-    typeService =  inject(TypeService)
     subtypeService = inject(SubTypeService)
+    
+    accountsList = this.accountService.read();
 
+    typeList =  inject(TypeService).read();
 
     ngOnInit() {
         this.createEmptyForm();
-        this.data$ = this.accountService.read();
-        this.subscriptionType = this.typeService.read().subscribe((types) => (this.types = types));
+           
     }
 
     ngOnDestroy(): void {
-        this.subscriptionType.unsubscribe();
+
     }
 
 
@@ -105,21 +103,27 @@ export class GlAccountsComponent implements OnInit, OnDestroy {
 
     onUpdate(e: any) {
         const dDate = new Date();
-        // const updateDate = dDate.toISOString().split('T')[0];
+        const updateDate = dDate.toISOString().split('T')[0];
+        const user = this.auth.currentUser.email;
 
-        const account = { ...this.accountsForm.value } as IAccounts;
+        const account = this.accountsForm.getRawValue() 
         const rawData = {
             account: account.account,
             child: account.child,
             parent_account: account.parent_account,
             description: account.description,
-            sub_type: account.sub_type,
+            sub_type: '',
             type: account.type,
-            comments: account.comments,
-        };
+            comments: account.comments,    
+            balance: 0,   
+            create_date: updateDate,
+            create_user: user,
+            update_date: updateDate,
+            update_user: user, 
+            status: "open"
 
+        };
         this.accountService.update(rawData);
-        this.closeDrawer();
     }
 
     changeType(e) {
@@ -162,7 +166,7 @@ export class GlAccountsComponent implements OnInit, OnDestroy {
     }
 
     onRefresh() {
-        this.data$ = this.accountService.read();
+        // this.data$ = this.accountService.read();
     }
 
     onAdd() {
@@ -176,20 +180,18 @@ export class GlAccountsComponent implements OnInit, OnDestroy {
         this.accountsForm = this.fb.group({
             account: ['', Validators.required],
             child: ['', Validators.required],
-            parent_account: ['', Validators.required],
+            parent_account: [false , Validators.required],
             description: ['', Validators.required],
-            balance: ['', Validators.required],
             type: ['', Validators.required],
-            sub_type: ['', Validators.required],
             comments: ['', Validators.required],
-            status: ['', Validators.required]
         });
     }
 
     private assignType(type: string ): string {
         var vType: string;
+        
         if (type !== null && type !== undefined) {
-          const typ = this.types.find((x) => x.type === type);
+          const typ = this.typeList().find((x) => x.type === type);
           if (typ === undefined) {
             vType = 'Assets';
           } else {
@@ -203,16 +205,15 @@ export class GlAccountsComponent implements OnInit, OnDestroy {
 
     createForm(e) {
         const sType = this.assignType(e.type);
+        var parent: boolean;
+        parent = e.parent_account;
         this.accountsForm = this.fb.group({
             account: [e.account, Validators.required],
             child: [e.child, Validators.required],
-            parent_account: [e.parent_account, Validators.required],
+            parent_account: parent,
             description: [e.description, Validators.required],
-            balance: [e.balance, Validators.required],
             type: [sType, Validators.required],
-            sub_type: [e.sub_type, Validators.required],
             comments: [e.comments, Validators.required],
-            status: [e.status, Validators.required],
         });
     }
 
@@ -237,6 +238,7 @@ export class GlAccountsComponent implements OnInit, OnDestroy {
     onDoubleClicked(args: any) {
         const type = args.data.type;
         this.assignType(type)
+        
 
         const account = {
             account: [args.data.account],
@@ -245,9 +247,7 @@ export class GlAccountsComponent implements OnInit, OnDestroy {
             description: [args.data.description],
             balance: [args.data.balance],
             type: [type],
-            sub_type: [args.data.sub_type],
             comments: [args.data.comments],
-            status: [args.data.status],
         }
         this.createForm(account)
 
@@ -256,6 +256,19 @@ export class GlAccountsComponent implements OnInit, OnDestroy {
 
     onFocusedRowChanged(e: any) {
         this.currentRow = e.row.data;
-        console.log(`selectionChanged ${JSON.stringify(e.row.data)}`);
+        const type = e.row.data.type;
+        this.assignType(type)
+        
+        const account = {
+            account: [e.row.data.account],
+            child: [e.row.data.child],
+            parent_account: [e.row.data.parent_account],
+            description: [e.row.data.description],
+            balance: [e.row.data.balance],
+            type: [type],
+            comments: [e.row.data.comments],
+        }
+        this.createForm(account)
+        
     }
 }

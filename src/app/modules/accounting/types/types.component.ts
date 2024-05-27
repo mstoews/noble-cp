@@ -41,10 +41,7 @@ const imports = [
     providers: []
 })
 export class GlTypesComponent implements OnInit {
-    public data: any;
-    private url = environment.baseUrl + '/v1/type_list'
-
-    private client = inject(HttpClient);
+    
     private _fuseConfirmationService = inject(FuseConfirmationService);
     private fb = inject(FormBuilder);
     private typeService = inject(TypeService)
@@ -52,13 +49,11 @@ export class GlTypesComponent implements OnInit {
 
     public sTitle = 'General Ledger Types';
     public accountsForm!: FormGroup;
-    public data$: any
-    public typeForm?: FormGroup | any;
+    
+    typeList = this.typeService.read();
 
     ngOnInit() {
         this.createEmptyForm();
-        this.data$ = this.typeService.read();
-        this.createEmptyForm()
     }
 
     onCreate(e: any) {
@@ -133,14 +128,5 @@ export class GlTypesComponent implements OnInit {
 
         this.closeDrawer();
     }
-
-    public focusIn(target: HTMLElement | any): void {
-        (target as any).parentElement.classList.add('e-input-focus');
-    }
-
-    public focusOut(target: HTMLElement | any): void {
-        (target as any).parentElement.classList.remove('e-input-focus');
-    }
-
 
 }

@@ -1,5 +1,5 @@
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { Component, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild, inject, Signal } from '@angular/core';
 import { DxBulletModule, DxDataGridModule, DxTemplateModule } from 'devextreme-angular';
 import { FuseConfirmationService } from '@fuse/services/confirmation';
 import { MatDrawer } from '@angular/material/sidenav';
@@ -36,24 +36,34 @@ const imports = [
 })
 export class StatusComponent implements OnInit, OnDestroy {
     
-    public data: any;
     private _fuseConfirmationService = inject(FuseConfirmationService);
     private fb = inject(FormBuilder);
     private kanbanService = inject(KanbanService)
     @ViewChild('drawer') drawer!: MatDrawer;
 
-    public sTitle = 'Kanban Types';
+    public sTitle = 'Kanban Status Types';
     public accountsForm!: FormGroup;
-    public data$: any
-    public typeForm?: FormGroup | any;
+    
+    statusList = this.kanbanService.readStatus();
+        
     public selectedItemKeys: string[] = [];
     private _unsubscribeAll: Subject<any> = new Subject<any>();
-    
+
+    onCellDblClick(e: any){
+
+    this.accountsForm = this.fb.group({
+      status: [e.data.status],
+      description: [e.data.description],
+    });
+        
+        this.openDrawer();
+    }
+
 
     ngOnInit() {
         this.createEmptyForm();
-        this.data$ = this.kanbanService.readFullStatus();         
-        this.createEmptyForm()
+        
+        // this.data$ = this.kanbanService.readFullStatus();         
     }
 
     ngOnDestroy(): void {
@@ -70,17 +80,16 @@ export class StatusComponent implements OnInit, OnDestroy {
         this.selectedItemKeys = selectedRowKeys;
       }
     
-      deleteRecords() {
+    deleteRecords() {
         this.selectedItemKeys.forEach((key) => {
           
         });
-        this.kanbanService.readTypes();
       }
 
     onDelete(e: any) {
         console.debug(`onDelete ${JSON.stringify(e)}`);
         const confirmation = this._fuseConfirmationService.open({
-            title: 'Delete Type?',
+            title: 'Delete status?',
             message: 'Are you sure you want to delete this type? ',
             actions: {
                 confirm: {
@@ -102,7 +111,7 @@ export class StatusComponent implements OnInit, OnDestroy {
 
     createEmptyForm() {
         this.accountsForm = this.fb.group({
-            type: [''],
+            status: [''],
             description: [''],
         });
     }
@@ -129,11 +138,12 @@ export class StatusComponent implements OnInit, OnDestroy {
     onUpdate(e: any) {
         const dDate = new Date();
         const updateDate = dDate.toISOString().split('T')[0];
-        const account = { ...this.accountsForm.value } as IStatus;
+        const status = { ...this.accountsForm.value } as IStatus;
         const rawData = {
-            status: account.status,
-            description: account.description
+            status: status.status,
+            description: status.description
         };
+        this.kanbanService.updateStatus(rawData)
         this.closeDrawer();
     }
 

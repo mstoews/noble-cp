@@ -51,7 +51,7 @@ export class TrnJournalDetailComponent implements OnInit {
     sTitle = 'Journal Entry Modification';
 
 
-    details$: Observable<IJournalDetail[]>;
+    details$ = this.journalService.getJournalDetail(0);
     glaccts$ = this.journalService.listAccounts();
 
     // details$ = this.transactionService.getAllTransactions();

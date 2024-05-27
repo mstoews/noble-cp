@@ -60,11 +60,11 @@
                         </div>
                     </mat-card>
                 </mat-drawer>
-                <ng-container>
-                    @if (data$ | async; as rows) {
+                <ng-container>                    
                     <grid-menubar [inTitle]="'Type Maintenance'"></grid-menubar>
+                    @if (typeList() != null) {
                     <div class="flex flex-col h-[600px]">
-                        <dx-data-grid id="id" [wordWrapEnabled]="true" [columnHidingEnabled]="true" [dataSource]="rows" [showColumnLines]="true"
+                        <dx-data-grid id="id" [wordWrapEnabled]="true" [columnHidingEnabled]="true" [dataSource]="typeList()" [showColumnLines]="true"
                             [showRowLines]="true" [showBorders]="true" [focusedRowEnabled]="true" [focusedRowIndex]="0"
                             keyExpr="type" [repaintChangesOnly]="true">
 
@@ -77,12 +77,6 @@
 
                         </dx-data-grid>
                     </div>
-
-                    <!-- <button mat-fab (click)="onCreate($event)" class="fixed bottom-30 right-14 rounded-full"
-                        color="primary" aria-label="Add Fab">
-                        <mat-icon>add</mat-icon>
-                    </button> -->
-
                     }
                 </ng-container>
             </mat-drawer-container>

@@ -1,8 +1,8 @@
 import { Component, ViewChild, inject } from '@angular/core';
 import { DxDataGridModule, DxTemplateModule } from 'devextreme-angular';
 import { FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { IJournalTemplate, JournalService } from 'app/services/journal.service';
-import { Observable, map } from 'rxjs';
+import { IAccounts, IJournalTemplate, JournalService } from 'app/services/journal.service';
+import { Observable, map, of } from 'rxjs';
 
 import { CommonModule } from '@angular/common';
 import { DndComponent } from 'app/modules/drag-n-drop/loaddnd/dnd.component';
@@ -56,7 +56,8 @@ export class JournalTemplateComponent {
     @ViewChild(JournalUpdateComponent) journalUpdate!: JournalUpdateComponent
 
     journalTemplate$ = this.journalService.readJournalTemplate();
-    accounts$ = this.accountService.read().pipe(map((child) => child.filter((parent) => parent.parent_account === false)));
+    
+    accounts$ = this.accountService.readChildren(); // retrieves only the child accounts which can be used for booking
     
     @ViewChild('drawer') drawer!: MatDrawer;    
     sTitle = 'Journal Template';

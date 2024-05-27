@@ -64,7 +64,8 @@ export class TrialBalanceComponent implements OnInit{
 
     customizeTooltip = (pointsInfo: { originalValue: string; }) => ({ text: `${parseInt(pointsInfo.originalValue)}%` });
     accountsForm!: FormGroup;
-    assets$ = this.accountApiService.read().pipe(map((income) => income.filter((inc) => inc.type === 'Assets' || inc.type === 'Liability')));
+    assets$: any;
+    //assets$ = this.accountApiService.read().pipe(map((income) => income.filter((inc) => inc.type === 'Assets' || inc.type === 'Liability')));
 
     ngOnInit() {
         this.createEmptyForm();

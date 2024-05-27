@@ -55,7 +55,7 @@ export class JournalDetailComponent implements OnInit {
     journalForm!: FormGroup;
     sTitle = 'Journal Entry Modification';
 
-    details$: Observable<IJournalDetail[]>;
+    details$ = this.journalService.getJournalDetail(0);
     glaccts$ = this.journalService.listAccounts();
 
     // details$ = this.transactionService.getAllTransactions();
@@ -94,8 +94,9 @@ export class JournalDetailComponent implements OnInit {
             minimumFractionDigits: 2,
             maximumFractionDigits: 2,
         };
+        if (e.value === null)
+            e.value = 0.0;
         const formattedWithOptions = e.value.toLocaleString('en-US', options);
-        console.log(formattedWithOptions);
         return formattedWithOptions;
     }
 

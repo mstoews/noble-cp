@@ -1,6 +1,5 @@
-@if (data$ | async; as status) {                                 
-    <mat-drawer-container class="flex-col h-full">
-        <mat-drawer class="lg:w-[400px] md:w-full bg-white-100" #drawer [opened]="false" mode="over" [position]="'end'"
+@if (statusList() !== null) {                                 
+    <mat-drawer class="bg-transparent lg:w-[400px] md:w-full bg-white-100" #drawer [opened]="false" mode="over" [position]="'end'"
             [disableClose]="false">
             <mat-card>
                 <div class="flex flex-col w-full text-gray-700 max-w-140 filter-article filter-interactive">
@@ -16,7 +15,7 @@
                                     <div class="flex flex-col grow">
                                         <mat-label class="ml-2 text-base">Status</mat-label>
                                         <mat-form-field class="m-1 form-element grow" appearance="outline">
-                                            <input matInput placeholder="Type" formControlName="status" />
+                                            <input matInput placeholder="Status" formControlName="status" />
                                         </mat-form-field>
                                     </div>
                                 </section>
@@ -36,41 +35,43 @@
                             aria-label="Button that displays a tooltip when focused or hovered over">
                             <mat-icon>update</mat-icon>
                         </button>
-                        <button mat-raised-button color="primary" class="m-1" (click)="onCreate($event)" matTooltip="Add"
+                        <button mat-icon-button color="primary" class="m-1" (click)="onCreate($event)" matTooltip="Add"
                             aria-label="Button that displays a tooltip when focused or hovered over">
-                            Add
+                            
                             <mat-icon>add</mat-icon>
                         </button>
-                        <button mat-raised-button color="primary" class="m-1" (click)="onDelete($event)" matTooltip="Delete"
+                        <button mat-icon-button color="primary" class="m-1" (click)="onDelete($event)" matTooltip="Delete"
                             aria-label="Button that displays a tooltip when focused or hovered over">
-                            Delete
+                            
                             <mat-icon>delete</mat-icon>
                         </button>
-                        <button mat-raised-button color="primary" class="m-1" (click)="closeDrawer()" matTooltip="Cancel"
+                        <button mat-icon-button color="primary" class="m-1" (click)="closeDrawer()" matTooltip="Cancel"
                             aria-label="Button that displays a tooltip when focused or hovered over">
-                            Cancel
+                            
                             <mat-icon>close</mat-icon>
                         </button>
                     </div>
                 </div>
             </mat-card>
         </mat-drawer>
+    <mat-drawer-container class="flex-col h-full">
+        
         <ng-container>
-            @if (data$ | async; as rows) {
-            <grid-menubar [inTitle]="'Kanban Priority Maintenance'"></grid-menubar>
+            @if (statusList() !== null) {
+            <grid-menubar [inTitle]="'Kanban Status Maintenance'"></grid-menubar>
             <div class="flex flex-col h-[600px]">
                 <dx-data-grid id="id" 
                     [wordWrapEnabled]="true" 
                     [columnHidingEnabled]="true"                     
-                    [dataSource]="rows" 
+                    [dataSource]="statusList()" 
                     [showColumnLines]="true"
                     [showRowLines]="true" 
                     [showBorders]="true" 
                     [focusedRowEnabled]="true" 
+                    (onCellDblClick)="onCellDblClick($event)"
                     [focusedRowIndex]="0"
-                    keyExpr="type" [repaintChangesOnly]="true">
-                    <dxo-editing  mode="cell" [allowUpdating]="true" [allowAdding]="true" [allowDeleting]="false" >
-                  </dxo-editing>
+                    keyExpr="status" [repaintChangesOnly]="true">
+                    
                     <dxi-column dataField="status" caption="Kanban Type" width="150"></dxi-column>
                     <dxi-column dataField="description"></dxi-column>                
                 </dx-data-grid>

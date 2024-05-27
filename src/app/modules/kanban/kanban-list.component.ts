@@ -7,14 +7,12 @@ import {
 } from '@angular/forms';
 import { Component, OnInit, ViewChild, inject } from '@angular/core';
 import { DxBulletModule, DxDataGridModule, DxTemplateModule } from 'devextreme-angular';
-
 import { CommonModule } from '@angular/common';
 import { FuseConfirmationService } from '@fuse/services/confirmation';
 import { MatDrawer } from '@angular/material/sidenav';
 import { MaterialModule } from 'app/services/material.module';
-
-import { GridMenubarStandaloneComponent } from '../accounting/grid-menubar/grid-menubar.component';
 import { KanbanService } from 'app/services/kanban.service';
+import { KanbanMenubarComponent } from './kanban/kanban-menubar/grid-menubar.component';
 
 const imports = [
   CommonModule,
@@ -24,7 +22,7 @@ const imports = [
   DxDataGridModule,
   DxBulletModule,
   DxTemplateModule,
-  GridMenubarStandaloneComponent
+  KanbanMenubarComponent
 ];
 
 @Component({
@@ -39,6 +37,9 @@ const imports = [
   providers: []
 })
 export class KanbanListComponent implements OnInit {
+onCopy() {
+throw new Error('Method not implemented.');
+}
   public data: any;
 
   private _fuseConfirmationService = inject(FuseConfirmationService);
@@ -48,12 +49,17 @@ export class KanbanListComponent implements OnInit {
   @ViewChild('drawer') drawer!: MatDrawer;
 
   public sTitle = 'Kanban List';
-  public accountsForm!: FormGroup;
+  public taskGroup!: FormGroup;
   public data$: any
-  public typeForm?: FormGroup | any;
-
+  tasksList = this.kanbanService.read()
+rag: any;
+types: any;
+priorities: any;
+assignees: any;
+bAdding: any;
+  
   ngOnInit() {      
-      this.data$ = this.kanbanService.read()
+    this.createEmptyForm();
   }
 
   onCreate(e: any) {
@@ -85,17 +91,25 @@ export class KanbanListComponent implements OnInit {
   }
 
   createEmptyForm() {
-      this.accountsForm = this.fb.group({
-          type: [''],
-          description: [''],
-          create_date: [''],
-          create_user: [''],
-          update_date: [''],
-          update_user: [''],
-      });
+    this.sTitle = 'Kanban Task';
+
+    this.taskGroup = this.fb.group({
+      title: [''],
+      status: [''],
+      summary: [''],
+      type: [''],
+      priority: [''],
+      tags: [''],
+      estimate: [''],
+      assignee: [''],
+      rankid: [''],
+      color: [''],
+      updateDate: [''],
+      updateUser: [''],
+      startDate: [''],
+      estimateDate: ['']
+    });
   }
-
-
 
   openDrawer() {
       const opened = this.drawer.opened;
@@ -129,5 +143,33 @@ export class KanbanListComponent implements OnInit {
       this.closeDrawer();
   }
 
+    onRefresh() {
+        this.tasksList = this.kanbanService.read()
+    }
+
+    onCellDblClick(e: any) {
+        console.debug('on cell form double click ', e.data)
+        this.openDrawer()
+    }
+    
+    onAdd() {
+      this.openDrawer()
+    }
+    onDeleteCurrentSelection() {
+    throw new Error('Method not implemented.');
+    }
+    onUpdateCurrentSelection() {
+    throw new Error('Method not implemented.');
+    }
+    changeRag($event: any) {
+    throw new Error('Method not implemented.');
+    }
+    changeType($event: any) {
+    throw new Error('Method not implemented.');
+    }
+    changePriority(arg0: any) {
+    throw new Error('Method not implemented.');
+    }
+    
 }
 

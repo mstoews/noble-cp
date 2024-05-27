@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild, inject, viewChild } from '@angular/core';
 import { DxDataGridModule, DxTemplateModule } from 'devextreme-angular';
 import { FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { IJournalDetail, JournalService } from 'app/services/journal.service';
@@ -48,26 +48,23 @@ const imports = [
        border-color: #ada6a7;
     }`
 })
-export class JournalEntryComponent implements OnInit, OnDestroy {
-    private transactionService = inject(GlTransactionsService);
+export class JournalEntryComponent implements OnInit, OnDestroy {    
     private journalService = inject(JournalService);
     private typeService = inject(TypeService);
     private subtypeService = inject(SubTypeService);
     private fundService = inject(FundsService);
     private accountService = inject(GLAccountsService);
-    public  currentDate: string;
-    public  journal_details: any[];
-    public  bOpenDetail: boolean = false;
-    @ViewChild(JournalUpdateComponent) journalUpdate!: JournalUpdateComponent
-
+    
     public journalHeader$ = this.journalService.readJournalHeader();
     public types$ = this.typeService.read();
     public subtypes$ = this.subtypeService.read()
     public funds$ = this.fundService.read();
-    public accounts$ = this.accountService.read().pipe(map((child) => child.filter((parent) => parent.parent_account === false)));
-    public details$: Observable<IJournalDetail[]>;
+    public accounts$ = this.accountService.readChildren();
+    public details$ = this.journalService.getJournalDetail(0);
 
-    @ViewChild('drawer') drawer!: MatDrawer;
+    drawer = viewChild<MatDrawer>('drawer')    
+    journalUpdate = viewChild(JournalUpdateComponent);
+    
     collapsed = false;
     sTitle = 'Journal Entry';
     selectedItemKeys: any[] = [];
@@ -75,6 +72,10 @@ export class JournalEntryComponent implements OnInit, OnDestroy {
     public description = '';
     public transaction_date = '';
     public amount = '';
+    public  currentDate: string;
+    public  journal_details: any[];
+    public  bOpenDetail: boolean = false;
+    
     
     readonly allowedPageSizes = [10, 20, 'all'];
     currentRowData: any;
@@ -96,7 +97,6 @@ export class JournalEntryComponent implements OnInit, OnDestroy {
         const dDate = new Date();
         this.currentDate = dDate.toISOString().split('T')[0];    
     }
-
     
     onCellDoubleClicked(e: any) {                     
         this.bOpenDetail = true;
@@ -105,13 +105,11 @@ export class JournalEntryComponent implements OnInit, OnDestroy {
         this.amount = e.data.amount;
         this.transaction_date = e.data.create_date;
         this.details$ = this.journalService.getJournalDetail(this.nJournal);       
-        if (this.journalUpdate !== undefined)  {
-            this.journalUpdate.refresh(this.nJournal, this.description, this.transaction_date);
+        if (this.journalUpdate() !== undefined)  {
+            this.journalUpdate().refresh(this.nJournal, this.description, this.transaction_date, this.amount);
         }
         this.openDrawer();        
     }
-
-
     
     changeType(e) {
         console.log('changeType ', JSON.stringify(e));
@@ -130,12 +128,11 @@ export class JournalEntryComponent implements OnInit, OnDestroy {
         console.log('changeType ', JSON.stringify(e));
     }
 
-
     onAdd() {
         this.bOpenDetail = true;
         this.nJournal = 0;
         this.openDrawer()
-        this.journalUpdate.refresh(this.nJournal, this.description, this.transaction_date);      
+        this.journalUpdate().refresh(this.nJournal, this.description, this.transaction_date, this.amount);      
     }
 
     onRefresh() {
@@ -160,9 +157,9 @@ export class JournalEntryComponent implements OnInit, OnDestroy {
 
     onBooked(booked: boolean) {
         this.journalForm.patchValue({ booked: booked });
-        this.transactionService.update(this.journalForm.value).then((res: any) => {
-            console.log(`update ${JSON.stringify(res)}`);
-        });
+        // this.transactionService.update(this.journalForm.value).then((res: any) => {
+        //     console.log(`update ${JSON.stringify(res)}`);
+        // });
     }
 
     formatNumber(e) {
@@ -227,15 +224,15 @@ export class JournalEntryComponent implements OnInit, OnDestroy {
         });
     }
 
-    async updateBooked() {
-        this.journalHeader$.subscribe((data: any) => {
-            data.forEach((element: any) => {
-                element.booked = element.booked === 'true' ? true : false;
-                this.transactionService.update(element).then((res: any) => {
-                    console.log(`update ${JSON.stringify(res)}`);
-                });
-            });
-        });
+    updateBooked() {
+        // this.journalHeader$.subscribe((data: any) => {
+        //     data.forEach((element: any) => {
+        //         element.booked = element.booked === 'true' ? true : false;
+        //         this.transactionService.update(element).then((res: any) => {
+        //             console.log(`update ${JSON.stringify(res)}`);
+        //         });
+        //     });
+        // });
     }
 
     onCreate() {    
@@ -264,22 +261,13 @@ export class JournalEntryComponent implements OnInit, OnDestroy {
     }
 
     openDrawer() {
-        const opened = this.drawer.opened;
-        if (opened !== true) {
-            this.drawer.toggle();
-        } else {
-            return;
-        }
+        if(this.drawer().opened !==true)
+            this.drawer().toggle();     
     }
 
     closeDrawer() {
-        this.bOpenDetail = true;
-        const opened = this.drawer.opened;
-        if (opened === true) {
-            this.drawer.toggle();
-        } else {
-            return;
-        }
+        if(this.drawer().opened === true)
+            this.drawer().toggle();
     }
     
     ngOnDestroy() {

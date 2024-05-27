@@ -107,7 +107,7 @@ export class EntryWizardComponent implements OnInit, OnDestroy, AfterViewInit {
 
         
         
-        this.accountService.readDropDownChild().pipe(takeUntil(this._onDestroy)).subscribe((accounts) => {
+        this.accountService.readChildren().pipe(takeUntil(this._onDestroy)).subscribe((accounts) => {
           this.debitAccounts = accounts;
           this.creditAccounts = accounts;
           this.filteredDebitAccounts.next(this.debitAccounts.slice());        
@@ -384,24 +384,15 @@ export class EntryWizardComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     postTransaction() {        
-        var details: any;
-        
+        var details: any;        
         this.journalService.createJournalHeader(this.journalHeader).subscribe(journal => {
             console.debug(JSON.stringify(journal));            
             this.journalDetails.forEach(journalDetail => {
                 journalDetail.journal_id = journal.journal_id    
-                this.journalService.createJournalDetail(journalDetail).subscribe(detail => {
-                    details = detail;   
-                    console.debug(details);
-                });
+                this.journalService.createJournalDetail(journalDetail)
             })
         });
 
-        this.snackBar.open('Transaction has been created ...', '', {
-            verticalPosition: 'top',
-            horizontalPosition: 'right',
-            duration: 2000,
-          });        
     }
 
 
