@@ -1,0 +1,45 @@
+@ACCESS_JWT=eyJhbGciOiJSUzI1NiIsImtpZCI6IjVkNjE3N2E5Mjg2ZDI1Njg0NTI2OWEzMTM2ZDNmNjY0MjZhNGQ2NDIiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL3NlY3VyZXRva2VuLmdvb2dsZS5jb20vY29uZG8tbWdtdCIsImF1ZCI6ImNvbmRvLW1nbXQiLCJhdXRoX3RpbWUiOjE3MTUzMDcxNzUsInVzZXJfaWQiOiJZOGxSY2lqTzU2WWZicngxTTBlQkNaVWVzZm8yIiwic3ViIjoiWThsUmNpak81NllmYnJ4MU0wZUJDWlVlc2ZvMiIsImlhdCI6MTcxNjkxNTIyNywiZXhwIjoxNzE2OTE4ODI3LCJlbWFpbCI6Im1zdG9ld3NAaG90bWFpbC5jb20iLCJlbWFpbF92ZXJpZmllZCI6ZmFsc2UsImZpcmViYXNlIjp7ImlkZW50aXRpZXMiOnsiZW1haWwiOlsibXN0b2V3c0Bob3RtYWlsLmNvbSJdfSwic2lnbl9pbl9wcm92aWRlciI6InBhc3N3b3JkIn19.Kiu5jy-cduvoILob6UD_bMjfANkGiHysgGlNRL7XMp8NZhm6ElhEzsgqhb6anh3PL0DP3G0UfKf2YPcbHg-S89yHAwLl1eHxC5q_dpdphWKkqKw3CIQlirYspPU71gdm_83ejGcmtLvalIqUKlcTiNrsMfSnHQLFs_0Wokh3XGyg0TL7g_eaPcfPR1cvKQl89aELFb4frlHO10rWApBYDwuh_kdqGEXqh0mOIQDGyRt39yKdoZZeshztT5le8sWNPVXkmoHhSPpknpeSCQX7yGD1wCDORyLzAoc5ncbQWGLN6RKFsUBFb3SbWM1Zj_JysEIuvB9dDjMxZGnQT8P4fw
+
+
+GET http://localhost:8080/dist
+Content-Type: application/json
+Authentication: Bearer: ${{ACCESS_JWT}}
+
+
+
+###accounts.GET("funds_list", server.ListFunds)
+GET http://localhost:8080/v1/funds_list
+Content-Type: application/json
+Authorization: Bearer {{ACCESS_JWT}}
+
+###accounts.DELETE("fund_delete/:id", server.DeleteFund)
+GET http://localhost:8080/v1/fund_delete/:id
+Content-Type: application/json
+Authorization: Bearer {{ACCESS_JWT}}
+
+###accounts.POST("fund_create", server.CreateFund)
+POST http://localhost:8080/v1/fund_create
+Content-Type: application/json
+Authorization: Bearer {{ACCESS_JWT}}
+
+{	
+    "fund" : "New Fund",
+    "description" : "New fund description",
+    "create_date":"2024-02-12",	
+    "create_user": "mstoews@hotmail.com"
+}
+
+
+###accounts.POST("fund_update", server.UpdateFund)
+POST http://localhost:8080/v1/fund_update
+Content-Type: application/json
+Authorization: Bearer {{ACCESS_JWT}}
+
+ {
+    "fund": "Capital Assets",
+    "description": "Capital Asset Fund ",
+    "create_date": "2024-01-14",
+    "create_user": "admin"
+  }
+
+

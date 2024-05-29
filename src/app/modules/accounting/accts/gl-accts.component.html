@@ -114,7 +114,7 @@
             <mat-drawer-container class="flex-col">
                 
                 <ng-container>
-                @if (accountsList()) {
+                @if (accountsList() !== null) {
                     <grid-menubar (notifyParentRefresh)="onRefresh()" (notifyParentAdd)="onAdd()"
                         (notifyParentDelete)="onDeleteSelection()" (notifyParentUpdate)="onUpdateSelection()">
                     </grid-menubar>

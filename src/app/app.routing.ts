@@ -136,7 +136,7 @@ export const appRoutes: Route[] = [
             {
                 path: 'analytics',
                 loadChildren: () =>
-                    import('app/modules/admin/finance/finance.routes'),                
+                    import('app/modules/admin/finance/finance.routes'),
             },
             {
                 path: 'projects',
@@ -172,7 +172,7 @@ export const appRoutes: Route[] = [
             {
                 path: 'general_ledger',
                 loadChildren: () =>
-                    import('app/modules/accounting/general-ledger/general-ledger.components.routes'),
+                    import('app/modules/accounting/accts/general-ledger/general-ledger.components.routes'),
             },
 
             {
@@ -190,8 +190,10 @@ export const appRoutes: Route[] = [
                 loadChildren: () =>
                     import('app/modules/file-manager/file-manager.routes'),
             },
-            { path: '**',loadChildren: () =>
-               import('app/modules/pages/error/error-404/error-404.routes')},
+            {
+                path: '**', loadChildren: () =>
+                    import('app/modules/pages/error/error-404/error-404.routes')
+            },
         ],
     },
     { path: '**', pathMatch: 'full', redirectTo: 'landing' },

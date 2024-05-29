@@ -24,21 +24,20 @@ export class GLAccountsService {
     //Query
     read() {
         var url = this.baseUrl + '/v1/account_list';
-        if (this.accountsList().length === 0) {
-            this.httpClient.get<IAccounts[]>(url).pipe(
-                tap(data => this.accountsList.set(data)),
-                take(1),
-                catchError(err => {
-                    const message = "Could not retrieve journals ...";
-                    console.debug(message, err);
-                    return throwError(() => new Error(`${JSON.stringify(err)}`));
-                }),
-                shareReplay()
-            ).subscribe();
-        }
+        this.httpClient.get<IAccounts[]>(url).pipe(
+            tap(data => this.accountsList.set(data)),
+            take(1),
+            catchError(err => {
+                const message = "Could not retrieve journals ...";
+                console.debug(message, err);
+                return throwError(() => new Error(`${JSON.stringify(err)}`));
+            }),
+            shareReplay()
+        ).subscribe();
         return this.accountsList;
     }
 
+    // account and description only
     readDropDownChild() {
         var url = this.baseUrl + '/v1/read_child_accounts';
         if (this.dropDownList().length === 0) {
@@ -56,6 +55,7 @@ export class GLAccountsService {
         return this.dropDownList;
     }
 
+    // only child account and no parents
     readChildren() {
         var url = this.baseUrl + '/v1/read_child_accounts';
         return this.httpClient.get<IDropDownAccounts[]>(url).pipe(
@@ -68,8 +68,9 @@ export class GLAccountsService {
             }),
             shareReplay()
         )
-    } 
+    }
 
+    // only parent accounts
     getParents() {
         var url = this.baseUrl + '/v1/account_parent_list';
         if (this.parentAccounts().length === 0) {
@@ -87,7 +88,7 @@ export class GLAccountsService {
         return this.parentAccounts;
     }
 
-    getChildren(parent: string) {
+    getChild(parent: string) {
         var url = this.baseUrl + '/v1/account_children_list/' + parent;
 
         if (this.childrenOfParents().length === 0) {
@@ -151,38 +152,22 @@ export class GLAccountsService {
             update_date: accounts.update_date,
             update_user: accounts.update_user
         }
-
-        // this.accountsList.update(items => items.map(account => account.account === data.account && account.child === data.child ? {
-        //     account: data.account,
-        //     child: data.child,
-        //     parent_account: data.parent_account,
-        //     type: data.type,
-        //     sub_type: data.sub_type,
-        //     balance: data.balance,
-        //     description: data.description,
-        //     comments: data.comments,
-        //     status: data.status,
-        //     create_date: data.create_date,
-        //     create_user: data.create_user,
-        //     update_date: data.update_date,
-        //     update_user: data.update_user
-        // } : account )); 
-      
         return this.httpClient.post(url, data).pipe(
             tap(data => this.updateAccountList(data)),
             take(1),
             catchError(err => {
                 const message = "Could not save journal header ...";
                 console.debug(message, err);
-                return throwError(() => new Error(`Invalid time ${ err }`));         
+                return throwError(() => new Error(`Invalid time ${err}`));
             }),
             shareReplay()
-          )
-          .subscribe();
+        )
+            .subscribe();
     }
 
+    // update account signal array
     updateAccountList(data: any) {
-    this.accountsList.update(items => items.map(account => account.account === data.account && account.child === data.child ? {
+        this.accountsList.update(items => items.map(account => account.account === data.account && account.child === data.child ? {
             account: data.account,
             child: data.child,
             parent_account: data.parent_account,
@@ -196,13 +181,13 @@ export class GLAccountsService {
             create_user: data.create_user,
             update_date: data.update_date,
             update_user: data.update_user
-        } : account )); 
+        } : account));
     }
 
 
     // Delete
     delete(id: string) {
-        var url = this.baseUrl + '/v1/account_parent_list';
+        var url = this.baseUrl + '/v1/account_delete';
         return this.httpClient.get<IAccounts[]>(url)
             .pipe(
                 shareReplay())

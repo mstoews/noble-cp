@@ -43,7 +43,8 @@ const imports = [
     {
        background-color: rgb(195, 199, 199);
        border-color: #ada6a7;
-    }`
+    }`,
+    providers:[]
 })
 
 export class JournalTemplateComponent {

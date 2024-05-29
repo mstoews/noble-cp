@@ -1,4 +1,5 @@
 import {
+    AbstractControl,
     FormBuilder,
     FormGroup,
     FormsModule,
@@ -9,12 +10,13 @@ import { DxBulletModule, DxDataGridModule, DxTemplateModule } from 'devextreme-a
 
 import { CommonModule } from '@angular/common';
 import { FuseConfirmationService } from '@fuse/services/confirmation';
-import { GridMenubarStandaloneComponent } from '../grid-menubar/grid-menubar.component';
+import { GridMenubarStandaloneComponent } from '../../grid-menubar/grid-menubar.component';
+import { HttpClient } from '@angular/common/http';
 
 import { MatDrawer } from '@angular/material/sidenav';
 import { MaterialModule } from 'app/services/material.module';
-import { SubTypeService } from 'app/services/subtype.service';
-import { IType } from 'app/services/type.service';
+import { IType, TypeService } from 'app/services/type.service';
+import { environment } from 'environments/environment.prod';
 
 const imports = [
     CommonModule,
@@ -28,32 +30,30 @@ const imports = [
 ];
 
 @Component({
-    selector: 'subtypes',
+    selector: 'types',
     standalone: true,
     imports: [imports],
-    templateUrl: './subtype.component.html',
+    templateUrl: './types.component.html',
     styles: `::ng-deep .dx-datagrid .dx-datagrid-rowsview .dx-row-focused.dx-data-row:not(.dx-edit-row) > td:not(.dx-focused) {
         background-color: rgb(195, 199, 199);
         border-color: #ada6a7;
         }`,
     providers: []
 })
-export class GlSubTypeComponent implements OnInit {
+export class GlTypesComponent implements OnInit {
 
-    private fuseConfirmationService = inject(FuseConfirmationService);
+    private _fuseConfirmationService = inject(FuseConfirmationService);
     private fb = inject(FormBuilder);
-    private subtypeService = inject(SubTypeService)
+    private typeService = inject(TypeService)
     @ViewChild('drawer') drawer!: MatDrawer;
 
-    public sTitle = 'General Ledger Sub Types';
+    public sTitle = 'General Ledger Types';
     public accountsForm!: FormGroup;
-    public data$: any
-    public typeForm?: FormGroup | any;
+
+    typeList = this.typeService.read();
 
     ngOnInit() {
         this.createEmptyForm();
-        this.data$ = this.subtypeService.read();
-        this.createEmptyForm()
     }
 
     onCreate(e: any) {
@@ -63,7 +63,7 @@ export class GlSubTypeComponent implements OnInit {
 
     onDelete(e: any) {
         console.debug(`onDelete ${JSON.stringify(e)}`);
-        const confirmation = this.fuseConfirmationService.open({
+        const confirmation = this._fuseConfirmationService.open({
             title: 'Delete Type?',
             message: 'Are you sure you want to delete this type? ',
             actions: {
@@ -86,10 +86,16 @@ export class GlSubTypeComponent implements OnInit {
 
     createEmptyForm() {
         this.accountsForm = this.fb.group({
-            sub_type: [''],
-            description: [''],            
+            type: [''],
+            description: [''],
+            create_date: [''],
+            create_user: [''],
+            update_date: [''],
+            update_user: [''],
         });
     }
+
+
 
     openDrawer() {
         const opened = this.drawer.opened;

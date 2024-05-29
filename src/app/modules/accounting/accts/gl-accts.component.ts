@@ -53,6 +53,9 @@ export class GlAccountsComponent implements OnInit, OnDestroy {
     private currentRow: Object;
     readonly allowedPageSizes = [10, 20, 'all'];
 
+
+
+
     readonly displayModes = [{ text: "Display Mode 'full'", value: 'full' }, { text: "Display Mode 'compact'", value: 'compact' }];
     displayMode = 'compact';
     showPageSizeSelector = true;

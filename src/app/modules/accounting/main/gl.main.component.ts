@@ -1,19 +1,19 @@
 
-import { BalanceSheetComponent } from '../balance-sheet/balance-sheet.component';
+import { BalanceSheetComponent } from '../../reporting/balance-sheet/balance-sheet.component';
 import { CdkScrollable } from '@angular/cdk/scrolling';
 import { DistributedLedgerComponent } from '../../reporting/distributed-ledger/distributed-ledger.component';
-import { FundsComponent } from '../funds/funds.component';
-import { GeneralLedgerTreeComponent } from '../general-ledger-tree/general-ledger-tree.component';
+import { FundsComponent } from '../accts/funds/funds.component';
+import { GeneralLedgerTreeComponent } from '../../reporting/general-ledger-tree/general-ledger-tree.component';
 import { GlAccountsComponent } from '../accts/gl-accts.component';
-import { GlTypesComponent } from '../types/types.component';
+import { GlTypesComponent } from '../accts/types/types.component';
 import { HttpClient } from '@angular/common/http';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTabsModule } from '@angular/material/tabs';
-import { PeriodsComponent } from '../periods/periods.component';
+
 import { RouterLink } from '@angular/router';
 import { TransactionAnalysisComponent } from '../../reporting/transaction-analysis/transaction-analysis.component';
-import { TrialBalanceComponent } from '../trial-balance/trial-balance.component';
+import { TrialBalanceComponent } from '../../reporting/trial-balance/trial-balance.component';
 import { Subject, takeUntil } from 'rxjs';
 import { MatDrawer } from '@angular/material/sidenav';
 import { FuseMediaWatcherService } from '@fuse/services/media-watcher';
@@ -29,7 +29,8 @@ import {
     ViewEncapsulation,
 } from '@angular/core';
 import { MaterialModule } from 'app/services/material.module';
-import { GlSubTypeComponent } from '../subtype/subtype.component';
+import { GlSubTypeComponent } from '../accts/subtype/subtype.component';
+import { PeriodsComponent } from '../accts/periods/periods.component';
 
 @Component({
     selector: 'gl-main',
@@ -39,7 +40,7 @@ import { GlSubTypeComponent } from '../subtype/subtype.component';
     imports: [
         MaterialModule,
         RouterLink,
-        CdkScrollable,        
+        CdkScrollable,
         BalanceSheetComponent,
         TrialBalanceComponent,
         DistributedLedgerComponent,
@@ -50,11 +51,11 @@ import { GlSubTypeComponent } from '../subtype/subtype.component';
         GlTypesComponent,
         PeriodsComponent,
         GlSubTypeComponent,
-        NgFor, 
-        NgClass, 
-        NgSwitch, 
+        NgFor,
+        NgClass,
+        NgSwitch,
         NgSwitchCase
-        ],
+    ],
     providers: [HttpClient],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -72,8 +73,7 @@ export class GlMainComponent {
     constructor(
         private _changeDetectorRef: ChangeDetectorRef,
         private _fuseMediaWatcherService: FuseMediaWatcherService,
-    )
-    {
+    ) {
     }
 
     // -----------------------------------------------------------------------------------------------------
@@ -83,68 +83,64 @@ export class GlMainComponent {
     /**
      * On init
      */
-    ngOnInit(): void
-    {
+    ngOnInit(): void {
         // Setup available panels
         this.panels = [
             {
-                id         : 'accounts',
-                icon       : 'heroicons_outline:currency-dollar',
-                title      : 'General Ledger Accounts',
+                id: 'accounts',
+                icon: 'heroicons_outline:currency-dollar',
+                title: 'General Ledger Accounts',
                 description: 'General ledger list of accounts in a hierarchy',
             },
             {
-                id         : 'types',
-                icon       : 'heroicons_outline:banknotes',
-                title      : 'General Ledger Types',
+                id: 'types',
+                icon: 'heroicons_outline:banknotes',
+                title: 'General Ledger Types',
                 description: 'Type definitions for accounts',
             },
             {
-                id         : 'subtypes',
-                icon       : 'heroicons_outline:clipboard-document',
-                title      : 'Transaction Subtypes',
+                id: 'subtypes',
+                icon: 'heroicons_outline:clipboard-document',
+                title: 'Transaction Subtypes',
                 description: 'Sub type definitions for tranaction reporting',
-            } ,
+            },
             {
-                id         : 'funds',
-                icon       : 'heroicons_outline:clipboard',
-                title      : 'Reserve Funds',
+                id: 'funds',
+                icon: 'heroicons_outline:clipboard',
+                title: 'Reserve Funds',
                 description: 'Reserve fund definitions for transactions',
             },
             {
-                id         : 'periods',
-                icon       : 'heroicons_outline:calendar',
-                title      : 'Accounting Periods',
+                id: 'periods',
+                icon: 'heroicons_outline:calendar',
+                title: 'Accounting Periods',
                 description: 'Start and end date of each accounting period',
             },
             {
-                id         : 'team',
-                icon       : 'heroicons_outline:user',
-                title      : 'Accounting Team',
+                id: 'team',
+                icon: 'heroicons_outline:user',
+                title: 'Accounting Team',
                 description: 'List of accounting team members',
             }
             ,
             {
-                id         : 'roles',
-                icon       : 'heroicons_outline:user-circle',
-                title      : 'Role Definitions',
+                id: 'roles',
+                icon: 'heroicons_outline:user-circle',
+                title: 'Role Definitions',
                 description: 'List of  assignable roles for team members',
-            }                       
+            }
         ];
 
         // Subscribe to media changes
         this._fuseMediaWatcherService.onMediaChange$
             .pipe(takeUntil(this._unsubscribeAll))
-            .subscribe(({matchingAliases}) =>
-            {
+            .subscribe(({ matchingAliases }) => {
                 // Set the drawerMode and drawerOpened
-                if ( matchingAliases.includes('lg') )
-                {
+                if (matchingAliases.includes('lg')) {
                     this.drawerMode = 'side';
                     this.drawerOpened = true;
                 }
-                else
-                {
+                else {
                     this.drawerMode = 'over';
                     this.drawerOpened = false;
                 }
@@ -157,8 +153,7 @@ export class GlMainComponent {
     /**
      * On destroy
      */
-    ngOnDestroy(): void
-    {
+    ngOnDestroy(): void {
         // Unsubscribe from all subscriptions
         this._unsubscribeAll.next(null);
         this._unsubscribeAll.complete();
@@ -173,13 +168,11 @@ export class GlMainComponent {
      *
      * @param panel
      */
-    goToPanel(panel: string): void
-    {
+    goToPanel(panel: string): void {
         this.selectedPanel = panel;
 
         // Close the drawer on 'over' mode
-        if ( this.drawerMode === 'over' )
-        {
+        if (this.drawerMode === 'over') {
             this.drawer.close();
         }
     }
@@ -189,8 +182,7 @@ export class GlMainComponent {
      *
      * @param id
      */
-    getPanelInfo(id: string): any
-    {
+    getPanelInfo(id: string): any {
         return this.panels.find(panel => panel.id === id);
     }
 
@@ -200,8 +192,7 @@ export class GlMainComponent {
      * @param index
      * @param item
      */
-    trackByFn(index: number, item: any): any
-    {
+    trackByFn(index: number, item: any): any {
         return item.id || index;
     }
 }

@@ -1,22 +1,19 @@
+import { Component, OnInit, ViewChild, inject } from '@angular/core';
+import { DxBulletModule, DxDataGridModule, DxTemplateModule } from 'devextreme-angular';
 import {
-    AbstractControl,
     FormBuilder,
     FormGroup,
     FormsModule,
     ReactiveFormsModule,
 } from '@angular/forms';
-import { Component, OnInit, ViewChild, inject } from '@angular/core';
-import { DxBulletModule, DxDataGridModule, DxTemplateModule } from 'devextreme-angular';
+import { IPeriod, PeriodsService } from 'app/services/periods.service';
 
 import { CommonModule } from '@angular/common';
 import { FuseConfirmationService } from '@fuse/services/confirmation';
-import { GridMenubarStandaloneComponent } from '../grid-menubar/grid-menubar.component';
-import { HttpClient } from '@angular/common/http';
 
 import { MatDrawer } from '@angular/material/sidenav';
 import { MaterialModule } from 'app/services/material.module';
-import { IType, TypeService } from 'app/services/type.service';
-import { environment } from 'environments/environment.prod';
+import { GridMenubarStandaloneComponent } from '../../grid-menubar/grid-menubar.component';
 
 const imports = [
     CommonModule,
@@ -30,27 +27,24 @@ const imports = [
 ];
 
 @Component({
-    selector: 'types',
+    selector: 'periods',
     standalone: true,
     imports: [imports],
-    templateUrl: './types.component.html',
-    styles: `::ng-deep .dx-datagrid .dx-datagrid-rowsview .dx-row-focused.dx-data-row:not(.dx-edit-row) > td:not(.dx-focused) {
-        background-color: rgb(195, 199, 199);
-        border-color: #ada6a7;
-        }`,
+    templateUrl: './periods.component.html',
     providers: []
 })
-export class GlTypesComponent implements OnInit {
-    
+export class PeriodsComponent implements OnInit {
+    public data: any;
     private _fuseConfirmationService = inject(FuseConfirmationService);
     private fb = inject(FormBuilder);
-    private typeService = inject(TypeService)
     @ViewChild('drawer') drawer!: MatDrawer;
+    periodsForm!: FormGroup;
 
-    public sTitle = 'General Ledger Types';
-    public accountsForm!: FormGroup;
-    
-    typeList = this.typeService.read();
+    public sTitle = 'General Ledger Periods';
+
+    private periodsService = inject(PeriodsService)
+
+    data$ = this.periodsService.listPeriods()
 
     ngOnInit() {
         this.createEmptyForm();
@@ -60,6 +54,11 @@ export class GlTypesComponent implements OnInit {
         this.createEmptyForm();
         this.openDrawer();
     }
+
+    public selectingEvent(e: any): void {
+        console.log('the row was selected ... ', e);
+    }
+
 
     onDelete(e: any) {
         console.debug(`onDelete ${JSON.stringify(e)}`);
@@ -85,8 +84,11 @@ export class GlTypesComponent implements OnInit {
     }
 
     createEmptyForm() {
-        this.accountsForm = this.fb.group({
-            type: [''],
+        this.periodsForm = this.fb.group({
+            period_id: [''],
+            period_year: [''],
+            start_date: [''],
+            end_date: [''],
             description: [''],
             create_date: [''],
             create_user: [''],
@@ -94,8 +96,6 @@ export class GlTypesComponent implements OnInit {
             update_user: [''],
         });
     }
-
-
 
     openDrawer() {
         const opened = this.drawer.opened;
@@ -118,15 +118,19 @@ export class GlTypesComponent implements OnInit {
     onUpdate(e: any) {
         const dDate = new Date();
         const updateDate = dDate.toISOString().split('T')[0];
-        const account = { ...this.accountsForm.value } as IType;
+        const periods = { ...this.periodsForm.value } as IPeriod;
         const rawData = {
-            type: account.type,
-            description: account.description,
-            update_date: updateDate,
-            update_user: 'admin_update',
+            period_id: e.data.periods,
+            period_year: [''],
+            start_date: [''],
+            end_date: [''],
+            description: [''],
+            create_date: [''],
+            create_user: [''],
+            update_date: [''],
+            update_user: [''],
         };
 
         this.closeDrawer();
     }
-
 }

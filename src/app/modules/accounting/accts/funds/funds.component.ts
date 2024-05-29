@@ -6,13 +6,16 @@ import {
     FormsModule,
     ReactiveFormsModule,
 } from '@angular/forms';
-import { IPeriod, PeriodsService } from 'app/services/periods.service';
+import { MatDrawer, MatSidenavModule } from '@angular/material/sidenav';
 
 import { CommonModule } from '@angular/common';
+import { FundsService } from 'app/services/funds.service';
 import { FuseConfirmationService } from '@fuse/services/confirmation';
-import { GridMenubarStandaloneComponent } from '../grid-menubar/grid-menubar.component';
-import { MatDrawer } from '@angular/material/sidenav';
+import { GridMenubarStandaloneComponent } from '../../grid-menubar/grid-menubar.component';
+
 import { MaterialModule } from 'app/services/material.module';
+import { IFund } from 'app/services/kanban.service';
+
 
 const imports = [
     CommonModule,
@@ -26,24 +29,22 @@ const imports = [
 ];
 
 @Component({
-    selector: 'periods',
+    selector: 'funds',
     standalone: true,
     imports: [imports],
-    templateUrl: './periods.component.html',
-    providers: []
+    templateUrl: './funds.component.html'
 })
-export class PeriodsComponent implements OnInit {
+export class FundsComponent implements OnInit {
     public data: any;
     private _fuseConfirmationService = inject(FuseConfirmationService);
+    private fundService = inject(FundsService)
     private fb = inject(FormBuilder);
     @ViewChild('drawer') drawer!: MatDrawer;
-    periodsForm!: FormGroup;
 
-    public sTitle = 'General Ledger Periods';
+    public sTitle = 'General Ledger Funds';
+    public accountsForm!: FormGroup;
 
-    private periodsService = inject(PeriodsService)
-
-    data$ = this.periodsService.listPeriods()
+    data$ = this.fundService.read();
 
     ngOnInit() {
         this.createEmptyForm();
@@ -83,18 +84,12 @@ export class PeriodsComponent implements OnInit {
     }
 
     createEmptyForm() {
-        this.periodsForm = this.fb.group({
-            period_id: [''],
-            period_year: [''],
-            start_date: [''],
-            end_date: [''],
-            description: [''],
-            create_date: [''],
-            create_user: [''],
-            update_date: [''],
-            update_user: [''],
+        this.accountsForm = this.fb.group({
+            fund: [''],
+            description: ['']
         });
     }
+
 
     openDrawer() {
         const opened = this.drawer.opened;
@@ -117,19 +112,13 @@ export class PeriodsComponent implements OnInit {
     onUpdate(e: any) {
         const dDate = new Date();
         const updateDate = dDate.toISOString().split('T')[0];
-        const periods = { ...this.periodsForm.value } as IPeriod;
+        const fund = { ...this.accountsForm.value } as IFund;
         const rawData = {
-            period_id: e.data.periods,
-            period_year: [''],
-            start_date: [''],
-            end_date: [''],
-            description: [''],
-            create_date: [''],
-            create_user: [''],
-            update_date: [''],
-            update_user: [''],
+            fund: fund.fund,
+            description: fund.description,
+            update_date: updateDate,
+            update_user: 'admin_update',
         };
-
         this.closeDrawer();
     }
 }

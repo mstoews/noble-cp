@@ -1,5 +1,4 @@
-<mat-drawer-container class="flex-col h-full">
-    <mat-drawer class="lg:w-2/5 md:w-full bg-white-100" #drawer [opened]="false" mode="over" [position]="'end'"
+<mat-drawer class="lg:w-2/5 md:w-full bg-white-100" #drawer [opened]="false" mode="over" [position]="'end'"
         [disableClose]="false">
         <div class="flex flex-col w-full text-gray-700 max-w-140 filter-article filter-interactive">
             <div class="h-10 pt-2 text-2xl text-justify text-black bg-slate-100" mat-dialog-title>
@@ -52,6 +51,8 @@
         </div>
     </mat-drawer>
 
+<mat-drawer-container class="flex-col h-full">
+    
     <ng-container>
         @if (data$ | async; as rows) {
         <grid-menubar [inTitle]="'Type Maintenance'"></grid-menubar>
