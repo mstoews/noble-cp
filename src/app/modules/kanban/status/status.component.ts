@@ -9,7 +9,8 @@ import { DxButtonModule } from 'devextreme-angular';
 import { DxDataGridTypes } from 'devextreme-angular/ui/data-grid';
 import { GridMenubarStandaloneComponent } from 'app/modules/accounting/grid-menubar/grid-menubar.component';
 import { CommonModule } from '@angular/common';
-import { IStatus, KanbanService } from 'app/services/kanban.service';
+import { KanbanService, IStatus } from '../kanban.service';
+
 
 const imports = [
     CommonModule,

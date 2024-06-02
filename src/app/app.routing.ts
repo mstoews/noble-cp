@@ -105,7 +105,7 @@ export const appRoutes: Route[] = [
                 path: 'gl',
                 loadChildren: () =>
                     import(
-                        'app/modules/accounting/main/gl.main.components.routes'
+                        'app/modules/accounting/accts/main/gl.main.components.routes'
                     ),
             },
             {

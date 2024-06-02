@@ -49,6 +49,18 @@ const imports = [
     providers: [provideNgxMask()]
 })
 export class EntryWizardComponent implements OnInit, OnDestroy, AfterViewInit {
+onUpdateJournalEntry() {
+throw new Error('Method not implemented.');
+}
+onAddLineJournalDetail() {
+throw new Error('Method not implemented.');
+}
+onAddEvidence() {
+throw new Error('Method not implemented.');
+}
+onCreateTemplate() {
+throw new Error('Method not implemented.');
+}
 
     journalEntryForm: UntypedFormGroup;
     private journalService = inject(JournalService);
@@ -98,6 +110,7 @@ export class EntryWizardComponent implements OnInit, OnDestroy, AfterViewInit {
     
     @ViewChild('singleDebitSelect', { static: true }) singleDebitSelect: MatSelect;
     @ViewChild('singleCreditSelect', { static: true }) singleCreditSelect: MatSelect;
+bNewTransaction: any;
     
     
     // -----------------------------------------------------------------------------------------------------
@@ -268,7 +281,7 @@ export class EntryWizardComponent implements OnInit, OnDestroy, AfterViewInit {
         
     }
 
-    onDelete($event: any) {
+    onDelete() {
         throw new Error('Method not implemented.');
     }
 

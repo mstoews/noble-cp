@@ -14,7 +14,8 @@ import { FuseConfirmationService } from '@fuse/services/confirmation';
 import { GridMenubarStandaloneComponent } from '../../grid-menubar/grid-menubar.component';
 
 import { MaterialModule } from 'app/services/material.module';
-import { IFund } from 'app/services/kanban.service';
+import { IFund } from 'app/modules/kanban/kanban.service';
+
 
 
 const imports = [
@@ -32,7 +33,11 @@ const imports = [
     selector: 'funds',
     standalone: true,
     imports: [imports],
-    templateUrl: './funds.component.html'
+    templateUrl: './funds.component.html',
+    styles: `::ng-deep .dx-datagrid .dx-datagrid-rowsview .dx-row-focused.dx-data-row:not(.dx-edit-row) > td:not(.dx-focused) {
+        background-color: rgb(195, 199, 199);
+        border-color: #ada6a7;
+        }`,
 })
 export class FundsComponent implements OnInit {
     public data: any;

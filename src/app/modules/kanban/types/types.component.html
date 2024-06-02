@@ -61,13 +61,6 @@
             <dx-data-grid id="id" [wordWrapEnabled]="true" [dataSource]="typesList()" [showColumnLines]="true"
                 [showRowLines]="true" [showBorders]="true" [focusedRowEnabled]="true" 
                 keyExpr="type" [repaintChangesOnly]="true">
-                <dxo-editing
-                mode="cell"
-                [allowUpdating]="true"
-                [allowAdding]="true"
-                [allowDeleting]="false"
-              >
-              </dxo-editing>
                 <dxi-column dataField="type" caption="Kanban Type" width="150"></dxi-column>
                 <dxi-column dataField="description"></dxi-column>                
             </dx-data-grid>

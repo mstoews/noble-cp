@@ -31,7 +31,11 @@ const imports = [
     standalone: true,
     imports: [imports],
     templateUrl: './periods.component.html',
-    providers: []
+    providers: [],
+    styles: `::ng-deep .dx-datagrid .dx-datagrid-rowsview .dx-row-focused.dx-data-row:not(.dx-edit-row) > td:not(.dx-focused) {
+        background-color: rgb(195, 199, 199);
+        border-color: #ada6a7;
+        }`,
 })
 export class PeriodsComponent implements OnInit {
     public data: any;

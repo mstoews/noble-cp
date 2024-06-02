@@ -181,14 +181,8 @@ export class JournalUpdateComponent implements OnInit, OnDestroy, AfterViewInit 
     this.currentRowData = e.row.data;
     this.journal_subid = e.row.data.journal_subid;
     this.updateForm(e.row.data)
-    this.editing = true;
-    
+    this.editing = true;    
     this.journalHeaderData = this.journalService.readJournalHeaderById(this.journal_id);
-
-    // this.journalService.getJournalHeader(this.journal_id).subscribe(journal => {
-    //   this.journalHeaderData = journal;
-    // });
-
   }
 
 

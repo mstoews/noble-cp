@@ -78,10 +78,19 @@
     <ng-container>
         <div class="flex flex-col h-full">
             @if (accounts$()) {
-            <dx-data-grid id="child" [columnHidingEnabled]="true" [wordWrapEnabled]="true"
-                [dataSource]="account$()" [showColumnLines]="true" [showRowLines]="true" [showBorders]="true"
-                [focusedRowEnabled]="true" [focusedRowIndex]="0" keyExpr="child" [repaintChangesOnly]="true"
-                (onFocusedRowChanged)="onFocusedRowChanged($event)" (onCellDblClick)="onCellDoubleClicked($event)"
+            <dx-data-grid id="child" 
+                [columnHidingEnabled]="true" 
+                [wordWrapEnabled]="true"
+                [dataSource]="account$()" 
+                [showColumnLines]="true" 
+                [showRowLines]="true" 
+                [showBorders]="true"
+                [focusedRowEnabled]="true" 
+                [focusedRowIndex]="0" 
+                keyExpr="child" 
+                [repaintChangesOnly]="true"
+                (onFocusedRowChanged)="onFocusedRowChanged($event)" 
+                (onCellDblClick)="onCellDoubleClicked($event)"
                 >                
                 <dxi-column dataField="child" width="70"> </dxi-column>
                 <dxi-column dataField="description" width="400"></dxi-column>

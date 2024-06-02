@@ -43,7 +43,8 @@ export const authTokenInterceptor: HttpInterceptorFn = (req, next) => {
             if (token != '') {
               req = req.clone({
                 setHeaders: {
-                  'Accept' : 'application/json',
+                  'Content-Type' : 'application/json',
+                  "user-agent": "nobleledger",
                   'Authorization' : `Bearer ${token}`,
                 },
               })

@@ -36,55 +36,45 @@ const keyExpr = ["account", "child"];
     standalone: true,
     imports: [imports],
     templateUrl: './gl-accts.component.html',
+    styles: `::ng-deep .dx-datagrid .dx-datagrid-rowsview .dx-row-focused.dx-data-row:not(.dx-edit-row) > td:not(.dx-focused) {
+        background-color: rgb(195, 199, 199);
+        border-color: #ada6a7;
+        }`,
     providers: []
 })
-export class GlAccountsComponent implements OnInit, OnDestroy {
+export class GlAccountsComponent implements OnInit {
     @ViewChild('drawer') drawer!: MatDrawer;
     accountsForm!: FormGroup;
     
     private _fuseConfirmationService = inject(FuseConfirmationService);
+    
     private fb = inject(FormBuilder);
-
     private auth = inject(AUTH);
-    private accountService = inject(GLAccountsService);
+    accountService = inject(GLAccountsService);
+    subtypeService = inject(SubTypeService)
+
     public sTitle = "Settings/Account Maintenance"
     public title = 'General Ledger Accounts';
     public selectedItemKeys: any[] = [];
     private currentRow: Object;
     readonly allowedPageSizes = [10, 20, 'all'];
 
-
-
-
     readonly displayModes = [{ text: "Display Mode 'full'", value: 'full' }, { text: "Display Mode 'compact'", value: 'compact' }];
     displayMode = 'compact';
     showPageSizeSelector = true;
     showInfo = true;
     showNavButtons = true;
-    subTypes: ISubType[];
-    subscriptionType: Subscription;
-    subscriptionSubType: Subscription;
-    subtypeService = inject(SubTypeService)
     
-    accountsList = this.accountService.read();
-
     typeList =  inject(TypeService).read();
 
     ngOnInit() {
+        this.accountService.read();
         this.createEmptyForm();
            
     }
 
-    ngOnDestroy(): void {
-
-    }
-
-
     // CRUD Functions
     onCreate(e: any) {
-        const dDate = new Date();
-        const User = this.auth.currentUser;
-        const createDate = dDate.toISOString().split('T')[0];
         const account = { ...this.accountsForm.value } as IAccounts;
         const rawData = {
             account: account.account,

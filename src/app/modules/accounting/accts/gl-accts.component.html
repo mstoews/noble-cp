@@ -114,13 +114,13 @@
             <mat-drawer-container class="flex-col">
                 
                 <ng-container>
-                @if (accountsList() !== null) {
+                @if (accountService.isLoading() === false) {
                     <grid-menubar (notifyParentRefresh)="onRefresh()" (notifyParentAdd)="onAdd()"
                         (notifyParentDelete)="onDeleteSelection()" (notifyParentUpdate)="onUpdateSelection()">
                     </grid-menubar>
 
                     <div class="flex flex-col">
-                        <dx-data-grid class="h-full" [columnHidingEnabled]="true" id="id" [wordWrapEnabled]="false" [dataSource]="accountsList()"
+                        <dx-data-grid class="h-full" [columnHidingEnabled]="true" id="id" [wordWrapEnabled]="false" [dataSource]="accountService.accountList()"
                             [showColumnLines]="true" [showRowLines]="true" [showBorders]="true"
                             [focusedRowEnabled]="true" [repaintChangesOnly]="true"
                             (onFocusedRowChanged)="onFocusedRowChanged($event)"
@@ -160,10 +160,10 @@
                     </div>
                     } @else
                     {
-                    <div class="container w-200">
-                    <button class="flex flex-auto snap-center" mat-raised-button color="primary">Refresh</button>
-                    </div>                    
-                }
+                        <div class="fixed z-[1050] -translate-x-2/4 -translate-y-2/4 left-2/4 top-2/4">
+                            <mat-spinner></mat-spinner>
+                        </div>    
+                    }
                 </ng-container>
             </mat-drawer-container>
         </div>

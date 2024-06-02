@@ -3,13 +3,14 @@ import { Component, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
 import { DxBulletModule, DxDataGridModule, DxTemplateModule } from 'devextreme-angular';
 import { CommonModule } from '@angular/common';
 import { FuseConfirmationService } from '@fuse/services/confirmation';
-import { IType, KanbanService } from 'app/services/kanban.service';
+
 import { MatDrawer } from '@angular/material/sidenav';
 import { MaterialModule } from 'app/services/material.module';
 import { GridMenubarStandaloneComponent } from 'app/modules/accounting/grid-menubar/grid-menubar.component';
 import { Subject, map, takeUntil } from 'rxjs';
 import { DxButtonModule } from 'devextreme-angular';
 import { DxDataGridTypes } from 'devextreme-angular/ui/data-grid';
+import { KanbanService, IType } from '../kanban.service';
 
 const imports = [
     CommonModule,

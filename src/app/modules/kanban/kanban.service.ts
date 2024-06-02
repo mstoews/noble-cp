@@ -1,15 +1,14 @@
-import { BehaviorSubject, Observable, Subject, catchError, map, mergeMap, of, retry, shareReplay, take, tap, toArray } from 'rxjs';
-import { Injectable, Signal, computed, inject, signal } from '@angular/core';
+import { BehaviorSubject, Observable, Subject, catchError, of, retry, shareReplay, take, tap  } from 'rxjs';
+import { Injectable, computed, inject, signal } from '@angular/core';
 
 import { AUTH } from 'app/app.config';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'environments/environment.prod';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
-
-interface KanbanState {
-  kanbans: IKanban[];
-  error: string | null;
-}
+import { signalState, PartialStateUpdater, patchState } from '@ngrx/signals';
+import { exhaustMap, pipe, throwError } from 'rxjs';
+import { rxMethod } from '@ngrx/signals/rxjs-interop';
+import { tapResponse } from '@ngrx/operators';
 
 export interface IKanbanStatus {
   id: string,
@@ -17,14 +16,17 @@ export interface IKanbanStatus {
   rankid: string,
 }
 
-export interface ITeam {
-  team_member: string,
-  first_name: string,
-  last_name: string,
-  location: string,
-  title: string,
-  updatedte: string,
-  updateusr: string
+export interface ITeam { 
+    team_member : string,
+    first_name  : string,
+    last_name   : string,
+    location    : string,
+    title       : string,
+    updatedte   : string,
+    updateusr   : string,
+    email       : string,
+    image       : string,
+    uid         : string
 }
 
 export interface IKanbanType {
@@ -93,11 +95,12 @@ export interface IKanban {
   rankid: number,
   color: string,
   className: string,
-  updateUser: string,
-  updateDate: string,
-  startDate: string,
-  estimateDate: string
+  updateuser: string,
+  updatedate: string,
+  startdate: string,
+  estimatedate: string
 }
+
 
 @Injectable({
   providedIn: 'root',
@@ -105,35 +108,117 @@ export interface IKanban {
 export class KanbanService {
 
   private httpClient = inject(HttpClient);
-  private authService = inject(AUTH);
+  private authService = inject(AUTH);  
   private baseUrl = environment.baseUrl;
-  private subject = new BehaviorSubject<IKanban[]>([]);
-
-  tasks$: Observable<IKanban[]> = this.subject.asObservable();
-
-  kanbanList = signal<IKanban[]>([]);
+  
   statusList = signal<IStatus[]>([]);
+  priorityList = signal<IPriority[]>([]);
+  teamList = signal<ITeam[]>([])
+  taskList = signal<IKanban[]>([]);
   typeList = signal<IType[]>([]);
   statusFullList = signal<IStatus[]>([]);
+  isLoading = signal<boolean>(false);
 
+  teamUrl = this.baseUrl + `/v1/task_team_list`; 
+  taskUrl = this.baseUrl + '/v1/tasks_list';
+  priorityUrl = this.baseUrl + '/v1/task_priority_list';
 
-  error$ = new Subject<string>();
-  kanbans = computed(() => this.state().kanbans);
-  error = computed(() => this.state().error);
+  readonly readPriority = rxMethod <void> (
+    pipe(
+      tap(() => this.isLoading.set(true)),
+      exhaustMap(() => {
+        return this.httpClient.get<IPriority[]>(this.priorityUrl).pipe(
+          tapResponse({
+            next: (priority) => this.priorityList.set(priority),            
+            error: console.error,
+            finalize: () => this.isLoading.set(false),
+          })
+        );
+      })
+    )
+  );
 
-  private state = signal<KanbanState>({
-    kanbans: [],
-    error: null,
-  });
-
-  // Priority
-  async getPriorityList() {
-    var url = this.baseUrl + '/v1/task_priority_list';
-    return this.httpClient.get<IPriority[]>(url).pipe(
-      shareReplay());
+  getTasks() {
+    return this.httpClient.get<IKanban[]>(this.taskUrl).pipe(
+      tapResponse({            
+        next: (kanban) => this.taskList.set(kanban),
+        error: console.error,
+        finalize: () => (this.isLoading.set(false)),
+      })
+    );
   }
 
+  readonly readTeam = rxMethod <void>  (
+    pipe(
+      tap(() => this.isLoading.set(true)),
+      exhaustMap(() => {
+        return this.httpClient.get<ITeam[]>(this.teamUrl).pipe(
+          tapResponse({
+            next: (team) => this.teamList.set(team),            
+            error: console.error,
+            finalize: () => this.isLoading.set(false),
+          })
+        );
+      })
+    )
+  );
 
+  readonly readKanban = rxMethod <void>  (
+    pipe(
+      tap(() => this.isLoading.set(true)),
+      exhaustMap(() => {
+        return this.httpClient.get<IKanban[]>(this.taskUrl).pipe(
+          tapResponse({            
+            next: (kanban) => this.taskList.set(kanban),
+            error: console.error,
+            finalize: () => (this.isLoading.set(false)),
+          })
+        );
+      })
+    )
+  );
+
+  update(k: IKanban) {
+    var url = this.baseUrl + '/v1/task_update';
+    var email = this.authService.currentUser.email;
+    const dDate = new Date();
+    const updateDate = dDate.toISOString().split('T')[0];
+    const startDate = new Date(k.startdate).toISOString().split('T')[0];
+    const estimateDate = new Date(k.estimatedate).toISOString().split('T')[0];
+    var data = {
+      id: k.id,
+      title: k.title,
+      status: k.status,
+      summary: k.summary,
+      type: k.type,
+      priority: k.priority,
+      tags: k.tags,
+      assignee: k.assignee,
+      rankid: Number(k.rankid),
+      color: k.color,
+      estimate: k.estimate,
+      className: 'class',
+      updatedate: updateDate,
+      updateuser: email,
+      startdate: startDate,
+      estimatedate: estimateDate
+    }
+
+        return this.httpClient.post<IKanban>(url, data).pipe(
+          tap(() => this.isLoading.set(false)),          
+          tapResponse({            
+            next: data => this.updateKanbanSignal(data),
+            error: console.error,
+            finalize: () => (this.isLoading.set(false)),
+          })
+        ).subscribe();
+  }
+
+  updateKanbanSignal(data: IKanban) {
+    console.debug('Updated signal ...', JSON.stringify(data));    
+    this.taskList.update(items => items.map(item => item.id === data.id ? data : item ));
+  }
+    
   readFullTypes() {
     var url = this.baseUrl + '/v1/task_type_list';
     const sub = this.httpClient.get<IType[]>(url).pipe(
@@ -226,13 +311,13 @@ export class KanbanService {
     var email = this.authService.currentUser.email;
     const dDate = new Date();
     const updateDate = dDate.toISOString().split('T')[0];
-    const startDate = new Date(k.startDate).toISOString().split('T')[0];
-    const estimateDate = new Date(k.estimateDate).toISOString().split('T')[0];
+    const startDate = new Date(k.startdate).toISOString().split('T')[0];
+    const estimateDate = new Date(k.estimatedate).toISOString().split('T')[0];
 
-    k.estimateDate = estimateDate;
-    k.startDate = startDate;
-    k.updateDate = updateDate;
-    k.updateUser = email;
+    k.estimatedate = estimateDate;
+    k.startdate = startDate;
+    k.updatedate = updateDate;
+    k.updateuser = email;
     k.estimate = Number(k.estimate)
 
   
@@ -242,79 +327,23 @@ export class KanbanService {
     }
 
     updateKanbanList(kanban: IKanban)  {
-      this.kanbanList.update(items => [...items, kanban])        
+      //this.kanbanList.update(items => [...items, kanban])        
     }
   
   // Read
   
-  read() {
-    var url = this.baseUrl + '/v1/tasks_list';
-    const sub = this.httpClient.get<IKanban[]>(url).pipe(
-      tap(data => this.kanbanList.set(data)),
-      take(1),
-      catchError(() => of([] as IKanban[]))
-    ).subscribe();
-    return this.kanbanList;
-  }
+  // read() {
+  //   var url = this.baseUrl + '/v1/tasks_list';
+  //   const sub = this.httpClient.get<IKanban[]>(url).pipe(
+  //     tap(data => this.kanbanList.set(data)),
+  //     take(1),
+  //     catchError(() => of([] as IKanban[]))
+  //   ).subscribe();
+  //   return this.kanbanList;
+  // }
 
   // Update
-  async update(k: IKanban) {
-    var url = this.baseUrl + '/v1/task_update';
-    var email = this.authService.currentUser.email;
-    const dDate = new Date();
-    const updateDate = dDate.toISOString().split('T')[0];
-    const startDate = new Date(k.startDate).toISOString().split('T')[0];
-    const estimateDate = new Date(k.estimateDate).toISOString().split('T')[0];
-
-    var data = {
-      id: k.id,
-      title: k.title,
-      status: k.status,
-      summary: k.summary,
-      type: k.type,
-      priority: k.priority,
-      tags: k.tags,
-      assignee: k.assignee,
-      rankid: Number(k.rankid),
-      color: k.color,
-      estimate: k.estimate,
-      className: 'class',
-      updateDate: updateDate,
-      updateUser: email,
-      startDate: startDate,
-      estimateDate: estimateDate
-    }
-
-    this.kanbanList.update(items =>
-      items.map(item => item.id === data.id ? {
-        id: data.id,
-        title: data.title,
-        status: data.status,
-        summary: data.summary,
-        type: data.type,
-        priority: data.priority,
-        tags: data.tags,
-        assignee: data.assignee,
-        rankid: data.rankid,
-        color: data.color,
-        estimate: data.estimate,
-        className: data.className,
-        updateDate: data.updateDate,
-        updateUser: data.updateUser,
-        startDate: data.startDate,
-        estimateDate: data.estimateDate
-      } : item));
-
-    console.debug('Updated signal ...');
-
-    var sub = this.httpClient.post<IKanban>(url, data)
-      .pipe(
-        shareReplay()).subscribe(
-          kanban => console.log(JSON.stringify(kanban),
-          error => console.log('Error', error))
-        );
-  }
-
+  
   updateStatusStatic(s: IStatus){
     var url = this.baseUrl + '/v1/task_status_update';
 

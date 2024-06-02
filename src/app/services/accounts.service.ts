@@ -1,41 +1,78 @@
 import { Injectable, inject, signal } from '@angular/core';
-import { Observable, catchError, map, shareReplay, take, tap, throwError } from 'rxjs';
+import { Subject, catchError, exhaustMap, of, pipe, shareReplay, take, tap, throwError } from 'rxjs';
+import { signalState, patchState} from '@ngrx/signals'
+import { rxMethod } from '@ngrx/signals/rxjs-interop';
+import { tapResponse } from '@ngrx/operators';
+
 
 import { HttpClient } from '@angular/common/http';
 import { IAccounts, IDropDownAccounts } from '../models';
 import { environment } from 'environments/environment.prod';
 
+
+type AccountState = { account: IAccounts[], isLoading: boolean }
+
+const initialState : AccountState = {
+  account: [],
+  isLoading: false,
+}
+
+
 @Injectable({
     providedIn: 'root',
 })
 export class GLAccountsService {
-    of(arg0: any) {
-        throw new Error('Method not implemented.');
-    }
-
+    
+    
     httpClient = inject(HttpClient)
     private baseUrl = environment.baseUrl;
 
-    private accountsList = signal<IAccounts[]>([])
+    accountList = signal<IAccounts[]>([])
     private parentAccounts = signal<IAccounts[]>([])
     private dropDownList = signal<IDropDownAccounts[]>([])
     private childrenOfParents = signal<IAccounts[]>([])
+   
+    private accountState = signalState(initialState); 
+
+    // readonly accountList = this.accountState.account;
+    readonly isLoading = this.accountState.isLoading;
+
+  
+    
+    readUrl = this.baseUrl + '/v1/account_list';
+
+    readonly read = rxMethod <void>  (
+        pipe(
+          tap(() => patchState(this.accountState, { isLoading: true })),
+          exhaustMap(() => {
+            return this.httpClient.get<IAccounts[]>(this.readUrl).pipe(
+              tapResponse({
+                // next: (account) => patchState(this.accountState, { account }),
+                next: (account) => this.accountList.set(account),
+                error: console.error,
+                finalize: () => patchState(this.accountState, { isLoading: false }),
+              })
+            );
+          })
+        )
+      );
+    
 
     //Query
-    read() {
-        var url = this.baseUrl + '/v1/account_list';
-        this.httpClient.get<IAccounts[]>(url).pipe(
-            tap(data => this.accountsList.set(data)),
-            take(1),
-            catchError(err => {
-                const message = "Could not retrieve journals ...";
-                console.debug(message, err);
-                return throwError(() => new Error(`${JSON.stringify(err)}`));
-            }),
-            shareReplay()
-        ).subscribe();
-        return this.accountsList;
-    }
+    // read() {
+    //     var url = this.baseUrl + '/v1/account_list';
+    //     this.httpClient.get<IAccounts[]>(url).pipe(
+    //         tap(data => this.accountsList.set(data)),
+    //         take(1),
+    //         catchError(err => {
+    //             const message = "Could not retrieve journals ...";
+    //             console.debug(message, err);
+    //             return throwError(() => new Error(`${JSON.stringify(err)}`));
+    //         }),
+    //         shareReplay()
+    //     ).subscribe();
+    //     return this.accountsList;
+    // }
 
     // account and description only
     readDropDownChild() {
@@ -167,7 +204,7 @@ export class GLAccountsService {
 
     // update account signal array
     updateAccountList(data: any) {
-        this.accountsList.update(items => items.map(account => account.account === data.account && account.child === data.child ? {
+        this.accountList.update(items => items.map(account => account.account === data.account && account.child === data.child ? {
             account: data.account,
             child: data.child,
             parent_account: data.parent_account,

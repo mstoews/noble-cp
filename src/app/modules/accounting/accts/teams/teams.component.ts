@@ -13,7 +13,7 @@ import { GridMenubarStandaloneComponent } from '../../grid-menubar/grid-menubar.
 
 import { MatDrawer } from '@angular/material/sidenav';
 import { MaterialModule } from 'app/services/material.module';
-import { IType, TypeService } from 'app/services/type.service';
+import { KanbanService, ITeam } from 'app/modules/kanban/kanban.service';
 
 
 const imports = [
@@ -40,17 +40,17 @@ const imports = [
 })
 export class TeamsComponent implements OnInit {
 
+  @ViewChild('drawer') drawer!: MatDrawer;
+  
   private _fuseConfirmationService = inject(FuseConfirmationService);
   private fb = inject(FormBuilder);
-  private typeService = inject(TypeService)
-  @ViewChild('drawer') drawer!: MatDrawer;
-
-  public sTitle = 'General Ledger Types';
-  public accountsForm!: FormGroup;
-
-  typeList = this.typeService.read();
-
+  kanbanService = inject(KanbanService)
+  title = "Team Maintenance"
+  
+  public teamForm!: FormGroup;
+  
   ngOnInit() {
+      this.kanbanService.readTeam();
       this.createEmptyForm();
   }
 
@@ -83,17 +83,19 @@ export class TeamsComponent implements OnInit {
   }
 
   createEmptyForm() {
-      this.accountsForm = this.fb.group({
-          type: [''],
-          description: [''],
-          create_date: [''],
-          create_user: [''],
-          update_date: [''],
-          update_user: [''],
+      this.teamForm = this.fb.group({
+            team_member :   [''],
+            first_name  :   [''],
+            last_name   :   [''],
+            location    :   [''],
+            title       :   [''],
+            updatedte   :   [''],
+            updateusr   :   [''],
+            email       :   [''],
+            image       :   [''],
+            uid         :   ['']
       });
   }
-
-
 
   openDrawer() {
       const opened = this.drawer.opened;
@@ -116,15 +118,37 @@ export class TeamsComponent implements OnInit {
   onUpdate(e: any) {
       const dDate = new Date();
       const updateDate = dDate.toISOString().split('T')[0];
-      const account = { ...this.accountsForm.value } as IType;
+      const team = { ...this.teamForm.value } as ITeam;
       const rawData = {
-          type: account.type,
-          description: account.description,
-          update_date: updateDate,
-          update_user: 'admin_update',
+        team_member :   team.team_member,
+        first_name  :   team.first_name,
+        last_name   :   team.last_name,
+        location    :   team.location,
+        title       :   team.title,
+        updatedte   :   team.updatedte,
+        updateusr   :   team.updateusr,
+        email       :   team.email,
+        image       :   team.image,
+        uid         :   team.uid          
       };
 
       this.closeDrawer();
   }
+
+    onRefresh() {
+      throw new Error('Method not implemented.');
+    }
+    onAdd() {
+      throw new Error('Method not implemented.');
+    }
+        
+    onDeleteSelection() {
+      throw new Error('Method not implemented.');
+    }
+    
+    onUpdateSelection() {
+      throw new Error('Method not implemented.');
+    }
+    
 
 }

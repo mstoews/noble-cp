@@ -7,7 +7,7 @@
         <div class="h-full rounded-2xl">
             <mat-drawer class="w-128 bg-transparent" #drawer [opened]="false" mode="over" [position]="'end'" [disableClose]="false">
                 <mat-card class="m-1 mat-elevation-z8">
-                    <div mat-card-title class="font-semibold text-3xl text-gray-100 bg-gray-500 p-1 border-white">
+                    <div mat-card-title class="font-semibold text-3xl text-gray-100 bg-gray-500 p-1 border-white m-1">
                         {{sTitle}} </div>
                     <div mat-card-content class="border-r-green-500">
                         <form [formGroup]="taskGroup" class="form">
@@ -51,16 +51,16 @@
                                 <section class="flex flex-col md:flex-row gap-2">
                                     <mat-form-field class="grow">
                                         <mat-date-range-input [rangePicker]="picker">
-                                            <input matStartDate formControlName="startDate" placeholder="Start date">
-                                            <input matEndDate formControlName="estimateDate" placeholder="End date">
+                                            <input matStartDate formControlName="startdate" placeholder="Start date">
+                                            <input matEndDate formControlName="estimatedate" placeholder="End date">
                                         </mat-date-range-input>
                                         <mat-datepicker-toggle matIconPrefix [for]="picker"></mat-datepicker-toggle>
                                         <mat-date-range-picker #picker></mat-date-range-picker>
 
-                                        @if (taskGroup.controls.startDate.hasError('matStartDateInvalid')) {
+                                        @if (taskGroup.controls.startdate.hasError('matStartDateInvalid')) {
                                         <mat-error>Invalid start date</mat-error>
                                         }
-                                        @if (taskGroup.controls.estimateDate.hasError('matEndDateInvalid')) {
+                                        @if (taskGroup.controls.estimatedate.hasError('matEndDateInvalid')) {
                                         <mat-error>Invalid end date</mat-error>
                                         }
                                     </mat-form-field>
@@ -115,17 +115,15 @@
             </mat-drawer>
             <mat-drawer-container>
                 <mat-drawer-content>
-                    @if (kanbanData() !== null) {
+                    @if (kanbanService.isLoading() == false) {
                         <div class="" cdkScrollable>
                             <div class="control-section">
                                 <div class="content-wrapper">
                                     <!-- <p>Selected range: {{kanbanData | json}}</p> -->
                                     <ejs-kanban #kanbanObj cssClass='kanban-overview' keyField="status"
-                                        [dataSource]='kanbanData()' [cardSettings]='cardSettings' enableTooltip='false'
+                                        [dataSource]='kanbanService.taskList()' [cardSettings]='cardSettings' enableTooltip='false'
                                         [swimlaneSettings]='swimlaneSettings' (actionBegin)='OnActionBegin()'
-                                        (actionComplete)='OnActionComplete()' (actionFailure)='OnActionFailure()'
-                                        (dataBinding)='OnDataBinding()' (dataBound)='OnDataBound()'
-                                        (queryCellInfo)='OnQueryCellInfo()' (cardClick)='OnCardClick($event)'
+                                        (actionComplete)='OnActionComplete()' (actionFailure)='OnActionFailure()'                                                                                
                                         (cardDoubleClick)='OnCardDoubleClick($event)' (dragStart)='OnDragStart($event)'
                                         (drag)='OnDrag($event)' (dragStop)='OnDragStop($event)'
                                         (cardRendered)='cardRendered($event)'>
@@ -150,6 +148,10 @@
                                                 </div>
                                                 <div class='e-card-content e-tooltip-text'>
                                                     <div class='e-text'>{{data.summary}}</div>
+                                                    
+                                                    <div class='e-date'>Start :{{data.startdate}}</div>
+                                                    <div class='e-date'>Estimate: {{data.estimatedate}}</div>
+                                                    
                                                 </div>
                                                 <div class='e-card-custom-footer'>
                                                     <div class="e-card-tag-field e-tooltip-text"

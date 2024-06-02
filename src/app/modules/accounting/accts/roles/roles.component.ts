@@ -13,7 +13,8 @@ import { GridMenubarStandaloneComponent } from '../../grid-menubar/grid-menubar.
 
 import { MatDrawer } from '@angular/material/sidenav';
 import { MaterialModule } from 'app/services/material.module';
-import { IType, TypeService } from 'app/services/type.service';
+
+import { IRole, RoleService } from 'app/services/roles.service';
 
 
 const imports = [
@@ -42,15 +43,15 @@ export class RolesComponent implements OnInit {
 
   private _fuseConfirmationService = inject(FuseConfirmationService);
   private fb = inject(FormBuilder);
-  private typeService = inject(TypeService)
+  
   @ViewChild('drawer') drawer!: MatDrawer;
 
-  public sTitle = 'General Ledger Types';
+  public sTitle = 'Roles Administration';
   public accountsForm!: FormGroup;
-
-  typeList = this.typeService.read();
+  roleService = inject(RoleService)
 
   ngOnInit() {
+      this.roleService.read();
       this.createEmptyForm();
   }
 
@@ -84,12 +85,8 @@ export class RolesComponent implements OnInit {
 
   createEmptyForm() {
       this.accountsForm = this.fb.group({
-          type: [''],
-          description: [''],
-          create_date: [''],
-          create_user: [''],
-          update_date: [''],
-          update_user: [''],
+          role: [''],
+          description: [''],                    
       });
   }
 
@@ -116,15 +113,25 @@ export class RolesComponent implements OnInit {
   onUpdate(e: any) {
       const dDate = new Date();
       const updateDate = dDate.toISOString().split('T')[0];
-      const account = { ...this.accountsForm.value } as IType;
+      const account = { ...this.accountsForm.value } as IRole;
       const rawData = {
-          type: account.type,
+          role: account.role,
           description: account.description,
           update_date: updateDate,
           update_user: 'admin_update',
       };
 
       this.closeDrawer();
+  }
+
+  onDoubleClicked(e: any)
+  {
+    console.log(e.data);
+    this.openDrawer();
+  }
+
+  changeRole(e: any){
+    console.log(e.data);
   }
 
 }

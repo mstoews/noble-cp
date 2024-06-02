@@ -1,19 +1,16 @@
 
-import { BalanceSheetComponent } from '../../reporting/balance-sheet/balance-sheet.component';
+import { BalanceSheetComponent } from '../../../reporting/balance-sheet/balance-sheet.component';
 import { CdkScrollable } from '@angular/cdk/scrolling';
-import { DistributedLedgerComponent } from '../../reporting/distributed-ledger/distributed-ledger.component';
-import { FundsComponent } from '../accts/funds/funds.component';
-import { GeneralLedgerTreeComponent } from '../../reporting/general-ledger-tree/general-ledger-tree.component';
-import { GlAccountsComponent } from '../accts/gl-accts.component';
-import { GlTypesComponent } from '../accts/types/types.component';
+import { DistributedLedgerComponent } from '../../../reporting/distributed-ledger/distributed-ledger.component';
+import { FundsComponent } from '../funds/funds.component';
+import { GeneralLedgerTreeComponent } from '../../../reporting/general-ledger-tree/general-ledger-tree.component';
+import { GlAccountsComponent } from '../gl-accts.component';
+import { GlTypesComponent } from '../types/types.component';
 import { HttpClient } from '@angular/common/http';
-import { MatButtonModule } from '@angular/material/button';
-import { MatIconModule } from '@angular/material/icon';
-import { MatTabsModule } from '@angular/material/tabs';
 
 import { RouterLink } from '@angular/router';
-import { TransactionAnalysisComponent } from '../../reporting/transaction-analysis/transaction-analysis.component';
-import { TrialBalanceComponent } from '../../reporting/trial-balance/trial-balance.component';
+import { TransactionAnalysisComponent } from '../../../reporting/transaction-analysis/transaction-analysis.component';
+import { TrialBalanceComponent } from '../../../reporting/trial-balance/trial-balance.component';
 import { Subject, takeUntil } from 'rxjs';
 import { MatDrawer } from '@angular/material/sidenav';
 import { FuseMediaWatcherService } from '@fuse/services/media-watcher';
@@ -29,8 +26,10 @@ import {
     ViewEncapsulation,
 } from '@angular/core';
 import { MaterialModule } from 'app/services/material.module';
-import { GlSubTypeComponent } from '../accts/subtype/subtype.component';
-import { PeriodsComponent } from '../accts/periods/periods.component';
+import { GlSubTypeComponent } from '../subtype/subtype.component';
+import { PeriodsComponent } from '../periods/periods.component';
+import { RolesComponent } from '../roles/roles.component';
+import { TeamsComponent } from '../teams/teams.component';
 
 @Component({
     selector: 'gl-main',
@@ -54,7 +53,9 @@ import { PeriodsComponent } from '../accts/periods/periods.component';
         NgFor,
         NgClass,
         NgSwitch,
-        NgSwitchCase
+        NgSwitchCase,
+        RolesComponent,
+        TeamsComponent
     ],
     providers: [HttpClient],
     changeDetection: ChangeDetectionStrategy.OnPush,
