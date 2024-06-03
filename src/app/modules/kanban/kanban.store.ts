@@ -8,7 +8,7 @@ import {
 } from '@ngrx/signals';
 
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
-import { exhaustMap, pipe, switchMap, tap } from 'rxjs';
+import { exhaustMap, pipe, shareReplay, switchMap, tap } from 'rxjs';
 import { computed, inject } from '@angular/core';
 import { IKanban, KanbanService } from './kanban.service';
 import { tapResponse } from '@ngrx/operators';
@@ -17,6 +17,7 @@ export interface KanbanStateInterface {
   tasks: IKanban[];
   isLoading: boolean;
   error: string | null;
+  tasksCount: number;
 }
 
 export const KanbanStore = signalStore(
@@ -24,51 +25,87 @@ export const KanbanStore = signalStore(
     tasks: [],
     error: null,
     isLoading: false,
+    tasksCount: 0
   }),
   withComputed((store) => ({
     tasksCount: computed(() => store.tasks().length),
   })),
-  withMethods((store, kanbanService = inject(KanbanService))  => ({
-    addTask(task: IKanban) {      
-      const updatedTasks = [...store.tasks(), task];
-      patchState(store, { tasks: updatedTasks });
-    },
-    removeTask(id: number) {
-      const updatedTasks = store.tasks().filter((kanban) => kanban.id !== id);
-      patchState(store, { tasks: updatedTasks });
-    },
-    updateTask(task: IKanban) {
-      const updatedTasks = store.tasks().filter((kanban) => kanban.id !== task.id);
-      patchState(store, { tasks: updatedTasks });            
-      const addTasks = [...store.tasks(), task];
-      patchState(store, { tasks: addTasks });
-    },
-    updatingTask: rxMethod<IKanban>(
+  withMethods((store, kanbanService = inject(KanbanService)) => ({   
+    removeTask:   rxMethod<IKanban>(
       pipe(
-        tap(() => patchState(store, {isLoading: true})),
-        exhaustMap(() => {
-          return kanbanService.getTasks().pipe(
+        switchMap((value) => {
+          patchState(store, { isLoading: true });
+          return kanbanService.delete(value.id).pipe(
             tapResponse({
-              next: (tasks) => patchState(store, {tasks : tasks}),            
+              next: (task) => {
+                patchState(store, { tasks: store.tasks().filter((kanban) => kanban.id !== value.id) });
+              },
               error: console.error,
-              finalize: () => patchState(store, {isLoading: false}),
+              finalize: () => patchState(store, { isLoading: false }),
             })
           );
         })
       )
     ),
-    addTasks(tasks: IKanban[]) {
-      patchState(store, { tasks });
-    },
+    addTask:  rxMethod<IKanban>(
+      pipe(
+        switchMap((value) => {
+          patchState(store, { isLoading: true });
+          return kanbanService.create(value).pipe(
+            tapResponse({
+              next: (task) => {
+               patchState(store, { tasks: [...store.tasks(), task] });
+              },
+              error: console.error,
+              finalize: () => patchState(store, { isLoading: false }),
+            })
+          );
+        })
+      )
+    ),
+    updateTask: rxMethod<IKanban>(
+      pipe(
+        switchMap((value) => {
+          patchState(store, { isLoading: true });
+          return kanbanService.update(value).pipe(
+            tapResponse({
+              next: (task) => {
+                const updatedTasks = store.tasks().filter((kanban) => kanban.id !== task.id);
+                patchState(store, { tasks: updatedTasks });
+                const addTasks = [...store.tasks(), task];
+                patchState(store, { tasks: addTasks });
+              },
+              error: console.error,
+              finalize: () => patchState(store, { isLoading: false }),
+            })
+          );
+        })
+      )
+    ),
+    addTasks: rxMethod<IKanban>(
+      pipe(
+        switchMap((value) => {
+          patchState(store, { isLoading: true });
+          return kanbanService.create(value).pipe(
+            tapResponse({
+              next: (task) =>  patchState(store, { tasks : [...store.tasks(), value ]}),             
+              error: console.error,
+              finalize: () => patchState(store, { isLoading: false }),
+            })
+          );
+        })
+      )
+    ),
+      
     loadTasks: rxMethod<void>(
       pipe(
-        tap(() => patchState(store, {isLoading: true})),
+        tap(() => patchState(store, { isLoading: true })),
         exhaustMap(() => {
           return kanbanService.getTasks().pipe(
             tapResponse({
-              next: (tasks) => patchState(store, {tasks : tasks}),            
+              next: (tasks) => patchState(store, { tasks: tasks }),
               error: console.error,
-              finalize: () => patchState(store, {isLoading: false}),
+              finalize: () => patchState(store, { isLoading: false }),
             })
           );
         })

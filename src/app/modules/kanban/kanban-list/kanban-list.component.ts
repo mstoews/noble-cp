@@ -34,10 +34,7 @@ const imports = [
   standalone: true,
   imports: [imports],
   templateUrl: './kanban-list.component.html',
-  styles: `::ng-deep .dx-datagrid .dx-datagrid-rowsview .dx-row-focused.dx-data-row:not(.dx-edit-row) > td:not(.dx-focused) {
-      background-color: rgb(195, 199, 199);
-      border-color: #ada6a7;
-      }`,
+  styleUrls: ['./kanban-list.scss'],
   providers: [KanbanStore]
 })
 export class KanbanListComponent implements OnInit {
@@ -303,7 +300,7 @@ export class KanbanListComponent implements OnInit {
       estimatedate: task.estimatedate
     } as IKanban;
 
-    this.store.updateTask(data);    
+    this.store.updateTask(data);  /// the last time 
     this.closeDrawer();
   }
 

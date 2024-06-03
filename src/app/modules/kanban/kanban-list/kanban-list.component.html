@@ -116,7 +116,7 @@
 
                     <grid-menubar [inTitle]="'Kanban List'"></grid-menubar>
                     <div class="flex flex-col h-[640px]">
-                        <dx-data-grid id="id" [wordWrapEnabled]="true" [dataSource]="store.tasks()"
+                        <dx-data-grid id="grid-container" [wordWrapEnabled]="true" [dataSource]="store.tasks()"
                             [showColumnLines]="true" [showRowLines]="true" [showBorders]="true" (onCellDblClick)="onCellDblClick($event)" 
                             [focusedRowEnabled]="true" [focusedRowIndex]="0" keyExpr="id" [repaintChangesOnly]="true">
                             <dxo-search-panel [visible]="true"></dxo-search-panel>
@@ -135,7 +135,7 @@
 
                             <dxi-column dataField="id" width="50"></dxi-column>
                             <dxi-column dataField="title"></dxi-column>
-                            <dxi-column dataField="status" width="70"></dxi-column>
+                            <dxi-column dataField="status" width="90"></dxi-column>
                             <dxi-column dataField="summary"></dxi-column>
                             <dxi-column dataField="type" width="70"></dxi-column>
                             <dxi-column dataField="priority" width="70"></dxi-column>

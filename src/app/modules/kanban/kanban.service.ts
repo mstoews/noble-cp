@@ -121,6 +121,7 @@ export class KanbanService {
 
   teamUrl = this.baseUrl + `/v1/task_team_list`; 
   taskUrl = this.baseUrl + '/v1/tasks_list';
+  updateTaskUrl = this.baseUrl + 'v1/task_update'
   priorityUrl = this.baseUrl + '/v1/task_priority_list';
 
   readonly readPriority = rxMethod <void> (
@@ -147,6 +148,11 @@ export class KanbanService {
       })
     );
   }
+
+  updateTask(task: IKanban) {
+    return this.httpClient.post<IKanban[]>(this.updateTaskUrl, task);
+  }
+
 
   readonly readTeam = rxMethod <void>  (
     pipe(
@@ -203,15 +209,7 @@ export class KanbanService {
       startdate: startDate,
       estimatedate: estimateDate
     }
-
-        return this.httpClient.post<IKanban>(url, data).pipe(
-          tap(() => this.isLoading.set(false)),          
-          tapResponse({            
-            next: data => this.updateKanbanSignal(data),
-            error: console.error,
-            finalize: () => (this.isLoading.set(false)),
-          })
-        ).subscribe();
+    return this.httpClient.post<IKanban>(url, data);
   }
 
   updateKanbanSignal(data: IKanban) {
@@ -272,20 +270,17 @@ export class KanbanService {
 
   readTeams() {
     var url = this.baseUrl + '/v1/read_task_team';
-    return this.httpClient.get<ITeam[]>(url).pipe(
-      shareReplay());
+    return this.httpClient.get<ITeam[]>(url)
   }
 
   getTeamMember(member: string) {
     var url = this.baseUrl + '/v1/read_team_member?memberId' + member;
-    return this.httpClient.get<IKanban[]>(url).pipe(
-      retry(3)).pipe(shareReplay());
+    return this.httpClient.get<IKanban[]>(url)
   }
 
   readTasks() {
     var url = this.baseUrl + '/v1/tasks_list';
-    return this.httpClient.get<IKanban[]>(url).pipe(
-      retry(3)).pipe(shareReplay());
+    return this.httpClient.get<IKanban[]>(url);
   }
 
 
@@ -319,31 +314,14 @@ export class KanbanService {
     k.updatedate = updateDate;
     k.updateuser = email;
     k.estimate = Number(k.estimate)
-
-  
-    console.debug(JSON.stringify(k))
-    return this.httpClient.post<IKanban>(url,k).pipe(
-        shareReplay())
+    
+    return this.httpClient.post<IKanban>(url,k);
     }
 
     updateKanbanList(kanban: IKanban)  {
       //this.kanbanList.update(items => [...items, kanban])        
     }
-  
-  // Read
-  
-  // read() {
-  //   var url = this.baseUrl + '/v1/tasks_list';
-  //   const sub = this.httpClient.get<IKanban[]>(url).pipe(
-  //     tap(data => this.kanbanList.set(data)),
-  //     take(1),
-  //     catchError(() => of([] as IKanban[]))
-  //   ).subscribe();
-  //   return this.kanbanList;
-  // }
-
-  // Update
-  
+    
   updateStatusStatic(s: IStatus){
     var url = this.baseUrl + '/v1/task_status_update';
 
@@ -362,12 +340,7 @@ export class KanbanService {
       priority: k.priority
     }
 
-    return this.httpClient.post<IKanban>(url, data)
-      .pipe(
-        shareReplay()).subscribe(
-          kanban => console.log(JSON.stringify(kanban),
-          error => console.log('Error', error))
-        );
+    return this.httpClient.post<IKanban>(url, data);
   }
 
   copy(id: string) {
@@ -375,43 +348,15 @@ export class KanbanService {
       Id: id
     }
     var url = this.baseUrl + '/v1/kanban_copy';
-    return this.httpClient.post<IKanban[]>(url, data)
-      .pipe(
-        shareReplay()).pipe().subscribe(
-          kanban => console.log(JSON.stringify(kanban),
-            error => console.log('Error', error)
-          )
-        );
+    return this.httpClient.post<IKanban[]>(url, data);    
   }
 
   // Delete
-  delete(id: string) {
+  delete(id: number) {
     var data = {
       Id: id
     }
     var url = this.baseUrl + '/v1/kanban_delete';
-    return this.httpClient.post<IKanban[]>(url, data)
-      .pipe(
-        shareReplay()).pipe().subscribe(
-          kanban => console.log(JSON.stringify(kanban),
-            error => console.log('Error', error)
-          )
-        );
+    return this.httpClient.post<IKanban>(url, data);    
   }
 }
-
-
-/*
- {
-   "id": "2",
-   "priority": "High",
-   "rankid": 1,
-   "status": "InProgress",
-   "summary": "Month end expense transaction creation and documentation of expenses" ,
-   "tags": "month-end",
-   "title": "Another Accounting Task",
-   "type": "Update",
-   "updatedate": "2024-03-23",
-   "updateuser": "mstoews"
-   }
- */
