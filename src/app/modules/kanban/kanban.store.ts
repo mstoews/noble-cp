@@ -10,11 +10,12 @@ import {
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { exhaustMap, pipe, shareReplay, switchMap, tap } from 'rxjs';
 import { computed, inject } from '@angular/core';
-import { IKanban, KanbanService } from './kanban.service';
+import { IKanban, IPriority, KanbanService } from './kanban.service';
 import { tapResponse } from '@ngrx/operators';
 
 export interface KanbanStateInterface {
   tasks: IKanban[];
+  priority: IPriority[],
   isLoading: boolean;
   error: string | null;
   tasksCount: number;
@@ -23,6 +24,7 @@ export interface KanbanStateInterface {
 export const KanbanStore = signalStore(
   withState<KanbanStateInterface>({
     tasks: [],
+    priority: [],
     error: null,
     isLoading: false,
     tasksCount: 0
@@ -96,7 +98,21 @@ export const KanbanStore = signalStore(
         })
       )
     ),
-      
+
+    loadPriority: rxMethod<void>(
+      pipe(
+        tap(() => patchState(store, { isLoading: true })),
+        exhaustMap(() => {
+          return kanbanService.httpReadPriority().pipe(
+            tapResponse({
+              next: (priorities) => patchState(store, { priority: priorities }),
+              error: console.error,
+              finalize: () => patchState(store, { isLoading: false }),
+            })
+          );
+        })
+      )
+    ),
     loadTasks: rxMethod<void>(
       pipe(
         tap(() => patchState(store, { isLoading: true })),
@@ -115,6 +131,7 @@ export const KanbanStore = signalStore(
   withHooks({
     onInit(store) {
       store.loadTasks();
+      store.loadPriority();
     },
   })
 );

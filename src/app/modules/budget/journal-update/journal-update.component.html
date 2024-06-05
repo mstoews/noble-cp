@@ -85,12 +85,9 @@
                     </div>
                     }
                 </div>
-                @if (journal_subid > 0 ) {
-                    <div class="text-3xl m-1 text-gray-100 p-2 mt-2  bg-slate-600">Update Details {{journal_subid}}</div>
-                }
-                @else {
-                    <div class="text-3xl m-1 text-gray-100 p-2 mt-2  bg-slate-600">Update Details</div>
-                }
+                @if (editing === true)
+                {
+                <div class="text-3xl m-1 text-gray-100 p-2 mt-2  bg-slate-600">Update Details {{journal_subid}}</div>
                 <section class="flex flex-col md:flex-row mt-2">
                     <div class="flex flex-col grow">
                         <mat-form-field class="mt-1 mr-1 form-element grow">                            
@@ -176,7 +173,7 @@
                         </mat-form-field>
                     </div>
                 </section>
-                
+                }
             </div>
 
         </form>

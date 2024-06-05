@@ -146,7 +146,7 @@ export class GeneralLedgerTreeComponent implements OnInit, OnDestroy {
       maximumFractionDigits: 2,
     };
     const formattedWithOptions = e.value.toLocaleString('en-US', options);
-    console.log(formattedWithOptions);
+    console.debug(formattedWithOptions);
     return formattedWithOptions;
   }
 
@@ -190,7 +190,7 @@ export class GeneralLedgerTreeComponent implements OnInit, OnDestroy {
   }
 
   onFocusedRowChanged(e: any) {
-    console.log(`selectionChanged ${JSON.stringify(e.data)}`);
+    console.debug(`selectionChanged ${JSON.stringify(e.data)}`);
   }
 
   openDrawer() {

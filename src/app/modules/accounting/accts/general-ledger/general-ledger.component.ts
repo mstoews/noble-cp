@@ -6,7 +6,7 @@ import {
   DxTemplateModule,
 } from 'devextreme-angular';
 
-import { MatDrawer} from '@angular/material/sidenav';
+import { MatDrawer } from '@angular/material/sidenav';
 import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
 
@@ -109,12 +109,12 @@ export class GeneralLedgerComponent implements OnInit {
   }
 
   selectionChanged(data: any) {
-    console.log(`selectionChanged ${JSON.stringify(data.data)}`);
+    console.debug(`selectionChanged ${JSON.stringify(data.data)}`);
     this.selectedItemKeys = data.selectedRowKeys;
   }
 
   onCellDoubleClicked(e: any) {
-    console.log(`ondoubleClicked an item   ${JSON.stringify(e.data)}`);
+    console.debug(`ondoubleClicked an item   ${JSON.stringify(e.data)}`);
 
     this.updated_type = e.data.type;
 
@@ -133,7 +133,7 @@ export class GeneralLedgerComponent implements OnInit {
   }
 
   onFocusedRowChanged(e: any) {
-    console.log(`selectionChanged ${JSON.stringify(e.data)}`);
+    console.debug(`selectionChanged ${JSON.stringify(e.data)}`);
   }
 
   openDrawer() {

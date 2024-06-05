@@ -95,7 +95,7 @@ export class GLAcctDetailComponent implements OnInit {
             maximumFractionDigits: 2,
         };
         const formattedWithOptions = e.value.toLocaleString('en-US', options);
-        console.log(formattedWithOptions);
+        console.debug(formattedWithOptions);
         return formattedWithOptions;
     }
 
@@ -122,16 +122,16 @@ export class GLAcctDetailComponent implements OnInit {
     }
 
     onCreateTemplate() {
-        console.log('onCreateTemplate');
+        console.debug('onCreateTemplate');
     }
 
     onAddEvidence() {
-        console.log('onAddEvidence');
+        console.debug('onAddEvidence');
     }
 
     onAmendJournal() {
         this.isModifiable = true;
-        console.log('onAmendJournal');
+        console.debug('onAmendJournal');
     }
 
     calculateDebitValue(data) {

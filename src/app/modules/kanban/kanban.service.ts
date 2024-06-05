@@ -48,7 +48,8 @@ export interface IPriority {
   Priority: string,
   Description: string,
   updatedte: string,
-  updateusr: string
+  updateusr: string,
+  color: string
 }
 
 export interface IType {
@@ -128,7 +129,7 @@ export class KanbanService {
     pipe(
       tap(() => this.isLoading.set(true)),
       exhaustMap(() => {
-        return this.httpClient.get<IPriority[]>(this.priorityUrl).pipe(
+        return this.httpReadPriority().pipe(
           tapResponse({
             next: (priority) => this.priorityList.set(priority),            
             error: console.error,
@@ -138,6 +139,10 @@ export class KanbanService {
       })
     )
   );
+
+  httpReadPriority() {
+    return this.httpClient.get<IPriority[]>(this.priorityUrl);
+  }
 
   getTasks() {
     return this.httpClient.get<IKanban[]>(this.taskUrl).pipe(

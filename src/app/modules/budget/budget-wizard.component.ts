@@ -41,14 +41,14 @@ const imports = [
   selector: 'entry-wizard',
   standalone: true,
   imports: [imports],
-  templateUrl: './entry-wizard.component.html',
+  templateUrl: './budget-wizard.component.html',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
   animations: fuseAnimations,
   styles: ``,
   providers: [provideNgxMask()]
 })
-export class EntryWizardComponent implements OnInit, OnDestroy, AfterViewInit {
+export class BudgetWizardComponent implements OnInit, OnDestroy, AfterViewInit {
   onUpdateJournalEntry() {
     throw new Error('Method not implemented.');
   }

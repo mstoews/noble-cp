@@ -231,6 +231,10 @@ export class JournalService implements OnDestroy  {
     this.journalDetailList.set(journalDetail);
   }
 
+  reNumberDetailJournal(){
+    
+  }
+
   readJournalHeader() {
     var url = this.baseUrl + '/v1/read_journal_header';
     this.httpClient.get<IJournalHeader[]>(url).pipe(

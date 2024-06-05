@@ -41,7 +41,7 @@ export class TransactionDetailComponent implements OnInit {
     selectedItemKeys: any[] = [];
 
     details$ = this.journalService.getJournalAccountsByPeriod(1, 2024)
-    
+
     ngOnInit() {
         var period = this.period;
         var year = this.year;
@@ -59,7 +59,7 @@ export class TransactionDetailComponent implements OnInit {
             maximumFractionDigits: 2,
         };
         const formattedWithOptions = e.value.toLocaleString('en-US', options);
-        console.log(formattedWithOptions);
+        console.debug(formattedWithOptions);
         return formattedWithOptions;
     }
 

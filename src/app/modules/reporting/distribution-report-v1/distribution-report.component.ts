@@ -92,9 +92,9 @@ export class DistributionReportV2Component implements OnInit {
         );
     }
 
-    onAdd() {}
+    onAdd() { }
 
-    onCellDoubleClicked(e) {}
+    onCellDoubleClicked(e) { }
 
     onExporting(e: DxDataGridTypes.ExportingEvent) {
         const workbook = new Workbook();
@@ -170,12 +170,12 @@ export class DistributionReportV2Component implements OnInit {
             maximumFractionDigits: 2,
         };
         const formattedWithOptions = e.value.toLocaleString('en-US', options);
-        //console.log(formattedWithOptions);
+        //console.debug(formattedWithOptions);
         return formattedWithOptions;
     }
 
     selectionChanged(data: any) {
-        //console.log(`selectionChanged ${JSON.stringify(data.data)}`);
+        //console.debug(`selectionChanged ${JSON.stringify(data.data)}`);
         this.selectedItemKeys = data.selectedRowKeys;
     }
 
@@ -188,6 +188,6 @@ export class DistributionReportV2Component implements OnInit {
     }
 
     onFocusedRowChanged(e: any) {
-        // console.log(`selectionChanged ${JSON.stringify(e.data)}`);
+        // console.debug(`selectionChanged ${JSON.stringify(e.data)}`);
     }
 }

@@ -97,7 +97,7 @@ export class BalanceSheetComponent implements OnInit {
     }
 
     selectionChanged(data: any) {
-        console.log(`selectionChanged ${JSON.stringify(data.data)}`);
+        console.debug(`selectionChanged ${JSON.stringify(data.data)}`);
         this.selectedItemKeys = data.selectedRowKeys;
     }
 

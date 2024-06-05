@@ -1,0 +1,121 @@
+@defer() {
+<div [formGroup]="journalDetailEditForm">
+        <div class="flex flex-col">
+            <section class="flex flex-col">
+                <div class="flex flex-col grow">
+                    @if (accounts$ | async; as accounts) {
+                        <mat-form-field class="flex-start m1-2 mr-2 text-white ">
+                            <mat-label class="ml-2 text-base dark:text-gray-100">Account</mat-label>
+                            <mat-select class="text-gray-800" placeholder="Account" formControlName="child" (selectionChange)="changeChildAccount($event)">
+                                @for (account of accounts; track account)
+                                { <mat-option [value]="account.child"> {{ account.child }} - {{account.description}}  </mat-option>
+                                }                        
+                            </mat-select>
+                        </mat-form-field>
+                        }
+                        @else {
+                        <mat-form-field class="m-1 flex-start">
+                            <mat-label class="ml-2 text-account">Account</mat-label>
+                            <input #myInput matInput placeholder="Account" formControlName="child" />
+                        </mat-form-field>
+                        }
+                </div>
+
+                <div class="flex flex-col grow">
+                    <mat-form-field class="m-1 form-element grow">
+                        <mat-label class="ml-2 text-base dark:text-gray-100">Description</mat-label>
+                        <input matInput placeholder="Description" formControlName="description" />
+                    </mat-form-field>
+                </div>
+                <section class="flex flex-row">
+                
+                @if (subtype$ | async; as subtypes) {
+                    <div class="flex flex-col grow">
+                    <mat-form-field class="flex-col ml-1">                        
+                        <mat-select class="text-gray-800"  placeholder="Sub Type" formControlName="sub_type" (selectionChange)="changeSubtype($event)">
+                            @for (item of subtypes; track item)
+                            { <mat-option [value]="item.subtype"> {{
+                                item.subtype }} </mat-option>
+                            }
+                        </mat-select>
+                    </mat-form-field>
+                    </div>
+                    }
+                    @else {
+                    <mat-form-field class="flex-start m1-2 mr-2">
+                        <mat-label class="ml-2 text-base">Funding</mat-label>
+                        <input #myInput matInput placeholder="Fund" formControlName="fund" />
+                    </mat-form-field>
+                    }
+
+                @if (funds$ | async; as funds) {
+                    <div class="flex flex-col grow">
+                    <mat-form-field class="flex-col ml-1">                        
+                        <mat-select class="text-gray-800"  placeholder="Fund" formControlName="fund" (selectionChange)="changeFund($event)">
+                            @for (item of funds; track item)
+                            { <mat-option [value]="item.fund"> {{
+                                item.fund }} </mat-option>
+                            }
+                        </mat-select>
+                    </mat-form-field>
+                    </div>
+                    }
+                    @else {
+                    <mat-form-field class="flex-start m1-2 mr-2">
+                        
+                        <input #myInput matInput placeholder="Fund" formControlName="fund" />
+                    </mat-form-field>
+                    }
+                </section>
+
+                <div class="flex flex-col grow m-1">
+                    <mat-form-field class="form-element" >
+                        <mat-label class="text-base dark:text-gray-100">Reference</mat-label>
+                        <input matInput placeholder="Reference" formControlName="reference" />
+                        
+                    </mat-form-field>
+                </div>
+
+
+                <section class="flex flex-row">
+                <div class="flex flex-col grow">
+                    <mat-form-field class="form-element mr-1">
+                        <mat-label class="text-base dark:text-gray-100">Debit</mat-label>
+                        <input type="text" mask="separator.2"   [leadZero]="true" thousandSeparator="," class="text-right" matInput placeholder="Debit" formControlName="debit" />
+                    </mat-form-field>
+                </div>
+                    <div class="flex flex-col grow">
+                        <mat-form-field class="form-element ml-1" >
+                        <mat-label class="text-base dark:text-gray-100">Credit</mat-label>
+                        <input type="text" mask="separator.2"   [leadZero]="true" thousandSeparator="," class="text-right" matInput placeholder="Credit" formControlName="credit"/>                        
+                        </mat-form-field>
+                    </div>
+
+                </section>
+
+            </section>
+        </div>
+                
+</div>
+
+<div>
+    <div mat-dialog-actions>
+        <button mat-icon-button color="primary" class="m-1 bg-slate-200 text-gray-100"
+            (click)="onUpdate()" matTooltip="Update" aria-label="hovered over">
+            <mat-icon>update</mat-icon>
+        </button>
+        <button mat-icon-button color="primary" class="m-1 bg-slate-200 text-gray-100"
+            (click)="onCreate()" matTooltip="Add New" aria-label="hovered over">
+            <mat-icon>add</mat-icon>
+        </button>
+        <button mat-icon-button color="primary" class="m-1 bg-slate-200 text-gray-100"
+            (click)="onDelete($event)" matTooltip="Delete" aria-label="hovered over">
+            <mat-icon>delete</mat-icon>
+        </button>
+        <button mat-icon-button color="primary" class="m-1 bg-slate-200 text-gray-100"
+            (click)="onClose()" matTooltip="Close" aria-label="hovered over">
+            <mat-icon>close</mat-icon>
+        </button>
+    </div>
+</div>
+}

@@ -7,7 +7,7 @@ import { CommonModule } from '@angular/common';
 import { DndComponent } from 'app/modules/drag-n-drop/loaddnd/dnd.component';
 import { FundsService } from 'app/services/funds.service';
 import { GLAccountsService } from 'app/services/accounts.service';
-import { GridMenubarStandaloneComponent } from '../../grid-menubar/grid-menubar.component';
+import { GridMenubarStandaloneComponent } from '../../accounting/grid-menubar/grid-menubar.component';
 import { JournalDetailComponent } from '../journal-detail/journal-detail.component';
 import { MaterialModule } from 'app/services/material.module';
 import { SubTypeService } from 'app/services/subtype.service';
@@ -65,7 +65,7 @@ export class JournalUpdateComponent implements OnInit, OnDestroy, AfterViewInit 
   @Input() public amount: string;
   @Input() public bNewTransaction = true;
 
-  
+
 
   private fb = inject(FormBuilder);
   private journalService = inject(JournalService);
@@ -94,7 +94,7 @@ export class JournalUpdateComponent implements OnInit, OnDestroy, AfterViewInit 
   subtype$ = this.subtypeService.read();
   accounts$ = this.accountService.readChildren();
   dropDownChildren$ = this.accountService.readChildren()
-  
+
   detailsListSignal = this.journalService.getJournalDetail(0);
 
   private fuseConfirmationService = inject(FuseConfirmationService);
@@ -109,48 +109,50 @@ export class JournalUpdateComponent implements OnInit, OnDestroy, AfterViewInit 
   child = new FormControl('');
   myControl = new FormControl('');
   accountOptions: Observable<string[]>;
-  
+
   public journalDetailList = [];
   public accountsListSubject: Subscription;
-  
-  
+  public detailsSubject: Subscription;
+  private journalDetailUpdateSubject: Subscription;
+  private journalDetailDeleteSubject: Subscription;
+
   // drop down searchable list
   public accountList: IDropDownAccounts[] = [];
   public accountCtrl: FormControl<IDropDownAccounts> = new FormControl<IDropDownAccounts>(null);
   public accountFilterCtrl: FormControl<string> = new FormControl<string>('');
   public filteredAccounts: ReplaySubject<IDropDownAccounts[]> = new ReplaySubject<IDropDownAccounts[]>(1);
 
-  @ViewChild('singleSelect', { static: true }) 
+  @ViewChild('singleSelect', { static: true })
   singleSelect: MatSelect;
 
   protected _onDestroy = new Subject<void>();
-  
-  ngOnInit(): void {    
+
+  ngOnInit(): void {
     this.accountsListSubject = this.dropDownChildren$.subscribe(accounts => {
-        accounts.forEach(acct =>{          
-          var list = {            
-            account: acct.account,
-            child: acct.child,
-            description: acct.description
-          }
-          this.accountList.push(list)
-        })        
-        this.filteredAccounts.next(this.accountList.slice());
-        console.debug('Length of array: ',this.accountList.length)
-     });
+      accounts.forEach(acct => {
+        var list = {
+          account: acct.account,
+          child: acct.child,
+          description: acct.description
+        }
+        this.accountList.push(list)
+      })
+      this.filteredAccounts.next(this.accountList.slice());
+      console.debug('Length of array: ', this.accountList.length)
+    });
 
     this.updateDetailList();
     this.createEmptyForm();
     this.refresh(this.journal_id, this.description, this.transaction_date, this.amount);
-    
+
     this.accountFilterCtrl.valueChanges.pipe(takeUntil(this._onDestroy))
-    .subscribe(() => {
-      this.filterAccounts();
-    });
+      .subscribe(() => {
+        this.filterAccounts();
+      });
   }
 
   protected setInitialValue() {
-        this.detailsListSignal = this.journalService.getJournalDetail(this.journal_id);
+    this.detailsListSignal = this.journalService.getJournalDetail(this.journal_id);
   }
 
   ngAfterViewInit() {
@@ -171,15 +173,15 @@ export class JournalUpdateComponent implements OnInit, OnDestroy, AfterViewInit 
     }
     // filter the banks
     this.filteredAccounts.next(
-      this.accountList.filter(account => account.description.toLowerCase().indexOf(search) > -1)      
+      this.accountList.filter(account => account.description.toLowerCase().indexOf(search) > -1)
     );
   }
-  
+
   onFocusedDetailRowChanged(e: any) {
     this.currentRowData = e.row.data;
     this.journal_subid = e.row.data.journal_subid;
     this.updateForm(e.row.data)
-    this.editing = true;    
+    this.editing = true;
     this.journalHeaderData = this.journalService.readJournalHeaderById(this.journal_id);
   }
 
@@ -201,7 +203,7 @@ export class JournalUpdateComponent implements OnInit, OnDestroy, AfterViewInit 
       debit: [row.debit, Validators.required],
       credit: [row.credit, Validators.required]
     });
-    
+
     const index = this.accountList.findIndex(account => account.child == row.child);
     this.accountCtrl.setValue(this.accountList[index]);
 
@@ -266,7 +268,7 @@ export class JournalUpdateComponent implements OnInit, OnDestroy, AfterViewInit 
 
     // Subscribe to the confirmation dialog closed action
     confirmation.afterClosed().subscribe((result) => {
-      
+      // If the confirm button pressed...
       if (result === 'confirmed') {
         // Delete the list
         // this.journalService.cre
@@ -330,33 +332,30 @@ export class JournalUpdateComponent implements OnInit, OnDestroy, AfterViewInit 
       "journal_id": this.currentRowData.journal_id,
       "journal_subid": this.currentRowData.journal_subid,
     }
-        const confirmation = this._fuseConfirmationService.open({
-            title: `Delete  transaction number : ${journalDetail.journal_id}-${journalDetail.journal_subid} `,
-            message: 'Are you sure you want to delete this line entry? ',
-            actions: {
-                confirm: {
-                    label: 'Delete',
-                },
-            },
-        });
+    const confirmation = this._fuseConfirmationService.open({
+      title: `Delete  transaction number : ${journalDetail.journal_id}-${journalDetail.journal_subid} `,
+      message: 'Are you sure you want to delete this line entry? ',
+      actions: {
+        confirm: {
+          label: 'Delete',
+        },
+      },
+    });
 
-        // Subscribe to the confirmation dialog closed action
-        confirmation.afterClosed().subscribe((result) => {
-            // If the confirm button pressed...
-            if (result === 'confirmed') {
-                // Delete the list
-                this.delete(journalDetail);
-                
-            }
-        });
+    // Subscribe to the confirmation dialog closed action
+    confirmation.afterClosed().subscribe((result) => {
+      // If the confirm button pressed...
+      if (result === 'confirmed') {
+        // Delete the list
+        this.delete(journalDetail);
+
+      }
+    });
   }
 
   delete(journal: IJournalDetailDelete) {
     this.journalService.deleteJournalDetail(journal);
-    this.journalDetailForm.reset();
-    this.accountCtrl.reset();
-    
-  } 
+  }
 
   onAddLineJournalDetail() {
     const dDate = new Date();
@@ -369,37 +368,15 @@ export class JournalUpdateComponent implements OnInit, OnDestroy, AfterViewInit 
 
     var detail = this.journalDetailForm.getRawValue();
 
-    const childAccount = this.accountCtrl.getRawValue();
+    var journal_subid = this.detailsListSignal().length + 1;
 
-    if (childAccount === undefined ) {
-      this.snackBar.open('Select a booking account from the dropdown list ...', 'OK', {
+    if (detail.detail_description === '' || detail.detail_description === undefined || detail.detail_description === null) {
+      this.snackBar.open('Please select a row to edit', 'OK', {
         verticalPosition: 'top',
         horizontalPosition: 'right',
         duration: 2000,
       });
       return;
-    }
-    
-    var journal_subid = this.detailsListSignal().length + 1;
-
-    if (detail.detail_description === '' || detail.detail_description === undefined || detail.detail_description === null) {
-      const confirmation = this._fuseConfirmationService.open({
-        title: `Journal Line : ${this.journal_id}`,
-        message: 'Would you like to add a new journal entry detail line? ',
-        actions: {
-            confirm: {
-                label: 'Add Line',
-            },
-        },
-    });
-
-    // Subscribe to the confirmation dialog closed action
-    confirmation.afterClosed().subscribe((result) => {
-        // If the confirm button pressed...
-        if (result === 'confirmed') {
-            return;            
-        }
-    });
     }
 
     debit = Number(detail.debit);
@@ -416,7 +393,7 @@ export class JournalUpdateComponent implements OnInit, OnDestroy, AfterViewInit 
 
     var journalDetail: IJournalDetail;
 
-    
+    var acct = this.accountList.find(x => x.child == detail.child);
 
     if (journal_subid === this.journalDetailList.length) {
       return;
@@ -424,10 +401,10 @@ export class JournalUpdateComponent implements OnInit, OnDestroy, AfterViewInit 
 
     if (debit !== undefined && credit !== undefined) {
       journalDetail = {
-        "journal_id": this.journal_id,
+        "journal_id": this.currentRowData.journal_id,
         "journal_subid": journal_subid,
-        "account": Number(childAccount.account),
-        "child": Number(childAccount.child),
+        "account": Number(acct.account),
+        "child": Number(acct.child),
         "description": detail.detail_description,
         "create_date": updateDate,
         "create_user": email,
@@ -440,17 +417,11 @@ export class JournalUpdateComponent implements OnInit, OnDestroy, AfterViewInit 
     }
 
     if (journalDetail !== undefined) {
-      this.journalService.createJournalDetail(journalDetail);
-      this.journalEntryCleanUp();
+      this.journalService.createJournalDetail(journalDetail)
+      this.journalDetailForm.reset()
     }
-  }
 
-  journalEntryCleanUp() {
-    this.journalDetailForm.reset();
-    this.accountCtrl.reset();
-    this.journalService.reNumberDetailJournal()
   }
-
 
   onUpdateJournalEntry() {
     const dDate = new Date();
@@ -464,10 +435,8 @@ export class JournalUpdateComponent implements OnInit, OnDestroy, AfterViewInit 
     var header = this.journalForm.getRawValue();
     var detail = this.journalDetailForm.getRawValue();
 
-
-
     if (detail.detail_description === '' || detail.detail_description === undefined || detail.detail_description === null) {
-      
+
       const journalHeader: any = {
         journal_id: this.journal_id,
         description: header.description,
@@ -475,8 +444,7 @@ export class JournalUpdateComponent implements OnInit, OnDestroy, AfterViewInit 
         amount: header.header_amount
       }
 
-      if (journalHeader !== undefined )
-      { 
+      if (journalHeader !== undefined) {
 
         this.journalService.updateJournalHeader(journalHeader);
         this.snackBar.open('Journal header details updated ... ', 'OK', {
@@ -491,7 +459,7 @@ export class JournalUpdateComponent implements OnInit, OnDestroy, AfterViewInit 
           verticalPosition: 'top',
           horizontalPosition: 'right',
           duration: 2000,
-        });  
+        });
       }
       return;
     }
@@ -528,9 +496,9 @@ export class JournalUpdateComponent implements OnInit, OnDestroy, AfterViewInit 
         "fund": detail.fund
       }
     }
-    
 
-    
+    console.debug('Journal Details : \n', JSON.stringify(journalDetail));
+
     this.journalService.updateJournalDetail(journalDetail);
 
     const journalHeader: any = {
@@ -550,10 +518,11 @@ export class JournalUpdateComponent implements OnInit, OnDestroy, AfterViewInit 
     });
 
     this.journalDetailForm.reset()
-    this.accountCtrl.reset();
+    //this.loadContent();
+    //this.detailsListSignal = this.journalService.getJournalDetail(this.currentRowData.journal_id);
     this.editing = false;
-    this.journal_subid = 0;
     this._change.markForCheck();
+
   }
 
   onCreate() {
@@ -621,10 +590,9 @@ export class JournalUpdateComponent implements OnInit, OnDestroy, AfterViewInit 
 
     // this.loadContent();
 
-    this.journalDetailForm.reset();
+    this.journalDetailForm.reset()
     this.detailsListSignal = null;
     this.detailsListSignal = this.journalService.getJournalDetail(this.journal_id);
-    this.accountCtrl.reset();
 
   }
 
@@ -636,7 +604,7 @@ export class JournalUpdateComponent implements OnInit, OnDestroy, AfterViewInit 
     const take4 = numbers.pipe(take(6))
     const subs$: Subscription = take4.subscribe(res => {
       value = value + 20;
-      
+      console.debug('spinner  :', value);
       if (value === 120) {
         this.loading = false;
         subs$.unsubscribe();
@@ -659,7 +627,8 @@ export class JournalUpdateComponent implements OnInit, OnDestroy, AfterViewInit 
     const dialogRef = this.dialog.open(JournalEditComponent, dialogConfig);
 
     dialogRef.afterClosed().subscribe(
-      val => {        
+      val => {
+        console.debug("Dialog output:", val)
         this.refresh(this.journal_id, this.description, this.transaction_date, this.amount);
       }
     );
@@ -689,7 +658,17 @@ export class JournalUpdateComponent implements OnInit, OnDestroy, AfterViewInit 
   ngOnDestroy(): void {
     if (this.accountsListSubject) {
       this.accountsListSubject.unsubscribe();
-    }  
+    }
+    if (this.detailsSubject) {
+      this.detailsSubject.unsubscribe();
+    }
+    if (this.journalDetailUpdateSubject) {
+      this.journalDetailUpdateSubject.unsubscribe();
+    }
+    if (this.journalDetailDeleteSubject) {
+      this.journalDetailDeleteSubject.unsubscribe();
+    }
+
     this._onDestroy.next();
     this._onDestroy.complete();
   }

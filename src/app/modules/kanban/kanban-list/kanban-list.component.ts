@@ -7,7 +7,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { Component, OnInit, ViewChild, inject } from '@angular/core';
-import { DxBulletModule, DxDataGridModule, DxTemplateModule } from 'devextreme-angular';
+import { DxBulletModule, DxDataGridComponent, DxDataGridModule, DxTemplateModule } from 'devextreme-angular';
 import { CommonModule } from '@angular/common';
 import { FuseConfirmationService } from '@fuse/services/confirmation';
 import { MatDrawer } from '@angular/material/sidenav';
@@ -17,6 +17,13 @@ import { KanbanMenubarComponent } from '../kanban/kanban-menubar/grid-menubar.co
 import { AUTH } from 'app/app.config';
 import { KanbanService, IKanban } from '../kanban.service';
 import { KanbanStore} from '../kanban.store'
+
+
+interface IValue {
+  value: string;
+  viewValue: string;
+}
+
 
 const imports = [
   CommonModule,
@@ -41,6 +48,37 @@ export class KanbanListComponent implements OnInit {
   onCopy() {
     throw new Error('Method not implemented.');
   }
+
+  types: IValue[] = [
+    { value: 'Add', viewValue: 'Add' },
+    { value: 'Update', viewValue: 'Update' },
+    { value: 'Delete', viewValue: 'Delete' },
+    { value: 'Verify', viewValue: 'Verify' },
+  ];
+
+  assignees: IValue[] = [
+    { value: 'mstoews', viewValue: 'mstoews' },
+    { value: 'matthew', viewValue: 'matthew' },
+    { value: 'admin', viewValue: 'admin' },
+  ];
+
+
+  rag: IValue[] = [
+    { value: '#238823', viewValue: 'Green' },
+    { value: '#FFBF00', viewValue: 'Amber' },
+    { value: '#D2222D', viewValue: 'Red' },
+  ];
+
+  priorities: IValue[] = [
+    { value: 'Critical', viewValue: 'Critical' },
+    { value: 'High', viewValue: 'High' },
+    { value: 'Normal', viewValue: 'Normal' },
+    { value: 'Low', viewValue: 'Low' },
+  ];
+
+
+  @ViewChild(DxDataGridComponent, { static: false }) dataGrid: DxDataGridComponent;
+
   public data: any;
   drawOpen: 'open' | 'close' = 'open';
 
@@ -55,11 +93,7 @@ export class KanbanListComponent implements OnInit {
   public sTitle = 'Kanban List';
   public taskGroup!: FormGroup;
   public data$: any
-  // tasksList = this.kanbanService.read()
-  rag: any;
-  types: any;
-  priorities: any;
-  assignees: any;
+  
   bAdding: any;
 
   cPriority: string;
@@ -68,12 +102,14 @@ export class KanbanListComponent implements OnInit {
 
   ngOnInit() {
     this.createEmptyForm();
+    
   }
-
+  
   onCellDblClick(e: any) {
     this.OnCardDoubleClick(e.data)
   }
-
+  
+ 
   OnCardDoubleClick(data: any): void {
     this.bAdding = false;
     const email = this.auth.currentUser.email;

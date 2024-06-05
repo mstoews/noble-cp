@@ -4,50 +4,44 @@ import { EMPTY, Observable, Subject, defer, exhaustMap, from } from 'rxjs';
 import { collection, query, orderBy, limit, addDoc, updateDoc } from 'firebase/firestore';
 import { collectionData } from 'rxfire/firestore';
 import { catchError, filter, map, retry } from 'rxjs/operators';
-
+import { AuthService } from './auth.service';
 import { FIRESTORE } from 'app/app.config';
-
-import { AuthService } from './auth.signal.service';
-
-export interface Message {
-  author: string;
-  content: string;
-  created: string;
-}
+import { IDashboardFund } from 'app/models';
+import { SendhttpService } from './sendhttp.service';
 
 interface MessageState {
-  messages: Message[];
+  dashboard: IDashboardFund[];
   error: string | null;
 }
 
 @Injectable({
   providedIn: 'root',
 })
-export class MessageService {
+export class DashboardService {
   private firestore = inject(FIRESTORE);
   private authService = inject(AuthService);
   private authUser$ = toObservable(this.authService.user);
-
+  private sendHttp = inject(SendhttpService)
 
   // sources
-  messages$ = this.getMessages().pipe(
+  messages$ = this.getAll().pipe(
     // restart stream when user re-authenticates
     retry({
       delay: () => this.authUser$.pipe(filter((user) => !!user)),
     })
   );
-  add$ = new Subject<Message['content']>();
+  add$ = new Subject<IDashboardFund['fund']>();
   error$ = new Subject<string>();
   logout$ = this.authUser$.pipe(filter((user) => !user));
 
   // state
   private state = signal<MessageState>({
-    messages: [],
+    dashboard: [],
     error: null,
   });
 
   // selectors
-  messages = computed(() => this.state().messages);
+  messages = computed(() => this.state().dashboard);
   error = computed(() => this.state().error);
 
   constructor() {
@@ -59,18 +53,20 @@ export class MessageService {
       }))
     );
 
-    this.add$.pipe(
-      takeUntilDestroyed(),
-      exhaustMap((message) => this.addMessage(message))
-    ).subscribe({
-      error: (err) => {
-        console.debug(err);
-        this.error$.next('Failed to send message');
-      },
-    });
+    this.add$
+      .pipe(
+        takeUntilDestroyed(),
+        exhaustMap((message) => this.addMessage(message, 100, 'description'))
+      )
+      .subscribe({
+        error: (err) => {
+          console.log(err);
+          this.error$.next('Failed to send message');
+        },
+      });
 
-    this.logout$.pipe(
-      takeUntilDestroyed())
+    this.logout$
+      .pipe(takeUntilDestroyed())
       .subscribe(() =>
         this.state.update((state) => ({ ...state, messages: [] }))
       );
@@ -81,31 +77,33 @@ export class MessageService {
         this.state.update((state) => ({ ...state, error }))
       );
   }
+  
+  private SendHttpRequest()
+   {
+     this.sendHttp.sendRequest();
+   } 
 
-  private SendHttpRequest() {
-
-  }
-
-  private getMessages() {
-    const messagesCollection = query(
-      collection(this.firestore, 'messages'),
-      orderBy('created', 'desc'),
-      limit(50)
-    );
+  private getAll() {
+      const messagesCollection = query(
+        collection(this.firestore, 'messages'),
+        orderBy('created', 'desc'),
+        limit(50)
+      );
 
     return collectionData(messagesCollection, { idField: 'id' }).pipe(
       map((messages) => [...messages].reverse())
-    ) as Observable<Message[]>;
+    ) as Observable<IDashboardFund[]>;
   }
 
-  private addMessage(message: string) {
-    const newMessage = {
-      author: this.authService.user()?.email,
-      content: message,
-      created: Date.now().toString(),
+  private addMessage(fund: string, value: number, desc: string) {
+    const newFundValues = {
+      fund: fund,
+      amount: value,
+      updatedTime: Date.now().toString(),  
+      description: desc
     };
-
-    const messagesCollection = collection(this.firestore, 'messages');
-    return defer(() => addDoc(messagesCollection, newMessage));
+      
+    const dashboardCollection = collection(this.firestore, 'dashboard');
+    return defer(() => addDoc(dashboardCollection, newFundValues));
   }
 }

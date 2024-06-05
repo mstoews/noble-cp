@@ -32,6 +32,13 @@ export const defaultNavigation: FuseNavigationItem[] = [
                 link: '/kanban',
             },        
             {
+                id: 'budgeting',
+                title: 'Budget',
+                type: 'basic',
+                icon: 'heroicons_outline:calculator',
+                link: '/budget',
+            },        
+            {
                 id: 'accounting.finance',
                 title: 'Financial Analytics',
                 type: 'basic',

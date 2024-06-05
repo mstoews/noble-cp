@@ -1,0 +1,45 @@
+@if (journalDetails$ | async; as dataSource) {
+<table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+  
+    
+    <ng-container matColumnDef="child">
+      <th mat-header-cell *matHeaderCellDef> Account </th>
+      <td mat-cell *matCellDef="let element"> {{element.child}} 
+        <!-- <mat-form-field appearance="fill">
+            <mat-label>Choose an option</mat-label>
+            <mat-select (selectionChange)="someMethod($event.value,element)">
+              <mat-option *ngFor="let topping of toppingList" [value]="topping">
+                {{topping}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field> -->
+    </td>
+    </ng-container>
+  
+    
+    <ng-container matColumnDef="fund">
+      <th mat-header-cell *matHeaderCellDef> Fund </th>
+      <td mat-cell *matCellDef="let element"> {{element.fund}} </td>
+    </ng-container>
+  
+    
+    <ng-container matColumnDef="description">
+      <th mat-header-cell *matHeaderCellDef> Description </th>
+      <td mat-cell *matCellDef="let element"> {{element.description}} </td>
+    </ng-container>
+  
+    
+    <ng-container matColumnDef="debit">
+      <th mat-header-cell *matHeaderCellDef> Debit </th>
+      <td mat-cell *matCellDef="let element"> {{element.debit}} </td>
+    </ng-container>
+    
+    <ng-container matColumnDef="credit">
+        <th mat-header-cell *matHeaderCellDef> Credit </th>
+        <td mat-cell *matCellDef="let element"> {{element.credit}} </td>
+      </ng-container>
+  
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+}

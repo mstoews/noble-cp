@@ -2,6 +2,14 @@ import type { User } from "firebase/auth";
 import { DocumentReference, Timestamp, FieldValue } from "firebase/firestore";
 
 
+export interface IDashboardFund {
+  fund: string,
+  amount: number;
+  updatedTime: Timestamp;  
+  description: string
+}
+
+
 export interface ITasks {
   task_id: string;
   title: string;

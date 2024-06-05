@@ -38,8 +38,12 @@
     
                                             <mat-select placeholder="Priority" formControlName="priority"
                                                 (selectionChange)="changePriority($event.value)">
-                                                <mat-option *ngFor="let p of priorities" [value]="p.value">
-                                                    {{ p.viewValue }} </mat-option>
+                                                <!-- <mat-option *ngFor="let p of priorities" [value]="p.value">
+                                                    {{ p.viewValue }} </mat-option> -->
+                                                    @for (item of store.priority(); track item) {
+                                                        <mat-option [value]="item.priority"> {{ item.priority }} </mat-option>
+                                                    }
+        
                                             </mat-select>
                                         </mat-form-field>
     
@@ -133,7 +137,7 @@
                                 [showInfo]="showInfo">
                             </dxo-pager>
 
-                            <dxi-column dataField="id" width="50"></dxi-column>
+                            <dxi-column dataField="id" width="50" sortOrder="asc"></dxi-column>
                             <dxi-column dataField="title"></dxi-column>
                             <dxi-column dataField="status" width="90"></dxi-column>
                             <dxi-column dataField="summary"></dxi-column>

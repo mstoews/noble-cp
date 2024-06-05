@@ -165,6 +165,12 @@ export const appRoutes: Route[] = [
                     import('app/modules/kanban/kanban/kanban.routes'),
             },
             {
+                path: 'budget',
+                loadChildren: () =>
+                    import('app/modules/budget/budget.entry.routes'),
+            },
+
+            {
                 path: 'learning',
                 loadChildren: () =>
                     import('app/modules/admin/academy/academy.routes'),

@@ -45,9 +45,9 @@ const keyExpr = ["account", "child"];
 export class GlAccountsComponent implements OnInit {
     @ViewChild('drawer') drawer!: MatDrawer;
     accountsForm!: FormGroup;
-    
+
     private _fuseConfirmationService = inject(FuseConfirmationService);
-    
+
     private fb = inject(FormBuilder);
     private auth = inject(AUTH);
     accountService = inject(GLAccountsService);
@@ -64,13 +64,13 @@ export class GlAccountsComponent implements OnInit {
     showPageSizeSelector = true;
     showInfo = true;
     showNavButtons = true;
-    
-    typeList =  inject(TypeService).read();
+
+    typeList = inject(TypeService).read();
 
     ngOnInit() {
         this.accountService.read();
         this.createEmptyForm();
-           
+
     }
 
     // CRUD Functions
@@ -99,7 +99,7 @@ export class GlAccountsComponent implements OnInit {
         const updateDate = dDate.toISOString().split('T')[0];
         const user = this.auth.currentUser.email;
 
-        const account = this.accountsForm.getRawValue() 
+        const account = this.accountsForm.getRawValue()
         const rawData = {
             account: account.account,
             child: account.child,
@@ -107,12 +107,12 @@ export class GlAccountsComponent implements OnInit {
             description: account.description,
             sub_type: '',
             type: account.type,
-            comments: account.comments,    
-            balance: 0,   
+            comments: account.comments,
+            balance: 0,
             create_date: updateDate,
             create_user: user,
             update_date: updateDate,
-            update_user: user, 
+            update_user: user,
             status: "open"
 
         };
@@ -120,7 +120,7 @@ export class GlAccountsComponent implements OnInit {
     }
 
     changeType(e) {
-        console.log('changeType ', JSON.stringify(e));
+        console.debug('changeType ', JSON.stringify(e));
     }
 
     sub_types: IValue[] = [
@@ -173,23 +173,23 @@ export class GlAccountsComponent implements OnInit {
         this.accountsForm = this.fb.group({
             account: ['', Validators.required],
             child: ['', Validators.required],
-            parent_account: [false , Validators.required],
+            parent_account: [false, Validators.required],
             description: ['', Validators.required],
             type: ['', Validators.required],
             comments: ['', Validators.required],
         });
     }
 
-    private assignType(type: string ): string {
+    private assignType(type: string): string {
         var vType: string;
-        
+
         if (type !== null && type !== undefined) {
-          const typ = this.typeList().find((x) => x.type === type);
-          if (typ === undefined) {
-            vType = 'Assets';
-          } else {
-            vType = type
-          }
+            const typ = this.typeList().find((x) => x.type === type);
+            if (typ === undefined) {
+                vType = 'Assets';
+            } else {
+                vType = type
+            }
         } else {
             vType = 'Assets';
         }
@@ -231,7 +231,7 @@ export class GlAccountsComponent implements OnInit {
     onDoubleClicked(args: any) {
         const type = args.data.type;
         this.assignType(type)
-        
+
 
         const account = {
             account: [args.data.account],
@@ -251,7 +251,7 @@ export class GlAccountsComponent implements OnInit {
         this.currentRow = e.row.data;
         const type = e.row.data.type;
         this.assignType(type)
-        
+
         const account = {
             account: [e.row.data.account],
             child: [e.row.data.child],
@@ -262,6 +262,6 @@ export class GlAccountsComponent implements OnInit {
             comments: [e.row.data.comments],
         }
         this.createForm(account)
-        
+
     }
 }

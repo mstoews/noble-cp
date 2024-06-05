@@ -60,7 +60,7 @@ export class PeriodsComponent implements OnInit {
     }
 
     public selectingEvent(e: any): void {
-        console.log('the row was selected ... ', e);
+        console.debug('the row was selected ... ', e);
     }
 
 

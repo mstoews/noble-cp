@@ -44,26 +44,26 @@ const imports = [
        background-color: rgb(195, 199, 199);
        border-color: #ada6a7;
     }`,
-    providers:[]
+    providers: []
 })
 
 export class JournalTemplateComponent {
     private transactionService = inject(GlTransactionsService);
     private journalService = inject(JournalService);
     private accountService = inject(GLAccountsService);
-    public  currentDate: string;
-    public  journal_details: any[];
-    public  bOpenDetail: boolean = false;
+    public currentDate: string;
+    public journal_details: any[];
+    public bOpenDetail: boolean = false;
     @ViewChild(JournalUpdateComponent) journalUpdate!: JournalUpdateComponent
 
     journalTemplate$ = this.journalService.readJournalTemplate();
-    
+
     accounts$ = this.accountService.readChildren(); // retrieves only the child accounts which can be used for booking
-    
-    @ViewChild('drawer') drawer!: MatDrawer;    
+
+    @ViewChild('drawer') drawer!: MatDrawer;
     sTitle = 'Journal Template';
     selectedItemKeys: any[] = [];
-    
+
     public description = '';
     public transaction_date = '';
     readonly allowedPageSizes = [10, 20, 'all'];
@@ -80,68 +80,68 @@ export class JournalTemplateComponent {
     customizeTooltip = (pointsInfo: { originalValue: string; }) => ({ text: `${parseInt(pointsInfo.originalValue)}%` });
     journalForm!: FormGroup;
     keyField: any;
-    
+
     async ngOnInit() {
         const dDate = new Date();
-        this.currentDate = dDate.toISOString().split('T')[0];        
+        this.currentDate = dDate.toISOString().split('T')[0];
     }
 
-    onCellDoubleClicked(e: any) {                     
+    onCellDoubleClicked(e: any) {
         this.bOpenDetail = true;
         this.description = e.data.description;
-        this.transaction_date = e.data.create_date;        
-        this.openDrawer();        
+        this.transaction_date = e.data.create_date;
+        this.openDrawer();
     }
 
 
-    
+
     changeType(e) {
-        console.log('changeType ', JSON.stringify(e));
+        console.debug('changeType ', JSON.stringify(e));
     }
 
     changeSubType(e) {
-        console.log('changeType ', JSON.stringify(e));
+        console.debug('changeType ', JSON.stringify(e));
     }
 
 
     changeFund(e) {
-        console.log('changeType ', JSON.stringify(e));
+        console.debug('changeType ', JSON.stringify(e));
     }
 
     changeChildAccount(e) {
-        console.log('changeType ', JSON.stringify(e));
+        console.debug('changeType ', JSON.stringify(e));
     }
 
 
     onAdd() {
-        this.bOpenDetail = true;        
+        this.bOpenDetail = true;
         this.openDrawer()
     }
 
     onRefresh() {
-        console.log('Refresh')
+        console.debug('Refresh')
     }
 
     onDeleteSelection() {
-        console.log('Delete Selection')
+        console.debug('Delete Selection')
     }
 
     onUpdateSelection() {
-        console.log('onUpdateSelection')
+        console.debug('onUpdateSelection')
     }
 
     onDelete(e: any) {
-        console.log('onDelete')
+        console.debug('onDelete')
     }
 
     onUpdate($event: any) {
-        console.log('onUpdate')
+        console.debug('onUpdate')
     }
 
     onBooked(booked: boolean) {
         this.journalForm.patchValue({ booked: booked });
         this.transactionService.update(this.journalForm.value).then((res: any) => {
-            console.log(`update ${JSON.stringify(res)}`);
+            console.debug(`update ${JSON.stringify(res)}`);
         });
     }
 
@@ -208,32 +208,32 @@ export class JournalTemplateComponent {
     }
 
 
-    onCreate() {    
+    onCreate() {
         this.openDrawer();
     }
 
 
     selectionChanged(data: any) {
-        console.log(`selectionChanged ${JSON.stringify(data.data)}`);
+        console.debug(`selectionChanged ${JSON.stringify(data.data)}`);
         this.selectedItemKeys = data.selectedRowKeys;
     }
 
 
 
-    onEdit() {             
-        this.bOpenDetail = true;        
+    onEdit() {
+        this.bOpenDetail = true;
         // this.refresh(this.hJournal, this.description, this.transaction_date);
         this.openDrawer();
     }
 
 
     onFocusedDetailRowChanged(e: any) {
-        
+
         this.currentRowData = e.row.data;
     }
 
     onFocusedRowChanged(e: any) {
-        console.log('onFocusRowChanged :', JSON.stringify(e.row.data))            
+        console.debug('onFocusRowChanged :', JSON.stringify(e.row.data))
     }
 
     openDrawer() {

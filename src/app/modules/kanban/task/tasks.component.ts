@@ -49,7 +49,7 @@ export class TasksComponent {
   @ViewChild('kanbanObj') kanbanObj!: KanbanComponent;
   @ViewChild('drawer') drawer: MatDrawer;
   private fb = inject(FormBuilder);
-  
+
   drawOpen: 'open' | 'close' = 'open';
   team: any[];
   taskGroup: FormGroup;
@@ -58,7 +58,7 @@ export class TasksComponent {
   cRAG: string;
   cType: string;
   currentDate: Date;
-  
+
   public swimlaneSettings: SwimlaneSettingsModel = { keyField: 'assignee' };
   private _fuseConfirmationService = inject(FuseConfirmationService)
   auth = inject(AUTH);
@@ -106,7 +106,7 @@ export class TasksComponent {
       rankid: e.data[0].rankid,
       priority: e.data[0].priority,
     }
-    console.log('Status', e.data[0].status);
+    console.debug('Status', e.data[0].status);
     if (e.data[0].status === 'Close') {
       d.priority = 'Normal'
     }
@@ -338,7 +338,7 @@ export class TasksComponent {
   }
 
   onAssignment(data) {
-    console.log(`${data}`);
+    console.debug(`${data}`);
   }
 
   closeDrawer() {

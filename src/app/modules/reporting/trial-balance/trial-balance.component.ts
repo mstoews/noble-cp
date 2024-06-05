@@ -49,18 +49,18 @@ const imports = [
     changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [GLAccountsService],
 })
-export class TrialBalanceComponent implements OnInit{
+export class TrialBalanceComponent implements OnInit {
     private fb = inject(FormBuilder);
     private accountApiService = inject(GLAccountsService);
 
     // local variables
     @ViewChild('drawer') drawer!: MatDrawer;
     collapsed = false;
-    sTitle='Income Statement';
+    sTitle = 'Income Statement';
     selectedItemKeys: any[] = [];
     totalRevenue: any;
 
-    revenue: any[] = [{account: '', description: 'Total Revenue', balance: 1530, type: ''}];
+    revenue: any[] = [{ account: '', description: 'Total Revenue', balance: 1530, type: '' }];
 
     customizeTooltip = (pointsInfo: { originalValue: string; }) => ({ text: `${parseInt(pointsInfo.originalValue)}%` });
     accountsForm!: FormGroup;
@@ -71,8 +71,7 @@ export class TrialBalanceComponent implements OnInit{
         this.createEmptyForm();
     }
 
-    add()
-    {
+    add() {
         this.createEmptyForm();
 
     }
@@ -85,20 +84,20 @@ export class TrialBalanceComponent implements OnInit{
             balance: ['', Validators.required],
             type: ['', Validators.required],
             comments: ['', Validators.required],
-            sub_type:['', Validators.required],
+            sub_type: ['', Validators.required],
             special_assessment: ['', Validators.required],
             capital_asset_fund: ['', Validators.required],
             reserve_fund: ['', Validators.required],
-      });
+        });
     }
 
     selectionChanged(data: any) {
-        console.log(`selectionChanged ${JSON.stringify(data.data)}`);
+        console.debug(`selectionChanged ${JSON.stringify(data.data)}`);
         this.selectedItemKeys = data.selectedRowKeys;
     }
 
-    onCellDoubleClicked( e: any) {
-        console.log(`onCellDoubleClicked ${JSON.stringify(e)}`);
+    onCellDoubleClicked(e: any) {
+        console.debug(`onCellDoubleClicked ${JSON.stringify(e)}`);
     }
 
 }
@@ -106,23 +105,23 @@ export class TrialBalanceComponent implements OnInit{
 
 
 
-    /*
-    id?: string;
-    account: string;
-    child_account: string;
-    type: string;
-    description: string;
-    balance: number;
-    sub_type: boolean;
-    special_assessment: boolean;
-    capital_asset_fund: boolean;
-    reserve_fund: boolean;
-    comments: string;
-    createDate: string;
-    createUsr: string;
-    updateDate: string;
-    updateUsr: string;
-    */
+/*
+id?: string;
+account: string;
+child_account: string;
+type: string;
+description: string;
+balance: number;
+sub_type: boolean;
+special_assessment: boolean;
+capital_asset_fund: boolean;
+reserve_fund: boolean;
+comments: string;
+createDate: string;
+createUsr: string;
+updateDate: string;
+updateUsr: string;
+*/
 
 
 
