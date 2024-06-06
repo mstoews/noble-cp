@@ -24,8 +24,11 @@ import { AUTH } from 'app/app.config';
 import { MatSelect } from '@angular/material/select';
 import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 import { IDropDownAccounts } from 'app/models';
+import notify from 'devextreme/ui/notify';
+import { DxContextMenuModule, DxContextMenuTypes } from 'devextreme-angular/ui/context-menu';
+import { TableGridComponent } from '../table/table.component';
 
-
+declare var __moduleName: string;
 
 const imports = [
   CommonModule,
@@ -43,7 +46,9 @@ const imports = [
   NgxMaskDirective,
   NgxMaskPipe,
   FileManagerComponent,
-  NgxMatSelectSearchModule
+  NgxMatSelectSearchModule,
+  DxContextMenuModule,
+  TableGridComponent
 ];
 
 @Component({
@@ -53,9 +58,16 @@ const imports = [
   templateUrl: './journal-update.component.html',
   providers: [provideNgxMask()],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  styles: ``,
+  styles: `
+  ::ng-deep .label {
+    color: #767676;
+  }
+  `,
+  moduleId: __moduleName,
 })
 export class JournalUpdateComponent implements OnInit, OnDestroy, AfterViewInit {
+
+  items: Record<any, unknown>[];
 
   @Output() notifyDrawerClose: EventEmitter<any> = new EventEmitter();
   @Input() public sTitle: string;
@@ -109,6 +121,7 @@ export class JournalUpdateComponent implements OnInit, OnDestroy, AfterViewInit 
   child = new FormControl('');
   myControl = new FormControl('');
   accountOptions: Observable<string[]>;
+  bDirty = false;
   
   public journalDetailList = [];
   public accountsListSubject: Subscription;
@@ -124,7 +137,49 @@ export class JournalUpdateComponent implements OnInit, OnDestroy, AfterViewInit 
   singleSelect: MatSelect;
 
   protected _onDestroy = new Subject<void>();
-  
+
+  constructor() {
+    this.items = [
+    { text: 'Cut' },
+    { text: 'Delete' },
+    { text: 'Add line' },
+    { text: 'Copy' },
+    { text: 'Paste' },
+    ];
+  }
+
+  itemClick({ itemData }: DxContextMenuTypes.ItemClickEvent) {
+    if (!itemData.items) {
+      notify(`The "${itemData.text}" item was clicked .. add updated function to handle each click`, 'success', 1500);
+    }
+  }
+
+  onSelectionChanged(e: any){
+    console.log(JSON.stringify(e));
+  }
+
+  onEditingStart(e: any){
+    console.log(e);
+  }
+
+  onEditingEnd(e: any) {
+    console.log(e);
+  }
+
+  onEditCanceling(e: any){
+    console.log(JSON.stringify(e));
+  }
+
+  onSaved(e: any){
+    this.bDirty = true;
+    console.log('onSaved ', e);
+    this.detailsListSignal.update()
+
+  }
+
+
+
+
   ngOnInit(): void {    
     this.accountsListSubject = this.dropDownChildren$.subscribe(accounts => {
         accounts.forEach(acct =>{          
@@ -680,7 +735,7 @@ export class JournalUpdateComponent implements OnInit, OnDestroy, AfterViewInit 
       minimumFractionDigits: 2,
       maximumFractionDigits: 2,
     };
-    if (e.value === null)
+    if (e.value === null || e.value === undefined)
       e.value = 0.0;
     const formattedWithOptions = e.value.toLocaleString('en-US', options);
     return formattedWithOptions;

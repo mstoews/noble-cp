@@ -5,8 +5,8 @@ import { GLAccountsService } from 'app/services/accounts.service';
 import { FundsService } from 'app/services/funds.service';
 import { IJournalDetail, JournalService } from 'app/services/journal.service';
 import { MaterialModule } from 'app/services/material.module';
-import { map, Observable, Subject, takeUntil, tap } from 'rxjs';
-import { JournalTableComponent } from '../journal-table/journal-table.component';
+import { Observable, Subject, takeUntil, tap } from 'rxjs';
+import { BudgetTableComponent } from '../budget-table/budget-table.component';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { SubTypeService } from 'app/services/subtype.service';
 import { AUTH } from 'app/app.config';
@@ -20,20 +20,20 @@ const imports = [
   ReactiveFormsModule,
   MaterialModule,
   FormsModule,
-  JournalTableComponent,
+  BudgetTableComponent,
   NgxMaskDirective,
   NgxMaskPipe
 ];
 
 @Component({
-  selector: 'journal-edit',
+  selector: 'budget-edit',
   standalone: true,
   imports: [imports],
-  templateUrl: './journal-edit.component.html',
+  templateUrl: './budget-edit.component.html',
   styles: ``,
   providers: [provideNgxMask()]
 })
-export class JournalEditComponent {
+export class BudgetEditComponent {
   public journal_id: number;
   public journal_subid: number;
 
@@ -55,7 +55,7 @@ export class JournalEditComponent {
 
   constructor(
 
-    private dialogRef: MatDialogRef<JournalEditComponent>,
+    private dialogRef: MatDialogRef<BudgetEditComponent>,
     @Inject(MAT_DIALOG_DATA) {
       journal_id,
       journal_subid,

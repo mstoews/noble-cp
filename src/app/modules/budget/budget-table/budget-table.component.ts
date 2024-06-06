@@ -20,14 +20,14 @@ export interface EditJournalDetails {
 }
 
 @Component({
-  selector: 'journal-table',
+  selector: 'budget-table',
   standalone: true,
   imports: [imports],
-  templateUrl: './journal-table.component.html',
+  templateUrl: './budget-table.component.html',
   styles: ``
 })
 
-export class JournalTableComponent {
+export class BudgetTableComponent {
   journalDetails$ = inject(JournalService).getJournalDetail(1);
   displayedColumns: string[] = ['child', 'fund', 'description', 'debit', 'credit'];
 

@@ -4,32 +4,32 @@ import { MatDrawer } from '@angular/material/sidenav';
 import { FuseMediaWatcherService } from '@fuse/services/media-watcher';
 import { MaterialModule } from 'app/services/material.module';
 import { Subject, takeUntil } from 'rxjs';
-import { JournalEntryComponent } from './journal-entry.component';
-import { JournalUpdateComponent } from './journal-update/journal-update.component';
+import { BudgetEntryComponent } from './budget-entry.component';
+import { BudgetUpdateComponent } from './budgetl-update/budget-update.component';
 import { FileManagerComponent } from 'app/modules/file-manager/file-manager.component';
 import { BudgetWizardComponent } from './budget-wizard.component';
 
 
 const imports = [
-    MaterialModule, 
-    NgFor, 
-    NgClass, 
-    NgSwitch, 
-    NgSwitchCase, 
-    JournalEntryComponent, 
-    JournalUpdateComponent, 
-    FileManagerComponent, 
+    MaterialModule,
+    NgFor,
+    NgClass,
+    NgSwitch,
+    NgSwitchCase,
+    BudgetEntryComponent,
+    BudgetUpdateComponent,
+    FileManagerComponent,
     BudgetWizardComponent
 ]
 
 @Component({
-  selector: 'budget-main',
-  standalone: true,
-  imports        : [imports],
-  encapsulation  : ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  templateUrl: './budget-main.component.html',
-  styles: ``
+    selector: 'budget-main',
+    standalone: true,
+    imports: [imports],
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    templateUrl: './budget-main.component.html',
+    styles: ``
 })
 export class BudgetMainComponent {
 
@@ -46,8 +46,7 @@ export class BudgetMainComponent {
     constructor(
         private _changeDetectorRef: ChangeDetectorRef,
         private _fuseMediaWatcherService: FuseMediaWatcherService,
-    )
-    {
+    ) {
     }
 
     // -----------------------------------------------------------------------------------------------------
@@ -57,43 +56,39 @@ export class BudgetMainComponent {
     /**
      * On init
      */
-    ngOnInit(): void
-    {
+    ngOnInit(): void {
         // Setup available panels
         this.panels = [
             {
-                id         : 'listing',
-                icon       : 'heroicons_outline:document-check',
-                title      : 'Budget Maintenance',
+                id: 'listing',
+                icon: 'heroicons_outline:document-check',
+                title: 'Budget Maintenance',
                 description: 'Manage your budget transactions',
             },
             {
-                id         : 'entry',
-                icon       : 'heroicons_outline:document-plus',
-                title      : 'Add Budget Entry',
+                id: 'entry',
+                icon: 'heroicons_outline:document-plus',
+                title: 'Add Budget Entry',
                 description: 'Create budget entry for each of the current trial balance line entry items.',
             },
             {
-                id         : 'template',
-                icon       : 'heroicons_outline:document-duplicate',
-                title      : 'Forecasts',
+                id: 'template',
+                icon: 'heroicons_outline:document-duplicate',
+                title: 'Forecasts',
                 description: 'Budget and actual amounts combined to create an estimated forecast for year-end results',
-            } ,
+            },
         ];
 
         // Subscribe to media changes
         this._fuseMediaWatcherService.onMediaChange$
             .pipe(takeUntil(this._unsubscribeAll))
-            .subscribe(({matchingAliases}) =>
-            {
+            .subscribe(({ matchingAliases }) => {
                 // Set the drawerMode and drawerOpened
-                if ( matchingAliases.includes('lg') )
-                {
+                if (matchingAliases.includes('lg')) {
                     this.drawerMode = 'side';
                     this.drawerOpened = true;
                 }
-                else
-                {
+                else {
                     this.drawerMode = 'over';
                     this.drawerOpened = false;
                 }
@@ -106,8 +101,7 @@ export class BudgetMainComponent {
     /**
      * On destroy
      */
-    ngOnDestroy(): void
-    {
+    ngOnDestroy(): void {
         // Unsubscribe from all subscriptions
         this._unsubscribeAll.next(null);
         this._unsubscribeAll.complete();
@@ -122,13 +116,11 @@ export class BudgetMainComponent {
      *
      * @param panel
      */
-    goToPanel(panel: string): void
-    {
+    goToPanel(panel: string): void {
         this.selectedPanel = panel;
 
         // Close the drawer on 'over' mode
-        if ( this.drawerMode === 'over' )
-        {
+        if (this.drawerMode === 'over') {
             this.drawer.close();
         }
     }
@@ -138,8 +130,7 @@ export class BudgetMainComponent {
      *
      * @param id
      */
-    getPanelInfo(id: string): any
-    {
+    getPanelInfo(id: string): any {
         return this.panels.find(panel => panel.id === id);
     }
 
@@ -149,8 +140,7 @@ export class BudgetMainComponent {
      * @param index
      * @param item
      */
-    trackByFn(index: number, item: any): any
-    {
+    trackByFn(index: number, item: any): any {
         return item.id || index;
     }
 }

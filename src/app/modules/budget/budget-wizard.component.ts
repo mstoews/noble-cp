@@ -13,7 +13,7 @@ import { SubTypeService } from 'app/services/subtype.service';
 import { DxDataGridModule, DxTemplateModule } from 'devextreme-angular';
 import { NgxMaskDirective, NgxMaskPipe, provideNgxMask } from 'ngx-mask';
 import { ReplaySubject, Subject, Subscription, take, takeUntil } from 'rxjs';
-import { JournalUpdateComponent } from './journal-update/journal-update.component';
+import { BudgetUpdateComponent } from './budgetl-update/budget-update.component';
 import { MatDialog } from '@angular/material/dialog';
 import { DndComponent } from 'app/modules/drag-n-drop/loaddnd/dnd.component';
 import { MatSelect } from '@angular/material/select';
@@ -32,13 +32,13 @@ const imports = [
   NgxMaskPipe,
   DxDataGridModule,
   DxTemplateModule,
-  JournalUpdateComponent,
+  BudgetUpdateComponent,
   DndComponent,
   NgxMatSelectSearchModule
 ]
 
 @Component({
-  selector: 'entry-wizard',
+  selector: 'budget-wizard',
   standalone: true,
   imports: [imports],
   templateUrl: './budget-wizard.component.html',

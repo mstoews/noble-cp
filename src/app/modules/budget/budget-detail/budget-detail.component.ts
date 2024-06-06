@@ -22,17 +22,17 @@ const imports = [
 ];
 
 @Component({
-    selector: 'journal-detail',
+    selector: 'budget-detail',
     standalone: true,
     imports: [imports],
-    templateUrl: './journal-detail.component.html',
+    templateUrl: './budget-detail.component.html',
     styles: `::ng-deep .dx-datagrid .dx-datagrid-rowsview .dx-row-focused.dx-data-row:not(.dx-edit-row) > td:not(.dx-focused) {
     background-color: rgb(195, 199, 199);
     border-color: rgb(195, 199, 199);
     }
     `
 })
-export class JournalDetailComponent implements OnInit {
+export class BudgetDetailComponent implements OnInit {
     @Input() key: string;
     @Input() journal_description: string;
     @Input() journal_date: string;

@@ -8,12 +8,12 @@ import { DndComponent } from 'app/modules/drag-n-drop/loaddnd/dnd.component';
 import { FundsService } from 'app/services/funds.service';
 import { GLAccountsService } from 'app/services/accounts.service';
 import { GridMenubarStandaloneComponent } from '../../accounting/grid-menubar/grid-menubar.component';
-import { JournalDetailComponent } from '../journal-detail/journal-detail.component';
+
 import { MaterialModule } from 'app/services/material.module';
 import { SubTypeService } from 'app/services/subtype.service';
 import { TypeService } from 'app/services/type.service';
-import { JournalEditComponent } from './journal-edit.component';
-import { JournalTableComponent } from '../journal-table/journal-table.component';
+import { BudgetEditComponent } from './budget-edit.component';
+
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { NgxMaskDirective, NgxMaskPipe, provideNgxMask } from 'ngx-mask';
 import { FuseConfirmationService } from '@fuse/services/confirmation';
@@ -24,6 +24,8 @@ import { AUTH } from 'app/app.config';
 import { MatSelect } from '@angular/material/select';
 import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 import { IDropDownAccounts } from 'app/models';
+import { BudgetDetailComponent } from '../budget-detail/budget-detail.component';
+import { BudgetTableComponent } from '../budget-table/budget-table.component';
 
 
 
@@ -35,11 +37,11 @@ const imports = [
   MaterialModule,
   ComboBoxModule,
   FormsModule,
-  JournalDetailComponent,
+  BudgetDetailComponent,
   DndComponent,
   GridMenubarStandaloneComponent,
-  JournalEditComponent,
-  JournalTableComponent,
+  BudgetEditComponent,
+  BudgetTableComponent,
   NgxMaskDirective,
   NgxMaskPipe,
   FileManagerComponent,
@@ -50,12 +52,12 @@ const imports = [
   selector: 'journal-update',
   standalone: true,
   imports: [imports],
-  templateUrl: './journal-update.component.html',
+  templateUrl: './budget-update.component.html',
   providers: [provideNgxMask()],
   changeDetection: ChangeDetectionStrategy.OnPush,
   styles: ``,
 })
-export class JournalUpdateComponent implements OnInit, OnDestroy, AfterViewInit {
+export class BudgetUpdateComponent implements OnInit, OnDestroy, AfterViewInit {
 
   @Output() notifyDrawerClose: EventEmitter<any> = new EventEmitter();
   @Input() public sTitle: string;
@@ -624,7 +626,7 @@ export class JournalUpdateComponent implements OnInit, OnDestroy, AfterViewInit 
     dialogConfig.data = e.data;
     dialogConfig.width = "450px";
 
-    const dialogRef = this.dialog.open(JournalEditComponent, dialogConfig);
+    const dialogRef = this.dialog.open(BudgetEditComponent, dialogConfig);
 
     dialogRef.afterClosed().subscribe(
       val => {

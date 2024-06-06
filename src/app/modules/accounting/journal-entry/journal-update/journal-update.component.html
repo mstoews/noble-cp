@@ -1,4 +1,5 @@
 <div class="flex flex-col w-full filter-article filter-interactive text-gray-700">
+  
 
     <div class="flex flex-col m-2">
         <div class="text-3xl gap-2 m-1 text-gray-100 p-2  bg-slate-600">Transaction : {{journal_id}}</div>
@@ -44,18 +45,53 @@
 
         <form [formGroup]="journalDetailForm">
             <div class="flex flex-col">
+                <dx-context-menu
+                [dataSource]="items"
+                [width]="200"
+                target="#journal_subid"
+                (onItemClick)="itemClick($event)" >
+            </dx-context-menu>
+            
                 <div class="text-3xl m-1 text-gray-100 p-2  bg-slate-600">Details</div>
                 <div class="flex flex-col h-full ml-1 mr-1 text-gray-800">
                     @if ( loading === false) {
                     @if (detailsListSignal() !== null) {
+                    @if (funds$ | async; as funds) {                       
+                    @if (subtype$ | async; as subtypes) {
+                    @if (filteredAccounts | async; as accounts ) {
                     <dx-data-grid id="journal_subid" [columnHidingEnabled]="true" [wordWrapEnabled]="false"
                         [dataSource]="detailsListSignal()" [showColumnLines]="true" [showRowLines]="true"
                         [showBorders]="true" [focusedRowEnabled]="true" keyExpr="journal_subid"
-                        (onFocusedRowChanged)="onFocusedDetailRowChanged($event)" [repaintChangesOnly]="false">
-                        <dxi-column dataField="journal_subid" caption="ID" width="60"> </dxi-column>
-                        <dxi-column dataField="child" caption="Account" width="90"> </dxi-column>
-                        <dxi-column dataField="fund" caption="Fund" width="100"> </dxi-column>
-                        <dxi-column dataField="sub_type" caption="Sub Type" width="150"> </dxi-column>
+                        (onSelectionChanged)="onSelectionChanged($event)"
+                        (onEditingStart)="onEditingStart($event)"
+                        (onSaved)="onSaved($event)"
+                        (onEditCanceling)="onEditCanceling($event)"
+                        (onEditCanceled)="onEditCanceled($event)"
+                        (onFocusedRowChanged)="onFocusedDetailRowChanged($event)" 
+                        [repaintChangesOnly]="true">
+                        <dxo-editing
+                        mode="cell"
+                        [allowUpdating]="true"
+                        [allowAdding]="false"
+                        [allowDeleting]="false" >
+                        
+                      </dxo-editing>
+                      <dxo-selection mode="multiple"></dxo-selection>
+                        <dxi-column dataField="journal_subid" caption="ID" width="50"> </dxi-column>
+                        <dxi-column dataField="child" caption="Account" width="250"> 
+                            <dxo-lookup [dataSource]="accountList" displayExpr="description" valueExpr="child">
+                            </dxo-lookup>
+                        </dxi-column>
+                        
+                        <dxi-column dataField="fund" caption="Fund" width="100">
+                            <dxo-lookup [dataSource]="funds" displayExpr="fund" valueExpr="fund">
+                            </dxo-lookup>
+                         </dxi-column>
+                        
+                         <dxi-column dataField="sub_type" caption="Sub Type" width="150">
+                            <dxo-lookup [dataSource]="subtypes" displayExpr="subtype" valueExpr="subtype">      </dxo-lookup>
+                        </dxi-column>
+                        
                         <dxi-column dataField="description"> </dxi-column>
                         <dxi-column dataField="reference" width="150"> </dxi-column>
                         <dxi-column dataField="debit" dataType="number" width="120" alignment="right"
@@ -76,6 +112,9 @@
                     </dx-data-grid>
                     }
                     }
+                    }
+                    }
+                    }
                     @else {
                     <div class="flex justify-center">
                         <div>
@@ -85,7 +124,7 @@
                     </div>
                     }
                 </div>
-                @if (journal_subid > 0 ) {
+                <!-- @if (journal_subid > 0 ) {
                     <div class="text-3xl m-1 text-gray-100 p-2 mt-2  bg-slate-600">Update Details {{journal_subid}}</div>
                 }
                 @else {
@@ -103,9 +142,7 @@
                             <input matInput placeholder="Reference" formControlName="reference" />
                         </mat-form-field>
                     </div>
-                </section>
-
-                <section class="flex flex-col md:flex-row mt-2">
+                
                      <div class="flex flex-col w-[350px]">
                         @if (filteredAccounts | async; as accounts ) {
                         <mat-form-field>
@@ -175,12 +212,13 @@
 
                         </mat-form-field>
                     </div>
-                </section>
+                </section> -->
                 
             </div>
 
         </form>
     </div>
+
 
 
     <div mat-dialog-actions class="m-1 gap-2">
@@ -220,5 +258,5 @@
         </button>
         }
     </div>
-
+    
 </div>

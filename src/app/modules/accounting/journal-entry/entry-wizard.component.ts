@@ -422,7 +422,7 @@ export class EntryWizardComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   formatNumber(e) {
-    if (e.value === null) {
+    if (e.value === null || e.value === undefined) {
       e.value = 0;
     }
     const options = {

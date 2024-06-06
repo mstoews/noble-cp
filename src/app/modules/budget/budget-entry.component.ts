@@ -12,8 +12,8 @@ import { FundsService } from 'app/services/funds.service';
 import { GLAccountsService } from 'app/services/accounts.service';
 import { GlTransactionsService } from 'app/services/gltransaction.service';
 import { GridMenubarStandaloneComponent } from '../accounting/grid-menubar/grid-menubar.component';
-import { JournalDetailComponent } from './journal-detail/journal-detail.component';
-import { JournalUpdateComponent } from './journal-update/journal-update.component';
+import { BudgetDetailComponent } from './budget-detail/budget-detail.component';
+import { BudgetUpdateComponent } from './budgetl-update/budget-update.component';
 import { MatDrawer } from '@angular/material/sidenav';
 import { MaterialModule } from 'app/services/material.module';
 import { SubTypeService } from 'app/services/subtype.service';
@@ -29,26 +29,26 @@ const imports = [
     ReactiveFormsModule,
     MaterialModule,
     FormsModule,
-    JournalDetailComponent,
+    BudgetDetailComponent,
     DndComponent,
     GridMenubarStandaloneComponent,
-    JournalUpdateComponent,
+    BudgetUpdateComponent,
     NgxMatSelectSearchModule
 ];
 
 
 @Component({
-    selector: 'transactions',
+    selector: 'budgets',
     standalone: true,
     imports: [imports],
-    templateUrl: './journal-entry.component.html',
+    templateUrl: './budget-entry.component.html',
     styles: `::ng-deep .dx-datagrid .dx-datagrid-rowsview .dx-row-focused.dx-data-row:not(.dx-edit-row) > td:not(.dx-focused)
     {
        background-color: rgb(195, 199, 199);
        border-color: #ada6a7;
     }`
 })
-export class JournalEntryComponent implements OnInit, OnDestroy {
+export class BudgetEntryComponent implements OnInit, OnDestroy {
     private journalService = inject(JournalService);
     private typeService = inject(TypeService);
     private subtypeService = inject(SubTypeService);
@@ -63,7 +63,7 @@ export class JournalEntryComponent implements OnInit, OnDestroy {
     public details$ = this.journalService.getJournalDetail(0);
 
     drawer = viewChild<MatDrawer>('drawer')
-    journalUpdate = viewChild(JournalUpdateComponent);
+    journalUpdate = viewChild(BudgetUpdateComponent);
 
     collapsed = false;
     sTitle = 'Journal Entry';
