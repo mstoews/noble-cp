@@ -292,7 +292,7 @@ export class JournalUpdateComponent implements OnInit, OnDestroy, AfterViewInit 
 
     this.journalForm = this.fb.group({
       description: [this.description, Validators.required],
-      header_amount: [this.amount, Validators.required],
+      amount: [this.amount, Validators.required],
       transaction_date: [this.transaction_date, Validators.required]
     });
 
@@ -312,7 +312,7 @@ export class JournalUpdateComponent implements OnInit, OnDestroy, AfterViewInit 
       this.detailsListSignal = this.journalService.getJournalDetail(0);
       this.journalForm = this.fb.group({
         description: [this.description, Validators.required],
-        header_amount: [this.amount, Validators.required],
+        amount: [this.amount, Validators.required],
         transaction_date: [this.transaction_date, Validators.required],
       });
     }
@@ -374,7 +374,7 @@ export class JournalUpdateComponent implements OnInit, OnDestroy, AfterViewInit 
   createEmptyForm() {
     this.journalForm = this.fb.group({
       description: [this.description, Validators.required],
-      header_amount: [this.amount, Validators.required],
+      amount: [this.amount, Validators.required],
       transaction_date: [this.transaction_date, Validators.required]
     });
     this.journalDetailForm = this.fb.group({
@@ -566,6 +566,12 @@ export class JournalUpdateComponent implements OnInit, OnDestroy, AfterViewInit 
       transaction_date: header.transaction_date,
       amount: Number(header.header_amount)
     }
+
+    this.journalForm = this.fb.group({
+      description: [this.description, Validators.required],
+      amount: [Number(header.header_amount), Validators.required],
+      transaction_date: [this.transaction_date, Validators.required]
+    });
 
     this.journalService.updateJournalHeader(journalHeaderUpdate);
 
