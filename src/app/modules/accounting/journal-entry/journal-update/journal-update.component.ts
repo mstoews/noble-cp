@@ -390,10 +390,35 @@ export class JournalUpdateComponent implements OnInit, OnDestroy, AfterViewInit 
   }
 
   closeDrawer() {
-    this.journalDetailForm.reset();
-    this.journalForm.reset();
-    this._change.markForCheck();
-    this.notifyDrawerClose.emit();
+    if (this.bDirty === false) {
+      this.journalDetailForm.reset();
+      this.journalForm.reset();
+      this._change.markForCheck();
+      this.notifyDrawerClose.emit();
+    }
+    else
+    {
+      const confirmation = this.fuseConfirmationService.open({
+        title: 'Unsaved Changes',
+        message: 'Would you like to save the changes before the edit window is closed and the changes lost?  ',
+        actions: {
+          confirm: {
+            label: 'Close Without Saving',
+          },
+        },
+      });
+  
+      // Subscribe to the confirmation dialog closed action
+      confirmation.afterClosed().subscribe((result) => {
+  
+        if (result === 'confirmed') {
+          this.journalDetailForm.reset();
+          this.journalForm.reset();
+          this._change.markForCheck();
+          this.notifyDrawerClose.emit();
+        }
+      });
+    }
   }
 
   onDelete() {

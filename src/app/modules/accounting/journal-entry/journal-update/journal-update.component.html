@@ -221,10 +221,13 @@
 
 
     <div mat-dialog-actions class="m-1 gap-2">
-        <button mat-icon-button color="primary" class=" bg-slate-200 text-gray-100 hover:bg-slate-400 ml-1" (click)="onUpdateJournalEntry()"
+        @if (bDirty === true) {
+        <button mat-icon-button class=" bg-green-300 text-gray-100 hover:bg-slate-400 ml-1" 
+            (click)="onUpdateJournalEntry()"
             matTooltip="Update Line Item" aria-label="hover over">
             <mat-icon [svgIcon]="'feather:refresh-cw'"></mat-icon>
         </button>
+        }
 
         <button mat-icon-button color="primary" class="bg-slate-200 text-gray-100 hover:bg-slate-400 ml-1"
             (click)=" onAddLineJournalDetail()" matTooltip="Add Line" aria-label="hovered over">
