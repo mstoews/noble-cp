@@ -433,13 +433,21 @@ export class JournalUpdateComponent implements OnInit, OnDestroy, AfterViewInit 
 
     const updateDate = new Date().toISOString().split('T')[0];
     const email = this.auth.currentUser?.email;
+    var max = 0;
+
+    for (let i = 0; i < this.detailsListSignal().length; i++) {
+       if(this.detailsListSignal()[i].journal_subid > max )
+          max = this.detailsListSignal()[i].journal_subid 
+    }
+
+    console.debug('max number in subid = ', max);
 
     if (this.detailsListSignal().length > 0) {
       const sub = this.detailsListSignal().length + 1;
       const journalCopy = this.detailsListSignal();
       const journalDetail = {
         "journal_id": this.journal_id,
-        "journal_subid": sub,
+        "journal_subid": max+1,
         "account": journalCopy[0].account,
         "child": journalCopy[0].child,
         "description": journalCopy[0].description,
