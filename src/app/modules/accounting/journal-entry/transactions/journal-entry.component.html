@@ -64,7 +64,7 @@
                             
                             <dxo-master-detail [enabled]="true" template="detail"> </dxo-master-detail>
                             <div *dxTemplate="let journal of 'detail'">
-                                <journal-detail 
+                                <journal-detail                                     
                                     [key]="journal.data.journal_id" 
                                     [description]="journal.data.description"
                                     [transaction_date]="journal.data.transaction_date"    

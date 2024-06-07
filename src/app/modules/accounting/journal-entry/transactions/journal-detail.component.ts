@@ -2,13 +2,13 @@ import { Component, EventEmitter, Input, OnInit, Output, ViewChild, inject } fro
 import { DxDataGridModule, DxDataGridTypes } from 'devextreme-angular/ui/data-grid';
 import { DxNumberBoxModule, DxTemplateModule } from 'devextreme-angular';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { IJournalDetail, JournalService } from 'app/services/journal.service';
 import { CommonModule } from '@angular/common';
 import { DndComponent } from 'app/modules/drag-n-drop/loaddnd/dnd.component';
 import { FuseConfirmationService } from '@fuse/services/confirmation';
 import { MatDialog } from '@angular/material/dialog';
 import { MaterialModule } from 'app/services/material.module';
-import { Observable } from 'rxjs';
+import { TransactionDetailStore } from './transaction.store';
+
 
 const imports = [
     CommonModule,
@@ -26,6 +26,7 @@ const imports = [
     standalone: true,
     imports: [imports],
     templateUrl: './journal-detail.component.html',
+    providers: [TransactionDetailStore],
     styles: `::ng-deep .dx-datagrid .dx-datagrid-rowsview .dx-row-focused.dx-data-row:not(.dx-edit-row) > td:not(.dx-focused) {
     background-color: rgb(195, 199, 199);
     border-color: rgb(195, 199, 199);
@@ -41,11 +42,13 @@ export class JournalDetailComponent implements OnInit {
     @Output() notifyTransactionEvidence: EventEmitter<any> = new EventEmitter();
     @Output() notifyTransactionEdit: EventEmitter<any> = new EventEmitter();
 
-
+    store = inject(TransactionDetailStore)
+    
     isModifiable: boolean = false;
     private fb = inject(FormBuilder);
 
-    public journalService = inject(JournalService);
+    journalNo: number;
+    
     matDialog = inject(MatDialog);
 
     private fuseConfirmationService = inject(FuseConfirmationService);
@@ -55,13 +58,10 @@ export class JournalDetailComponent implements OnInit {
     journalForm!: FormGroup;
     sTitle = 'Journal Entry Modification';
 
-    details$ = this.journalService.getJournalDetail(0);
-    glaccts$ = this.journalService.listAccounts();
-
     // details$ = this.transactionService.getAllTransactions();
-    ngOnInit() {
-        const journalNo = Number(this.key)
-        this.details$ = this.journalService.getJournalDetail(journalNo);
+    ngOnInit() {  
+        this.journalNo = Number(this.key);
+        this.store.loadDetails(this.journalNo);              
         this.journalForm = this.fb.group({
             journal_id: ['', Validators.required],
             account: ['', Validators.required],
@@ -150,7 +150,7 @@ export class JournalDetailComponent implements OnInit {
         const dialogRef = this.matDialog.open(DndComponent, {
             width: '600px',
             data: {
-                reference_no: this.key,
+                reference_no: this.journalNo,
                 description: "description",
             },
         });

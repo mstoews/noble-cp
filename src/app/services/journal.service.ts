@@ -116,7 +116,9 @@ export class JournalService implements OnDestroy  {
   snackBar = inject(MatSnackBar);
   private baseUrl = environment.baseUrl;
   ngDestroy$ = new Subject();
-  
+
+  // Journal Detail signal
+  journalDetailList = signal<IJournalDetail[]>([]);
   
   // Journal Header signal
   journalHeaderList = signal<IJournalHeader[]>([]);
@@ -146,12 +148,10 @@ export class JournalService implements OnDestroy  {
     return this.journalHeaderList;
   }
 
-  // Journal Detail signal
-  journalDetailList = signal<IJournalDetail[]>([]);
   
   addJournalDetailSignal(journalItem: IJournalDetail){
     this.journalDetailList.update(items => [...items, journalItem]);
-    
+  
   }
 
   updateJournalDetailSignal(journalItem: IJournalDetail){
@@ -209,11 +209,16 @@ export class JournalService implements OnDestroy  {
       shareReplay())
   }
 
+  getHttpJournalDetails(journal_id: number) {
+    if (journal_id === undefined) 
+      journal_id = 177
+    var url = this.baseUrl + '/v1/get_journal_detail/'+journal_id;
+    return this.httpClient.get<IJournalDetail[]>(url)
+  }
+
   getJournalDetail(journal_id: number) {
-    var url = this.baseUrl + '/v1/get_journal_detail/' + journal_id.toString();
-    this.httpClient.post<IJournalDetail[]>(url, {
-       journal_id: journal_id
-      }).pipe(
+    var url = this.baseUrl + '/v1/get_journal_detail/'+journal_id;
+    this.httpClient.get<IJournalDetail[]>(url).pipe(
         tap(data => this.journalDetailList.set(data)),
         take(1),
         catchError(err => {
@@ -275,17 +280,6 @@ export class JournalService implements OnDestroy  {
       }).pipe(
       shareReplay());
   }
-
-  /* 
-  var url = this.baseUrl + '/v1/tasks_list';
-    const sub = this.httpClient.get<IKanban[]>(url).pipe(
-      tap(data => this.kanbanList.set(data)),
-      take(1),
-      catchError(() => of([] as IKanban[]))
-    ).subscribe();
-    return this.kanbanList;
-  */
-
   
   listAccounts() {
     var url = this.baseUrl + '/v1/list_accounts';
@@ -309,7 +303,7 @@ export class JournalService implements OnDestroy  {
       amount: Number(header.amount)
     }
     return this.httpClient.post<any>(url, journalHeaderUpdate).pipe(
-      tap(data => console.debug(data)),
+      tap(data => this.updateJournalHeaderSignal(data)),
       take(1),
       catchError(err => {
           const message = "Could not save journal header ...";
@@ -318,8 +312,8 @@ export class JournalService implements OnDestroy  {
           return throwError(() => new Error(`Invalid time ${ err }`));         
       }),
       shareReplay()
-    )
-    .subscribe();
+    ).subscribe();
+
   }
 
   deleteJournalHeader(journal_id: number) {
@@ -349,6 +343,7 @@ export class JournalService implements OnDestroy  {
     var url = this.baseUrl + '/v1/update_journal_detail';    
     this.httpClient.post<IJournalDetail>(url, detail)
       .pipe(
+      tap( data => this.updateJournalDetailSignal(data)),
       catchError(err => {
           this.message("Could not save journal detail"); 
           return throwError(() => new Error(`Invalid time ${ err }`));         
@@ -361,11 +356,14 @@ export class JournalService implements OnDestroy  {
         duration: 2000,
       });
     });
-    this.updateJournalDetailSignal(detail);
-    
   }
 
-  
+
+  updateHttpJournalDetail(detail: IJournalDetail) {         
+    var url = this.baseUrl + '/v1/update_journal_detail';    
+    return this.httpClient.post<IJournalDetail>(url, detail);      
+  }
+
   
   message(msg: string){
     this.snackBar.open(msg, 'OK', {
@@ -376,10 +374,26 @@ export class JournalService implements OnDestroy  {
     });
   }
 
+
+
+  deleteHttpJournalDetail(journal_id: number, journal_subid: number) { 
+    const detail = {
+      journal_id: journal_id,
+      journal_subid : journal_subid
+    }
+    var url = this.baseUrl + '/v1/delete_journal_details';
+    return this.httpClient.post<IJournalDetailDelete>(url, detail)     
+  }
+
+
   deleteJournalDetail(detail: any){ 
     var url = this.baseUrl + '/v1/delete_journal_details';
     this.httpClient.post<IJournalDetailDelete>(url, detail )
     .pipe(
+      tap (data => { 
+        console.log('deleted journal id', data);
+        this.deleteJournalDetailSignal(detail)
+      }),
       catchError(err => {
           this.message("Could not save journal detail"); 
           return throwError(() => new Error(`Invalid time ${ err }`));         
@@ -390,8 +404,7 @@ export class JournalService implements OnDestroy  {
         verticalPosition: 'top',
         horizontalPosition: 'right',
         duration: 2000,
-      });
-      this.deleteJournalDetailSignal(detail);
+      });      
     });
     
   }
@@ -413,6 +426,12 @@ export class JournalService implements OnDestroy  {
       });
     });
     this.addJournalDetailSignal(detail);
+  }
+
+  
+  createHttpJournalDetail(detail: IJournalDetail) {
+    var url = this.baseUrl + '/v1/create_journal_detail';
+    return this.httpClient.post<IJournalDetail>(url, detail);    
   }
 
   

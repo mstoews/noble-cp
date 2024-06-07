@@ -6,7 +6,6 @@ import { FundsService } from 'app/services/funds.service';
 import { IJournalDetail, JournalService } from 'app/services/journal.service';
 import { MaterialModule } from 'app/services/material.module';
 import { map, Observable, Subject, takeUntil, tap } from 'rxjs';
-import { JournalTableComponent } from '../journal-table/journal-table.component';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { SubTypeService } from 'app/services/subtype.service';
 import { AUTH } from 'app/app.config';
@@ -20,7 +19,6 @@ const imports = [
   ReactiveFormsModule,
   MaterialModule,
   FormsModule,
-  JournalTableComponent,
   NgxMaskDirective,
   NgxMaskPipe
 ];

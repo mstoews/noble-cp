@@ -4,7 +4,7 @@ import { MatDrawer } from '@angular/material/sidenav';
 import { FuseMediaWatcherService } from '@fuse/services/media-watcher';
 import { MaterialModule } from 'app/services/material.module';
 import { Subject, takeUntil } from 'rxjs';
-import { JournalEntryComponent } from './journal-entry.component';
+import { JournalEntryComponent } from './transactions/journal-entry.component';
 import { JournalUpdateComponent } from './journal-update/journal-update.component';
 import { FileManagerComponent } from 'app/modules/file-manager/file-manager.component';
 import { EntryWizardComponent } from './entry-wizard.component';
@@ -12,27 +12,27 @@ import { JournalTemplateComponent } from './journal-template.component';
 
 
 const imports = [
-    MaterialModule, 
-    NgFor, 
-    NgClass, 
-    NgSwitch, 
-    NgSwitchCase, 
-    JournalEntryComponent, 
-    JournalUpdateComponent, 
-    FileManagerComponent, 
+    MaterialModule,
+    NgFor,
+    NgClass,
+    NgSwitch,
+    NgSwitchCase,
+    JournalEntryComponent,
+    JournalUpdateComponent,
+    FileManagerComponent,
     EntryWizardComponent,
     JournalTemplateComponent
-    
+
 ]
 
 @Component({
-  selector: 'transaction-main',
-  standalone: true,
-  imports        : [imports],
-  encapsulation  : ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  templateUrl: './transaction-main.component.html',
-  styles: ``
+    selector: 'transaction-main',
+    standalone: true,
+    imports: [imports],
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    templateUrl: './transaction-main.component.html',
+    styles: ``
 })
 export class TransactionMainComponent {
 
@@ -49,8 +49,7 @@ export class TransactionMainComponent {
     constructor(
         private _changeDetectorRef: ChangeDetectorRef,
         private _fuseMediaWatcherService: FuseMediaWatcherService,
-    )
-    {
+    ) {
     }
 
     // -----------------------------------------------------------------------------------------------------
@@ -60,49 +59,45 @@ export class TransactionMainComponent {
     /**
      * On init
      */
-    ngOnInit(): void
-    {
+    ngOnInit(): void {
         // Setup available panels
         this.panels = [
             {
-                id         : 'listing',
-                icon       : 'heroicons_outline:document-check',
-                title      : 'Transaction Maintenance',
+                id: 'listing',
+                icon: 'heroicons_outline:document-check',
+                title: 'Transaction Maintenance',
                 description: 'Manage your transactions and documentation',
             },
             {
-                id         : 'entry',
-                icon       : 'heroicons_outline:document-plus',
-                title      : 'Add Transaction',
+                id: 'entry',
+                icon: 'heroicons_outline:document-plus',
+                title: 'Add Transaction',
                 description: 'Create transactions and append digital artifacts for each transaction',
             },
             {
-                id         : 'template',
-                icon       : 'heroicons_outline:document-duplicate',
-                title      : 'Templates',
+                id: 'template',
+                icon: 'heroicons_outline:document-duplicate',
+                title: 'Templates',
                 description: 'Manage your accounting patterns to automate, reduce effort and provide consistency in accounting',
-            } ,
+            },
             {
-                id         : 'artifact',
-                icon       : 'feather:image',
-                title      : 'Artifact Management',
+                id: 'artifact',
+                icon: 'feather:image',
+                title: 'Artifact Management',
                 description: 'Manage the documentation of transactions',
-            }                       
+            }
         ];
 
         // Subscribe to media changes
         this._fuseMediaWatcherService.onMediaChange$
             .pipe(takeUntil(this._unsubscribeAll))
-            .subscribe(({matchingAliases}) =>
-            {
+            .subscribe(({ matchingAliases }) => {
                 // Set the drawerMode and drawerOpened
-                if ( matchingAliases.includes('lg') )
-                {
+                if (matchingAliases.includes('lg')) {
                     this.drawerMode = 'side';
                     this.drawerOpened = true;
                 }
-                else
-                {
+                else {
                     this.drawerMode = 'over';
                     this.drawerOpened = false;
                 }
@@ -115,8 +110,7 @@ export class TransactionMainComponent {
     /**
      * On destroy
      */
-    ngOnDestroy(): void
-    {
+    ngOnDestroy(): void {
         // Unsubscribe from all subscriptions
         this._unsubscribeAll.next(null);
         this._unsubscribeAll.complete();
@@ -131,13 +125,11 @@ export class TransactionMainComponent {
      *
      * @param panel
      */
-    goToPanel(panel: string): void
-    {
+    goToPanel(panel: string): void {
         this.selectedPanel = panel;
 
         // Close the drawer on 'over' mode
-        if ( this.drawerMode === 'over' )
-        {
+        if (this.drawerMode === 'over') {
             this.drawer.close();
         }
     }
@@ -147,8 +139,7 @@ export class TransactionMainComponent {
      *
      * @param id
      */
-    getPanelInfo(id: string): any
-    {
+    getPanelInfo(id: string): any {
         return this.panels.find(panel => panel.id === id);
     }
 
@@ -158,8 +149,7 @@ export class TransactionMainComponent {
      * @param index
      * @param item
      */
-    trackByFn(index: number, item: any): any
-    {
+    trackByFn(index: number, item: any): any {
         return item.id || index;
     }
 }

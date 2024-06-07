@@ -11,7 +11,7 @@ import { FundsService } from 'app/services/funds.service';
 import { GLAccountsService } from 'app/services/accounts.service';
 import { GlTransactionsService } from 'app/services/gltransaction.service';
 import { GridMenubarStandaloneComponent } from '../grid-menubar/grid-menubar.component';
-import { JournalDetailComponent } from './journal-detail/journal-detail.component';
+import { JournalDetailComponent } from './transactions/journal-detail.component';
 import { JournalUpdateComponent } from './journal-update/journal-update.component';
 import { MatDrawer } from '@angular/material/sidenav';
 import { MaterialModule } from 'app/services/material.module';

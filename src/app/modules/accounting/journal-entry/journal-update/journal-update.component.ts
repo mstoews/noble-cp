@@ -1,19 +1,18 @@
 import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild, inject } from '@angular/core';
 import { DxDataGridModule, DxTemplateModule } from 'devextreme-angular';
 import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { IJournalDetail, IJournalDetailDelete, IJournalHeader, JournalService } from 'app/services/journal.service';
+import { IJournalDetail, IJournalDetailDelete, IJournalHeader, IJournalHeaderUpdate, JournalService } from 'app/services/journal.service';
 import { Observable, ReplaySubject, Subject, Subscription, interval, map, startWith, take, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { DndComponent } from 'app/modules/drag-n-drop/loaddnd/dnd.component';
 import { FundsService } from 'app/services/funds.service';
 import { GLAccountsService } from 'app/services/accounts.service';
 import { GridMenubarStandaloneComponent } from '../../grid-menubar/grid-menubar.component';
-import { JournalDetailComponent } from '../journal-detail/journal-detail.component';
+import { JournalDetailComponent } from '../transactions/journal-detail.component';
 import { MaterialModule } from 'app/services/material.module';
 import { SubTypeService } from 'app/services/subtype.service';
 import { TypeService } from 'app/services/type.service';
 import { JournalEditComponent } from './journal-edit.component';
-import { JournalTableComponent } from '../journal-table/journal-table.component';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { NgxMaskDirective, NgxMaskPipe, provideNgxMask } from 'ngx-mask';
 import { FuseConfirmationService } from '@fuse/services/confirmation';
@@ -26,7 +25,7 @@ import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 import { IDropDownAccounts } from 'app/models';
 import notify from 'devextreme/ui/notify';
 import { DxContextMenuModule, DxContextMenuTypes } from 'devextreme-angular/ui/context-menu';
-import { TableGridComponent } from '../table/table.component';
+
 
 declare var __moduleName: string;
 
@@ -42,13 +41,11 @@ const imports = [
   DndComponent,
   GridMenubarStandaloneComponent,
   JournalEditComponent,
-  JournalTableComponent,
   NgxMaskDirective,
   NgxMaskPipe,
   FileManagerComponent,
   NgxMatSelectSearchModule,
-  DxContextMenuModule,
-  TableGridComponent
+  DxContextMenuModule
 ];
 
 @Component({
@@ -77,7 +74,7 @@ export class JournalUpdateComponent implements OnInit, OnDestroy, AfterViewInit 
   @Input() public amount: string;
   @Input() public bNewTransaction = true;
 
-  
+
 
   private fb = inject(FormBuilder);
   private journalService = inject(JournalService);
@@ -106,7 +103,7 @@ export class JournalUpdateComponent implements OnInit, OnDestroy, AfterViewInit 
   subtype$ = this.subtypeService.read();
   accounts$ = this.accountService.readChildren();
   dropDownChildren$ = this.accountService.readChildren()
-  
+
   detailsListSignal = this.journalService.getJournalDetail(0);
 
   private fuseConfirmationService = inject(FuseConfirmationService);
@@ -122,29 +119,29 @@ export class JournalUpdateComponent implements OnInit, OnDestroy, AfterViewInit 
   myControl = new FormControl('');
   accountOptions: Observable<string[]>;
   bDirty = false;
-  
+
   public journalDetailList = [];
   public accountsListSubject: Subscription;
-  
-  
+
+
   // drop down searchable list
   public accountList: IDropDownAccounts[] = [];
   public accountCtrl: FormControl<IDropDownAccounts> = new FormControl<IDropDownAccounts>(null);
   public accountFilterCtrl: FormControl<string> = new FormControl<string>('');
   public filteredAccounts: ReplaySubject<IDropDownAccounts[]> = new ReplaySubject<IDropDownAccounts[]>(1);
 
-  @ViewChild('singleSelect', { static: true }) 
+  @ViewChild('singleSelect', { static: true })
   singleSelect: MatSelect;
 
   protected _onDestroy = new Subject<void>();
 
   constructor() {
     this.items = [
-    { text: 'Cut' },
-    { text: 'Delete' },
-    { text: 'Add line' },
-    { text: 'Copy' },
-    { text: 'Paste' },
+      { text: 'Cut' },
+      { text: 'Delete' },
+      { text: 'Add line' },
+      { text: 'Copy' },
+      { text: 'Paste' },
     ];
   }
 
@@ -154,11 +151,11 @@ export class JournalUpdateComponent implements OnInit, OnDestroy, AfterViewInit 
     }
   }
 
-  onSelectionChanged(e: any){
+  onSelectionChanged(e: any) {
     console.log(JSON.stringify(e));
   }
 
-  onEditingStart(e: any){
+  onEditingStart(e: any) {
     console.log(e);
   }
 
@@ -166,46 +163,65 @@ export class JournalUpdateComponent implements OnInit, OnDestroy, AfterViewInit 
     console.log(e);
   }
 
-  onEditCanceling(e: any){
-    console.log(JSON.stringify(e));
-  }
-
-  onSaved(e: any){
+  // Update only the signal and mark as dirty. When completed update the whole signal. 
+  onSaved(e: any) {
     this.bDirty = true;
-    console.log('onSaved ', e);
-    this.detailsListSignal.update()
+    const updateDate = new Date().toISOString().split('T')[0];
+    const email = this.auth.currentUser?.email;
+    const changes = e.changes[0].data;
+    console.log('onSaved ', changes);
+    const journalDetail = {
+      "journal_id": changes.journal_id,
+      "journal_subid": changes.journal_subid,
+      "account": Number(changes.account),
+      "child": Number(changes.child),
+      "description": changes.description,
+      "create_date": updateDate,
+      "create_user": email,
+      "sub_type": changes.sub_type,
+      "debit": changes.debit,
+      "credit": changes.credit,
+      "reference": changes.reference,
+      "fund": changes.fund
+    }
+    this.journalService.updateJournalDetailSignal(journalDetail);
+    if (this.detailsListSignal.length > 0) {
+      this.detailsListSignal().forEach(data => {
+        console.log(data);
+      })
+    }
 
   }
 
 
 
 
-  ngOnInit(): void {    
+  ngOnInit(): void {
     this.accountsListSubject = this.dropDownChildren$.subscribe(accounts => {
-        accounts.forEach(acct =>{          
-          var list = {            
-            account: acct.account,
-            child: acct.child,
-            description: acct.description
-          }
-          this.accountList.push(list)
-        })        
-        this.filteredAccounts.next(this.accountList.slice());
-        console.debug('Length of array: ',this.accountList.length)
-     });
+      accounts.forEach(acct => {
+        var list = {
+          account: acct.account,
+          child: acct.child,
+          description: acct.description
+        }
+        this.accountList.push(list)
+      })
+      this.filteredAccounts.next(this.accountList.slice());
+      console.debug('Length of array: ', this.accountList.length)
+    });
 
     this.updateDetailList();
     this.createEmptyForm();
     this.refresh(this.journal_id, this.description, this.transaction_date, this.amount);
-    
+
     this.accountFilterCtrl.valueChanges.pipe(takeUntil(this._onDestroy))
-    .subscribe(() => {
-      this.filterAccounts();
-    });
+      .subscribe(() => {
+        this.filterAccounts();
+      });
   }
 
   protected setInitialValue() {
-        this.detailsListSignal = this.journalService.getJournalDetail(this.journal_id);
+    this.detailsListSignal = this.journalService.getJournalDetail(this.journal_id);
   }
 
   ngAfterViewInit() {
@@ -226,15 +242,15 @@ export class JournalUpdateComponent implements OnInit, OnDestroy, AfterViewInit 
     }
     // filter the banks
     this.filteredAccounts.next(
-      this.accountList.filter(account => account.description.toLowerCase().indexOf(search) > -1)      
+      this.accountList.filter(account => account.description.toLowerCase().indexOf(search) > -1)
     );
   }
-  
+
   onFocusedDetailRowChanged(e: any) {
     this.currentRowData = e.row.data;
     this.journal_subid = e.row.data.journal_subid;
     this.updateForm(e.row.data)
-    this.editing = true;    
+    this.editing = true;
     this.journalHeaderData = this.journalService.readJournalHeaderById(this.journal_id);
   }
 
@@ -256,7 +272,7 @@ export class JournalUpdateComponent implements OnInit, OnDestroy, AfterViewInit 
       debit: [row.debit, Validators.required],
       credit: [row.credit, Validators.required]
     });
-    
+
     const index = this.accountList.findIndex(account => account.child == row.child);
     this.accountCtrl.setValue(this.accountList[index]);
 
@@ -321,7 +337,7 @@ export class JournalUpdateComponent implements OnInit, OnDestroy, AfterViewInit 
 
     // Subscribe to the confirmation dialog closed action
     confirmation.afterClosed().subscribe((result) => {
-      
+
       if (result === 'confirmed') {
         // Delete the list
         // this.journalService.cre
@@ -385,119 +401,78 @@ export class JournalUpdateComponent implements OnInit, OnDestroy, AfterViewInit 
       "journal_id": this.currentRowData.journal_id,
       "journal_subid": this.currentRowData.journal_subid,
     }
-        const confirmation = this._fuseConfirmationService.open({
-            title: `Delete  transaction number : ${journalDetail.journal_id}-${journalDetail.journal_subid} `,
-            message: 'Are you sure you want to delete this line entry? ',
-            actions: {
-                confirm: {
-                    label: 'Delete',
-                },
-            },
-        });
-
-        // Subscribe to the confirmation dialog closed action
-        confirmation.afterClosed().subscribe((result) => {
-            // If the confirm button pressed...
-            if (result === 'confirmed') {
-                // Delete the list
-                this.delete(journalDetail);
-                
-            }
-        });
-  }
-
-  delete(journal: IJournalDetailDelete) {
-    this.journalService.deleteJournalDetail(journal);
-    this.journalDetailForm.reset();
-    this.accountCtrl.reset();
-    
-  } 
-
-  onAddLineJournalDetail() {
-    const dDate = new Date();
-    const updateDate = dDate.toISOString().split('T')[0];
-    const email = this.auth.currentUser?.email;
-    var debit: number;
-    var credit: number;
-
-    this.editing = false;
-
-    var detail = this.journalDetailForm.getRawValue();
-
-    const childAccount = this.accountCtrl.getRawValue();
-
-    if (childAccount === undefined ) {
-      this.snackBar.open('Select a booking account from the dropdown list ...', 'OK', {
-        verticalPosition: 'top',
-        horizontalPosition: 'right',
-        duration: 2000,
-      });
-      return;
-    }
-    
-    var journal_subid = this.detailsListSignal().length + 1;
-
-    if (detail.detail_description === '' || detail.detail_description === undefined || detail.detail_description === null) {
-      const confirmation = this._fuseConfirmationService.open({
-        title: `Journal Line : ${this.journal_id}`,
-        message: 'Would you like to add a new journal entry detail line? ',
-        actions: {
-            confirm: {
-                label: 'Add Line',
-            },
+    const confirmation = this._fuseConfirmationService.open({
+      title: `Delete  transaction number : ${journalDetail.journal_id}-${journalDetail.journal_subid} `,
+      message: 'Are you sure you want to delete this line entry? ',
+      actions: {
+        confirm: {
+          label: 'Delete',
         },
+      },
     });
 
     // Subscribe to the confirmation dialog closed action
     confirmation.afterClosed().subscribe((result) => {
-        // If the confirm button pressed...
-        if (result === 'confirmed') {
-            return;            
-        }
+      // If the confirm button pressed...
+      if (result === 'confirmed') {
+        // Delete the list
+        this.delete(journalDetail);
+
+      }
     });
-    }
 
-    debit = Number(detail.debit);
-    credit = Number(detail.credit);
+  }
 
-    if (debit > 0 && credit > 0) {
-      this.snackBar.open('Only one of debit and credit fields updated', 'OK', {
-        verticalPosition: 'top',
-        horizontalPosition: 'right',
-        duration: 2000,
-      });
-      return;
-    }
+  delete(journal: IJournalDetailDelete) {
+    this.journalService.deleteJournalDetail(journal);
+    this.bDirty = true;
+    this.onUpdateJournalEntry();
+  }
 
-    var journalDetail: IJournalDetail;
+  onAddLineJournalDetail() {
 
-    
+    const updateDate = new Date().toISOString().split('T')[0];
+    const email = this.auth.currentUser?.email;
 
-    if (journal_subid === this.journalDetailList.length) {
-      return;
-    }
-
-    if (debit !== undefined && credit !== undefined) {
-      journalDetail = {
+    if (this.detailsListSignal().length > 0) {
+      const sub = this.detailsListSignal().length + 1;
+      const journalCopy = this.detailsListSignal();
+      const journalDetail = {
         "journal_id": this.journal_id,
-        "journal_subid": journal_subid,
-        "account": Number(childAccount.account),
-        "child": Number(childAccount.child),
-        "description": detail.detail_description,
+        "journal_subid": sub,
+        "account": journalCopy[0].account,
+        "child": journalCopy[0].child,
+        "description": journalCopy[0].description,
         "create_date": updateDate,
         "create_user": email,
-        "sub_type": detail.sub_type,
-        "debit": debit,
-        "credit": credit,
-        "reference": detail.reference,
-        "fund": detail.fund
+        "sub_type": journalCopy[0].sub_type,
+        "debit": 0,
+        "credit": 0,
+        "reference": journalCopy[0].reference,
+        "fund": journalCopy[0].fund
       }
-    }
-
-    if (journalDetail !== undefined) {
       this.journalService.createJournalDetail(journalDetail);
-      this.journalEntryCleanUp();
     }
+    else {
+      const journalDetail = {
+        "journal_id": this.journal_id,
+        "journal_subid": 1,
+        "account": 0,
+        "child": 0,
+        "description": '',
+        "create_date": updateDate,
+        "create_user": email,
+        "sub_type": '',
+        "debit": 0,
+        "credit": 0,
+        "reference": '',
+        "fund": ''
+      }
+      this.journalService.createJournalDetail(journalDetail);
+    }
+    this.bDirty = true;
+    console.log('total detail journals items : ', this.detailsListSignal().length)
+
   }
 
   journalEntryCleanUp() {
@@ -514,100 +489,52 @@ export class JournalUpdateComponent implements OnInit, OnDestroy, AfterViewInit 
     var debit: number;
     var credit: number;
 
-
-    this.editing = false;
-    var header = this.journalForm.getRawValue();
-    var detail = this.journalDetailForm.getRawValue();
-
-
-
-    if (detail.detail_description === '' || detail.detail_description === undefined || detail.detail_description === null) {
-      
-      const journalHeader: any = {
-        journal_id: this.journal_id,
-        description: header.description,
-        transaction_date: header.transaction_date,
-        amount: header.header_amount
-      }
-
-      if (journalHeader !== undefined )
-      { 
-
-        this.journalService.updateJournalHeader(journalHeader);
-        this.snackBar.open('Journal header details updated ... ', 'OK', {
-          verticalPosition: 'top',
-          horizontalPosition: 'right',
-          duration: 2000,
-        });
-        return
-      }
-      else {
-        this.snackBar.open('Please select a row to edit', 'OK', {
-          verticalPosition: 'top',
-          horizontalPosition: 'right',
-          duration: 2000,
-        });  
-      }
-      return;
-    }
-
-    debit = Number(detail.debit);
-    credit = Number(detail.credit);
-
-    if (debit > 0 && credit > 0) {
-      this.snackBar.open('Only one of debit and credit fields updated', 'OK', {
+    if (this.bDirty === false) {
+      this.snackBar.open('Journal details have nothing to update ... ', 'OK', {
         verticalPosition: 'top',
         horizontalPosition: 'right',
         duration: 2000,
       });
-      return;
+      return
     }
 
-    var journalDetail: IJournalDetail;
+    this.editing = false;
+    var header = this.journalForm.getRawValue();
 
-    var childAccount = this.accountCtrl.getRawValue()
+    header.header_amount = 0.0;
+    var journal_subid = 1;
+    var journal_id = 0;
+    console.log('Detail list length', this.detailsListSignal().length);
+    this.detailsListSignal().forEach(details => {
+      header.header_amount = Number(details.debit) + header.header_amount;
+      journal_id = details.journal_id;
 
-    if (debit !== undefined && credit !== undefined) {
-      journalDetail = {
-        "journal_id": this.currentRowData.journal_id,
-        "journal_subid": this.currentRowData.journal_subid,
-        "account": Number(childAccount.account),
-        "child": Number(childAccount.child),
-        "description": detail.detail_description,
-        "create_date": updateDate,
-        "create_user": email,
-        "sub_type": detail.sub_type,
-        "debit": debit,
-        "credit": credit,
-        "reference": detail.reference,
-        "fund": detail.fund
+      debit = Number(details.debit);
+      credit = Number(details.credit);
+
+      if (debit > 0 && credit > 0) {
+        this.snackBar.open('Only one of debit and credit fields updated', 'OK', {
+          verticalPosition: 'top',
+          horizontalPosition: 'right',
+          duration: 2000,
+        });
+        return;
       }
-    }
-    
+      details.journal_subid = journal_subid;
+      this.journalService.updateJournalDetail(details);
+      journal_subid++;
+    })
 
-    
-    this.journalService.updateJournalDetail(journalDetail);
-
-    const journalHeader: any = {
-      journal_id: this.journalHeaderData.journal_id,
+    const journalHeaderUpdate: IJournalHeaderUpdate = {
+      journal_id: journal_id,
       description: header.description,
       transaction_date: header.transaction_date,
-      amount: header.header_amount
+      amount: Number(header.header_amount)
     }
 
-    this.journalService.updateJournalHeader(journalHeader);
+    this.journalService.updateJournalHeader(journalHeaderUpdate);
 
-
-    this.snackBar.open('Journal Entry Updated', 'OK', {
-      verticalPosition: 'top',
-      horizontalPosition: 'right',
-      duration: 2000,
-    });
-
-    this.journalDetailForm.reset()
-    this.accountCtrl.reset();
-    this.editing = false;
-    this.journal_subid = 0;
+    this.bDirty = false
     this._change.markForCheck();
   }
 
@@ -673,14 +600,10 @@ export class JournalUpdateComponent implements OnInit, OnDestroy, AfterViewInit 
       duration: 2000,
     });
 
-
-    // this.loadContent();
-
-    this.journalDetailForm.reset();
+    this.loadContent();
     this.detailsListSignal = null;
     this.detailsListSignal = this.journalService.getJournalDetail(this.journal_id);
     this.accountCtrl.reset();
-
   }
 
 
@@ -691,7 +614,7 @@ export class JournalUpdateComponent implements OnInit, OnDestroy, AfterViewInit 
     const take4 = numbers.pipe(take(6))
     const subs$: Subscription = take4.subscribe(res => {
       value = value + 20;
-      
+
       if (value === 120) {
         this.loading = false;
         subs$.unsubscribe();
@@ -714,7 +637,7 @@ export class JournalUpdateComponent implements OnInit, OnDestroy, AfterViewInit 
     const dialogRef = this.dialog.open(JournalEditComponent, dialogConfig);
 
     dialogRef.afterClosed().subscribe(
-      val => {        
+      val => {
         this.refresh(this.journal_id, this.description, this.transaction_date, this.amount);
       }
     );
@@ -744,7 +667,7 @@ export class JournalUpdateComponent implements OnInit, OnDestroy, AfterViewInit 
   ngOnDestroy(): void {
     if (this.accountsListSubject) {
       this.accountsListSubject.unsubscribe();
-    }  
+    }
     this._onDestroy.next();
     this._onDestroy.complete();
   }

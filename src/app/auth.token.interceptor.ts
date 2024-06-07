@@ -3,7 +3,7 @@ import { TokenService } from './token.service';
 import { environment } from 'environments/environment.prod'
 import { inject } from '@angular/core';
 import { AuthService } from './modules/auth/auth.service';
-import { catchError, switchMap } from 'rxjs';
+import { catchError, switchMap, take } from 'rxjs';
 
 const getHeaders = (): any => {
   const authState = inject(AuthService);
@@ -37,6 +37,7 @@ export const authTokenInterceptor: HttpInterceptorFn = (req, next) => {
       if (error.status === 401) {
         // Unauthorized - JWT Token expired
         return authService.refreshToken().pipe(
+          take(1),
           switchMap((tokenReceived) => {            
             let token : String = tokenReceived;
             console.debug(token);
