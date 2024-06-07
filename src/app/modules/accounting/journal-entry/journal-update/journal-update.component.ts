@@ -479,7 +479,7 @@ export class JournalUpdateComponent implements OnInit, OnDestroy, AfterViewInit 
   journalEntryCleanUp() {
     this.journalDetailForm.reset();
     this.accountCtrl.reset();
-    this.journalService.reNumberDetailJournal()
+    this.journalService.reNumberJournalDetail(this.journal_id);
   }
 
 
