@@ -425,6 +425,7 @@ export class JournalUpdateComponent implements OnInit, OnDestroy, AfterViewInit 
 
   delete(journal: IJournalDetailDelete) {
     this.journalService.deleteJournalDetail(journal);
+    this.journalService.reNumberJournalDetail(journal.journal_id);
     this.bDirty = true;
     this.onUpdateJournalEntry();
   }

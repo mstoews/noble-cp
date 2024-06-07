@@ -209,9 +209,26 @@ export class JournalService implements OnDestroy  {
       shareReplay())
   }
 
+  reNumberJournalDetail(journal_id: number ) {
+    var url = this.baseUrl + '/v1/renumber_journal_details';
+    const update = {
+      journal_id : journal_id
+    }
+    return this.httpClient.post(url, update)
+    .pipe(tap(results => console.log(results)),
+    take(1),
+    catchError(err => {
+        const message = "Could not retrieve journals ...";
+        console.debug(message, err);
+        this.message(message); 
+        return throwError(() => new Error(`${ JSON.stringify(err) }`));         
+    }),
+    shareReplay()
+  ).subscribe();
+  }
+
   getHttpJournalDetails(journal_id: number) {
-    if (journal_id === undefined) 
-      journal_id = 177
+    
     var url = this.baseUrl + '/v1/get_journal_detail/'+journal_id;
     return this.httpClient.get<IJournalDetail[]>(url)
   }
@@ -236,10 +253,7 @@ export class JournalService implements OnDestroy  {
     this.journalDetailList.set(journalDetail);
   }
 
-  reNumberDetailJournal(){
-    
-  }
-
+ 
   readJournalHeader() {
     var url = this.baseUrl + '/v1/read_journal_header';
     this.httpClient.get<IJournalHeader[]>(url).pipe(
