@@ -164,6 +164,15 @@ export class JournalService implements OnDestroy  {
     this.journalDetailList.update(items => items.filter(item => item.journal_subid != journalItem.journal_subid));
   }
 
+  reNumberJournaldetailSignal(journal_id : number) {
+    var n = 1;
+    this.journalDetailList().forEach(item => {
+      item.journal_subid = n;
+      this.updateJournalDetailSignal(item);
+      n++;
+    })
+  }
+
   readJournalDetailSignal() {
     return this.journalDetailList;
   }
@@ -357,7 +366,7 @@ export class JournalService implements OnDestroy  {
     var url = this.baseUrl + '/v1/update_journal_detail';    
     this.httpClient.post<IJournalDetail>(url, detail)
       .pipe(
-      tap( data => this.updateJournalDetailSignal(data)),
+      tap( data => console.log('details updated ', data.journal_subid)),
       catchError(err => {
           this.message("Could not save journal detail"); 
           return throwError(() => new Error(`Invalid time ${ err }`));         

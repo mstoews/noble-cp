@@ -76,7 +76,7 @@
                         
                       </dxo-editing>
                       <dxo-selection mode="multiple"></dxo-selection>
-                        <dxi-column dataField="journal_subid" caption="ID" width="50"> </dxi-column>
+                        <!-- <dxi-column dataField="journal_subid" allowEditing=false caption="ID" width="50"> </dxi-column> -->
                         <dxi-column dataField="child" caption="Account" width="250"> 
                             <dxo-lookup [dataSource]="accountList" displayExpr="description" valueExpr="child">
                             </dxo-lookup>

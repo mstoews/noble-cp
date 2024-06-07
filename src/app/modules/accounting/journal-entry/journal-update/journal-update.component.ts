@@ -120,7 +120,7 @@ export class JournalUpdateComponent implements OnInit, OnDestroy, AfterViewInit 
   accountOptions: Observable<string[]>;
   bDirty = false;
 
-  public journalDetailList = [];
+
   public accountsListSubject: Subscription;
 
 
@@ -425,9 +425,8 @@ export class JournalUpdateComponent implements OnInit, OnDestroy, AfterViewInit 
 
   delete(journal: IJournalDetailDelete) {
     this.journalService.deleteJournalDetail(journal);
-    this.journalService.reNumberJournalDetail(journal.journal_id);
     this.bDirty = true;
-    this.onUpdateJournalEntry();
+    this.journalService.reNumberJournalDetail(this.journal_id);
   }
 
   onAddLineJournalDetail() {
@@ -509,6 +508,7 @@ export class JournalUpdateComponent implements OnInit, OnDestroy, AfterViewInit 
     this.detailsListSignal().forEach(details => {
       header.header_amount = Number(details.debit) + header.header_amount;
       journal_id = details.journal_id;
+      
 
       debit = Number(details.debit);
       credit = Number(details.credit);
@@ -522,6 +522,7 @@ export class JournalUpdateComponent implements OnInit, OnDestroy, AfterViewInit 
         return;
       }
       details.journal_subid = journal_subid;
+      this.journalService.updateJournalDetailSignal(details);
       this.journalService.updateJournalDetail(details);
       journal_subid++;
     })
