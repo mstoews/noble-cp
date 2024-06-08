@@ -5,9 +5,9 @@ import { FuseMediaWatcherService } from '@fuse/services/media-watcher';
 import { MaterialModule } from 'app/services/material.module';
 import { Subject, takeUntil } from 'rxjs';
 import { JournalEntryComponent } from './transactions/journal-entry.component';
-import { JournalUpdateComponent } from './journal-update/journal-update.component';
+import { JournalUpdateComponent } from './transactions/journal-update.component';
 import { FileManagerComponent } from 'app/modules/file-manager/file-manager.component';
-import { EntryWizardComponent } from './entry-wizard.component';
+import { EntryWizardComponent } from './wizard/wizard-entry.component';
 import { JournalTemplateComponent } from './journal-template.component';
 
 
@@ -71,7 +71,7 @@ export class TransactionMainComponent {
             {
                 id: 'entry',
                 icon: 'heroicons_outline:document-plus',
-                title: 'Add Transaction',
+                title: 'Transaction Wizard',
                 description: 'Create transactions and append digital artifacts for each transaction',
             },
             {

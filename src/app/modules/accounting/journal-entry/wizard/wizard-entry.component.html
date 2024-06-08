@@ -1,7 +1,7 @@
 <div class="flex flex-col flex-auto min-w-0">
 
 
-    <div class="max-w-5xl lx:max-w-6xl">
+    <div class="md:max-w-7xl max-w-4xl">
 
         <form class="p-4 bg-card shadow rounded overflow-hidden" [formGroup]="journalEntryForm">
             <mat-vertical-stepper [linear]="true" #verticalStepper>
@@ -111,7 +111,7 @@
                             </mat-form-field>
                             }
                         </div>
-                        <div class="flex flex-col grow">
+                        <div class="flex flex-col w-[200px]">
                             <mat-form-field class="form-element">
                                 <input type="text" mask="separator.2" [leadZero]="true" thousandSeparator=","
                                     class="text-right" matInput [placeholder]="'Debit Amount'"
@@ -140,7 +140,7 @@
                             </mat-form-field>
                             }
                         </div>
-                        <div class="flex flex-col grow">
+                        <div class="flex flex-col w-[200px]">
                             <mat-form-field class="form-element">
                                 <input type="text" mask="separator.2" [leadZero]="true" thousandSeparator=","
                                     class="text-right" matInput [placeholder]="'Credit Amount'"
@@ -180,7 +180,6 @@
 
                 <mat-step [formGroupName]="'step3'" [stepControl]="journalEntryForm.get('step4')">
                     <ng-template matStepLabel>Post/Edit Transaction</ng-template>
-
                     @if (journalHeader) {
                     <div class="text-gray-800 text-3xl m-1">Confirm Transaction</div>
                     <div class="flex">
@@ -194,8 +193,14 @@
                     </div>
 
                     }
-                    <ng-container>
-                        <div class="flex flex-col h-full mb-2">
+                    <ng-container>                        
+                        <wizard-update 
+                        [journal_id]="journal_id" 
+                        [sTitle]="'Journal Entry Detail'"
+                        [description]="description"
+                        [amount]="headerAmount">
+                     </wizard-update>
+                        <!-- <div class="flex flex-col h-full mb-2">
                             @if (journalDetails !== null) {
                             <dx-data-grid id="journal_child_id" 
                                 [columnHidingEnabled]="true" 
@@ -229,15 +234,15 @@
                                 </dxo-summary>
                             </dx-data-grid>
                             }
-                        </div>
+                        </div> -->
                     </ng-container>
                     <div class="flex justify-end mt-8">
                         <button mat-icon-button color="primary" class="bg-gray-200  hover:bg-slate-400 ml-1"
-                            type="button" matTooltip="Back" aria-label="Template" matStepperPrevious>
+                            type="button" matTooltip="Back to Entry" aria-label="Template" matStepperPrevious>
                             <mat-icon [svgIcon]="'feather:arrow-left'"></mat-icon>
                         </button>
 
-                        <button mat-icon-button color="primary"
+                        <!-- <button mat-icon-button color="primary"
                             class=" bg-slate-200 text-gray-100 hover:bg-slate-400 ml-1" (click)="onUpdateJournalEntry()"
                             matTooltip="Update Line Item" aria-label="hover over">
                             <mat-icon [svgIcon]="'feather:refresh-cw'"></mat-icon>
@@ -254,13 +259,12 @@
                             matTooltip="Remove Line" aria-label="hovered over">
                             <mat-icon [svgIcon]="'feather:trash'"></mat-icon>
                         </button>
-
+ -->
                         
                         <button mat-icon-button color="primary" class="bg-gray-200  hover:bg-slate-400 ml-1"
                             type="button" matTooltip="Post Transaction" aria-label="Template" matStepperNext
-                            [disabled]="verticalStepperStep2.stepControl.pristine || verticalStepperStep2.stepControl.invalid"
-                            (click)="postTransaction()">
-                            <mat-icon [svgIcon]="'mat_outline:post_add'"></mat-icon>
+                            [disabled]="verticalStepperStep2.stepControl.pristine || verticalStepperStep2.stepControl.invalid">
+                            <mat-icon [svgIcon]="'feather:arrow-right'"></mat-icon>
                         </button>
 
                     </div>

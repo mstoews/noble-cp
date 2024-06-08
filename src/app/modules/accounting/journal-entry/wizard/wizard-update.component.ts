@@ -12,7 +12,7 @@ import { JournalDetailComponent } from '../transactions/journal-detail.component
 import { MaterialModule } from 'app/services/material.module';
 import { SubTypeService } from 'app/services/subtype.service';
 import { TypeService } from 'app/services/type.service';
-import { JournalEditComponent } from './journal-edit.component';
+import { JournalEditComponent } from '../journal-update/journal-edit.component';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { NgxMaskDirective, NgxMaskPipe, provideNgxMask } from 'ngx-mask';
 import { FuseConfirmationService } from '@fuse/services/confirmation';
@@ -50,10 +50,10 @@ const imports = [
 ];
 
 @Component({
-  selector: 'journal-update',
+  selector: 'wizard-update',
   standalone: true,
   imports: [imports],
-  templateUrl: './journal-update.component.html',
+  templateUrl: './wizard-update.component.html',
   providers: [provideNgxMask()],
   changeDetection: ChangeDetectionStrategy.OnPush,
   styles: `
@@ -63,7 +63,7 @@ const imports = [
   `,
   moduleId: __moduleName,
 })
-export class JournalUpdateComponent implements OnInit, OnDestroy, AfterViewInit {
+export class WizardUpdateComponent implements OnInit, OnDestroy, AfterViewInit {
 
   items: Record<any, unknown>[];
 
@@ -72,7 +72,7 @@ export class JournalUpdateComponent implements OnInit, OnDestroy, AfterViewInit 
   @Input() public journal_id: number;
   @Input() public description: string;
   @Input() public transaction_date: string;
-  @Input() public amount: string;
+  @Input() public amount: number;
   @Input() public bNewTransaction = true;
 
 
@@ -88,13 +88,13 @@ export class JournalUpdateComponent implements OnInit, OnDestroy, AfterViewInit 
   private _change = inject(ChangeDetectorRef);
   private _fuseConfirmationService = inject(FuseConfirmationService);
   private auth = inject(AUTH);
-  
+
 
   public journalForm!: FormGroup;
   public journalDetailForm!: FormGroup;
   public matDialog = inject(MatDialog);
-  
-  
+
+
 
   public value = 0;
   public loading = false;
@@ -212,9 +212,8 @@ export class JournalUpdateComponent implements OnInit, OnDestroy, AfterViewInit 
     });
 
     this.updateDetailList();
-    this.createEmptyForm();
     this.refresh(this.journal_id, this.description, this.transaction_date, this.amount);
-
+    
     this.accountFilterCtrl.valueChanges.pipe(takeUntil(this._onDestroy))
       .subscribe(() => {
         this.filterAccounts();
@@ -285,11 +284,11 @@ export class JournalUpdateComponent implements OnInit, OnDestroy, AfterViewInit 
     // })
   }
 
-  public refresh(journal_id: number, description: string, transaction_date: string, amount: string) {
+  public refresh(journal_id: number, description: string, transaction_date: string, amount: number) {
 
     this.description = description;
     this.transaction_date = transaction_date;
-    this.amount = amount;
+    this.amount = Number(amount);
 
     this.journalForm = this.fb.group({
       description: [this.description, Validators.required],
@@ -397,8 +396,7 @@ export class JournalUpdateComponent implements OnInit, OnDestroy, AfterViewInit 
       this._change.markForCheck();
       this.notifyDrawerClose.emit();
     }
-    else
-    {
+    else {
       const confirmation = this.fuseConfirmationService.open({
         title: 'Unsaved Changes',
         message: 'Would you like to save the changes before the edit window is closed and the changes lost?  ',
@@ -408,10 +406,10 @@ export class JournalUpdateComponent implements OnInit, OnDestroy, AfterViewInit 
           },
         },
       });
-  
+
       // Subscribe to the confirmation dialog closed action
       confirmation.afterClosed().subscribe((result) => {
-  
+
         if (result === 'confirmed') {
           this.journalDetailForm.reset();
           this.journalForm.reset();
@@ -462,8 +460,8 @@ export class JournalUpdateComponent implements OnInit, OnDestroy, AfterViewInit 
     var max = 0;
 
     for (let i = 0; i < this.detailsListSignal().length; i++) {
-       if(this.detailsListSignal()[i].journal_subid > max )
-          max = this.detailsListSignal()[i].journal_subid 
+      if (this.detailsListSignal()[i].journal_subid > max)
+        max = this.detailsListSignal()[i].journal_subid
     }
 
     console.debug('max number in subid = ', max);
@@ -473,7 +471,7 @@ export class JournalUpdateComponent implements OnInit, OnDestroy, AfterViewInit 
       const journalCopy = this.detailsListSignal();
       const journalDetail = {
         "journal_id": this.journal_id,
-        "journal_subid": max+1,
+        "journal_subid": max + 1,
         "account": journalCopy[0].account,
         "child": journalCopy[0].child,
         "description": journalCopy[0].description,
@@ -529,14 +527,14 @@ export class JournalUpdateComponent implements OnInit, OnDestroy, AfterViewInit 
     details.splice(toIndex, 0, e.itemData);
     var n = 1;
     details.forEach(journal => {
-       journal.journal_subid = n            
-       n++;       
+      journal.journal_subid = n
+      n++;
     });
     // details.forEach(journals => console.debug('Ending List', journals.child+ ' : ' + journals.journal_subid ))
     this.detailsListSignal.set(null);
     this.detailsListSignal.set(details);
-    this.bDirty = true; 
-  }  
+    this.bDirty = true;
+  }
 
   onUpdateJournalEntry() {
     const dDate = new Date();
@@ -564,7 +562,7 @@ export class JournalUpdateComponent implements OnInit, OnDestroy, AfterViewInit 
     this.detailsListSignal().forEach(details => {
       header.header_amount = Number(details.debit) + header.header_amount;
       journal_id = details.journal_id;
-      
+
 
       debit = Number(details.debit);
       credit = Number(details.credit);
@@ -670,7 +668,7 @@ export class JournalUpdateComponent implements OnInit, OnDestroy, AfterViewInit 
   }
 
 
- 
+
 
   onUpdate(e: any) {
     if (e.data === undefined) {

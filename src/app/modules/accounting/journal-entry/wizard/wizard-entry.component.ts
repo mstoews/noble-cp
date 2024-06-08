@@ -13,13 +13,12 @@ import { SubTypeService } from 'app/services/subtype.service';
 import { DxDataGridModule, DxTemplateModule } from 'devextreme-angular';
 import { NgxMaskDirective, NgxMaskPipe, provideNgxMask } from 'ngx-mask';
 import { ReplaySubject, Subject, Subscription, take, takeUntil } from 'rxjs';
-import { JournalUpdateComponent } from './journal-update/journal-update.component';
 import { MatDialog } from '@angular/material/dialog';
 import { DndComponent } from 'app/modules/drag-n-drop/loaddnd/dnd.component';
 import { MatSelect } from '@angular/material/select';
 import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 import { IDropDownAccounts } from 'app/models';
-import { filter } from 'lodash';
+import { WizardUpdateComponent } from './wizard-update.component';
 
 
 const imports = [
@@ -32,7 +31,7 @@ const imports = [
   NgxMaskPipe,
   DxDataGridModule,
   DxTemplateModule,
-  JournalUpdateComponent,
+  WizardUpdateComponent,
   DndComponent,
   NgxMatSelectSearchModule
 ]
@@ -41,7 +40,7 @@ const imports = [
   selector: 'entry-wizard',
   standalone: true,
   imports: [imports],
-  templateUrl: './entry-wizard.component.html',
+  templateUrl: './wizard-entry.component.html',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
   animations: fuseAnimations,
@@ -394,14 +393,15 @@ export class EntryWizardComponent implements OnInit, OnDestroy, AfterViewInit {
       this.journalDetails.push(journalDetail);
     }
     this.changeDesctionRef.markForCheck();
+    this.postTransaction();
   }
 
   postTransaction() {
-    var details: any;
     this.journalService.createJournalHeader(this.journalHeader).subscribe(journal => {
       console.debug(JSON.stringify(journal));
       this.journalDetails.forEach(journalDetail => {
         journalDetail.journal_id = journal.journal_id
+        this.journal_id = journal.journal_id
         this.journalService.createJournalDetail(journalDetail)
       })
     });

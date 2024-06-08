@@ -9,6 +9,10 @@
                 <div class="flex flex-col grow">
                     <mat-form-field class="mt-1 mr-1 flex-start">
                         <input matInput placeholder="Journal Description" formControlName="description" />
+                        <mat-icon class="icon-size-5" matPrefix
+                                    [svgIcon]="'heroicons_solid:calculator'"></mat-icon>
+                                    <mat-icon class="icon-size-5" matPrefix
+                                    [svgIcon]="'heroicons_solid:document'"></mat-icon>
                     </mat-form-field>
                 </div>
                 <div class="flex flex-col w-[150px]">
@@ -16,6 +20,8 @@
                         <input type="text" mask="separator.2" [leadZero]="true" thousandSeparator="," class="text-right"
                             matInput placeholder="Amount" formControlName="amount"
                             [placeholder]="'Transaction Total'" />
+                            <mat-icon class="icon-size-5" matPrefix
+                                    [svgIcon]="'heroicons_solid:currency-dollar'"></mat-icon>
                     </mat-form-field>
                 </div>
                 <div class="flex flex-col w-[150px]">
@@ -60,7 +66,7 @@
 
                         <!-- <dxo-selection mode="multiple"></dxo-selection> -->
                         <!-- <dxi-column dataField="journal_subid" allowEditing=false caption="ID" width="50"> </dxi-column> -->
-                        <dxi-column dataField="child" caption="Account" width="250">
+                        <dxi-column dataField="child" caption="Account" width="200">
                             <dxo-lookup [dataSource]="accountList" displayExpr="description" valueExpr="child">
                             </dxo-lookup>
                         </dxi-column>
@@ -70,18 +76,18 @@
                             </dxo-lookup>
                         </dxi-column>
 
-                        <dxi-column dataField="sub_type" caption="Sub Type" width="150">
+                        <dxi-column dataField="sub_type" caption="Sub Type" width="120">
                             <dxo-lookup [dataSource]="subtypes" displayExpr="subtype" valueExpr="subtype">
                             </dxo-lookup>
                         </dxi-column>
 
                         <dxi-column dataField="description"> </dxi-column>
                         <dxi-column dataField="reference" width="150"> </dxi-column>
-                        <dxi-column dataField="debit" dataType="number" width="120" alignment="right"
+                        <dxi-column dataField="debit" dataType="number" width="100" alignment="right"
                             [customizeText]="formatNumber">
                         </dxi-column>
                         <dxi-column dataField="credit" dataType="number" alignment="right"
-                            [customizeText]="formatNumber" width="120">
+                            [customizeText]="formatNumber" width="100">
                         </dxi-column>
 
                         <dxo-summary>
