@@ -25,6 +25,7 @@ import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 import { IDropDownAccounts } from 'app/models';
 import notify from 'devextreme/ui/notify';
 import { DxContextMenuModule, DxContextMenuTypes } from 'devextreme-angular/ui/context-menu';
+import { DxDataGridTypes } from 'devextreme-angular/ui/data-grid';
 
 
 declare var __moduleName: string;
@@ -87,13 +88,13 @@ export class JournalUpdateComponent implements OnInit, OnDestroy, AfterViewInit 
   private _change = inject(ChangeDetectorRef);
   private _fuseConfirmationService = inject(FuseConfirmationService);
   private auth = inject(AUTH);
-  public currentDate: string;
-  public journal_details: any[];
+  
+
   public journalForm!: FormGroup;
   public journalDetailForm!: FormGroup;
   public matDialog = inject(MatDialog);
-  public localFields: Object = { text: 'description', value: 'child' };
-  public localWaterMark: string = 'Select an account';
+  
+  
 
   public value = 0;
   public loading = false;
@@ -514,6 +515,28 @@ export class JournalUpdateComponent implements OnInit, OnDestroy, AfterViewInit 
     this.journalService.reNumberJournalDetail(this.journal_id);
   }
 
+  onReorder = (e: Parameters<DxDataGridTypes.RowDragging['onReorder']>[0]) => {
+    e.promise = this.processReorder(e);
+  };
+
+  async processReorder(e: Parameters<DxDataGridTypes.RowDragging['onReorder']>[0]) {
+    const visibleRows = e.component.getVisibleRows();
+    const toIndex = this.detailsListSignal().findIndex((item) => item.journal_subid === visibleRows[e.toIndex].data.journal_subid);
+    const fromIndex = this.detailsListSignal().findIndex((item) => item.journal_subid === e.itemData.journal_subid);
+    const details = this.detailsListSignal();
+    // details.forEach(journals => console.debug('Start List', journals.child + ' : ' + journals.journal_subid ))
+    details.splice(fromIndex, 1);
+    details.splice(toIndex, 0, e.itemData);
+    var n = 1;
+    details.forEach(journal => {
+       journal.journal_subid = n            
+       n++;       
+    });
+    // details.forEach(journals => console.debug('Ending List', journals.child+ ' : ' + journals.journal_subid ))
+    this.detailsListSignal.set(null);
+    this.detailsListSignal.set(details);
+    this.bDirty = true; 
+  }  
 
   onUpdateJournalEntry() {
     const dDate = new Date();
@@ -641,29 +664,13 @@ export class JournalUpdateComponent implements OnInit, OnDestroy, AfterViewInit 
       duration: 2000,
     });
 
-    this.loadContent();
     this.detailsListSignal = null;
     this.detailsListSignal = this.journalService.getJournalDetail(this.journal_id);
     this.accountCtrl.reset();
   }
 
 
-  loadContent() {
-    this.loading = true;
-    var value = 0;
-    const numbers = interval(300);
-    const take4 = numbers.pipe(take(6))
-    const subs$: Subscription = take4.subscribe(res => {
-      value = value + 20;
-
-      if (value === 120) {
-        this.loading = false;
-        subs$.unsubscribe();
-        this._change.markForCheck();
-
-      }
-    });
-  }
+ 
 
   onUpdate(e: any) {
     if (e.data === undefined) {
