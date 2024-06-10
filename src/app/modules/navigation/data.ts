@@ -38,44 +38,17 @@ export const defaultNavigation: FuseNavigationItem[] = [
                 icon: 'heroicons_outline:calculator',
                 link: '/budget',
             },        
+            
             {
-                id: 'accounting.finance',
-                title: 'Financial Analytics',
+                id: 'accounting.reporting',
+                title: 'Financial Reporting',
                 type: 'basic',
                 icon: 'mat_outline:money',
-                link: '/analytics',
+                link: '/reporting',
             },
 
         ]
     },
-    {
-        id      : 'account.reporting',
-        title   : 'Reporting',
-        subtitle: 'Management and Financial',
-        type    : 'collapsable',
-        icon    : 'heroicons_outline:document-text',
-                children: [
-                    {
-                        id      : 'pages.authentication.sign-in',
-                        title   : 'Trial Balances',
-                        type    : 'basic',
-                        link    : '/reporting',
-                    },
-                    {
-                        id      : 'pages.authentication.sign-in',
-                        title   : 'Income Statements',
-                        type    : 'basic',
-                        link    : '/income-statements',
-                    },
-                    {
-                        id      : 'pages.authentication.sign-in',
-                        title   : 'Expense Reports',
-                        type    : 'basic',
-                        link    : '/expense-reports',
-                    },
-
-                ]
-            },
     {
         id: 'settings',
         title: 'Setting',
@@ -90,13 +63,6 @@ export const defaultNavigation: FuseNavigationItem[] = [
                 icon: 'heroicons_outline:bookmark',
                 link: '/gl',
             },
-            // {
-            //     id: 'settings.tasks',
-            //     title: 'Tasks',
-            //     type: 'basic',
-            //     icon: 'mat_outline:settings_input_component',
-            //     link: '/kanban-settings',
-            // },
             {
                 id: 'property.document-management',
                 title: 'Artifacts',
