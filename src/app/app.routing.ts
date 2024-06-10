@@ -141,7 +141,7 @@ export const appRoutes: Route[] = [
             {
                 path: 'projects',
                 loadChildren: () =>
-                    import('app/modules/admin/project/project.routes'),
+                    import('app/modules/admin/dashboard/project.routes'),
             },
             {
                 path: 'reporting',

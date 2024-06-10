@@ -63,7 +63,7 @@
                     </div>
                     <div class="flex items-center">
                         <div class="flex flex-col">
-                            <div class="text-lg font-medium tracking-tight leading-6 truncate">Previous Statement</div>
+                            <div class="text-lg font-medium tracking-tight leading-6 truncate">Current Month Finances</div>
                             <div class="text-green-600 font-medium text-sm">
                                 Paid on {{data.previousStatement.date}}
                             </div>
@@ -123,15 +123,15 @@
                     </div>
                     <div class="flex flex-row flex-wrap mt-4 -mx-6">
                         <div class="flex flex-col mx-6 my-3">
-                            <div class="text-sm font-medium leading-none text-secondary">Card Limit</div>
+                            <div class="text-sm font-medium leading-none text-secondary">Cash Balance</div>
                             <div class="mt-2 font-medium text-3xl leading-none">{{data.previousStatement.limit | currency:'USD'}}</div>
                         </div>
                         <div class="flex flex-col mx-6 my-3">
-                            <div class="text-sm font-medium leading-none text-secondary">Spent</div>
+                            <div class="text-sm font-medium leading-none text-secondary">Inflows</div>
                             <div class="mt-2 font-medium text-3xl leading-none">{{data.previousStatement.spent | currency:'USD'}}</div>
                         </div>
                         <div class="flex flex-col mx-6 my-3">
-                            <div class="text-sm font-medium leading-none text-secondary">Minimum</div>
+                            <div class="text-sm font-medium leading-none text-secondary">Outflows</div>
                             <div class="mt-2 font-medium text-3xl leading-none">{{data.previousStatement.minimum | currency:'USD'}}</div>
                         </div>
                     </div>
@@ -145,10 +145,8 @@
                     </div>
                     <div class="flex items-center">
                         <div class="flex flex-col">
-                            <div class="text-lg font-medium tracking-tight leading-6 truncate">Current Statement</div>
-                            <div class="text-red-600 font-medium text-sm">
-                                Must be paid before {{data.currentStatement.date}}
-                            </div>
+                            <div class="text-lg font-medium tracking-tight leading-6 truncate">Previous Month Finances</div>
+                            
                         </div>
                         <div class="ml-auto -mt-2">
                             <button
@@ -205,15 +203,15 @@
                     </div>
                     <div class="flex flex-row flex-wrap mt-4 -mx-6">
                         <div class="flex flex-col mx-6 my-3">
-                            <div class="text-sm font-medium leading-none text-secondary">Card Limit</div>
+                            <div class="text-sm font-medium leading-none text-secondary">Cash Balances</div>
                             <div class="mt-2 font-medium text-3xl leading-none">{{data.currentStatement.limit | currency:'USD'}}</div>
                         </div>
                         <div class="flex flex-col mx-6 my-3">
-                            <div class="text-sm font-medium leading-none text-secondary">Spent</div>
+                            <div class="text-sm font-medium leading-none text-secondary">Inflows</div>
                             <div class="mt-2 font-medium text-3xl leading-none">{{data.currentStatement.spent | currency:'USD'}}</div>
                         </div>
                         <div class="flex flex-col mx-6 my-3">
-                            <div class="text-sm font-medium leading-none text-secondary">Minimum</div>
+                            <div class="text-sm font-medium leading-none text-secondary">Outflows</div>
                             <div class="mt-2 font-medium text-3xl leading-none">{{data.currentStatement.minimum | currency:'USD'}}</div>
                         </div>
                     </div>

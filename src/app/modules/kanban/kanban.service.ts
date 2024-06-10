@@ -14,6 +14,7 @@ export interface IKanbanStatus {
   id: string,
   status: string,
   rankid: string,
+  priority: string
 }
 
 export interface ITeam { 

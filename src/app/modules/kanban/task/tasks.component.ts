@@ -15,6 +15,7 @@ import { provideNativeDateAdapter } from '@angular/material/core';
 import { KanbanMenubarComponent } from '../kanban/kanban-menubar/grid-menubar.component';
 import { AUTH } from 'app/app.config';
 import { IKanban, KanbanService } from '../kanban.service';
+import { KanbanStore } from '../kanban.store';
 
 
 export interface IValue {
@@ -42,7 +43,7 @@ const imports = [
   imports: [imports],
   templateUrl: './tasks.component.html',
   styleUrl: './tasks.component.scss',
-  providers: [provideNativeDateAdapter()],
+  providers: [provideNativeDateAdapter(), KanbanStore],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TasksComponent {
@@ -62,10 +63,11 @@ export class TasksComponent {
   public swimlaneSettings: SwimlaneSettingsModel = { keyField: 'assignee' };
   private _fuseConfirmationService = inject(FuseConfirmationService)
   auth = inject(AUTH);
-  kanbanService = inject(KanbanService);
+  // kanbanService = inject(KanbanService);
+  store = inject(KanbanStore);
 
   ngOnInit(): void {
-    this.kanbanService.readKanban();
+    // this.kanbanService.readKanban();
     this.bAdding = true;
     this.createEmptyForm();
   }
@@ -110,7 +112,34 @@ export class TasksComponent {
     if (e.data[0].status === 'Close') {
       d.priority = 'Normal'
     }
-    this.kanbanService.updateStatus(d);
+    this.store.updateStatus(d);
+
+    // this.bAdding = false;
+    // const email = this.auth.currentUser.email;
+    // const dDate = new Date()
+    // var currentDate = dDate.toISOString().split('T')[0];
+
+    // const kanban = {
+    //   id: e.data[0].id,
+    //   title: e.data[0].title,
+    //   status: e.data[0].status,
+    //   summary: e.data[0].summary,
+    //   type: e.data[0].type,
+    //   priority: e.data[0].priority,
+    //   tags: e.data[0].tags,
+    //   estimate: e.data[0].estimate,
+    //   assignee: e.data[0].assignee,
+    //   rankid: e.data[0].rankid,
+    //   color: e.data[0].color,
+    //   className: '',
+    //   updateuser: email,
+    //   updatedate: currentDate,
+    //   startdate: e.data[0].startdate,
+    //   estimatedate: e.data[0].estimatedate
+    // } as IKanban;
+
+    // this.store.updateTask(kanban)
+
   }
 
   OnCardDoubleClick(args: CardClickEventArgs): void {
@@ -164,9 +193,6 @@ export class TasksComponent {
       estimatedate: ['']
     });
   }
-
-
-
 
   createForm(task: IKanban) {
     this.sTitle = 'Kanban Task - ' + task.id;
@@ -286,7 +312,7 @@ export class TasksComponent {
     }
     else {
       this.bAdding = false;
-      this.kanbanService.update(data);
+      this.store.updateTask(data);
       this.closeDrawer();
     }
   }
@@ -303,11 +329,9 @@ export class TasksComponent {
         },
       },
     });
-
-
     confirmation.afterClosed().subscribe((result) => {
       if (result === 'confirmed') {
-        this.kanbanService.create(data);
+        this.store.addTasks(data)
       }
     });
 
@@ -330,7 +354,7 @@ export class TasksComponent {
 
     confirmation.afterClosed().subscribe((result) => {
       if (result === 'confirmed') {
-        this.kanbanService.delete(data);
+        this.store.removeTask(data);
       }
     });
 
@@ -418,12 +442,7 @@ export class TasksComponent {
       updateuser: "mstoews",
       startdate: startDate
     }
-
-    var sub = this.kanbanService.create(dt).subscribe(kanban => {
-      var kanbanList = kanban;
-      this.kanbanService.updateKanbanList(kanbanList)
-    })
-
+    var sub = this.store.addTask(dt);
     this.closeDrawer();
   }
 

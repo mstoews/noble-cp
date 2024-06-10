@@ -10,7 +10,7 @@ import {
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { exhaustMap, pipe, shareReplay, switchMap, tap } from 'rxjs';
 import { computed, inject } from '@angular/core';
-import { IKanban, IPriority, KanbanService } from './kanban.service';
+import { IKanban, IKanbanStatus, IPriority, KanbanService } from './kanban.service';
 import { tapResponse } from '@ngrx/operators';
 
 export interface KanbanStateInterface {
@@ -29,37 +29,39 @@ export const KanbanStore = signalStore(
     isLoading: false,
     tasksCount: 0
   }),
-  withComputed((store) => ({
-    tasksCount: computed(() => store.tasks().length),
+  withComputed((state) => ({
+    tasksCount: computed(() => state.tasks().length),
+    selected: computed(() => state.tasks().filter((t) => state.tasks()[t.id])),
   })),
-  withMethods((store, kanbanService = inject(KanbanService)) => ({   
+  withMethods((state, kanbanService = inject(KanbanService)) => ({       
     removeTask:   rxMethod<IKanban>(
       pipe(
         switchMap((value) => {
-          patchState(store, { isLoading: true });
+          patchState(state, { isLoading: true });
           return kanbanService.delete(value.id).pipe(
             tapResponse({
               next: (task) => {
-                patchState(store, { tasks: store.tasks().filter((kanban) => kanban.id !== value.id) });
+                patchState(state, { tasks: state.tasks().filter((kanban) => kanban.id !== value.id) });
               },
               error: console.error,
-              finalize: () => patchState(store, { isLoading: false }),
+              finalize: () => patchState(state, { isLoading: false }),
             })
           );
         })
       )
     ),
+
     addTask:  rxMethod<IKanban>(
       pipe(
         switchMap((value) => {
-          patchState(store, { isLoading: true });
+          patchState(state, { isLoading: true });
           return kanbanService.create(value).pipe(
             tapResponse({
               next: (task) => {
-               patchState(store, { tasks: [...store.tasks(), task] });
+               patchState(state, { tasks: [...state.tasks(), task] });
               },
               error: console.error,
-              finalize: () => patchState(store, { isLoading: false }),
+              finalize: () => patchState(state, { isLoading: false }),
             })
           );
         })
@@ -68,17 +70,43 @@ export const KanbanStore = signalStore(
     updateTask: rxMethod<IKanban>(
       pipe(
         switchMap((value) => {
-          patchState(store, { isLoading: true });
+          // patchState(state, { isLoading: true });
           return kanbanService.update(value).pipe(
             tapResponse({
               next: (task) => {
-                const updatedTasks = store.tasks().filter((kanban) => kanban.id !== task.id);
-                patchState(store, { tasks: updatedTasks });
-                const addTasks = [...store.tasks(), task];
-                patchState(store, { tasks: addTasks });
+                const updatedTasks = state.tasks().filter((kanban) => kanban.id !== task.id);
+                patchState(state, { tasks: updatedTasks });
+                const currentTasks = state.tasks();
+                const updateTask = [task, ...currentTasks.slice(1)];
+                patchState(state, {tasks: updateTask})
               },
               error: console.error,
-              finalize: () => patchState(store, { isLoading: false }),
+              finalize: () => patchState(state, { isLoading: false }),
+            })
+          );
+        })
+      )
+    ),
+    updateStatus: rxMethod<IKanbanStatus>(
+      pipe(
+        switchMap((value) => {
+          // patchState(state, { isLoading: true });
+          return kanbanService.updateStatus(value).pipe(
+            tapResponse({
+              next: (task) => {
+                // make a copy of the task to update
+                const taskToUpdate = state.tasks().filter((kanban) => kanban.id === task.id);
+                // remove the copy from the array
+                const updatedTasks = state.tasks().filter((kanban) => kanban.id !== task.id);
+                patchState(state, { tasks: updatedTasks });                
+                // update the copy and add it back to the array of tasks
+                var taskCopy = taskToUpdate[0];
+                taskCopy.priority = value.priority;
+                taskCopy.status = value.status;                
+                patchState(state, { tasks: [...state.tasks(), taskCopy]});
+              },
+              error: console.error,
+              finalize: () => patchState(state, { isLoading: false }),
             })
           );
         })
@@ -87,12 +115,12 @@ export const KanbanStore = signalStore(
     addTasks: rxMethod<IKanban>(
       pipe(
         switchMap((value) => {
-          patchState(store, { isLoading: true });
+          patchState(state, { isLoading: true });
           return kanbanService.create(value).pipe(
             tapResponse({
-              next: (task) =>  patchState(store, { tasks : [...store.tasks(), value ]}),             
+              next: (task) =>  patchState(state, { tasks : [...state.tasks(), value ]}),             
               error: console.error,
-              finalize: () => patchState(store, { isLoading: false }),
+              finalize: () => patchState(state, { isLoading: false }),
             })
           );
         })
@@ -101,13 +129,13 @@ export const KanbanStore = signalStore(
 
     loadPriority: rxMethod<void>(
       pipe(
-        tap(() => patchState(store, { isLoading: true })),
+        tap(() => patchState(state, { isLoading: true })),
         exhaustMap(() => {
           return kanbanService.httpReadPriority().pipe(
             tapResponse({
-              next: (priorities) => patchState(store, { priority: priorities }),
+              next: (priorities) => patchState(state, { priority: priorities }),
               error: console.error,
-              finalize: () => patchState(store, { isLoading: false }),
+              finalize: () => patchState(state, { isLoading: false }),
             })
           );
         })
@@ -115,13 +143,13 @@ export const KanbanStore = signalStore(
     ),
     loadTasks: rxMethod<void>(
       pipe(
-        tap(() => patchState(store, { isLoading: true })),
+        tap(() => patchState(state, { isLoading: true })),
         exhaustMap(() => {
           return kanbanService.getTasks().pipe(
             tapResponse({
-              next: (tasks) => patchState(store, { tasks: tasks }),
+              next: (tasks) => patchState(state, { tasks: tasks }),
               error: console.error,
-              finalize: () => patchState(store, { isLoading: false }),
+              finalize: () => patchState(state, { isLoading: false }),
             })
           );
         })

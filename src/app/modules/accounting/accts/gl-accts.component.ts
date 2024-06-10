@@ -1,8 +1,8 @@
 import { Component, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
 import { DxBulletModule, DxDataGridModule, DxTemplateModule } from 'devextreme-angular';
 import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { ISubType, SubTypeService } from 'app/services/subtype.service';
-import { IType, TypeService } from 'app/services/type.service';
+import { SubTypeService } from 'app/services/subtype.service';
+import { TypeService } from 'app/services/type.service';
 
 import { AUTH } from 'app/app.config';
 import { CommonModule, JsonPipe } from '@angular/common';
@@ -14,7 +14,7 @@ import { IAccounts } from 'app/models';
 import { IValue } from 'app/modules/kanban/kanban/kanban.component';
 import { MatDrawer } from '@angular/material/sidenav';
 import { MaterialModule } from 'app/services/material.module';
-import { Subscription } from 'rxjs';
+
 
 const imports = [
     CommonModule,

@@ -56,10 +56,13 @@ const imports = [
   templateUrl: './journal-update.component.html',
   providers: [provideNgxMask()],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  styles: `
-  ::ng-deep .label {
-    color: #767676;
-  }
+  styles: `::ng-deep .dx-datagrid .dx-datagrid-rowsview .dx-row-focused.dx-data-row:not(.dx-edit-row) > td:not(.dx-focused) {
+    background-color: rgb(195, 199, 199);
+    border-color: rgb(195, 199, 199);
+    }
+    .filter-green{
+    filter: invert(48%) sepia(79%) saturate(2476%) hue-rotate(86deg) brightness(118%) contrast(119%);
+    }
   `,
   moduleId: __moduleName,
 })
@@ -164,6 +167,22 @@ export class JournalUpdateComponent implements OnInit, OnDestroy, AfterViewInit 
     console.log(e);
   }
 
+
+  addMenuItems(e: any){
+    if (e.target == 'header') {
+      // e.items can be undefined
+      if (!e.items) e.items = [];
+
+      // Add a custom menu item
+      e.items.push({
+          text: 'Log Column Caption',
+          onItemClick: () => {
+              console.debug(e.column.caption);
+          }
+      });
+  } 
+  }
+
   // Update only the signal and mark as dirty. When completed update the whole signal. 
   onSaved(e: any) {
     this.bDirty = true;
@@ -250,6 +269,7 @@ export class JournalUpdateComponent implements OnInit, OnDestroy, AfterViewInit 
   onFocusedDetailRowChanged(e: any) {
     this.currentRowData = e.row.data;
     this.journal_subid = e.row.data.journal_subid;
+    this.journal_id = e.row.data.journal
     this.updateForm(e.row.data)
     this.editing = true;
     this.journalHeaderData = this.journalService.readJournalHeaderById(this.journal_id);
@@ -421,6 +441,7 @@ export class JournalUpdateComponent implements OnInit, OnDestroy, AfterViewInit 
     }
   }
 
+ 
   onDelete() {
     var journalDetail = {
       "journal_id": this.currentRowData.journal_id,

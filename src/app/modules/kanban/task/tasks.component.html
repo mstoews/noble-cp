@@ -115,13 +115,13 @@
             </mat-drawer>
             <mat-drawer-container>
                 <mat-drawer-content>
-                    @if (kanbanService.isLoading() == false) {
+                    @if (store.isLoading() == false) {
                         <div class="" cdkScrollable>
                             <div class="control-section">
                                 <div class="content-wrapper">
                                     <!-- <p>Selected range: {{kanbanData | json}}</p> -->
                                     <ejs-kanban #kanbanObj cssClass='kanban-overview' keyField="status"
-                                        [dataSource]='kanbanService.taskList()' [cardSettings]='cardSettings' enableTooltip='false'
+                                        [dataSource]='store.tasks()' [cardSettings]='cardSettings' enableTooltip='false'
                                         [swimlaneSettings]='swimlaneSettings' (actionBegin)='OnActionBegin()'
                                         (actionComplete)='OnActionComplete()' (actionFailure)='OnActionFailure()'                                                                                
                                         (cardDoubleClick)='OnCardDoubleClick($event)' (dragStart)='OnDragStart($event)'

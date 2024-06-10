@@ -87,7 +87,7 @@ export class KanbanListComponent implements OnInit {
   auth = inject(AUTH);
   store = inject(KanbanStore);
 
-  kanbanService = inject(KanbanService);
+
   @ViewChild('drawer') drawer!: MatDrawer;
 
   public sTitle = 'Kanban List';
@@ -265,8 +265,30 @@ export class KanbanListComponent implements OnInit {
     confirmation.afterClosed().subscribe((result) => {
       // If the confirm button pressed...
       if (result === 'confirmed') {
-        // Delete the list
-        // this.typeApiService.delete(this.typeId);
+        // Delete the listconst dDate = new Date();
+        const task = this.taskGroup.getRawValue();
+        const user = this.auth.currentUser;
+        var currentDate = new Date().toISOString().split('T')[0];
+        
+        var data = {
+        id : task.id,
+        title: task.title,
+        status: task.status,
+        summary: task.summary,
+        type: task.type,
+        priority: task.priority,
+        tags: task.tags,
+        estimate: task.estimate,
+        assignee: task.assignee,
+        rankid: task.rankid,
+        color: '',
+        updatedate: currentDate,
+        updateuser: user.email,
+        startdate: task.startdate,
+        estimatedate: task.estimatedate
+        } as IKanban;
+
+        this.store.removeTask(data)
       }
     });
     this.closeDrawer();

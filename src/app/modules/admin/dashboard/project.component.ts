@@ -22,6 +22,7 @@ import { ApexOptions, NgApexchartsModule } from 'ng-apexcharts';
 import { Subject, takeUntil } from 'rxjs';
 import { AuthService } from 'app/shared/data-access/auth.service';
 import { SummaryCardComponent } from './summary-card.component';
+import { FIRESTORE } from 'app/app.config';
 
 
 
@@ -62,6 +63,7 @@ export class ProjectComponent implements OnInit, OnDestroy {
     authService = inject(AuthService);
     private _router = inject(Router);
     private _projectService = inject(ProjectService);
+    firestore = inject(FIRESTORE);
 
     public cashReserves =  18223.23;
     public fundCount = 3;
