@@ -23,9 +23,11 @@ import { AUTH } from 'app/app.config';
 import { MatSelect } from '@angular/material/select';
 import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 import { IDropDownAccounts } from 'app/models';
-import notify from 'devextreme/ui/notify';
 import { DxContextMenuModule, DxContextMenuTypes } from 'devextreme-angular/ui/context-menu';
 import { DxDataGridTypes } from 'devextreme-angular/ui/data-grid';
+import { ContextMenuComponent, MenuEventArgs, MenuItemModel, ContextMenuModule } from '@syncfusion/ej2-angular-navigations';
+
+
 
 
 declare var __moduleName: string;
@@ -46,7 +48,8 @@ const imports = [
   NgxMaskPipe,
   FileManagerComponent,
   NgxMatSelectSearchModule,
-  DxContextMenuModule
+  DxContextMenuModule,
+  ContextMenuModule
 ];
 
 @Component({
@@ -56,19 +59,9 @@ const imports = [
   templateUrl: './journal-update.component.html',
   providers: [provideNgxMask()],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  styles: `::ng-deep .dx-datagrid .dx-datagrid-rowsview .dx-row-focused.dx-data-row:not(.dx-edit-row) > td:not(.dx-focused) {
-    background-color: rgb(195, 199, 199);
-    border-color: rgb(195, 199, 199);
-    }
-    .filter-green{
-    filter: invert(48%) sepia(79%) saturate(2476%) hue-rotate(86deg) brightness(118%) contrast(119%);
-    }
-  `,
-  moduleId: __moduleName,
+  styleUrls: ['./context.scss'],
 })
 export class JournalUpdateComponent implements OnInit, OnDestroy, AfterViewInit {
-
-  items: Record<any, unknown>[];
 
   @Output() notifyDrawerClose: EventEmitter<any> = new EventEmitter();
   @Input() public sTitle: string;
@@ -79,6 +72,12 @@ export class JournalUpdateComponent implements OnInit, OnDestroy, AfterViewInit 
   @Input() public bNewTransaction = true;
 
 
+  @ViewChild('contextmenu')
+
+  private _change = inject(ChangeDetectorRef);
+  private _fuseConfirmationService = inject(FuseConfirmationService);
+  
+  public contextmenu: ContextMenuComponent;
 
   private fb = inject(FormBuilder);
   private journalService = inject(JournalService);
@@ -88,8 +87,6 @@ export class JournalUpdateComponent implements OnInit, OnDestroy, AfterViewInit 
   private accountService = inject(GLAccountsService);
   private snackBar = inject(MatSnackBar);
   private dialog = inject(MatDialog);
-  private _change = inject(ChangeDetectorRef);
-  private _fuseConfirmationService = inject(FuseConfirmationService);
   private auth = inject(AUTH);
 
 
@@ -133,30 +130,55 @@ export class JournalUpdateComponent implements OnInit, OnDestroy, AfterViewInit 
   public accountCtrl: FormControl<IDropDownAccounts> = new FormControl<IDropDownAccounts>(null);
   public accountFilterCtrl: FormControl<string> = new FormControl<string>('');
   public filteredAccounts: ReplaySubject<IDropDownAccounts[]> = new ReplaySubject<IDropDownAccounts[]>(1);
+  selectedItemKeys: any;
 
   @ViewChild('singleSelect', { static: true })
   singleSelect: MatSelect;
 
   protected _onDestroy = new Subject<void>();
 
-  constructor() {
-    this.items = [
-      { text: 'Cut' },
-      { text: 'Delete' },
-      { text: 'Add line' },
-      { text: 'Copy' },
-      { text: 'Paste' },
-    ];
-  }
+  public menuItems: MenuItemModel[] = [
+    {
+        text: 'Delete Line',
+        iconCss: 'e-cm-icons e-cut'
+    },
+    {
+        text: 'Copy Line',
+        iconCss: 'e-cm-icons e-copy'
+    },
+    {
+        text: 'Paste',
+        iconCss: 'e-cm-icons e-paste',
+        items: [
+            {
+                text: 'Paste Text',
+                iconCss: 'e-cm-icons e-pastetext'
+            },
+            {
+                text: 'Paste Special',
+                iconCss: 'e-cm-icons e-pastespecial'
+            }
+        ]
+    },
+    {
+        separator: true
+    },
+    {
+        text: 'Link',
+        iconCss: 'e-cm-icons e-link'
+    },
+    {
+        text: 'New Comment',
+        iconCss: 'e-cm-icons e-comment'
+    }];
 
-  itemClick({ itemData }: DxContextMenuTypes.ItemClickEvent) {
-    if (!itemData.items) {
-      notify(`The "${itemData.text}" item was clicked .. add updated function to handle each click`, 'success', 1500);
+    addDisabled($event: any) {
+  
     }
-  }
-
-  onSelectionChanged(e: any) {
-    console.log(JSON.stringify(e));
+  
+  onSelectionChanged(data: any) {
+    console.log(JSON.stringify(data));
+    this.selectedItemKeys = data.selectedRowKeys;
   }
 
   onEditingStart(e: any) {
@@ -167,21 +189,6 @@ export class JournalUpdateComponent implements OnInit, OnDestroy, AfterViewInit 
     console.log(e);
   }
 
-
-  addMenuItems(e: any){
-    if (e.target == 'header') {
-      // e.items can be undefined
-      if (!e.items) e.items = [];
-
-      // Add a custom menu item
-      e.items.push({
-          text: 'Log Column Caption',
-          onItemClick: () => {
-              console.debug(e.column.caption);
-          }
-      });
-  } 
-  }
 
   // Update only the signal and mark as dirty. When completed update the whole signal. 
   onSaved(e: any) {
@@ -212,9 +219,6 @@ export class JournalUpdateComponent implements OnInit, OnDestroy, AfterViewInit 
     }
 
   }
-
-
-
 
   ngOnInit(): void {
     this.accountsListSubject = this.dropDownChildren$.subscribe(accounts => {
@@ -270,9 +274,8 @@ export class JournalUpdateComponent implements OnInit, OnDestroy, AfterViewInit 
     this.currentRowData = e.row.data;
     this.journal_subid = e.row.data.journal_subid;
     this.journal_id = e.row.data.journal
-    this.updateForm(e.row.data)
     this.editing = true;
-    this.journalHeaderData = this.journalService.readJournalHeaderById(this.journal_id);
+    // this.journalHeaderData = this.journalService.readJournalHeaderById(this.journal_id);
   }
 
 
@@ -284,18 +287,18 @@ export class JournalUpdateComponent implements OnInit, OnDestroy, AfterViewInit 
       transaction_date: [this.transaction_date, Validators.required]
     });
 
-    this.journalDetailForm = this.fb.group({
-      detail_description: [row.description, Validators.required],
-      child: [row.child, Validators.required],
-      fund: [row.fund, Validators.required],
-      sub_type: [row.sub_type, Validators.required],
-      reference: [row.reference],
-      debit: [row.debit, Validators.required],
-      credit: [row.credit, Validators.required]
-    });
+    // this.journalDetailForm = this.fb.group({
+    //   detail_description: [row.description, Validators.required],
+    //   child: [row.child, Validators.required],
+    //   fund: [row.fund, Validators.required],
+    //   sub_type: [row.sub_type, Validators.required],
+    //   reference: [row.reference],
+    //   debit: [row.debit, Validators.required],
+    //   credit: [row.credit, Validators.required]
+    // });
 
-    const index = this.accountList.findIndex(account => account.child == row.child);
-    this.accountCtrl.setValue(this.accountList[index]);
+    //const index = this.accountList.findIndex(account => account.child == row.child);
+    //this.accountCtrl.setValue(this.accountList[index]);
 
   }
 
@@ -412,9 +415,7 @@ export class JournalUpdateComponent implements OnInit, OnDestroy, AfterViewInit 
 
   closeDrawer() {
     if (this.bDirty === false) {
-      this.journalDetailForm.reset();
-      this.journalForm.reset();
-      this._change.markForCheck();
+      this.journalForm.reset();      
       this.notifyDrawerClose.emit();
     }
     else {
@@ -427,14 +428,12 @@ export class JournalUpdateComponent implements OnInit, OnDestroy, AfterViewInit 
           },
         },
       });
-
       // Subscribe to the confirmation dialog closed action
       confirmation.afterClosed().subscribe((result) => {
 
         if (result === 'confirmed') {
           this.journalDetailForm.reset();
           this.journalForm.reset();
-          this._change.markForCheck();
           this.notifyDrawerClose.emit();
         }
       });
@@ -598,7 +597,6 @@ export class JournalUpdateComponent implements OnInit, OnDestroy, AfterViewInit 
         return;
       }
       details.journal_subid = journal_subid;
-      this.journalService.updateJournalDetailSignal(details);
       this.journalService.updateJournalDetail(details);
       journal_subid++;
     })
@@ -688,9 +686,6 @@ export class JournalUpdateComponent implements OnInit, OnDestroy, AfterViewInit 
     this.detailsListSignal = this.journalService.getJournalDetail(this.journal_id);
     this.accountCtrl.reset();
   }
-
-
-
 
   onUpdate(e: any) {
     if (e.data === undefined) {

@@ -15,7 +15,7 @@ import { MaterialModule } from 'app/services/material.module';
 
 import { KanbanMenubarComponent } from '../kanban/kanban-menubar/grid-menubar.component';
 import { AUTH } from 'app/app.config';
-import { KanbanService, IKanban } from '../kanban.service';
+import { IKanban } from '../kanban.service';
 import { KanbanStore} from '../kanban.store'
 
 

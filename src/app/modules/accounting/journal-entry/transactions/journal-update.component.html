@@ -1,4 +1,4 @@
-<div class="flex flex-col w-full filter-article filter-interactive text-gray-700">
+<div id="contextmenutarget" class="flex flex-col w-full filter-article filter-interactive text-gray-700">
     <div class="flex flex-col m-2">
         @if (journal_id > 0 ) {
         <div class="text-3xl gap-2 m-1 text-gray-100 p-2 bg-slate-600">
@@ -78,12 +78,9 @@
             }
         </div>
 
-        <form [formGroup]="journalDetailForm">
+        <form  [formGroup]="journalDetailForm">
             <div class="flex flex-col">
-                <dx-context-menu [dataSource]="items" [width]="200" target="#journal_subid"
-                    (onItemClick)="itemClick($event)">
-                </dx-context-menu>
-
+                
                 <div class="text-3xl m-1 text-gray-100 p-2 bg-slate-600">Details</div>
                 <div class="flex flex-col h-full ml-1 mr-1 text-gray-800">
                     @if ( loading === false) {
@@ -92,13 +89,12 @@
                     @if (subtype$ | async; as subtypes) {
                     @if
                     (filteredAccounts | async; as accounts ) {
-                    <dx-data-grid id="journal_subid" [columnHidingEnabled]="true" [wordWrapEnabled]="false"
+                    <dx-data-grid  [columnHidingEnabled]="true" [wordWrapEnabled]="false"
                         [dataSource]="detailsListSignal()" [showColumnLines]="true" [showRowLines]="true"
                         [showBorders]="true" [focusedRowEnabled]="true"
                         (onSelectionChanged)="onSelectionChanged($event)" 
                         (onEditingStart)="onEditingStart($event)"
                         (onSaved)="onSaved($event)"                         
-                        (onContextMenuPreparing)="addMenuItems($event)"
                         (onEditCanceling)="onEditCanceling($event)" 
                         keyExpr="journal_subid"
                         (onFocusedRowChanged)="onFocusedDetailRowChanged($event)" 
@@ -108,14 +104,12 @@
 
                         <dxo-row-dragging [allowReordering]="true" [onReorder]="onReorder" [showDragIcons]="true"
                             dropFeedbackMode="push">
-                        </dxo-row-dragging>
+                        </dxo-row-dragging>                        
 
                         <dxo-sorting mode="none"></dxo-sorting>
                         <dxo-scrolling mode="virtual"></dxo-scrolling>
                         <dxo-selection mode="multiple"></dxo-selection>
 
-                        <!-- <dxo-selection mode="multiple"></dxo-selection> -->
-                        <!-- <dxi-column dataField="journal_subid" allowEditing=false caption="ID" width="50"> </dxi-column> -->
                         <dxi-column dataField="child" caption="Account" width="250">
                             <dxo-lookup [dataSource]="accountList" displayExpr="description" valueExpr="child">
                             </dxo-lookup>
@@ -166,9 +160,15 @@
                     }
                 </div>
             </div>
+            <ejs-contextmenu #contextmenu class="bg-white"
+                    target='#contextmenutarget' 
+                    [items]='menuItems' 
+                    (beforeItemRender)='addDisabled($event)' 
+                    (created)='onCreate()'>
+            </ejs-contextmenu>
         </form>
     </div>
 
     
+    
 </div>
-

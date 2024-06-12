@@ -136,22 +136,7 @@ export class WizardUpdateComponent implements OnInit, OnDestroy, AfterViewInit {
 
   protected _onDestroy = new Subject<void>();
 
-  constructor() {
-    this.items = [
-      { text: 'Cut' },
-      { text: 'Delete' },
-      { text: 'Add line' },
-      { text: 'Copy' },
-      { text: 'Paste' },
-    ];
-  }
-
-  itemClick({ itemData }: DxContextMenuTypes.ItemClickEvent) {
-    if (!itemData.items) {
-      notify(`The "${itemData.text}" item was clicked .. add updated function to handle each click`, 'success', 1500);
-    }
-  }
-
+  
   onSelectionChanged(e: any) {
     console.log(JSON.stringify(e));
   }
@@ -198,6 +183,8 @@ export class WizardUpdateComponent implements OnInit, OnDestroy, AfterViewInit {
 
 
   ngOnInit(): void {
+    this.createEmptyForm();
+    
     this.accountsListSubject = this.dropDownChildren$.subscribe(accounts => {
       accounts.forEach(acct => {
         var list = {

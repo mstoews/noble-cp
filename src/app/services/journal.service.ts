@@ -366,7 +366,7 @@ export class JournalService implements OnDestroy  {
     var url = this.baseUrl + '/v1/update_journal_detail';    
     this.httpClient.post<IJournalDetail>(url, detail)
       .pipe(
-      tap( data => console.log('details updated ', data.journal_subid)),
+      tap( data => this.updateJournalDetailSignal(detail)),
       catchError(err => {
           this.message("Could not save journal detail"); 
           return throwError(() => new Error(`Invalid time ${ err }`));         
@@ -429,37 +429,38 @@ export class JournalService implements OnDestroy  {
         duration: 2000,
       });      
     });
-    
   }
 
-  createJournalDetail(detail: IJournalDetail) {
+
+  // add a line to journal detail
+
+  createHttpJournalDetail(detail: IJournalDetail) {
     var url = this.baseUrl + '/v1/create_journal_detail';
-    this.httpClient.post<IJournalDetail>(url, detail)
-      .pipe(
+    return this.httpClient.post<IJournalDetail>(url, detail);    
+  }
+
+  createJournalDetail(detail: any){     
+    this.createHttpJournalDetail(detail)
+    .pipe(
+      tap (data => { 
+        console.log('added journal id', data);
+        this.addJournalDetailSignal(detail)
+      }),
       catchError(err => {
           this.message("Could not save journal detail"); 
           return throwError(() => new Error(`Invalid time ${ err }`));         
       }),
       shareReplay()
     ).pipe(takeUntil(this.ngDestroy$)).subscribe(data => {
-      this.snackBar.open('Journal details updated ... ' + data.journal_id, 'OK', {
+      this.snackBar.open('Journal detail added ... ' + data.journal_id, 'OK', {
         verticalPosition: 'top',
         horizontalPosition: 'right',
         duration: 2000,
-      });
+      });      
     });
-    this.addJournalDetailSignal(detail);
+    
   }
 
-  
-  createHttpJournalDetail(detail: IJournalDetail) {
-    var url = this.baseUrl + '/v1/create_journal_detail';
-    return this.httpClient.post<IJournalDetail>(url, detail);    
-  }
-
-  
-
-  
   ngOnDestroy(): void {
     this.ngDestroy$.next(true);
     this.ngDestroy$.complete();

@@ -36,10 +36,6 @@
 
         <form [formGroup]="journalDetailForm">
             <div class="flex flex-col">
-                <dx-context-menu [dataSource]="items" [width]="200" target="#journal_subid"
-                    (onItemClick)="itemClick($event)">
-                </dx-context-menu>
-
                 <div class="text-3xl m-1 text-gray-100 p-2 bg-slate-600">Details</div>
                 <div class="flex flex-col h-full ml-1 mr-1 text-gray-800">
                     @if ( loading === false) {

@@ -7,13 +7,15 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { ScrollService } from 'app/services/scroll.service';
 import { MaterialModule } from 'app/services/material.module';
 import { MatDrawer } from '@angular/material/sidenav';
+import { NgClass, NgIf } from '@angular/common';
+import { FuseCardComponent } from '@fuse/components/card';
 
 @Component({
     standalone: true,
     selector: 'app-login',
     templateUrl: './login.component.html',
     providers: [LoginService],
-    imports: [RouterModule, LoginFormComponent, MatProgressSpinnerModule, MaterialModule],
+    imports: [RouterModule, LoginFormComponent, MatProgressSpinnerModule, MaterialModule, NgClass, FuseCardComponent, NgIf],
 })
 export default class LoginComponent {
     public loginService = inject(LoginService);
@@ -24,6 +26,8 @@ export default class LoginComponent {
     scrollService = inject(ScrollService);
     @ViewChild('drawer') drawer: MatDrawer;
     drawOpen: 'open' | 'close' = 'open';
+
+    yearlyBilling: boolean = true;
 
 
     constructor() {

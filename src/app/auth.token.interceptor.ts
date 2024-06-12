@@ -3,13 +3,13 @@ import { TokenService } from './token.service';
 import { environment } from 'environments/environment.prod'
 import { inject } from '@angular/core';
 import { AuthService } from './modules/auth/auth.service';
-import { catchError, debounceTime, switchMap, take } from 'rxjs';
+import { Observable, catchError, debounceTime, of, switchMap, take } from 'rxjs';
 
 const getHeaders = (): any => {
-  const authState = inject(AuthService);
+  const authService = inject(AuthService);
   //  authorization here
   let headers: any = {};
-  const _auth = authState.GetToken();
+  const _auth = authService.GetToken();
   console.debug(_auth);
   if (_auth && _auth !== '') {
     headers['Authorization'] = `Bearer ${_auth}`;
@@ -23,6 +23,8 @@ const getHeaders = (): any => {
 export const authTokenInterceptor: HttpInterceptorFn = (req, next) => {
   const authService = inject(AuthService);
   const baseUrl = environment.baseUrl  
+
+  
    if (req.url.indexOf('oauthCallback') > -1) {
      return next(req)
    }
@@ -32,16 +34,36 @@ export const authTokenInterceptor: HttpInterceptorFn = (req, next) => {
       setHeaders: getHeaders(),
     });
   }
+
+  var authToken: Observable<string>;
+
+  const user = authService.user();
+  if (user === undefined) {
+    console.debug('User is undefined ...');
+    return next(req);
+  }
+
+  user.getIdToken().then( data => {
+     authToken = of(data)     
+  });
+
+  if (authToken === undefined){
+    return next(req);
+  }
+  
+  
   return next(req).pipe(
     catchError ( error => {  
       if (error.status === 401) {
-        // Unauthorized - JWT Token expired
-        return authService.refreshToken().pipe(
+        // Unauthorized - JWT Token expired        
+        return authToken.pipe(
           take(1),
           debounceTime(500),
           switchMap((tokenReceived) => {            
-            let token : String = tokenReceived;
-            console.debug(token);
+            let token : string = tokenReceived;
+            if (token !== null) {
+              localStorage.setItem('token', token)
+            }
             if (token != '') {
               req = req.clone({
                 setHeaders: {
