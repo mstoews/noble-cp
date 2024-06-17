@@ -1,8 +1,8 @@
 import { Component, OnDestroy, OnInit, ViewChild, inject, viewChild } from '@angular/core';
 import { DxDataGridModule, DxTemplateModule } from 'devextreme-angular';
 import { FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { IJournalDetail, JournalService } from 'app/services/journal.service';
-import { Observable, ReplaySubject, Subject, map, takeUntil } from 'rxjs';
+import { JournalService } from 'app/services/journal.service';
+import { Subject } from 'rxjs';
 import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 
 import { CommonModule } from '@angular/common';
@@ -10,7 +10,7 @@ import { DndComponent } from 'app/modules/drag-n-drop/loaddnd/dnd.component';
 import { DxDataGridTypes } from 'devextreme-angular/ui/data-grid';
 import { FundsService } from 'app/services/funds.service';
 import { GLAccountsService } from 'app/services/accounts.service';
-import { GlTransactionsService } from 'app/services/gltransaction.service';
+
 import { GridMenubarStandaloneComponent } from '../../grid-menubar/grid-menubar.component';
 import { JournalDetailComponent } from './journal-detail.component';
 import { JournalUpdateComponent } from './journal-update.component';
@@ -54,6 +54,7 @@ export class JournalEntryComponent implements OnInit, OnDestroy {
     private subtypeService = inject(SubTypeService);
     private fundService = inject(FundsService);
     private accountService = inject(GLAccountsService);
+
     public journalHeader$ = this.journalService.readJournalHeader();
     public types$ = this.typeService.read();
     public subtypes$ = this.subtypeService.read()
@@ -76,14 +77,14 @@ export class JournalEntryComponent implements OnInit, OnDestroy {
     public bOpenDetail: boolean = false;
 
 
-    readonly allowedPageSizes = [10, 20, 'all'];
+//     readonly allowedPageSizes = [10, 20, 'all'];
     currentRowData: any;
 
     readonly displayModes = [{ text: "Display Mode 'compact'", value: 'compact' }];
     displayMode = 'compact';
-    showPageSizeSelector = true;
-    showInfo = true;
-    showNavButtons = true;
+    showPageSizeSelector = false;
+    showInfo = false;
+    showNavButtons = false;
 
     drawOpen: 'open' | 'close' = 'open';
 
@@ -156,9 +157,6 @@ export class JournalEntryComponent implements OnInit, OnDestroy {
 
     onBooked(booked: boolean) {
         this.journalForm.patchValue({ booked: booked });
-        // this.transactionService.update(this.journalForm.value).then((res: any) => {
-        //     console.debug(`update ${JSON.stringify(res)}`);
-        // });
     }
 
     formatNumber(e) {

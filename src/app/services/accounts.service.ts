@@ -57,23 +57,6 @@ export class GLAccountsService {
         )
       );
     
-
-    //Query
-    // read() {
-    //     var url = this.baseUrl + '/v1/account_list';
-    //     this.httpClient.get<IAccounts[]>(url).pipe(
-    //         tap(data => this.accountsList.set(data)),
-    //         take(1),
-    //         catchError(err => {
-    //             const message = "Could not retrieve journals ...";
-    //             console.debug(message, err);
-    //             return throwError(() => new Error(`${JSON.stringify(err)}`));
-    //         }),
-    //         shareReplay()
-    //     ).subscribe();
-    //     return this.accountsList;
-    // }
-
     // account and description only
     readDropDownChild() {
         var url = this.baseUrl + '/v1/read_child_accounts';

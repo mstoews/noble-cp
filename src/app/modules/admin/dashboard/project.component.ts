@@ -70,7 +70,7 @@ export class ProjectComponent implements OnInit, OnDestroy {
     public caption_1 = 'Fund Total';
 
 
-    constructor() {
+    constructor() { 
         effect(() => {
             if (!this.authService.user()) {
                 this._router.navigate(['auth/login']);
@@ -78,14 +78,12 @@ export class ProjectComponent implements OnInit, OnDestroy {
         });
     }
 
-    openSettings() {
-        this._router.navigate(['settings']);
-
-    }
-
     openTasks() {
         this._router.navigate(['kanban']);
+    }
 
+    openTransactions() {
+        this._router.navigate(['journals']);
     }
 
     ngOnInit(): void {

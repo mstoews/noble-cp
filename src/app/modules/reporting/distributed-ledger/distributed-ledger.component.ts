@@ -168,6 +168,8 @@ export class DistributedLedgerComponent implements OnInit {
             minimumFractionDigits: 2,
             maximumFractionDigits: 2,
         };
+        if (e.value === undefined || e.value === null)
+            e.value = 0;
         const formattedWithOptions = e.value.toLocaleString('en-US', options);
         //console.debug(formattedWithOptions);
         return formattedWithOptions;

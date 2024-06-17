@@ -275,7 +275,7 @@ export class JournalUpdateComponent implements OnInit, OnDestroy, AfterViewInit 
     this.journal_subid = e.row.data.journal_subid;
     this.journal_id = e.row.data.journal
     this.editing = true;
-    // this.journalHeaderData = this.journalService.readJournalHeaderById(this.journal_id);
+    
   }
 
 
@@ -485,10 +485,12 @@ export class JournalUpdateComponent implements OnInit, OnDestroy, AfterViewInit 
         max = this.detailsListSignal()[i].journal_subid
     }
 
-    console.debug('max number in subid = ', max);
+    if (this.journal_id === 0)
+      {
+        return;
+      }
 
     if (this.detailsListSignal().length > 0) {
-      const sub = this.detailsListSignal().length + 1;
       const journalCopy = this.detailsListSignal();
       const journalDetail = {
         "journal_id": this.journal_id,
@@ -524,8 +526,7 @@ export class JournalUpdateComponent implements OnInit, OnDestroy, AfterViewInit 
       this.journalService.createJournalDetail(journalDetail);
     }
     this.bDirty = true;
-    console.log('total detail journals items : ', this.detailsListSignal().length)
-
+    
   }
 
   journalEntryCleanUp() {
@@ -578,13 +579,12 @@ export class JournalUpdateComponent implements OnInit, OnDestroy, AfterViewInit 
 
     header.header_amount = 0.0;
     var journal_subid = 1;
-    var journal_id = 0;
+
     console.log('Detail list length', this.detailsListSignal().length);
-    this.detailsListSignal().forEach(details => {
+    const details =  this.detailsListSignal();
+    details.forEach(details => {
       header.header_amount = Number(details.debit) + header.header_amount;
-      journal_id = details.journal_id;
-
-
+      this.journal_id = details.journal_id;
       debit = Number(details.debit);
       credit = Number(details.credit);
 
@@ -597,12 +597,13 @@ export class JournalUpdateComponent implements OnInit, OnDestroy, AfterViewInit 
         return;
       }
       details.journal_subid = journal_subid;
+      details.create_date = updateDate;
       this.journalService.updateJournalDetail(details);
       journal_subid++;
     })
 
     const journalHeaderUpdate: IJournalHeaderUpdate = {
-      journal_id: journal_id,
+      journal_id: this.journal_id,
       description: header.description,
       transaction_date: header.transaction_date,
       amount: Number(header.header_amount)

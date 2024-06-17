@@ -4,7 +4,7 @@ import { FuseNavigationItem } from '@fuse/components/navigation';
 export const defaultNavigation: FuseNavigationItem[] = [
     {
         id: 'home',
-        title: 'Home Page',
+        title: 'Noble Ledger',
         subtitle: 'Financial and Management Accounting',
         type: 'group',
         icon: 'heroicons_outline:home',
@@ -107,7 +107,7 @@ export const defaultNavigation: FuseNavigationItem[] = [
 export const compactNavigation: FuseNavigationItem[] = [
     {
         id: 'home',
-        title: 'Home Page',
+        title: 'Noble Ledger',
         type: 'basic',
         icon: 'heroicons_outline:home',
         link: '/home',
@@ -169,7 +169,7 @@ export const compactNavigation: FuseNavigationItem[] = [
 export const futuristicNavigation: FuseNavigationItem[] = [
     {
         id: 'home',
-        title: 'Home Page',
+        title: 'Noble Ledger',
         type: 'basic',
         icon: 'heroicons_outline:home',
         link: '/home',
@@ -231,7 +231,7 @@ export const futuristicNavigation: FuseNavigationItem[] = [
 export const horizontalNavigation: FuseNavigationItem[] = [
     {
         id: 'home',
-        title: 'Home Page',
+        title: 'Noble Ledger',
         type: 'group',
         icon: 'heroicons_outline:home',
         link: '/home',

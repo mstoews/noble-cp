@@ -28,7 +28,8 @@
                     <ng-container>
                         @if (journalHeader$() !== null) {
                         <div class="flex flex-1 flex-col overflow-auto">
-                            <dx-data-grid class="w-full lg:w-full" [dataSource]="journalHeader$()" 
+                            <dx-data-grid class="w-full lg:w-full" 
+                            [dataSource]="journalHeader$()" 
                                 [columnHidingEnabled]="true"
                                 [allowColumnReordering]="true" 
                                 [rowAlternationEnabled]="true" 
@@ -49,19 +50,20 @@
                                 <dxo-paging [pageSize]="10"> </dxo-paging>
                                 <dxo-pager [visible]="true" [allowedPageSizes]="allowedPageSizes"
                                     [displayMode]="displayMode" [showPageSizeSelector]="showPageSizeSelector"
-                                    [showInfo]="showInfo" [showNavigationButtons]="showNavButtons">
-                                </dxo-pager>
+                                    [showInfo]="showInfo">
+                                </dxo-pager>    
                                 <dxo-selection mode="multiple"></dxo-selection>
 
                                 <dxi-column dataField="journal_id" caption="ID" width="50" dataType="number" alignment="left"></dxi-column>                            
-                                <dxi-column dataField="booked" dataType="boolean" template="book"></dxi-column>                            
+                                <dxi-column dataField="booked" dataType="boolean" width="70" template="book"></dxi-column>                            
                                 <dxi-column dataField="amount" width="100" [customizeText]="formatNumber" dataType="number"></dxi-column>
+                                <dxi-column dataField="period" caption="Prd" width="50" ></dxi-column>
+                                <dxi-column dataField="period_year" caption="Year" width="70"></dxi-column>    
                                 <dxi-column dataField="description" width="300" dataType="string"></dxi-column>
                                 <dxi-column dataField="booked_date" dataType="date"></dxi-column>                                                        
                                 <dxi-column dataField="booked_user" dataType="string"></dxi-column>
-                                <dxi-column dataField="create_user"></dxi-column>
-                                <dxi-column dataField="create_date" caption="Date" dataType="date"></dxi-column>
-                                
+                                <dxi-column dataField="create_date" dataType="date"></dxi-column>                                                        
+                                <dxi-column dataField="create_user" dataType="string"></dxi-column>
                                 
                                 <dxo-master-detail [enabled]="true" template="detail"> </dxo-master-detail>
                                 <div *dxTemplate="let journal of 'detail'">

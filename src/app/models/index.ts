@@ -2,6 +2,23 @@ import type { User } from "firebase/auth";
 import { DocumentReference, Timestamp, FieldValue } from "firebase/firestore";
 
 
+export interface IBudget {
+    account        :number;
+    child          :number;
+    parent_account :boolean;
+    type           :string;
+    sub_type       :string;
+    description    :string;
+    balance        :number;
+    comments       :string;
+    create_date    :Timestamp;
+    create_user    :string;
+    update_date    :Timestamp;
+    update_user    :string;
+    
+}
+
+
 export interface IDashboardFund {
   fund: string,
   amount: number;

@@ -8,11 +8,11 @@ import {
   } from '@ngrx/signals';
   
   import { rxMethod } from '@ngrx/signals/rxjs-interop';
-  import { exhaustMap, pipe, shareReplay, switchMap, tap } from 'rxjs';
+  import { debounceTime, distinctUntilChanged, exhaustMap, pipe, shareReplay, switchMap, tap } from 'rxjs';
   import { computed, inject } from '@angular/core';
-  import { IAccounts, IJournalDetail, JournalService } from 'app/services/journal.service';
+  import { IAccounts, IJournalDetail, IJournalHeader, JournalService } from 'app/services/journal.service';
   import { tapResponse } from '@ngrx/operators';
-  
+  import { addEntity, removeEntity, updateEntity, withEntities } from '@ngrx/signals/entities'
   
   export interface TransactionDetailInterface {
     details: IJournalDetail[];    
@@ -20,15 +20,19 @@ import {
     isLoading: boolean;
     error: string | null;
     detailCount: number;
+    query: string
   }
   
   export const TransactionDetailStore = signalStore(
+    withEntities<IJournalDetail>(),
     withState<TransactionDetailInterface>({
       details: [],      
       accounts: [],
       error: null,
       isLoading: false,
-      detailCount: 0
+      detailCount: 0,
+      query: ''
+
     }),
     withComputed((store) => ({
       detailCount: computed(() => store.details().length),
@@ -68,6 +72,8 @@ import {
       ),
       updateDetail: rxMethod<IJournalDetail>(
         pipe(
+          debounceTime(300),
+          distinctUntilChanged(),
           switchMap((value) => {
             patchState(store, { isLoading: true });
             return journalService.updateHttpJournalDetail(value).pipe(
@@ -126,7 +132,13 @@ import {
               );
             })
             )
-      ),
-    })),    
+      )
+    })),
+    withHooks({
+      onInit(store) {
+        store.entities();
+        store.loadAccounts();
+      },
+    })    
   );
   

@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, OnDestroy, inject, signal } from '@angular/core';
-import { Observable, Subject, Subscription, catchError, shareReplay, take, takeUntil, tap, throwError } from 'rxjs';
+import { Observable, Subject, Subscription, catchError, debounceTime, distinctUntilChanged, shareReplay, take, takeUntil, tap, throwError } from 'rxjs';
 
 import { environment } from 'environments/environment.prod';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -262,10 +262,16 @@ export class JournalService implements OnDestroy  {
     this.journalDetailList.set(journalDetail);
   }
 
+  
+  readHttpJournalHeader() {  
+    var url = this.baseUrl + '/v1/read_journal_header';
+    return this.httpClient.get<IJournalHeader[]>(url)
+  }
  
   readJournalHeader() {
-    var url = this.baseUrl + '/v1/read_journal_header';
-    this.httpClient.get<IJournalHeader[]>(url).pipe(
+    this.readHttpJournalHeader().pipe(
+      debounceTime(300),
+      distinctUntilChanged(),
       tap(data => this.journalHeaderList.set(data)),
       take(1),
       catchError(err => {
@@ -279,13 +285,24 @@ export class JournalService implements OnDestroy  {
     return this.journalHeaderList;
   }
 
-  getJournalAccountsByPeriod(period:  number , periodYear: number) {
-        var url = this.baseUrl + '/v1/get_jrn_by_acct';
+   getJournalAccountsByPeriod(period:  number , periodYear: number, child: number) {
+        var url = this.baseUrl + '/v1/read_journal_by_account';
         return this.httpClient.post(url, {
          period: period,
-         period_year: periodYear
-        }).pipe(shareReplay());
+         period_year: periodYear,
+         child: child
+        });
     }
+
+    readJournalDetails(period:  number , periodYear: number, child: number) {
+      var url = this.baseUrl + '/v1/read_journal_by_account';
+      return this.httpClient.post(url, {
+       period: period,
+       period_year: periodYear,
+       child: child
+      }).pipe(shareReplay());
+  }
+
 
   getJournalDetailByChildAccount(child: string){
     var url = this.baseUrl + '/v1/get_jd_by_child/' + child;
@@ -305,7 +322,7 @@ export class JournalService implements OnDestroy  {
   }
   
   listAccounts() {
-    var url = this.baseUrl + '/v1/list_accounts';
+    var url = this.baseUrl + '/v1/account_list';
     return this.httpClient.get<IAccounts[]>(url).pipe(
       shareReplay())
   }
@@ -366,7 +383,7 @@ export class JournalService implements OnDestroy  {
     var url = this.baseUrl + '/v1/update_journal_detail';    
     this.httpClient.post<IJournalDetail>(url, detail)
       .pipe(
-      tap( data => this.updateJournalDetailSignal(detail)),
+      // tap( data => this.updateJournalDetailSignal(detail)),
       catchError(err => {
           this.message("Could not save journal detail"); 
           return throwError(() => new Error(`Invalid time ${ err }`));         

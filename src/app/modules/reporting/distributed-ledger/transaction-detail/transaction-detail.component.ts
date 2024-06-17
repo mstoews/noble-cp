@@ -1,6 +1,6 @@
-import { Component, Input, OnInit, ViewChild, inject } from '@angular/core';
+import { Component, Input, OnInit,  inject } from '@angular/core';
 import { DxBulletModule, DxDataGridModule, DxTemplateModule } from 'devextreme-angular';
-import { IJournalDetail, JournalService } from 'app/services/journal.service';
+import { JournalService } from 'app/services/journal.service';
 import { Observable, map } from 'rxjs';
 
 import { CommonModule } from '@angular/common';
@@ -40,16 +40,10 @@ export class TransactionDetailComponent implements OnInit {
 
     selectedItemKeys: any[] = [];
 
-    details$ = this.journalService.getJournalAccountsByPeriod(1, 2024)
+    details$ : Observable<Object>;
 
-    ngOnInit() {
-        var period = this.period;
-        var year = this.year;
-        var account = this.account;
-        this.details$ = this.journalService.getJournalAccountsByPeriod(period, year).pipe(map((data: any) => {
-            return data.filter((item: any) => item.child === account)
-        }
-        ));
+    ngOnInit() {        
+        this.details$ = this.journalService.readJournalDetails(this.period, this.year, this.account);
     }
 
     formatNumber(e) {
@@ -58,6 +52,9 @@ export class TransactionDetailComponent implements OnInit {
             minimumFractionDigits: 2,
             maximumFractionDigits: 2,
         };
+        if (e.value === null || e.value === undefined)
+            e.value = 0;
+        
         const formattedWithOptions = e.value.toLocaleString('en-US', options);
         console.debug(formattedWithOptions);
         return formattedWithOptions;
