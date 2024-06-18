@@ -5,31 +5,27 @@
 
     <div class="flex-auto">
         <div class="h-full rounded-2xl">
-            <mat-drawer class="w-128" #drawer [opened]="false" mode="over" [position]="'end'" [disableClose]="false">
-                <mat-card>
-                    <div mat-card-title class="font-semibold text-3xl text-gray-100 bg-gray-500 p-1 border-white">
-                        {{sTitle}} </div>
+            <mat-drawer class="w-128 bg-gray-100" #drawer [opened]="false" mode="over" [position]="'end'"
+                [disableClose]="false">
+                <mat-card class="m-2 mat-elevation-z8">
+                    <div mat-card-title
+                        class="font-semibold text-3xl text-gray-100 bg-gray-500 p-1 border-white m-2 rounded-md">
+                        {{sTitle}}
+                    </div>
                     <div mat-card-content class="border-r-green-500">
-                        <form [formGroup]="taskGroup" class="form">
+                        <!-- <form [formGroup]="taskGroup" class="form">
 
                             <div class="flex flex-col m-1">
                                 <div class="flex flex-col grow">
                                     <mat-form-field class="flex-start">
-                                        <input #myInput matInput placeholder="Task Title"
-                                            formControlName="title" />
+                                        <input #myInput matInput placeholder="Task Title" formControlName="title" />
+                                        <mat-icon class="icon-size-5" matPrefix
+                                            [svgIcon]="'heroicons_solid:document'"></mat-icon>
                                     </mat-form-field>
                                 </div>
 
                                 <section class="flex flex-col md:flex-row gap-1">
-                                    <!-- <div class="flex flex-col grow">
-                                        <mat-form-field class="flex ">
-                                            <mat-select placeholder="RAG" formControlName="color"
-                                                (selectionChange)="changeRag($event)">
-                                                <mat-option *ngFor="let p of rag" [value]="p.value"> {{ p.viewValue }}
-                                                </mat-option>
-                                            </mat-select>
-                                        </mat-form-field>
-                                    </div> -->
+                                    
 
                                     <div class="flex flex-col grow">
                                         <mat-form-field class="flex">
@@ -65,36 +61,32 @@
                                     <mat-datepicker-toggle matIconPrefix [for]="picker"></mat-datepicker-toggle>
                                     <mat-date-range-picker #picker></mat-date-range-picker>
 
-                                    @if (taskGroup.controls.startDate.hasError('matStartDateInvalid')) {
-                                    <mat-error>Invalid start date</mat-error>
-                                    }
-                                    @if (taskGroup.controls.estimateDate.hasError('matEndDateInvalid')) {
-                                    <mat-error>Invalid end date</mat-error>
-                                    }
-                                </mat-form-field>
+                                    
 
-                                <!-- <p>Selected range: {{taskGroup.value.startDate | json}}</p> -->
+                                    <mat-form-field class="grow">
 
-                                <mat-form-field class="form-element">
+                                        <mat-form-field class="form-element">
 
-                                    <input matInput placeholder="Estimate (Days)" formControlName="estimate" />
-                                </mat-form-field>
+                                            <input matInput placeholder="Estimate (Days)" formControlName="estimate" />
+                                        </mat-form-field>
 
-                                <mat-form-field class="form-element">
-                                    <mat-select placeholder="Assigned" formControlName="assignee"
-                                        (selectionChange)="changeType($event.value)">
-                                        <mat-option *ngFor="let p of assignees" [value]="p.value"> {{
-                                            p.viewValue }}
-                                        </mat-option>
-                                    </mat-select>
-                                </mat-form-field>
+                                        <mat-form-field class="form-element">
+                                            <mat-select placeholder="Assigned" formControlName="assignee"
+                                                (selectionChange)="changeType($event.value)">
+                                                <mat-option *ngFor="let p of assignees" [value]="p.value"> {{
+                                                    p.viewValue }}
+                                                </mat-option>
+                                            </mat-select>
+                                        </mat-form-field>
 
-                                <mat-form-field class="mat-form-field">
+                                        <mat-form-field class="mat-form-field">
+                                            <textarea matInput placeholder="Summary"
+                                                formControlName="summary"> </textarea>
+                                        </mat-form-field>
 
-                                    <textarea matInput placeholder="Summary" formControlName="summary"> </textarea>
-                                </mat-form-field>
-                            </div>
-                        </form>
+
+                        </form> -->
+
 
                         <div mat-card-actions class="mb-3">
                             <button mat-icon-button (click)="onAddNew()" color="primary" class="m-1"
@@ -123,19 +115,19 @@
             </mat-drawer>
             <mat-drawer-container>
                 <mat-drawer-content>
-                    @if (kanbanData$ | async; as kanbanData) {
+                    @if (store.isLoading() == false) {
                     <div class="" cdkScrollable>
                         <div class="control-section">
                             <div class="content-wrapper">
                                 <!-- <p>Selected range: {{kanbanData | json}}</p> -->
                                 <ejs-kanban #kanbanObj cssClass='kanban-overview' keyField="status"
-                                    [dataSource]='kanbanData' [cardSettings]='cardSettings' enableTooltip='false'
+                                    [dataSource]='store.tasks()' [cardSettings]='cardSettings' enableTooltip='false'
                                     [swimlaneSettings]='swimlaneSettings' (actionBegin)='OnActionBegin()'
                                     (actionComplete)='OnActionComplete()' (actionFailure)='OnActionFailure()'
-                                    (dataBinding)='OnDataBinding()' (dataBound)='OnDataBound()'
-                                    (queryCellInfo)='OnQueryCellInfo()' (cardClick)='OnCardClick($event)'
-                                    (cardDoubleClick)='OnCardDoubleClick($event)' (dragStart)='OnDragStart($event)'
-                                    (drag)='OnDrag($event)' (dragStop)='OnDragStop($event)'
+                                    (cardDoubleClick)='OnCardDoubleClick($event)' 
+                                    (dragStart)='OnDragStart($event)'
+                                    (drag)='OnDrag($event)' 
+                                    (dragStop)='OnDragStop($event)'
                                     (cardRendered)='cardRendered($event)'>
                                     <e-columns>
                                         <e-column class="text-gray-400" *ngFor="let column of columns;"
@@ -158,6 +150,10 @@
                                             </div>
                                             <div class='e-card-content e-tooltip-text'>
                                                 <div class='e-text'>{{data.summary}}</div>
+
+                                                <div class='e-date'>Start :{{data.startdate}}</div>
+                                                <div class='e-date'>Estimate: {{data.estimatedate}}</div>
+
                                             </div>
                                             <div class='e-card-custom-footer'>
                                                 <div class="e-card-tag-field e-tooltip-text"
@@ -176,6 +172,7 @@
                         <mat-spinner class="text-gray-100 bg-white" [diameter]="80"></mat-spinner>
                         <p class="text-gray-100 text-2xl">Loading...</p>
                     </div>
+
                     }
                 </mat-drawer-content>
             </mat-drawer-container>

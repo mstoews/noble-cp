@@ -270,6 +270,9 @@ const config = {
             })
         }
     },
+    variants: {
+        fill: ['hover', 'focus'], // this line does the trick
+      },
     corePlugins: {
         appearance        : false,
         container         : false,

@@ -1,16 +1,20 @@
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Component, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
 import { DxBulletModule, DxDataGridModule, DxTemplateModule } from 'devextreme-angular';
 import { CommonModule } from '@angular/common';
 import { FuseConfirmationService } from '@fuse/services/confirmation';
 
-import { IPriority, KanbanService } from 'app/services/kanban.service';
 import { MatDrawer } from '@angular/material/sidenav';
 import { MaterialModule } from 'app/services/material.module';
 import { GridMenubarStandaloneComponent } from 'app/modules/accounting/grid-menubar/grid-menubar.component';
-import { Subject, map, takeUntil } from 'rxjs';
+import { Subject } from 'rxjs';
 import { DxButtonModule } from 'devextreme-angular';
 import { DxDataGridTypes } from 'devextreme-angular/ui/data-grid';
+import { KanbanService, IPriority } from '../kanban.service';
+import { EditService, ToolbarService, PageService, SortService, FilterService, NewRowPosition, GridModule, DialogEditEventArgs, SaveEventArgs } from '@syncfusion/ej2-angular-grids';
+import { DropDownListComponent } from '@syncfusion/ej2-angular-dropdowns';
+import { Browser } from '@syncfusion/ej2-base';
+import { Dialog } from '@syncfusion/ej2-popups';
 
 const imports = [
     CommonModule,
@@ -21,6 +25,7 @@ const imports = [
     DxBulletModule,
     DxTemplateModule,
     DxButtonModule,
+    GridModule,
     GridMenubarStandaloneComponent
 ];
 
@@ -33,28 +38,113 @@ const imports = [
         background-color: rgb(195, 199, 199);
         border-color: #ada6a7;
         }`,
-    providers: []
+    providers: [SortService, PageService, FilterService, ToolbarService, EditService]
 })
 export class KanbanPriorityComponent implements OnInit, OnDestroy {
-    
-    public data: any;
-    private _fuseConfirmationService = inject(FuseConfirmationService);
-    private fb = inject(FormBuilder);
-    private kanbanService = inject(KanbanService)
+
+    _fuseConfirmationService = inject(FuseConfirmationService);
+    fb = inject(FormBuilder);
+    kanbanService = inject(KanbanService)
+
     @ViewChild('drawer') drawer!: MatDrawer;
 
-    public sTitle = 'Kanban Types';
-    public accountsForm!: FormGroup;
-    public data$: any
-    public typeForm?: FormGroup | any;
+    public sTitle = 'Priority';
+    public priorityForm!: FormGroup;
+
     public selectedItemKeys: string[] = [];
-    private _unsubscribeAll: Subject<any> = new Subject<any>();
+    public orderidrules: Object;
+    public dropDown: DropDownListComponent;
+    public initialSort: Object;
+    public pageSettings: Object;
+    public filterSettings: Object;
+    public toolbar: string[];
+    public editSettings: Object;
+    public customeridrules: Object;
+    public freightrules: Object;
+    public editparams: Object;
+    public submitClicked: boolean = false;
+    public PriorityForm: FormGroup;
     
+    public formatoptions: Object;
+    private _unsubscribeAll: Subject<any> = new Subject<any>();
+
 
     ngOnInit() {
-        this.createEmptyForm();
-        this.data$ = this.kanbanService.getPriorityList();        
-        this.createEmptyForm()
+        var priority: IPriority = {
+            priority: '',
+            description: '',
+            updatedte: '',
+            updateusr: ''
+        }
+        this.createEmptyForm(priority);
+        this.kanbanService.readPriority();
+        this.orderidrules = { required: true, number: true };
+        this.pageSettings = { pageCount: 5 };        
+        this.formatoptions = { type: 'dateTime', format: 'M/d/y hh:mm a' }
+        this.filterSettings = { type: 'Excel' };
+        // this.toolbar = ['Add', 'Edit', 'Delete', 'Update', 'Cancel'];
+        this.editSettings = { allowEditing: true, allowAdding: true, allowDeleting: true };
+        this.orderidrules = { required: true, number: true };
+        this.customeridrules = { required: true, minLength: 5 };
+        this.freightrules = { required: true, min: 0 };
+    }
+
+
+    createFormGroup(data: IPriority): FormGroup {
+        return new FormGroup({
+            Priority: new FormControl(data.priority, Validators.required),
+            Description: new FormControl(data.description, this.dateValidator()),            
+        });
+    }
+
+    dateValidator() {
+        return (control: FormControl): null | Object  => {
+            return control.value && control.value.getFullYear &&
+            (1900 <= control.value.getFullYear() && control.value.getFullYear() <=  2099) ? null : { OrderDate: { value : control.value}};
+        }
+    }
+
+
+
+
+
+    actionBegin(args: SaveEventArgs): void {
+        if (args.requestType === 'beginEdit' || args.requestType === 'add') {
+            this.submitClicked = false;
+            var priority: IPriority = {
+                priority: '',
+                description: '',
+                updatedte: '',
+                updateusr: ''
+            }
+            this.PriorityForm = this.createFormGroup(priority);
+        }
+        if (args.requestType === 'save') {
+            console.log(JSON.stringify(args.data));
+            var data = args.data as IPriority;
+            this.kanbanService.updateTaskPriority(data)
+            this.submitClicked = true;
+            if (this.PriorityForm.valid) {
+                args.data = this.PriorityForm.value;
+            } else {
+                args.cancel = true;
+            }
+        }
+    }
+
+    actionComplete(args: DialogEditEventArgs): void {
+        if ((args.requestType === 'beginEdit' || args.requestType === 'add')) {
+            if (Browser.isDevice) {
+                args.dialog.height = window.innerHeight - 90 + 'px';
+                (<Dialog>args.dialog).dataBind();
+            }
+            // Set initail Focus
+            if (args.requestType === 'beginEdit') {
+                // (args.form.elements.namedItem('CustomerName') as HTMLInputElement).focus();
+            } else if (args.requestType === 'add') {
+                // (args.form.elements.namedItem('OrderID') as HTMLInputElement).focus();
+            }
+        }
     }
 
     ngOnDestroy(): void {
@@ -62,21 +152,26 @@ export class KanbanPriorityComponent implements OnInit, OnDestroy {
         this._unsubscribeAll.complete();
     }
 
-
     onCreate(e: any) {
-        this.createEmptyForm();
+        var priority: IPriority = {
+            priority: '',
+            description: '',
+            updatedte: '',
+            updateusr: ''
+        }
+        this.createEmptyForm(priority);
         this.openDrawer();
     }
-     onSelectionChanged({ selectedRowKeys }: DxDataGridTypes.SelectionChangedEvent) {
+    onSelectionChanged({ selectedRowKeys }: DxDataGridTypes.SelectionChangedEvent) {
         this.selectedItemKeys = selectedRowKeys;
-      }
-    
-      deleteRecords() {
+    }
+
+    deleteRecords() {
         this.selectedItemKeys.forEach((key) => {
-          
+
         });
         this.kanbanService.readTypes();
-      }
+    }
 
     onDelete(e: any) {
         console.debug(`onDelete ${JSON.stringify(e)}`);
@@ -101,9 +196,9 @@ export class KanbanPriorityComponent implements OnInit, OnDestroy {
         this.closeDrawer();
     }
 
-    createEmptyForm() {
-        this.accountsForm = this.fb.group({
-            type: [''],
+    createEmptyForm(priority: IPriority) {
+        this.priorityForm = this.fb.group({
+            priority: [''],
             description: [''],
         });
     }
@@ -130,11 +225,13 @@ export class KanbanPriorityComponent implements OnInit, OnDestroy {
     onUpdate(e: any) {
         const dDate = new Date();
         const updateDate = dDate.toISOString().split('T')[0];
-        const account = { ...this.accountsForm.value } as IPriority;
+        const priority = { ...this.priorityForm.value } as IPriority;
         const rawData = {
-            Priority: account.Priority,
-            Description: account.Description
+            Priority: priority.priority,
+            Description: priority.description
         };
+
+        // this.kanbanService.updatePriority(rawData)
 
         this.closeDrawer();
     }

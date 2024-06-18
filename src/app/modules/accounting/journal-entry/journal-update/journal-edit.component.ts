@@ -6,7 +6,6 @@ import { FundsService } from 'app/services/funds.service';
 import { IJournalDetail, JournalService } from 'app/services/journal.service';
 import { MaterialModule } from 'app/services/material.module';
 import { map, Observable, Subject, takeUntil, tap } from 'rxjs';
-import { JournalTableComponent } from '../journal-table/journal-table.component';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { SubTypeService } from 'app/services/subtype.service';
 import { AUTH } from 'app/app.config';
@@ -20,8 +19,7 @@ const imports = [
   ReactiveFormsModule,
   MaterialModule,
   FormsModule,
-  JournalTableComponent,
-  NgxMaskDirective, 
+  NgxMaskDirective,
   NgxMaskPipe
 ];
 
@@ -33,7 +31,7 @@ const imports = [
   styles: ``,
   providers: [provideNgxMask()]
 })
-export class JournalEditComponent  {
+export class JournalEditComponent {
   public journal_id: number;
   public journal_subid: number;
 
@@ -49,7 +47,7 @@ export class JournalEditComponent  {
   journalDetail$?: Observable<IJournalDetail[]>
   funds$ = this.fundService.read();
   subtype$ = this.subtypeService.read();
-  accounts$ = this.accountService.read().pipe(map((child) => child.filter((parent) => parent.parent_account === false)));
+  accounts$ = this.accountService.readChildren();
   childAccount: 'account';
   account: number;
 
@@ -86,20 +84,20 @@ export class JournalEditComponent  {
 
 
   changeChildAccount(e: any) {
-    console.log(e.value);
+    console.debug(e.value);
     this.childAccount = e;
   }
 
   changeFund(e: any) {
-    console.log('Fund: ', e.value);
+    console.debug('Fund: ', e.value);
   }
 
   changeSubtype(e: any) {
-    console.log('Subytype :', e.value);
+    console.debug('Subytype :', e.value);
   }
 
   private _unsubscribeAll: Subject<any> = new Subject<any>();
-  
+
   onUpdate() {
     const dDate = new Date();
     const User = this.auth.currentUser;
@@ -120,7 +118,7 @@ export class JournalEditComponent  {
       fund: journal_details.fund
     }
     this.journalService.updateJournalDetail(rawData);
-    
+
     this.dialogRef.close('Update');
   }
 
@@ -147,9 +145,7 @@ export class JournalEditComponent  {
       reference: journal_details.reference,
       fund: journal_details.fund
     }
-    this.journalService.createJournalDetail(rawData).pipe(
-      takeUntilDestroyed(this.destroyRef)
-    ).subscribe()
+    this.journalService.createJournalDetail(rawData);
     this.dialogRef.close('Update');
     this.dialogRef.close('Create');
 

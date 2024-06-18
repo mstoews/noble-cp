@@ -126,13 +126,13 @@ export class DndComponent implements OnDestroy {
         const progress =
           (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
         this.percentageChange$ = of(progress);
-        console.log('Upload is ' + progress + '% done');
+        console.debug('Upload is ' + progress + '% done');
         switch (snapshot.state) {
           case 'paused':
-            console.log('Upload is paused');
+            console.debug('Upload is paused');
             break;
           case 'running':
-            console.log('Upload is running');
+            console.debug('Upload is running');
             break;
         }
       },
@@ -143,18 +143,19 @@ export class DndComponent implements OnDestroy {
 
         const updateDate = DateTime.now().toFormat('yyyy-MM-dd');
 
-        getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {          
+        getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
           const update = {
-          "journal_id": this.imageData.journal_id, 
-          "reference": this.imageData.reference_no.toString(), 
-          "description": this.imageData.description,
-          "location": downloadURL,
-          "user_created": "admin",
-          "date_created": updateDate }
-          console.debug(update);        
+            "journal_id": this.imageData.journal_id,
+            "reference": this.imageData.reference_no.toString(),
+            "description": this.imageData.description,
+            "location": downloadURL,
+            "user_created": "admin",
+            "date_created": updateDate
+          }
+          console.debug(update);
           this.evidenceService.createEvidence(update);
           this.closeDialog();
-        });        
+        });
       }
     );
 

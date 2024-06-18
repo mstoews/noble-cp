@@ -1,5 +1,5 @@
 import { Injectable, computed, inject, signal } from '@angular/core';
-import { from, defer, switchMap, tap, BehaviorSubject, Observable, of } from 'rxjs';
+import { from, defer, switchMap, tap, BehaviorSubject, Observable, of, Subject } from 'rxjs';
 import {
   User,
   createUserWithEmailAndPassword,
@@ -9,7 +9,6 @@ import {
 import { authState , idToken} from 'rxfire/auth';
 
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { HttpClient } from '@angular/common/http';
 import { Credentials } from 'app/shared/interfaces/credentials';
 import { AUTH } from 'app/app.config';
 
@@ -26,7 +25,6 @@ interface AuthState {
 })
 export class AuthService {
   private auth = inject(AUTH);
-  private http = inject(HttpClient)
   private token: BehaviorSubject<string> = new BehaviorSubject(null);
   token$: Observable<string> = this.token.asObservable();
 
@@ -41,6 +39,7 @@ export class AuthService {
   // selectors
   user = computed(() => this.state().user);
   authState: any;
+  tokenSubject: Subject<string>;
 
   constructor() {
     this.user$.pipe(takeUntilDestroyed()).subscribe((user) =>

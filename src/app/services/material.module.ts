@@ -95,7 +95,6 @@ import {ReactiveFormsModule } from '@angular/forms';
     OverlayModule,
     PortalModule,
     ScrollingModule,
-    HttpClientModule,
     FormsModule,
     ReactiveFormsModule
   ]

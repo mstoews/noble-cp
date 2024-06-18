@@ -15,7 +15,7 @@ import {
 import { DistMenuStandaloneComponent } from '../distributed-ledger/dist-menubar/grid-menubar.component';
 import { DistributionLedgerService } from 'app/services/distribution.ledger.service';
 import { DxDataGridTypes } from 'devextreme-angular/ui/data-grid';
-import { JournalDetailComponent } from 'app/modules/accounting/journal-entry/journal-detail/journal-detail.component';
+import { JournalDetailComponent } from 'app/modules/accounting/journal-entry/transactions/journal-detail.component';
 import { MatDrawer } from '@angular/material/sidenav';
 import { MaterialModule } from 'app/services/material.module';
 import { TransactionDetailComponent } from '../distributed-ledger/transaction-detail/transaction-detail.component';
@@ -92,9 +92,9 @@ export class DistributionReportV2Component implements OnInit {
         );
     }
 
-    onAdd() {}
+    onAdd() { }
 
-    onCellDoubleClicked(e) {}
+    onCellDoubleClicked(e) { }
 
     onExporting(e: DxDataGridTypes.ExportingEvent) {
         const workbook = new Workbook();
@@ -170,12 +170,12 @@ export class DistributionReportV2Component implements OnInit {
             maximumFractionDigits: 2,
         };
         const formattedWithOptions = e.value.toLocaleString('en-US', options);
-        //console.log(formattedWithOptions);
+        //console.debug(formattedWithOptions);
         return formattedWithOptions;
     }
 
     selectionChanged(data: any) {
-        //console.log(`selectionChanged ${JSON.stringify(data.data)}`);
+        //console.debug(`selectionChanged ${JSON.stringify(data.data)}`);
         this.selectedItemKeys = data.selectedRowKeys;
     }
 
@@ -188,6 +188,6 @@ export class DistributionReportV2Component implements OnInit {
     }
 
     onFocusedRowChanged(e: any) {
-        // console.log(`selectionChanged ${JSON.stringify(e.data)}`);
+        // console.debug(`selectionChanged ${JSON.stringify(e.data)}`);
     }
 }

@@ -105,7 +105,7 @@ export const appRoutes: Route[] = [
                 path: 'gl',
                 loadChildren: () =>
                     import(
-                        'app/modules/accounting/main/gl.main.components.routes'
+                        'app/modules/accounting/accts/main/gl.main.components.routes'
                     ),
             },
             {
@@ -136,12 +136,12 @@ export const appRoutes: Route[] = [
             {
                 path: 'analytics',
                 loadChildren: () =>
-                    import('app/modules/admin/finance/finance.routes'),                
+                    import('app/modules/admin/finance/finance.routes'),
             },
             {
                 path: 'projects',
                 loadChildren: () =>
-                    import('app/modules/admin/project/project.routes'),
+                    import('app/modules/admin/dashboard/project.routes'),
             },
             {
                 path: 'reporting',
@@ -165,6 +165,12 @@ export const appRoutes: Route[] = [
                     import('app/modules/kanban/kanban/kanban.routes'),
             },
             {
+                path: 'budget',
+                loadChildren: () =>
+                    import('app/modules/budget/budget.entry.routes'),
+            },
+
+            {
                 path: 'learning',
                 loadChildren: () =>
                     import('app/modules/admin/academy/academy.routes'),
@@ -172,7 +178,7 @@ export const appRoutes: Route[] = [
             {
                 path: 'general_ledger',
                 loadChildren: () =>
-                    import('app/modules/accounting/general-ledger/general-ledger.components.routes'),
+                    import('app/modules/accounting/accts/general-ledger/general-ledger.components.routes'),
             },
 
             {
@@ -190,8 +196,10 @@ export const appRoutes: Route[] = [
                 loadChildren: () =>
                     import('app/modules/file-manager/file-manager.routes'),
             },
-            { path: '**',loadChildren: () =>
-               import('app/modules/pages/error/error-404/error-404.routes')},
+            {
+                path: '**', loadChildren: () =>
+                    import('app/modules/pages/error/error-404/error-404.routes')
+            },
         ],
     },
     { path: '**', pathMatch: 'full', redirectTo: 'landing' },

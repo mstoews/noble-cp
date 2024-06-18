@@ -59,7 +59,7 @@ export class MessageService {
             )
             .subscribe({
                 error: (err) => {
-                    console.log(err);
+                    console.debug(err);
                     this.error$.next('Failed to send message');
                 },
             });

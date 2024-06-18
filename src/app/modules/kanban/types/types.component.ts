@@ -3,13 +3,14 @@ import { Component, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
 import { DxBulletModule, DxDataGridModule, DxTemplateModule } from 'devextreme-angular';
 import { CommonModule } from '@angular/common';
 import { FuseConfirmationService } from '@fuse/services/confirmation';
-import { IType, KanbanService } from 'app/services/kanban.service';
+
 import { MatDrawer } from '@angular/material/sidenav';
 import { MaterialModule } from 'app/services/material.module';
 import { GridMenubarStandaloneComponent } from 'app/modules/accounting/grid-menubar/grid-menubar.component';
 import { Subject, map, takeUntil } from 'rxjs';
 import { DxButtonModule } from 'devextreme-angular';
 import { DxDataGridTypes } from 'devextreme-angular/ui/data-grid';
+import { KanbanService, IType } from '../kanban.service';
 
 const imports = [
     CommonModule,
@@ -36,7 +37,6 @@ const imports = [
 })
 export class KanbanTypesComponent implements OnInit, OnDestroy {
     
-    public data: any;
     private _fuseConfirmationService = inject(FuseConfirmationService);
     private fb = inject(FormBuilder);
     private kanbanService = inject(KanbanService)
@@ -44,21 +44,14 @@ export class KanbanTypesComponent implements OnInit, OnDestroy {
 
     public sTitle = 'Kanban Types';
     public accountsForm!: FormGroup;
-    public data$: any
-    public typeForm?: FormGroup | any;
     public selectedItemKeys: string[] = [];
     private _unsubscribeAll: Subject<any> = new Subject<any>();
+    
+    typesList = this.kanbanService.readTypes()
     
 
     ngOnInit() {
         this.createEmptyForm();
-        this.data$ = this.kanbanService.readTypes();
-        // this.data$.pipe(takeUntil(this._unsubscribeAll)).subscribe(data => {
-        //     data.forEach(d => {
-        //         console.log(d);
-        //     })
-        // });        
-        this.createEmptyForm()
     }
 
     ngOnDestroy(): void {

@@ -1,50 +1,47 @@
 <div class="h-full border-gray-300 rounded-2xl">
-    <ng-container>
-        <div class="flex flex-col h-full mb-2">
-            @if (details$ | async; as journal_details) {
-            <dx-data-grid id="child" [wordWrapEnabled]="true" [dataSource]="journal_details"
-                [showColumnLines]="true" [showRowLines]="true" [showBorders]="true" [focusedRowEnabled]="true"
-                keyExpr="journal_id" [repaintChangesOnly]="true">
-                <dxi-column dataField="journal_id" caption="ID" width="100"> </dxi-column>
-                <dxi-column dataField="child" caption="Account" width="100"> </dxi-column>
-                <dxi-column dataField="sub_type" caption="Sub Type" width="120"> </dxi-column>
-                <dxi-column dataField="fund" caption="Fund" width="120"> </dxi-column>
-                <dxi-column dataField="description"> </dxi-column>
-                <dxi-column dataField="debit" dataType="number" width="120" alignment="right"  [customizeText]="formatNumber"> </dxi-column>
-                <dxi-column dataField="credit" dataType="number" alignment="right" [customizeText]="formatNumber" width="120"> </dxi-column>
-                <dxi-column dataField="create_date" caption="Date" width="120"> </dxi-column>
-                <dxi-column dataField="create_user" caption="User" width="100"> </dxi-column>
-                <dxo-summary>
-                    <dxi-total-item column="child" summaryType="count"> </dxi-total-item>
-                    <dxi-total-item
-                      column="debit"
-                      summaryType="sum"
-                      [valueFormat]="{
+  <ng-container>
+    <div class="flex flex-col h-full mb-2">
+      @if (details$ | async; as journal_details) {
+      @if (journal_details.length > 0 ) {
+      <dx-data-grid id="child" [wordWrapEnabled]="true" [dataSource]="journal_details" [showColumnLines]="true"
+        [showRowLines]="true" [showBorders]="true" [focusedRowEnabled]="true" keyExpr="journal_id"
+        [repaintChangesOnly]="true">
+        <dxi-column dataField="journal_id" caption="ID" width="100"> </dxi-column>
+        <dxi-column dataField="child" caption="Account" width="100"> </dxi-column>
+        <dxi-column dataField="sub_type" caption="Sub Type" width="120"> </dxi-column>
+        <dxi-column dataField="fund" caption="Fund" width="120"> </dxi-column>
+        <dxi-column dataField="description"> </dxi-column>
+        <dxi-column dataField="debit" dataType="number" width="120" alignment="right" [customizeText]="formatNumber">
+        </dxi-column>
+        <dxi-column dataField="credit" dataType="number" alignment="right" [customizeText]="formatNumber" width="120">
+        </dxi-column>
+        <dxi-column dataField="create_date" caption="Date" width="120"> </dxi-column>
+        <dxi-column dataField="create_user" caption="User" width="100"> </dxi-column>
+        <dxo-summary>
+          <dxi-total-item column="child" summaryType="count"> </dxi-total-item>
+          <dxi-total-item column="debit" summaryType="sum" [valueFormat]="{
                       type: 'currency',
                       precision: 2,
                       useCurrencyAccountingStyle: true
-                     }"
-                     displayFormat="{0}"
-                    >
-                    </dxi-total-item>
-                    <dxi-total-item
-                      column="credit"
-                      summaryType="sum"
-                      [valueFormat]="{
+                     }" displayFormat="{0}">
+          </dxi-total-item>
+          <dxi-total-item column="credit" summaryType="sum" [valueFormat]="{
                         type: 'currency',
                         precision: 2,
                         useCurrencyAccountingStyle: true
-                       }"
-                      displayFormat="{0}"
-                    >
-                    </dxi-total-item>
-                  </dxo-summary>
-                <dxo-master-detail [enabled]="true" template="details"> </dxo-master-detail>
-                <div *dxTemplate="let journal of 'details'">
-                    <trn-journal-detail [key]="journal.data.journal_id"></trn-journal-detail>
-                </div>
-            </dx-data-grid>
-            }
+                       }" displayFormat="{0}">
+          </dxi-total-item>
+        </dxo-summary>
+        <dxo-master-detail [enabled]="true" template="details"> </dxo-master-detail>
+        <div *dxTemplate="let journal of 'details'">
+          <trn-journal-detail [key]="journal.data.journal_id"></trn-journal-detail>
         </div>
-    </ng-container>
+      </dx-data-grid>
+      }
+      @else {
+        <div class="text-2xl text-gray-600">No details for the account : {{account}} </div>
+      }
+    }
+    </div>
+  </ng-container>
 </div>

@@ -49,7 +49,7 @@ export class AuthSignOutComponent implements OnInit, OnDestroy
             .pipe(
                 finalize(() =>
                 {
-                    this._router.navigate(['auth/login']);
+                     this._router.navigate(['auth/login']);
                 }),
                 takeWhile(() => this.countdown > 0),
                 takeUntil(this._unsubscribeAll),

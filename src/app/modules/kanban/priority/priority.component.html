@@ -8,25 +8,24 @@
                     {{ sTitle }}
                 </div>
                 <div mat-dialog-content>
-                    <form [formGroup]="accountsForm">
+                    <form [formGroup]="priorityForm">
 
                         <div class="flex flex-col m-1">
                             <section class="flex flex-col md:flex-row">
                                 <div class="flex flex-col grow">
-                                    <mat-label class="ml-2 text-base">Type</mat-label>
+                                    <mat-label class="ml-2 text-base">Priority</mat-label>
                                     <mat-form-field class="m-1 form-element grow" appearance="outline">
-                                        <input matInput placeholder="Type" formControlName="type" />
+                                        <input matInput placeholder="Priority" formControlName="priority" />
+                                    </mat-form-field>
+                                </div>
+
+                                <div class="flex flex-col grow">
+                                    <mat-label class="ml-2 text-base">Description</mat-label>
+                                    <mat-form-field class="m-1 form-element" appearance="outline">
+                                        <input matInput placeholder="Description" formControlName="description" />
                                     </mat-form-field>
                                 </div>
                             </section>
-
-                            <div class="flex flex-col grow">
-                                <mat-label class="ml-2 text-base">Description</mat-label>
-                                <mat-form-field class="m-1 form-element" appearance="outline">
-                                    <input matInput placeholder="Type Description" formControlName="description" />
-                                </mat-form-field>
-                            </div>
-
                         </div>
                     </form>
                 </div>
@@ -55,22 +54,42 @@
         </mat-card>
     </mat-drawer>
     <ng-container>
-        @if (data$ | async; as rows) {
         <grid-menubar [inTitle]="'Kanban Priority Maintenance'"></grid-menubar>
+        @if (kanbanService.isLoading() == false ) {        
         <div class="flex flex-col h-[600px]">
-            <dx-data-grid id="id" [wordWrapEnabled]="true" [columnHidingEnabled]="true" [columnHidingEnabled]="true" [dataSource]="rows" [showColumnLines]="true"
-                [showRowLines]="true" [showBorders]="true" [focusedRowEnabled]="true" [focusedRowIndex]="0" 
-                keyExpr="priority" [repaintChangesOnly]="true">
-                <dxo-editing
-                mode="cell"
-                [allowUpdating]="true"
-                [allowAdding]="true"
-                [allowDeleting]="false"
-              >
-              </dxo-editing>
+            <!-- 
+            <dx-data-grid id="id" [wordWrapEnabled]="true" [columnHidingEnabled]="true" [columnHidingEnabled]="true"
+                [dataSource]="kanbanService.priorityList()" [showColumnLines]="true" [showRowLines]="true"
+                [showBorders]="true" [focusedRowEnabled]="true" [focusedRowIndex]="0" keyExpr="priority"
+                [repaintChangesOnly]="true">
                 <dxi-column dataField="priority" caption="Kanban Type" width="150"></dxi-column>
-                <dxi-column dataField="description"></dxi-column>                
-            </dx-data-grid>
+                <dxi-column dataField="description"></dxi-column>
+            </dx-data-grid>  
+            -->
+
+            <ejs-grid #normalgrid id='Normalgrid'             
+                [dataSource]='kanbanService.priorityList()' 
+                allowPaging='true' 
+                [allowSorting]='true' 
+                [allowFiltering]='true' 
+                [filterSettings]='filterSettings' 
+                [editSettings]='editSettings' 
+                [toolbar]='toolbar' 
+                [sortSettings]='initialSort'
+                (actionBegin)='actionBegin($event)' 
+                (actionComplete)='actionComplete($event)'                
+                [pageSettings]='pageSettings'>
+                <e-columns>
+                    <e-column field='priority' headerText="Priority"  width='140' isPrimaryKey='true' ></e-column>
+                    <e-column field='description' headerText="Description" [validationRules]='customeridrules'></e-column>                
+                </e-columns>
+            </ejs-grid>
+        </div>
+        } @else
+        {
+        <div class="flex flex-col items-center justify-center h-screen mat-spinner-color w-full bg-white">
+            <mat-spinner class="text-gray-100 bg-white" [diameter]="80"></mat-spinner>
+            <p class="text-gray-100 text-2xl">Loading...</p>
         </div>
         }
     </ng-container>

@@ -3,7 +3,6 @@
         <!-- Main -->
         <div class="flex-auto p-6 sm:p-10">
             <div class="h-full border-gray-300 rounded-2xl">
-
                 @if (dl$ | async; as dist)
                 {
                             <div class="flex flex-col h-full">
@@ -24,8 +23,7 @@
                                 [showRowLines]="true"
                                 [showColumnLines]="true"
                                 [focusedRowEnabled]="true"
-                                [focusedRowIndex]="0"
-                                (onCellDblClick)="onCellDoubleClicked($event)"
+                                [focusedRowIndex]="0"                                
                                 [repaintChangesOnly]="false"
                                 [customizeColumns]="customizeColumns"
                                 (onExporting)="onExporting($event)"
@@ -46,7 +44,16 @@
                                 <dxi-column dataField="debit_balance" alignment="right"   [customizeText]="formatNumber" width="130" ></dxi-column>
                                 <dxi-column dataField="credit_balance" alignment="right"  [customizeText]="formatNumber" width="130" ></dxi-column>
                                 <dxi-column dataField="closing_balance" alignment="right" [customizeText]="formatNumber" width="130" ></dxi-column>
+                              
+                              
                                 <dxi-column dataField="update_date" dataType="date" width="100" ></dxi-column>
+                                <dxo-summary>
+                                <dxi-group-item column="opening_balance" summaryType="sum" [customizeText]="formatNumber" [showInGroupFooter]="true"  [alignByColumn]="true" ></dxi-group-item>
+                                <dxi-group-item column="debit_balance" summaryType="sum"   [customizeText]="formatNumber" [showInGroupFooter]="true"  [alignByColumn]="true" ></dxi-group-item>
+                                <dxi-group-item column="credit_balance" summaryType="sum"  [customizeText]="formatNumber" [showInGroupFooter]="true"  [alignByColumn]="true" ></dxi-group-item>
+                                <dxi-group-item column="closing_balance" summaryType="sum" [customizeText]="formatNumber" [showInGroupFooter]="true"  [alignByColumn]="true" ></dxi-group-item>
+                                </dxo-summary>
+                              
                                 <dxo-export [enabled]="true" [allowExportSelectedData]="true"></dxo-export>
                             </dx-data-grid>
                         </div>

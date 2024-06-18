@@ -51,7 +51,7 @@ export class TrnJournalDetailComponent implements OnInit {
     sTitle = 'Journal Entry Modification';
 
 
-    details$: Observable<IJournalDetail[]>;
+    details$ = this.journalService.getJournalDetail(0);
     glaccts$ = this.journalService.listAccounts();
 
     // details$ = this.transactionService.getAllTransactions();
@@ -91,7 +91,7 @@ export class TrnJournalDetailComponent implements OnInit {
             maximumFractionDigits: 2,
         };
         const formattedWithOptions = e.value.toLocaleString('en-US', options);
-        console.log(formattedWithOptions);
+        console.debug(formattedWithOptions);
         return formattedWithOptions;
     }
 
@@ -119,7 +119,7 @@ export class TrnJournalDetailComponent implements OnInit {
 
 
     onCreateTemplate() {
-        console.log('onCreateTemplate');
+        console.debug('onCreateTemplate');
     }
 
     onAddEvidence() {
@@ -138,7 +138,7 @@ export class TrnJournalDetailComponent implements OnInit {
             }
             switch (result.event) {
                 case 'Create':
-                    console.log(result.data);
+                    console.debug(result.data);
                     break;
                 case 'Cancel':
                     break;
@@ -148,7 +148,7 @@ export class TrnJournalDetailComponent implements OnInit {
 
     onAmendJournal() {
         this.isModifiable = true;
-        console.log('onAmendJournal');
+        console.debug('onAmendJournal');
     }
 
     calculateDebitValue(data) {

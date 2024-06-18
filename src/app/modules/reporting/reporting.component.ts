@@ -11,6 +11,7 @@ import { ReportComponent } from './report.component';
 import { RouterOutlet } from '@angular/router';
 import { SpreadsheetRptComponent } from './spread/spreadsheet-rpt.component';
 import { TransactionAnalysisComponent } from './transaction-analysis/transaction-analysis.component';
+import { ExpenseRptComponent } from './expense/expense-rpt.component';
 
 export interface IValue {
   value: string;
@@ -31,6 +32,7 @@ const imports = [
   TransactionAnalysisComponent,
   SpreadsheetRptComponent,
   DistMenuStandaloneComponent,
+ 
 ]
 
 @Component({

@@ -58,7 +58,7 @@ export class GlTransactionsService {
             const qSnapshot = getDocs(qy);
             (await qSnapshot).forEach((doc) => {
                 const key = doc.data().journal_id + doc.data().journal_child_id;
-                console.log('Journal Distributed Ledger key: ', key);
+                console.debug('Journal Distributed Ledger key: ', key);
                 this.hashJournalDetailsMap.set(
                     key,
                     doc.data() as IJournalDetail[]
@@ -113,7 +113,7 @@ export class GlTransactionsService {
             const ref = await addDoc(collection(this.firestore, 'gljournals'), journal);
             updateDoc(ref, { id: ref.id });
         } catch (error) {
-            console.log(error);
+            console.debug(error);
         }
     }
 

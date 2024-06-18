@@ -1,10 +1,10 @@
 import { Routes } from '@angular/router';
-import { JournalEntryComponent  } from './journal-entry.component';
+import { JournalEntryComponent } from './transactions/journal-entry.component';
 import { TransactionMainComponent } from './transaction-main.component';
 
 export default [
     {
-        path     : '',
+        path: '',
         component: TransactionMainComponent,
     },
 ] as Routes;

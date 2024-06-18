@@ -1,0 +1,146 @@
+
+    <div class="absolute inset-0 flex flex-col min-w-0 overflow-y-auto -px-20" cdkScrollable>
+        <!-- Main -->
+        <div class="flex-auto p-6 sm:p-10">
+            <div class="h-full border-gray-300 rounded-2xl">
+                <mat-drawer-container class="flex-col h-full">
+                    <mat-drawer class="lg:w-[500px] sm:w-full bg-white-100" #drawer [opened]="false" mode="over" [position]="'end'" [disableClose]="false">
+                        <div *ngIf="types$ | async as types">
+                        <form [formGroup]="accountsForm" >
+
+                        <mat-card>
+                            <div class="flex flex-col w-full text-gray-700 max-w-140 filter-article filter-interactive">
+
+                                    <div class="flex flex-col m-1">
+                                        <section class="flex flex-col md:flex-row">
+                                            <div class="flex flex-col grow">
+                                                <mat-form-field class="m-1 form-element grow" appearance="outline">
+                                                    <mat-label class="ml-2 text-base dark:text-gray-100">Account Code</mat-label>
+                                                    <input matInput placeholder="Account" formControlName="account" />
+                                                </mat-form-field>
+                                            </div>
+                                        </section>
+
+
+                                        <mat-form-field class="m-1 form-element grow" appearance="outline">
+                                            <mat-select (selectionChange)="selectionType($event)"  placeholder="Type"  formControlName="type">
+                                              <mat-option *ngFor="let type of types" [value]="type.type"> {{ type.type }} </mat-option>
+                                            </mat-select>
+                                        </mat-form-field>
+
+                                        <section class="flex flex-col md:flex-row">
+                                            <div class="flex flex-col grow">
+                                                <mat-form-field class="m-1 form-element grow" appearance="outline">
+                                                    <mat-label class="ml-2 text-base dark:text-gray-100">Current
+                                                        Balance</mat-label>
+                                                    <input matInput placeholder="Balance" formControlName="balance" />
+                                                </mat-form-field>
+                                            </div>
+                                        </section>
+
+                                        <div class="flex flex-col grow">
+                                            <mat-form-field class="m-1 form-element" appearance="outline">
+                                                <mat-label class="ml-2 text-base dark:text-gray-100">Long
+                                                    Description</mat-label>
+                                                <input matInput placeholder="Account Description"
+                                                    formControlName="description" />
+                                            </mat-form-field>
+                                        </div>
+
+                                        <div class="flex flex-col grow">
+                                            <mat-form-field class="m-1 form-element" appearance="outline">
+                                                <mat-label class="ml-2 text-base dark:text-gray-100">Comments</mat-label>
+                                                <input matInput placeholder="Comments" formControlName="comments" />
+                                            </mat-form-field>
+                                        </div>
+
+                                        <section class="flex flex-col md:flex-row">
+                                            <div class="flex flex-row grow">
+                                                <mat-checkbox class="dark:text-gray-100" formControlName="sub_type">
+                                                    Sub Type
+                                                </mat-checkbox>
+                                                <mat-checkbox class="dark:text-gray-100"
+                                                    formControlName="special_assessment">
+                                                    Assessment
+                                                </mat-checkbox>
+                                                <mat-checkbox class="dark:text-gray-100" formControlName="reserve_fund">
+                                                    Reserve
+                                                </mat-checkbox>
+                                                <mat-checkbox class="dark:text-gray-100"
+                                                    formControlName="capital_asset_fund">
+                                                    Asset
+                                                </mat-checkbox>
+                                            </div>
+                                        </section>
+
+                                        <div mat-dialog-actions>
+                                            <!-- <button mat-icon-button (click)="add()"
+                                                class="m-2 text-gray-100 bg-light-50 hover:bg-white hover:text-gray-900">
+                                                <mat-icon>add</mat-icon>
+                                            </button> -->
+                                            <button mat-icon-button (click)="onUpdate()"
+                                                class="m-2 text-gray-100 bg-gray-300  hover:bg-gray-700 hover:text-white">
+                                                <mat-icon>add</mat-icon>
+                                            </button>
+                                            <button mat-icon-button (click)="closeDrawer()"
+                                                class="m-2 text-gray-100 bg-gray-300  hover:bg-gray-700 hover:text-white">
+                                                <mat-icon>delete</mat-icon>
+                                            </button>
+                                            <button mat-icon-button (click)="closeDrawer()"
+                                                class="m-2 text-gray-100 bg-gray-300 hover:bg-white hover:bg-gray-700 hover:text-white">
+                                                <mat-icon>close</mat-icon>
+                                             </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </mat-card>
+                        </form>
+                    </div>
+                    </mat-drawer>
+
+                    <ng-container>
+                        <div class="flex flex-col h-full" *ngIf="accounts$ | async as rows">
+                            <dx-data-grid
+                                [dataSource]="rows"
+                                [remoteOperations]="false"
+                                [allowColumnReordering]="true"
+                                [rowAlternationEnabled]="true"
+                                [showBorders]="true"
+                                [focusedRowEnabled]="true"
+                                [focusedRowIndex]="0"
+                                (onCellDblClick)="onCellDoubleClicked($event)"
+                                [repaintChangesOnly]="true"
+                                [columnHidingEnabled]="true"
+                                keyExpr="account">
+
+                                <dxo-paging [pageSize]="10"></dxo-paging>                                
+                                <dxo-search-panel [visible]="true" [highlightCaseSensitive]="true"></dxo-search-panel>
+                                <dxo-group-panel [visible]="true"></dxo-group-panel>
+                                <dxo-grouping [autoExpandAll]="false"></dxo-grouping>
+
+                                <dxi-column dataField="account" dataType="string"></dxi-column>
+                                <dxi-column dataField="description" width="300" dataType="string"></dxi-column>
+                                <dxi-column dataField="type" dataType="string"></dxi-column>
+                                <dxi-column dataField="balance" dataType="decimal"></dxi-column>
+                                <dxi-column dataField="sub_type" dataType="boolean"></dxi-column>
+                                <dxi-column dataField="reserve_fund" dataType="boolean"></dxi-column>
+                                <dxi-column dataField="special_assessment" dataType="boolean"></dxi-column>
+                                <dxi-column dataField="capital_asset_fund" dataType="boolean"></dxi-column>
+                                <dxi-column dataField="update_user" dataType="string"></dxi-column>
+                                <dxi-column dataField="update_date" dataType="date"></dxi-column>
+                            </dx-data-grid>
+
+                            <button (click)="add()"
+                                class="fixed w-12 h-12 p-1 transition duration-200 ease-in bg-blue-600 rounded-full shadow bottom-20 right-20 hover:bg-blue-800 active:shadow-lg mouse focus:outline-none">
+                                <svg viewBox="0 0 20 20" enable-background="new 0 0 20 20" class="inline-block w-6 h-6">
+                                    <path fill="#FFFFFF"
+                                        d="M16,10c0,0.553-0.048,1-0.601,1H11v4.399C11,15.951,10.553,16,10,16c-0.553,0-1-0.049-1-0.601V11H4.601C4.049,11,4,10.553,4,10c0-0.553,0.049-1,0.601-1H9V4.601C9,4.048,9.447,4,10,4c0.553,0,1,0.048,1,0.601V9h4.399       C15.952,9,16,9.447,16,10z" />
+                                </svg>
+                            </button>
+                        </div>
+                    </ng-container>
+                </mat-drawer-container>
+            </div>
+        </div>
+    </div>
+

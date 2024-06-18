@@ -73,12 +73,13 @@
 
                     @switch (selectedPanel) {
                     
-                    @case ('kanban')   { <kanban></kanban> }                        
+                    @case ('kanban')   { <kanban></kanban> } 
+                    @case ('scheduler') { <schedule></schedule> }                                               
                     @case ('priority') { <kanban-priority></kanban-priority> }
                     @case ('status')   { <kanban-status></kanban-status>}
                     @case ('tasks')    { <kanban-list></kanban-list> }
-                    @case ('team')     {  }
-                    @case ('type')     { <kanban-types></kanban-types> }
+                    @case ('team')     { <team></team> }
+                    @case ('type')     { <kanban-types></kanban-types>}
                     }
 
                 </div>

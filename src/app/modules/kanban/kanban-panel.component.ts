@@ -18,28 +18,32 @@ import { MaterialModule } from 'app/services/material.module';
 import { TasksComponent } from './task/tasks.component';
 import { KanbanTypesComponent } from './types/types.component';
 import { StatusComponent } from './status/status.component';
-import { KanbanListComponent } from './kanban-list.component';
+import { KanbanListComponent } from './kanban-list/kanban-list.component';
 import { KanbanPriorityComponent } from './priority/priority.component';
+import { ScheduleNobleComponent } from './schedule/schedule.component';
+import { TeamsComponent } from '../accounting/accts/teams/teams.component';
 
 @Component({
-    selector: 'gl-main',
+    selector: 'gl-kanban-panel',
     templateUrl: './kanban-panel.component.html',
     encapsulation: ViewEncapsulation.None,
     standalone: true,
     imports: [
         MaterialModule,
         RouterLink,
-        CdkScrollable,        
-        NgFor, 
-        NgClass, 
-        NgSwitch, 
+        CdkScrollable,
+        NgFor,
+        NgClass,
+        NgSwitch,
         NgSwitchCase,
         TasksComponent,
         KanbanTypesComponent,
         StatusComponent,
         KanbanListComponent,
         KanbanPriorityComponent,
-        ],
+        ScheduleNobleComponent,
+        TeamsComponent
+    ],
     providers: [HttpClient],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -57,8 +61,7 @@ export class KanbanPanelComponent {
     constructor(
         private _changeDetectorRef: ChangeDetectorRef,
         private _fuseMediaWatcherService: FuseMediaWatcherService,
-    )
-    {
+    ) {
     }
 
     // -----------------------------------------------------------------------------------------------------
@@ -68,63 +71,65 @@ export class KanbanPanelComponent {
     /**
      * On init
      */
-    ngOnInit(): void
-    {
+    ngOnInit(): void {
         // Setup available panels
         this.panels = [
             {
-                id         : 'kanban',
-                icon       : 'heroicons_outline:currency-dollar',
-                title      : 'Kanban Task Management',
+                id: 'kanban',
+                icon: 'heroicons_outline:table-cells',
+                title: 'Kanban Task Management',
                 description: 'Kanban drag and drop management of tasks',
             },
+            // {
+            //     id         : 'scheduler',
+            //     icon       : 'heroicons_outline:calendar',
+            //     title      : 'Schedule',
+            //     description: 'Update calendar items and important dates in the accounting and management cycle.',
+            // },
             {
-                id         : 'priority',
-                icon       : 'heroicons_outline:banknotes',
-                title      : 'Priority',
+                id: 'priority',
+                icon: 'heroicons_outline:queue-list',
+                title: 'Priority',
                 description: 'List of key prioritization levels for each tasks to accommodate effective sorting',
             },
             {
-                id         : 'status',
-                icon       : 'heroicons_outline:calculator',
-                title      : 'Status',
+                id: 'status',
+                icon: 'heroicons_outline:calculator',
+                title: 'Status',
                 description: 'Status of each tasks',
-            } ,
+            },
             {
-                id         : 'tasks',
-                icon       : 'heroicons_outline:building-office',
-                title      : 'Tasks',
+                id: 'tasks',
+                icon: 'heroicons_outline:document-check',
+                title: 'Tasks',
                 description: 'Comprehensive list of all tasks with history',
             },
             {
-                id         : 'team',
-                icon       : 'heroicons_outline:building-office',
-                title      : 'Team',
+                id: 'team',
+                icon: 'heroicons_outline:chart-bar-square',
+                title: 'Team',
                 description: 'List of team members to assign tasks',
             },
             {
-                id         : 'type',
-                icon       : 'heroicons_outline:building-office',
-                title      : 'Kanban Types',
-                description: 'Type of assignments to categorize the work being completed',
+                id: 'type',
+                icon: 'heroicons_outline:chart-bar',
+                title: 'Kanban Action Types',
+                description: 'Type of actions that can used to categorize the work being completed',
             }
-            
-            
+
+
         ];
 
         // Subscribe to media changes
         this._fuseMediaWatcherService.onMediaChange$
             .pipe(takeUntil(this._unsubscribeAll))
-            .subscribe(({matchingAliases}) =>
-            {
+            .subscribe(({ matchingAliases }) => {
                 // Set the drawerMode and drawerOpened
-                if ( matchingAliases.includes('lg') )
-                {
+                if (matchingAliases.includes('lg')) {
                     this.drawerMode = 'side';
                     this.drawerOpened = true;
                 }
-                else
-                {
+                else {
                     this.drawerMode = 'over';
                     this.drawerOpened = false;
                 }
@@ -137,8 +142,7 @@ export class KanbanPanelComponent {
     /**
      * On destroy
      */
-    ngOnDestroy(): void
-    {
+    ngOnDestroy(): void {
         // Unsubscribe from all subscriptions
         this._unsubscribeAll.next(null);
         this._unsubscribeAll.complete();
@@ -153,13 +157,11 @@ export class KanbanPanelComponent {
      *
      * @param panel
      */
-    goToPanel(panel: string): void
-    {
+    goToPanel(panel: string): void {
         this.selectedPanel = panel;
 
         // Close the drawer on 'over' mode
-        if ( this.drawerMode === 'over' )
-        {
+        if (this.drawerMode === 'over') {
             this.drawer.close();
         }
     }
@@ -169,8 +171,7 @@ export class KanbanPanelComponent {
      *
      * @param id
      */
-    getPanelInfo(id: string): any
-    {
+    getPanelInfo(id: string): any {
         return this.panels.find(panel => panel.id === id);
     }
 
@@ -180,8 +181,7 @@ export class KanbanPanelComponent {
      * @param index
      * @param item
      */
-    trackByFn(index: number, item: any): any
-    {
+    trackByFn(index: number, item: any): any {
         return item.id || index;
     }
 }

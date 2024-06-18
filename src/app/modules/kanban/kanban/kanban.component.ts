@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormsModule, ReactiveFormsModule  } from '@angular/forms';
-import { IKanban } from 'app/services/kanban.service';
+
 import { CheckBoxAllModule } from '@syncfusion/ej2-angular-buttons';
 import { CommonModule } from '@angular/common';
 import { DxDataGridModule } from 'devextreme-angular';
@@ -9,6 +9,7 @@ import { KanbanTypesComponent } from '../types/types.component';
 import { MaterialModule } from 'app/services/material.module';
 import { RouterOutlet } from '@angular/router';
 import { TasksComponent } from '../task/tasks.component';
+import { IKanban } from '../kanban.service';
 
 export interface IValue {
   value: string;

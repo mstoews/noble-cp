@@ -1,9 +1,9 @@
 import {
-        IDistributionLedger,
-        IDistributionLedgerReport,
-        IDistributionReport,
-        IJournalDetail,
-        ITransaction
+    IDistributionLedger,
+    IDistributionLedgerReport,
+    IDistributionReport,
+    IJournalDetail,
+    ITransaction
 } from '../models';
 import { Injectable, inject } from '@angular/core';
 
@@ -13,7 +13,7 @@ import { shareReplay } from 'rxjs';
 
 @Injectable({
     providedIn: 'root'
-  })
+})
 export class DistributionLedgerService {
     hashDistributionLedger = new Map<string, IDistributionLedger>();
     hashDistributionReport = new Map<number, IDistributionLedger>();
@@ -36,39 +36,38 @@ export class DistributionLedgerService {
     //     });
     // }
 
-    getDistributionReportByPrdAndYear(period: number , periodYear: number) {
+    getDistributionReportByPrdAndYear(period: number, periodYear: number) {
         const params = {
             "period": period,
             "period_year": periodYear
         }
         return this.http.post<IDistributionLedger[]>(`${this.rootUrl}/v1/dist_list_by_prd`, params)
-        .pipe(shareReplay());
+            .pipe(shareReplay());
     }
 
-    writeDistributionReportFromHash()
-    {
+    writeDistributionReportFromHash() {
         this.hashDistributionReport.forEach(report => {
             console.debug(JSON.stringify(report));
         });
     }
 
 
-    getDistributionByPrdAndYear(period: number , periodYear: number) {
+    getDistributionByPrdAndYear(period: number, periodYear: number) {
         const params = {
             "period": period,
             "period_year": periodYear
         }
         return this.http.post<IDistributionLedgerReport>(`${this.rootUrl}/v1/dist_list_by_prd`, params)
-        .pipe(shareReplay());
+            .pipe(shareReplay());
     }
 
 
-    getTransactionsList(period: number, periodYear: number){
-            const params = {
-                "period": period,
-                "period_year": periodYear
-            }
-            return this.http.post(`${this.rootUrl}/v1/dist_list_by_prd`, params)
+    getTransactionsList(period: number, periodYear: number) {
+        const params = {
+            "period": period,
+            "period_year": periodYear
+        }
+        return this.http.post(`${this.rootUrl}/v1/dist_list_by_prd`, params)
             .pipe(shareReplay());
     }
 
@@ -86,9 +85,9 @@ export class DistributionLedgerService {
     }
 
     public getDistributionElementByKey(key: string): IDistributionLedger {
-        //console.log(key);
+        //console.debug(key);
         const element = this.hashDistributionLedger.get(key)
-        // console.log('closing balance', element.closing_balance);
+        // console.debug('closing balance', element.closing_balance);
         return element;
     }
 

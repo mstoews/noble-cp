@@ -16,6 +16,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Observable } from 'rxjs';
 import { DxNumberBoxModule } from 'devextreme-angular';
 import { FuseConfirmationService } from '@fuse/services/confirmation';
+import { IAccounts } from 'app/services/journal.service';
 
 
 const imports = [
@@ -36,35 +37,33 @@ const imports = [
 ];
 
 @Component({
-  selector: 'gl-detail',
-  standalone: true,
-  imports: [imports],
-  templateUrl: './gl-accts-detail.component.html',
-  styles: `::ng-deep .dx-datagrid .dx-datagrid-rowsview .dx-row-focused.dx-data-row:not(.dx-edit-row) > td:not(.dx-focused) {
+    selector: 'gl-detail',
+    standalone: true,
+    imports: [imports],
+    templateUrl: './gl-accts-detail.component.html',
+    styles: `::ng-deep .dx-datagrid .dx-datagrid-rowsview .dx-row-focused.dx-data-row:not(.dx-edit-row) > td:not(.dx-focused) {
     background-color: rgb(195, 199, 199);
     border-color: rgb(195, 199, 199);
     }
     `
 })
-export class GLAcctDetailComponent implements OnInit{
+export class GLAcctDetailComponent implements OnInit {
 
     isModifiable: boolean = false;
     private fb = inject(FormBuilder);
     private transactionService = inject(GlTransactionsService);
     private glAccountsService = inject(GLAccountsService);
     private fuseConfirmationService = inject(FuseConfirmationService);
-    @Input() account: string;
+    @Input() account!: string;
 
     selectedItemKeys: any[] = [];
     customizeTooltip = (pointsInfo: { originalValue: string; }) => ({ text: `${parseInt(pointsInfo.originalValue)}%` });
     journalForm!: FormGroup;
     sTitle = 'General Ledger Accounts';
+    accounts$ = this.glAccountsService.getChild(this.account);
 
-    accounts$: Observable<any[]>;
+    ngOnInit() {
 
-    // details$ = this.transactionService.getAllTransactions();
-    ngOnInit() {        
-        this.accounts$ = this.glAccountsService.getChildren(this.account);
         this.journalForm = this.fb.group({
             account: ['', Validators.required],
             parent_account: ['', Validators.required],
@@ -73,7 +72,7 @@ export class GLAcctDetailComponent implements OnInit{
             balance: ['', Validators.required],
             type: ['', Validators.required],
             comments: ['', Validators.required],
-      });
+        });
     }
 
 
@@ -89,20 +88,20 @@ export class GLAcctDetailComponent implements OnInit{
         throw new Error('Method not implemented.');
     }
 
-    formatNumber(e){
+    formatNumber(e) {
         const options = {
             style: 'decimal',  // Other options: 'currency', 'percent', etc.
             minimumFractionDigits: 2,
             maximumFractionDigits: 2,
-          };
+        };
         const formattedWithOptions = e.value.toLocaleString('en-US', options);
-        console.log(formattedWithOptions);
+        console.debug(formattedWithOptions);
         return formattedWithOptions;
     }
 
     onBook() {
         const confirmation = this.fuseConfirmationService.open({
-            title  : 'Book Journal Entry',
+            title: 'Book Journal Entry',
             message: 'Do you want to post the current entry? ',
             actions: {
                 confirm: {
@@ -112,11 +111,9 @@ export class GLAcctDetailComponent implements OnInit{
         });
 
         // Subscribe to the confirmation dialog closed action
-        confirmation.afterClosed().subscribe((result) =>
-        {
+        confirmation.afterClosed().subscribe((result) => {
             // If the confirm button pressed...
-            if ( result === 'confirmed' )
-            {
+            if (result === 'confirmed') {
                 // Delete the list
                 this.transactionService.bookJournal(this.account);
             }
@@ -125,17 +122,17 @@ export class GLAcctDetailComponent implements OnInit{
     }
 
     onCreateTemplate() {
-        console.log('onCreateTemplate');
-        }
+        console.debug('onCreateTemplate');
+    }
 
     onAddEvidence() {
-        console.log('onAddEvidence');
-        }
+        console.debug('onAddEvidence');
+    }
 
     onAmendJournal() {
         this.isModifiable = true;
-            console.log('onAmendJournal');
-        }
+        console.debug('onAmendJournal');
+    }
 
     calculateDebitValue(data) {
         var debit = data.debit.toFixed(2);
@@ -143,7 +140,7 @@ export class GLAcctDetailComponent implements OnInit{
             debit = data.debit.toFixed(2);
         }
         return debit.toString();
-      }
+    }
 
     createEmptyForm() {
         this.journalForm = this.fb.group({
@@ -153,14 +150,14 @@ export class GLAcctDetailComponent implements OnInit{
             create_date: [''],
             create_user: [''],
             description: [''],
-            fund : [''],
+            fund: [''],
             debit: [''],
             credit: [''],
             update_date: [''],
             update_user: [''],
 
         });
-      }
+    }
 
 
     closeDialog() {
@@ -173,10 +170,24 @@ export class GLAcctDetailComponent implements OnInit{
         this.createEmptyForm();
     }
 
-    selectionChanged(data: any) {
-        console.log(`selectionChanged ${JSON.stringify(data.data)}`);
-        this.selectedItemKeys = data.selectedRowKeys;
+    selectionChanged(e: any) {
+        if (e.data.booked === undefined || e.data.booked === '') {
+            e.data.booked = false;
+            e.data.booked_date = '';
+        }
+
+        this.journalForm = this.fb.group({
+            journal_id: [e.data.journal_id],
+            description: [e.data.description],
+            parent_account: [e.data.parent_account],
+            booked: [e.data.booked],
+            create_date: [e.data.create_date],
+            create_user: [e.data.create_user],
+            booked_user: [e.data.booked_user],
+            booked_date: [e.data.booked_date]
+        });
     }
+
     onCellDoubleClicked(e: any) {
         if (e.data.booked === undefined || e.data.booked === '') {
             e.data.booked = false;
@@ -184,18 +195,33 @@ export class GLAcctDetailComponent implements OnInit{
         }
 
         this.journalForm = this.fb.group({
-            journal_id :[e.data.journal_id],
-            description:[e.data.description],
-            booked:[e.data.booked],
-            create_date:[e.data.create_date],
-            create_user:[e.data.create_user],
-            booked_user:[e.data.booked_user],
-            booked_date:[e.data.booked_date]
-          });
+            journal_id: [e.data.journal_id],
+            description: [e.data.description],
+            parent_account: [e.data.parent_account],
+            booked: [e.data.booked],
+            create_date: [e.data.create_date],
+            create_user: [e.data.create_user],
+            booked_user: [e.data.booked_user],
+            booked_date: [e.data.booked_date]
+        });
     }
 
     onFocusedRowChanged(e: any) {
-        console.log(`selectionChanged ${JSON.stringify(e.data)}`);
+        if (e.data.booked === undefined || e.data.booked === '') {
+            e.data.booked = false;
+            e.data.booked_date = '';
+        }
+
+        this.journalForm = this.fb.group({
+            journal_id: [e.data.journal_id],
+            description: [e.data.description],
+            parent_account: [e.data.parent_account],
+            booked: [e.data.booked],
+            create_date: [e.data.create_date],
+            create_user: [e.data.create_user],
+            booked_user: [e.data.booked_user],
+            booked_date: [e.data.booked_date]
+        });
     }
 
 

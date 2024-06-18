@@ -4,7 +4,7 @@ import { FuseNavigationItem } from '@fuse/components/navigation';
 export const defaultNavigation: FuseNavigationItem[] = [
     {
         id: 'home',
-        title: 'Home Page',
+        title: 'Noble Ledger',
         subtitle: 'Financial and Management Accounting',
         type: 'group',
         icon: 'heroicons_outline:home',
@@ -32,43 +32,23 @@ export const defaultNavigation: FuseNavigationItem[] = [
                 link: '/kanban',
             },        
             {
-                id: 'accounting.finance',
-                title: 'Financial Analytics',
+                id: 'budgeting',
+                title: 'Budget',
+                type: 'basic',
+                icon: 'heroicons_outline:calculator',
+                link: '/budget',
+            },        
+            
+            {
+                id: 'accounting.reporting',
+                title: 'Financial Reporting',
                 type: 'basic',
                 icon: 'mat_outline:money',
-                link: '/analytics',
+                link: '/reporting',
             },
 
         ]
     },
-    {
-        id      : 'account.reporting',
-        title   : 'Reporting',
-        subtitle: 'Management and Financial',
-        type    : 'collapsable',
-        icon    : 'heroicons_outline:document-text',
-                children: [
-                    {
-                        id      : 'pages.authentication.sign-in',
-                        title   : 'Trial Balances',
-                        type    : 'basic',
-                        link    : '/reporting',
-                    },
-                    {
-                        id      : 'pages.authentication.sign-in',
-                        title   : 'Income Statements',
-                        type    : 'basic',
-                        link    : '/income-statements',
-                    },
-                    {
-                        id      : 'pages.authentication.sign-in',
-                        title   : 'Expense Reports',
-                        type    : 'basic',
-                        link    : '/expense-reports',
-                    },
-
-                ]
-            },
     {
         id: 'settings',
         title: 'Setting',
@@ -83,13 +63,6 @@ export const defaultNavigation: FuseNavigationItem[] = [
                 icon: 'heroicons_outline:bookmark',
                 link: '/gl',
             },
-            // {
-            //     id: 'settings.tasks',
-            //     title: 'Tasks',
-            //     type: 'basic',
-            //     icon: 'mat_outline:settings_input_component',
-            //     link: '/kanban-settings',
-            // },
             {
                 id: 'property.document-management',
                 title: 'Artifacts',
@@ -134,7 +107,7 @@ export const defaultNavigation: FuseNavigationItem[] = [
 export const compactNavigation: FuseNavigationItem[] = [
     {
         id: 'home',
-        title: 'Home Page',
+        title: 'Noble Ledger',
         type: 'basic',
         icon: 'heroicons_outline:home',
         link: '/home',
@@ -196,7 +169,7 @@ export const compactNavigation: FuseNavigationItem[] = [
 export const futuristicNavigation: FuseNavigationItem[] = [
     {
         id: 'home',
-        title: 'Home Page',
+        title: 'Noble Ledger',
         type: 'basic',
         icon: 'heroicons_outline:home',
         link: '/home',
@@ -258,7 +231,7 @@ export const futuristicNavigation: FuseNavigationItem[] = [
 export const horizontalNavigation: FuseNavigationItem[] = [
     {
         id: 'home',
-        title: 'Home Page',
+        title: 'Noble Ledger',
         type: 'group',
         icon: 'heroicons_outline:home',
         link: '/home',
