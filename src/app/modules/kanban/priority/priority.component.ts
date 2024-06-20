@@ -1,6 +1,5 @@
 import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Component, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
-import { DxBulletModule, DxDataGridModule, DxTemplateModule } from 'devextreme-angular';
 import { CommonModule } from '@angular/common';
 import { FuseConfirmationService } from '@fuse/services/confirmation';
 
@@ -8,7 +7,7 @@ import { MatDrawer } from '@angular/material/sidenav';
 import { MaterialModule } from 'app/services/material.module';
 import { GridMenubarStandaloneComponent } from 'app/modules/accounting/grid-menubar/grid-menubar.component';
 import { Subject } from 'rxjs';
-import { DxButtonModule } from 'devextreme-angular';
+
 import { DxDataGridTypes } from 'devextreme-angular/ui/data-grid';
 import { KanbanService, IPriority } from '../kanban.service';
 import { EditService, ToolbarService, PageService, SortService, FilterService, NewRowPosition, GridModule, DialogEditEventArgs, SaveEventArgs } from '@syncfusion/ej2-angular-grids';
@@ -20,11 +19,7 @@ const imports = [
     CommonModule,
     MaterialModule,
     ReactiveFormsModule,
-    FormsModule,
-    DxDataGridModule,
-    DxBulletModule,
-    DxTemplateModule,
-    DxButtonModule,
+    FormsModule,    
     GridModule,
     GridMenubarStandaloneComponent
 ];
@@ -33,16 +28,12 @@ const imports = [
     selector: 'kanban-priority',
     standalone: true,
     imports: [imports],
-    templateUrl: 'priority.component.html',
-    styles: `::ng-deep .dx-datagrid .dx-datagrid-rowsview .dx-row-focused.dx-data-row:not(.dx-edit-row) > td:not(.dx-focused) {
-        background-color: rgb(195, 199, 199);
-        border-color: #ada6a7;
-        }`,
+    templateUrl: 'priority.component.html',    
     providers: [SortService, PageService, FilterService, ToolbarService, EditService]
 })
-export class KanbanPriorityComponent implements OnInit, OnDestroy {
+export class KanbanPriorityComponent implements OnInit {
 
-    _fuseConfirmationService = inject(FuseConfirmationService);
+    fuseConfirmationService = inject(FuseConfirmationService);
     fb = inject(FormBuilder);
     kanbanService = inject(KanbanService)
 
@@ -52,60 +43,24 @@ export class KanbanPriorityComponent implements OnInit, OnDestroy {
     public priorityForm!: FormGroup;
 
     public selectedItemKeys: string[] = [];
-    public orderidrules: Object;
     public dropDown: DropDownListComponent;
-    public initialSort: Object;
-    public pageSettings: Object;
-    public filterSettings: Object;
-    public toolbar: string[];
-    public editSettings: Object;
-    public customeridrules: Object;
-    public freightrules: Object;
-    public editparams: Object;
     public submitClicked: boolean = false;
     public PriorityForm: FormGroup;
     
+
+    // datagrid settings start
+    public pageSettings: Object;
     public formatoptions: Object;
-    private _unsubscribeAll: Subject<any> = new Subject<any>();
+    public initialSort: Object;
+    public filterSettings: Object;
+    public editSettings: Object;
 
-
-    ngOnInit() {
-        var priority: IPriority = {
-            priority: '',
-            description: '',
-            updatedte: '',
-            updateusr: ''
-        }
-        this.createEmptyForm(priority);
-        this.kanbanService.readPriority();
-        this.orderidrules = { required: true, number: true };
-        this.pageSettings = { pageCount: 5 };        
+    initialDatagrid() {
+        this.pageSettings = { pageCount: 10 };        
         this.formatoptions = { type: 'dateTime', format: 'M/d/y hh:mm a' }
-        this.filterSettings = { type: 'Excel' };
-        // this.toolbar = ['Add', 'Edit', 'Delete', 'Update', 'Cancel'];
-        this.editSettings = { allowEditing: true, allowAdding: true, allowDeleting: true };
-        this.orderidrules = { required: true, number: true };
-        this.customeridrules = { required: true, minLength: 5 };
-        this.freightrules = { required: true, min: 0 };
+        this.filterSettings = { type: 'Excel' };        
+        this.editSettings = { allowEditing: true, allowAdding: true, allowDeleting: true };   
     }
-
-
-    createFormGroup(data: IPriority): FormGroup {
-        return new FormGroup({
-            Priority: new FormControl(data.priority, Validators.required),
-            Description: new FormControl(data.description, this.dateValidator()),            
-        });
-    }
-
-    dateValidator() {
-        return (control: FormControl): null | Object  => {
-            return control.value && control.value.getFullYear &&
-            (1900 <= control.value.getFullYear() && control.value.getFullYear() <=  2099) ? null : { OrderDate: { value : control.value}};
-        }
-    }
-
-
-
 
 
     actionBegin(args: SaveEventArgs): void {
@@ -147,9 +102,33 @@ export class KanbanPriorityComponent implements OnInit, OnDestroy {
         }
     }
 
-    ngOnDestroy(): void {
-        this._unsubscribeAll.next(null);
-        this._unsubscribeAll.complete();
+    dateValidator() {
+        return (control: FormControl): null | Object  => {
+            return control.value && control.value.getFullYear &&
+            (1900 <= control.value.getFullYear() && control.value.getFullYear() <=  2099) ? null : { OrderDate: { value : control.value}};
+        }
+    }
+
+    // datagrid settings end 
+    
+    ngOnInit() {
+        var priority: IPriority = {
+            priority: '',
+            description: '',
+            updatedte: '',
+            updateusr: ''
+        }
+        this.createEmptyForm(priority);
+        this.kanbanService.readPriority(); 
+        this.initialDatagrid();       
+    }
+
+
+    createFormGroup(data: IPriority): FormGroup {
+        return new FormGroup({
+            Priority: new FormControl(data.priority, Validators.required),
+            Description: new FormControl(data.description, this.dateValidator()),            
+        });
     }
 
     onCreate(e: any) {
@@ -175,7 +154,7 @@ export class KanbanPriorityComponent implements OnInit, OnDestroy {
 
     onDelete(e: any) {
         console.debug(`onDelete ${JSON.stringify(e)}`);
-        const confirmation = this._fuseConfirmationService.open({
+        const confirmation = this.fuseConfirmationService.open({
             title: 'Delete Type?',
             message: 'Are you sure you want to delete this type? ',
             actions: {
@@ -235,6 +214,5 @@ export class KanbanPriorityComponent implements OnInit, OnDestroy {
 
         this.closeDrawer();
     }
-
 
 }

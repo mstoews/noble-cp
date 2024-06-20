@@ -26,57 +26,34 @@
             <mat-drawer-container class="flex-col h-full">
                 @defer {
                     <ng-container>
-                        @if (journalHeader$() !== null) {
+                        @if (journalHeader() !== null) {
                         <div class="flex flex-1 flex-col overflow-auto">
-                            <dx-data-grid class="w-full lg:w-full" 
-                            [dataSource]="journalHeader$()" 
-                                [columnHidingEnabled]="true"
-                                [allowColumnReordering]="true" 
-                                [rowAlternationEnabled]="true" 
-                                [showBorders]="true"
-                                [focusedRowEnabled]="true" 
-                                [focusedRowIndex]="0" 
-                                [repaintChangesOnly]="true"                            
-                                keyExpr="journal_id"                             
-                                (onFocusedRowChanged)="onFocusedDetailRowChanged($event)"
-                                (onCellDblClick)="onCellDoubleClicked($event)"
-                                [width]="'100%'">                            
-
-                                <dxo-search-panel [visible]="true"></dxo-search-panel>
-                                <dxo-group-panel [visible]="true"></dxo-group-panel>
-                                <dxo-grouping [autoExpandAll]="true"></dxo-grouping>
-                                <dxo-filter-row [visible]="false"></dxo-filter-row>
-                                <dxo-scrolling rowRenderingMode="virtual"> </dxo-scrolling>
-                                <dxo-paging [pageSize]="10"> </dxo-paging>
-                                <dxo-pager [visible]="true" [allowedPageSizes]="allowedPageSizes"
-                                    [displayMode]="displayMode" [showPageSizeSelector]="showPageSizeSelector"
-                                    [showInfo]="showInfo">
-                                </dxo-pager>    
-                                <dxo-selection mode="multiple"></dxo-selection>
-
-                                <dxi-column dataField="journal_id" caption="ID" width="50" dataType="number" alignment="left"></dxi-column>                            
-                                <dxi-column dataField="booked" dataType="boolean" width="70" template="book"></dxi-column>                            
-                                <dxi-column dataField="amount" width="100" [customizeText]="formatNumber" dataType="number"></dxi-column>
-                                <dxi-column dataField="period" caption="Prd" width="50" ></dxi-column>
-                                <dxi-column dataField="period_year" caption="Year" width="70"></dxi-column>    
-                                <dxi-column dataField="description" width="300" dataType="string"></dxi-column>
-                                <dxi-column dataField="booked_date" dataType="date"></dxi-column>                                                        
-                                <dxi-column dataField="booked_user" dataType="string"></dxi-column>
-                                <dxi-column dataField="create_date" dataType="date"></dxi-column>                                                        
-                                <dxi-column dataField="create_user" dataType="string"></dxi-column>
-                                
-                                <dxo-master-detail [enabled]="true" template="detail"> </dxo-master-detail>
-                                <div *dxTemplate="let journal of 'detail'">
-                                    <journal-detail                                     
-                                        [key]="journal.data.journal_id" 
-                                        [description]="journal.data.description"
-                                        [transaction_date]="journal.data.transaction_date"    
-                                        [amount]="journal.data.amount"
-                                        (notifyTransactionEdit)="onEdit()">
-                                    </journal-detail>
-                                </div>
-                                <dxo-export [enabled]="true" [allowExportSelectedData]="true"></dxo-export>
-                            </dx-data-grid>
+                            <ejs-grid #normalgrid id='grid'             
+                                  [dataSource]='journalHeader()' 
+                                  [allowPaging]="true"
+                                  [allowSorting]="true" 
+                                  [allowFiltering]="true" 
+                                  [filterSettings]="filterSettings"
+                                  [editSettings]="editSettings"                                     
+                                  [sortSettings]="initialSort"
+                                  (actionBegin)="actionBegin($event)" 
+                                  (actionComplete)="actionComplete($event)"
+                                  
+                                  [pageSettings]="pageSettings">
+                                <e-columns>
+                                    <e-column  field="journal_id"  headerText="ID" width="100" dataType="number"  isPrimaryKey='true' textAlign="left"></e-column>                            
+                                    <e-column  field="booked"       [displayAsCheckBox]='true' headerText="Book" width="120" type="boolean"></e-column>                            
+                                    <e-column  field="amount"      headerText="Amount" format='C2' width="150" textAlign="Right"></e-column>
+                                    <e-column  field="period"      headerText="Prd" width="100" ></e-column>
+                                    <e-column  field="period_year" headerText="Yr" width="100"></e-column>    
+                                    <e-column  field="description" headerText="Description"></e-column>
+                                    <e-column  field="booked_date" width='120' headerText="Booked" type="date"></e-column>                                                        
+                                    <e-column  field="booked_user" width='120' headerText="User" type="string"></e-column>
+                                    <e-column  field="create_date" width='120' headerText="Created" type="date"></e-column>                                                        
+                                    <e-column  field="create_user" width='120' headerText="User" type="string"></e-column>                
+                                </e-columns>
+                            </ejs-grid>
+                            
                         </div>
                         }
                     </ng-container>             

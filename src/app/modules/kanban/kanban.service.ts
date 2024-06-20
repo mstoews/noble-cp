@@ -126,6 +126,7 @@ export class KanbanService {
   taskUrl = this.baseUrl + '/v1/tasks_list';
   updateTaskUrl = this.baseUrl + 'v1/task_update'
   priorityUrl = this.baseUrl + '/v1/task_priority_list';
+  statusUrl = this.baseUrl + '/v1/task_status_list';
 
   readonly readPriority = rxMethod <void> (
     pipe(
@@ -141,6 +142,25 @@ export class KanbanService {
       })
     )
   );
+
+  readonly readStatus = rxMethod <void> (
+    pipe(
+      tap(() => this.isLoading.set(true)),
+      exhaustMap(() => {
+        return this.httpReadStatus().pipe(
+          tapResponse({
+            next: (status) => this.statusList.set(status),            
+            error: console.error,
+            finalize: () => this.isLoading.set(false),
+          })
+        );
+      })
+    )
+  );
+
+  httpReadStatus() {
+    return this.httpClient.get<IStatus[]>(this.statusUrl);
+  }
 
   httpReadPriority() {
     return this.httpClient.get<IPriority[]>(this.priorityUrl);
@@ -255,16 +275,7 @@ export class KanbanService {
   }
 
 
-  readStatus() {
-    const url = this.baseUrl + '/v1/task_status_list';
-    const sub = this.httpClient.get<IStatus[]>(url).pipe(
-      tap(data => this.statusList.set(data)),
-      takeUntilDestroyed(),
-      catchError(() => of([] as IStatus[]))
-    ).subscribe();
-    return this.statusList;
-  }
-
+  
   readTypes() {
     var url = this.baseUrl + '/v1/task_type_list';
     const sub = this.httpClient.get<IType[]>(url).pipe(
