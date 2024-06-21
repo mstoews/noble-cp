@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit, ViewChild, inject, viewChild } from '@angular/core';
 import { DxDataGridModule, DxTemplateModule } from 'devextreme-angular';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { JournalService } from 'app/services/journal.service';
+import { IJournalHeader, JournalService } from 'app/services/journal.service';
 import { Subject } from 'rxjs';
 import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 
@@ -21,11 +21,12 @@ import { TypeService } from 'app/services/type.service';
 import { Workbook } from 'exceljs';
 import { exportDataGrid } from 'devextreme/excel_exporter';
 import { saveAs } from 'file-saver-es';
-import { DialogEditEventArgs, EditService, SelectionSettingsModel, FilterService, GridModule, PageService, SaveEventArgs, SortService, ToolbarService, GridComponent } from '@syncfusion/ej2-angular-grids';
+import { DialogEditEventArgs, EditService, SelectionSettingsModel, FilterService, GridModule, PageService, SaveEventArgs, SortService, ToolbarService, GridComponent, AggregateService, FilterSettingsModel, ToolbarItems, SearchSettingsModel } from '@syncfusion/ej2-angular-grids';
 import { Browser } from '@syncfusion/ej2-base';
 import { Dialog } from '@syncfusion/ej2-popups';
-import { IPriority } from 'app/modules/kanban/kanban.service';
+
 import { DropDownListComponent } from '@syncfusion/ej2-angular-dropdowns';
+
 
 
 const imports = [
@@ -47,7 +48,7 @@ const imports = [
     standalone: true,
     imports: [imports],
     templateUrl: './journal-entry.component.html',
-    providers: [SortService, PageService, FilterService, ToolbarService, EditService],
+    providers: [SortService, PageService, FilterService, ToolbarService, EditService, AggregateService],
     styles: `::ng-deep .dx-datagrid .dx-datagrid-rowsview .dx-row-focused.dx-data-row:not(.dx-edit-row) > td:not(.dx-focused)
     {
        background-color: rgb(195, 199, 199);
@@ -85,45 +86,48 @@ export class JournalEntryComponent implements OnInit, OnDestroy {
     public journal_details: any[];
     public bOpenDetail: boolean = false;
 
-
     // datagrid settings start
     public pageSettings: Object;
     public formatoptions: Object;
     public initialSort: Object;
-    public filterSettings: Object;
+    public filterOptions: FilterSettingsModel;
     public editSettings: Object;
     public dropDown: DropDownListComponent;
     public submitClicked: boolean = false;
     public selectionOptions?: SelectionSettingsModel;
-
+    public toolbarOptions?: ToolbarItems[];
+    public searchOptions?: SearchSettingsModel;
 
     initialDatagrid() {
         this.pageSettings = { pageCount: 10 };        
         this.formatoptions = { type: 'dateTime', format: 'M/d/y hh:mm a' }
-        this.filterSettings = { type: 'Excel' }; 
-        this.selectionOptions = { mode: 'Row',  type: 'Single' };      
-        this.editSettings = { allowEditing: true, allowAdding: true, allowDeleting: true };
+        this.filterOptions = { type: 'Menu' }; 
+        this.selectionOptions = { mode: 'Row' };              
+        this.editSettings = { allowEditing: true, allowAdding: false, allowDeleting: false };
+        this.searchOptions = { fields: ['description'], operator: 'contains', ignoreCase: true, ignoreAccent:true };
+        this.toolbarOptions = ['Search'];
     }
 
-
-
-
     actionBegin(args: SaveEventArgs): void {
+        args.cancel = true;
+        var data = args.rowData as IJournalHeader;
         if (args.requestType === 'beginEdit' || args.requestType === 'add') {
             this.submitClicked = false;
-            
-            
-            var priority: IPriority = {
-                priority: '',
-                description: '',
-                updatedte: '',
-                updateusr: ''
+            this.bOpenDetail = true;
+            this.nJournal = Number(data.journal_id);
+            this.description = data.description;
+            this.amount = data.amount.toString();
+            this.transaction_date = data.create_date;
+            this.details$ = this.journalService.getJournalDetail(this.nJournal);
+            if (this.journalViewChildControl() !== undefined) {
+                this.journalViewChildControl().refresh(this.nJournal, this.description, this.transaction_date, this.amount);
             }
-            // this.PriorityForm = this.createFormGroup(priority);
+            this.openDrawer();
+        
         }
         if (args.requestType === 'save') {
             console.log(JSON.stringify(args.data));
-            var data = args.data as IPriority;
+            var data = args.data as IJournalHeader;
             // this.journalService.updateTaskPriority(data)
             this.submitClicked = true;
             //if (this.PriorityForm.valid) {

@@ -17,6 +17,8 @@ import { KanbanMenubarComponent } from '../kanban/kanban-menubar/grid-menubar.co
 import { AUTH } from 'app/app.config';
 import { IKanban } from '../kanban.service';
 import { KanbanStore} from '../kanban.store'
+import { GridModule,EditService, ToolbarService, PageService, SortService, FilterService, NewRowPosition } from '@syncfusion/ej2-angular-grids';
+import { DropDownListModule } from '@syncfusion/ej2-angular-dropdowns';
 
 
 interface IValue {
@@ -33,7 +35,9 @@ const imports = [
   DxDataGridModule,
   DxBulletModule,
   DxTemplateModule,
-  KanbanMenubarComponent
+  KanbanMenubarComponent,
+  GridModule,
+  DropDownListModule,
 ];
 
 @Component({
