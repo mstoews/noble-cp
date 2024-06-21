@@ -49,11 +49,8 @@ const imports = [
     imports: [imports],
     templateUrl: './journal-entry.component.html',
     providers: [SortService, PageService, FilterService, ToolbarService, EditService, AggregateService],
-    styles: `::ng-deep .dx-datagrid .dx-datagrid-rowsview .dx-row-focused.dx-data-row:not(.dx-edit-row) > td:not(.dx-focused)
-    {
-       background-color: rgb(195, 199, 199);
-       border-color: #ada6a7;
-    }`
+    styleUrls: ['./context.scss']
+    
 })
 export class JournalEntryComponent implements OnInit, OnDestroy {
     private journalService = inject(JournalService);

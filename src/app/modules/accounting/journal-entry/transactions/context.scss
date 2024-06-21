@@ -10,9 +10,9 @@
     filter: invert(48%) sepia(79%) saturate(2476%) hue-rotate(86deg) brightness(118%) contrast(119%);
 }
 
-.e-dropdownbase .e-list-item.e-item-focus, .e-dropdownbase .e-list-item.e-active, .e-dropdownbase .e-list-item.e-active.e-hover, .e-dropdownbase .e-list-item.e-hover {
-    background-color: #1f9c99;
-    color: #2319b8;
+.e-grid .e-headercell {
+    background-color: #333232; 
+    color: #fff;
 }
 
 @font-face {
