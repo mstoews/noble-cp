@@ -63,6 +63,7 @@ export class ProjectComponent implements OnInit, OnDestroy {
     authService = inject(AuthService);
     private _router = inject(Router);
     private _projectService = inject(ProjectService);
+    
     firestore = inject(FIRESTORE);
 
     public cashReserves =  18223.23;

@@ -5,6 +5,7 @@ import { Observable, Subject, Subscription, catchError, debounceTime, distinctUn
 import { environment } from 'environments/environment.prod';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { IDropDownAccounts } from 'app/models';
+import { Router } from '@angular/router';
 
 export interface IPeriod {
   period_id: number,
@@ -114,6 +115,7 @@ export class JournalService implements OnDestroy  {
   
   httpClient = inject(HttpClient)
   snackBar = inject(MatSnackBar);
+  router = inject(Router);
   private baseUrl = environment.baseUrl;
   ngDestroy$ = new Subject();
 
@@ -276,9 +278,13 @@ export class JournalService implements OnDestroy  {
       take(1),
       catchError(err => {
           const message = "Could not retrieve journals ...";
-          console.debug(message, err);
+          console.debug(message, err.statusText);
           this.message(message); 
-          return throwError(() => new Error(`${ JSON.stringify(err) }`));         
+          if (err.statusText === "Unauthorized")
+            {
+              this.router.navigate(['sign-out']);            
+            }
+          return throwError(() => new Error(`${ JSON.stringify(err.statusText) }`));         
       }),
       shareReplay()
     ).subscribe();
@@ -346,10 +352,9 @@ export class JournalService implements OnDestroy  {
       tap(data => this.updateJournalHeaderSignal(data)),
       take(1),
       catchError(err => {
-          const message = "Could not save journal header ...";
-          console.debug(message, err);
-          this.message(message); 
-          return throwError(() => new Error(`Invalid time ${ err }`));         
+          const message = "Could not save journal header :"  + err.statusText;          
+          this.router.navigate(['auth/login']);
+          return throwError(() => new Error(`Invalid time ${ err.statusText }`));         
       }),
       shareReplay()
     ).subscribe();

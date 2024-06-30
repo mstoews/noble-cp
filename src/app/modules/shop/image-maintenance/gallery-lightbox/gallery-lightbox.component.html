@@ -1,0 +1,74 @@
+<div class="gallery-lightbox-container flex-wrap gap-2">
+  <div *ngFor="let data of galleryData; let i = index">
+  <mat-card class="lg:w-[350px]">
+    <img  (click)="onPreviewImage(i)"
+      class="lg: w-full h-auto lg:h-[350px] lg:w-[350px] rounded-t-sm cursor-zoom-in"
+      [src]="data.imageSrc200" alt="images">
+    <div class="absolute bottom-0 px-4 py-2 bg-gray-600 w-full ">
+      <div class="text-white font-normal text-lg">{{data.description}}</div>
+    </div>
+  </mat-card>
+</div>  
+  <!-- <div class="gallery">
+    <mat-card
+      cdkDropList
+      *ngFor="let data of galleryData; let i = index"
+      class="gallery-img"
+      cdkDrag>
+      <img
+        (click)="onPreviewImage(i)"
+        [src]="data.imageSrc200"
+        width="400"
+        height="400"
+        [alt]="data.description"
+      />  
+    </mat-card> -->
+    
+  
+  <div *ngIf="showMask" class="lightbox" @animation2>
+    <span *ngIf="showCount" class="count">
+      {{ currentIndex + 1 }}/{{ totalImageCount }}
+    </span>
+
+    <button 
+      *ngIf="controls"
+      class="close-btn"
+      mat-icon-button
+      (click)="onClosePreview()"
+      color="primary"    >
+      <mat-icon [svgIcon]="'mat_outline:close'"></mat-icon>
+    </button>
+
+    <button 
+      *ngIf="controls"
+      class="btn-lightbox-carousel btn-prev"
+      mat-icon-button
+      (click)="prev()"
+      color="primary"
+    >
+    <mat-icon [svgIcon]="'heroicons_outline:arrow-circle-left'"></mat-icon>
+    </button>
+
+    <button
+      *ngIf="controls"
+      class="btn-lightbox-carousel btn-next"
+      mat-icon-button
+      (click)="next()"
+      color="primary" >
+      <mat-icon [svgIcon]="'heroicons_outline:arrow-circle-right'"></mat-icon>
+    </button>
+
+    <mat-card class="m-1">
+      <div
+        *ngIf="previewImage"
+        [@animation]="{ value: 'visible' }"
+        (@animation.done)="onAnimationEnd($event)" >
+        <img class="transition ease-in-out delay-300 bg-gray-300 hover:-translate-y-1 hover:scale-110 hover:bg-gray-500 duration-300"
+          [src]="currentLightboxImage.imageSrc400"
+          width="600"
+          height="600"
+          alt="currentLightboxImage.description" />
+      </div>
+    </mat-card>
+  </div>
+</div>

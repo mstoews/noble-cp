@@ -2,23 +2,6 @@ import type { User } from "firebase/auth";
 import { DocumentReference, Timestamp, FieldValue } from "firebase/firestore";
 
 
-export interface IBudget {
-    account        :number;
-    child          :number;
-    parent_account :boolean;
-    type           :string;
-    sub_type       :string;
-    description    :string;
-    balance        :number;
-    comments       :string;
-    create_date    :Timestamp;
-    create_user    :string;
-    update_date    :Timestamp;
-    update_user    :string;
-    
-}
-
-
 export interface IDashboardFund {
   fund: string,
   amount: number;
@@ -53,7 +36,7 @@ export interface ICategory {
   description: string;
   jp_description?: string;
   image: string;
-  createDate: string;
+  createDate: Date;
   updateDate: string;
   updateBy: string;
   isUsed?: boolean;
@@ -70,7 +53,7 @@ export type IType = {
   description: string;
   create_date: string;
   create_user: string;
-  update_date: string;
+  update_date: Date;
   update_user: string;  
 }
 
@@ -92,7 +75,7 @@ export interface AccountsPayableLedger {
   vendor: string;
   type: string;
   description: string;
-  createDate: string;
+  createDate: Date;
   createUsr: string;
   updateDate: string;
   updateUsr: string;
@@ -105,10 +88,15 @@ export interface AccountsPayableDetail {
   vendor: string;
   type: string;
   description: string;
-  createDate: string;
+  createDate: Date;
   createUsr: string;
   updateDate: string;
   updateUsr: string;
+}
+
+export interface IDropDownAccountsGridList {
+  childName: number;
+  descriptionName: string;
 }
 
 export interface IDropDownAccounts {
@@ -132,6 +120,35 @@ export interface IAccounts {
   update_date: string;
   update_user: string;
 }
+
+export interface IBudget {
+  budget_id: number;
+  description: string;
+  status: string;
+  type: string;
+  amount: number;
+  sub_type: string;
+  transaction_date: Date;
+  create_date: string;
+  create_user: string;
+  period: number;
+  period_year: number;
+}
+
+export interface IBudgetDetails {
+  budget_id: number;
+  budget_detail_id: number;
+  child: number;
+  sub_type: string;
+  description: string;
+  debit: number;
+  credit: number;
+  create_date: string;  
+  create_user: string;
+  fund: string;
+  reference: string;
+}
+
 
 export interface IDistributionReport {
   journal_id: number,
@@ -183,10 +200,10 @@ export interface IFunds {
   id?: string;
   fund: string;
   description: string;
-  create_date: string;
-  create_user: string;
-  update_date: string;
-  update_user: string;
+  create_date?: string;
+  create_user?: string;
+  update_date?: string;
+  update_user?: string;
 }
 
 

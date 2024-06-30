@@ -1,124 +1,126 @@
 import {
-  AbstractControl,
   FormBuilder,
   FormGroup,
   FormsModule,
   ReactiveFormsModule,
   Validators,
-} from '@angular/forms';
-import { Component, OnInit, ViewChild, inject } from '@angular/core';
-import { DxBulletModule, DxDataGridComponent, DxDataGridModule, DxTemplateModule } from 'devextreme-angular';
-import { CommonModule } from '@angular/common';
-import { FuseConfirmationService } from '@fuse/services/confirmation';
-import { MatDrawer } from '@angular/material/sidenav';
-import { MaterialModule } from 'app/services/material.module';
+} from "@angular/forms";
+import { Component, OnInit, ViewChild, inject } from "@angular/core";
+import { CommonModule } from "@angular/common";
+import { FuseConfirmationService } from "@fuse/services/confirmation";
+import { MatDrawer } from "@angular/material/sidenav";
+import { MaterialModule } from "app/services/material.module";
+import { KanbanMenubarComponent } from "../kanban/kanban-menubar/grid-menubar.component";
+import {
+  GridModule,
+  EditService,
+  ToolbarService,
+  PageService,
+  SortService,
+  FilterService,
+  AggregateService,
+  ColumnMenuService,
+} from "@syncfusion/ej2-angular-grids";
+import { DropDownListModule } from "@syncfusion/ej2-angular-dropdowns";
 
-import { KanbanMenubarComponent } from '../kanban/kanban-menubar/grid-menubar.component';
-import { AUTH } from 'app/app.config';
-import { IKanban } from '../kanban.service';
-import { KanbanStore} from '../kanban.store'
-import { GridModule,EditService, ToolbarService, PageService, SortService, FilterService, NewRowPosition } from '@syncfusion/ej2-angular-grids';
-import { DropDownListModule } from '@syncfusion/ej2-angular-dropdowns';
-
+import { AUTH } from "app/app.config";
+import { IKanban } from "../kanban.service";
+import { KanbanStore } from "../kanban.store";
 
 interface IValue {
   value: string;
   viewValue: string;
 }
 
-
 const imports = [
   CommonModule,
   MaterialModule,
   ReactiveFormsModule,
   FormsModule,
-  DxDataGridModule,
-  DxBulletModule,
-  DxTemplateModule,
   KanbanMenubarComponent,
   GridModule,
   DropDownListModule,
 ];
 
 @Component({
-  selector: 'kanban-list',
+  selector: "kanban-list",
   standalone: true,
   imports: [imports],
-  templateUrl: './kanban-list.component.html',
-  styleUrls: ['./kanban-list.scss'],
-  providers: [KanbanStore]
+  templateUrl: "./kanban-list.component.html",
+  styleUrls: ["./kanban-list.scss"],
+  providers: [
+    KanbanStore,
+    SortService,
+    PageService,
+    FilterService,
+    ToolbarService,
+    EditService,
+    AggregateService,
+    ColumnMenuService,
+  ],
 })
 export class KanbanListComponent implements OnInit {
-  onCopy() {
-    throw new Error('Method not implemented.');
-  }
 
+  private fuseConfirmationService = inject(FuseConfirmationService);
+  private fb = inject(FormBuilder);
+  
   types: IValue[] = [
-    { value: 'Add', viewValue: 'Add' },
-    { value: 'Update', viewValue: 'Update' },
-    { value: 'Delete', viewValue: 'Delete' },
-    { value: 'Verify', viewValue: 'Verify' },
+    { value: "Add", viewValue: "Add" },
+    { value: "Update", viewValue: "Update" },
+    { value: "Delete", viewValue: "Delete" },
+    { value: "Verify", viewValue: "Verify" },
   ];
 
   assignees: IValue[] = [
-    { value: 'mstoews', viewValue: 'mstoews' },
-    { value: 'matthew', viewValue: 'matthew' },
-    { value: 'admin', viewValue: 'admin' },
+    { value: "mstoews", viewValue: "mstoews" },
+    { value: "matthew", viewValue: "matthew" },
+    { value: "admin", viewValue: "admin" },
   ];
 
-
   rag: IValue[] = [
-    { value: '#238823', viewValue: 'Green' },
-    { value: '#FFBF00', viewValue: 'Amber' },
-    { value: '#D2222D', viewValue: 'Red' },
+    { value: "#238823", viewValue: "Green" },
+    { value: "#FFBF00", viewValue: "Amber" },
+    { value: "#D2222D", viewValue: "Red" },
   ];
 
   priorities: IValue[] = [
-    { value: 'Critical', viewValue: 'Critical' },
-    { value: 'High', viewValue: 'High' },
-    { value: 'Normal', viewValue: 'Normal' },
-    { value: 'Low', viewValue: 'Low' },
+    { value: "Critical", viewValue: "Critical" },
+    { value: "High", viewValue: "High" },
+    { value: "Normal", viewValue: "Normal" },
+    { value: "Low", viewValue: "Low" },
   ];
 
-
-  @ViewChild(DxDataGridComponent, { static: false }) dataGrid: DxDataGridComponent;
-
   public data: any;
-  drawOpen: 'open' | 'close' = 'open';
+  drawOpen: "open" | "close" = "open";
 
-  private _fuseConfirmationService = inject(FuseConfirmationService);
-  private fb = inject(FormBuilder);
-  auth = inject(AUTH);
-  store = inject(KanbanStore);
-
-
-  @ViewChild('drawer') drawer!: MatDrawer;
-
-  public sTitle = 'Kanban List';
-  public taskGroup!: FormGroup;
-  public data$: any
   
-  bAdding: any;
+  public auth = inject(AUTH);
+  public store = inject(KanbanStore);
 
-  cPriority: string;
-  cRAG: string;
-  cType: string;
+  @ViewChild("drawer") drawer!: MatDrawer;
+
+  public sTitle = "Kanban List";
+  public taskGroup!: FormGroup;
+  public data$: any;
+
+  public bAdding: any;
+  public cPriority: string;
+  public cRAG: string;
+  public cType: string;
 
   ngOnInit() {
     this.createEmptyForm();
-    
   }
-  
+
   onCellDblClick(e: any) {
-    this.OnCardDoubleClick(e.data)
+    this.OnCardDoubleClick(e.data);
   }
-  
- 
+
   OnCardDoubleClick(data: any): void {
     this.bAdding = false;
     const email = this.auth.currentUser.email;
-    const dDate = new Date()
-    var currentDate = dDate.toISOString().split('T')[0];
+    const dDate = new Date();
+    var currentDate = dDate.toISOString().split("T")[0];
 
     const kanban = {
       id: data.id,
@@ -132,23 +134,22 @@ export class KanbanListComponent implements OnInit {
       assignee: data.assignee,
       rankid: data.rankid,
       color: data.color,
-      className: '',
+      className: "",
       updateuser: email,
       updatedate: currentDate,
       startdate: data.startdate,
-      estimatedate: data.estimatedate
+      estimatedate: data.estimatedate,
     } as IKanban;
 
-    this.createForm(kanban)
+    this.createForm(kanban);
   }
-
 
   toggleDrawer() {
     const opened = this.drawer.opened;
     if (opened !== true) {
       this.drawer.toggle();
     } else {
-      if (this.drawOpen === 'close') {
+      if (this.drawOpen === "close") {
         this.drawer.toggle();
       }
     }
@@ -158,12 +159,12 @@ export class KanbanListComponent implements OnInit {
     if (task.type !== null && task.type !== undefined) {
       const type = this.types.find((x) => x.value === task.type.toString());
       if (type === undefined) {
-        this.cType = 'Add';
+        this.cType = "Add";
       } else {
         this.cType = type.value;
       }
     } else {
-      this.cType = 'Add';
+      this.cType = "Add";
     }
     return this.cType;
   }
@@ -171,30 +172,31 @@ export class KanbanListComponent implements OnInit {
   private assignAssignee(task: IKanban): string {
     var rc: string;
     if (task.assignee !== null && task.assignee !== undefined) {
-      const assignee = this.assignees.find((x) => x.value === task.assignee.toString());
+      const assignee = this.assignees.find(
+        (x) => x.value === task.assignee.toString()
+      );
       if (assignee === undefined) {
-        rc = 'mstoews';
+        rc = "mstoews";
       } else {
         rc = assignee.value;
       }
     } else {
-      rc = 'admin'
+      rc = "admin";
     }
-    return rc
+    return rc;
   }
 
-
-
+  
   private assignRag(task: IKanban): string {
     if (task.color !== null && task.color !== undefined) {
       const rag = this.rag.find((x) => x.value === task.color.toString());
       if (rag === undefined) {
-        this.cRAG = '#238823';
+        this.cRAG = "#238823";
       } else {
         this.cRAG = rag.value;
       }
     } else {
-      this.cRAG = '#238823';
+      this.cRAG = "#238823";
     }
     return this.cRAG;
   }
@@ -207,23 +209,21 @@ export class KanbanListComponent implements OnInit {
       if (priority !== undefined) {
         this.cPriority = priority.value;
       } else {
-        this.cPriority = 'Normal';
+        this.cPriority = "Normal";
       }
     } else {
-      this.cPriority = 'Normal';
+      this.cPriority = "Normal";
     }
-    return this.cPriority
+    return this.cPriority;
   }
 
-
   createForm(task: IKanban) {
-    this.sTitle = 'Kanban Task - ' + task.id;
+    this.sTitle = "Kanban Task - " + task.id;
     const user = this.auth.currentUser;
 
-    const dDate = new Date()
-    var currentDate = dDate.toISOString().split('T')[0];
-    if (task.estimatedate === null)
-      task.estimatedate = currentDate;
+    const dDate = new Date();
+    var currentDate = dDate.toISOString().split("T")[0];
+    if (task.estimatedate === null) task.estimatedate = currentDate;
 
     this.taskGroup = this.fb.group({
       id: [task.id],
@@ -240,27 +240,24 @@ export class KanbanListComponent implements OnInit {
       updatedate: [currentDate],
       updateuser: [user.email, Validators.required],
       startdate: [task.startdate, Validators.required],
-      estimatedate: [task.estimatedate, Validators.required]
-
+      estimatedate: [task.estimatedate, Validators.required],
     });
     this.openDrawer();
   }
 
-
-
-  onCreate(e: any) {    
+  onCreate(e: any) {
     this.createEmptyForm();
     this.openDrawer();
   }
 
   onDelete(e: any) {
     console.debug(`onDelete ${JSON.stringify(e)}`);
-    const confirmation = this._fuseConfirmationService.open({
-      title: 'Delete Type?',
-      message: 'Are you sure you want to delete this type? ',
+    const confirmation = this.fuseConfirmationService.open({
+      title: "Delete Type?",
+      message: "Are you sure you want to delete this type? ",
       actions: {
         confirm: {
-          label: 'Delete',
+          label: "Delete",
         },
       },
     });
@@ -268,55 +265,59 @@ export class KanbanListComponent implements OnInit {
     // Subscribe to the confirmation dialog closed action
     confirmation.afterClosed().subscribe((result) => {
       // If the confirm button pressed...
-      if (result === 'confirmed') {
+      if (result === "confirmed") {
         // Delete the listconst dDate = new Date();
         const task = this.taskGroup.getRawValue();
         const user = this.auth.currentUser;
-        var currentDate = new Date().toISOString().split('T')[0];
-        
+        var currentDate = new Date().toISOString().split("T")[0];
+
         var data = {
-        id : task.id,
-        title: task.title,
-        status: task.status,
-        summary: task.summary,
-        type: task.type,
-        priority: task.priority,
-        tags: task.tags,
-        estimate: task.estimate,
-        assignee: task.assignee,
-        rankid: task.rankid,
-        color: '',
-        updatedate: currentDate,
-        updateuser: user.email,
-        startdate: task.startdate,
-        estimatedate: task.estimatedate
+          id: task.id,
+          title: task.title,
+          status: task.status,
+          summary: task.summary,
+          type: task.type,
+          priority: task.priority,
+          tags: task.tags,
+          estimate: task.estimate,
+          assignee: task.assignee,
+          rankid: task.rankid,
+          color: "",
+          updatedate: currentDate,
+          updateuser: user.email,
+          startdate: task.startdate,
+          estimatedate: task.estimatedate,
         } as IKanban;
 
-        this.store.removeTask(data)
+        this.store.removeTask(data);
       }
     });
     this.closeDrawer();
   }
 
   createEmptyForm() {
-    this.sTitle = 'Kanban Task';
+    this.sTitle = "Kanban Task";
 
     this.taskGroup = this.fb.group({
-      title: [''],
-      status: [''],
-      summary: [''],
-      type: [''],
-      priority: [''],
-      tags: [''],
-      estimate: [''],
-      assignee: [''],
-      rankid: [''],
-      color: [''],
-      updateDate: [''],
-      updateUser: [''],
-      startdate: [''],
-      estimatedate: ['']
+      title: [""],
+      status: [""],
+      summary: [""],
+      type: [""],
+      priority: [""],
+      tags: [""],
+      estimate: [""],
+      assignee: [""],
+      rankid: [""],
+      color: [""],
+      updateDate: [""],
+      updateUser: [""],
+      startdate: [""],
+      estimatedate: [""],
     });
+  }
+
+  onCopy() {
+    throw new Error("Method not implemented.");
   }
 
   openDrawer() {
@@ -341,11 +342,10 @@ export class KanbanListComponent implements OnInit {
     const dDate = new Date();
     const task = this.taskGroup.getRawValue();
     const user = this.auth.currentUser;
-    var currentDate = dDate.toISOString().split('T')[0];
-    
-    
+    var currentDate = dDate.toISOString().split("T")[0];
+
     var data = {
-      id : task.id,
+      id: task.id,
       title: task.title,
       status: task.status,
       summary: task.summary,
@@ -355,14 +355,14 @@ export class KanbanListComponent implements OnInit {
       estimate: task.estimate,
       assignee: task.assignee,
       rankid: task.rankid,
-      color: '',
+      color: "",
       updatedate: currentDate,
       updateuser: user.email,
       startdate: task.startdate,
-      estimatedate: task.estimatedate
+      estimatedate: task.estimatedate,
     } as IKanban;
 
-    this.store.updateTask(data);  /// the last time 
+    this.store.updateTask(data); /// the last time
     this.closeDrawer();
   }
 
@@ -370,25 +370,22 @@ export class KanbanListComponent implements OnInit {
     // this.tasksList = this.kanbanService.read()
   }
 
-  
   onAdd() {
-    this.openDrawer()
+    this.openDrawer();
   }
   onDeleteCurrentSelection() {
-    throw new Error('Method not implemented.');
+    throw new Error("Method not implemented.");
   }
   onUpdateCurrentSelection() {
-    throw new Error('Method not implemented.');
+    throw new Error("Method not implemented.");
   }
   changeRag($event: any) {
-    throw new Error('Method not implemented.');
+    throw new Error("Method not implemented.");
   }
   changeType($event: any) {
-    throw new Error('Method not implemented.');
+    throw new Error("Method not implemented.");
   }
   changePriority(arg0: any) {
-    throw new Error('Method not implemented.');
+    throw new Error("Method not implemented.");
   }
-
 }
-

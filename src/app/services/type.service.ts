@@ -62,8 +62,8 @@ export class TypeService {
         take(1),
         catchError(err => {
           const message = "Could not retrieve journals ...";
-          console.debug(message, err);
-          return throwError(() => new Error(`${JSON.stringify(err)}`));
+          console.debug(message);
+          return throwError(() => new Error(`${JSON.stringify(err.status.Text)}`));
         }),
         shareReplay()
       ).subscribe();

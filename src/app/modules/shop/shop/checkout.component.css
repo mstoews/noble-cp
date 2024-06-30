@@ -1,0 +1,61 @@
+.dropbtn-one {
+    border: none;
+    cursor: pointer;
+  }
+
+  .dropdown-one {
+    position: relative;
+    display: inline-block;
+  }
+
+  .cr:hover {
+    color: rgb(29 78 216);
+  }
+  * {
+    /* border: 1px solid red; */
+  }
+  .dwy a:hover {
+    background-color: rgb(191 219 254);
+    font-weight: bold;
+  }
+  .dwy a {
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+  }
+  .dwy-one a:hover {
+    background-color: rgb(191 219 254);
+    font-weight: bold;
+  }
+  .dwy-one a {
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+  }
+  .dwy-two a:hover {
+    background-color: rgb(191 219 254);
+    font-weight: bold;
+  }
+  .dwy-two a {
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+  }
+  .dwy-three a:hover {
+    background-color: rgb(191 219 254);
+    font-weight: bold;
+  }
+  .dwy-three a {
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+  }
+  .expire a:hover {
+    background-color: rgb(191 219 254);
+    font-weight: bold;
+  }
+  .expire a {
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+  }

@@ -11,14 +11,20 @@ import {
   
   import { rxMethod } from '@ngrx/signals/rxjs-interop';
   import { debounceTime, distinctUntilChanged, exhaustMap, pipe, shareReplay, switchMap, tap } from 'rxjs';
-  import { computed, inject } from '@angular/core';
-  import { tapResponse } from '@ngrx/operators';
-  
-  import { IBudget } from 'app/models';
-  import { BudgetService } from 'app/services/budget.service';
+  import { inject } from '@angular/core';
+  import { tapResponse } from '@ngrx/operators';  
+  import { IAccounts, IBudget } from 'app/models';
+  import { BudgetService } from './budget.service';
+  import { ISubType } from 'app/services/subtype.service';
+  import { IType } from 'app/services/type.service';
+import { IFund } from '../kanban/kanban.service';
   
   export interface TransactionDetailInterface {
     budgetAmt: IBudget[]
+    accounts: IAccounts[],
+    types: IType[],
+    subTypes: ISubType[],
+    funds: IFund[],
     isLoading: boolean;
     error: string | null;
     detailCount: number;
@@ -29,6 +35,10 @@ import {
     
     withState<TransactionDetailInterface>({
       budgetAmt: [],
+      accounts: [],
+      types: [],
+      subTypes:[],
+      funds:[],
       error: null,
       isLoading: false,
       detailCount: 0,
@@ -112,8 +122,63 @@ import {
                 );
               })
             )
-        ),      
-      
+        ), 
+      loadTypes: rxMethod<void>(
+          pipe(
+              switchMap((value) => { 
+                  patchState(store, { isLoading: true });
+                  return budgetService.readTypes().pipe(
+                    tapResponse({
+                      next: (types) => patchState(store, { types : types }),             
+                      error: console.error,
+                      finalize: () => patchState(store, { isLoading: false }),
+                    })
+                  );
+                })
+              )
+        ),                       
+      loadSubtypes: rxMethod<void>(
+          pipe(
+              switchMap((value) => { 
+                  patchState(store, { isLoading: true });
+                  return budgetService.readSubtypes().pipe(
+                    tapResponse({
+                      next: (budget) =>  patchState(store, { budgetAmt : budget }),             
+                      error: console.error,
+                      finalize: () => patchState(store, { isLoading: false }),
+                    })
+                  );
+                })
+              )
+        ),
+      loadFunds: rxMethod<void>(
+          pipe(
+              switchMap((value) => { 
+                  patchState(store, { isLoading: true });
+                  return budgetService.readFunds().pipe(
+                    tapResponse({
+                      next: (budget) =>  patchState(store, { budgetAmt : budget }),             
+                      error: console.error,
+                      finalize: () => patchState(store, { isLoading: false }),
+                    })
+                  );
+                })
+              )
+        ),
+      loadAccounts: rxMethod<void>(
+          pipe(
+              switchMap((value) => { 
+                  patchState(store, { isLoading: true });
+                  return budgetService.readAccounts().pipe(
+                    tapResponse({
+                      next: (budget) =>  patchState(store, { budgetAmt : budget }),             
+                      error: console.error,
+                      finalize: () => patchState(store, { isLoading: false }),
+                    })
+                  );
+                })
+              )
+        ),                         
     })),
     withHooks({
       onInit(store) {

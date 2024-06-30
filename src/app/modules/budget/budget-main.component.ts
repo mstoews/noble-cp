@@ -4,7 +4,7 @@ import { MatDrawer } from '@angular/material/sidenav';
 import { FuseMediaWatcherService } from '@fuse/services/media-watcher';
 import { MaterialModule } from 'app/services/material.module';
 import { Subject, takeUntil } from 'rxjs';
-import { BudgetEntryComponent } from './budget-entry.component';
+import { BudgetEntryComponent } from './budget-listing.component';
 import { BudgetUpdateComponent } from './budgetl-update/budget-update.component';
 import { FileManagerComponent } from 'app/modules/file-manager/file-manager.component';
 import { BudgetWizardComponent } from './budget-wizard.component';

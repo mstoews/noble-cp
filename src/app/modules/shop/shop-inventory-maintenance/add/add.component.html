@@ -1,0 +1,60 @@
+<mat-card>
+
+  <div class="edit-course-form">
+
+    <h2 mat-dialog-title> Add New Product</h2>
+
+    <mat-dialog-content [formGroup]="form">
+
+      <mat-form-field>
+
+        <input matInput placeholder="Product Description" formControlName="description">
+
+      </mat-form-field>
+
+      <mat-form-field>
+          <mat-label>Category</mat-label>
+          <mat-select  formControlName="category"
+            (selectionChange)="changeCategory($event.value)">
+            <mat-option *ngFor="let p of categories" [value]="p.name">
+              {{ p.name }}
+            </mat-option>
+          </mat-select>
+      </mat-form-field>
+
+      <mat-form-field>
+
+        <input matInput [matDatepicker]="myDatepicker" formControlName="date_created">
+
+        <mat-datepicker-toggle matSuffix [for]="myDatepicker">
+
+        </mat-datepicker-toggle>
+
+        <mat-datepicker #myDatepicker></mat-datepicker>
+
+      </mat-form-field>
+
+      <mat-form-field>
+
+        <textarea matInput placeholder="Description" formControlName="rich_description">
+
+        </textarea>
+
+      </mat-form-field>
+
+    </mat-dialog-content>
+
+    <div mat-dialog-actions>
+      <button mat-icon-button (click)="update(form.value)" class="bg-gray-200 hover:text-white hover:bg-green-600" color="primary" aria-label="Add">
+        <mat-icon [svgIcon]="'mat_outline:add'"></mat-icon>
+      </button>
+      <button mat-icon-button (click)="close()" color="acsent" class="bg-gray-200 hover:text-white hover:bg-red-500">
+        <mat-icon [svgIcon]="'mat_outline:close'"></mat-icon>
+      </button>
+    </div>
+
+  </div>
+  
+  </mat-card>
+
+

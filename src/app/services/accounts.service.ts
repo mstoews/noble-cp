@@ -154,9 +154,7 @@ export class GLAccountsService {
     update(accounts: Partial<IAccounts>) {
 
         var url = this.baseUrl + '/v1/account_update';
-        var description = String(accounts.description);
-        var comments = String(accounts.comments);
-
+        
         var data: any = {
             account: Number(accounts.account),
             child: Number(accounts.child),
@@ -164,8 +162,8 @@ export class GLAccountsService {
             type: accounts.type,
             sub_type: accounts.sub_type,
             balance: 0.0,
-            description: description,
-            comments: comments,
+            description: accounts.description,
+            comments: accounts.comments,
             status: accounts.status,
             create_date: accounts.create_date,
             create_user: accounts.create_user,

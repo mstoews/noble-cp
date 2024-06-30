@@ -1,0 +1,43 @@
+<div class="flex flex-col items-start justify-center w-full space-y-4">
+    <div class="relative flex items-center justify-center w-full group">
+      <img class="hidden w-full lg:block" [src]="item.image" alt="watch-1" />
+      <img class="hidden w-full md:block lg:hidden" [src]="item.image" alt="watch-1" />
+      <img class="w-full md:hidden" [src]="item.image" alt="watch-1" />
+      <button (click)="onRemoveItem(item.id)"
+        class="absolute z-30 p-2 text-gray-600 bg-white rounded-full top-4 right-4 hover:text-red-600">
+        <svg class="fill-stroke" width="30" height="30" viewBox="0 0 30 30" fill="none"
+          xmlns="http://www.w3.org/2000/svg">
+          <path d="M5 8.75H25" stroke="currentColor" stroke-width="1.25" stroke-linecap="round"
+            stroke-linejoin="round" />
+          <path d="M12.5 13.75V21.25" stroke="currentColor" stroke-width="1.25" stroke-linecap="round"
+            stroke-linejoin="round" />
+          <path d="M17.5 13.75V21.25" stroke="currentColor" stroke-width="1.25" stroke-linecap="round"
+            stroke-linejoin="round" />
+          <path
+            d="M6.25 8.75L7.5 23.75C7.5 24.413 7.76339 25.0489 8.23223 25.5178C8.70107 25.9866 9.33696 26.25 10 26.25H20C20.663 26.25 21.2989 25.9866 21.7678 25.5178C22.2366 25.0489 22.5 24.413 22.5 23.75L23.75 8.75"
+            stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" />
+          <path
+            d="M11.25 8.75V5C11.25 4.66848 11.3817 4.35054 11.6161 4.11612C11.8505 3.8817 12.1685 3.75 12.5 3.75H17.5C17.8315 3.75 18.1495 3.8817 18.3839 4.11612C18.6183 4.35054 18.75 4.66848 18.75 5V8.75"
+            stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+      </button>
+      <button (click)="addToCart(item.product_id, item.id)"
+        class="absolute z-10 flex items-center justify-center w-5/6 py-3 text-base font-medium leading-4 text-center text-gray-800 transition duration-200 bg-white opacity-0 hover:text-black group-hover:opacity-100 bottom-8">
+        Add to cart
+      </button>
+      <div
+        class="absolute bottom-0 z-0 w-full h-full transition duration-200 opacity-0 group-hover:opacity-25 bg-gradient-to-t from-gray-800 to-opacity-0">
+      </div>
+    </div>
+    <div class="text-left">
+      <p class="text-sm leading-3 text-gray-600">{{ item.category }}</p>
+      <h2 class="mt-1 text-xl font-semibold leading-5 text-gray-800 lg:text-2xl lg:leading-6">
+        {{ item.description }}
+      </h2>
+    </div>
+    <div class="text-left">
+      <p class="text-xl font-medium leading-5 text-gray-600">
+        ${{ item.price }}
+      </p>
+    </div>
+  </div>

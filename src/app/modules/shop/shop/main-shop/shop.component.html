@@ -1,0 +1,70 @@
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-WGMMJK9NR3"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag() {
+    dataLayer.push(arguments);
+  }
+  gtag('js', new Date());
+
+  gtag('config', 'G-WGMMJK9NR3');
+</script>
+
+
+<div class="bg-gray-200 h-screen">
+  <div *ngIf="mobile">
+    <app-header class="bg-white" [title]="'Made To Shopping'"></app-header>
+  </div>
+
+  <div *ngIf="!mobile">
+    <app-header class="bg-white" [title]="'Made To Shopping'" [sub_title]="category"></app-header>
+  </div>
+
+  <ng-container *ngIf="data$ | async as data; else loading">
+    <!-- <div *ngIf="mobile">
+      <mat-tab-group #tabGroup class="flex-1" (selectedTabChange)="selectCategory($event)">
+        <div *ngFor="let item of data.categories">
+          <mat-tab class="m-1 border">
+            <mat-tab-label>
+              <h2 class="text-gray-700 ml-12">{{ item.name }}</h2>
+              <div mat-tab-label>
+                <img class="rounded-lg p-1" [ngSrc]="item.image" [alt]="item.name" width="50" height="auto" />
+              </div>
+            </mat-tab-label>
+          </mat-tab>
+        </div>
+      </mat-tab-group>
+    </div> -->
+    <!-- <div *ngIf="!mobile" class="m-2 p-2 bg-gray-200"> -->
+    <div class="bg-gray-100">
+      <div class="flex flex-row gap-4 w-100 bg-gray-100 justify-around items-center flex-wrap p-2">
+        <div *ngFor="let item of data.categories">
+          <shop-category-card [category]="item" (notifyCategoryRefresh)="updateCategory($event)">
+          </shop-category-card>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+  <ng-container *ngIf="data$ | async as data; else loading" class="bg-white">
+    <div *ngIf="data.products.length > 0; else empty">
+      <!-- <div class="grid grid-cols-1 mx-5 gap-y-10 gap-x-6 sm:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 xl:gap-x-8"> -->
+      <div class="flex flex-row gap-4 w-100 bg-gray-200 justify-around items-center flex-wrap">
+        <div *ngFor="let product of data.products">
+          <shop-card [product]="product"></shop-card>
+        </div>
+      </div>
+    </div>
+
+    <ng-template #loading>
+      <div class="flex flex-col m-10 items-center justify-center h-[800]">
+        <mat-spinner *ngIf="loading" class="mat-spinner-color"  [diameter]="60"></mat-spinner>
+        <p class="text-gray-500 m-20 text-2xl ">Loading...</p>
+      </div>
+    </ng-template>
+
+    <ng-template #empty>
+      <div class="flex flex-col items-center justify-center h-[800]">
+        <p class="text-gray-500 m-10 text-2xl">Currently No Products</p>
+      </div>
+    </ng-template>
+  </ng-container>
+</div>

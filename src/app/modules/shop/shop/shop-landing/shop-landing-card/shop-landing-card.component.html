@@ -1,0 +1,11 @@
+<div (click)="openShopByCategory()"
+  class="w-[360px] rounded-lg bg-white shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] dark:bg-neutral-700">
+  <div class="relative overflow-hidden bg-cover bg-no-repeat ease-in duration-300 hover:cursor-pointer">
+    <img  class="rounded-t-lg w-full h-auto"  [src]="category.image" width="400" height="400" [alt]="'Shop'" />
+  </div>
+  <div class="p-3 h-[100px]">
+    <div class="text-base text-center text-neutral-600 dark:text-neutral-200"> {{category.name}} </div>
+    <div class="text-base text-center text-neutral-600 dark:text-neutral-200">  {{category.description}} </div>
+  </div>
+</div>
+

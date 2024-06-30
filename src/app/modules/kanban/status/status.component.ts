@@ -28,7 +28,12 @@ const imports = [
     standalone: true,
     imports: [imports],
     templateUrl: 'status.component.html',
-    providers: [SortService, PageService, FilterService, ToolbarService, EditService]
+    providers: [SortService, PageService, FilterService, ToolbarService, EditService],
+    styles: `
+        .e-grid .e-headercell {
+        background-color: #333232; 
+        color: #fff; }
+    `
 })
 export class StatusComponent implements OnInit {
 

@@ -2,7 +2,6 @@
     (notifyParentDelete)="onDeleteCurrentSelection()"
     (notifyParentUpdate)="onUpdateCurrentSelection()"></kanban-menubar>
 <div class="flex flex-col min-w-0 overflow-y-auto bg-transparent" cdkScrollable>
-
     <div class="flex-auto">
         <div class="h-full rounded-2xl">
             <mat-drawer class="w-128 bg-gray-100" #drawer [opened]="false" mode="over" [position]="'end'"
@@ -39,14 +38,14 @@
 
                                         <mat-select placeholder="Priority" formControlName="priority"
                                             (selectionChange)="changePriority($event.value)">
-                                            
+
                                             @for (item of store.priority(); track item.priority) {
-                                                <mat-option [value]="item.priority"> {{ item.priority }} </mat-option>
+                                            <mat-option [value]="item.priority"> {{ item.priority }} </mat-option>
                                             }
 
-                                        </mat-select> 
+                                        </mat-select>
                                     </mat-form-field>
-                                   
+
 
                                 </section>
 
@@ -69,7 +68,7 @@
                                         @if (taskGroup.controls.estimatedate.hasError('matEndDateInvalid')) {
                                         <mat-error>Invalid end date</mat-error>
                                         }
-                                    </mat-form-field>                                    
+                                    </mat-form-field>
 
                                     <mat-form-field class="grow">
                                         <input matInput placeholder="Estimate (Days)" formControlName="estimate" />
@@ -80,10 +79,10 @@
                                     <mat-select placeholder="Assigned" formControlName="assignee"
                                         (selectionChange)="changeType($event.value)">
                                         @for (item of assignees; track item) {
-                                        <mat-option [value]="item.view"> 
-                                            {{ item.viewValue }}                                             
+                                        <mat-option [value]="item.view">
+                                            {{ item.viewValue }}
                                         </mat-option>
-                                        }                                        
+                                        }
                                     </mat-select>
                                 </mat-form-field>
 
@@ -114,51 +113,42 @@
 
             <mat-drawer-container>
                 <mat-drawer-content>
-                    @if (store.isLoading() !== null) {
-
-                    <grid-menubar [inTitle]="'Kanban List'"></grid-menubar>
-                    <div class="flex flex-col h-[640px]">
-                        <!-- <dx-data-grid id="grid-container" 
-                            [dataSource]="store.tasks()"
-                            [showColumnLines]="true" 
-                            [showRowLines]="true" 
-                            [showBorders]="true"
-                            (onCellDblClick)="onCellDblClick($event)" 
-                            [focusedRowEnabled]="true"                             
-                            keyExpr="id" [repaintChangesOnly]="true">
-                            <dxo-search-panel [visible]="true"></dxo-search-panel>
-                            <dxo-group-panel [visible]="true"></dxo-group-panel>
-                            <dxo-grouping [autoExpandAll]="true"></dxo-grouping>
-                            <dxo-filter-row [visible]="false"></dxo-filter-row>
-                            <dxo-scrolling rowRenderingMode="virtual"> </dxo-scrolling>
-                            <dxo-paging [pageSize]="10"> </dxo-paging>
-                            
-                            <dxo-pager [visible]="true" [allowedPageSizes]="allowedPageSizes"
-                                [displayMode]="displayMode" [showPageSizeSelector]="showPageSizeSelector"
-                                [showInfo]="showInfo">
-                            </dxo-pager>
-
-                            <dxi-column dataField="id" width="50" sortOrder="asc"></dxi-column>                            
-                            <dxi-column dataField="title"></dxi-column>
-                            <dxi-column dataField="status" width="90"></dxi-column>
-                            <dxi-column dataField="summary"></dxi-column>
-                            <dxi-column dataField="type" width="70"></dxi-column>
-                            <dxi-column dataField="priority" width="70"></dxi-column>
-                            <dxi-column dataField="tags" width="120"></dxi-column>
-                            <dxi-column dataField="estimate" width="70"></dxi-column>
-                            <dxi-column dataField="assignee" width="70"></dxi-column>
-                            <dxi-column dataField="rankid " width="70"></dxi-column>
-                            <dxi-column dataField="color" width="70"></dxi-column> 
-                        </dx-data-grid> -->
+                    @if (store.isLoading() == false) {
+                    <div class="" cdkScrollable>
+                        <div class="control-section">
+                            <div class="content-wrapper">
+                                <ejs-grid id='tasks' allowPaging='true' allowSorting='true' showColumnMenu='true'
+                                    allowEditing='true' [dataSource]='store.tasks()' [allowFiltering]='false'
+                                    [toolbar]='toolbarOptions' [selectionOptions]="selectionOptions"
+                                    (actionBegin)="actionBegin($event)" (actionComplete)="actionComplete($event)"
+                                    [filterSettings]='filterSettings' [editSettings]='editSettings'
+                                    [searchSetting]="searchOptions">
+                                    <e-columns>
+                                        <e-column field="id" headerText="ID" width="100" sortOrder="asc"></e-column>
+                                        <e-column field="title" headerText="Title"></e-column>
+                                        <e-column field="status" headerText="Status" width="120"></e-column>
+                                        <e-column field="summary" headerText="Summary"></e-column>
+                                        <e-column field="type" headerText="Type" [visible]='false' width="100"></e-column>
+                                        <e-column field="priority" headerText="Priority" width="120"></e-column>
+                                        <e-column field="tags" [visible]='false' headerText="Tag" width="120"></e-column>
+                                        <e-column field="estimate" headerText="Estimate" width="130"></e-column>
+                                        <e-column field="assignee" headerText="Assignee" width="130"></e-column>
+                                        <e-column field="rankid " [visible]='false' headerText="Rank ID" width="70"></e-column>
+                                        <e-column field="color" [visible]='false' headerText="Color" width="70"></e-column>
+                                    </e-columns>
+                                </ejs-grid>
+                            </div>
+                        </div>
                     </div>
-
-                    } @else
+                    }
+                    @else
                     {
                     <div class="flex flex-col items-center justify-center h-screen mat-spinner-color w-full bg-white">
                         <mat-spinner class="text-gray-100 bg-white" [diameter]="80"></mat-spinner>
                         <p class="text-gray-100 text-2xl">Loading...</p>
                     </div>
                     }
+
                 </mat-drawer-content>
             </mat-drawer-container>
         </div>

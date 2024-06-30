@@ -122,7 +122,7 @@ export const appRoutes: Route[] = [
                 path: 'journals',
                 loadChildren: () =>
                     import(
-                        'app/modules/accounting/journal-entry/journal.entry.routes'
+                        'app/modules/accounting/transactions/journal.entry.routes'
                     ),
             },
             // {

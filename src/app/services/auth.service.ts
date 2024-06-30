@@ -97,8 +97,12 @@ export class AuthService {
     // map to getTokenIdResults
   }
 
+  public UserId(): string {
+    return this.state().user.uid;
+  }
+
   public UserName(): string {
-    return this.state().user.email
+    return this.state().user.email;
   }
 
 }

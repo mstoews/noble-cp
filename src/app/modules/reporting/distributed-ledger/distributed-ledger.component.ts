@@ -14,65 +14,55 @@ import {
 
 import { DistMenuStandaloneComponent } from './dist-menubar/grid-menubar.component';
 import { DistributionLedgerService } from 'app/services/distribution.ledger.service';
-import { DxDataGridTypes } from 'devextreme-angular/ui/data-grid';
-import { JournalDetailComponent } from '../distribution-report-v1/distribution-detail/journal-detail.component';
 import { MatDrawer } from '@angular/material/sidenav';
 import { MaterialModule } from 'app/services/material.module';
-import { TransactionDetailComponent } from './transaction-detail/transaction-detail.component';
 import { Workbook } from 'exceljs';
 import { exportDataGrid } from 'devextreme/excel_exporter';
 import { saveAs } from 'file-saver-es';
+import { AggregateService, ColumnMenuService, EditService, FilterService, FilterSettingsModel, GridComponent, GridModule, PageService, ResizeService, SearchSettingsModel, SelectionSettingsModel, SortService, ToolbarItems, ToolbarService } from '@syncfusion/ej2-angular-grids';
+import { ReportTemplateComponent } from './report-template-component';
 
 const imports = [
     CommonModule,
-    DxDataGridModule,
-    DxBulletModule,
-    DxTemplateModule,
+    GridModule,
     MaterialModule,
     DistMenuStandaloneComponent,
-    TransactionDetailComponent,
 ];
 
 @Component({
     selector: 'dist-ledger',
     standalone: true,
-    imports: [imports],
-    styles: [
-        `
-            ::ng-deep
-                .dx-datagrid
-                .dx-datagrid-rowsview
-                .dx-row-focused.dx-data-row:not(.dx-edit-row)
-                > td:not(.dx-focused) {
-                background-color: rgb(195, 199, 199);
-                border-color: rgb(195, 199, 199);
-            }
-        `,
-    ],
+    imports: [imports],    
     templateUrl: './distributed-ledger.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
-    providers: [],
+    providers: [SortService, PageService, ResizeService, FilterService, ToolbarService, EditService, AggregateService, ColumnMenuService],
 })
-export class DistributedLedgerComponent implements OnInit {
+export class DistributedLedgerComponent extends ReportTemplateComponent implements OnInit {
     private dlService = inject(DistributionLedgerService);
-    public currentPeriod = 1;
-    public currentYear = 2024;
     public selectedItemKeys: any[] = [];
     public keyField: any;
     public currentDate: string;
-    public dl$ = this.dlService.getDistributionByPrdAndYear(
-        this.currentPeriod,
-        this.currentYear
-    );
-    public collapsed = false;
-
+    
+    dl$: any;
+    
     // local variables
     @ViewChild('drawer') drawer!: MatDrawer;
+    public initialPage: Object;
+    @ViewChild('grid')
+    public grid?: GridComponent;
 
     ngOnInit() {
-        const dDate = new Date();
-        this.currentDate = dDate.toISOString().split('T')[0];
+        super.ngOnInit();
+        this.initialPage = { pageSizes:true, pageCount:10 };        
+        this.currentPeriod = 1;
+        this.currentYear = 2024;        
+        this.dl$ = this.dlService.getDistributionByPrdAndYear(
+            this.currentPeriod,
+            this.currentYear
+        );
+        (this.grid as GridComponent).pageSettings.pageSize = 10;
     }
+    
 
     onYearChanged(e: any) {
         this.currentYear = Number(e);
@@ -95,97 +85,9 @@ export class DistributedLedgerComponent implements OnInit {
 
     onCellDoubleClicked(e) { }
 
-    onExporting(e: DxDataGridTypes.ExportingEvent) {
-        const workbook = new Workbook();
-        const worksheet = workbook.addWorksheet('Dist Ledger');
-
-        exportDataGrid({
-            component: e.component,
-            worksheet,
-            autoFilterEnabled: true,
-            keepColumnWidths: true,
-            topLeftCell: { row: 4, column: 1 },
-            customizeCell: ({ gridCell, excelCell }) => {
-                if (gridCell.rowType === 'data') {
-                    if (gridCell.column.dataType === 'number') {
-                        excelCell.value = parseFloat(gridCell.value);
-                        excelCell.numFmt = '#,##0.00_);(#,##0.00)';
-                    }
-                }
-                if (gridCell.rowType === 'group') {
-                    excelCell.fill = {
-                        type: 'pattern',
-                        pattern: 'solid',
-                        fgColor: { argb: 'BEDFE6' },
-                    };
-                }
-                if (gridCell.rowType === 'totalFooter' && excelCell.value) {
-                    excelCell.font.italic = true;
-                }
-            },
-        })
-            .then((cellRange) => {
-                // header
-                const headerRow = worksheet.getRow(2);
-                headerRow.height = 30;
-                headerRow.getCell(
-                    1
-                ).value = `Distribution Ledger Report - ${this.currentDate}`;
-                headerRow.getCell(1).font = {
-                    name: 'Segoe UI Light',
-                    size: 22,
-                };
-                headerRow.getCell(1).alignment = { horizontal: 'left' };
-                worksheet.mergeCells(2, 1, 2, 8);
-
-                // footer
-                const footerRowIndex = cellRange.to.row + 2;
-                const footerRow = worksheet.getRow(footerRowIndex);
-                footerRow.height = 20;
-                worksheet.mergeCells(footerRowIndex, 1, footerRowIndex, 8);
-                footerRow.getCell(1).value = 'www.nobleledger.com';
-                footerRow.getCell(1).font = {
-                    color: { argb: 'BFBFFF' },
-                    italic: true,
-                };
-                footerRow.getCell(1).alignment = { horizontal: 'left' };
-            })
-            .then(() => {
-                workbook.xlsx.writeBuffer().then((buffer) => {
-                    saveAs(
-                        new Blob([buffer], {
-                            type: 'application/octet-stream',
-                        }),
-                        `distributed_ledger_${this.currentDate}.xlsx`
-                    );
-                });
-            });
-    }
-
-    formatNumber(e) {
-        const options = {
-            style: 'decimal', // Other options: 'currency', 'percent', etc.
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2,
-        };
-        if (e.value === undefined || e.value === null)
-            e.value = 0;
-        const formattedWithOptions = e.value.toLocaleString('en-US', options);
-        //console.debug(formattedWithOptions);
-        return formattedWithOptions;
-    }
-
     selectionChanged(data: any) {
         //console.debug(`selectionChanged ${JSON.stringify(data.data)}`);
         this.selectedItemKeys = data.selectedRowKeys;
-    }
-
-    customizeColumns(columns: DxDataGridTypes.Column[]) {
-        columns[0].width = 70;
-    }
-
-    onContentReady(e: DxDataGridTypes.ContentReadyEvent) {
-        e.component.option('loadPanel.enabled', false);
     }
 
     onFocusedRowChanged(e: any) {

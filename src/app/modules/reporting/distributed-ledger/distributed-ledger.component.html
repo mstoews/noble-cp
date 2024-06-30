@@ -2,10 +2,10 @@
     <div class="absolute inset-0 flex flex-col min-w-0 overflow-y-auto -px-20" cdkScrollable>
         <!-- Main -->
         <div class="flex-auto p-6 sm:p-10">
-            <div class="h-full border-gray-300 rounded-2xl">
+            <div class=" border-gray-300 rounded-2xl">
                 @if (dl$ | async; as dist)
                 {
-                            <div class="flex flex-col h-full">
+                            <div class="flex flex-col">
                             <dist-menubar [inTitle]="'Distributed Ledger Report'"
                             (notifyParentRefresh)="onRefresh()"
                             (notifyParentAdd)="onAdd()"
@@ -14,49 +14,51 @@
                             [currentPeriod]="currentPeriod"
                             [currentYear]="currentYear" >
                             </dist-menubar>
-                            <dx-data-grid class="h-[600px]"
-                                [dataSource]="dist"
-                                [remoteOperations]="false"
-                                [allowColumnReordering]="true"
-                                [rowAlternationEnabled]="true"
-                                [showBorders]="true"
-                                [showRowLines]="true"
-                                [showColumnLines]="true"
-                                [focusedRowEnabled]="true"
-                                [focusedRowIndex]="0"                                
-                                [repaintChangesOnly]="false"
-                                [customizeColumns]="customizeColumns"
-                                (onExporting)="onExporting($event)"
-                                (onContentReady)="onContentReady($event)"
-                                keyExpr="child">
-                                <dxo-search-panel [visible]="true" [highlightCaseSensitive]="true"></dxo-search-panel>
-                                <dxo-group-panel [visible]="true"></dxo-group-panel>
-                                <dxo-grouping [autoExpandAll]="true"></dxo-grouping>
-                                <dxo-selection mode="multiple"></dxo-selection>
-                                <dxo-scrolling mode="virtual"></dxo-scrolling>
 
-                                <dxi-column dataField="account" [groupIndex]="0" dataType="string"></dxi-column>
-                                <dxi-column dataField="child" dataType="string" width="130"></dxi-column>
-                                <dxi-column dataField="description" dataType="string"></dxi-column>
-                                <dxi-column dataField="period" width="100" dataType="string"></dxi-column>
-                                <dxi-column dataField="period_year" width="100" dataType="string"></dxi-column>
-                                <dxi-column dataField="opening_balance" alignment="right" [customizeText]="formatNumber" width="130" ></dxi-column>
-                                <dxi-column dataField="debit_balance" alignment="right"   [customizeText]="formatNumber" width="130" ></dxi-column>
-                                <dxi-column dataField="credit_balance" alignment="right"  [customizeText]="formatNumber" width="130" ></dxi-column>
-                                <dxi-column dataField="closing_balance" alignment="right" [customizeText]="formatNumber" width="130" ></dxi-column>
-                              
-                              
-                                <dxi-column dataField="update_date" dataType="date" width="100" ></dxi-column>
-                                <dxo-summary>
-                                <dxi-group-item column="opening_balance" summaryType="sum" [customizeText]="formatNumber" [showInGroupFooter]="true"  [alignByColumn]="true" ></dxi-group-item>
-                                <dxi-group-item column="debit_balance" summaryType="sum"   [customizeText]="formatNumber" [showInGroupFooter]="true"  [alignByColumn]="true" ></dxi-group-item>
-                                <dxi-group-item column="credit_balance" summaryType="sum"  [customizeText]="formatNumber" [showInGroupFooter]="true"  [alignByColumn]="true" ></dxi-group-item>
-                                <dxi-group-item column="closing_balance" summaryType="sum" [customizeText]="formatNumber" [showInGroupFooter]="true"  [alignByColumn]="true" ></dxi-group-item>
-                                </dxo-summary>
-                              
-                                <dxo-export [enabled]="true" [allowExportSelectedData]="true"></dxo-export>
-                            </dx-data-grid>
+
+                            <ejs-grid  id='grid'
+                                  [dataSource]='dist'   
+                                  [allowPaging]='true' 
+                                  allowSorting='true'                                   
+                                  showColumnMenu='true'
+                                  pageSettings="initialPage"                                 
+                                  [allowFiltering]='false'
+                                  [toolbar]='toolbarOptions'
+                                  [selectionOptions]="selectionOptions"                                                                       
+                                  [filterSettings]='filterSettings'                                        
+                                  [searchSetting]="searchOptions" >
+                                <e-columns>                                
+                                <e-column  field="account" width="130" headerText="Group"></e-column>
+                                <e-column  field="child" headerText="Account" type="string" width="130"></e-column>
+                                <e-column  field="description" headerText="Description" type="string" width="170"></e-column>
+                                <e-column  field="period" width="100" type="string"></e-column>                                
+                                <e-column  field="opening_balance" format='N2' type="number" textAlign="right" width="130" ></e-column>
+                                <e-column  field="debit_balance"   format='N2' textAlign="right"   width="130" ></e-column>
+                                <e-column  field="credit_balance"  format='N2' textAlign="right"  width="130" ></e-column>
+                                <e-column  field="closing_balance" format='N2' textAlign="right" width="130" ></e-column>
+                                <e-column  field="update_date" format="MM-dd-yyyy" type="date" width="100" ></e-column>
+                                </e-columns>
+                                <e-aggregates>
+                                    <e-aggregate>
+                                        <e-columns>
+                                            <e-column field="opening_balance" format="N2" type="sum">
+                                                <ng-template #footerTemplate let-data>{{data.sum}}</ng-template>
+                                            </e-column>                                            
+                                            <e-column field="debit_balance" format="N2" type="sum">
+                                                <ng-template #footerTemplate let-data>{{data.sum}} </ng-template>
+                                            </e-column>                                            
+                                            <e-column field="credit_balance" format="N2" type="sum">
+                                                <ng-template #footerTemplate let-data>{{data.sum}} </ng-template>
+                                            </e-column>                                            
+                                            <e-column field="closing_balance" format="N2" type="sum">
+                                                <ng-template #footerTemplate let-data>{{data.sum}} </ng-template>
+                                            </e-column>                                            
+                                        </e-columns>
+                                    </e-aggregate>                                    
+                                </e-aggregates>
+                            </ejs-grid>                                
                         </div>
+
                 }
         </div>
     </div>
