@@ -1,7 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild, ViewEncapsulation, inject } from '@angular/core';
 import { FormsModule, ReactiveFormsModule, FormBuilder, UntypedFormGroup, Validators, FormControl } from '@angular/forms';
-import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { fuseAnimations } from '@fuse/animations';
 import { AUTH } from 'app/app.config';
@@ -10,7 +9,7 @@ import { FundsService } from 'app/services/funds.service';
 import { IJournalDetail, IJournalHeader, ITransactionDate, JournalService } from 'app/services/journal.service';
 import { MaterialModule } from 'app/services/material.module';
 import { SubTypeService } from 'app/services/subtype.service';
-import { DxDataGridModule, DxTemplateModule } from 'devextreme-angular';
+
 import { NgxMaskDirective, NgxMaskPipe, provideNgxMask } from 'ngx-mask';
 import { ReplaySubject, Subject, Subscription, take, takeUntil } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
@@ -23,14 +22,12 @@ import { WizardUpdateComponent } from './wizard-update.component';
 
 const imports = [
   CommonModule,
-  MatIconModule,
+  MaterialModule,
   FormsModule,
   ReactiveFormsModule,
   MaterialModule,
   NgxMaskDirective,
   NgxMaskPipe,
-  DxDataGridModule,
-  DxTemplateModule,
   WizardUpdateComponent,
   DndComponent,
   NgxMatSelectSearchModule

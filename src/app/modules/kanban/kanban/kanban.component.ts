@@ -3,7 +3,7 @@ import { FormsModule, ReactiveFormsModule  } from '@angular/forms';
 
 import { CheckBoxAllModule } from '@syncfusion/ej2-angular-buttons';
 import { CommonModule } from '@angular/common';
-import { DxDataGridModule } from 'devextreme-angular';
+
 import { KanbanModule } from '@syncfusion/ej2-angular-kanban';
 import { KanbanTypesComponent } from '../types/types.component';
 import { MaterialModule } from 'app/services/material.module';
@@ -24,14 +24,13 @@ const imports = [
   MaterialModule,
   FormsModule,
   ReactiveFormsModule,
-  DxDataGridModule,
   CommonModule,
   RouterOutlet,
   CommonModule,
   KanbanModule,
   CheckBoxAllModule,
   KanbanTypesComponent,
-  TasksComponent
+  TasksComponent,
 ]
 
 @Component({

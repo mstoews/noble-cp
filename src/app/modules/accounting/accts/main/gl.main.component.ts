@@ -3,33 +3,29 @@ import { BalanceSheetComponent } from '../../../reporting/balance-sheet/balance-
 import { CdkScrollable } from '@angular/cdk/scrolling';
 import { DistributedLedgerComponent } from '../../../reporting/distributed-ledger/distributed-ledger.component';
 import { FundsComponent } from '../funds/funds.component';
-import { GeneralLedgerTreeComponent } from '../../../reporting/general-ledger-tree/general-ledger-tree.component';
 import { GlAccountsComponent } from '../gl-accts.component';
 import { GlTypesComponent } from '../types/types.component';
 import { HttpClient } from '@angular/common/http';
-
-import { RouterLink } from '@angular/router';
-import { TransactionAnalysisComponent } from '../../../reporting/transaction-analysis/transaction-analysis.component';
 import { TrialBalanceComponent } from '../../../reporting/trial-balance/trial-balance.component';
 import { Subject, takeUntil } from 'rxjs';
-import { MatDrawer } from '@angular/material/sidenav';
 import { FuseMediaWatcherService } from '@fuse/services/media-watcher';
 import { NgClass, NgFor, NgSwitch, NgSwitchCase } from '@angular/common';
 
-
 import {
-
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
     ViewChild,
     ViewEncapsulation,
 } from '@angular/core';
+
 import { MaterialModule } from 'app/services/material.module';
 import { GlSubTypeComponent } from '../subtype/subtype.component';
 import { PeriodsComponent } from '../periods/periods.component';
 import { RolesComponent } from '../roles/roles.component';
 import { TeamsComponent } from '../teams/teams.component';
+import { RouterLink } from '@angular/router';
+import { MatDrawer } from '@angular/material/sidenav';
 
 @Component({
     selector: 'gl-main',
@@ -42,10 +38,8 @@ import { TeamsComponent } from '../teams/teams.component';
         CdkScrollable,
         BalanceSheetComponent,
         TrialBalanceComponent,
-        DistributedLedgerComponent,
-        TransactionAnalysisComponent,
+        DistributedLedgerComponent,        
         FundsComponent,
-        GeneralLedgerTreeComponent,
         GlAccountsComponent,
         GlTypesComponent,
         PeriodsComponent,
@@ -55,7 +49,7 @@ import { TeamsComponent } from '../teams/teams.component';
         NgSwitch,
         NgSwitchCase,
         RolesComponent,
-        TeamsComponent
+        TeamsComponent,
     ],
     providers: [HttpClient],
     changeDetection: ChangeDetectionStrategy.OnPush,

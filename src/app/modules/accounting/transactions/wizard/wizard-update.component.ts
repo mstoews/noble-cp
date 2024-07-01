@@ -1,5 +1,4 @@
 import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild, inject } from '@angular/core';
-import { DxDataGridModule, DxTemplateModule } from 'devextreme-angular';
 import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { IJournalDetail, IJournalDetailDelete, IJournalHeader, IJournalHeaderUpdate, JournalService } from 'app/services/journal.service';
 import { Observable, ReplaySubject, Subject, Subscription, interval, map, startWith, take, takeUntil } from 'rxjs';
@@ -23,9 +22,6 @@ import { AUTH } from 'app/app.config';
 import { MatSelect } from '@angular/material/select';
 import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 import { IDropDownAccounts } from 'app/models';
-import notify from 'devextreme/ui/notify';
-import { DxContextMenuModule, DxContextMenuTypes } from 'devextreme-angular/ui/context-menu';
-import { DxDataGridTypes } from 'devextreme-angular/ui/data-grid';
 import { AggregateService, EditService, FilterService, GridModule, PageService, RowDDService, SortService, ToolbarService } from '@syncfusion/ej2-angular-grids';
 
 
@@ -33,7 +29,6 @@ declare var __moduleName: string;
 
 const imports = [
   CommonModule,
-
   ReactiveFormsModule,
   MaterialModule,
   ComboBoxModule,
@@ -46,12 +41,8 @@ const imports = [
   NgxMaskPipe,
   FileManagerComponent,
   NgxMatSelectSearchModule,
-  // DxContextMenuModule,
-  // DxDataGridModule,
-  // DxTemplateModule,
   GridModule,
   DropDownListAllModule,
-
 ];
 
 @Component({
@@ -511,28 +502,6 @@ export class WizardUpdateComponent implements OnInit, OnDestroy, AfterViewInit {
     this.journalService.reNumberJournalDetail(this.journal_id);
   }
 
-  onReorder = (e: Parameters<DxDataGridTypes.RowDragging['onReorder']>[0]) => {
-    e.promise = this.processReorder(e);
-  };
-
-  async processReorder(e: Parameters<DxDataGridTypes.RowDragging['onReorder']>[0]) {
-    const visibleRows = e.component.getVisibleRows();
-    const toIndex = this.detailsListSignal().findIndex((item) => item.journal_subid === visibleRows[e.toIndex].data.journal_subid);
-    const fromIndex = this.detailsListSignal().findIndex((item) => item.journal_subid === e.itemData.journal_subid);
-    const details = this.detailsListSignal();
-    // details.forEach(journals => console.debug('Start List', journals.child + ' : ' + journals.journal_subid ))
-    details.splice(fromIndex, 1);
-    details.splice(toIndex, 0, e.itemData);
-    var n = 1;
-    details.forEach(journal => {
-      journal.journal_subid = n
-      n++;
-    });
-    // details.forEach(journals => console.debug('Ending List', journals.child+ ' : ' + journals.journal_subid ))
-    this.detailsListSignal.set(null);
-    this.detailsListSignal.set(details);
-    this.bDirty = true;
-  }
 
   onUpdateJournalEntry() {
     const dDate = new Date();
@@ -678,13 +647,13 @@ export class WizardUpdateComponent implements OnInit, OnDestroy, AfterViewInit {
     dialogConfig.data = e.data;
     dialogConfig.width = "450px";
 
-    const dialogRef = this.dialog.open(JournalEditComponent, dialogConfig);
+    //const dialogRef = this.dialog.open(JournalEditComponent, dialogConfig);
 
-    dialogRef.afterClosed().subscribe(
-      val => {
-        this.refresh(this.journal_id, this.description, this.transaction_date, this.amount);
-      }
-    );
+    // dialogRef.afterClosed().subscribe(
+    //   val => {
+    //     this.refresh(this.journal_id, this.description, this.transaction_date, this.amount);
+    //   }
+    // );
 
   }
 

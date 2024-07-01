@@ -1,6 +1,4 @@
 import { Component, EventEmitter, Input, OnInit, Output, ViewChild, inject } from '@angular/core';
-import { DxDataGridModule, DxDataGridTypes } from 'devextreme-angular/ui/data-grid';
-import { DxNumberBoxModule, DxTemplateModule } from 'devextreme-angular';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { IJournalDetail, JournalService } from 'app/services/journal.service';
 import { CommonModule } from '@angular/common';
@@ -12,12 +10,9 @@ import { Observable } from 'rxjs';
 
 const imports = [
     CommonModule,
-    DxDataGridModule,
-    DxTemplateModule,
     ReactiveFormsModule,
     MaterialModule,
     FormsModule,
-    DxNumberBoxModule,
     DndComponent
 ];
 
@@ -26,11 +21,6 @@ const imports = [
     standalone: true,
     imports: [imports],
     templateUrl: './budget-detail.component.html',
-    styles: `::ng-deep .dx-datagrid .dx-datagrid-rowsview .dx-row-focused.dx-data-row:not(.dx-edit-row) > td:not(.dx-focused) {
-    background-color: rgb(195, 199, 199);
-    border-color: rgb(195, 199, 199);
-    }
-    `
 })
 export class BudgetDetailComponent implements OnInit {
     @Input() key: string;
@@ -85,19 +75,6 @@ export class BudgetDetailComponent implements OnInit {
 
     onUpdate() {
         this.notifyTransactionEdit.emit();
-    }
-
-
-    formatNumber(e) {
-        const options = {
-            style: 'decimal',  // Other options: 'currency', 'percent', etc.
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2,
-        };
-        if (e.value === null)
-            e.value = 0.0;
-        const formattedWithOptions = e.value.toLocaleString('en-US', options);
-        return formattedWithOptions;
     }
 
     onBook() {

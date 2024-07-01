@@ -1,35 +1,28 @@
 import { Component, Input, OnInit,  inject } from '@angular/core';
-import { DxBulletModule, DxDataGridModule, DxTemplateModule } from 'devextreme-angular';
+
 import { JournalService } from 'app/services/journal.service';
 import { Observable, map } from 'rxjs';
 
 import { CommonModule } from '@angular/common';
 import { DndComponent } from 'app/modules/drag-n-drop/loaddnd/dnd.component';
-import { DxNumberBoxModule } from 'devextreme-angular';
+
 import { MaterialModule } from 'app/services/material.module';
 import { TrnJournalDetailComponent } from '../journal-detail/journal-detail.component';
+import { GridModule } from '@syncfusion/ej2-angular-grids';
 
 const imports = [
     CommonModule,
-    DxDataGridModule,
-    DxBulletModule,
-    DxTemplateModule,
     MaterialModule,
-    DxNumberBoxModule,
     DndComponent,
-    TrnJournalDetailComponent
+    TrnJournalDetailComponent,
+    GridModule
 ];
 
 @Component({
     selector: 'transaction-detail',
     standalone: true,
     imports: [imports],
-    templateUrl: './transaction-detail.component.html',
-    styles: `::ng-deep .dx-datagrid .dx-datagrid-rowsview .dx-row-focused.dx-data-row:not(.dx-edit-row) > td:not(.dx-focused) {
-    background-color: rgb(195, 199, 199);
-    border-color: rgb(195, 199, 199);
-    }
-    `
+    templateUrl: './transaction-detail.component.html',    
 })
 export class TransactionDetailComponent implements OnInit {
 

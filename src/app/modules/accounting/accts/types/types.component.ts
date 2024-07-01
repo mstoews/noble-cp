@@ -6,7 +6,7 @@ import {
     ReactiveFormsModule,
 } from '@angular/forms';
 import { Component, OnInit, ViewChild, inject } from '@angular/core';
-import { DxBulletModule, DxDataGridModule, DxTemplateModule } from 'devextreme-angular';
+
 
 import { CommonModule } from '@angular/common';
 import { FuseConfirmationService } from '@fuse/services/confirmation';
@@ -17,16 +17,15 @@ import { MatDrawer } from '@angular/material/sidenav';
 import { MaterialModule } from 'app/services/material.module';
 import { IType, TypeService } from 'app/services/type.service';
 import { environment } from 'environments/environment.prod';
+import { GridModule } from '@syncfusion/ej2-angular-grids';
 
 const imports = [
     CommonModule,
     MaterialModule,
     ReactiveFormsModule,
     FormsModule,
-    DxDataGridModule,
-    DxBulletModule,
-    DxTemplateModule,
-    GridMenubarStandaloneComponent
+    GridMenubarStandaloneComponent,
+    GridModule
 ];
 
 @Component({
@@ -34,15 +33,11 @@ const imports = [
     standalone: true,
     imports: [imports],
     templateUrl: './types.component.html',
-    styles: `::ng-deep .dx-datagrid .dx-datagrid-rowsview .dx-row-focused.dx-data-row:not(.dx-edit-row) > td:not(.dx-focused) {
-        background-color: rgb(195, 199, 199);
-        border-color: #ada6a7;
-        }`,
     providers: []
 })
 export class GlTypesComponent implements OnInit {
 
-    private _fuseConfirmationService = inject(FuseConfirmationService);
+    private fuseConfirmationService = inject(FuseConfirmationService);
     private fb = inject(FormBuilder);
     private typeService = inject(TypeService)
     @ViewChild('drawer') drawer!: MatDrawer;
@@ -63,7 +58,7 @@ export class GlTypesComponent implements OnInit {
 
     onDelete(e: any) {
         console.debug(`onDelete ${JSON.stringify(e)}`);
-        const confirmation = this._fuseConfirmationService.open({
+        const confirmation = this.fuseConfirmationService.open({
             title: 'Delete Type?',
             message: 'Are you sure you want to delete this type? ',
             actions: {

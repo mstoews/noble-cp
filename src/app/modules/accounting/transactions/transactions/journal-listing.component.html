@@ -1,11 +1,14 @@
 <div class="sm:hide md:visible">
-<grid-menubar class="pl-5 pr-5" [inTitle]="'Journal Entry'" (notifyParentRefresh)="onRefresh()"
-    (notifyParentAdd)="onAdd()" (notifyParentDelete)="onDeleteSelection()" (notifyParentUpdate)="onUpdateSelection()">
+<grid-menubar class="pl-5 pr-5" 
+    [inTitle]="'Journal Entry'" 
+    (notifyParentRefresh)="onRefresh()"
+    (notifyParentAdd)="onAdd()" 
+    (notifyParentDelete)="onDeleteSelection()" 
+    (notifyParentUpdate)="onUpdateSelection()">
 </grid-menubar>
 </div>
 
 <div class="flex flex-col min-w-0 overflow-y-auto -px-10" cdkScrollable>
-    <!-- Main -->
 
     <div class="flex-auto">
         <div class="h-full border-gray-300 rounded-2xl">
@@ -19,7 +22,7 @@
                    [transaction_date]="transaction_date"
                    [amount]="amount"
                    [details$]="details$"
-                    (notifyDrawerClose)="closeDrawer()">
+                   (notifyDrawerClose)="closeDrawer()">
                 </journal-update>
                 }                
             </mat-drawer>

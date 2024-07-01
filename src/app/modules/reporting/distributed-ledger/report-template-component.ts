@@ -7,7 +7,7 @@ import {
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Workbook } from 'exceljs';
-import { exportDataGrid } from 'devextreme/excel_exporter';
+
 import { saveAs } from 'file-saver-es';
 import { AggregateService, ColumnMenuService, EditService, FilterService, FilterSettingsModel, GridModule, PageService, ResizeService, SearchSettingsModel, SelectionSettingsModel, SortService, ToolbarItems, ToolbarService } from '@syncfusion/ej2-angular-grids';
 import { DropDownListComponent } from '@syncfusion/ej2-angular-dropdowns';

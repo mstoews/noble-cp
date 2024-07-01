@@ -8,7 +8,6 @@ import { MaterialModule } from 'app/services/material.module';
 import { GridMenubarStandaloneComponent } from 'app/modules/accounting/grid-menubar/grid-menubar.component';
 import { Subject } from 'rxjs';
 
-import { DxDataGridTypes } from 'devextreme-angular/ui/data-grid';
 import { KanbanService, IPriority } from '../kanban.service';
 import { EditService, ToolbarService, PageService, SortService, FilterService, NewRowPosition, GridModule, DialogEditEventArgs, SaveEventArgs } from '@syncfusion/ej2-angular-grids';
 import { DropDownListComponent } from '@syncfusion/ej2-angular-dropdowns';
@@ -146,9 +145,6 @@ export class KanbanPriorityComponent implements OnInit {
         }
         this.createEmptyForm(priority);
         this.openDrawer();
-    }
-    onSelectionChanged({ selectedRowKeys }: DxDataGridTypes.SelectionChangedEvent) {
-        this.selectedItemKeys = selectedRowKeys;
     }
 
     deleteRecords() {

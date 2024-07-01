@@ -1,6 +1,6 @@
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Component, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
-import { DxBulletModule, DxDataGridModule, DxTemplateModule } from 'devextreme-angular';
+
 import { CommonModule } from '@angular/common';
 import { FuseConfirmationService } from '@fuse/services/confirmation';
 
@@ -8,19 +8,15 @@ import { MatDrawer } from '@angular/material/sidenav';
 import { MaterialModule } from 'app/services/material.module';
 import { GridMenubarStandaloneComponent } from 'app/modules/accounting/grid-menubar/grid-menubar.component';
 import { Subject, map, takeUntil } from 'rxjs';
-import { DxButtonModule } from 'devextreme-angular';
-import { DxDataGridTypes } from 'devextreme-angular/ui/data-grid';
 import { KanbanService, IType } from '../kanban.service';
+import { GridModule } from '@syncfusion/ej2-angular-grids';
 
 const imports = [
     CommonModule,
     MaterialModule,
     ReactiveFormsModule,
     FormsModule,
-    DxDataGridModule,
-    DxBulletModule,
-    DxTemplateModule,
-    DxButtonModule,
+    GridModule,
     GridMenubarStandaloneComponent
 ];
 
@@ -29,10 +25,6 @@ const imports = [
     standalone: true,
     imports: [imports],
     templateUrl: 'types.component.html',
-    styles: `::ng-deep .dx-datagrid .dx-datagrid-rowsview .dx-row-focused.dx-data-row:not(.dx-edit-row) > td:not(.dx-focused) {
-        background-color: rgb(195, 199, 199);
-        border-color: #ada6a7;
-        }`,
     providers: []
 })
 export class KanbanTypesComponent implements OnInit, OnDestroy {
@@ -49,7 +41,6 @@ export class KanbanTypesComponent implements OnInit, OnDestroy {
     
     typesList = this.kanbanService.readTypes()
     
-
     ngOnInit() {
         this.createEmptyForm();
     }
@@ -59,21 +50,15 @@ export class KanbanTypesComponent implements OnInit, OnDestroy {
         this._unsubscribeAll.complete();
     }
 
-
     onCreate(e: any) {
         this.createEmptyForm();
         this.openDrawer();
     }
-     onSelectionChanged({ selectedRowKeys }: DxDataGridTypes.SelectionChangedEvent) {
-        this.selectedItemKeys = selectedRowKeys;
-      }
-    
-      deleteRecords() {
-        this.selectedItemKeys.forEach((key) => {
-          
-        });
+     
+    deleteRecords() {
+        this.selectedItemKeys.forEach((key) => { });
         this.kanbanService.readTypes();
-      }
+    }
 
     onDelete(e: any) {
         console.debug(`onDelete ${JSON.stringify(e)}`);
@@ -135,6 +120,5 @@ export class KanbanTypesComponent implements OnInit, OnDestroy {
 
         this.closeDrawer();
     }
-
 
 }

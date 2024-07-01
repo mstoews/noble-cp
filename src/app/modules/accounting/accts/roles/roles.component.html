@@ -66,26 +66,16 @@
                 </grid-menubar>
                 
                 <div class="flex flex-col">
-                    <dx-data-grid class="h-full" 
-                        id="id"                         
-                        [dataSource]="roleService.roleList()" 
-                        (onCellDblClick)="onDoubleClicked($event)" 
-                        [showColumnLines]="true" 
-                        [showRowLines]="true"
-                        [showBorders]="true" 
-                        [focusedRowEnabled]="true" 
-                        [repaintChangesOnly]="true"                        
-                        [columnHidingEnabled]="true"                         
-                        [wordWrapEnabled]="false"
-                        keyExpr="role">
-                        
-                        <dxi-column dataField="role" width="100"> </dxi-column>
-                        <dxi-column dataField="description"></dxi-column>
-                        <dxi-column dataField="permission" Caption="Permission Type"></dxi-column>
-                        <dxi-column dataField="update_date" width="100"></dxi-column>
-                        <dxi-column dataField="update_user" width="100"></dxi-column>
-                    
-                    </dx-data-grid>
+                        <ejs-grid class="h-full"                         
+                            [dataSource]="roleService.roleList()" >
+                            <e-columns>
+                            <e-column field="role" width="100"> </e-column>
+                            <e-column field="description"></e-column>
+                            <e-column field="permission" Caption="Permission Type"></e-column>
+                            <e-column field="update_date" width="100"></e-column>
+                            <e-column field="update_user" width="100"></e-column>
+                        </e-columns>
+                    </ejs-grid>                    
                 </div>
             }
             @else

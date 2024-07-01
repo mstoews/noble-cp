@@ -1,6 +1,4 @@
 import { Component, EventEmitter, Input, OnInit, Output, ViewChild, inject } from '@angular/core';
-import { DxDataGridModule, DxDataGridTypes } from 'devextreme-angular/ui/data-grid';
-import { DxNumberBoxModule, DxTemplateModule } from 'devextreme-angular';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { DndComponent } from 'app/modules/drag-n-drop/loaddnd/dnd.component';
@@ -8,17 +6,15 @@ import { FuseConfirmationService } from '@fuse/services/confirmation';
 import { MatDialog } from '@angular/material/dialog';
 import { MaterialModule } from 'app/services/material.module';
 import { TransactionDetailStore } from './transaction.store';
-
+import { GridModule } from '@syncfusion/ej2-angular-grids';
 
 const imports = [
     CommonModule,
-    DxDataGridModule,
-    DxTemplateModule,
     ReactiveFormsModule,
     MaterialModule,
     FormsModule,
-    DxNumberBoxModule,
-    DndComponent
+    DndComponent,
+    GridModule
 ];
 
 @Component({
@@ -27,11 +23,6 @@ const imports = [
     imports: [imports],
     templateUrl: './journal-detail.component.html',
     providers: [TransactionDetailStore],
-    styles: `::ng-deep .dx-datagrid .dx-datagrid-rowsview .dx-row-focused.dx-data-row:not(.dx-edit-row) > td:not(.dx-focused) {
-    background-color: rgb(195, 199, 199);
-    border-color: rgb(195, 199, 199);
-    }
-    `
 })
 export class JournalDetailComponent implements OnInit {
     @Input() key: string;

@@ -4,10 +4,10 @@ import { Component, OnInit, ViewChild, inject, Signal } from '@angular/core';
 import { FuseConfirmationService } from '@fuse/services/confirmation';
 import { MatDrawer } from '@angular/material/sidenav';
 import { MaterialModule } from 'app/services/material.module';
-import { DxDataGridTypes } from 'devextreme-angular/ui/data-grid';
+
 import { GridMenubarStandaloneComponent } from 'app/modules/accounting/grid-menubar/grid-menubar.component';
 import { CommonModule } from '@angular/common';
-import { KanbanService, IStatus, IPriority } from '../kanban.service';
+import { KanbanService, IStatus } from '../kanban.service';
 import { Browser } from '@syncfusion/ej2-base';
 import { SaveEventArgs, DialogEditEventArgs } from '@syncfusion/ej2-grids';
 import { Dialog } from '@syncfusion/ej2-popups';
@@ -114,9 +114,6 @@ export class StatusComponent implements OnInit {
         this.openDrawer();
     }
     
-    onSelectionChanged({ selectedRowKeys }: DxDataGridTypes.SelectionChangedEvent) {
-        this.selectedItemKeys = selectedRowKeys;
-    }
 
     deleteRecords() {
         this.selectedItemKeys.forEach((key) => {

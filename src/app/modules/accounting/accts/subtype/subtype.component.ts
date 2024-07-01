@@ -5,7 +5,6 @@ import {
     ReactiveFormsModule,
 } from '@angular/forms';
 import { Component, OnInit, ViewChild, inject } from '@angular/core';
-import { DxBulletModule, DxDataGridModule, DxTemplateModule } from 'devextreme-angular';
 
 import { CommonModule } from '@angular/common';
 import { FuseConfirmationService } from '@fuse/services/confirmation';
@@ -21,9 +20,6 @@ const imports = [
     MaterialModule,
     ReactiveFormsModule,
     FormsModule,
-    DxDataGridModule,
-    DxBulletModule,
-    DxTemplateModule,
     GridMenubarStandaloneComponent
 ];
 
@@ -32,11 +28,7 @@ const imports = [
     standalone: true,
     imports: [imports],
     templateUrl: './subtype.component.html',
-    styles: `::ng-deep .dx-datagrid .dx-datagrid-rowsview .dx-row-focused.dx-data-row:not(.dx-edit-row) > td:not(.dx-focused) {
-        background-color: rgb(195, 199, 199);
-        border-color: #ada6a7;
-        }`,
-    providers: []
+    providers: [imports]
 })
 export class GlSubTypeComponent implements OnInit {
 

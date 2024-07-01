@@ -1,5 +1,4 @@
 import { Component, OnDestroy, OnInit, ViewChild, inject, viewChild } from '@angular/core';
-import { DxDataGridModule, DxTemplateModule } from 'devextreme-angular';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { IJournalHeader, JournalService } from 'app/services/journal.service';
 import { Subject } from 'rxjs';
@@ -7,7 +6,7 @@ import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 
 import { CommonModule } from '@angular/common';
 import { DndComponent } from 'app/modules/drag-n-drop/loaddnd/dnd.component';
-import { DxDataGridTypes } from 'devextreme-angular/ui/data-grid';
+
 import { FundsService } from 'app/services/funds.service';
 import { GLAccountsService } from 'app/services/accounts.service';
 
@@ -18,9 +17,6 @@ import { MatDrawer } from '@angular/material/sidenav';
 import { MaterialModule } from 'app/services/material.module';
 import { SubTypeService } from 'app/services/subtype.service';
 import { TypeService } from 'app/services/type.service';
-import { Workbook } from 'exceljs';
-import { exportDataGrid } from 'devextreme/excel_exporter';
-import { saveAs } from 'file-saver-es';
 import { DialogEditEventArgs, EditService, SelectionSettingsModel, FilterService, GridModule, PageService, SaveEventArgs, SortService, ToolbarService, GridComponent, AggregateService, FilterSettingsModel, ToolbarItems, SearchSettingsModel, GroupSettingsModel, ColumnMenuService, ResizeService } from '@syncfusion/ej2-angular-grids';
 import { Browser } from '@syncfusion/ej2-base';
 import { Dialog } from '@syncfusion/ej2-popups';
@@ -34,8 +30,7 @@ const imports = [
     FormsModule,
     JournalDetailComponent,
     DndComponent,
-    GridMenubarStandaloneComponent,
-    JournalUpdateComponent,
+    GridMenubarStandaloneComponent,    
     NgxMatSelectSearchModule,
     GridModule
 ];
@@ -241,68 +236,7 @@ export class JournalEntryComponent implements OnInit, OnDestroy {
         return formattedWithOptions;
     }
 
-    onExporting(e: DxDataGridTypes.ExportingEvent) {
-        const workbook = new Workbook();
-        const worksheet = workbook.addWorksheet('Distribution Ledger');
-
-        exportDataGrid({
-            component: e.component,
-            worksheet,
-            autoFilterEnabled: true,
-            keepColumnWidths: true,
-            topLeftCell: { row: 4, column: 1 },
-            customizeCell: ({ gridCell, excelCell }) => {
-                if (gridCell.rowType === 'data') {
-                    if (gridCell.column.dataType === 'number') {
-                        excelCell.value = parseFloat(gridCell.value);
-                        excelCell.numFmt = '#,##0.00_);\(#,##0.00\)';
-                        if (gridCell.column.name === 'journal_id') {
-                            excelCell.numFmt = '#,##0);\(#,##0\)';
-                        }
-                    }
-
-                }
-                if (gridCell.rowType === 'group') {
-                    excelCell.fill = { type: 'pattern', pattern: 'solid', fgColor: { arg: 'BEDFE6' } };
-                }
-                if (gridCell.rowType === 'totalFooter' && excelCell.value) {
-                    excelCell.font.italic = true;
-                }
-            },
-        }).then((cellRange) => {
-            // header
-            const headerRow = worksheet.getRow(2);
-            headerRow.height = 30;
-            headerRow.getCell(1).value = `Distribution Ledger Report - ${this.currentDate}`;
-            headerRow.getCell(1).font = { name: 'Segoe UI Light', size: 22 };
-            headerRow.getCell(1).alignment = { horizontal: 'left' };
-            worksheet.mergeCells(2, 1, 2, 8);
-
-            // footer
-            const footerRowIndex = cellRange.to.row + 2;
-            const footerRow = worksheet.getRow(footerRowIndex);
-            footerRow.height = 20;
-            worksheet.mergeCells(footerRowIndex, 1, footerRowIndex, 8);
-            footerRow.getCell(1).value = 'www.nobleledger.com';
-            footerRow.getCell(1).font = { color: { argb: 'BFBFFF' }, italic: true };
-            footerRow.getCell(1).alignment = { horizontal: 'left' };
-        }).then(() => {
-            workbook.xlsx.writeBuffer().then((buffer) => {
-                saveAs(new Blob([buffer], { type: 'application/octet-stream' }), `transactions_details_${this.currentDate}.xlsx`);
-            });
-        });
-    }
-
-    updateBooked() {
-        // this.journalHeader$.subscribe((data: any) => {
-        //     data.forEach((element: any) => {
-        //         element.booked = element.booked === 'true' ? true : false;
-        //         this.transactionService.update(element).then((res: any) => {
-        //             console.debug(`update ${JSON.stringify(res)}`);
-        //         });
-        //     });
-        // });
-    }
+    updateBooked() { }
 
     onCreate() {
         this.openDrawer();

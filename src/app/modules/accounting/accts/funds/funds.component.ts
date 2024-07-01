@@ -1,21 +1,19 @@
 import { Component, OnInit, ViewChild, inject } from '@angular/core';
-import { DxBulletModule, DxDataGridModule, DxTemplateModule } from 'devextreme-angular';
 import {
     FormBuilder,
     FormGroup,
     FormsModule,
     ReactiveFormsModule,
 } from '@angular/forms';
-import { MatDrawer, MatSidenavModule } from '@angular/material/sidenav';
 
+import { MatDrawer } from '@angular/material/sidenav';
 import { CommonModule } from '@angular/common';
 import { FundsService } from 'app/services/funds.service';
 import { FuseConfirmationService } from '@fuse/services/confirmation';
 import { GridMenubarStandaloneComponent } from '../../grid-menubar/grid-menubar.component';
-
 import { MaterialModule } from 'app/services/material.module';
 import { IFund } from 'app/modules/kanban/kanban.service';
-
+import { GridModule } from '@syncfusion/ej2-angular-grids';
 
 
 const imports = [
@@ -23,9 +21,7 @@ const imports = [
     MaterialModule,
     ReactiveFormsModule,
     FormsModule,
-    DxDataGridModule,
-    DxBulletModule,
-    DxTemplateModule,
+    GridModule,
     GridMenubarStandaloneComponent
 ];
 
@@ -34,14 +30,10 @@ const imports = [
     standalone: true,
     imports: [imports],
     templateUrl: './funds.component.html',
-    styles: `::ng-deep .dx-datagrid .dx-datagrid-rowsview .dx-row-focused.dx-data-row:not(.dx-edit-row) > td:not(.dx-focused) {
-        background-color: rgb(195, 199, 199);
-        border-color: #ada6a7;
-        }`,
 })
 export class FundsComponent implements OnInit {
     public data: any;
-    private _fuseConfirmationService = inject(FuseConfirmationService);
+    private fuseConfirmationService = inject(FuseConfirmationService);
     private fundService = inject(FundsService)
     private fb = inject(FormBuilder);
     @ViewChild('drawer') drawer!: MatDrawer;
@@ -64,10 +56,9 @@ export class FundsComponent implements OnInit {
         console.debug('the row was selected ... ', e);
     }
 
-
     onDelete(e: any) {
         console.debug(`onDelete ${JSON.stringify(e)}`);
-        const confirmation = this._fuseConfirmationService.open({
+        const confirmation = this.fuseConfirmationService.open({
             title: 'Delete Type?',
             message: 'Are you sure you want to delete this type? ',
             actions: {

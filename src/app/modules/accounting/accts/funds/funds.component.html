@@ -58,24 +58,21 @@
                 </mat-drawer>
 
                 <ng-container>
-                    @if (data$ | async; as rows) {
+                    @if (data$ | async; as rows) 
+                    {
                         <grid-menubar [inTitle]="'Fund Maintenance'"></grid-menubar>
                         <div class="flex flex-col h-screen">
-                            <dx-data-grid id="id" [columnHidingEnabled]="true" [wordWrapEnabled]="true"
-                            [dataSource]="rows" [showColumnLines]="true" [showRowLines]="true" [showBorders]="true"
-                            [focusedRowEnabled]="true" [focusedRowIndex]="0" keyExpr="fund" [repaintChangesOnly]="true">
-                            
-                            <dxi-column dataField="fund" width="150"></dxi-column>
-                            <dxi-column dataField="description" width="400"></dxi-column>
-                            <dxi-column dataField="create_date"></dxi-column>
-                            <dxi-column dataField="create_user"></dxi-column>
-                            <dxi-column dataField="update_date"></dxi-column>
-                            <dxi-column dataField="update_user"></dxi-column>
-                            
-                        </dx-data-grid>
+                        <ejs-grid id="id" [dataSource]="rows">
+                            <e-columns>
+                                <e-column field="fund" width="150"></e-column>
+                                <e-column field="description" width="200"></e-column>
+                                <e-column field="create_date" width="100"></e-column>
+                                <e-column field="create_user" width="100"></e-column>
+                                <e-column field="update_date" width="100"></e-column>
+                                <e-column field="update_user" width="100"></e-column>
+                            </e-columns>                            
+                        </ejs-grid>
                         </div>
-                  
                     }
-
                 </ng-container>
             </mat-drawer-container>

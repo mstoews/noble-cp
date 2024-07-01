@@ -1,14 +1,8 @@
 import { ChangeDetectionStrategy, Component, OnInit, ViewChild, inject } from '@angular/core';
-import { CommonModule, NgFor } from '@angular/common';
-import {
-    DxDataGridModule,
-    DxBulletModule,
-    DxTemplateModule,
-} from 'devextreme-angular';
-
+import { CommonModule } from '@angular/common';
 import { MatDrawer, MatSidenavModule } from '@angular/material/sidenav';
 import { MatCardModule } from '@angular/material/card';
-import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from "@angular/material/form-field";
@@ -16,14 +10,12 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatButtonModule } from '@angular/material/button';
 import { GLAccountsService } from 'app/services/accounts.service';
 import { MatSelectModule } from '@angular/material/select';
-import { map, reduce } from 'rxjs';
+import { MaterialModule } from 'app/services/material.module';
 
 
 const imports = [
     CommonModule,
-    DxDataGridModule,
-    DxBulletModule,
-    DxTemplateModule,
+    MaterialModule,
     MatSidenavModule,
     MatCardModule,
     ReactiveFormsModule,
@@ -40,12 +32,6 @@ const imports = [
     selector: 'income-statement',
     standalone: true,
     imports: [imports],
-    styles: [`
-    ::ng-deep .dx-datagrid .dx-datagrid-rowsview .dx-row-focused.dx-data-row:not(.dx-edit-row) > td:not(.dx-focused) {
-        background-color: rgb(195, 199, 199);
-        border-color: rgb(195, 199, 199);
-      }
-    `],
     templateUrl: './is.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [GLAccountsService],
@@ -66,9 +52,6 @@ export class IncomeStatementComponent implements OnInit {
 
     customizeTooltip = (pointsInfo: { originalValue: string; }) => ({ text: `${parseInt(pointsInfo.originalValue)}%` });
     accountsForm!: FormGroup;
-    revenue$ = this.accountApiService.getAll().pipe(map((income) => income.filter((inc) => inc.type === 'Revenue')));
-
-    expense$ = this.accountApiService.getAll().pipe(map((income) => income.filter((inc) => inc.type === 'Expense')));
     keyField: any;
 
     ngOnInit() {
@@ -101,28 +84,6 @@ export class IncomeStatementComponent implements OnInit {
     }
 
 }
-
-
-
-
-/*
-id?: string;
-account: string;
-child_account: string;
-type: string;
-description: string;
-balance: number;
-sub_type: boolean;
-special_assessment: boolean;
-capital_asset_fund: boolean;
-reserve_fund: boolean;
-comments: string;
-createDate: string;
-createUsr: string;
-updateDate: string;
-updateUsr: string;
-*/
-
 
 
 

@@ -68,47 +68,28 @@
     <mat-drawer-container class="flex-col">        
         <ng-container>
             
-
-        
             <kanban-menubar class="" [inTitle]="'Kanban Task List'" (notifyParentRefresh)="onRefresh()" (notifyParentAdd)="onAdd()"
                 (notifyParentDelete)="onDeleteCurrentSelection()"
                 (notifyParentUpdate)="onUpdateCurrentSelection()">
             </kanban-menubar>
             
             <div class="flex flex-col">
-                <dx-data-grid class="h-full" [columnHidingEnabled]="true" id="team_member" [wordWrapEnabled]="false" [dataSource]="kanbanService.readTeams()"
-                    [showColumnLines]="true" [showRowLines]="true" [showBorders]="true"
-                    [focusedRowEnabled]="true" [repaintChangesOnly]="true"
-                    (onFocusedRowChanged)="onFocusedRowChanged($event)"
-                    (onCellDblClick)="onDoubleClicked($event)" keyExpr="team_member">
-
-                    <dxo-search-panel [visible]="true" [highlightCaseSensitive]="true"></dxo-search-panel>
-                    <dxo-group-panel [visible]="true"></dxo-group-panel>
-                    <dxo-grouping [autoExpandAll]="true"></dxo-grouping>
-                    <dxo-filter-row [visible]="false"></dxo-filter-row>                            
-                    <dxo-scrolling rowRenderingMode="virtual"> </dxo-scrolling>
-                    
-                    <dxi-column dataField="team_member"></dxi-column>
-                    <dxi-column dataField="first_name"></dxi-column>
-                    <dxi-column dataField="last_name"></dxi-column>
-                    <dxi-column dataField="location"></dxi-column>
-                    <dxi-column dataField="title"></dxi-column>
-                    <dxi-column dataField="updatedte"></dxi-column>
-                    <dxi-column dataField="updateusr"></dxi-column>
-                    <dxi-column dataField="email"></dxi-column>
-                    <dxi-column dataField="image"></dxi-column>
-                    <dxi-column dataField="uid"></dxi-column>
-
-                    
-                </dx-data-grid>
+                <ejs-grid class="h-full" id="team_member" [dataSource]="kanbanService.readTeams()">
+                <e-columns>
+                   <e-column field="team_member"></e-column>
+                   <e-column field="first_name"></e-column>
+                   <e-column field="last_name"></e-column>
+                   <e-column field="location"></e-column>
+                   <e-column field="title"></e-column>
+                   <e-column field="updatedte"></e-column>
+                   <e-column field="updateusr"></e-column>
+                   <e-column field="email"></e-column>
+                   <e-column field="image"></e-column>
+                   <e-column field="uid"></e-column>
+                </e-columns>                    
+                </ejs-grid>
             </div>
         
-            <!-- @else
-            {
-                <div class="fixed z-[1050] -translate-x-2/4 -translate-y-2/4 left-2/4 top-2/4">
-                    <mat-spinner></mat-spinner>
-                </div>    
-            } -->
         </ng-container>
     </mat-drawer-container>
 </div>

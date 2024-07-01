@@ -1,26 +1,14 @@
-import {
-    ChangeDetectionStrategy,
-    Component,
-    OnInit,
-    ViewChild,
-    inject,
-} from '@angular/core';
+import {ChangeDetectionStrategy, Component, OnInit, ViewChild, inject} from '@angular/core';
 import { CommonModule, NgFor } from '@angular/common';
-import {
-    DxBulletModule,
-    DxDataGridModule,
-    DxTemplateModule,
-} from 'devextreme-angular';
-
 import { DistMenuStandaloneComponent } from './dist-menubar/grid-menubar.component';
 import { DistributionLedgerService } from 'app/services/distribution.ledger.service';
 import { MatDrawer } from '@angular/material/sidenav';
 import { MaterialModule } from 'app/services/material.module';
-import { Workbook } from 'exceljs';
-import { exportDataGrid } from 'devextreme/excel_exporter';
-import { saveAs } from 'file-saver-es';
 import { AggregateService, ColumnMenuService, EditService, FilterService, FilterSettingsModel, GridComponent, GridModule, PageService, ResizeService, SearchSettingsModel, SelectionSettingsModel, SortService, ToolbarItems, ToolbarService } from '@syncfusion/ej2-angular-grids';
 import { ReportTemplateComponent } from './report-template-component';
+import { Workbook } from 'exceljs';
+import { saveAs } from 'file-saver-es';
+
 
 const imports = [
     CommonModule,
@@ -48,6 +36,7 @@ export class DistributedLedgerComponent extends ReportTemplateComponent implemen
     // local variables
     @ViewChild('drawer') drawer!: MatDrawer;
     public initialPage: Object;
+    
     @ViewChild('grid')
     public grid?: GridComponent;
 
@@ -86,11 +75,11 @@ export class DistributedLedgerComponent extends ReportTemplateComponent implemen
     onCellDoubleClicked(e) { }
 
     selectionChanged(data: any) {
-        //console.debug(`selectionChanged ${JSON.stringify(data.data)}`);
+        
         this.selectedItemKeys = data.selectedRowKeys;
     }
 
     onFocusedRowChanged(e: any) {
-        // console.debug(`selectionChanged ${JSON.stringify(e.data)}`);
+        
     }
 }

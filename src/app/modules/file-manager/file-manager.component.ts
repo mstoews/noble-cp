@@ -1,34 +1,25 @@
 import { Component, ViewChild, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MatInputModule } from '@angular/material/input';
-import { DxBulletModule, DxDataGridModule, DxTemplateModule } from 'devextreme-angular';
-import { ReactiveFormsModule, FormsModule, FormBuilder, FormGroup } from '@angular/forms';
-import { MatCardModule } from '@angular/material/card';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatIconModule } from '@angular/material/icon';
-import { MatDrawer, MatSidenavModule } from '@angular/material/sidenav';
 
-import { MatButtonModule } from '@angular/material/button';
-import { MatCheckboxModule } from '@angular/material/checkbox';
-import { MatSelectModule } from '@angular/material/select';
+import { ReactiveFormsModule, FormsModule, FormBuilder, FormGroup } from '@angular/forms';
+import { MatDrawer } from '@angular/material/sidenav';
 
 import { DndComponent } from 'app/modules/drag-n-drop/loaddnd/dnd.component';
 import { EvidenceService } from 'app/services/evidence.service';
 import { EvidenceCardComponent } from './file-manager-card/evidence-card.component';
 import { GridMenubarStandaloneComponent } from '../accounting/grid-menubar/grid-menubar.component';
 import { MaterialModule } from 'app/services/material.module';
+import { GridModule } from '@syncfusion/ej2-angular-grids';
 
 const imports = [
   CommonModule,
   MaterialModule,
-  DxDataGridModule,
-  DxBulletModule,
-  DxTemplateModule,
   ReactiveFormsModule,
   FormsModule,
   DndComponent,
   EvidenceCardComponent,
   GridMenubarStandaloneComponent,
+  GridModule
 ];
 
 @Component({
@@ -36,12 +27,6 @@ const imports = [
   standalone: true,
   imports: [imports],
   templateUrl: './file-manager.component.html',
-  styles: `
-        ::ng-deep .dx-datagrid .dx-datagrid-rowsview .dx-row-focused.dx-data-row:not(.dx-edit-row) > td:not(.dx-focused) {
-        background-color: rgb(195, 199, 199);
-        border-color: #878283;
-        } 
-        `
 })
 
 export class FileManagerComponent {

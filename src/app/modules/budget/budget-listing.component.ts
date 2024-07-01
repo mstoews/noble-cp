@@ -1,5 +1,4 @@
-import { Component, OnDestroy, OnInit, ViewChild, inject, viewChild } from '@angular/core';
-import { DxDataGridModule, DxTemplateModule } from 'devextreme-angular';
+import { Component, OnDestroy, OnInit, inject, viewChild } from '@angular/core';
 import { FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { IJournalDetail, JournalService } from 'app/services/journal.service';
 import { Observable, ReplaySubject, Subject, map, takeUntil } from 'rxjs';
@@ -7,10 +6,10 @@ import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 
 import { CommonModule } from '@angular/common';
 import { DndComponent } from 'app/modules/drag-n-drop/loaddnd/dnd.component';
-import { DxDataGridTypes } from 'devextreme-angular/ui/data-grid';
+
 import { FundsService } from 'app/services/funds.service';
 import { GLAccountsService } from 'app/services/accounts.service';
-import { GlTransactionsService } from 'app/services/gltransaction.service';
+
 import { GridMenubarStandaloneComponent } from '../accounting/grid-menubar/grid-menubar.component';
 import { BudgetDetailComponent } from './budget-detail/budget-detail.component';
 import { BudgetUpdateComponent } from './budgetl-update/budget-update.component';
@@ -19,20 +18,16 @@ import { MaterialModule } from 'app/services/material.module';
 import { SubTypeService } from 'app/services/subtype.service';
 import { TypeService } from 'app/services/type.service';
 import { Workbook } from 'exceljs';
-import { exportDataGrid } from 'devextreme/excel_exporter';
+
 import { saveAs } from 'file-saver-es';
 
 const imports = [
     CommonModule,
-    DxDataGridModule,
-    DxTemplateModule,
     ReactiveFormsModule,
     MaterialModule,
-    FormsModule,
-    BudgetDetailComponent,
+    FormsModule,    
     DndComponent,
     GridMenubarStandaloneComponent,
-    BudgetUpdateComponent,
     NgxMatSelectSearchModule
 ];
 
@@ -41,12 +36,7 @@ const imports = [
     selector: 'budgets',
     standalone: true,
     imports: [imports],
-    templateUrl: './budget-listing.component.html',
-    styles: `::ng-deep .dx-datagrid .dx-datagrid-rowsview .dx-row-focused.dx-data-row:not(.dx-edit-row) > td:not(.dx-focused)
-    {
-       background-color: rgb(195, 199, 199);
-       border-color: #ada6a7;
-    }`
+    templateUrl: './budget-listing.component.html',    
 })
 export class BudgetEntryComponent implements OnInit, OnDestroy {
     private journalService = inject(JournalService);
@@ -172,57 +162,6 @@ export class BudgetEntryComponent implements OnInit, OnDestroy {
         return formattedWithOptions;
     }
 
-    onExporting(e: DxDataGridTypes.ExportingEvent) {
-        const workbook = new Workbook();
-        const worksheet = workbook.addWorksheet('Distribution Ledger');
-
-        exportDataGrid({
-            component: e.component,
-            worksheet,
-            autoFilterEnabled: true,
-            keepColumnWidths: true,
-            topLeftCell: { row: 4, column: 1 },
-            customizeCell: ({ gridCell, excelCell }) => {
-                if (gridCell.rowType === 'data') {
-                    if (gridCell.column.dataType === 'number') {
-                        excelCell.value = parseFloat(gridCell.value);
-                        excelCell.numFmt = '#,##0.00_);\(#,##0.00\)';
-                        if (gridCell.column.name === 'journal_id') {
-                            excelCell.numFmt = '#,##0);\(#,##0\)';
-                        }
-                    }
-
-                }
-                if (gridCell.rowType === 'group') {
-                    excelCell.fill = { type: 'pattern', pattern: 'solid', fgColor: { arg: 'BEDFE6' } };
-                }
-                if (gridCell.rowType === 'totalFooter' && excelCell.value) {
-                    excelCell.font.italic = true;
-                }
-            },
-        }).then((cellRange) => {
-            // header
-            const headerRow = worksheet.getRow(2);
-            headerRow.height = 30;
-            headerRow.getCell(1).value = `Distribution Ledger Report - ${this.currentDate}`;
-            headerRow.getCell(1).font = { name: 'Segoe UI Light', size: 22 };
-            headerRow.getCell(1).alignment = { horizontal: 'left' };
-            worksheet.mergeCells(2, 1, 2, 8);
-
-            // footer
-            const footerRowIndex = cellRange.to.row + 2;
-            const footerRow = worksheet.getRow(footerRowIndex);
-            footerRow.height = 20;
-            worksheet.mergeCells(footerRowIndex, 1, footerRowIndex, 8);
-            footerRow.getCell(1).value = 'www.nobleledger.com';
-            footerRow.getCell(1).font = { color: { argb: 'BFBFFF' }, italic: true };
-            footerRow.getCell(1).alignment = { horizontal: 'left' };
-        }).then(() => {
-            workbook.xlsx.writeBuffer().then((buffer) => {
-                saveAs(new Blob([buffer], { type: 'application/octet-stream' }), `transactions_details_${this.currentDate}.xlsx`);
-            });
-        });
-    }
 
     updateBooked() {
         // this.journalHeader$.subscribe((data: any) => {

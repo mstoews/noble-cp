@@ -7,7 +7,6 @@ import { ChangeDetectionStrategy, Component, ViewChild, ViewEncapsulation, injec
 import { addClass } from '@syncfusion/ej2-base';
 import { KanbanComponent, ColumnsModel, CardSettingsModel, SwimlaneSettingsModel, CardRenderedEventArgs } from '@syncfusion/ej2-angular-kanban';
 
-import { DxDataGridModule } from 'devextreme-angular';
 import { MatDrawer } from '@angular/material/sidenav';
 import { MaterialModule } from 'app/services/material.module';
 import { FuseConfirmationService } from '@fuse/services/confirmation';
@@ -16,7 +15,6 @@ import { KanbanMenubarComponent } from '../kanban/kanban-menubar/grid-menubar.co
 import { AUTH } from 'app/app.config';
 import { IKanban, KanbanService } from '../kanban.service';
 import { KanbanStore } from '../kanban.store';
-
 
 interface IValue {
   value: string;
@@ -27,7 +25,6 @@ const imports = [
   MaterialModule,
   FormsModule,
   ReactiveFormsModule,
-  DxDataGridModule,
   CommonModule,
   RouterOutlet,
   CommonModule,

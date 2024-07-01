@@ -1,12 +1,12 @@
 import { Component, ViewChild, inject } from '@angular/core';
-import { DxDataGridModule, DxTemplateModule } from 'devextreme-angular';
+
 import { FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { IAccounts, IJournalTemplate, JournalService } from 'app/services/journal.service';
 import { Observable, map, of } from 'rxjs';
 
 import { CommonModule } from '@angular/common';
 import { DndComponent } from 'app/modules/drag-n-drop/loaddnd/dnd.component';
-import { DxDataGridTypes } from 'devextreme-angular/ui/data-grid';
+
 import { FundsService } from 'app/services/funds.service';
 import { GLAccountsService } from 'app/services/accounts.service';
 import { GlTransactionsService } from 'app/services/gltransaction.service';
@@ -15,16 +15,9 @@ import { JournalDetailComponent } from './transactions/journal-detail.component'
 import { JournalUpdateComponent } from './transactions/journal-update.component';
 import { MatDrawer } from '@angular/material/sidenav';
 import { MaterialModule } from 'app/services/material.module';
-import { SubTypeService } from 'app/services/subtype.service';
-import { TypeService } from 'app/services/type.service';
-import { Workbook } from 'exceljs';
-import { exportDataGrid } from 'devextreme/excel_exporter';
-import { saveAs } from 'file-saver-es';
 
 const imports = [
     CommonModule,
-    DxDataGridModule,
-    DxTemplateModule,
     ReactiveFormsModule,
     MaterialModule,
     FormsModule,
@@ -154,59 +147,6 @@ export class JournalTemplateComponent {
         const formattedWithOptions = e.value.toLocaleString('en-US', options);
         return formattedWithOptions;
     }
-
-    onExporting(e: DxDataGridTypes.ExportingEvent) {
-        const workbook = new Workbook();
-        const worksheet = workbook.addWorksheet('Journal Template');
-
-        exportDataGrid({
-            component: e.component,
-            worksheet,
-            autoFilterEnabled: true,
-            keepColumnWidths: true,
-            topLeftCell: { row: 4, column: 1 },
-            customizeCell: ({ gridCell, excelCell }) => {
-                if (gridCell.rowType === 'data') {
-                    if (gridCell.column.dataType === 'number') {
-                        excelCell.value = parseFloat(gridCell.value);
-                        excelCell.numFmt = '#,##0.00_);\(#,##0.00\)';
-                        if (gridCell.column.name === 'journal_id') {
-                            excelCell.numFmt = '#,##0);\(#,##0\)';
-                        }
-                    }
-
-                }
-                if (gridCell.rowType === 'group') {
-                    excelCell.fill = { type: 'pattern', pattern: 'solid', fgColor: { arg: 'BEDFE6' } };
-                }
-                if (gridCell.rowType === 'totalFooter' && excelCell.value) {
-                    excelCell.font.italic = true;
-                }
-            },
-        }).then((cellRange) => {
-            // header
-            const headerRow = worksheet.getRow(2);
-            headerRow.height = 30;
-            headerRow.getCell(1).value = `Journal Template List`;
-            headerRow.getCell(1).font = { name: 'Segoe UI Light', size: 22 };
-            headerRow.getCell(1).alignment = { horizontal: 'left' };
-            worksheet.mergeCells(2, 1, 2, 8);
-
-            // footer
-            const footerRowIndex = cellRange.to.row + 2;
-            const footerRow = worksheet.getRow(footerRowIndex);
-            footerRow.height = 20;
-            worksheet.mergeCells(footerRowIndex, 1, footerRowIndex, 8);
-            footerRow.getCell(1).value = 'www.nobleledger.com';
-            footerRow.getCell(1).font = { color: { argb: 'BFBFFF' }, italic: true };
-            footerRow.getCell(1).alignment = { horizontal: 'left' };
-        }).then(() => {
-            workbook.xlsx.writeBuffer().then((buffer) => {
-                saveAs(new Blob([buffer], { type: 'application/octet-stream' }), `transactions_details_${this.currentDate}.xlsx`);
-            });
-        });
-    }
-
 
     onCreate() {
         this.openDrawer();

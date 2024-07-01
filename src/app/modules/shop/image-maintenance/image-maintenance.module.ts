@@ -9,13 +9,6 @@ import { ImageMgtEditComponent } from './image-edit/image-mgt-edit.component';
 import { ImageMaintenanceCardComponent } from './image-maintenance-card/image-maintenance-card.component';
 import { ImageMenubarComponent } from './image-menubar/image-menubar.component';
 import { ThoughtsImageSelectionComponent } from './thoughts-image-selection/thoughts-image-selection.component';
-import {
-  DxDataGridModule,
-  DxBulletModule,
-  DxTemplateModule,
-  DxPopupModule,
-  DxHtmlEditorModule,
-} from 'devextreme-angular';
 
 import { ViewImageItemComponent } from '../../shop/shop-inventory-maintenance/inventory-image-card/view-image-item/view-image-item.component';
 import { RouterModule, Routes } from '@angular/router';
@@ -54,12 +47,7 @@ const routes: Routes = [
     CommonModule,
     ImageMaintenanceRoutingModule,
     MaterialModule,
-    DxDataGridModule,
-    DxBulletModule,
-    DxTemplateModule,
     GalleryLightboxModule,
-    DxPopupModule,
-    DxHtmlEditorModule,
     NgOptimizedImage,
     ViewImageItemComponent,
     RouterModule.forChild(routes),

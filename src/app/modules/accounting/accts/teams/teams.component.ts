@@ -5,17 +5,16 @@ import {
   ReactiveFormsModule,
 } from '@angular/forms';
 import { Component, OnInit, ViewChild, inject } from '@angular/core';
-import { DxBulletModule, DxDataGridModule, DxTemplateModule } from 'devextreme-angular';
 
 import { CommonModule } from '@angular/common';
 import { FuseConfirmationService } from '@fuse/services/confirmation';
 import { GridMenubarStandaloneComponent } from '../../grid-menubar/grid-menubar.component';
-
 import { MatDrawer } from '@angular/material/sidenav';
 import { MaterialModule } from 'app/services/material.module';
 import { KanbanMenubarComponent } from 'app/modules/reporting/reporting-menubar/grid-menubar.component';
 import { KanbanStore } from 'app/modules/kanban/kanban.store';
 import { ITeam, KanbanService } from 'app/modules/kanban/kanban.service';
+import { GridModule } from '@syncfusion/ej2-angular-grids';
 
 
 const imports = [
@@ -23,9 +22,7 @@ const imports = [
   MaterialModule,
   ReactiveFormsModule,
   FormsModule,
-  DxDataGridModule,
-  DxBulletModule,
-  DxTemplateModule,
+  GridModule,
   KanbanMenubarComponent
 ];
 
@@ -40,53 +37,36 @@ interface IValue {
   standalone: true,
   imports: [imports],
   templateUrl: './teams.component.html',
-  styles: `::ng-deep .dx-datagrid .dx-datagrid-rowsview .dx-row-focused.dx-data-row:not(.dx-edit-row) > td:not(.dx-focused) {
-      background-color: rgb(195, 199, 199);
-      border-color: #ada6a7;
-      }`,
   providers: []
 })
 export class TeamsComponent implements OnInit {
 
   @ViewChild('drawer') drawer!: MatDrawer;
   
-  private _fuseConfirmationService = inject(FuseConfirmationService);
+  private fuseConfirmationService = inject(FuseConfirmationService);
   private fb = inject(FormBuilder);
   
-  kanbanService = inject(KanbanService);
-  
+  kanbanService = inject(KanbanService);  
   title = "Team Maintenance"
   
   public teamForm!: FormGroup;
   
-  ngOnInit() {      
-      this.createEmptyForm();
-  }
+  ngOnInit() { this.createEmptyForm();  }
 
-  onDoubleClicked(event) {
+  onDoubleClicked(event: any) { }
 
-  }
+  onDeleteCurrentSelection() { }
 
-  onDeleteCurrentSelection() {
-
-  }
-
-  onUpdateCurrentSelection() {
-
-  }
+  onUpdateCurrentSelection() { }
   
-  onFocusedRowChanged(e ) {
-
-  }
+  onFocusedRowChanged(event: any ) { }
 
   onCreate(e: any) {
       this.createEmptyForm();
       this.openDrawer();
   }
 
-  onDelete() {
-    
-  }
+  onDelete() { }
 
 
   createEmptyForm() {
@@ -154,6 +134,5 @@ export class TeamsComponent implements OnInit {
     onUpdateSelection() {
       throw new Error('Method not implemented.');
     }
-    
-
+  
 }

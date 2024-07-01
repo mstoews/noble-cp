@@ -1,5 +1,4 @@
 import { Component, OnInit, ViewChild, inject } from '@angular/core';
-import { DxBulletModule, DxDataGridModule, DxTemplateModule } from 'devextreme-angular';
 import {
     FormBuilder,
     FormGroup,
@@ -14,16 +13,15 @@ import { FuseConfirmationService } from '@fuse/services/confirmation';
 import { MatDrawer } from '@angular/material/sidenav';
 import { MaterialModule } from 'app/services/material.module';
 import { GridMenubarStandaloneComponent } from '../../grid-menubar/grid-menubar.component';
+import { GridModule } from '@syncfusion/ej2-angular-grids';
 
 const imports = [
     CommonModule,
     MaterialModule,
     ReactiveFormsModule,
     FormsModule,
-    DxDataGridModule,
-    DxBulletModule,
-    DxTemplateModule,
-    GridMenubarStandaloneComponent
+    GridMenubarStandaloneComponent,
+    GridModule
 ];
 
 @Component({
@@ -32,10 +30,6 @@ const imports = [
     imports: [imports],
     templateUrl: './periods.component.html',
     providers: [],
-    styles: `::ng-deep .dx-datagrid .dx-datagrid-rowsview .dx-row-focused.dx-data-row:not(.dx-edit-row) > td:not(.dx-focused) {
-        background-color: rgb(195, 199, 199);
-        border-color: #ada6a7;
-        }`,
 })
 export class PeriodsComponent implements OnInit {
     public data: any;

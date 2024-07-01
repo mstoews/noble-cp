@@ -1,5 +1,4 @@
 import { Component, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
-import { DxBulletModule, DxDataGridModule, DxTemplateModule } from 'devextreme-angular';
 import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { SubTypeService } from 'app/services/subtype.service';
 import { TypeService } from 'app/services/type.service';
@@ -14,6 +13,7 @@ import { IAccounts } from 'app/models';
 import { IValue } from 'app/modules/kanban/kanban/kanban.component';
 import { MatDrawer } from '@angular/material/sidenav';
 import { MaterialModule } from 'app/services/material.module';
+import { GridModule } from '@syncfusion/ej2-angular-grids';
 
 
 const imports = [
@@ -21,12 +21,10 @@ const imports = [
     MaterialModule,
     ReactiveFormsModule,
     FormsModule,
-    DxDataGridModule,
-    DxBulletModule,
-    DxTemplateModule,
     GridMenubarStandaloneComponent,
     GLAcctDetailComponent,
-    JsonPipe
+    JsonPipe,
+    GridModule
 ];
 
 const keyExpr = ["account", "child"];
@@ -36,10 +34,6 @@ const keyExpr = ["account", "child"];
     standalone: true,
     imports: [imports],
     templateUrl: './gl-accts.component.html',
-    styles: `::ng-deep .dx-datagrid .dx-datagrid-rowsview .dx-row-focused.dx-data-row:not(.dx-edit-row) > td:not(.dx-focused) {
-        background-color: rgb(195, 199, 199);
-        border-color: #ada6a7;
-        }`,
     providers: []
 })
 export class GlAccountsComponent implements OnInit {

@@ -1,10 +1,5 @@
 import { ChangeDetectionStrategy, Component, OnInit, ViewChild, inject } from '@angular/core';
 import { CommonModule, NgFor } from '@angular/common';
-import {
-    DxBulletModule,
-    DxDataGridModule,
-    DxTemplateModule,
-} from 'devextreme-angular';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatDrawer, MatSidenavModule } from '@angular/material/sidenav';
 
@@ -20,9 +15,6 @@ import { map } from 'rxjs';
 
 const imports = [
     CommonModule,
-    DxDataGridModule,
-    DxBulletModule,
-    DxTemplateModule,
     MatSidenavModule,
     MatCardModule,
     ReactiveFormsModule,

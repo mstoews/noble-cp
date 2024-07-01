@@ -1,45 +1,27 @@
 import { ChangeDetectionStrategy, Component, OnInit, ViewChild, inject } from '@angular/core';
 import { CommonModule, NgFor } from '@angular/common';
-import {
-  DxDataGridModule,
-  DxBulletModule,
-  DxTemplateModule,
-} from 'devextreme-angular';
-
 import { MatDrawer } from '@angular/material/sidenav';
-import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { MatIconModule } from '@angular/material/icon';
-
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { IAccounts, IType } from 'app/models';
-
 import { GLAccountsService } from 'app/services/accounts.service';
 import { TypeService } from 'app/services/type.service';
-
 import { MaterialModule } from 'app/services/material.module';
+import { GridModule } from '@syncfusion/ej2-angular-grids';
 
 
 const imports = [
   CommonModule,
-  DxDataGridModule,
-  DxBulletModule,
-  DxTemplateModule,
   ReactiveFormsModule,
-  MatIconModule,
+  MaterialModule,
   FormsModule,
   MaterialModule,
-
+  GridModule
 ];
 
 @Component({
   selector: 'app-general-ledger',
   standalone: true,
   imports: [imports],
-  styles: [`
-    ::ng-deep .dx-datagrid .dx-datagrid-rowsview .dx-row-focused.dx-data-row:not(.dx-edit-row) > td:not(.dx-focused) {
-        background-color: rgb(195, 199, 199);
-        border-color: rgb(195, 199, 199);
-      }
-    `],
   templateUrl: './general-ledger.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [GLAccountsService, TypeService],
@@ -48,22 +30,20 @@ export class GeneralLedgerComponent implements OnInit {
   private fb = inject(FormBuilder);
   private accountApiService = inject(GLAccountsService);
   private typesApiService = inject(TypeService);
-
   private updated_type: string = 'Asset';
 
-  changeType(e: string) {
-    this.updated_type = e;
-  }
-
+  
   // local variables
   @ViewChild('drawer') drawer!: MatDrawer;
   collapsed = false;
+
   sTitle = 'General Ledger Accounts';
   selectedItemKeys: any[] = [];
 
   drawOpen: 'open' | 'close' = 'open';
 
   customizeTooltip = (pointsInfo: { originalValue: string; }) => ({ text: `${parseInt(pointsInfo.originalValue)}%` });
+  
   accountsForm!: FormGroup;
   accounts$ = this.accountApiService.read();
   types$ = this.typesApiService.read();
@@ -73,11 +53,14 @@ export class GeneralLedgerComponent implements OnInit {
     this.createEmptyForm();
   }
 
+  changeType(e: string) {
+    this.updated_type = e;
+  }
+
   add() {
     this.createEmptyForm();
     this.openDrawer();
   }
-
 
   createEmptyForm() {
     this.accountsForm = this.fb.group({

@@ -1,39 +1,22 @@
 import { AfterViewInit, Component, Input, OnInit, ViewChild, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { DxBulletModule, DxDataGridModule, DxTemplateModule } from 'devextreme-angular';
 import { ReactiveFormsModule, FormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MatButtonModule } from '@angular/material/button';
-import { MatCardModule } from '@angular/material/card';
-import { MatCheckboxModule } from '@angular/material/checkbox';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatIconModule } from '@angular/material/icon';
-import { MatInputModule } from '@angular/material/input';
-import { MatSelectModule } from '@angular/material/select';
 import { MatDrawer, MatSidenavModule } from '@angular/material/sidenav';
 import { GlTransactionsService } from 'app/services/gltransaction.service';
 import { GLAccountsService } from 'app/services/accounts.service';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { Observable } from 'rxjs';
-import { DxNumberBoxModule } from 'devextreme-angular';
+
 import { FuseConfirmationService } from '@fuse/services/confirmation';
 import { IAccounts } from 'app/services/journal.service';
+import { GridModule } from '@syncfusion/ej2-angular-grids';
+import { MaterialModule } from 'app/services/material.module';
 
 
 const imports = [
     CommonModule,
-    DxDataGridModule,
-    DxTemplateModule,
-    MatSidenavModule,
-    MatCardModule,
-    ReactiveFormsModule,
-    MatIconModule,
+    MaterialModule,
+    ReactiveFormsModule,    
     FormsModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatCheckboxModule,
-    MatButtonModule,
-    MatSelectModule,
-    DxNumberBoxModule
+    GridModule
 ];
 
 @Component({
@@ -41,11 +24,6 @@ const imports = [
     standalone: true,
     imports: [imports],
     templateUrl: './gl-accts-detail.component.html',
-    styles: `::ng-deep .dx-datagrid .dx-datagrid-rowsview .dx-row-focused.dx-data-row:not(.dx-edit-row) > td:not(.dx-focused) {
-    background-color: rgb(195, 199, 199);
-    border-color: rgb(195, 199, 199);
-    }
-    `
 })
 export class GLAcctDetailComponent implements OnInit {
 

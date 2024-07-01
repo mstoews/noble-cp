@@ -32,9 +32,5 @@ export class ImageMgtEditComponent {
     //this.deleteDupesService.deleteDuplicateImages();
   }
 
-  async RefreshImages() {
-    // this.deleteDupesService.updateImageIndexList('400')
-    //await this.deleteDupesService.updateImageIndexList('200')
-    // this.deleteDupesService.updateImages();
-  }
+  async RefreshImages() { }
 }

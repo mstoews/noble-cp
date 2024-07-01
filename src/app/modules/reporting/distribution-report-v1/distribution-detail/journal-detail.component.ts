@@ -1,41 +1,23 @@
-import { AfterViewInit, Component, Input, OnInit, ViewChild, inject } from '@angular/core';
-import { DxBulletModule, DxDataGridModule, DxTemplateModule } from 'devextreme-angular';
+import { Component, Input, OnInit, ViewChild, inject } from '@angular/core';
+
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { IJournalDetail, JournalService } from 'app/services/journal.service';
 import { MatDrawer, MatSidenavModule } from '@angular/material/sidenav';
 
 import { CommonModule } from '@angular/common';
 import { DndComponent } from 'app/modules/drag-n-drop/loaddnd/dnd.component';
-import { DxNumberBoxModule } from 'devextreme-angular';
+
 import { FuseConfirmationService } from '@fuse/services/confirmation';
 import { GLAccountsService } from 'app/services/accounts.service';
 import { GlTransactionsService } from 'app/services/gltransaction.service';
-import { MatButtonModule } from '@angular/material/button';
-import { MatCardModule } from '@angular/material/card';
-import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatDialog } from '@angular/material/dialog';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatIconModule } from '@angular/material/icon';
-import { MatInputModule } from '@angular/material/input';
-import { MatSelectModule } from '@angular/material/select';
 import { Observable } from 'rxjs';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+
 
 const imports = [
     CommonModule,
-    DxDataGridModule,
-    DxTemplateModule,
-    MatSidenavModule,
-    MatCardModule,
     ReactiveFormsModule,
-    MatIconModule,
-    FormsModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatCheckboxModule,
-    MatButtonModule,
-    MatSelectModule,
-    DxNumberBoxModule,
+    FormsModule,    
     DndComponent
 ];
 
@@ -44,11 +26,6 @@ const imports = [
     standalone: true,
     imports: [imports],
     templateUrl: './journal-detail.component.html',
-    styles: `::ng-deep .dx-datagrid .dx-datagrid-rowsview .dx-row-focused.dx-data-row:not(.dx-edit-row) > td:not(.dx-focused) {
-    background-color: rgb(195, 199, 199);
-    border-color: rgb(195, 199, 199);
-    }
-    `
 })
 export class JournalDetailComponent implements OnInit {
 

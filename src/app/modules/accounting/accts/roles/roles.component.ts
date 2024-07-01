@@ -5,7 +5,7 @@ import {
     ReactiveFormsModule,
 } from '@angular/forms';
 import { Component, OnInit, ViewChild, inject } from '@angular/core';
-import { DxBulletModule, DxDataGridModule, DxTemplateModule } from 'devextreme-angular';
+
 
 import { CommonModule } from '@angular/common';
 import { FuseConfirmationService } from '@fuse/services/confirmation';
@@ -15,6 +15,7 @@ import { MatDrawer } from '@angular/material/sidenav';
 import { MaterialModule } from 'app/services/material.module';
 
 import { IRole, RoleService } from 'app/services/roles.service';
+import { GridModule } from '@syncfusion/ej2-angular-grids';
 
 
 const imports = [
@@ -22,9 +23,7 @@ const imports = [
     MaterialModule,
     ReactiveFormsModule,
     FormsModule,
-    DxDataGridModule,
-    DxBulletModule,
-    DxTemplateModule,
+    GridModule,
     GridMenubarStandaloneComponent
 ];
 

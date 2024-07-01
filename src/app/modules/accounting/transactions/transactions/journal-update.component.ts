@@ -23,8 +23,7 @@ import { AUTH } from "app/app.config";
 import { MatSelect } from "@angular/material/select";
 import { NgxMatSelectSearchModule } from "ngx-mat-select-search";
 import { IDropDownAccounts, IDropDownAccountsGridList, IFunds, } from "app/models";
-import { DxContextMenuModule, DxContextMenuTypes, } from "devextreme-angular/ui/context-menu";
-import { DxDataGridTypes } from "devextreme-angular/ui/data-grid";
+
 import { ContextMenuComponent, MenuEventArgs, MenuItemModel, ContextMenuModule } from "@syncfusion/ej2-angular-navigations";
 import {
   AggregateService, EditService, EditSettingsModel, FilterService, FilterSettingsModel, GridModule, IEditCell, PageService,
@@ -34,7 +33,6 @@ import {
   SelectionSettingsModel, SortService, ToolbarService,
   GridComponent,
   DialogEditEventArgs,
-  RowDataBoundEventArgs,
 } from "@syncfusion/ej2-angular-grids";
 
 import { DataManager, Query } from "@syncfusion/ej2-data";
@@ -55,7 +53,6 @@ const imports = [
   NgxMaskPipe,
   FileManagerComponent,
   NgxMatSelectSearchModule,
-  DxContextMenuModule,
   ContextMenuModule,
   GridModule,
   DropDownListAllModule,
@@ -630,32 +627,7 @@ export class JournalUpdateComponent
     this.journalService.reNumberJournalDetail(this.journal_id);
   }
 
-  onReorder = (e: Parameters<DxDataGridTypes.RowDragging["onReorder"]>[0]) => {
-    e.promise = this.processReorder(e);
-  };
-
-  async processReorder(e: Parameters<DxDataGridTypes.RowDragging["onReorder"]>[0]
-  ) {
-    const visibleRows = e.component.getVisibleRows();
-    const toIndex = this.detailsListSignal().findIndex((item) => item.journal_subid === visibleRows[e.toIndex].data.journal_subid);
-    const fromIndex = this.detailsListSignal().findIndex(
-      (item) => item.journal_subid === e.itemData.journal_subid
-    );
-    const details = this.detailsListSignal();
-    // details.forEach(journals => console.debug('Start List', journals.child + ' : ' + journals.journal_subid ))
-    details.splice(fromIndex, 1);
-    details.splice(toIndex, 0, e.itemData);
-    var n = 1;
-    details.forEach((journal) => {
-      journal.journal_subid = n;
-      n++;
-    });
-    // details.forEach(journals => console.debug('Ending List', journals.child+ ' : ' + journals.journal_subid ))
-    this.detailsListSignal.set(null);
-    this.detailsListSignal.set(details);
-    this.bDirty = true;
-  }
-
+  
   onUpdateJournalEntry() {
     const dDate = new Date();
     const updateDate = dDate.toISOString().split("T")[0];

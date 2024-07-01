@@ -61,29 +61,19 @@
                     @if (data$ | async; as rows) {
                     <grid-menubar [inTitle]="'Periods'"></grid-menubar>
                     <div class="flex flex-col h-full">
-                        <dx-data-grid id="id" 
-                            [wordWrapEnabled]="true" 
-                            [dataSource]="rows" 
-                            [showColumnLines]="true"
-                            [showRowLines]="true" 
-                            [showBorders]="true" 
-                            [focusedRowEnabled]="true" 
-                            [focusedRowIndex]="0"
-                            keyExpr="period_id" 
-                            [columnHidingEnabled]="true"
-                            [repaintChangesOnly]="true">
-
-                            <dxi-column dataField="period_id"></dxi-column>
-                            <dxi-column dataField="period_year"></dxi-column>
-                            <dxi-column dataField="start_date"></dxi-column>
-                            <dxi-column dataField="end_date"></dxi-column>
-                            <dxi-column dataField="description"></dxi-column>
-                            <dxi-column dataField="create_date"></dxi-column>
-                            <dxi-column dataField="create_user"></dxi-column>
-                            <dxi-column dataField="update_date"></dxi-column>
-                            <dxi-column dataField="update_user"></dxi-column>
-
-                        </dx-data-grid>
+                        <ejs-grid id="id">                            
+                        <e-columns>
+                            <e-column field="period_id"></e-column>
+                            <e-column field="period_year"></e-column>
+                            <e-column field="start_date"></e-column>
+                            <e-column field="end_date"></e-column>
+                            <e-column field="description"></e-column>
+                            <e-column field="create_date"></e-column>
+                            <e-column field="create_user"></e-column>
+                            <e-column field="update_date"></e-column>
+                            <e-column field="update_user"></e-column>
+                        </e-columns>
+                    </ejs-grid>
                     </div>
 
                     <button mat-fab (click)="onCreate($event)" class="fixed bottom-30 right-14 rounded-full"

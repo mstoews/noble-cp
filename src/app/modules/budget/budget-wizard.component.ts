@@ -10,7 +10,6 @@ import { FundsService } from 'app/services/funds.service';
 import { IJournalDetail, IJournalHeader, ITransactionDate, JournalService } from 'app/services/journal.service';
 import { MaterialModule } from 'app/services/material.module';
 import { SubTypeService } from 'app/services/subtype.service';
-import { DxDataGridModule, DxTemplateModule } from 'devextreme-angular';
 import { NgxMaskDirective, NgxMaskPipe, provideNgxMask } from 'ngx-mask';
 import { ReplaySubject, Subject, Subscription, take, takeUntil } from 'rxjs';
 import { BudgetUpdateComponent } from './budgetl-update/budget-update.component';
@@ -30,8 +29,6 @@ const imports = [
   MaterialModule,
   NgxMaskDirective,
   NgxMaskPipe,
-  DxDataGridModule,
-  DxTemplateModule,
   BudgetUpdateComponent,
   DndComponent,
   NgxMatSelectSearchModule

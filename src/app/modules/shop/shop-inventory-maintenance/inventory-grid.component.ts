@@ -10,7 +10,7 @@ import { Router } from '@angular/router';
 import { openAddComponentDialog } from './add/add.component';
 import { Workbook } from 'exceljs';
 import { saveAs } from 'file-saver-es';
-import { exportDataGrid } from 'devextreme/excel_exporter';
+
 // import { CategoryService } from '../shop-services/category.service';
 import { Category } from '../models/category';
 import { DndComponent } from 'app/modules/drag-n-drop/loaddnd/dnd.component';
@@ -36,7 +36,9 @@ const imports = [
 export class InventoryComponent implements OnInit, OnDestroy {
   @ViewChild('drawer') drawer: MatDrawer;
   @Input() rich_description: string;
+  
   drawOpen: 'open' | 'close' = 'open';
+  
   prdGroup: FormGroup;
   action: string;
   party: string;
@@ -62,6 +64,7 @@ export class InventoryComponent implements OnInit, OnDestroy {
   private readonly productService  = inject( ProductsService);
   private dialog  = inject(MatDialog);
   private fb  = inject(FormBuilder);
+  _unsubscribeAll: Subject<any> = new Subject<any>();
 
 
   onRefresh() {
@@ -77,8 +80,8 @@ export class InventoryComponent implements OnInit, OnDestroy {
         e.rowElement.style.height = "10px";
   }
 
-  onCellDoubleClicked(e) {
-    this.route.navigate(['admin/inventory', e.data.id]);
+  onCellDoubleClicked(e: any) {
+    
   }
 
   /**
@@ -90,29 +93,12 @@ export class InventoryComponent implements OnInit, OnDestroy {
   onExporting(e: { component: any; cancel: boolean }) {
     const workbook = new Workbook();
     const worksheet = workbook.addWorksheet('Inventory');
-
-    exportDataGrid({
-      component: e.component,
-      worksheet,
-      autoFilterEnabled: true,
-    }).then(() => {
-      workbook.xlsx.writeBuffer().then((buffer) => {
-        saveAs(
-          new Blob([buffer], { type: 'application/octet-stream' }),
-          'DataGrid.xlsx'
-        );
-      });
-    });
-    e.cancel = true;
   }
 
   ngOnDestroy(): void {
     this._unsubscribeAll.next(null);
     this._unsubscribeAll.complete();
   }
-
-  _unsubscribeAll: Subject<any> = new Subject<any>();
-  // pipe(takeUntil(this._unsubscribeAll))
 
   onImages(): void {
     // console.debug('onImages');
@@ -161,7 +147,7 @@ export class InventoryComponent implements OnInit, OnDestroy {
   }
 
   onOpenRow(row: any) {
-    this.route.navigate(['admin/inventory', row.id]);
+    this.route.navigate(['login'])
   }
 
   rowHeight = '500px';

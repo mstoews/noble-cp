@@ -1,5 +1,4 @@
 import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild, inject } from '@angular/core';
-import { DxDataGridModule, DxTemplateModule } from 'devextreme-angular';
 import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { IJournalDetail, IJournalDetailDelete, IJournalHeader, JournalService } from 'app/services/journal.service';
 import { Observable, ReplaySubject, Subject, Subscription, interval, map, startWith, take, takeUntil } from 'rxjs';
@@ -28,11 +27,8 @@ import { BudgetDetailComponent } from '../budget-detail/budget-detail.component'
 import { BudgetTableComponent } from '../budget-table/budget-table.component';
 
 
-
 const imports = [
   CommonModule,
-  DxDataGridModule,
-  DxTemplateModule,
   ReactiveFormsModule,
   MaterialModule,
   ComboBoxModule,

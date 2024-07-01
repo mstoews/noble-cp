@@ -1,0 +1,9 @@
+start web app
+npm run start
+
+> nobleledger@0.0.1 start
+> ng serve
+
+Application bundle generation failed. [10.799 seconds]
+
+Watch mode enabled. Watching for file changes...
