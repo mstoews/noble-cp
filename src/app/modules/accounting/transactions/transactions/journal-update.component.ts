@@ -1,4 +1,4 @@
-import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild, inject, viewChild } from "@angular/core";
+import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild, WritableSignal, inject, viewChild } from "@angular/core";
 
 import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from "@angular/forms";
 import { IJournalDetailDelete, IJournalHeader, IJournalHeaderUpdate, JournalService } from "app/services/journal.service";
@@ -22,7 +22,7 @@ import { FileManagerComponent } from "app/modules/file-manager/file-manager.comp
 import { AUTH } from "app/app.config";
 import { MatSelect } from "@angular/material/select";
 import { NgxMatSelectSearchModule } from "ngx-mat-select-search";
-import { IDropDownAccounts, IDropDownAccountsGridList, IFunds, } from "app/models";
+import { IDropDownAccounts, IDropDownAccountsGridList, IFunds, IJournalDetail, } from "app/models";
 
 import { ContextMenuComponent, MenuEventArgs, MenuItemModel, ContextMenuModule } from "@syncfusion/ej2-angular-navigations";
 import {
@@ -120,7 +120,6 @@ export class JournalUpdateComponent
   public subtype$ = this.subtypeService.read();
   public accounts$ = this.accountService.readChildren();
   public dropDownChildren$ = this.accountService.readChildren();
-  public detailsListSignal = this.journalService.getJournalDetail(0);
 
   private fuseConfirmationService = inject(FuseConfirmationService);
 
@@ -193,8 +192,6 @@ export class JournalUpdateComponent
         };
         this.accountsGrid.push(list);
       });
-      //this.filteredAccounts.next(this.accountList.slice());
-      //console.debug("Length of array: ", this.accountList.length);
       this.fundListSubject = this.funds$.subscribe((funds) => {
         funds.forEach((fund) => {
           var list = {
@@ -325,8 +322,8 @@ export class JournalUpdateComponent
       fund: e.fund,
     };
     this.journalService.updateJournalDetailSignal(journalDetail);
-    if (this.detailsListSignal.length > 0) {
-      this.detailsListSignal().forEach((data) => {
+    if (this.journalService.journalDetailList().length > 0) {
+       this.journalService.journalDetailList().forEach((data) => {
         console.log(data);
       });
     }
@@ -339,9 +336,7 @@ export class JournalUpdateComponent
 
 
   protected setInitialValue() {
-    this.detailsListSignal = this.journalService.getJournalDetail(
-      this.journal_id
-    );
+    this.journalService.getJournalDetail(this.journal_id);
     this.accountParams = {
       params: {
         filterType: "Contains",
@@ -419,15 +414,14 @@ export class JournalUpdateComponent
 
     if (journal_id === undefined) {
       this.description = "";
-      this.transaction_date = "";
-      this.detailsListSignal = this.journalService.getJournalDetail(0);
+      this.transaction_date = "";      
       return;
     } else if (journal_id > 0) {
-      //this.detailsListSignal = this.journalService.getJournalDetail(this.journal_id);
+        this.journalService.getJournalDetail(this.journal_id);
     } else {
       this.description = "";
       this.transaction_date = "";
-      this.detailsListSignal = this.journalService.getJournalDetail(0);
+      
       this.journalForm = this.fb.group({
         description: [this.description, Validators.required],
         amount: [this.amount, Validators.required],
@@ -575,17 +569,17 @@ export class JournalUpdateComponent
     const email = this.auth.currentUser?.email;
     var max = 0;
 
-    for (let i = 0; i < this.detailsListSignal().length; i++) {
-      if (this.detailsListSignal()[i].journal_subid > max)
-        max = this.detailsListSignal()[i].journal_subid;
+    for (let i = 0; i < this.journalService.journalDetailList().length; i++) {
+      if (this.journalService.journalDetailList()[i].journal_subid > max)
+        max = this.journalService.journalDetailList()[i].journal_subid;
     }
 
     if (this.journal_id === 0) {
       return;
     }
 
-    if (this.detailsListSignal().length > 0) {
-      const journalCopy = this.detailsListSignal();
+    if (this.journalService.journalDetailList().length > 0) {
+      const journalCopy = this.journalService.journalDetailList();
       const journalDetail = {
         journal_id: this.journal_id,
         journal_subid: max + 1,
@@ -650,9 +644,9 @@ export class JournalUpdateComponent
     header.header_amount = 0.0;
     var journal_subid = 1;
 
-    console.log("Detail list length", this.detailsListSignal().length);
-    const details = this.detailsListSignal();
-    details.forEach((details) => {
+    console.log("Detail list length", this.journalService.journalDetailList().length);
+    
+    this.journalService.journalDetailList().forEach((details) => {
       header.header_amount = Number(details.debit) + header.header_amount;
       this.journal_id = details.journal_id;
       debit = Number(details.debit);
@@ -762,10 +756,8 @@ export class JournalUpdateComponent
       duration: 2000,
     });
 
-    this.detailsListSignal = null;
-    this.detailsListSignal = this.journalService.getJournalDetail(
-      this.journal_id
-    );
+    this.journalService.getJournalDetail(this.journal_id);
+  
     this.accountCtrl.reset();
   }
 

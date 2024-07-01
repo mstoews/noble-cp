@@ -86,8 +86,7 @@
                     @if (funds$ | async; as funds) {
                     @if (subtype$ | async; as subtypes) {
                                         
-                    <ejs-grid
-                        
+                    <ejs-grid                        
                         id="grid" #grid                        
                         [dataSource]='detailsListSignal()'                                             
                         [selectionSettings]="selectionOptions"                        

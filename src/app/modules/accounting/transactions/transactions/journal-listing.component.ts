@@ -29,6 +29,7 @@ const imports = [
     MaterialModule,
     FormsModule,
     JournalDetailComponent,
+    JournalUpdateComponent,
     DndComponent,
     GridMenubarStandaloneComponent,    
     NgxMatSelectSearchModule,
@@ -125,10 +126,11 @@ export class JournalEntryComponent implements OnInit, OnDestroy {
             this.description = data.description;
             this.amount = data.amount.toString();
             this.transaction_date = data.create_date;
-            this.details$ = this.journalService.getJournalDetail(this.nJournal);
-            if (this.journalViewChildControl() !== undefined) {
-                this.journalViewChildControl().refresh(this.nJournal, this.description, this.transaction_date, this.amount);
-            }
+            this.journalService.getJournalDetail(this.nJournal);
+            // this.details$ = this.journalService.getJournalDetail(this.nJournal);
+            // if (this.journalViewChildControl() !== undefined) {
+            //     this.journalViewChildControl().refresh(this.nJournal, this.description, this.transaction_date, this.amount);
+            // }
             this.openDrawer();        
         }
         if (args.requestType === 'save') {
@@ -144,8 +146,7 @@ export class JournalEntryComponent implements OnInit, OnDestroy {
             if (Browser.isDevice) {
                 args.dialog.height = window.innerHeight - 90 + 'px';
                 (<Dialog>args.dialog).dataBind();
-            }
-            // Set initail Focus
+            }            
             if (args.requestType === 'beginEdit') {
                 // (args.form.elements.namedItem('CustomerName') as HTMLInputElement).focus();
             } else if (args.requestType === 'add') {
@@ -165,18 +166,18 @@ export class JournalEntryComponent implements OnInit, OnDestroy {
 
 //  readonly allowedPageSizes = [10, 20, 'all'];
     
-    onCellDoubleClicked(e: any) {
-        this.bOpenDetail = true;
-        this.nJournal = e.data.journal_id;
-        this.description = e.data.description;
-        this.amount = e.data.amount;
-        this.transaction_date = e.data.create_date;
-        this.details$ = this.journalService.getJournalDetail(this.nJournal);
-        if (this.journalViewChildControl() !== undefined) {
-            this.journalViewChildControl().refresh(this.nJournal, this.description, this.transaction_date, this.amount);
-        }
-        this.openDrawer();
-    }
+    // onCellDoubleClicked(e: any) {
+    //     this.bOpenDetail = true;
+    //     this.nJournal = e.data.journal_id;
+    //     this.description = e.data.description;
+    //     this.amount = e.data.amount;
+    //     this.transaction_date = e.data.create_date;
+    //     this.details$ = this.journalService.getJournalDetail(this.nJournal);
+    //     if (this.journalViewChildControl() !== undefined) {
+    //         this.journalViewChildControl().refresh(this.nJournal, this.description, this.transaction_date, this.amount);
+    //     }
+    //     this.openDrawer();
+    // }
 
     changeType(e) {
         console.debug('changeType ', JSON.stringify(e));

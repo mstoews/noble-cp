@@ -12,19 +12,17 @@
 
     <div class="flex-auto">
         <div class="h-full border-gray-300 rounded-2xl">
-            <mat-drawer class="w-full" #drawer [opened]="false" mode="push" [position]="'end'"
-                [disableClose]="false">
-                @if (bOpenDetail === true) {
+            <mat-drawer class="w-full" #drawer [opened]="false" mode="push" [position]="'end'" [disableClose]="false">
+                @if (bOpenDetail === true) { 
                 <journal-update 
                    [journal_id]="nJournal" 
                    [sTitle]="'Journal Entry Detail'"
                    [description]="description"
                    [transaction_date]="transaction_date"
-                   [amount]="amount"
-                   [details$]="details$"
+                   [amount]="amount"                   
                    (notifyDrawerClose)="closeDrawer()">
                 </journal-update>
-                }                
+                } 
             </mat-drawer>
             <mat-drawer-container class="flex-col h-full">
                 @defer {
