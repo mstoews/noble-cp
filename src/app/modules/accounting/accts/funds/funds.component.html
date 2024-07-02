@@ -58,11 +58,11 @@
                 </mat-drawer>
 
                 <ng-container>
-                    @if (data$ | async; as rows) 
+                    @if (funds | async; as data) 
                     {
                         <grid-menubar [inTitle]="'Fund Maintenance'"></grid-menubar>
                         <div class="flex flex-col h-screen">
-                        <ejs-grid id="id" [dataSource]="rows">
+                        <ejs-grid id="id" [dataSource]="data">
                             <e-columns>
                                 <e-column field="fund" width="150"></e-column>
                                 <e-column field="description" width="200"></e-column>

@@ -1,15 +1,12 @@
 import {
     IDistributionLedger,
     IDistributionLedgerReport,
-    IDistributionReport,
-    IJournalDetail,
-    ITransaction
 } from '../models';
 import { Injectable, inject } from '@angular/core';
-
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'environments/environment.prod';
 import { shareReplay } from 'rxjs';
+import { IJournalDetail, IJournalHeader } from 'app/models/journals';
 
 @Injectable({
     providedIn: 'root'
@@ -28,13 +25,6 @@ export class DistributionLedgerService {
         this.hashDistributionReport.clear();
         //this.createDistributionReportMap(1,2024);
     }
-
-    // createDistributionReportMap(prd: number, prdYear: number) {
-    //     const report$ = this.getDistributionReportByPrdAndYear(prd, prdYear);
-    //     report$.subscribe( report => {
-    //             report.forEach(data => this.hashDistributionReport.set(data.child, data))
-    //     });
-    // }
 
     getDistributionReportByPrdAndYear(period: number, periodYear: number) {
         const params = {
@@ -72,7 +62,7 @@ export class DistributionLedgerService {
     }
 
 
-    hashJournalMap = new Map<string, ITransaction[]>();
+    hashJournalMap = new Map<string, IJournalHeader[]>();
     hashJournalDetailsMap = new Map<string, IJournalDetail[]>();
 
     //Query

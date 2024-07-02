@@ -13,7 +13,7 @@
     <div class="flex-auto">
         <div class="h-full border-gray-300 rounded-2xl">
             <mat-drawer class="w-full" #drawer [opened]="false" mode="push" [position]="'end'" [disableClose]="false">
-                @if (bOpenDetail === true) { 
+                
                 <journal-update 
                    [journal_id]="nJournal" 
                    [sTitle]="'Journal Entry Detail'"
@@ -22,7 +22,7 @@
                    [amount]="amount"                   
                    (notifyDrawerClose)="closeDrawer()">
                 </journal-update>
-                } 
+                 
             </mat-drawer>
             <mat-drawer-container class="flex-col h-full">
                 @defer {
@@ -47,7 +47,7 @@
                                 <e-columns>
                                     <e-column  field="journal_id"  headerText="ID" width="100" dataType="number" isPrimaryKey='true' textAlign="left"></e-column>
                                     <e-column  field="booked"      [displayAsCheckBox]='true' headerText="Bk" width="100" type="boolean"></e-column>                            
-                                    <e-column  field="amount"      headerText="Amount" format='C2' width="150" textAlign="Right"></e-column>
+                                    <e-column  field="amount"      headerText="Amount" format='N2' width="150" textAlign="Right"></e-column>
                                     <e-column  field="period"      headerText="Prd" width="100" ></e-column>
                                     <e-column  field="period_year" headerText="Yr" width="100"></e-column>    
                                     <e-column  field="description" headerText="Description"></e-column>                                    

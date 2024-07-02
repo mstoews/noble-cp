@@ -1,6 +1,5 @@
 import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild, inject } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { IJournalDetail, IJournalDetailDelete, IJournalHeader, JournalService } from 'app/services/journal.service';
 import { Observable, ReplaySubject, Subject, Subscription, interval, map, startWith, take, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { DndComponent } from 'app/modules/drag-n-drop/loaddnd/dnd.component';
@@ -25,6 +24,8 @@ import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 import { IDropDownAccounts } from 'app/models';
 import { BudgetDetailComponent } from '../budget-detail/budget-detail.component';
 import { BudgetTableComponent } from '../budget-table/budget-table.component';
+import { JournalService } from 'app/services/journal.service';
+import { IJournalDetail, IJournalDetailDelete } from 'app/models/journals';
 
 
 const imports = [

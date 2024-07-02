@@ -41,7 +41,7 @@ export class FundsComponent implements OnInit {
     public sTitle = 'General Ledger Funds';
     public accountsForm!: FormGroup;
 
-    data$ = this.fundService.read();
+    funds = this.fundService.read();
 
     ngOnInit() {
         this.createEmptyForm();

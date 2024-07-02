@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit, ViewChild, inject, viewChild } from '@angular/core';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { IJournalHeader, JournalService } from 'app/services/journal.service';
+import { JournalService } from 'app/services/journal.service';
 import { Subject } from 'rxjs';
 import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 
@@ -22,6 +22,7 @@ import { Browser } from '@syncfusion/ej2-base';
 import { Dialog } from '@syncfusion/ej2-popups';
 
 import { DropDownListComponent } from '@syncfusion/ej2-angular-dropdowns';
+import { IJournalHeader } from 'app/models/journals';
 
 const imports = [
     CommonModule,    
@@ -56,8 +57,7 @@ export class JournalEntryComponent implements OnInit, OnDestroy {
     public subtypes$ = this.subtypeService.read()
     public funds$ = this.fundService.read();
     public accounts$ = this.accountService.readChildren();
-    public details$ = this.journalService.getJournalDetail(0);
-
+    
     @ViewChild('grid')
     public grid?: GridComponent;
 
@@ -123,15 +123,10 @@ export class JournalEntryComponent implements OnInit, OnDestroy {
             this.submitClicked = false;
             this.bOpenDetail = true;
             this.nJournal = Number(data.journal_id);
-            this.description = data.description;
-            this.amount = data.amount.toString();
-            this.transaction_date = data.create_date;
-            this.journalService.getJournalDetail(this.nJournal);
-            // this.details$ = this.journalService.getJournalDetail(this.nJournal);
-            // if (this.journalViewChildControl() !== undefined) {
-            //     this.journalViewChildControl().refresh(this.nJournal, this.description, this.transaction_date, this.amount);
-            // }
-            this.openDrawer();        
+            if (this.nJournal > 0 ) {
+                this.journalViewChildControl().refresh(this.nJournal, data.description, data.create_date, data.amount.toString());
+                this.openDrawer();        
+            }            
         }
         if (args.requestType === 'save') {
             args.cancel = true;
@@ -162,23 +157,7 @@ export class JournalEntryComponent implements OnInit, OnDestroy {
         }
     }
 
-    // datagrid settings end 
-
-//  readonly allowedPageSizes = [10, 20, 'all'];
     
-    // onCellDoubleClicked(e: any) {
-    //     this.bOpenDetail = true;
-    //     this.nJournal = e.data.journal_id;
-    //     this.description = e.data.description;
-    //     this.amount = e.data.amount;
-    //     this.transaction_date = e.data.create_date;
-    //     this.details$ = this.journalService.getJournalDetail(this.nJournal);
-    //     if (this.journalViewChildControl() !== undefined) {
-    //         this.journalViewChildControl().refresh(this.nJournal, this.description, this.transaction_date, this.amount);
-    //     }
-    //     this.openDrawer();
-    // }
-
     changeType(e) {
         console.debug('changeType ', JSON.stringify(e));
     }

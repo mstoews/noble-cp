@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit, inject, viewChild } from '@angular/core';
 import { FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { IJournalDetail, JournalService } from 'app/services/journal.service';
+import { JournalService } from 'app/services/journal.service';
 import { Observable, ReplaySubject, Subject, map, takeUntil } from 'rxjs';
 import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 
@@ -17,8 +17,8 @@ import { MatDrawer } from '@angular/material/sidenav';
 import { MaterialModule } from 'app/services/material.module';
 import { SubTypeService } from 'app/services/subtype.service';
 import { TypeService } from 'app/services/type.service';
-import { Workbook } from 'exceljs';
 
+import { Workbook } from 'exceljs';
 import { saveAs } from 'file-saver-es';
 
 const imports = [
@@ -52,12 +52,6 @@ export class BudgetEntryComponent implements OnInit, OnDestroy {
     public accounts$ = this.accountService.readChildren();
     public details$ = this.journalService.getJournalDetail(0);
 
-    drawer = viewChild<MatDrawer>('drawer')
-    journalUpdate = viewChild(BudgetUpdateComponent);
-
-    collapsed = false;
-    sTitle = 'Journal Entry';
-    selectedItemKeys: any[] = [];
     public nJournal = 0;
     public description = '';
     public transaction_date = '';
@@ -65,6 +59,13 @@ export class BudgetEntryComponent implements OnInit, OnDestroy {
     public currentDate: string;
     public journal_details: any[];
     public bOpenDetail: boolean = false;
+
+    drawer = viewChild<MatDrawer>('drawer')
+    journalUpdate = viewChild(BudgetUpdateComponent);
+
+    collapsed = false;
+    sTitle = 'Journal Entry';
+    selectedItemKeys: any[] = [];
 
 
     readonly allowedPageSizes = [10, 20, 'all'];

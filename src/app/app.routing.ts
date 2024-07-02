@@ -148,11 +148,6 @@ export const appRoutes: Route[] = [
                 loadChildren: () =>
                     import('app/modules/reporting/reporting.routes'),
             },
-            {
-                path: 'income-statements',
-                loadChildren: () =>
-                    import('app/modules/reporting/spread/spreadsheet.routes'),
-            },
 
             {
                 path: 'expense-reports',
@@ -175,12 +170,6 @@ export const appRoutes: Route[] = [
                 loadChildren: () =>
                     import('app/modules/admin/academy/academy.routes'),
             },
-            {
-                path: 'general_ledger',
-                loadChildren: () =>
-                    import('app/modules/accounting/accts/general-ledger/general-ledger.components.routes'),
-            },
-
             {
                 path: 'glaccts',
                 loadChildren: () =>

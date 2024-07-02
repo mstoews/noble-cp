@@ -1,7 +1,7 @@
 import { Component, ViewChild, inject } from '@angular/core';
 
 import { FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { IAccounts, IJournalTemplate, JournalService } from 'app/services/journal.service';
+import { JournalService } from 'app/services/journal.service';
 import { Observable, map, of } from 'rxjs';
 
 import { CommonModule } from '@angular/common';
@@ -9,7 +9,7 @@ import { DndComponent } from 'app/modules/drag-n-drop/loaddnd/dnd.component';
 
 import { FundsService } from 'app/services/funds.service';
 import { GLAccountsService } from 'app/services/accounts.service';
-import { GlTransactionsService } from 'app/services/gltransaction.service';
+
 import { GridMenubarStandaloneComponent } from '../grid-menubar/grid-menubar.component';
 import { JournalDetailComponent } from './transactions/journal-detail.component';
 import { JournalUpdateComponent } from './transactions/journal-update.component';
@@ -32,16 +32,10 @@ const imports = [
     standalone: true,
     imports: [imports],
     templateUrl: './journal-template.component.html',
-    styles: `::ng-deep .dx-datagrid .dx-datagrid-rowsview .dx-row-focused.dx-data-row:not(.dx-edit-row) > td:not(.dx-focused)
-    {
-       background-color: rgb(195, 199, 199);
-       border-color: #ada6a7;
-    }`,
     providers: []
 })
 
 export class JournalTemplateComponent {
-    private transactionService = inject(GlTransactionsService);
     private journalService = inject(JournalService);
     private accountService = inject(GLAccountsService);
     public currentDate: string;
@@ -132,10 +126,7 @@ export class JournalTemplateComponent {
     }
 
     onBooked(booked: boolean) {
-        this.journalForm.patchValue({ booked: booked });
-        this.transactionService.update(this.journalForm.value).then((res: any) => {
-            console.debug(`update ${JSON.stringify(res)}`);
-        });
+        this.journalForm.patchValue({ booked: booked });        
     }
 
     formatNumber(e) {

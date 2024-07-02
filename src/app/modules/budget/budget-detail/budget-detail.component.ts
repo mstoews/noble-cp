@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output, ViewChild, inject } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { IJournalDetail, JournalService } from 'app/services/journal.service';
+import { JournalService } from 'app/services/journal.service';
 import { CommonModule } from '@angular/common';
 import { DndComponent } from 'app/modules/drag-n-drop/loaddnd/dnd.component';
 import { FuseConfirmationService } from '@fuse/services/confirmation';

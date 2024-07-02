@@ -3,7 +3,7 @@ import { Component, DestroyRef, Inject, Input, OnDestroy, OnInit, inject } from 
 import { ReactiveFormsModule, FormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { GLAccountsService } from 'app/services/accounts.service';
 import { FundsService } from 'app/services/funds.service';
-import { IJournalDetail, JournalService } from 'app/services/journal.service';
+import { JournalService } from 'app/services/journal.service';
 import { MaterialModule } from 'app/services/material.module';
 import { Observable, Subject, takeUntil, tap } from 'rxjs';
 import { BudgetTableComponent } from '../budget-table/budget-table.component';
@@ -13,6 +13,7 @@ import { AUTH } from 'app/app.config';
 
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NgxMaskDirective, NgxMaskPipe, provideNgxMask } from 'ngx-mask';
+import { IJournalDetail } from 'app/models/journals';
 
 
 const imports = [

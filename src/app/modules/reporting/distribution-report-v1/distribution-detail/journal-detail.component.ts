@@ -1,17 +1,12 @@
 import { Component, Input, OnInit, ViewChild, inject } from '@angular/core';
-
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { IJournalDetail, JournalService } from 'app/services/journal.service';
-import { MatDrawer, MatSidenavModule } from '@angular/material/sidenav';
-
 import { CommonModule } from '@angular/common';
 import { DndComponent } from 'app/modules/drag-n-drop/loaddnd/dnd.component';
-
 import { FuseConfirmationService } from '@fuse/services/confirmation';
-import { GLAccountsService } from 'app/services/accounts.service';
-import { GlTransactionsService } from 'app/services/gltransaction.service';
 import { MatDialog } from '@angular/material/dialog';
 import { Observable } from 'rxjs';
+import { JournalService } from 'app/services/journal.service';
+import { IJournalDetail } from 'app/models/journals';
 
 
 const imports = [

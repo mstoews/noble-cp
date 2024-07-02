@@ -10,9 +10,10 @@ import {
   import { rxMethod } from '@ngrx/signals/rxjs-interop';
   import { debounceTime, distinctUntilChanged, exhaustMap, pipe, shareReplay, switchMap, tap } from 'rxjs';
   import { computed, inject } from '@angular/core';
-  import { IAccounts, IJournalDetail, IJournalHeader, JournalService } from 'app/services/journal.service';
+  import { JournalService } from 'app/services/journal.service';
   import { tapResponse } from '@ngrx/operators';
   import { addEntity, removeEntity, updateEntity, withEntities } from '@ngrx/signals/entities'
+import { IAccounts, IJournalDetail } from 'app/models/journals';
   
   export interface TransactionDetailInterface {
     details: IJournalDetail[];    

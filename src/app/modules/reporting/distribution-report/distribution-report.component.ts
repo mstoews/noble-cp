@@ -7,18 +7,18 @@ import {
 } from '@angular/core';
 
 import { CommonModule } from '@angular/common';
-import { DistMenuStandaloneComponent } from '../distributed-ledger/dist-menubar/grid-menubar.component';
-import { DistributionLedgerService } from 'app/services/distribution.ledger.service';
+
+
 import { JournalDetailComponent } from '../distribution-report-v1/distribution-detail/journal-detail.component';
 import { MatDrawer } from '@angular/material/sidenav';
 import { MaterialModule } from 'app/services/material.module';
 import { TransactionDetailComponent } from '../distributed-ledger/transaction-detail/transaction-detail.component';
 import { GridModule } from '@syncfusion/ej2-angular-grids';
+import { GLAccountsService } from 'app/services/accounts.service';
 
 const imports = [
     CommonModule,
     MaterialModule,
-    DistMenuStandaloneComponent,
     TransactionDetailComponent,
     JournalDetailComponent,
     GridModule
@@ -33,7 +33,7 @@ const imports = [
     providers: [],
 })
 export class DistributionReportComponent implements OnInit {
-    private dlService = inject(DistributionLedgerService);
+    private accountsService = inject(GLAccountsService);
     public currentPeriod = 1;
     public currentYear = 2024;
     public selectedItemKeys: any[] = [];

@@ -82,13 +82,13 @@
                 <div class="text-3xl m-1 text-gray-100 p-2 bg-slate-600">Details</div>
                 <div class="flex flex-col h-full ml-1 mr-1 text-gray-800">
                     @if ( loading === false) {
-                    @if (detailsListSignal() !== null) {
+                    @if (journalService.journalDetailList() !== null) {
                     @if (funds$ | async; as funds) {
                     @if (subtype$ | async; as subtypes) {
                                         
                     <ejs-grid                        
                         id="grid" #grid                        
-                        [dataSource]='detailsListSignal()'                                             
+                        [dataSource]='journalService.journalDetailList()'                                             
                         [selectionSettings]="selectionOptions"                        
                         [editSettings]='editSettings' 
                         [allowFiltering]='false'
@@ -113,17 +113,17 @@
                             <e-column field='sub_type' editType='dropdownedit' headerText='Sub Type' width='90'></e-column>
                             <e-column field='description' headerText='Description' width='150'></e-column>                            
                             <e-column field='reference' headerText='Reference' width=120></e-column>
-                            <e-column field='debit' headerText='Debit' textAlign='Right' width='100' format="C2"></e-column>
-                            <e-column field='credit' headerText='Credit' textAlign='Right' width='100' format="C2"></e-column>
+                            <e-column field='debit' headerText='Debit' textAlign='Right' width='100' format="N2"></e-column>
+                            <e-column field='credit' headerText='Credit' textAlign='Right' width='100' format="N2"></e-column>
                         </e-columns>
                     
                         <e-aggregates>
                             <e-aggregate>
                                 <e-columns>
-                                    <e-column type="Sum" field="debit" format="C2">
+                                    <e-column type="Sum" field="debit" format="N2">
                                         <ng-template #footerTemplate let-data>{{data.Sum}}</ng-template>
                                     </e-column>
-                                    <e-column type="Sum" field="credit" format="C2">
+                                    <e-column type="Sum" field="credit" format="N2">
                                         <ng-template #footerTemplate let-data>{{data.Sum}}</ng-template>
                                     </e-column>
                                 </e-columns>

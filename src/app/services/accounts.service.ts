@@ -1,20 +1,20 @@
 import { Injectable, inject, signal } from '@angular/core';
 import { Subject, catchError, exhaustMap, of, pipe, shareReplay, take, tap, throwError } from 'rxjs';
-import { signalState, patchState} from '@ngrx/signals'
+import { signalState, patchState } from '@ngrx/signals'
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { tapResponse } from '@ngrx/operators';
 
 
 import { HttpClient } from '@angular/common/http';
-import { IAccounts, IDropDownAccounts } from '../models';
+import { IDropDownAccounts } from '../models';
 import { environment } from 'environments/environment.prod';
-
+import { IAccounts } from 'app/models/journals';
 
 type AccountState = { account: IAccounts[], isLoading: boolean }
 
-const initialState : AccountState = {
-  account: [],
-  isLoading: false,
+const initialState: AccountState = {
+    account: [],
+    isLoading: false,
 }
 
 
@@ -22,8 +22,7 @@ const initialState : AccountState = {
     providedIn: 'root',
 })
 export class GLAccountsService {
-    
-    
+
     httpClient = inject(HttpClient)
     private baseUrl = environment.baseUrl;
 
@@ -31,32 +30,30 @@ export class GLAccountsService {
     private parentAccounts = signal<IAccounts[]>([])
     private dropDownList = signal<IDropDownAccounts[]>([])
     private childrenOfParents = signal<IAccounts[]>([])
-   
-    private accountState = signalState(initialState); 
+
+    private accountState = signalState(initialState);
 
     // readonly accountList = this.accountState.account;
     readonly isLoading = this.accountState.isLoading;
 
-  
-    
     readUrl = this.baseUrl + '/v1/account_list';
 
-    readonly read = rxMethod <void>  (
+    readonly read = rxMethod<void>(
         pipe(
-          tap(() => patchState(this.accountState, { isLoading: true })),
-          exhaustMap(() => {
-            return this.httpClient.get<IAccounts[]>(this.readUrl).pipe(
-              tapResponse({
-                // next: (account) => patchState(this.accountState, { account }),
-                next: (account) => this.accountList.set(account),
-                error: console.error,
-                finalize: () => patchState(this.accountState, { isLoading: false }),
-              })
-            );
-          })
+            tap(() => patchState(this.accountState, { isLoading: true })),
+            exhaustMap(() => {
+                return this.httpClient.get<IAccounts[]>(this.readUrl).pipe(
+                    tapResponse({
+                        // next: (account) => patchState(this.accountState, { account }),
+                        next: (account) => this.accountList.set(account),
+                        error: console.error,
+                        finalize: () => patchState(this.accountState, { isLoading: false }),
+                    })
+                );
+            })
         )
-      );
-    
+    );
+
     // account and description only
     readDropDownChild() {
         var url = this.baseUrl + '/v1/read_child_accounts';
@@ -154,7 +151,7 @@ export class GLAccountsService {
     update(accounts: Partial<IAccounts>) {
 
         var url = this.baseUrl + '/v1/account_update';
-        
+
         var data: any = {
             account: Number(accounts.account),
             child: Number(accounts.child),

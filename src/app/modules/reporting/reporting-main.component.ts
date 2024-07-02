@@ -24,7 +24,7 @@ const imports = [
     templateUrl: './reporting-main.component.html',
     styles: ``
 })
-export class ReportingMainComponent {
+export class ReportingPanelComponent {
 
     @ViewChild('drawer') drawer: MatDrawer;
     drawerMode: 'over' | 'side' = 'side';

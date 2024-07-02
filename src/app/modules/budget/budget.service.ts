@@ -7,7 +7,7 @@ import { IAccounts, IBudget, IBudgetDetails, IFunds, IType } from '../../models'
 import { ISubType } from 'app/services/subtype.service';
 
 @Injectable({
-    providedIn: 'root',
+  providedIn: 'root',
 })
 export class BudgetService {
   private httpClient = inject(HttpClient);
@@ -17,13 +17,13 @@ export class BudgetService {
   // Create 
   create(t: IBudget) {
     var url = this.baseUrl + '/v1/create_budget_amt';
-    var email = this.authService.currentUser.email;  
-    var name   = email.substring(0, email.lastIndexOf("@"));
+    var email = this.authService.currentUser.email;
+    var name = email.substring(0, email.lastIndexOf("@"));
     const dDate = Timestamp.fromDate(new Date());
-    
+
     return this.httpClient.post<IBudget>(url, data)
   }
-  
+
   // Read
   read() {
     var url = this.baseUrl + '/v1/read_budget_amt';
@@ -33,7 +33,7 @@ export class BudgetService {
   readTypes() {
     var url = this.baseUrl + '/v1/read_types';
     return this.httpClient.get<IType[]>(url)
-  } 
+  }
 
   readAccounts() {
     var url = this.baseUrl + '/v1/read_accounts';
@@ -59,20 +59,20 @@ export class BudgetService {
   update(t: IBudget) {
     var url = this.baseUrl + '/v1/update_budget_amt';
 
-    var data: IBudget = {       
-        child: t.child,
-        sub_type: t.sub_type,
-        parent_account: t.parent_account, 
-        type: t.type,
-        balance: t.balance,
-        account: t.account,
-        comments: t.comments,
-        description: t.description,
-        create_date: t.create_date,
-        create_user: t.create_user,
-        update_date: t.update_date,
-        update_user: t.update_user
-      
+    var data: IBudget = {
+      child: t.child,
+      sub_type: t.sub_type,
+      parent_account: t.parent_account,
+      type: t.type,
+      balance: t.balance,
+      account: t.account,
+      comments: t.comments,
+      description: t.description,
+      create_date: t.create_date,
+      create_user: t.create_user,
+      update_date: t.update_date,
+      update_user: t.update_user
+
     }
     return this.httpClient.post<IBudget>(url, data)
   }

@@ -1,112 +1,17 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, OnDestroy, inject, signal } from '@angular/core';
-import { Observable, Subject, Subscription, catchError, debounceTime, distinctUntilChanged, shareReplay, take, takeUntil, tap, throwError } from 'rxjs';
-
+import { Observable, Subject, catchError, debounceTime, distinctUntilChanged, shareReplay, take, takeUntil, tap, throwError } from 'rxjs';
 import { environment } from 'environments/environment.prod';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { IDropDownAccounts } from 'app/models';
 import { Router } from '@angular/router';
-
-export interface IPeriod {
-  period_id: number,
-  period_year: number,
-}
-
-
-export interface IJournalDetailDelete {
-  journal_id: number,
-  journal_subid: number
-
-}
-
-export interface  IJournalHeaderUpdate {
-  journal_id: number,
-  description: string,
-  transaction_date: string,
-  amount: number
-}
-
-export interface IJournalHeader {
-    journal_id: number,
-    description: string,
-    booked: boolean,
-    booked_date: string,
-    booked_user: string,
-    create_date: string,
-    create_user: string,
-    period: number,
-    period_year: number,
-    transaction_date: string,
-    status: string,
-    type: string,
-    sub_type: string,
-    amount: number
-}
-
-export interface IJournalDetail {
-  journal_id    : number,
-  journal_subid : number,
-  account       : number,
-  child         : number,
-  fund?         : string,
-  sub_type?     : string,
-  description   : string,
-  debit         : number,
-  credit        : number,
-  create_date   : string,
-  create_user   : string,
-  reference     :string,
-}
-
-export interface IAccounts {
-  account       : number,
-  child         : number,
-  parent_account: string,
-  type          : string,
-  sub_type      : string,
-  description   : string,
-  balance       : number,
-  comments      : string,
-  create_date   : string,
-  create_user   : string,
-  update_date   : string,
-  update_user   : string,
-  period?       : number,
-  period_year?  : number,
-}
-
-export interface ITransactionDate {
-  start_date: string,
-  end_date: string
-}
-
-
-export interface IJournalTemplate {
-    template_ref: string,    
-    description: string,
-    type: string,
-    debit_percentage:  number,
-    credit_percentage: number,
-    create_date:       Date,
-    create_user:       string
-}
-
-export interface IJournalViewDetails {
-    period?         : number,
-    period_year?    : number,
-    journal_id      : number,
-    journal_subid   : number,
-    account         : number,
-    child           : number,
-    description     : string,
-    sub_type        : string,
-    debit           : number,
-    credit          : number,
-    create_date     : Date,
-    create_user     : string,
-    fund            : string,
-    reference       : string,
-}
+import { IAccounts, 
+         IJournalDetail, 
+         IJournalDetailDelete, 
+         IJournalHeader, 
+         IJournalHeaderUpdate, 
+         IJournalTemplate, 
+         IPeriod, 
+         ITransactionDate } from 'app/models/journals';
 
 @Injectable({
   providedIn: 'root'
@@ -116,15 +21,16 @@ export class JournalService implements OnDestroy  {
   httpClient = inject(HttpClient)
   snackBar = inject(MatSnackBar);
   router = inject(Router);
+
   private baseUrl = environment.baseUrl;
   ngDestroy$ = new Subject();
 
-  // Journal Detail signal
-  journalDetailList = signal<IJournalDetail[]>([]);
-  
   // Journal Header signal
   journalHeaderList = signal<IJournalHeader[]>([]);
-
+  
+  // Journal Detail signal
+  journalDetailList = signal<IJournalDetail[]>([]);
+    
   readJournalHeaderById(journal_id: number) {
     if (this.journalHeaderList().length > 0)  {
       return this.journalHeaderList().find(item => item.journal_id === journal_id)

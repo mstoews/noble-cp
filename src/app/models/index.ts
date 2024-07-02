@@ -105,21 +105,21 @@ export interface IDropDownAccounts {
   description: string;
 }
 
-export interface IAccounts {
-  account: string;
-  child: string;
-  parent_account?: boolean;
-  type: string;
-  sub_type: string;
-  balance: number;
-  description: string;
-  comments: string;
-  status: string;
-  create_date: string;
-  create_user: string;
-  update_date: string;
-  update_user: string;
-}
+// export interface IAccounts {
+//   account: string;
+//   child: string;
+//   parent_account?: boolean;
+//   type: string;
+//   sub_type: string;
+//   balance: number;
+//   description: string;
+//   comments: string;
+//   status: string;
+//   create_date: string;
+//   create_user: string;
+//   update_date: string;
+//   update_user: string;
+// }
 
 export interface IBudget {
   budget_id: number;
@@ -178,6 +178,24 @@ export interface IDistributionLedger {
   update_date: Date;
   created_user: string;
 }
+export interface IJournalSummary {
+  journal_id      : number,
+  journal_subid   : number,
+  account         : number,
+  child           : number,
+  fund?           : string,
+  sub_type?       : string,
+  description     : string,
+  debit           : number,
+  credit          : number,
+  create_date     : string,
+  create_user     : string,
+  reference       :string,
+  period          : number,
+  period_year     : number
+}
+
+
 
 export interface IDistributionLedgerReport {
   account:             number; 
@@ -207,20 +225,6 @@ export interface IFunds {
 }
 
 
-export interface ITransaction {
-  booked: boolean;
-  journal_id: string;
-  journal_type: string;
-  journal_total: number;
-  description: string;
-  journal_status: string;
-  booked_user: string;
-  booked_date?: string;
-  create_date: string;
-  create_user: string;
-  update_date: string;
-  update_user: string;
-}
 
 export interface IAccount {
   account: number;
@@ -235,34 +239,6 @@ export interface IAccount {
   create_user: string;
   update_date: string;
   update_user: string;
-}
-
-export interface IJournalHeader {
-  journal_id: string;
-  journal_date: string;
-  journal_type: string;
-  journal_description: string;
-  journal_total: number;
-  journal_status: string;
-  transaction_date: string;
-  journal_create_date: string;
-  journal_create_usr: string;
-  journal_update_date: string;
-  journal_update_usr: string;
-}
-
-export interface IJournalDetail {
-  journal_id: string;
-  journal_child_id: string;
-  account: string;
-  create_date: string;
-  create_user: string;
-  description: string;
-  fund: string;
-  update_date: string;
-  update_user: string;
-  debit: number;
-  credit: number;
 }
 
 

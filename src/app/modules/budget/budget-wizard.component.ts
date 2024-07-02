@@ -7,7 +7,7 @@ import { fuseAnimations } from '@fuse/animations';
 import { AUTH } from 'app/app.config';
 import { GLAccountsService } from 'app/services/accounts.service';
 import { FundsService } from 'app/services/funds.service';
-import { IJournalDetail, IJournalHeader, ITransactionDate, JournalService } from 'app/services/journal.service';
+import { JournalService } from 'app/services/journal.service';
 import { MaterialModule } from 'app/services/material.module';
 import { SubTypeService } from 'app/services/subtype.service';
 import { NgxMaskDirective, NgxMaskPipe, provideNgxMask } from 'ngx-mask';
@@ -19,6 +19,7 @@ import { MatSelect } from '@angular/material/select';
 import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 import { IDropDownAccounts } from 'app/models';
 import { filter } from 'lodash';
+import { IJournalDetail, IJournalHeader, ITransactionDate } from 'app/models/journals';
 
 
 const imports = [
@@ -109,13 +110,10 @@ export class BudgetWizardComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild('singleCreditSelect', { static: true }) singleCreditSelect: MatSelect;
   bNewTransaction: any;
 
-
   // -----------------------------------------------------------------------------------------------------
   // @ Lifecycle hooks
   // -----------------------------------------------------------------------------------------------------
   ngOnInit(): void {
-
-
 
     this.accountService.readChildren().pipe(takeUntil(this._onDestroy)).subscribe((accounts) => {
       this.debitAccounts = accounts;
@@ -147,7 +145,6 @@ export class BudgetWizardComponent implements OnInit, OnDestroy, AfterViewInit {
 
       })
     });
-
 
     this.journalService.getLastJournalNo().subscribe(journal_no => {
       this.journal_id = Number(journal_no);

@@ -1,6 +1,6 @@
 import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild, inject } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { IJournalDetail, IJournalDetailDelete, IJournalHeader, IJournalHeaderUpdate, JournalService } from 'app/services/journal.service';
+import { JournalService } from 'app/services/journal.service';
 import { Observable, ReplaySubject, Subject, Subscription, interval, map, startWith, take, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { DndComponent } from 'app/modules/drag-n-drop/loaddnd/dnd.component';
@@ -23,6 +23,7 @@ import { MatSelect } from '@angular/material/select';
 import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 import { IDropDownAccounts } from 'app/models';
 import { AggregateService, EditService, FilterService, GridModule, PageService, RowDDService, SortService, ToolbarService } from '@syncfusion/ej2-angular-grids';
+import { IJournalDetailDelete, IJournalHeaderUpdate } from 'app/models/journals';
 
 
 declare var __moduleName: string;

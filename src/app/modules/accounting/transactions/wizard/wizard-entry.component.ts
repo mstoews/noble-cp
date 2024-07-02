@@ -6,10 +6,9 @@ import { fuseAnimations } from '@fuse/animations';
 import { AUTH } from 'app/app.config';
 import { GLAccountsService } from 'app/services/accounts.service';
 import { FundsService } from 'app/services/funds.service';
-import { IJournalDetail, IJournalHeader, ITransactionDate, JournalService } from 'app/services/journal.service';
+import { JournalService } from 'app/services/journal.service';
 import { MaterialModule } from 'app/services/material.module';
 import { SubTypeService } from 'app/services/subtype.service';
-
 import { NgxMaskDirective, NgxMaskPipe, provideNgxMask } from 'ngx-mask';
 import { ReplaySubject, Subject, Subscription, take, takeUntil } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
@@ -18,6 +17,7 @@ import { MatSelect } from '@angular/material/select';
 import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 import { IDropDownAccounts } from 'app/models';
 import { WizardUpdateComponent } from './wizard-update.component';
+import { IJournalDetail, IJournalHeader, ITransactionDate } from 'app/models/journals';
 
 
 const imports = [
@@ -45,19 +45,8 @@ const imports = [
   providers: [provideNgxMask()]
 })
 export class EntryWizardComponent implements OnInit, OnDestroy, AfterViewInit {
-  onUpdateJournalEntry() {
-    throw new Error('Method not implemented.');
-  }
-  onAddLineJournalDetail() {
-    throw new Error('Method not implemented.');
-  }
-  onAddEvidence() {
-    throw new Error('Method not implemented.');
-  }
-  onCreateTemplate() {
-    throw new Error('Method not implemented.');
-  }
-
+  
+  
   journalEntryForm: UntypedFormGroup;
   private journalService = inject(JournalService);
   private subtypeService = inject(SubTypeService);
@@ -65,7 +54,7 @@ export class EntryWizardComponent implements OnInit, OnDestroy, AfterViewInit {
   private accountService = inject(GLAccountsService);
   private snackBar = inject(MatSnackBar);
   private formBuilder = inject(FormBuilder);
-  private changeDesctionRef = inject(ChangeDetectorRef);
+  private changeDescriptionRef = inject(ChangeDetectorRef);
   public matDialog = inject(MatDialog);
   public description: string;
 
@@ -261,7 +250,7 @@ export class EntryWizardComponent implements OnInit, OnDestroy, AfterViewInit {
     this.journalHeader = journalHeader;
     this.journalEntryForm.get('step2').get('debit').setValue(this.headerAmount);
     this.journalEntryForm.get('step2').get('credit').setValue(this.headerAmount);
-    this.changeDesctionRef.markForCheck();
+    this.changeDescriptionRef.markForCheck();
 
 
     var transaction_period: ITransactionDate = {
@@ -389,7 +378,7 @@ export class EntryWizardComponent implements OnInit, OnDestroy, AfterViewInit {
       }
       this.journalDetails.push(journalDetail);
     }
-    this.changeDesctionRef.markForCheck();
+    this.changeDescriptionRef.markForCheck();
     this.postTransaction();
   }
 
@@ -484,5 +473,17 @@ export class EntryWizardComponent implements OnInit, OnDestroy, AfterViewInit {
     this._onDestroy.complete();
   }
 
-
+  onUpdateJournalEntry() {
+    throw new Error('Method not implemented.');
+  }
+  onAddLineJournalDetail() {
+    throw new Error('Method not implemented.');
+  }
+  onAddEvidence() {
+    throw new Error('Method not implemented.');
+  }
+  onCreateTemplate() {
+    throw new Error('Method not implemented.');
+  }
+  
 }

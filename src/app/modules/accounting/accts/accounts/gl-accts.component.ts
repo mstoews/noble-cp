@@ -7,13 +7,14 @@ import { AUTH } from 'app/app.config';
 import { CommonModule, JsonPipe } from '@angular/common';
 import { FuseConfirmationService } from '@fuse/services/confirmation';
 import { GLAccountsService } from 'app/services/accounts.service';
-import { GLAcctDetailComponent } from './gl-accts-detail/gl-accts-detail.component';
-import { GridMenubarStandaloneComponent } from '../grid-menubar/grid-menubar.component';
-import { IAccounts } from 'app/models';
+import { GridMenubarStandaloneComponent } from '../../grid-menubar/grid-menubar.component';
+
 import { IValue } from 'app/modules/kanban/kanban/kanban.component';
 import { MatDrawer } from '@angular/material/sidenav';
 import { MaterialModule } from 'app/services/material.module';
-import { GridModule } from '@syncfusion/ej2-angular-grids';
+import { AggregateService, ColumnMenuService, DialogEditEventArgs, EditService, FilterService, FilterSettingsModel, GridModule, GroupService, PageService, ResizeService, SaveEventArgs, SearchSettingsModel, SelectionSettingsModel, SortService, ToolbarItems, ToolbarService } from '@syncfusion/ej2-angular-grids';
+import { DropDownListComponent } from '@syncfusion/ej2-angular-dropdowns';
+import { IAccounts } from 'app/models/journals';
 
 
 const imports = [
@@ -22,7 +23,6 @@ const imports = [
     ReactiveFormsModule,
     FormsModule,
     GridMenubarStandaloneComponent,
-    GLAcctDetailComponent,
     JsonPipe,
     GridModule
 ];
@@ -34,7 +34,7 @@ const keyExpr = ["account", "child"];
     standalone: true,
     imports: [imports],
     templateUrl: './gl-accts.component.html',
-    providers: []
+    providers: [SortService, GroupService ,PageService, ResizeService, FilterService, ToolbarService, EditService, AggregateService, ColumnMenuService,],
 })
 export class GlAccountsComponent implements OnInit {
     @ViewChild('drawer') drawer!: MatDrawer;
@@ -51,7 +51,7 @@ export class GlAccountsComponent implements OnInit {
     public title = 'General Ledger Accounts';
     public selectedItemKeys: any[] = [];
     private currentRow: Object;
-    readonly allowedPageSizes = [10, 20, 'all'];
+    
 
     readonly displayModes = [{ text: "Display Mode 'full'", value: 'full' }, { text: "Display Mode 'compact'", value: 'compact' }];
     displayMode = 'compact';
@@ -64,8 +64,59 @@ export class GlAccountsComponent implements OnInit {
     ngOnInit() {
         this.accountService.read();
         this.createEmptyForm();
-
+        this.initialDatagrid();
     }
+
+    // datagrid settings start
+    public pageSettings: Object;
+    public formatoptions: Object;
+    public initialSort: Object;
+    public filterOptions: FilterSettingsModel;
+    public editSettings: Object;
+    public dropDown: DropDownListComponent;
+    public submitClicked: boolean = false;
+    public selectionOptions?: SelectionSettingsModel;
+    public toolbarOptions?: ToolbarItems[];
+    public searchOptions?: SearchSettingsModel;
+    public filterSettings: FilterSettingsModel;
+    
+    
+    initialDatagrid() {
+        // this.pageSettings = { pageCount: 10 };        
+        this.formatoptions = { type: 'dateTime', format: 'M/dd/yyyy' }        
+        this.pageSettings =  { pageSizes: true, pageCount: 10 };
+        this.selectionOptions = { mode: 'Cell' };              
+        this.editSettings = { allowEditing: true, allowAdding: false, allowDeleting: false };
+        this.searchOptions = { operator: 'contains', ignoreCase: true, ignoreAccent:true };
+        this.toolbarOptions = ['Search'];   
+        this.filterSettings = { type: 'Excel' };    
+    }
+
+
+
+    actionBegin(args: SaveEventArgs): void {        
+        var data = args.rowData as IAccounts;
+        if (args.requestType === 'beginEdit' || args.requestType === 'add') {        
+           this.openDrawer();        
+                        
+        }
+        if (args.requestType === 'save') {
+            args.cancel = true;
+            console.log(JSON.stringify(args.data));
+            var data = args.data as IAccounts;                        
+        }
+    }
+
+    actionComplete(args: DialogEditEventArgs): void {
+        if ((args.requestType === 'beginEdit' || args.requestType === 'add')) {
+            if (args.requestType === 'beginEdit') {
+                // (args.form.elements.namedItem('CustomerName') as HTMLInputElement).focus();
+            } else if (args.requestType === 'add') {
+                // (args.form.elements.namedItem('OrderID') as HTMLInputElement).focus();
+            }
+        }
+    }
+
 
     // CRUD Functions
     onCreate(e: any) {

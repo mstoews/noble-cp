@@ -7,13 +7,13 @@ import { IFunds } from '../models';
 import { environment } from 'environments/environment.prod';
 
 interface FundState {
-    types: IFunds[];
-    error: string | null;
-  }
-  
+  funds: IFunds[];
+  error: string | null;
+}
+
 
 @Injectable({
-    providedIn: 'root',
+  providedIn: 'root',
 })
 export class FundsService {
   private httpClient = inject(HttpClient);
@@ -21,30 +21,29 @@ export class FundsService {
   private baseUrl = environment.baseUrl;
 
   error$ = new Subject<string>();
-  
-  types = computed(() => this.state().types);
+
+  funds = computed(() => this.state().funds);
   error = computed(() => this.state().error);
 
   private state = signal<FundState>({
-    types: [],
+    funds: [],
     error: null,
   });
 
-  
   create(t: IFunds) {
     var url = this.baseUrl + '/v1/type_create';
-    var email = this.authService.currentUser.email;  
+    var email = this.authService.currentUser.email;
     const dDate = new Date();
-    
+
     var data: IFunds = {
-        id: t.id,
-        fund: t.fund,
-        description: t.description,
-        create_date: t.create_date,
-        create_user: t.create_user,
-        update_date: t.update_date,
-        update_user: t.update_user
-      
+      id: t.id,
+      fund: t.fund,
+      description: t.description,
+      create_date: t.create_date,
+      create_user: t.create_user,
+      update_date: t.update_date,
+      update_user: t.update_user
+
     }
 
     return this.httpClient.post<IFunds>(url, data).pipe(
@@ -64,16 +63,14 @@ export class FundsService {
     var url = this.baseUrl + '/v1/fund_create';
 
     var data: IFunds = {
-        id: t.id,
-        fund: t.fund,
-        description: t.description,
-        create_date: t.create_date,
-        create_user: t.create_user,
-        update_date: t.update_date,
-        update_user: t.update_user
-      
+      id: t.id,
+      fund: t.fund,
+      description: t.description,
+      create_date: t.create_date,
+      create_user: t.create_user,
+      update_date: t.update_date,
+      update_user: t.update_user
     }
-
     return this.httpClient.post<IFunds>(url, data).pipe(
       shareReplay())
   }
@@ -87,6 +84,5 @@ export class FundsService {
     return this.httpClient.post<IFunds[]>(url, data).pipe(
       shareReplay())
   }
-
 
 }

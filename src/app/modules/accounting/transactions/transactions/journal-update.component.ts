@@ -1,7 +1,6 @@
-import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild, WritableSignal, inject, viewChild } from "@angular/core";
-
+import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild, inject, viewChild } from "@angular/core";
 import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from "@angular/forms";
-import { IJournalDetailDelete, IJournalHeader, IJournalHeaderUpdate, JournalService } from "app/services/journal.service";
+import { JournalService } from "app/services/journal.service";
 import { Observable, ReplaySubject, Subject, Subscription, interval, map, startWith, take, takeUntil } from "rxjs";
 import { CommonModule } from "@angular/common";
 import { DndComponent } from "app/modules/drag-n-drop/loaddnd/dnd.component";
@@ -22,7 +21,7 @@ import { FileManagerComponent } from "app/modules/file-manager/file-manager.comp
 import { AUTH } from "app/app.config";
 import { MatSelect } from "@angular/material/select";
 import { NgxMatSelectSearchModule } from "ngx-mat-select-search";
-import { IDropDownAccounts, IDropDownAccountsGridList, IFunds, IJournalDetail, } from "app/models";
+import { IDropDownAccounts, IDropDownAccountsGridList, IFunds } from "app/models";
 
 import { ContextMenuComponent, MenuEventArgs, MenuItemModel, ContextMenuModule } from "@syncfusion/ej2-angular-navigations";
 import {
@@ -36,6 +35,7 @@ import {
 } from "@syncfusion/ej2-angular-grids";
 
 import { DataManager, Query } from "@syncfusion/ej2-data";
+import { IJournalDetailDelete, IJournalHeader, IJournalHeaderUpdate } from "app/models/journals";
 
 
 declare var __moduleName: string;
@@ -192,7 +192,8 @@ export class JournalUpdateComponent
         };
         this.accountsGrid.push(list);
       });
-      this.fundListSubject = this.funds$.subscribe((funds) => {
+    
+    this.fundListSubject = this.funds$.subscribe((funds) => {
         funds.forEach((fund) => {
           var list = {
             fund: fund.fund,
@@ -333,10 +334,8 @@ export class JournalUpdateComponent
   public dataAccountList = new DataManager(this.accountsGrid);
   public dFields = { text: "child", value: "child" };
 
-
-
   protected setInitialValue() {
-    this.journalService.getJournalDetail(this.journal_id);
+    // this.journalService.getJournalDetail(this.journal_id);
     this.accountParams = {
       params: {
         filterType: "Contains",
@@ -390,12 +389,6 @@ export class JournalUpdateComponent
     });
   }
 
-  updateDetailList() {
-    // this.detailsSubject = this.detailsListSignal.subscribe(details => {
-    //   this.journalDetailList = details;
-    // })
-  }
-
   public refresh(
     journal_id: number,
     description: string,
@@ -405,6 +398,7 @@ export class JournalUpdateComponent
     this.description = description;
     this.transaction_date = transaction_date;
     this.amount = amount;
+    this.journalService.getJournalDetail(journal_id);
 
     this.journalForm = this.fb.group({
       description: [this.description, Validators.required],
@@ -416,22 +410,11 @@ export class JournalUpdateComponent
       this.description = "";
       this.transaction_date = "";      
       return;
-    } else if (journal_id > 0) {
-        this.journalService.getJournalDetail(this.journal_id);
-    } else {
-      this.description = "";
-      this.transaction_date = "";
-      
-      this.journalForm = this.fb.group({
-        description: [this.description, Validators.required],
-        amount: [this.amount, Validators.required],
-        transaction_date: [this.transaction_date, Validators.required],
-      });
-    }
+    } 
   }
 
   changeSubtype(e: any) {
-    console.debug("Subytype :", e.value);
+    console.debug("Subtype :", e.value);
   }
 
   onCreateTemplate() {

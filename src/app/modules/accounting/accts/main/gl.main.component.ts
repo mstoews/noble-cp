@@ -1,9 +1,8 @@
 
 import { BalanceSheetComponent } from '../../../reporting/balance-sheet/balance-sheet.component';
 import { CdkScrollable } from '@angular/cdk/scrolling';
-import { DistributedLedgerComponent } from '../../../reporting/distributed-ledger/distributed-ledger.component';
 import { FundsComponent } from '../funds/funds.component';
-import { GlAccountsComponent } from '../gl-accts.component';
+import { GlAccountsComponent } from '../accounts/gl-accts.component';
 import { GlTypesComponent } from '../types/types.component';
 import { HttpClient } from '@angular/common/http';
 import { TrialBalanceComponent } from '../../../reporting/trial-balance/trial-balance.component';
@@ -38,7 +37,6 @@ import { MatDrawer } from '@angular/material/sidenav';
         CdkScrollable,
         BalanceSheetComponent,
         TrialBalanceComponent,
-        DistributedLedgerComponent,        
         FundsComponent,
         GlAccountsComponent,
         GlTypesComponent,
@@ -97,7 +95,7 @@ export class GlMainComponent {
                 id: 'subtypes',
                 icon: 'heroicons_outline:clipboard-document',
                 title: 'Transaction Subtypes',
-                description: 'Sub type definitions for tranaction reporting',
+                description: 'Sub type definitions for transaction reporting',
             },
             {
                 id: 'funds',
