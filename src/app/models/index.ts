@@ -165,6 +165,18 @@ export interface IDistributionReport {
   update_date: Date    
 }
 
+export interface IJournalParams {    
+  child: number,
+  period: number,
+  period_year: number
+}
+
+export interface IDistributionParams {
+  period : number,
+  period_year: number
+
+}
+
 export interface IDistributionLedger {
   account: string;
   child: string;

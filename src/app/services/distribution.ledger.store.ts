@@ -2,7 +2,6 @@ import {
     patchState,
     signalStore,
     withComputed,
-    withHooks,
     withMethods,
     withState,
   } from '@ngrx/signals';
@@ -12,62 +11,52 @@ import {
   import { computed, inject } from '@angular/core';
   import { DistributionLedgerService } from './distribution.ledger.service'
   import { tapResponse } from '@ngrx/operators';
-  import { IDistributionLedger, IDistributionLedgerReport } from 'app/models';
+  import { IDistributionLedger, IDistributionParams, IJournalParams, IJournalSummary } from 'app/models';
   
-  export interface IDistributionParams {
-    period : number,
-    period_year: number
-
-  }
-
-  export interface IJournalParams {
-    account: number,
-    child: number,
-    period: number,
-    period_year: number
-  }
   
   export interface DistributionStateInterface {
     header: IDistributionLedger[];
-    details: IDistributionLedgerReport[],
+    details: IJournalSummary[],
+    periodParam: IDistributionParams,
+    accountParam: IJournalParams,
     isLoading: boolean;
     error: string | null;
     accountCount: number;
   }
   
-  export const KanbanStore = signalStore(
+  export const TrialBalanceStore = signalStore(
     withState<DistributionStateInterface>({
       header: [],
       details: [],
-      error: null,
+      periodParam: null,
+      accountParam: null,
+      error: null,      
       isLoading: false,
       accountCount: 0
     }),
     withComputed((state) => ({
-      tasksCount: computed(() => state.header().length),      
+      accountCount: computed(() => state.header().length),      
     })),
     withMethods((state, distributionService = inject(DistributionLedgerService)) => ({             
-      loadHeader: rxMethod<void>(
+      loadHeader: rxMethod<IDistributionParams>(
         pipe(
-          tap(() => patchState(state, { isLoading: true })),
-          exhaustMap(() => {
-            return distributionService.getDistributionReportByPrdAndYear(1, 2024).pipe(
+          switchMap((value) => {          
+            return distributionService.getDistributionReportByPrdAndYear(value).pipe(
               tapResponse({
                 next: (header) => patchState(state, { header: header }),
                 error: console.error,
                 finalize: () => patchState(state, { isLoading: false }),
               })
             );
-          })
+          })  
         )
       ),
-      loadDetail: rxMethod<void>(
+      loadDetail: rxMethod<IJournalParams>(
         pipe(
-          tap(() => patchState(state, { isLoading: true })),
-          exhaustMap(() => {
-            return kanbanService.getTasks().pipe(
+          switchMap((value) => {                              
+            return distributionService.getDistributionJournalsByChild(value).pipe(
               tapResponse({
-                next: (tasks) => patchState(state, { tasks: tasks }),
+                next: (detail) => patchState(state, { details: detail }),
                 error: console.error,
                 finalize: () => patchState(state, { isLoading: false }),
               })
@@ -76,11 +65,5 @@ import {
         )
       ),
     })),
-    withHooks({
-      onInit(store) {
-        store.loadTasks();
-        store.loadPriority();
-      },
-    })
   );
   

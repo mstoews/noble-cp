@@ -1,57 +1,49 @@
 
-    <div class="absolute inset-0 flex flex-col min-w-0 overflow-y-auto -px-20" cdkScrollable>
+<div class="absolute inset-0 flex flex-col min-w-0 overflow-y-auto -px-20" cdkScrollable>
         <!-- Main -->
         <div class="flex-auto p-6 sm:p-10">
             <div class="h-full border-gray-300 rounded-2xl">
                 <div class="dark:text-white text-3xl mb-10">Trial Balance</div>
-                  <div class="dark:text-white text-2xl ml-20 mb-10">Assets and Liabilities</div>
-                        @if (assets$ | async; as assets) {
-                            <div class="flex flex-col ml-20">
-                            <dx-data-grid
-                                [dataSource]="assets"
-                                [remoteOperations]="false"
-                                [showBorders]="true"
-                                [showColumnLines]="true"
-                                [showRowLines]="true"
-                                [showColumnHeaders]="true"
-                                [allowColumnReordering]="true"
-                                [rowAlternationEnabled]="true"
-                                [showBorders]="true"
-                                [focusedRowEnabled]="true"
-                                [focusedRowIndex]="0"
-                                (onCellDblClick)="onCellDoubleClicked($event)"
-                                [repaintChangesOnly]="true"
-                                [columnHidingEnabled]="true"
-                                keyExpr="account">
-
-                                <dxo-paging [pageSize]="25"></dxo-paging>
-                                <dxo-pager [showPageSizeSelector]="true"
-                                    [allowedPageSizes]="[25, 50, 100]"></dxo-pager>
-                                <dxo-search-panel [visible]="true" [highlightCaseSensitive]="true"></dxo-search-panel>
-                                <dxo-group-panel [visible]="true"></dxo-group-panel>
-                                <dxo-grouping [autoExpandAll]="false"></dxo-grouping>
-
-                                <dxi-column dataField="account" width="100" dataType="string"></dxi-column> -->
-                                <dxi-column dataField="description" width="400" dataType="string"></dxi-column>
-                                <dxi-column dataField="type" width="100" dataType="string"></dxi-column>
-                                <dxi-column dataField="balance" dataType="number" alignment="right" format="currency"></dxi-column>
-                                <dxo-summary>
-                                    <dxi-total-item column="account" summaryType="count"> </dxi-total-item>
-
-
-                                    <dxi-total-item
-                                      column="balance"
-                                      summaryType="sum"
-                                      valueFormat="currency"
-                                    >
-                                    </dxi-total-item>
-                                  </dxo-summary>
-
-                            </dx-data-grid>
-                        </div>
-}
-
-            </div>
+                <ng-container>
+                    @if (store.isLoading() === false) {
+        
+                    <ejs-grid id="grid" 
+                        [dataSource]="store.header()" 
+                        [childGrid]='childGrid'
+                        allowPaging='true' allowSorting='true'  
+                        showColumnMenu='true' allowEditing='false' [allowFiltering]='true' [allowGrouping]='true'
+                        [toolbar]='toolbarOptions' [selectionOptions]='selectionOptions' [filterSettings]='filterSettings'
+                        [editSettings]='editSettings' 
+                        [pageSettings]='pageSettings' 
+                        [searchSetting]='searchOptions'
+                        (rowSelected)="onRowSelected($event)"
+                        (actionBegin)="actionBegin($event)" 
+                        (load)='onLoad()'
+                        >
+        
+                        <e-columns>
+                            <e-column headerText="Group" field="account" width="100" ></e-column>
+                            <e-column headerText="Account" field="child" isPrimaryKey='true'  width="120" ></e-column>
+                            <e-column headerText="Prd" field="period" width="100" ></e-column>
+                            <e-column headerText="Tear" field="period_year" width="120" ></e-column>
+                            <e-column headerText="Description" field="description" width="240" ></e-column>
+                            <e-column textAlign="Right" headerText="Open" format="N2" field="opening_balance" width="140" ></e-column>
+                            <e-column textAlign="Right" headerText="Debit" format="N2" field="debit_balance" width="140" ></e-column>
+                            <e-column textAlign="Right" headerText="Credit" format="N2" field="credit_balance" width="140" ></e-column>
+                            <e-column textAlign="Right" headerText="Closing" format="N2" field="closing_balance" width="140" ></e-column>
+                        </e-columns>
+                    </ejs-grid>
+        
+                    }
+                    @else
+                    {
+                    <div class="fixed z-[1050] -translate-x-2/4 -translate-y-2/4 left-2/4 top-2/4">
+                        <mat-spinner></mat-spinner>
+                    </div>
+                    }
+                </ng-container>
+                
+                </div>
         </div>
-    </div>
+</div>
 

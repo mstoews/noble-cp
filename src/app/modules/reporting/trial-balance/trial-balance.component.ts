@@ -1,120 +1,142 @@
 import { ChangeDetectionStrategy, Component, OnInit, ViewChild, inject } from '@angular/core';
 import { CommonModule, NgFor } from '@angular/common';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { MatDrawer, MatSidenavModule } from '@angular/material/sidenav';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { TrialBalanceStore } from 'app/services/distribution.ledger.store';
+import { MaterialModule } from 'app/services/material.module';
+import { AggregateService, ColumnMenuService, DetailRowService, EditService, FilterService, FilterSettingsModel, GridComponent, GridModule, GroupService, PageService, ResizeService, RowSelectEventArgs, SearchSettingsModel, SelectionSettingsModel, SortService, ToolbarItems, ToolbarService } from '@syncfusion/ej2-angular-grids';
+import { DropDownListComponent } from '@syncfusion/ej2-angular-dropdowns';
 
-import { GLAccountsService } from 'app/services/accounts.service';
-import { MatButtonModule } from '@angular/material/button';
-import { MatCardModule } from '@angular/material/card';
-import { MatCheckboxModule } from '@angular/material/checkbox';
-import { MatFormFieldModule } from "@angular/material/form-field";
-import { MatIconModule } from '@angular/material/icon';
-import { MatInputModule } from '@angular/material/input';
-import { MatSelectModule } from '@angular/material/select';
-import { map } from 'rxjs';
 
 const imports = [
     CommonModule,
-    MatSidenavModule,
-    MatCardModule,
     ReactiveFormsModule,
-    MatIconModule,
     FormsModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatCheckboxModule,
-    MatButtonModule,
-    MatSelectModule
+    MaterialModule,
+    GridModule,
 ];
 
 @Component({
     selector: 'trial-balance',
     standalone: true,
     imports: [imports],
-    styles: [`
-    ::ng-deep .dx-datagrid .dx-datagrid-rowsview .dx-row-focused.dx-data-row:not(.dx-edit-row) > td:not(.dx-focused) {
-        background-color: rgb(195, 199, 199);
-        border-color: rgb(195, 199, 199);
-      }
-    `],
     templateUrl: './trial-balance.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
-    providers: [GLAccountsService],
+    providers: [TrialBalanceStore, GroupService, DetailRowService, SortService, PageService, ResizeService, FilterService, ToolbarService, EditService, AggregateService, ColumnMenuService],
+    styles: [`
+               .e-detailcell .e-grid td.e-cellselectionbackground { background-color: #00b7ea; }
+            `]
 })
 export class TrialBalanceComponent implements OnInit {
-    private fb = inject(FormBuilder);
-    private accountApiService = inject(GLAccountsService);
 
-    // local variables
-    @ViewChild('drawer') drawer!: MatDrawer;
-    collapsed = false;
-    sTitle = 'Income Statement';
-    selectedItemKeys: any[] = [];
-    totalRevenue: any;
+    store = inject(TrialBalanceStore);
+    @ViewChild('grid')
+    public grid?: GridComponent;
 
-    revenue: any[] = [{ account: '', description: 'Total Revenue', balance: 1530, type: '' }];
+    // datagrid settings start
+    public pageSettings: Object;
+    public formatoptions: Object;
+    public initialSort: Object;
+    public filterOptions: FilterSettingsModel;
+    public editSettings: Object;
+    public dropDown: DropDownListComponent;
+    public submitClicked: boolean = false;
+    public selectionOptions?: SelectionSettingsModel;
+    public toolbarOptions?: ToolbarItems[];
+    public searchOptions?: SearchSettingsModel;
+    public filterSettings: FilterSettingsModel;
 
-    customizeTooltip = (pointsInfo: { originalValue: string; }) => ({ text: `${parseInt(pointsInfo.originalValue)}%` });
-    accountsForm!: FormGroup;
-    assets$: any;
-    //assets$ = this.accountApiService.read().pipe(map((income) => income.filter((inc) => inc.type === 'Assets' || inc.type === 'Liability')));
+    public childGrid: GridModule = {
+        dataSource: this.store.details(),        
+        queryString: 'child',        
+        columns: [
+            { field: 'account', headerText: 'Account', textAlign: 'Right', width: 140 },
+            { field: 'child', headerText: 'Child', textAlign: 'Right', width: 140 },
+            { field: 'fund', headerText: 'Fund', textAlign: 'Right', width: 140 },
+            { field: 'sub_type', headerText: 'Sub Type', textAlign: 'Right', width: 140 },
+            { field: 'description', headerText: 'Description', textAlign: 'Right', width: 240 },
+            { field: 'debit', headerText: 'Debit', textAlign: 'Right', format: 'N2', width: 140 },
+            { field: 'credit', headerText: 'Credit', textAlign: 'Right', format: 'N2', width: 140 },
+        ],
+    }
+
+    initialDatagrid() {
+        // this.pageSettings = { pageCount: 10 };        
+        this.formatoptions = { type: 'dateTime', format: 'M/dd/yyyy' }
+        this.pageSettings = { pageSizes: true, pageCount: 10 };
+        this.selectionOptions = { mode: 'Cell' };
+        this.editSettings = { allowEditing: false, allowAdding: false, allowDeleting: false };
+        this.searchOptions = { fields: ['description'], operator: 'contains', ignoreCase: true, ignoreAccent: true };
+        this.toolbarOptions = ['Search'];
+        this.filterSettings = { type: 'CheckBox' };
+    }
 
     ngOnInit() {
-        this.createEmptyForm();
+        this.initialDatagrid();
+        var params = {
+            period: 1,
+            period_year: 2024
+        }
+        var paramsDetail = {
+            child: 1002,
+            period: 1,
+            period_year: 2024
+        }
+        this.store.loadHeader(params)
+
+        
+
+        this.store.loadDetail(paramsDetail);
+
+        
+        console.log('Initial Trial Balance completed');
+        
+        console.log('Header Length', this.store.header().length)
+
     }
 
-    add() {
-        this.createEmptyForm();
+    actionBegin(args: any) {
+        console.debug(JSON.stringify(args.requestType));
+        console.log('Header Length from refresh', this.store.header().length)
 
+        
+        // if (args.requestType === 'beginEdit' || args.requestType === 'add') {
+
+        //     var detailParams = {
+        //         period: 1,
+        //         period_year: 2024,
+        //         child: 1001
+        //     }
+
+        //     this.store.loadDetail(detailParams)
+        //     this.store.details().forEach(data => {
+        //         console.log(JSON.stringify(data));
+        //     })
+        //     var data =args.rowData as IDistributionLedger;
+            
+        // }
+    }
+
+    public onRowSelected(args: RowSelectEventArgs): void {
+        const queryData: any = args.data;      
+        
+        var params = {
+            period: queryData.period,
+            period_year: queryData.period_year,
+            child: queryData.child
+        }
+
+        this.store.loadDetail(params);
+        
+        console.debug('Number of entries', JSON.stringify(this.store.details().length));        
+        
     }
 
 
-    createEmptyForm() {
-        this.accountsForm = this.fb.group({
-            account: ['', Validators.required],
-            description: ['', Validators.required],
-            balance: ['', Validators.required],
-            type: ['', Validators.required],
-            comments: ['', Validators.required],
-            sub_type: ['', Validators.required],
-            special_assessment: ['', Validators.required],
-            capital_asset_fund: ['', Validators.required],
-            reserve_fund: ['', Validators.required],
-        });
+    onLoad(): void {
+        // (this.grid as GridComponent).childGrid.dataSource = this.store.details();
+        // (this.grid as GridComponent).detailRowModule.expand(1);
     }
-
-    selectionChanged(data: any) {
-        console.debug(`selectionChanged ${JSON.stringify(data.data)}`);
-        this.selectedItemKeys = data.selectedRowKeys;
-    }
-
-    onCellDoubleClicked(e: any) {
-        console.debug(`onCellDoubleClicked ${JSON.stringify(e)}`);
-    }
-
+    
+    
 }
-
-
-
-
-/*
-id?: string;
-account: string;
-child_account: string;
-type: string;
-description: string;
-balance: number;
-sub_type: boolean;
-special_assessment: boolean;
-capital_asset_fund: boolean;
-reserve_fund: boolean;
-comments: string;
-createDate: string;
-createUsr: string;
-updateDate: string;
-updateUsr: string;
-*/
-
-
-
 

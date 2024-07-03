@@ -5,6 +5,8 @@ import { CommonModule } from '@angular/common';
 
 import { MaterialModule } from 'app/services/material.module';
 import { RouterOutlet } from '@angular/router';
+import { TrialBalanceComponent } from './trial-balance/trial-balance.component';
+import { ReportTestComponent } from './report-test.component';
 
 export interface IValue {
   value: string;
@@ -17,7 +19,9 @@ const imports = [
   ReactiveFormsModule,
   CommonModule,
   RouterOutlet,
-  CommonModule
+  CommonModule,
+  TrialBalanceComponent,
+  ReportTestComponent
 ]
 
 @Component({
