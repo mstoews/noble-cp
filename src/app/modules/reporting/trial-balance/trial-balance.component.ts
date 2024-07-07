@@ -1,10 +1,26 @@
-import { ChangeDetectionStrategy, Component, OnInit, ViewChild, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, ViewChild, inject, AfterViewInit } from '@angular/core';
 import { CommonModule, NgFor } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TrialBalanceStore } from 'app/services/distribution.ledger.store';
 import { MaterialModule } from 'app/services/material.module';
-import { AggregateService, ColumnMenuService, DetailRowService, EditService, FilterService, FilterSettingsModel, GridComponent, GridModule, GroupService, PageService, ResizeService, RowSelectEventArgs, SearchSettingsModel, SelectionSettingsModel, SortService, ToolbarItems, ToolbarService } from '@syncfusion/ej2-angular-grids';
+import { 
+    AggregateService, 
+    ColumnMenuService, 
+    DetailRowService, 
+    EditService, 
+    PdfExportService, 
+    ExcelExportService, 
+    FilterService, 
+    FilterSettingsModel, 
+    GridComponent, 
+    GridModule, 
+    GroupService, 
+    PageService, 
+    ResizeService, 
+    RowSelectEventArgs, SearchSettingsModel, SelectionSettingsModel, SortService, ToolbarItems, ToolbarService } from '@syncfusion/ej2-angular-grids';
 import { DropDownListComponent } from '@syncfusion/ej2-angular-dropdowns';
+import { IJournalSummary } from 'app/models';
+import { ReportingToolbarComponent } from '../grid-reporting/grid-menubar.component';
 
 
 const imports = [
@@ -13,6 +29,7 @@ const imports = [
     FormsModule,
     MaterialModule,
     GridModule,
+    ReportingToolbarComponent
 ];
 
 @Component({
@@ -21,16 +38,15 @@ const imports = [
     imports: [imports],
     templateUrl: './trial-balance.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
-    providers: [TrialBalanceStore, GroupService, DetailRowService, SortService, PageService, ResizeService, FilterService, ToolbarService, EditService, AggregateService, ColumnMenuService],
+    providers: [TrialBalanceStore, PdfExportService ,ExcelExportService ,GroupService, DetailRowService, SortService, PageService, ResizeService, FilterService, ToolbarService, EditService, AggregateService, ColumnMenuService],
     styles: [`
                .e-detailcell .e-grid td.e-cellselectionbackground { background-color: #00b7ea; }
             `]
 })
-export class TrialBalanceComponent implements OnInit {
-
+export class TrialBalanceComponent implements OnInit, AfterViewInit {
+    
     store = inject(TrialBalanceStore);
-    @ViewChild('grid')
-    public grid?: GridComponent;
+    @ViewChild('grid') public grid: GridComponent;
 
     // datagrid settings start
     public pageSettings: Object;
@@ -44,25 +60,47 @@ export class TrialBalanceComponent implements OnInit {
     public toolbarOptions?: ToolbarItems[];
     public searchOptions?: SearchSettingsModel;
     public filterSettings: FilterSettingsModel;
+    public childData?: IJournalSummary[] | null;
 
-    public childGrid: GridModule = {
-        dataSource: this.store.details(),        
-        queryString: 'child',        
+    public childDataGrid: GridModule = {
+        dataSource: this.childData,        
+        queryString: 'child',
+        allowPaging: false,
+        allowGrouping: true,
         columns: [
-            { field: 'account', headerText: 'Account', textAlign: 'Right', width: 140 },
-            { field: 'child', headerText: 'Child', textAlign: 'Right', width: 140 },
-            { field: 'fund', headerText: 'Fund', textAlign: 'Right', width: 140 },
-            { field: 'sub_type', headerText: 'Sub Type', textAlign: 'Right', width: 140 },
+            { field: 'journal_id',headerText: 'ID', textAlign: 'Right', width: 70 },
+            { field: 'child', headerText: 'Child', textAlign: 'Right', width: 100 },
+            { field: 'account', headerText: 'Account', textAlign: 'Right', width: 100 },            
+            { field: 'fund', headerText: 'Fund', textAlign: 'Right', width: 100 },
+            { field: 'sub_type', headerText: 'Sub Type', textAlign: 'Right', width: 100 },
             { field: 'description', headerText: 'Description', textAlign: 'Right', width: 240 },
-            { field: 'debit', headerText: 'Debit', textAlign: 'Right', format: 'N2', width: 140 },
-            { field: 'credit', headerText: 'Credit', textAlign: 'Right', format: 'N2', width: 140 },
-        ],
+            { field: 'debit', headerText: 'Debit', textAlign: 'Right', format: 'N2', width: 120 },
+            { field: 'credit', headerText: 'Credit', textAlign: 'Right', format: 'N2', width: 120 },
+            ],
+            aggregates: [
+                {
+                  columns: [
+                    {
+                      type: 'Sum',
+                      field: 'debit',
+                      footerTemplate: '${Sum}',
+                      format: 'N2'
+                    },
+                    {
+                        type: 'Sum',
+                        field: 'credit',
+                        footerTemplate: '${Sum}',
+                        format: 'N2'
+                      },
+                  ],
+                },                
+              ],
+        
     }
 
     initialDatagrid() {
-        // this.pageSettings = { pageCount: 10 };        
-        this.formatoptions = { type: 'dateTime', format: 'M/dd/yyyy' }
-        this.pageSettings = { pageSizes: true, pageCount: 10 };
+        
+        this.formatoptions = { type: 'dateTime', format: 'M/dd/yyyy' }        
         this.selectionOptions = { mode: 'Cell' };
         this.editSettings = { allowEditing: false, allowAdding: false, allowDeleting: false };
         this.searchOptions = { fields: ['description'], operator: 'contains', ignoreCase: true, ignoreAccent: true };
@@ -76,67 +114,81 @@ export class TrialBalanceComponent implements OnInit {
             period: 1,
             period_year: 2024
         }
-        var paramsDetail = {
-            child: 1002,
-            period: 1,
-            period_year: 2024
-        }
-        this.store.loadHeader(params)
+        this.store.loadHeader(params);
+        this.store.loadJournals(params);        
+    }
 
-        
-
-        this.store.loadDetail(paramsDetail);
-
-        
-        console.log('Initial Trial Balance completed');
-        
-        console.log('Header Length', this.store.header().length)
+    onRefresh() {
+        console.log('Refresh');
 
     }
 
+    onExportExcel(){
+        console.log('Excel');
+        this.grid!.excelExport({ fileName: 'TB-31-01-2024.xlsx', header: {
+            headerRows: 7,
+            rows: [
+                { cells: [{ colSpan: 4, value: "Noble Ledgers ", style: { fontColor: '#03396c', fontSize: 20, hAlign: 'Left', bold: true, } }] },    
+                { cells: [{ colSpan: 4, value: "Trial Balance", style: { fontColor: '#03396c', fontSize: 20, hAlign: 'Left', bold: true, } }] },    
+            ]
+        },
+        footer: {
+            footerRows: 4,
+            rows: [
+                { cells: [{ colSpan: 4, value: "", style: { hAlign: 'Center', bold: true } }] },
+                { cells: [{ colSpan: 4, value: "", style: { hAlign: 'Center', bold: true } }] }
+            ]
+        }, });
+    }
+
+
+    onExportCSV() {
+        console.log('Refresh');
+        this.grid!.pdfExport({ pageOrientation: 'Landscape', pageSize: 'A4', fileName: 'TB-31-01-2024.pdf',  header: {
+            fromTop: 0,
+            height: 120,
+            contents: [
+                {
+                  type: 'Text',
+                  value: 'Trial Balance 31-01-2024',
+                  position: { x:10, y: 50 },
+                  style: { textBrushColor: '#000000', fontSize: 30 },
+                },
+            ]
+        }  });
+
+    }
+
+    ngAfterViewInit(): void {
+        this.store.loadJournals({
+            period: 1,
+            period_year: 2024
+        });
+        if (this.grid !== null || this.grid !== undefined) {
+            this.grid!.childGrid.dataSource = this.childData;   
+        }                      
+    }
+    
     actionBegin(args: any) {
-        console.debug(JSON.stringify(args.requestType));
-        console.log('Header Length from refresh', this.store.header().length)
-
-        
-        // if (args.requestType === 'beginEdit' || args.requestType === 'add') {
-
-        //     var detailParams = {
-        //         period: 1,
-        //         period_year: 2024,
-        //         child: 1001
-        //     }
-
-        //     this.store.loadDetail(detailParams)
-        //     this.store.details().forEach(data => {
-        //         console.log(JSON.stringify(data));
-        //     })
-        //     var data =args.rowData as IDistributionLedger;
-            
-        // }
+        console.debug(JSON.stringify(args.requestType));        
+        console.log('Header Length', this.store.header().length)
+        console.debug('Detail Length', this.store.details().length)
     }
 
     public onRowSelected(args: RowSelectEventArgs): void {
-        const queryData: any = args.data;      
+        console.debug('row Selected');
+        this.childData = this.store.details();
+        (this.grid as GridComponent).childGrid.dataSource = this.childData;                         
+        console.debug('Detail Length', this.childData.length);
+    }
         
-        var params = {
-            period: queryData.period,
-            period_year: queryData.period_year,
-            child: queryData.child
-        }
-
-        this.store.loadDetail(params);
+    onLoad(): void { 
         
-        console.debug('Number of entries', JSON.stringify(this.store.details().length));        
+        this.childData = this.store.details();
+        
+        (this.grid as GridComponent).childGrid.dataSource = this.childData;                         
         
     }
-
-
-    onLoad(): void {
-        // (this.grid as GridComponent).childGrid.dataSource = this.store.details();
-        // (this.grid as GridComponent).detailRowModule.expand(1);
-    }
+ }
     
-    
-}
 

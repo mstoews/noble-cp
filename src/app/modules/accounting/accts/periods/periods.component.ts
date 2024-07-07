@@ -13,7 +13,9 @@ import { FuseConfirmationService } from '@fuse/services/confirmation';
 import { MatDrawer } from '@angular/material/sidenav';
 import { MaterialModule } from 'app/services/material.module';
 import { GridMenubarStandaloneComponent } from '../../grid-menubar/grid-menubar.component';
-import { GridModule } from '@syncfusion/ej2-angular-grids';
+import { FilterSettingsModel, GridModule, SearchSettingsModel, SelectionSettingsModel, ToolbarItems } from '@syncfusion/ej2-angular-grids';
+import { PeriodStore } from 'app/services/periods.store';
+import { DropDownListComponent } from '@syncfusion/ej2-angular-dropdowns';
 
 const imports = [
     CommonModule,
@@ -29,7 +31,7 @@ const imports = [
     standalone: true,
     imports: [imports],
     templateUrl: './periods.component.html',
-    providers: [],
+    providers: [PeriodStore],
 })
 export class PeriodsComponent implements OnInit {
     public data: any;
@@ -40,12 +42,36 @@ export class PeriodsComponent implements OnInit {
 
     public sTitle = 'General Ledger Periods';
 
-    private periodsService = inject(PeriodsService)
+    store = inject(PeriodStore);
 
-    data$ = this.periodsService.listPeriods()
+    // datagrid settings start
+    public pageSettings: Object;
+    public formatoptions: Object;
+    public initialSort: Object;
+    public filterOptions: FilterSettingsModel;
+    public editSettings: Object;
+    public dropDown: DropDownListComponent;
+    public submitClicked: boolean = false;
+    public selectionOptions?: SelectionSettingsModel;
+    public toolbarOptions?: ToolbarItems[];
+    public searchOptions?: SearchSettingsModel;
+    public filterSettings: FilterSettingsModel;
+    
+    initialDatagrid() {
+        // this.pageSettings = { pageCount: 10 };        
+        this.formatoptions = { type: 'dateTime', format: 'M/dd/yyyy' }        
+        this.pageSettings =  { pageSizes: true, pageCount: 10 };
+        this.selectionOptions = { mode: 'Cell' };              
+        this.editSettings = { allowEditing: true, allowAdding: false, allowDeleting: false };
+        this.searchOptions = { operator: 'contains', ignoreCase: true, ignoreAccent:true };
+        this.toolbarOptions = ['Search'];   
+        this.filterSettings = { type: 'Excel' };    
+    }
 
     ngOnInit() {
         this.createEmptyForm();
+        this.initialDatagrid()
+        this.store.loadPeriods()
     }
 
     onCreate(e: any) {
@@ -61,7 +87,7 @@ export class PeriodsComponent implements OnInit {
     onDelete(e: any) {
         console.debug(`onDelete ${JSON.stringify(e)}`);
         const confirmation = this._fuseConfirmationService.open({
-            title: 'Delete Type?',
+            title: 'Delete period?',
             message: 'Are you sure you want to delete this type? ',
             actions: {
                 confirm: {

@@ -4,6 +4,7 @@ import { MatDrawer } from '@angular/material/sidenav';
 import { FuseMediaWatcherService } from '@fuse/services/media-watcher';
 import { MaterialModule } from 'app/services/material.module';
 import { Subject, takeUntil } from 'rxjs';
+import { TrialBalanceComponent } from './trial-balance/trial-balance.component';
 
 
 const imports = [
@@ -12,6 +13,7 @@ const imports = [
     NgClass,
     NgSwitch,
     NgSwitchCase,
+    TrialBalanceComponent
 
 ]
 
@@ -21,7 +23,7 @@ const imports = [
     imports: [imports],
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    templateUrl: './reporting-main.component.html',
+    templateUrl: './reporting-panel.component.html',
     styles: ``
 })
 export class ReportingPanelComponent {
@@ -30,7 +32,7 @@ export class ReportingPanelComponent {
     drawerMode: 'over' | 'side' = 'side';
     drawerOpened: boolean = true;
     panels: any[] = [];
-    selectedPanel: string = 'listing';
+    selectedPanel: string = 'trial-balance';
     private _unsubscribeAll: Subject<any> = new Subject<any>();
 
     /**
@@ -53,28 +55,22 @@ export class ReportingPanelComponent {
         // Setup available panels
         this.panels = [
             {
-                id: 'financial',
+                id: 'trial-balance',
                 icon: 'heroicons_outline:document-check',
-                title: 'Financial Reports',
-                description: 'Manage and create financial reporting',
+                title: 'Trial Balance Reporting',
+                description: 'Distributed trial balance listing including the associated journal entries',
             },
             {
-                id: 'balance-sheet',
+                id: 'income-statement',
                 icon: 'heroicons_outline:document-plus',
                 title: 'Transaction Balances',
                 description: 'Transaction reporting, trial balance and distributed ledger reporting',
             },
             {
-                id: 'budgeting',
+                id: 'balance-sheet',
                 icon: 'heroicons_outline:document-duplicate',
                 title: 'Templates',
                 description: 'Manage your accounting patterns to automate, reduce effort and provide consistency in accounting',
-            },
-            {
-                id: 'management',
-                icon: 'feather:image',
-                title: 'Artifact Management',
-                description: 'Manage the documentation of transactions',
             },
             {
                 id: 'reconciliations',

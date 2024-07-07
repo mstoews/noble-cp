@@ -63,7 +63,7 @@ export class KanbanTypesComponent implements OnInit, OnDestroy {
     onDelete(e: any) {
         console.debug(`onDelete ${JSON.stringify(e)}`);
         const confirmation = this._fuseConfirmationService.open({
-            title: 'Delete Type?',
+            title: 'Delete Kanban Type?',
             message: 'Are you sure you want to delete this type? ',
             actions: {
                 confirm: {
@@ -77,7 +77,8 @@ export class KanbanTypesComponent implements OnInit, OnDestroy {
             // If the confirm button pressed...
             if (result === 'confirmed') {
                 // Delete the list
-                // this.typeApiService.delete(this.typeId);
+                // this.kanbanService.delete()
+                
             }
         });
         this.closeDrawer();

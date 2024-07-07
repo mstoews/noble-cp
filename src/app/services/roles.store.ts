@@ -10,38 +10,35 @@ import {
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { exhaustMap, pipe, switchMap, tap } from 'rxjs';
 import { computed, inject } from '@angular/core';
-
 import { tapResponse } from '@ngrx/operators';
-import { FundsService } from './funds.service';
-import { IFunds } from 'app/models';
+import { IRole, RoleService } from './roles.service';
 
 
-export interface FundStateInterface {
-  funds: IFunds[];
+export interface RoleStateInterface {
+  roles: IRole[];
   isLoading: boolean;
   error: string | null;
 }
 
-export const FundsStore = signalStore(
-  withState<FundStateInterface>({
-    funds: [],
+export const RolesStore = signalStore(
+  withState<RoleStateInterface>({
+    roles: [],
     error: null,
     isLoading: false,
-  
   }),
   withComputed((state) => ({
-    tasksCount: computed(() => state.funds().length),
-    selected: computed(() => state.funds().filter((t) => state.funds()[t.id])),
+    tasksCount: computed(() => state.roles().length),
+    selected: computed(() => state.roles().filter((t) => state.roles()[t.role])),
   })),
-  withMethods((state, fundService = inject(FundsService)) => ({       
-    removeFund:   rxMethod<IFunds>(
+  withMethods((state, roleService = inject(RoleService)) => ({       
+    removeRole: rxMethod<IRole>(
       pipe(
         switchMap((value) => {
           patchState(state, { isLoading: true });
-          return fundService.delete(value.id).pipe(
+          return roleService.delete(value.role).pipe(
             tapResponse({
-              next: (fund) => {
-                patchState(state, { funds: state.funds().filter((fund) => fund.fund !== value.fund) });
+              next: () => {
+                patchState(state, { roles: state.roles().filter((prd) => prd.role !== value.role) });
               },
               error: console.error,
               finalize: () => patchState(state, { isLoading: false }),
@@ -51,33 +48,14 @@ export const FundsStore = signalStore(
       )
     ),
 
-    addFund:  rxMethod<IFunds>(
+    addRole: rxMethod<IRole>(
       pipe(
         switchMap((value) => {
           patchState(state, { isLoading: true });
-          return fundService.create(value).pipe(
+          return roleService.create(value).pipe(
             tapResponse({
-              next: (fund) => {
-               patchState(state, { funds: [...state.funds(), fund] });
-              },
-              error: console.error,
-              finalize: () => patchState(state, { isLoading: false }),
-            })
-          );
-        })
-      )
-    ),
-    updateFund: rxMethod<IFunds>(
-      pipe(
-        switchMap((value) => {
-          return fundService.update(value).pipe(
-            tapResponse({
-              next: (fund) => {
-                const updatedTasks = state.funds().filter((fund) => fund.fund !== fund.fund);
-                patchState(state, { funds: updatedTasks });
-                const currentTasks = state.funds();
-                const updateTask = [fund, ...currentTasks.slice(1)];
-                patchState(state, {funds: updateTask})
+              next: (role) => {
+               patchState(state, { roles: [...state.roles(), role] });
               },
               error: console.error,
               finalize: () => patchState(state, { isLoading: false }),
@@ -87,13 +65,29 @@ export const FundsStore = signalStore(
       )
     ),
 
-    loadFunds: rxMethod<void>(
+    updateRole: rxMethod<IRole>(
+      pipe(
+        switchMap((value) => {
+          return roleService.update(value).pipe(
+            tapResponse({
+              next: (role) => {
+                patchState(state, { roles: role });
+              },
+              error: console.error,
+              finalize: () => patchState(state, { isLoading: false }),
+            })
+          );
+        })
+      )
+    ),
+
+    loadRoles: rxMethod<void>(
       pipe(
         tap(() => patchState(state, { isLoading: true })),
         exhaustMap(() => {
-          return fundService.read().pipe(
+          return roleService.read().pipe(
             tapResponse({
-              next: (fund) => patchState(state, { funds: fund }),
+              next: (role) => patchState(state, { roles: role }),
               error: console.error,
               finalize: () => patchState(state, { isLoading: false }),
             })
@@ -104,7 +98,7 @@ export const FundsStore = signalStore(
   })),
   withHooks({
     onInit(store) {
-      store.loadFunds();
+      store.loadRoles();
     },
   })
 );

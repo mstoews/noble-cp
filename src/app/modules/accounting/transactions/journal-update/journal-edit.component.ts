@@ -8,11 +8,14 @@ import { MaterialModule } from 'app/services/material.module';
 import { map, Observable, Subject, takeUntil, tap } from 'rxjs';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { SubTypeService } from 'app/services/subtype.service';
-import { AUTH } from 'app/app.config';
 
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NgxMaskDirective, NgxMaskPipe, provideNgxMask } from 'ngx-mask';
 import { IJournalDetail } from 'app/models/journals';
+import { AuthService } from 'app/services/auth.service';
+
+
+
 
 
 const imports = [
@@ -40,7 +43,7 @@ export class JournalEditComponent {
   private fundService = inject(FundsService);
   private subtypeService = inject(SubTypeService);
   private accountService = inject(GLAccountsService);
-  private auth = inject(AUTH);
+  private auth = inject(AuthService);
   private fb = inject(FormBuilder);
   private readonly destroyRef = inject(DestroyRef)
 
@@ -94,14 +97,14 @@ export class JournalEditComponent {
   }
 
   changeSubtype(e: any) {
-    console.debug('Subytype :', e.value);
+    console.debug('Sub type :', e.value);
   }
 
   private _unsubscribeAll: Subject<any> = new Subject<any>();
 
   onUpdate() {
     const dDate = new Date();
-    const User = this.auth.currentUser;
+    const email = this.auth.user().email;
     const createDate = dDate.toISOString().split('T')[0];
     const journal_details = { ...this.journalDetailEditForm.value } as IJournalDetail;
     const rawData = {
@@ -111,7 +114,7 @@ export class JournalEditComponent {
       child: journal_details.child,
       description: journal_details.description,
       create_date: createDate,
-      create_user: User.email,
+      create_user: email,
       sub_type: journal_details.sub_type,
       debit: journal_details.debit,
       credit: journal_details.credit,
@@ -129,7 +132,7 @@ export class JournalEditComponent {
 
   onCreate() {
     const dDate = new Date();
-    const User = this.auth.currentUser;
+    const User = this.auth.user();
     const createDate = dDate.toISOString().split('T')[0];
     const journal_details = { ...this.journalDetailEditForm.value } as IJournalDetail;
     const rawData = {
@@ -139,7 +142,7 @@ export class JournalEditComponent {
       child: journal_details.child,
       description: journal_details.description,
       create_date: createDate,
-      create_user: User.email,
+      create_user: User.email.split('T')[0],
       sub_type: journal_details.sub_type,
       debit: journal_details.debit,
       credit: journal_details.credit,

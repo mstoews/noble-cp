@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CardClickEventArgs, KanbanModule } from '@syncfusion/ej2-angular-kanban';
 import { CheckBoxAllModule } from '@syncfusion/ej2-angular-buttons';
-import { ChangeDetectionStrategy, Component, ViewChild, ViewEncapsulation, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, ViewChild, ViewEncapsulation, inject } from '@angular/core';
 import { addClass } from '@syncfusion/ej2-base';
 import { KanbanComponent, ColumnsModel, CardSettingsModel, SwimlaneSettingsModel, CardRenderedEventArgs } from '@syncfusion/ej2-angular-kanban';
 
@@ -15,6 +15,7 @@ import { KanbanMenubarComponent } from '../kanban/kanban-menubar/grid-menubar.co
 import { AUTH } from 'app/app.config';
 import { IKanban, KanbanService } from '../kanban.service';
 import { KanbanStore } from '../kanban.store';
+import { debounce, defer, from, of, take, timer } from 'rxjs';
 
 interface IValue {
   value: string;
@@ -43,7 +44,7 @@ const imports = [
   providers: [provideNativeDateAdapter(), KanbanStore],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TasksComponent {
+export class TasksComponent implements OnInit {
   @ViewChild('kanbanObj') kanbanObj!: KanbanComponent;
   @ViewChild('drawer') drawer: MatDrawer;
   private fb = inject(FormBuilder);
@@ -60,11 +61,18 @@ export class TasksComponent {
   public swimlaneSettings: SwimlaneSettingsModel = { keyField: 'assignee' };
   private _fuseConfirmationService = inject(FuseConfirmationService)
   auth = inject(AUTH);
+  
+  tk: string
+  
   // kanbanService = inject(KanbanService);
   store = inject(KanbanStore);
+  user = this.auth.currentUser;
 
-  ngOnInit(): void {
-    // this.kanbanService.readKanban();
+  async ngOnInit() {
+    
+    const firebaseUser = this.auth.currentUser
+    const token = await firebaseUser?.getIdToken();
+    console.log(token);
     this.bAdding = true;
     this.createEmptyForm();
   }
@@ -78,13 +86,7 @@ export class TasksComponent {
     { value: 'Verify', viewValue: 'Verify' },
   ];
 
-  assignees: IValue[] = [
-    { value: 'mstoews', viewValue: 'mstoews' },
-    { value: 'matthew', viewValue: 'matthew' },
-    { value: 'admin', viewValue: 'admin' },
-  ];
-
-
+  
   rag: IValue[] = [
     { value: '#238823', viewValue: 'Green' },
     { value: '#FFBF00', viewValue: 'Amber' },
@@ -110,33 +112,6 @@ export class TasksComponent {
       d.priority = 'Normal'
     }
     this.store.updateStatus(d);
-
-    // this.bAdding = false;
-    // const email = this.auth.currentUser.email;
-    // const dDate = new Date()
-    // var currentDate = dDate.toISOString().split('T')[0];
-
-    // const kanban = {
-    //   id: e.data[0].id,
-    //   title: e.data[0].title,
-    //   status: e.data[0].status,
-    //   summary: e.data[0].summary,
-    //   type: e.data[0].type,
-    //   priority: e.data[0].priority,
-    //   tags: e.data[0].tags,
-    //   estimate: e.data[0].estimate,
-    //   assignee: e.data[0].assignee,
-    //   rankid: e.data[0].rankid,
-    //   color: e.data[0].color,
-    //   className: '',
-    //   updateuser: email,
-    //   updatedate: currentDate,
-    //   startdate: e.data[0].startdate,
-    //   estimatedate: e.data[0].estimatedate
-    // } as IKanban;
-
-    // this.store.updateTask(kanban)
-
   }
 
   OnCardDoubleClick(args: CardClickEventArgs): void {
@@ -193,7 +168,7 @@ export class TasksComponent {
 
   createForm(task: IKanban) {
     this.sTitle = 'Kanban Task - ' + task.id;
-    const user = this.auth.currentUser;
+
 
     const dDate = new Date()
     var currentDate = dDate.toISOString().split('T')[0];
@@ -202,7 +177,7 @@ export class TasksComponent {
     this.assignType(task);
     this.assignRag(task);
 
-    var assignee = this.assignAssignee(task)
+    // var assignee = this.assignAssignee(task)
 
     if (task.estimatedate === null)
       task.estimatedate = currentDate;
@@ -216,11 +191,11 @@ export class TasksComponent {
       priority: [priority, Validators.required],
       tags: [task.tags, Validators.required],
       estimate: [task.estimate, Validators.required],
-      assignee: assignee,
+      assignee: [task.assignee,Validators.required],
       rankid: [task.rankid.toString()],
       color: [this.cRAG],
       updatedate: [currentDate],
-      updateuser: [user.email, Validators.required],
+      updateuser: [this.user.email, Validators.required],
       startdate: [task.startdate, Validators.required],
       estimatedate: [task.estimatedate, Validators.required]
 
@@ -241,20 +216,20 @@ export class TasksComponent {
     return this.cType;
   }
 
-  private assignAssignee(task: IKanban): string {
-    var rc: string;
-    if (task.assignee !== null && task.assignee !== undefined) {
-      const assignee = this.assignees.find((x) => x.value === task.assignee.toString());
-      if (assignee === undefined) {
-        rc = 'mstoews';
-      } else {
-        rc = assignee.value;
-      }
-    } else {
-      rc = 'admin'
-    }
-    return rc
-  }
+  // private assignAssignee(task: IKanban): string {
+  //   var rc: string;
+  //   if (task.assignee !== null && task.assignee !== undefined) {
+  //     const assignee = this.assignees.find((x) => x.value === task.assignee.toString());
+  //     if (assignee === undefined) {
+  //       rc = 'mstoews';
+  //     } else {
+  //       rc = assignee.value;
+  //     }
+  //   } else {
+  //     rc = 'admin'
+  //   }
+  //   return rc
+  // }
 
   private assignRag(task: IKanban): string {
     if (task.color !== null && task.color !== undefined) {
@@ -314,7 +289,7 @@ export class TasksComponent {
     }
   }
 
-  onCopy(e: any) {
+  onCopy() {
     var data = this.taskGroup.getRawValue()
 
     const confirmation = this._fuseConfirmationService.open({

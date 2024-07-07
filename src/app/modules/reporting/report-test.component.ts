@@ -15,27 +15,30 @@ import { TrialBalanceStore } from 'app/services/distribution.ledger.store';
 })
 export class ReportTestComponent implements OnInit, AfterViewInit {
   public parentData: Object[];
-  public childGrid: any;
+  public childGrids: any;
   public secondChildGrid: any;
   public filterSettings: Object;
   public store = inject(TrialBalanceStore);
-  public data? : any;
+  public childData?: object[];
 
   ngAfterViewInit(): void {
      
      console.log(this.store.details().length)
 
-     this.data = this.store.details();
+     this.childData = orderDatas;
  
-     this.childGrid = {
-      dataSource: this.data,
+     this.childGrids = {
+      dataSource: this.childData,
       queryString: 'EmployeeID',
       allowPaging: true,
       pageSettings: {pageSize: 6, pageCount: 5},
       columns: [
-          { field: 'child', headerText: 'child', textAlign: 'Right', width: 120 },
-      
-      ],      
+        { field: 'EmployeeID', headerText: 'ID', textAlign: 'Right', width: 90 },
+        { field: 'OrderID', headerText: 'Order ID', textAlign: 'Right', width: 90 },
+        { field: 'CustomerID', headerText: 'Customer ID', width: 100 },
+        { field: 'ShipCity', headerText: 'Ship City', width: 100 },
+        { field: 'ShipName', headerText: 'Ship Name', width: 120 }
+    ],
   };
   }
 

@@ -1,7 +1,8 @@
-import { Injectable, OnDestroy, inject } from '@angular/core';
+
 import { ImageItemIndex } from 'app/models/imageItem';
 import { Observable, Subscription, map } from 'rxjs';
 import { collectionData, docData } from 'rxfire/firestore';
+import { Injectable, OnDestroy, inject } from '@angular/core';
 
 import {
   StorageReference,

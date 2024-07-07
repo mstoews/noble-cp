@@ -157,7 +157,7 @@ export class KanbanPriorityComponent implements OnInit {
     onDelete(e: any) {
         console.debug(`onDelete ${JSON.stringify(e)}`);
         const confirmation = this.fuseConfirmationService.open({
-            title: 'Delete Type?',
+            title: 'Delete Period?',
             message: 'Are you sure you want to delete this type? ',
             actions: {
                 confirm: {

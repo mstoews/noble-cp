@@ -58,10 +58,14 @@
                 </mat-drawer>
 
                 <ng-container>
-                    @if (data$ | async; as rows) {
+                    @if (store.isLoading()) {
                     <grid-menubar [inTitle]="'Periods'"></grid-menubar>
                     <div class="flex flex-col h-full">
-                        <ejs-grid id="id">                            
+                        <ejs-grid id="id" [dataSource]="store.periods()" allowPaging='true' allowSorting='true'
+                        showColumnMenu='true' allowEditing='false' [allowFiltering]='true' [allowGrouping]='true'
+                        [toolbar]='toolbarOptions' [selectionOptions]='selectionOptions' [filterSettings]='filterSettings'
+                        [editSettings]='editSettings' [pageSettings]='pageSettings' [searchSetting]='searchOptions'
+                        >
                         <e-columns>
                             <e-column field="period_id"></e-column>
                             <e-column field="period_year"></e-column>

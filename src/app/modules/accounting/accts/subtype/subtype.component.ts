@@ -56,7 +56,7 @@ export class GlSubTypeComponent implements OnInit {
     onDelete(e: any) {
         console.debug(`onDelete ${JSON.stringify(e)}`);
         const confirmation = this.fuseConfirmationService.open({
-            title: 'Delete Type?',
+            title: 'Delete Sub Type?',
             message: 'Are you sure you want to delete this type? ',
             actions: {
                 confirm: {

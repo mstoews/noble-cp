@@ -7,7 +7,7 @@
             <div class="flex items-center justify-between m-8 mr-6 sm:my-10">
                 <!-- Title -->
                 <div class="text-4xl font-extrabold tracking-tight leading-none">
-                    Transactions
+                    Reporting
                 </div>
                 <!-- Close button -->
                 <div class="lg:hidden">
@@ -71,13 +71,15 @@
                 <!-- Load settings panel -->
                 <div class="mt-8">
 
-                    <!-- 
+                    
                     @switch (selectedPanel) {
-                    @case ('listing') {  <transactions></transactions>   }
-                    @case ('entry') { <entry-wizard></entry-wizard>  }
-                    @case ('template') { <journal-template></journal-template>  }
-                    @case ('artifact') { <app-file-manager></app-file-manager>} }                    
-                    -->
+                    
+                        @case ('trial-balance')     { <trial-balance></trial-balance>   }
+                        @case ('income-statement')  { <entry-wizard></entry-wizard>  }
+                        @case ('balance-sheet')     { <journal-template></journal-template>  }
+                        @case ('management')        { <app-file-manager></app-file-manager>} 
+                        @case ('reconciliations')   { <app-file-manager></app-file-manager>}                     
+                    }
 
                 </div>
             </div>

@@ -64,6 +64,21 @@ import {
           })
         )
       ),
+      loadJournals: rxMethod<IDistributionParams>(
+        pipe(
+          tap(() => patchState(state, { isLoading: true })),          
+          switchMap((value) => {
+            return distributionService.getDistributionJournalsByPeriod(value).pipe(
+              tapResponse({
+                next: (tasks) => patchState(state, { details: tasks }),
+                error: console.error,
+                finalize: () => patchState(state, { isLoading: false }),
+              })
+            );
+          })
+        )
+      ),
     })),
+
   );
   

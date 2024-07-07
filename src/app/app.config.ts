@@ -14,7 +14,6 @@ import { environment } from 'environments/environment';
 import { InjectionToken } from '@angular/core';
 import { authTokenInterceptor } from './auth.token.interceptor';
 
-
 import {
   Firestore,
   initializeFirestore,
@@ -30,14 +29,12 @@ import {
 import { getAuth, connectAuthEmulator } from 'firebase/auth';
 
 import { initializeApp } from 'firebase/app';
-import { graphqlProvider } from './graphql.provider';
-import { spinnerInterceptor } from './spinner.interceptor';
 
-import { AuthService } from './modules/auth/auth.service';
+
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async'
+import { AuthService } from './services/auth.signal.service';
 
 const app = initializeApp(environment.firebase);
-
 
 export const FIRESTORE = new InjectionToken('Firebase firestore', {
   providedIn: 'root',

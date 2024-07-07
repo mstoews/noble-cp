@@ -16,13 +16,6 @@ export interface IRole {
   update_user: string
 }
 
-type RoleState = { role: IRole[], isLoading: boolean }
-
-const initialState : RoleState = {
-  role: [],
-  isLoading: false,
-}
-
 @Injectable({
   providedIn: 'root',
 })
@@ -32,30 +25,13 @@ export class RoleService {
   private authService = inject(AUTH);
   private baseUrl = environment.baseUrl;
 
-  private roleState = signalState(initialState); 
-  readonly roleList = this.roleState.role;
-  readonly isLoading = this.roleState.isLoading;
+  // Read  
+  read() {
+      var url = this.baseUrl + '/v1/read_roles';
+      return this.httpClient.get<IRole[]>(url).pipe(shareReplay()) 
+  }
 
-  error$ = new Subject<string>();
-  
-  readUrl = this.baseUrl + '/v1/read_roles';
-
-  readonly read = rxMethod <void>  (
-    pipe(
-      tap(() => patchState(this.roleState, { isLoading: true })),
-      exhaustMap(() => {
-        return this.httpClient.get<IRole[]>(this.readUrl).pipe(
-          tapResponse({
-            next: (role) => patchState(this.roleState, { role }),
-            error: console.error,
-            finalize: () => patchState(this.roleState, { isLoading: false }),
-          })
-        );
-      })
-    )
-  );
-  
-
+  // Create
   create(t: IRole) {
     var url = this.baseUrl + '/v1/role_create';
     var email = this.authService.currentUser.email;
@@ -68,27 +44,10 @@ export class RoleService {
       update_date: dDate,
       update_user: email,
     }
-
-      this.httpClient.post<IRole>(url, data).pipe(
-        tap(data => this.createRoleSignal(data)),
-        take(1),
-        catchError(err => {
-          const message = "Could not retrieve journals ...";
-          console.debug(message, err);
-          return throwError(() => new Error(`${JSON.stringify(err)}`));
-        }),
-        shareReplay()
-      ).subscribe();
-      return this.roleState.role
-  }
-  
-  createRoleSignal(role: IRole){
-    patchState(this.roleState, (state) => ({ 
-      role: {...state.role, role } 
-    }))    
+      return this.httpClient.post<IRole>(url, data).pipe(shareReplay()) 
   }
 
-
+  // Update
   update(t: IRole) {
     var url = this.baseUrl + '/v1/update_role';
 
@@ -99,23 +58,7 @@ export class RoleService {
       update_date: t.update_date,
       update_user: t.update_user
     }
-
-    this.httpClient.post<IRole>(url, t).pipe(
-      tap(data => this.updateRole(data)),
-      take(1),
-      catchError(err => {
-        const message = "Could not retrieve journals ...";
-        console.debug(message, err);
-        return throwError(() => new Error(`${JSON.stringify(err)}`));
-      }),
-      shareReplay()
-    ).subscribe();
-
-    return this.roleState.role;
-  }
-
-  updateRole(data: IRole) {
-    this.roleState.role().map(item => item.role === data.role ? item: data );    
+    return this.httpClient.post<IRole[]>(url, t).pipe(shareReplay());    
   }
 
   // Delete
@@ -124,28 +67,7 @@ export class RoleService {
       role: id
     }
     var url = this.baseUrl + '/v1/delete_role';
-    return this.httpClient.post<IRole>(url, data).pipe(
-      tap(data => this.deleteRoleSignal(data)),
-      take(1),
-      catchError(err => {
-        const message = "Could not retrieve journals ...";
-        console.debug(message, err);
-        return throwError(() => new Error(`${JSON.stringify(err)}`));
-      }),
-      shareReplay()
-    ).subscribe();
-  }
-
-  deleteRoleSignal(data: IRole){
-    this.roleState.role().filter(item => item.role != data.role);
-    patchState(this.roleState, (state) => (
-      {
-        ...state.role,
-        role:  state.role.filter(role => role.role !== data.role),
-        isLoading: false,
-        error: ''
-      }
-    ));      
+    return this.httpClient.post<IRole>(url, data).pipe(shareReplay());
   }
 
 }

@@ -1,10 +1,10 @@
 import { Routes } from '@angular/router';
-import { ReportingMainComponent } from './reporting.component';
+import { ReportingPanelComponent } from './reporting-panel.component';
 
 
 export default [
     {
         path: '',
-        component: ReportingMainComponent,
+        component: ReportingPanelComponent,
     },
 ] as Routes;

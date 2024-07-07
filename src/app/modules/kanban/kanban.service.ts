@@ -121,7 +121,7 @@ export class KanbanService {
   typeList = signal<IType[]>([]);
   statusFullList = signal<IStatus[]>([]);
   isLoading = signal<boolean>(false);
-
+  
   teamUrl = this.baseUrl + `/v1/task_team_list`; 
   taskUrl = this.baseUrl + '/v1/tasks_list';
   updateTaskUrl = this.baseUrl + 'v1/task_update'
@@ -164,6 +164,10 @@ export class KanbanService {
 
   httpReadPriority() {
     return this.httpClient.get<IPriority[]>(this.priorityUrl);
+  }
+
+  httpReadTeam() {
+    return this.httpClient.get<ITeam[]>(this.teamUrl);
   }
 
   getTasks() {

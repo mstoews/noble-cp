@@ -4,10 +4,11 @@ import { EMPTY, Observable, Subject, defer, exhaustMap, from } from 'rxjs';
 import { collection, query, orderBy, limit, addDoc, updateDoc } from 'firebase/firestore';
 import { collectionData } from 'rxfire/firestore';
 import { catchError, filter, map, retry } from 'rxjs/operators';
-import { AuthService } from './auth.service';
+
 import { FIRESTORE } from 'app/app.config';
 import { IDashboardFund } from 'app/models';
 import { SendhttpService } from './sendhttp.service';
+import { AuthService } from './auth.signal.service';
 
 interface MessageState {
   dashboard: IDashboardFund[];

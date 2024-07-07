@@ -2,8 +2,6 @@ import { Component, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { SubTypeService } from 'app/services/subtype.service';
 import { TypeService } from 'app/services/type.service';
-
-import { AUTH } from 'app/app.config';
 import { CommonModule, JsonPipe } from '@angular/common';
 import { FuseConfirmationService } from '@fuse/services/confirmation';
 import { GLAccountsService } from 'app/services/accounts.service';
@@ -15,6 +13,8 @@ import { MaterialModule } from 'app/services/material.module';
 import { AggregateService, ColumnMenuService, DialogEditEventArgs, EditService, FilterService, FilterSettingsModel, GridModule, GroupService, PageService, ResizeService, SaveEventArgs, SearchSettingsModel, SelectionSettingsModel, SortService, ToolbarItems, ToolbarService } from '@syncfusion/ej2-angular-grids';
 import { DropDownListComponent } from '@syncfusion/ej2-angular-dropdowns';
 import { IAccounts } from 'app/models/journals';
+import { AuthService } from 'app/services/auth.signal.service';
+
 
 
 const imports = [
@@ -43,7 +43,7 @@ export class GlAccountsComponent implements OnInit {
     private _fuseConfirmationService = inject(FuseConfirmationService);
 
     private fb = inject(FormBuilder);
-    private auth = inject(AUTH);
+    private auth = inject(AuthService);
     accountService = inject(GLAccountsService);
     subtypeService = inject(SubTypeService)
 
@@ -142,7 +142,7 @@ export class GlAccountsComponent implements OnInit {
     onUpdate(e: any) {
         const dDate = new Date();
         const updateDate = dDate.toISOString().split('T')[0];
-        const user = this.auth.currentUser.email;
+        const user = this.auth.user().email.split('T')[0];
 
         const account = this.accountsForm.getRawValue()
         const rawData = {

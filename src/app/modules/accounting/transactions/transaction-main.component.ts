@@ -78,6 +78,18 @@ export class TransactionMainComponent {
                 description: 'Create transactions and append digital artifacts for each transaction',
             },
             {
+                id: 'ar',
+                icon: 'feather:image',
+                title: 'Accounts Receivable Transaction',
+                description: 'Create accounts receivable creation and clearing',
+            },
+            {
+                id: 'ap',
+                icon: 'feather:image',
+                title: 'Accounts Payable Transaction',
+                description: 'Create accounts payable entries and clearing',
+            },
+            {
                 id: 'template',
                 icon: 'heroicons_outline:document-duplicate',
                 title: 'Templates',

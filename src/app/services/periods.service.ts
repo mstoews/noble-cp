@@ -42,15 +42,30 @@ export class PeriodsService {
     }
 
     return this.httpClient.post<IPeriod>(url,data).pipe(
-      shareReplay()) 
-  }
+        shareReplay()) 
+      }
+
+    delete(period_id: number){
+      const update = {
+        period: period_id
+      }
+      var url = this.baseUrl + '/v1/periods_delete';
+      return this.httpClient.post<IPeriod[]>(url, update).pipe(shareReplay()) 
+    }
+
+    create(period: IPeriod) {
+      var url = this.baseUrl + '/v1/periods_create';
+      return this.httpClient.post<IPeriod>(url, period).pipe(shareReplay()) 
+    }
   
-  listPeriods() {
-    var url = this.baseUrl + '/v1/periods_list';
-    return this.httpClient.get<IPeriod[]>(url).pipe(
-      shareReplay()) 
-  }
+    update(period: IPeriod){
+      var url = this.baseUrl + '/v1/periods_update';
+      return this.httpClient.post<IPeriod[]>(url, period).pipe(shareReplay()) 
+    }
 
-
+    read() {
+      var url = this.baseUrl + '/v1/periods_list';
+      return this.httpClient.get<IPeriod[]>(url).pipe(shareReplay()) 
+    }
 
 }

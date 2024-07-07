@@ -5,18 +5,14 @@ import {
     ReactiveFormsModule,
 } from '@angular/forms';
 import { Component, OnInit, ViewChild, inject } from '@angular/core';
-
-
 import { CommonModule } from '@angular/common';
 import { FuseConfirmationService } from '@fuse/services/confirmation';
 import { GridMenubarStandaloneComponent } from '../../grid-menubar/grid-menubar.component';
-
 import { MatDrawer } from '@angular/material/sidenav';
 import { MaterialModule } from 'app/services/material.module';
-
 import { IRole, RoleService } from 'app/services/roles.service';
 import { GridModule } from '@syncfusion/ej2-angular-grids';
-
+import { RolesStore } from 'app/services/roles.store';
 
 const imports = [
     CommonModule,
@@ -32,11 +28,7 @@ const imports = [
     standalone: true,
     imports: [imports],
     templateUrl: './roles.component.html',
-    styles: `::ng-deep .dx-datagrid .dx-datagrid-rowsview .dx-row-focused.dx-data-row:not(.dx-edit-row) > td:not(.dx-focused) {
-      background-color: rgb(195, 199, 199);
-      border-color: #ada6a7;
-      }`,
-    providers: []
+    providers: [RoleService]
 })
 export class RolesComponent implements OnInit {
 
@@ -45,13 +37,14 @@ export class RolesComponent implements OnInit {
 
     @ViewChild('drawer') drawer!: MatDrawer;
 
-    public sTitle = 'Roles Administration';
+    public sTitle = 'Roles Administration';    
     public accountsForm!: FormGroup;
-    roleService = inject(RoleService)
+    
+    store = inject(RolesStore)
 
-    ngOnInit() {
-        this.roleService.read();
+    ngOnInit() {        
         this.createEmptyForm();
+        this.store.loadRoles();
     }
 
     onCreate(e: any) {
@@ -62,7 +55,7 @@ export class RolesComponent implements OnInit {
     onDelete(e: any) {
         console.debug(`onDelete ${JSON.stringify(e)}`);
         const confirmation = this._fuseConfirmationService.open({
-            title: 'Delete Type?',
+            title: 'Delete Role?',
             message: 'Are you sure you want to delete this type? ',
             actions: {
                 confirm: {
@@ -70,7 +63,6 @@ export class RolesComponent implements OnInit {
                 },
             },
         });
-
         // Subscribe to the confirmation dialog closed action
         confirmation.afterClosed().subscribe((result) => {
             // If the confirm button pressed...

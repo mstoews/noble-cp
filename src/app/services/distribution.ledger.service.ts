@@ -27,6 +27,11 @@ export class DistributionLedgerService {
         return this.http.post<IJournalSummary[]>(`${this.rootUrl}/v1/dist_journals_by_child`, params).pipe(shareReplay());
     }
 
+    getDistributionJournalsByPeriod(params: IDistributionParams){
+        return this.http.post<IJournalSummary[]>(`${this.rootUrl}/v1/dist_journals_by_prd`, params).pipe(shareReplay());
+    }
+
+
     getDistributionByPrdAndYear(params: IDistributionParams) {
         return this.http.post<IDistributionLedgerReport>(`${this.rootUrl}/v1/dist_list_by_prd`, params).pipe(shareReplay());
     }

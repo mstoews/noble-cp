@@ -10,12 +10,13 @@ import {
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { exhaustMap, pipe, shareReplay, switchMap, tap } from 'rxjs';
 import { computed, inject } from '@angular/core';
-import { IKanban, IKanbanStatus, IPriority, KanbanService } from './kanban.service';
+import { IKanban, IKanbanStatus, IPriority, ITeam, KanbanService } from './kanban.service';
 import { tapResponse } from '@ngrx/operators';
 
 export interface KanbanStateInterface {
   tasks: IKanban[];
   priority: IPriority[],
+  team: ITeam[],
   isLoading: boolean;
   error: string | null;
   tasksCount: number;
@@ -25,6 +26,7 @@ export const KanbanStore = signalStore(
   withState<KanbanStateInterface>({
     tasks: [],
     priority: [],
+    team: [],
     error: null,
     isLoading: false,
     tasksCount: 0
@@ -126,7 +128,6 @@ export const KanbanStore = signalStore(
         })
       )
     ),
-
     loadPriority: rxMethod<void>(
       pipe(
         tap(() => patchState(state, { isLoading: true })),
@@ -134,6 +135,20 @@ export const KanbanStore = signalStore(
           return kanbanService.httpReadPriority().pipe(
             tapResponse({
               next: (priorities) => patchState(state, { priority: priorities }),
+              error: console.error,
+              finalize: () => patchState(state, { isLoading: false }),
+            })
+          );
+        })
+      )
+    ),
+    loadAssignee: rxMethod<void>(
+      pipe(
+        tap(() => patchState(state, { isLoading: true })),
+        exhaustMap(() => {
+          return kanbanService.httpReadTeam().pipe(
+            tapResponse({
+              next: (team) => patchState(state, { team: team }),
               error: console.error,
               finalize: () => patchState(state, { isLoading: false }),
             })
@@ -160,6 +175,7 @@ export const KanbanStore = signalStore(
     onInit(store) {
       store.loadTasks();
       store.loadPriority();
+      store.loadAssignee();
     },
   })
 );

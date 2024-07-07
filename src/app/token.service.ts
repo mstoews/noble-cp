@@ -1,9 +1,9 @@
 import { Injectable, inject } from '@angular/core';
-import { AUTH } from './app.config';
+import { AuthService } from './services/auth.service';
 
 @Injectable()
 export class TokenService {
-  auth = inject(AUTH)
+  auth = inject(AuthService)
   private token!: string
 
   constructor() { 
@@ -11,14 +11,14 @@ export class TokenService {
   }
 
   async getRefreshToken(): Promise<string> {
-    var token =  await this.auth.currentUser?.getIdToken()
+    var token =  await this.auth.user().getIdToken()
     localStorage.setItem('token', token);    
     this.token = token;
     return this.token;
   }
 
   async getToken(): Promise<string> {
-    var token =  await this.auth.currentUser?.getIdToken()
+    var token =  await this.auth.user().getIdToken()
     localStorage.setItem('token', token);  
     console.debug(token);  
     return token;    

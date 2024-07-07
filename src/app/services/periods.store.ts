@@ -10,38 +10,35 @@ import {
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { exhaustMap, pipe, switchMap, tap } from 'rxjs';
 import { computed, inject } from '@angular/core';
-
 import { tapResponse } from '@ngrx/operators';
-import { FundsService } from './funds.service';
-import { IFunds } from 'app/models';
+import { IPeriod, PeriodsService } from './periods.service';
 
 
-export interface FundStateInterface {
-  funds: IFunds[];
+export interface PeriodStateInterface {
+  periods: IPeriod[];
   isLoading: boolean;
   error: string | null;
 }
 
-export const FundsStore = signalStore(
-  withState<FundStateInterface>({
-    funds: [],
+export const PeriodStore = signalStore(
+  withState<PeriodStateInterface>({
+    periods: [],
     error: null,
     isLoading: false,
-  
   }),
   withComputed((state) => ({
-    tasksCount: computed(() => state.funds().length),
-    selected: computed(() => state.funds().filter((t) => state.funds()[t.id])),
+    tasksCount: computed(() => state.periods().length),
+    selected: computed(() => state.periods().filter((t) => state.periods()[t.period_id])),
   })),
-  withMethods((state, fundService = inject(FundsService)) => ({       
-    removeFund:   rxMethod<IFunds>(
+  withMethods((state, periodService = inject(PeriodsService)) => ({       
+    removePeriod: rxMethod<IPeriod>(
       pipe(
         switchMap((value) => {
           patchState(state, { isLoading: true });
-          return fundService.delete(value.id).pipe(
+          return periodService.delete(value.period_id).pipe(
             tapResponse({
-              next: (fund) => {
-                patchState(state, { funds: state.funds().filter((fund) => fund.fund !== value.fund) });
+              next: () => {
+                patchState(state, { periods: state.periods().filter((prd) => prd.period_id !== value.period_id) });
               },
               error: console.error,
               finalize: () => patchState(state, { isLoading: false }),
@@ -51,33 +48,14 @@ export const FundsStore = signalStore(
       )
     ),
 
-    addFund:  rxMethod<IFunds>(
+    addPeriod: rxMethod<IPeriod>(
       pipe(
         switchMap((value) => {
           patchState(state, { isLoading: true });
-          return fundService.create(value).pipe(
+          return periodService.create(value).pipe(
             tapResponse({
-              next: (fund) => {
-               patchState(state, { funds: [...state.funds(), fund] });
-              },
-              error: console.error,
-              finalize: () => patchState(state, { isLoading: false }),
-            })
-          );
-        })
-      )
-    ),
-    updateFund: rxMethod<IFunds>(
-      pipe(
-        switchMap((value) => {
-          return fundService.update(value).pipe(
-            tapResponse({
-              next: (fund) => {
-                const updatedTasks = state.funds().filter((fund) => fund.fund !== fund.fund);
-                patchState(state, { funds: updatedTasks });
-                const currentTasks = state.funds();
-                const updateTask = [fund, ...currentTasks.slice(1)];
-                patchState(state, {funds: updateTask})
+              next: (period) => {
+               patchState(state, { periods: [...state.periods(), period] });
               },
               error: console.error,
               finalize: () => patchState(state, { isLoading: false }),
@@ -87,13 +65,29 @@ export const FundsStore = signalStore(
       )
     ),
 
-    loadFunds: rxMethod<void>(
+    updatePeriod: rxMethod<IPeriod>(
+      pipe(
+        switchMap((value) => {
+          return periodService.update(value).pipe(
+            tapResponse({
+              next: (period) => {
+                patchState(state, { periods: period });
+              },
+              error: console.error,
+              finalize: () => patchState(state, { isLoading: false }),
+            })
+          );
+        })
+      )
+    ),
+
+    loadPeriods: rxMethod<void>(
       pipe(
         tap(() => patchState(state, { isLoading: true })),
         exhaustMap(() => {
-          return fundService.read().pipe(
+          return periodService.read().pipe(
             tapResponse({
-              next: (fund) => patchState(state, { funds: fund }),
+              next: (period) => patchState(state, { periods: period }),
               error: console.error,
               finalize: () => patchState(state, { isLoading: false }),
             })
@@ -104,7 +98,7 @@ export const FundsStore = signalStore(
   })),
   withHooks({
     onInit(store) {
-      store.loadFunds();
+      store.loadPeriods();
     },
   })
 );

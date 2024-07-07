@@ -37,36 +37,22 @@ export class TypeService {
 
   create(t: IType) {
     var url = this.baseUrl + '/v1/type_create';
-    var email = this.authService.currentUser.email;
-    const dDate = new Date();
-
     var data: IType = {
       type: t.type,
       description: t.description,
-      create_date: dDate,
-      create_user: email,
-      update_date: dDate,
-      update_user: email,
+      create_date: new Date(),
+      create_user: this.authService.currentUser.email,
+      update_date: new Date(),
+      update_user: this.authService.currentUser.email,
     }
-
-    return this.httpClient.post<IType>(url, data).pipe(
-      shareReplay())
+    return this.httpClient.post<IType>(url, data).pipe( shareReplay())
   }
 
   // Read
   read() {
     if (this.typeList().length === 0) {
       var url = this.baseUrl + '/v1/type_list';
-      this.httpClient.get<IType[]>(url).pipe(
-        tap(data => this.typeList.set(data)),
-        take(1),
-        catchError(err => {
-          const message = "Could not retrieve journals ...";
-          console.debug(message);
-          return throwError(() => new Error(`${JSON.stringify(err.status.Text)}`));
-        }),
-        shareReplay()
-      ).subscribe();
+      this.httpClient.get<IType[]>(url).pipe(shareReplay());
     }
     return this.typeList;
   }
