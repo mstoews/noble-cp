@@ -6,8 +6,9 @@ import { catchError, map } from 'rxjs/operators'
 import { IUser, User } from './user'
 import { CacheService } from 'app/common/cache.service'
 import { transformError } from 'app/common/common'
-import { AuthService } from 'app/shared/data-access/auth.service'
+
 import { environment } from 'environments/environment.prod'
+import { AuthService } from 'app/services/auth.service'
 
 export interface IUsers {
   data: IUser[]

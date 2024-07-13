@@ -1,0 +1,107 @@
+<div class="h-full border-gray-300 rounded-2xl">
+    <ng-container>
+        <div class="flex flex-col h-full mb-2">
+            @if (store.isLoading() === false) {
+            <ejs-grid id="journal_child_id" > 
+                <e-columns>                                
+                    <e-column  field="child" caption="Account" width="100"> </e-column>
+                    <e-column  field="fund" caption="Fund" width="150"> </e-column>
+                    <e-column  field="sub_type" caption="Sub Type" width="150"> </e-column>
+                    <e-column  field="description"> </e-column>
+                    <e-column  field="reference" width="120"> </e-column>
+                    <e-column  field="debit" dataType="number" width="120" alignment="right"  [customizeText]="formatNumber"> </e-column>
+                    <e-column  field="credit" dataType="number" alignment="right" [customizeText]="formatNumber" width="120"> </e-column>   
+                    <e-column  field="create_user" caption="User" width="150"> </e-column>
+                </e-columns>
+            </ejs-grid>
+            }
+        </div>
+    </ng-container>
+    @if (!isModifiable) {
+    <button mat-icon-button color="primary" class="bg-gray-200 ml-1" (click)="onBook()" matTooltip="Book" aria-label="Book">
+        <mat-icon [svgIcon]="'mat_outline:confirmation_number'"></mat-icon>
+    </button>
+
+    <button mat-icon-button color="primary" (click)="onAddEvidence()"  class="bg-gray-200 ml-1" matTooltip="Add Evidence" aria-label="Evidence">
+        <mat-icon [svgIcon]="'heroicons_outline:document-plus'"></mat-icon>
+    </button>
+
+    <button mat-icon-button color="primary" (click)="onDeleteTransaction()" class="bg-gray-200 ml-1" matTooltip="Delete Transactions" aria-label="Template">
+        <mat-icon [svgIcon]="'mat_outline:delete'"></mat-icon>
+    </button>
+
+    <button mat-icon-button color="primary" (click)="onUpdate()" class="bg-gray-200 ml-1" matTooltip="Edit" aria-label="Template">
+        <mat-icon [svgIcon]="'mat_outline:edit'"></mat-icon>
+    </button>
+    
+    }
+    
+    @else {
+    <mat-card>
+        <div class="bg-slate-600 text-justify pt-2 text-white h-10 text-2xl m-2" mat-dialog-title>
+            {{ sTitle }}
+        </div>
+
+        <div class="flex flex-col w-full text-gray-700  filter-article filter-interactive">
+
+            <div class="flex flex-col m-1">
+                <section class="flex flex-col md:flex-row">
+                    <div class="flex flex-col grow">
+                        <mat-form-field class="m-1 form-element grow">
+                            <mat-label class="ml-2 text-base dark:text-gray-100">Account Code</mat-label>
+                            <input matInput placeholder="Account" formControlName="account" />
+                        </mat-form-field>
+                    </div>
+
+                    <div class="flex flex-col grow">
+                        <mat-form-field class="m-1 form-element grow" >
+                            <mat-label class="ml-2 text-base dark:text-gray-100">Description</mat-label>
+                            <input matInput placeholder="Description" formControlName="account" />
+                        </mat-form-field>
+                    </div>
+                    <div class="flex flex-col grow">
+                        <mat-form-field class="m-1 form-element grow" >
+                            <mat-label class="ml-2 text-base dark:text-gray-100">Type</mat-label>
+                            <input matInput placeholder="Type" formControlName="account" />
+                        </mat-form-field>
+                    </div>
+
+                    <div class="flex flex-col grow">
+                        <mat-form-field class="m-1 form-element grow" >
+                            <mat-label class="ml-2 text-base dark:text-gray-100">Fund</mat-label>
+                            <input matInput placeholder="Account" formControlName="account" />
+                        </mat-form-field>
+                    </div>
+                    <div class="flex flex-col grow">
+                        <mat-form-field class="m-1 form-element" >
+                            <mat-label class="ml-2 text-base dark:text-gray-100">Amount</mat-label>
+                            <input matInput placeholder="Amount" formControlName="description" />
+                        </mat-form-field>
+                    </div>
+
+                </section>
+
+                <div mat-dialog-actions>
+                    <div mat-dialog-actions>
+                        <button mat-raised-button color="primary" class="m-1" (click)="onUpdate()"
+                            matTooltip="Save" aria-label="Button that displays a tooltip when focused or hovered over">
+                            Update
+                            <mat-icon>update</mat-icon>
+                        </button>
+
+                        <button mat-raised-button color="primary" class="m-1" (click)="onDeleteTransaction()"
+                            matTooltip="Cancel"
+                            aria-label="Button that displays a tooltip when focused or hovered over">
+                            Cancel
+                            <mat-icon>delete</mat-icon>
+                        </button>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </mat-card>
+    }
+</div>
+

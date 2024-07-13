@@ -9,7 +9,7 @@ import { MediaChange } from '@ngbracket/ngx-layout'
 import { autoSpyObj } from 'angular-unit-test-helper'
 import { Observable, of, Subscription } from 'rxjs'
 
-import { AuthService } from '../auth/auth.service'
+import { AuthService } from './modules/auth/auth.service';
 import { UiService } from './ui.service'
 
 const FAKE_SVGS = {

@@ -8,7 +8,8 @@ import { catchError, filter, map, retry } from 'rxjs/operators';
 import { FIRESTORE } from 'app/app.config';
 import { IDashboardFund } from 'app/models';
 import { SendhttpService } from './sendhttp.service';
-import { AuthService } from './auth.signal.service';
+import { AuthService } from 'app/modules/auth/auth.service';
+
 
 interface MessageState {
   dashboard: IDashboardFund[];

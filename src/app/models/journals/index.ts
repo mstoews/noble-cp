@@ -46,7 +46,7 @@ export interface IJournalDetail {
   credit        : number,
   create_date   : string,
   create_user   : string,
-  reference     :string,
+  reference     : string,
 }
 
 export interface IAccounts {

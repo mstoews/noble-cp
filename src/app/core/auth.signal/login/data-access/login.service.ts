@@ -2,7 +2,7 @@ import { Injectable, computed, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { EMPTY, Subject, switchMap } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { AuthService } from 'app/shared/data-access/auth.service';
+import { AuthService } from 'app/modules/auth/auth.service';
 import { Credentials } from 'app/shared/interfaces/credentials';
 
 export type LoginStatus = 'pending' | 'authenticating' | 'success' | 'error';
@@ -38,14 +38,14 @@ export class LoginService {
   // selectors
   status = computed(() => this.state().status);
 
-  
+
 
   constructor() {
     // reducers
     this.userAuthenticated$
       .pipe(takeUntilDestroyed())
       .subscribe(() =>
-        this.state.update((state) => ({ ...state, status: 'success'  }))
+        this.state.update((state) => ({ ...state, status: 'success' }))
       );
 
     this.login$

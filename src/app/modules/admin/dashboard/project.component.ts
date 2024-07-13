@@ -20,7 +20,7 @@ import { TranslocoModule } from '@ngneat/transloco';
 import { ProjectService } from './project.service';
 import { ApexOptions, NgApexchartsModule } from 'ng-apexcharts';
 import { Subject, takeUntil } from 'rxjs';
-import { AuthService } from 'app/shared/data-access/auth.service';
+import { AuthService } from 'app/modules/auth/auth.service';
 import { SummaryCardComponent } from './summary-card.component';
 import { FIRESTORE } from 'app/app.config';
 
@@ -47,7 +47,7 @@ import { FIRESTORE } from 'app/app.config';
         NgClass,
         CurrencyPipe,
         CommonModule,
-        SummaryCardComponent        
+        SummaryCardComponent
     ],
 })
 export class ProjectComponent implements OnInit, OnDestroy {
@@ -63,15 +63,15 @@ export class ProjectComponent implements OnInit, OnDestroy {
     authService = inject(AuthService);
     private _router = inject(Router);
     private _projectService = inject(ProjectService);
-    
+
     firestore = inject(FIRESTORE);
 
-    public cashReserves =  18223.23;
+    public cashReserves = 18223.23;
     public fundCount = 3;
     public caption_1 = 'Fund Total';
 
 
-    constructor() { 
+    constructor() {
         effect(() => {
             if (!this.authService.user()) {
                 this._router.navigate(['auth/login']);

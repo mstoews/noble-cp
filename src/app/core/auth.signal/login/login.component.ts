@@ -2,13 +2,14 @@ import { Component, ViewChild, effect, inject } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { LoginFormComponent } from './ui/login-form.component';
 import { LoginService } from './data-access/login.service';
-import { AuthService } from 'app/shared/data-access/auth.service';
+
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { ScrollService } from 'app/services/scroll.service';
 import { MaterialModule } from 'app/services/material.module';
 import { MatDrawer } from '@angular/material/sidenav';
 import { NgClass, NgIf } from '@angular/common';
 import { FuseCardComponent } from '@fuse/components/card';
+import { AuthService } from 'app/modules/auth/auth.service';
 
 @Component({
     standalone: true,

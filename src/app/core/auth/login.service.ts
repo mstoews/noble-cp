@@ -3,7 +3,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { EMPTY, Subject, switchMap } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { Credentials } from 'app/shared/interfaces/credentials';
-import { AuthService } from 'app/shared/data-access/auth.service';
+import { AuthService } from 'app/modules/auth/auth.service';
 
 export type LoginStatus = 'pending' | 'authenticating' | 'success' | 'error';
 

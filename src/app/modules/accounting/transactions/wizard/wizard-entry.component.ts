@@ -179,7 +179,7 @@ export class EntryWizardComponent implements OnInit, OnDestroy, AfterViewInit {
 
 
   ngAfterViewInit() {
-    //this.setInitialValue();
+    this.setInitialValue();
   }
 
   protected filterCreditAccounts() {

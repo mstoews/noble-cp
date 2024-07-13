@@ -1,7 +1,7 @@
 import { Injectable, computed, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { EMPTY, Subject, catchError, switchMap } from 'rxjs';
-import { AuthService } from 'app/shared/data-access/auth.service';
+import { AuthService } from 'app/modules/auth/auth.service';
 import { Credentials } from 'app/shared/interfaces/credentials';
 
 export type RegisterStatus = 'pending' | 'creating' | 'success' | 'error';

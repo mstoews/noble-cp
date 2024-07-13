@@ -13,7 +13,8 @@ import { MaterialModule } from 'app/services/material.module';
 import { AggregateService, ColumnMenuService, DialogEditEventArgs, EditService, FilterService, FilterSettingsModel, GridModule, GroupService, PageService, ResizeService, SaveEventArgs, SearchSettingsModel, SelectionSettingsModel, SortService, ToolbarItems, ToolbarService } from '@syncfusion/ej2-angular-grids';
 import { DropDownListComponent } from '@syncfusion/ej2-angular-dropdowns';
 import { IAccounts } from 'app/models/journals';
-import { AuthService } from 'app/services/auth.signal.service';
+import { AuthService } from 'app/modules/auth/auth.service';
+
 
 
 

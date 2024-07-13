@@ -2,7 +2,7 @@ import { Injectable, computed, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { EMPTY, Subject, switchMap } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-// import { AuthService } from 'app/shared/data-access/auth.service';
+// import { AuthService } from 'app/modules/auth/auth.service';
 import { AuthService } from '../../auth.servicea'
 import { Credentials } from 'app/shared/interfaces/credentials';
 

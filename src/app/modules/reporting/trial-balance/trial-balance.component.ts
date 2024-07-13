@@ -21,6 +21,7 @@ import {
 import { DropDownListComponent } from '@syncfusion/ej2-angular-dropdowns';
 import { IJournalSummary } from 'app/models';
 import { ReportingToolbarComponent } from '../grid-reporting/grid-menubar.component';
+import { throwServerError } from '@apollo/client/core';
 
 
 const imports = [
@@ -64,18 +65,14 @@ export class TrialBalanceComponent implements OnInit, AfterViewInit {
 
     public childDataGrid: GridModule = {
         dataSource: this.childData,        
-        queryString: 'child',
-        allowPaging: false,
-        allowGrouping: true,
+        queryString: 'child',        
         columns: [
-            { field: 'journal_id',headerText: 'ID', textAlign: 'Right', width: 70 },
-            { field: 'child', headerText: 'Child', textAlign: 'Right', width: 100 },
-            { field: 'account', headerText: 'Account', textAlign: 'Right', width: 100 },            
-            { field: 'fund', headerText: 'Fund', textAlign: 'Right', width: 100 },
-            { field: 'sub_type', headerText: 'Sub Type', textAlign: 'Right', width: 100 },
-            { field: 'description', headerText: 'Description', textAlign: 'Right', width: 240 },
-            { field: 'debit', headerText: 'Debit', textAlign: 'Right', format: 'N2', width: 120 },
-            { field: 'credit', headerText: 'Credit', textAlign: 'Right', format: 'N2', width: 120 },
+            { field: 'journal_id',headerText: 'ID', textAlign: 'left', width: 80 },
+            { field: 'child', headerText: 'Child', textAlign: 'left', width: 100 },
+            { field: 'description', headerText: 'Description', textAlign: 'left', width: '200'},
+            { field: 'fund', headerText: 'Fund', textAlign: 'left', width: 100 },            
+            { field: 'debit', headerText: 'Debit', textAlign: 'Right', format: 'N2',  width: 120},
+            { field: 'credit', headerText: 'Credit', textAlign: 'Right', format: 'N2', width: 120},
             ],
             aggregates: [
                 {
@@ -109,6 +106,10 @@ export class TrialBalanceComponent implements OnInit, AfterViewInit {
     }
 
     ngOnInit() {
+        this.onRefresh();
+    }
+
+    onRefresh() {
         this.initialDatagrid();
         var params = {
             period: 1,
@@ -116,11 +117,6 @@ export class TrialBalanceComponent implements OnInit, AfterViewInit {
         }
         this.store.loadHeader(params);
         this.store.loadJournals(params);        
-    }
-
-    onRefresh() {
-        console.log('Refresh');
-
     }
 
     onExportExcel(){
@@ -165,8 +161,21 @@ export class TrialBalanceComponent implements OnInit, AfterViewInit {
             period_year: 2024
         });
         if (this.grid !== null || this.grid !== undefined) {
-            this.grid!.childGrid.dataSource = this.childData;   
+            (this.grid as GridComponent).childGrid.dataSource = this.childData;   
         }                      
+    }
+
+    // grid.element.addEventListener('click', (e) => { 
+    //     let cell = closest(e.target, 'td'); // details cell element 
+    //     if (cell.classList.contains('e-detailrowexpand')) { 
+    //      const rowIndex = parseInt(cell.parentElement.getAttribute('aria-rowindex'), 10); 
+    //      const data = grid.getCurrentViewRecords()[rowIndex]; // get details row data 
+    //      alert("Child Grid"); 
+    //     } 
+    // }); 
+
+    onClickGrid(e: any) {                
+        (this.grid as GridComponent).childGrid.dataSource = this.store.details();
     }
     
     actionBegin(args: any) {
@@ -177,16 +186,10 @@ export class TrialBalanceComponent implements OnInit, AfterViewInit {
 
     public onRowSelected(args: RowSelectEventArgs): void {
         console.debug('row Selected');
-        this.childData = this.store.details();
-        (this.grid as GridComponent).childGrid.dataSource = this.childData;                         
-        console.debug('Detail Length', this.childData.length);
     }
         
-    onLoad(): void { 
-        
-        this.childData = this.store.details();
-        
-        (this.grid as GridComponent).childGrid.dataSource = this.childData;                         
+    onLoad(): void {     
+        (this.grid as GridComponent).childGrid.dataSource = this.store.details();
         
     }
  }

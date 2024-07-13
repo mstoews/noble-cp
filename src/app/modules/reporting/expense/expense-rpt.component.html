@@ -4,18 +4,19 @@
     <div class="h-full border-gray-300 rounded-2xl">
       <dist-menubar 
         (notifyParentRefresh)="onRefresh()" 
-        (notifyParentAdd)="onAdd()"
         (notifyParentPeriod)="onPeriodChanged($event)" 
         (notifyParentYear)="onYearChanged($event)"
-        [currentPeriod]="currentPeriod" 
-        [currentYear]="currentYear">
+        [currentPeriod]="currentPeriod()" 
+        [currentYear]="currentYear()"
+        >
       </dist-menubar>
       <ejs-spreadsheet class="w-[calc(100%)] h-[calc(95%)]" #default 
       sheet="{ rowCount: 100}"
-      [scrollSettings]="scrollSettings" 
-      [openUrl]="openUrl" [saveUrl]="saveUrl" 
-      [showRibbon]="false" [showFormulaBar]="false" 
-      (contextMenuBeforeOpen)="contextMenuBeforeOpen($args)" [showSheetTabs]="false">
+      [scrollSettings]="scrollSettings"       
+      [showRibbon]="false" 
+      [showFormulaBar]="true" 
+      (created)="created()"
+      (contextMenuBeforeOpen)="contextMenuBeforeOpen(args$)" [showSheetTabs]="false">
         <e-sheets >
           <e-sheet name="Expense Report" [rowCount]="50" [colCount]="10">
           </e-sheet>

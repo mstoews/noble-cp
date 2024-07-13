@@ -32,7 +32,7 @@ import { initializeApp } from 'firebase/app';
 
 
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async'
-import { AuthService } from './services/auth.signal.service';
+import { AuthService } from './modules/auth/auth.service';
 
 const app = initializeApp(environment.firebase);
 
@@ -84,7 +84,7 @@ const CoreProviders = [
     useFactory: () => () => {},
     multi: true,
     // injected dependencies, this will be constructed immediately
-    deps: [AuthService],
+    // deps: [AuthService],
   },
 ];
 
@@ -122,9 +122,6 @@ export const appConfig: ApplicationConfig = {
     provideTransloco(),
     // Fuse
     provideIcons(),
-    {
-      provide: AuthService,      
-    },
     provideFuse({
       mockApi: {
         delay: 0,

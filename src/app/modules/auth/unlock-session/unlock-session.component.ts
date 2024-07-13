@@ -11,22 +11,21 @@ import { fuseAnimations } from '@fuse/animations';
 import { FuseAlertComponent, FuseAlertType } from '@fuse/components/alert';
 
 import { UserService } from 'app/core/user/user.service';
-import { AuthService } from 'app/shared/data-access/auth.service';
+import { AuthService } from 'app/modules/auth/auth.service';
 
 @Component({
-    selector     : 'auth-unlock-session',
-    templateUrl  : './unlock-session.component.html',
+    selector: 'auth-unlock-session',
+    templateUrl: './unlock-session.component.html',
     encapsulation: ViewEncapsulation.None,
-    animations   : fuseAnimations,
-    standalone   : true,
-    imports      : [NgIf, FuseAlertComponent, FormsModule, ReactiveFormsModule, MatFormFieldModule, MatInputModule, MatButtonModule, MatIconModule, MatProgressSpinnerModule, RouterLink],
+    animations: fuseAnimations,
+    standalone: true,
+    imports: [NgIf, FuseAlertComponent, FormsModule, ReactiveFormsModule, MatFormFieldModule, MatInputModule, MatButtonModule, MatIconModule, MatProgressSpinnerModule, RouterLink],
 })
-export class AuthUnlockSessionComponent implements OnInit
-{
+export class AuthUnlockSessionComponent implements OnInit {
     @ViewChild('unlockSessionNgForm') unlockSessionNgForm: NgForm;
 
     alert: { type: FuseAlertType; message: string } = {
-        type   : 'success',
+        type: 'success',
         message: '',
     };
     name: string;
@@ -43,8 +42,7 @@ export class AuthUnlockSessionComponent implements OnInit
         private _formBuilder: UntypedFormBuilder,
         private _router: Router,
         private _userService: UserService,
-    )
-    {
+    ) {
     }
 
     // -----------------------------------------------------------------------------------------------------
@@ -54,20 +52,18 @@ export class AuthUnlockSessionComponent implements OnInit
     /**
      * On init
      */
-    ngOnInit(): void
-    {
+    ngOnInit(): void {
         // Get the user's name
-        this._userService.user$.subscribe((user) =>
-        {
+        this._userService.user$.subscribe((user) => {
             // this.name = user.displayName;
             this._email = user.email;
         });
 
         // Create the form
         this.unlockSessionForm = this._formBuilder.group({
-            name    : [
+            name: [
                 {
-                    value   : this.name,
+                    value: this.name,
                     disabled: true,
                 },
             ],
@@ -82,11 +78,9 @@ export class AuthUnlockSessionComponent implements OnInit
     /**
      * Unlock
      */
-    unlock(): void
-    {
+    unlock(): void {
         // Return if the form is invalid
-        if ( this.unlockSessionForm.invalid )
-        {
+        if (this.unlockSessionForm.invalid) {
             return;
         }
 
@@ -97,11 +91,10 @@ export class AuthUnlockSessionComponent implements OnInit
         this.showAlert = false;
 
         this._authService.unlockSession({
-            email   : this._email ?? '',
+            email: this._email ?? '',
             password: this.unlockSessionForm.get('password').value,
         }).subscribe(
-            () =>
-            {
+            () => {
                 // Set the redirect url.
                 // The '/signed-in-redirect' is a dummy url to catch the request and redirect the user
                 // to the correct page after a successful sign in. This way, that url can be set via
@@ -112,22 +105,21 @@ export class AuthUnlockSessionComponent implements OnInit
                 this._router.navigateByUrl(redirectURL);
 
             },
-            (response) =>
-            {
+            (response) => {
                 // Re-enable the form
                 this.unlockSessionForm.enable();
 
                 // Reset the form
                 this.unlockSessionNgForm.resetForm({
                     name: {
-                        value   : this.name,
+                        value: this.name,
                         disabled: true,
                     },
                 });
 
                 // Set the alert
                 this.alert = {
-                    type   : 'error',
+                    type: 'error',
                     message: 'Invalid password',
                 };
 

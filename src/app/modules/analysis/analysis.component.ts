@@ -7,7 +7,7 @@ import { SalesGraphComponent } from '../admin/sales-graph/sales-graph.component'
 import { Router } from '@angular/router';
 import { AuthService } from '../auth/auth.service';
 
-// import { AuthService } from 'app/shared/data-access/auth.service';
+// import { AuthService } from 'app/modules/auth/auth.service';
 
 
 const imports = [

@@ -5,6 +5,7 @@ import { FuseMediaWatcherService } from '@fuse/services/media-watcher';
 import { MaterialModule } from 'app/services/material.module';
 import { Subject, takeUntil } from 'rxjs';
 import { TrialBalanceComponent } from './trial-balance/trial-balance.component';
+import { ExpenseRptComponent } from './expense/expense-rpt.component';
 
 
 const imports = [
@@ -13,7 +14,8 @@ const imports = [
     NgClass,
     NgSwitch,
     NgSwitchCase,
-    TrialBalanceComponent
+    TrialBalanceComponent,
+    ExpenseRptComponent
 
 ]
 
@@ -61,10 +63,10 @@ export class ReportingPanelComponent {
                 description: 'Distributed trial balance listing including the associated journal entries',
             },
             {
-                id: 'income-statement',
+                id: 'expense-statement',
                 icon: 'heroicons_outline:document-plus',
-                title: 'Transaction Balances',
-                description: 'Transaction reporting, trial balance and distributed ledger reporting',
+                title: 'Expense Statement',
+                description: 'Current period expense statement and comparison',
             },
             {
                 id: 'balance-sheet',

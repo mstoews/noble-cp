@@ -5,7 +5,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { ScrollService } from 'app/services/scroll.service';
 
 import { Router } from '@angular/router';
-import { AuthService } from 'app/shared/data-access/auth.service';
+import { AuthService } from 'app/modules/auth/auth.service';
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { filter } from 'rxjs';
 
