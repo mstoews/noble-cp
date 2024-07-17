@@ -10,15 +10,16 @@
         [currentYear]="currentYear()"
         >
       </dist-menubar>
-      <ejs-spreadsheet class="w-[calc(100%)] h-[calc(95%)]" #default 
+      <ejs-spreadsheet id="ExpenseSpread" class="w-[calc(100%)] h-[calc(95%)]"  #default 
       sheet="{ rowCount: 100}"
       [scrollSettings]="scrollSettings"       
       [showRibbon]="false" 
       [showFormulaBar]="true" 
       (created)="created()"
-      (contextMenuBeforeOpen)="contextMenuBeforeOpen(args$)" [showSheetTabs]="false">
+      [showSheetTabs]="false"
+      (contextMenuBeforeOpen)="contextMenuBeforeOpen(args$)" >
         <e-sheets >
-          <e-sheet name="Expense Report" [rowCount]="50" [colCount]="10">
+          <e-sheet name="Expense Report">
           </e-sheet>
         </e-sheets>
       </ejs-spreadsheet>

@@ -6,7 +6,8 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { IAccounts, 
          IJournalDetail, 
-         IJournalDetailDelete,          
+         IJournalDetailDelete, 
+         IJournalHeader, 
          IJournalHeaderUpdate, 
          IJournalTemplate, 
          IPeriod, 
@@ -15,7 +16,7 @@ import { IAccounts,
 @Injectable({
   providedIn: 'root'
 })
-export class APJournalService implements OnDestroy  {
+export class ARJournalService implements OnDestroy  {
   
   httpClient = inject(HttpClient)
   snackBar = inject(MatSnackBar);

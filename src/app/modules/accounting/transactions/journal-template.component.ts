@@ -11,8 +11,8 @@ import { FundsService } from 'app/services/funds.service';
 import { GLAccountsService } from 'app/services/accounts.service';
 
 import { GridMenubarStandaloneComponent } from '../grid-menubar/grid-menubar.component';
-import { JournalDetailComponent } from './transactions/journal-detail.component';
-import { JournalUpdateComponent } from './transactions/journal-update.component';
+import { JournalDetailComponent } from './gl-transactions/journal-detail.component';
+import { JournalUpdateComponent } from './gl-transactions/journal-update.component';
 import { MatDrawer } from '@angular/material/sidenav';
 import { MaterialModule } from 'app/services/material.module';
 
@@ -126,7 +126,7 @@ export class JournalTemplateComponent {
     }
 
     onBooked(booked: boolean) {
-        this.journalForm.patchValue({ booked: booked });        
+        this.journalForm.patchValue({ booked: booked });
     }
 
     formatNumber(e) {

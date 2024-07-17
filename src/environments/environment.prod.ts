@@ -11,8 +11,8 @@ export const environment = {
   },
   production: true,
   useEmulators: false,
-  baseUrl: "https://noble-server-omq5x5dxza-ue.a.run.app",
-  // baseUrl: "http://localhost:8080",
+  // baseUrl: "https://noble-server-omq5x5dxza-ue.a.run.app",
+  baseUrl: "http://localhost:8080",
   stripe: {
     public_key: 'pk_test_51JogSuCGT3ceZF7pYLMW9IZjEOaMGFqz5YOoBaNGTgT8dl72ThRvLgfx1DEFlQPteFpFlwgfpJLPnuJ1X60UCc8m00yEl0F8ra',
   },

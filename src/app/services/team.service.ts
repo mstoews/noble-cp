@@ -1,31 +1,21 @@
-import { HttpClient } from '@angular/common/http';
-import { Injectable, inject } from '@angular/core';
-import { environment } from 'environments/environment.prod';
-import { shareReplay } from 'rxjs';
-
-export interface ITeam {
-  team_member: string,
-  first_name: string,
-  last_name: string,
-  location: string,
-  title: string,
-  updatedte: Date,
-  updateusr: string
-}
+import { HttpClient } from "@angular/common/http";
+import { Injectable, inject } from "@angular/core";
+import { ITeam } from "app/models/team";
+import { environment } from "environments/environment.prod";
+import { retry, shareReplay } from "rxjs";
 
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: "root",
 })
 export class TeamService {
-
-  httpClient = inject(HttpClient)
+  httpClient = inject(HttpClient);
   private baseUrl = environment.baseUrl;
 
-  constructor() { }
+  constructor() {}
 
   createEvidence(team: ITeam) {
-    var url = this.baseUrl + '/v1/team_create';
+    var url = this.baseUrl + "/v1/team_create";
 
     var data: ITeam = {
       team_member: team.team_member,
@@ -34,16 +24,38 @@ export class TeamService {
       location: team.location,
       title: team.title,
       updatedte: team.updatedte,
-      updateusr: team.updateusr  
-    }
+      updateusr: team.updateusr,
+      email: team.email,
+      image: team.image,
+      uid: team.uid,
+    };
 
-    return this.httpClient.post<ITeam>(url, data).pipe(
-      shareReplay())
+    return this.httpClient.post<ITeam>(url, data).pipe(shareReplay(), retry(2));
   }
 
-  listTeamMembers() {
-    var url = this.baseUrl + '/v1/team_list';
-    return this.httpClient.get<ITeam[]>(url).pipe(
-      shareReplay())
+  read() {
+    var url = this.baseUrl + "/v1/team_read";
+    return this.httpClient.get<ITeam[]>(url).pipe(shareReplay(), retry(2));
+  }
+
+  delete(memberId: string) {
+    var url = this.baseUrl + "/v1/team_delete";
+    return this.httpClient
+      .post<ITeam[]>(url, { memberId: memberId })
+      .pipe(shareReplay(), retry(2));
+  }
+
+  create(team: ITeam) {
+    var url = this.baseUrl + "/v1/team_create";
+    return this.httpClient
+      .post<ITeam>(url, { team: team })
+      .pipe(shareReplay(), retry(2));
+  }
+
+  update(team: ITeam) {
+    var url = this.baseUrl + "/v1/team_update";
+    return this.httpClient
+      .post<ITeam[]>(url, { team: team })
+      .pipe(shareReplay(), retry(2));
   }
 }

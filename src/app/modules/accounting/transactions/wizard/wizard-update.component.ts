@@ -7,7 +7,7 @@ import { DndComponent } from 'app/modules/drag-n-drop/loaddnd/dnd.component';
 import { FundsService } from 'app/services/funds.service';
 import { GLAccountsService } from 'app/services/accounts.service';
 import { GridMenubarStandaloneComponent } from '../../grid-menubar/grid-menubar.component';
-import { JournalDetailComponent } from '../transactions/journal-detail.component';
+import { JournalDetailComponent } from '../gl-transactions/journal-detail.component';
 import { MaterialModule } from 'app/services/material.module';
 import { SubTypeService } from 'app/services/subtype.service';
 import { TypeService } from 'app/services/type.service';
@@ -51,7 +51,7 @@ const imports = [
   standalone: true,
   imports: [imports],
   templateUrl: './wizard-update.component.html',
-  providers: [provideNgxMask(),  SortService,
+  providers: [provideNgxMask(), SortService,
     PageService,
     FilterService,
     ToolbarService,
@@ -139,7 +139,7 @@ export class WizardUpdateComponent implements OnInit, OnDestroy, AfterViewInit {
 
   protected _onDestroy = new Subject<void>();
 
-  
+
   onSelectionChanged(e: any) {
     console.log(JSON.stringify(e));
   }
@@ -187,7 +187,7 @@ export class WizardUpdateComponent implements OnInit, OnDestroy, AfterViewInit {
 
   ngOnInit(): void {
     this.createEmptyForm();
-    
+
     this.accountsListSubject = this.dropDownChildren$.subscribe(accounts => {
       accounts.forEach(acct => {
         var list = {
@@ -203,7 +203,7 @@ export class WizardUpdateComponent implements OnInit, OnDestroy, AfterViewInit {
 
     this.updateDetailList();
     this.refresh(this.journal_id, this.description, this.transaction_date, this.amount);
-    
+
     this.accountFilterCtrl.valueChanges.pipe(takeUntil(this._onDestroy))
       .subscribe(() => {
         this.filterAccounts();

@@ -15,23 +15,23 @@ export interface  IJournalHeaderUpdate {
   description: string,
   transaction_date: string,
   amount: number
-}
-
+};
 export interface IJournalHeader {
-    journal_id: number,
-    description: string,
-    booked: boolean,
-    booked_date: string,
-    booked_user: string,
-    create_date: string,
-    create_user: string,
-    period: number,
-    period_year: number,
-    transaction_date: string,
-    status: string,
-    type: string,
-    sub_type: string,
-    amount: number
+  journal_id: number,         
+  description: string,
+  booked: boolean,
+  booked_date: string,
+  booked_user: string,
+  create_date: string,
+  create_user: string,
+  period: number,
+  period_year: number,
+  transaction_date: string,
+  status: string,
+  type: string,
+  sub_type: string,
+  amount: number,    
+  party_id?: string
 }
 
 export interface IJournalDetail {

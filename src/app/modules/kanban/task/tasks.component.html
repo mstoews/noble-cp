@@ -5,8 +5,7 @@
 
     <div class="flex-auto">
         <div class="h-full rounded-2xl">
-            <mat-drawer class="w-128 bg-gray-100" #drawer [opened]="false" mode="over" [position]="'end'"
-                [disableClose]="false">
+            <mat-drawer class="w-128 bg-gray-100" #drawer [opened]="false" mode="over" [position]="'end'" [disableClose]="false">
                 <mat-card class="mt-2 ml-3 mr-3 mat-elevation-z8">
                     <div mat-card-title
                         class="font-semibold text-3xl text-gray-100 bg-gray-500 p-1 border-white m-1 rounded-md">
@@ -17,17 +16,13 @@
                             <div class="flex flex-col m-1">
                                 <div class="flex flex-col grow">
                                     <mat-form-field class="mt-1 flex-start">
-                                        <input #myInput matInput placeholder="Kanban Task Title"
-                                            formControlName="title" />
-                                        <mat-icon class="icon-size-5" matPrefix
-                                            [svgIcon]="'heroicons_solid:document'"></mat-icon>
+                                        <input #myInput matInput placeholder="Kanban Task Title" formControlName="title" />
+                                        <mat-icon class="icon-size-5" matPrefix [svgIcon]="'heroicons_solid:document'"></mat-icon>
                                     </mat-form-field>
                                 </div>
 
                                 <section class="flex flex-col md:flex-row gap-2">
-
                                     <mat-form-field class="grow">
-
                                         <mat-select placeholder="Type" formControlName="type"
                                             (selectionChange)="changeType($event)">
                                             <mat-option *ngFor="let p of types" [value]="p.value">
@@ -36,18 +31,12 @@
                                     </mat-form-field>
 
                                     <mat-form-field class="grow">
-
-                                        <mat-select placeholder="Priority" formControlName="priority"
-                                            (selectionChange)="changePriority($event.value)">
-
+                                        <mat-select placeholder="Priority" formControlName="priority" (selectionChange)="changePriority($event.value)">
                                             @for (item of store.priority(); track item.priority) {
-                                            <mat-option [value]="item.priority"> {{ item.priority }} </mat-option>
+                                                <mat-option [value]="item.priority"> {{ item.priority }} </mat-option>
                                             }
-
                                         </mat-select>
                                     </mat-form-field>
-
-
                                 </section>
 
                                 <mat-form-field class=" grow gap-2">
@@ -80,7 +69,9 @@
                                     <mat-select placeholder="Assigned" formControlName="assignee"
                                         (selectionChange)="changeType($event.value)">
                                         @for (item of store.team(); track item) {
-                                            0<mat-option [value]="item.team_member">  {{ item.team_member }}  </mat-option>
+                                            <mat-option [value]="item.team_member">  
+                                                {{ item.team_member }}  
+                                            </mat-option>
                                         }
                                     </mat-select>
                                 </mat-form-field>
@@ -120,8 +111,10 @@
                                 <ejs-kanban #kanbanObj cssClass='kanban-overview' keyField="status"
                                     [dataSource]='store.tasks()'
                                     [cardSettings]='cardSettings' enableTooltip='false'
-                                    [swimlaneSettings]='swimlaneSettings' (actionBegin)='OnActionBegin()'
-                                    (actionComplete)='OnActionComplete()' (actionFailure)='OnActionFailure()'
+                                    [swimlaneSettings]='swimlaneSettings' 
+                                    (actionBegin)='OnActionBegin()'
+                                    (actionComplete)='OnActionComplete()' 
+                                    (actionFailure)='OnActionFailure()'
                                     (cardDoubleClick)='OnCardDoubleClick($event)' 
                                     (dragStart)='OnDragStart($event)'
                                     (drag)='OnDrag($event)' 

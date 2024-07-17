@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, OnDestroy, inject, signal } from '@angular/core';
-import { Observable, Subject, catchError, debounceTime, distinctUntilChanged, shareReplay, take, takeUntil, tap, throwError } from 'rxjs';
+import { Observable, Subject, catchError, debounceTime, distinctUntilChanged, retry, shareReplay, take, takeUntil, tap, throwError } from 'rxjs';
 import { environment } from 'environments/environment.prod';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
@@ -173,7 +173,7 @@ export class JournalService implements OnDestroy  {
   
   readHttpJournalHeader() {  
     var url = this.baseUrl + '/v1/read_journal_header';
-    return this.httpClient.get<IJournalHeader[]>(url)
+    return this.httpClient.get<IJournalHeader[]>(url).pipe(shareReplay(), retry(2));
   }
  
   readJournalHeader() {
@@ -263,23 +263,15 @@ export class JournalService implements OnDestroy  {
           return throwError(() => new Error(`Invalid time ${ err.statusText }`));         
       }),
       shareReplay()
-    ).subscribe();
-
+    );
   }
 
   deleteJournalHeader(journal_id: number) {
     var url = this.baseUrl + '/v1/delete_journal_header';
-    return this.httpClient.post<IJournalHeader>(url,
-      {
-        journal_id: journal_id
-      },
-      ).pipe(
-      shareReplay())
-      .subscribe();
+    return this.httpClient.post<IJournalHeader>(url,   { journal_id: journal_id },  ).pipe(  shareReplay());
   }
 
- // set the sub_type 
-
+ 
   createJournalHeader(header: IJournalHeader) {
     var url = this.baseUrl + '/v1/create_journal_header';
     var journalHeader: any = {

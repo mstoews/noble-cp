@@ -13,7 +13,7 @@ import { FuseConfirmationService } from '@fuse/services/confirmation';
 import { MatDrawer } from '@angular/material/sidenav';
 import { MaterialModule } from 'app/services/material.module';
 import { GridMenubarStandaloneComponent } from '../../grid-menubar/grid-menubar.component';
-import { FilterSettingsModel, GridModule, SearchSettingsModel, SelectionSettingsModel, ToolbarItems } from '@syncfusion/ej2-angular-grids';
+import { AggregateService, ColumnMenuService, EditService, FilterService, FilterSettingsModel, GridModule, GroupService, PageService, ResizeService, SearchSettingsModel, SelectionSettingsModel, SortService, ToolbarItems, ToolbarService } from '@syncfusion/ej2-angular-grids';
 import { PeriodStore } from 'app/services/periods.store';
 import { DropDownListComponent } from '@syncfusion/ej2-angular-dropdowns';
 
@@ -31,9 +31,21 @@ const imports = [
     standalone: true,
     imports: [imports],
     templateUrl: './periods.component.html',
-    providers: [PeriodStore],
+    providers: [PeriodStore, SortService, GroupService ,PageService, ResizeService, FilterService, ToolbarService, EditService, AggregateService, ColumnMenuService,],
 })
 export class PeriodsComponent implements OnInit {
+onRefresh() {
+throw new Error('Method not implemented.');
+}
+onAdd() {
+throw new Error('Method not implemented.');
+}
+onDeleteSelection() {
+throw new Error('Method not implemented.');
+}
+onUpdateSelection() {
+throw new Error('Method not implemented.');
+}
     public data: any;
     private _fuseConfirmationService = inject(FuseConfirmationService);
     private fb = inject(FormBuilder);
@@ -71,7 +83,6 @@ export class PeriodsComponent implements OnInit {
     ngOnInit() {
         this.createEmptyForm();
         this.initialDatagrid()
-        this.store.loadPeriods()
     }
 
     onCreate(e: any) {

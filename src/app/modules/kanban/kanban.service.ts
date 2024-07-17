@@ -122,7 +122,7 @@ export class KanbanService {
   statusFullList = signal<IStatus[]>([]);
   isLoading = signal<boolean>(false);
   
-  teamUrl = this.baseUrl + `/v1/task_team_list`; 
+  teamUrl = this.baseUrl + `/v1/team_read`; 
   taskUrl = this.baseUrl + '/v1/tasks_list';
   updateTaskUrl = this.baseUrl + 'v1/task_update'
   priorityUrl = this.baseUrl + '/v1/task_priority_list';

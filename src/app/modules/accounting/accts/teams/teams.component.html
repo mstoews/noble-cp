@@ -74,18 +74,18 @@
             </kanban-menubar>
             
             <div class="flex flex-col">
-                <ejs-grid class="h-full" id="team_member" [dataSource]="kanbanService.readTeams()">
+                <ejs-grid class="h-full" id="team_member" [dataSource]="teamStore.team()">
                 <e-columns>
-                   <e-column field="team_member"></e-column>
-                   <e-column field="first_name"></e-column>
-                   <e-column field="last_name"></e-column>
-                   <e-column field="location"></e-column>
-                   <e-column field="title"></e-column>
-                   <e-column field="updatedte"></e-column>
-                   <e-column field="updateusr"></e-column>
-                   <e-column field="email"></e-column>
-                   <e-column field="image"></e-column>
-                   <e-column field="uid"></e-column>
+                   <e-column headerText="Member" field="team_member"></e-column>
+                   <e-column headerText="First Name" field="first_name"></e-column>
+                   <e-column headerText="Last Name" field="last_name"></e-column>
+                   <e-column headerText="Location" field="location"></e-column>
+                   <e-column headerText="Title" field="title"></e-column>
+                   <e-column headerText="Updated" field="updatedte"></e-column>
+                   <e-column headerText="User" field="updateusr"></e-column>
+                   <e-column headerText="email" field="email"></e-column>
+                   <e-column headerText="image" field="image"></e-column>
+                   <!-- <e-column headerText="ID" field="uid"></e-column> -->
                 </e-columns>                    
                 </ejs-grid>
             </div>

@@ -85,6 +85,7 @@ export class JournalUpdateComponent
   @Input() public transaction_date: string;
   @Input() public amount: string;
   @Input() public bNewTransaction = true;
+  @Input() public journalType: string;
 
   public accountParams?: IEditCell;
   public subtypeParams?: IEditCell;
@@ -209,7 +210,8 @@ export class JournalUpdateComponent
       this.journal_id,
       this.description,
       this.transaction_date,
-      this.amount
+      this.amount,
+      this.journalType
     );
 
     this.accountFilterCtrl.valueChanges
@@ -393,12 +395,14 @@ export class JournalUpdateComponent
     journal_id: number,
     description: string,
     transaction_date: string,
-    amount: string
+    amount: string,
+    journalType: string
   ) {
     this.description = description;
     this.transaction_date = transaction_date;
     this.amount = amount;
     this.journalService.getJournalDetail(journal_id);
+    this.journalType = journalType
 
     this.journalForm = this.fb.group({
       description: [this.description, Validators.required],
@@ -761,7 +765,8 @@ export class JournalUpdateComponent
         this.journal_id,
         this.description,
         this.transaction_date,
-        this.amount
+        this.amount,
+        this.journalType
       );
     });
   }

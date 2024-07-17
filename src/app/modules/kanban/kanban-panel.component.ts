@@ -42,7 +42,8 @@ import { TeamsComponent } from '../accounting/accts/teams/teams.component';
         KanbanListComponent,
         KanbanPriorityComponent,
         ScheduleNobleComponent,
-        TeamsComponent
+        TeamsComponent,
+        ScheduleNobleComponent
     ],
     providers: [HttpClient],
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -81,23 +82,17 @@ export class KanbanPanelComponent {
                 description: 'Kanban drag and drop management of tasks',
             },
             // {
-            //     id         : 'scheduler',
-            //     icon       : 'heroicons_outline:calendar',
-            //     title      : 'Schedule',
-            //     description: 'Update calendar items and important dates in the accounting and management cycle.',
+            //     id: 'priority',
+            //     icon: 'heroicons_outline:queue-list',
+            //     title: 'Priority',
+            //     description: 'List of key prioritization levels for each tasks to accommodate effective sorting',
             // },
-            {
-                id: 'priority',
-                icon: 'heroicons_outline:queue-list',
-                title: 'Priority',
-                description: 'List of key prioritization levels for each tasks to accommodate effective sorting',
-            },
-            {
-                id: 'status',
-                icon: 'heroicons_outline:calculator',
-                title: 'Status',
-                description: 'Status of each tasks',
-            },
+            // {
+            //     id: 'status',
+            //     icon: 'heroicons_outline:calculator',
+            //     title: 'Status',
+            //     description: 'Status of each tasks',
+            // },
             {
                 id: 'tasks',
                 icon: 'heroicons_outline:document-check',
@@ -110,12 +105,20 @@ export class KanbanPanelComponent {
                 title: 'Team',
                 description: 'List of team members to assign tasks',
             },
-            {
-                id: 'type',
-                icon: 'heroicons_outline:chart-bar',
-                title: 'Kanban Action Types',
-                description: 'Type of actions that can used to categorize the work being completed',
-            }
+            // {
+            //     id: 'type',
+            //     icon: 'heroicons_outline:chart-bar',
+            //     title: 'Kanban Action Types',
+            //     description: 'Type of actions that can used to categorize the work being completed',
+            // }
+            // ,
+            // {
+            //     id: 'schedule',
+            //     icon: 'heroicons_outline:calendar',
+            //     title: 'Schedule',
+            //     description: 'Schedule events and meeting for completion of tasks',
+            // }
+
 
 
         ];

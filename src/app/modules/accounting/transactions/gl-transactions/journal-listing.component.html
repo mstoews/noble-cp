@@ -12,25 +12,25 @@
 
     <div class="flex-auto">
         <div class="h-full border-gray-300 rounded-2xl">
-            <mat-drawer class="w-full" #drawer [opened]="false" mode="push" [position]="'end'" [disableClose]="false">
-                
+            <mat-drawer class="w-full" #drawer [opened]="false" mode="push" [position]="'end'" [disableClose]="false">                                
                 <journal-update 
                    [journal_id]="nJournal" 
                    [sTitle]="'Journal Entry Detail'"
                    [description]="description"
                    [transaction_date]="transaction_date"
-                   [amount]="amount"                   
+                   [amount]="amount"  
+                   [journalType]="journalType"                 
                    (notifyDrawerClose)="closeDrawer()">
                 </journal-update>
-                 
+                                 
             </mat-drawer>
             <mat-drawer-container class="flex-col h-full">
                 @defer {
                     <ng-container>
-                        @if (journalHeader() !== null) {
+                        @if (store.journals()) {
                         <div class="flex flex-1 flex-col overflow-auto">
-                            <ejs-grid  id='journal_detail'
-                                  [dataSource]='journalHeader()'   
+                            <ejs-grid  id='journals'
+                                  [dataSource]='store.journals()'   
                                   allowPaging='true' 
                                   allowSorting='true'                                   
                                   showColumnMenu='true'
@@ -39,7 +39,7 @@
                                   [enablePersistence]='true'
                                   [allowGrouping]='true'
                                   [allowExcelExport]='true'
-                                  [allowPdfExport]='true'
+                                  [allowPdfExport]='true' 
                                   [toolbar]='toolbarOptions'
                                   [selectionOptions]="selectionOptions"                                                                       
                                   (actionBegin)="actionBegin($event)" 
@@ -50,19 +50,25 @@
                                   [searchSetting]="searchOptions" >
                                 <e-columns>
                                     <e-column  field="journal_id"  headerText="ID" width="100" dataType="number" isPrimaryKey='true' textAlign="left"></e-column>
+                                    <e-column  field="type"        headerText="Type" width="100" dataType="text" textAlign="left"></e-column>
                                     <e-column  field="booked"      [displayAsCheckBox]='true' headerText="Booked" width="100" type="boolean"></e-column>                            
                                     <e-column  field="amount"      headerText="Amount" format='N2' width="150" textAlign="Right"></e-column>
                                     <e-column  field="period"      headerText="Prd" width="100" ></e-column>
                                     <e-column  field="period_year" headerText="Yr" width="100"></e-column>    
                                     <e-column  field="description" headerText="Description" width="200"></e-column>                                    
-                                    <e-column  field="create_date" width='120' [format]='formatoptions' headerText="Created" type="date"></e-column>                                                        
+                                    <e-column  field="create_date" width='120' [format]='formatoptions' headerText="Created" type="dateTime"></e-column>                                                        
                                     <e-column  field="create_user" width='120' headerText="User" type="string"></e-column>             
                                 </e-columns>
-                            </ejs-grid>
-                            
+                            </ejs-grid>                             
                         </div>
                         }
-                    </ng-container>             
+                        @else 
+                        {
+                            <p>No transactions to display</p>
+                        }
+                        
+                    </ng-container>     
+
                 }
                 @placeholder(minimum 1000ms) {
                     <div class="fixed z-[1031] -translate-x-2/4 -translate-y-2/4 left-2/4 top-2/4">

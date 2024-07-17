@@ -69,7 +69,7 @@ export interface UserRoles {
 
 // General Ledger Accounts Listing
 
-export interface AccountsPayableLedger {
+export interface IAccountsPayableLedger {
   account: string;
   name: string;
   vendor: string;
@@ -81,7 +81,7 @@ export interface AccountsPayableLedger {
   updateUsr: string;
 }
 
-export interface AccountsPayableDetail {
+export interface IAccountsPayableDetail {
   account: string;
   journal_id: string;
   name: string;

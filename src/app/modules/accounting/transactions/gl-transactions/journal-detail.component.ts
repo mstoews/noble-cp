@@ -5,7 +5,7 @@ import { DndComponent } from 'app/modules/drag-n-drop/loaddnd/dnd.component';
 import { FuseConfirmationService } from '@fuse/services/confirmation';
 import { MatDialog } from '@angular/material/dialog';
 import { MaterialModule } from 'app/services/material.module';
-import { TransactionDetailStore } from '../../../services/ap.store';
+import { TransactionDetailStore } from './transaction.store';
 import { GridModule } from '@syncfusion/ej2-angular-grids';
 
 const imports = [
@@ -21,13 +21,14 @@ const imports = [
     selector: 'journal-detail',
     standalone: true,
     imports: [imports],
-    templateUrl: './ap-detail.component.html',
+    templateUrl: './journal-detail.component.html',
     providers: [TransactionDetailStore],
 })
 export class JournalDetailComponent implements OnInit {
     @Input() key: string;
     @Input() journal_description: string;
     @Input() journal_date: string;
+    @Input() journalType: string;
     @Output() notifyTransactionAdd: EventEmitter<any> = new EventEmitter();
     @Output() notifyTransactionDelete: EventEmitter<any> = new EventEmitter();
     @Output() notifyTransactionEvidence: EventEmitter<any> = new EventEmitter();

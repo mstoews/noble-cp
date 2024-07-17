@@ -78,9 +78,9 @@
                                 <mat-form-field class="form-element gap-2">
                                     <mat-select placeholder="Assigned" formControlName="assignee"
                                         (selectionChange)="changeType($event.value)">
-                                        @for (item of assignees; track item) {
-                                        <mat-option [value]="item.view">
-                                            {{ item.viewValue }}
+                                        @for (item of store.team(); track item) {
+                                        <mat-option [value]="item.team_member">
+                                            {{ item.team_member}}
                                         </mat-option>
                                         }
                                     </mat-select>
@@ -93,7 +93,6 @@
                         </form>
 
                         <div mat-card-actions class="mb-3">
-
                             <button mat-icon-button (click)="onUpdate()" color="primary" class="m-1">
                                 <mat-icon>update</mat-icon>
                             </button>
@@ -117,14 +116,22 @@
                     <div class="" cdkScrollable>
                         <div class="control-section">
                             <div class="content-wrapper">
-                                <ejs-grid id='tasks' allowPaging='true' allowSorting='true' showColumnMenu='true'
-                                    allowEditing='true' [dataSource]='store.tasks()' [allowFiltering]='false'
-                                    [toolbar]='toolbarOptions' [selectionOptions]="selectionOptions"
-                                    (actionBegin)="actionBegin($event)" (actionComplete)="actionComplete($event)"
-                                    [filterSettings]='filterSettings' [editSettings]='editSettings'
+                                <ejs-grid id='tasks' 
+                                    allowPaging='true' 
+                                    allowSorting='true' 
+                                    showColumnMenu='true'
+                                    allowEditing='true' 
+                                    [dataSource]='store.tasks()' 
+                                    [allowFiltering]='false'
+                                    [toolbar]='toolbarOptions' 
+                                    [selectionOptions]="selectionOptions"
+                                    (actionBegin)="actionBegin($event)" 
+                                    (actionComplete)="actionComplete($event)"
+                                    [filterSettings]='filterSettings' 
+                                    [editSettings]='editSettings'
                                     [searchSetting]="searchOptions">
                                     <e-columns>
-                                        <e-column field="id" headerText="ID" width="100" sortOrder="asc"></e-column>
+                                        <e-column field="id" headerText="ID" isPrimaryKey="true" width="100" sortOrder="asc"></e-column>
                                         <e-column field="title" headerText="Title"></e-column>
                                         <e-column field="status" headerText="Status" width="120"></e-column>
                                         <e-column field="summary" headerText="Summary"></e-column>

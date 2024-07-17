@@ -20,12 +20,20 @@ import {
   FilterService,
   AggregateService,
   ColumnMenuService,
+  DialogEditEventArgs,
+  SaveEventArgs,
+  ResizeService,
+  FilterSettingsModel,
+  SearchSettingsModel,
+  SelectionSettingsModel,
+  ToolbarItems,
 } from "@syncfusion/ej2-angular-grids";
-import { DropDownListModule } from "@syncfusion/ej2-angular-dropdowns";
+import { DropDownListComponent, DropDownListModule } from "@syncfusion/ej2-angular-dropdowns";
 
 import { AUTH } from "app/app.config";
 import { IKanban } from "../kanban.service";
 import { KanbanStore } from "../kanban.store";
+import { IAccounts } from "app/models/journals";
 
 interface IValue {
   value: string;
@@ -57,6 +65,7 @@ const imports = [
     EditService,
     AggregateService,
     ColumnMenuService,
+    ResizeService
   ],
 })
 export class KanbanListComponent implements OnInit {
@@ -110,6 +119,7 @@ export class KanbanListComponent implements OnInit {
 
   ngOnInit() {
     this.createEmptyForm();
+    this.initialDatagrid();
   }
 
   onCellDblClick(e: any) {
@@ -245,9 +255,85 @@ export class KanbanListComponent implements OnInit {
     this.openDrawer();
   }
 
+  public pageSettings: Object;
+  public formatoptions: Object;
+  public initialSort: Object;
+  public filterOptions: FilterSettingsModel;
+  public editSettings: Object;
+  public dropDown: DropDownListComponent;
+  public submitClicked: boolean = false;
+  public selectionOptions?: SelectionSettingsModel;
+  public toolbarOptions?: ToolbarItems[];
+  public searchOptions?: SearchSettingsModel;
+  public filterSettings: FilterSettingsModel;
+  
+  
+  initialDatagrid() {
+      // this.pageSettings = { pageCount: 10 };        
+      this.formatoptions = { type: 'dateTime', format: 'M/dd/yyyy' }        
+      this.pageSettings =  { pageSizes: true, pageCount: 10 };
+      this.selectionOptions = { mode: 'Cell' };              
+      this.editSettings = { allowEditing: true, allowAdding: false, allowDeleting: false };
+      this.searchOptions = { operator: 'contains', ignoreCase: true, ignoreAccent:true };
+      this.toolbarOptions = ['Search'];   
+      this.filterSettings = { type: 'Excel' };    
+  }
+
+
+
   onCreate(e: any) {
     this.createEmptyForm();
     this.openDrawer();
+  }
+
+
+  actionBegin(args: SaveEventArgs): void {        
+    
+    if (args.requestType === 'beginEdit' || args.requestType === 'add') {        
+      var data = args.rowData as IKanban;
+      args.cancel = true;
+      this.bAdding = false;
+      const email = this.auth.currentUser.email;
+      const dDate = new Date()
+      var currentDate = dDate.toISOString().split('T')[0];
+  
+      args.cancel = true;
+      const kanban = {
+        id: data.id,
+        title: data.title,
+        status: data.status,
+        summary: data.summary,
+        type: data.type,
+        priority: data.priority,
+        tags: data.tags,
+        estimate: data.estimate,
+        assignee: data.assignee,
+        rankid: data.rankid,
+        color: data.color,
+        className: '',
+        updateuser: email,
+        updatedate: currentDate,
+        startdate: data.startdate,
+        estimatedate: data.estimatedate
+      } as IKanban;
+      this.createForm(data)
+      this.openDrawer();                            
+      
+    }
+    if (args.requestType === 'save') {        
+        console.log(JSON.stringify(args.data));
+        var data = args.data as IKanban;                        
+    }
+  }
+
+  actionComplete(args: DialogEditEventArgs): void {
+    if ((args.requestType === 'beginEdit' || args.requestType === 'add')) {
+        if (args.requestType === 'beginEdit') {
+            // (args.form.elements.namedItem('CustomerName') as HTMLInputElement).focus();
+        } else if (args.requestType === 'add') {
+            // (args.form.elements.namedItem('OrderID') as HTMLInputElement).focus();
+        }
+    }
   }
 
   onDelete(e: any) {
@@ -374,18 +460,19 @@ export class KanbanListComponent implements OnInit {
     this.openDrawer();
   }
   onDeleteCurrentSelection() {
-    throw new Error("Method not implemented.");
+    
   }
   onUpdateCurrentSelection() {
-    throw new Error("Method not implemented.");
+    
   }
   changeRag($event: any) {
-    throw new Error("Method not implemented.");
+    
   }
   changeType($event: any) {
-    throw new Error("Method not implemented.");
+    
   }
-  changePriority(arg0: any) {
-    throw new Error("Method not implemented.");
+  changePriority(arg: any) {
+
+  
   }
 }

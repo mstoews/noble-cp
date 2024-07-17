@@ -69,10 +69,6 @@ export class TasksComponent implements OnInit {
   user = this.auth.currentUser;
 
   async ngOnInit() {
-    
-    const firebaseUser = this.auth.currentUser
-    const token = await firebaseUser?.getIdToken();
-    console.log(token);
     this.bAdding = true;
     this.createEmptyForm();
   }

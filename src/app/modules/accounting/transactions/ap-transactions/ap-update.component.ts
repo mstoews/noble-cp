@@ -7,7 +7,6 @@ import { DndComponent } from "app/modules/drag-n-drop/loaddnd/dnd.component";
 import { FundsService } from "app/services/funds.service";
 import { GLAccountsService } from "app/services/accounts.service";
 import { GridMenubarStandaloneComponent } from "../../grid-menubar/grid-menubar.component";
-import { JournalDetailComponent } from "./journal-detail.component";
 import { MaterialModule } from "app/services/material.module";
 import { ISubType, SubTypeService } from "app/services/subtype.service";
 import { TypeService } from "app/services/type.service";
@@ -45,7 +44,6 @@ const imports = [
   ReactiveFormsModule,
   MaterialModule,
   FormsModule,
-  JournalDetailComponent,
   DndComponent,
   GridMenubarStandaloneComponent,
   JournalEditComponent,
@@ -62,7 +60,7 @@ const imports = [
   selector: "journal-update",
   standalone: true,
   imports: [imports],
-  templateUrl: "./journal-update.component.html",
+  templateUrl: "./ap-update.component.html",
   providers: [
     provideNgxMask(),
     SortService,
@@ -76,15 +74,11 @@ const imports = [
   changeDetection: ChangeDetectionStrategy.OnPush,
 
 })
-export class JournalUpdateComponent
+export class APUpdateComponent
   implements OnInit, OnDestroy, AfterViewInit {
   @Output() notifyDrawerClose: EventEmitter<any> = new EventEmitter();
-  @Input() public sTitle: string;
-  @Input() public journal_id: number;
-  @Input() public description: string;
-  @Input() public transaction_date: string;
-  @Input() public amount: string;
-  @Input() public bNewTransaction = true;
+
+  
 
   public accountParams?: IEditCell;
   public subtypeParams?: IEditCell;
@@ -108,6 +102,7 @@ export class JournalUpdateComponent
   private dialog = inject(MatDialog);
   private auth = inject(AUTH);
 
+  
   public journalForm!: FormGroup;
   public journalDetailForm!: FormGroup;
   public matDialog = inject(MatDialog);
@@ -141,11 +136,14 @@ export class JournalUpdateComponent
   public filterSettings: Object;
   public toolbar: string[];
   public orderidrules: Object;
-  public customeridrules: Object;
-  public freightrules: Object;
   public editparams: Object;
   public pageSettings: Object;
   public formatoptions: Object;
+  
+  description: string;
+  transaction_date: string;
+  amount: number;
+  journalType: string;
 
   // drop down searchable list
   public accountList: IDropDownAccounts[] = [];
@@ -172,6 +170,11 @@ export class JournalUpdateComponent
   public Accounts: IDropDownAccounts[] = [];
 
   public accountsGrid: IDropDownAccountsGridList[] = [];
+  journal_id: any;
+
+  public dataAccountList = new DataManager(this.accountsGrid);
+  public dFields = { text: "child", value: "child" };
+
 
   ngOnInit(): void {
     this.editSettings = {
@@ -205,13 +208,7 @@ export class JournalUpdateComponent
     });
 
     this.createEmptyForm();
-    this.refresh(
-      this.journal_id,
-      this.description,
-      this.transaction_date,
-      this.amount
-    );
-
+    
     this.accountFilterCtrl.valueChanges
       .pipe(takeUntil(this._onDestroy))
       .subscribe(() => {
@@ -226,18 +223,6 @@ export class JournalUpdateComponent
   
   public selIndex?: number[] = [];
 
-  // onGridClicked(){
-  //   if (this.selIndex?.length) {
-  //     var cell = this.grid?.selectRows(this.selIndex);
-  //     console.log(cell);
-  //     this.selIndex = [];
-  //   }
-  // }
-
-  // public rowDataBound(args: RowDataBoundEventArgs ): void {    
-  //   this.selIndex = (this.grid as GridComponent).getSelectedRowIndexes();
-  //   this.selIndex?.push(parseInt(((args.row as Element).getAttribute('aria-rowindex') as string), 10));
-  // }
 
   actionBegin(args: SaveEventArgs): void {
     console.debug('args : ', args.requestType);
@@ -331,8 +316,6 @@ export class JournalUpdateComponent
     console.log("onSaved ", e);
   }
 
-  public dataAccountList = new DataManager(this.accountsGrid);
-  public dFields = { text: "child", value: "child" };
 
   protected setInitialValue() {
     // this.journalService.getJournalDetail(this.journal_id);
@@ -380,6 +363,8 @@ export class JournalUpdateComponent
     this.editing = true;
   }
 
+
+
   updateForm(row: any) {
     this.journalForm.reset();
     this.journalForm = this.fb.group({
@@ -393,12 +378,14 @@ export class JournalUpdateComponent
     journal_id: number,
     description: string,
     transaction_date: string,
-    amount: string
+    amount: number,
+    journalType: string
   ) {
     this.description = description;
     this.transaction_date = transaction_date;
     this.amount = amount;
     this.journalService.getJournalDetail(journal_id);
+    this.journalType = journalType
 
     this.journalForm = this.fb.group({
       description: [this.description, Validators.required],
@@ -761,7 +748,8 @@ export class JournalUpdateComponent
         this.journal_id,
         this.description,
         this.transaction_date,
-        this.amount
+        this.amount,
+        this.journalType
       );
     });
   }

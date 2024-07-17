@@ -1,14 +1,14 @@
-<div id="contextmenutarget" class="flex flex-col w-full filter-article filter-interactive text-gray-700">
-    <div class="flex flex-col m-2">
+<div id="contextmenutarget" class="flex flex-col w-full filter-article filter-interactive text-gray-700">    
+        <div class="flex flex-col m-2">
         @if (journal_id > 0 ) {
             <div class="text-3xl gap-2 m-1 text-gray-100 p-2 bg-slate-600">
-                Transaction : {{ journal_id }}
+                Accounts Receivable : {{ journal_id }}
             </div>
         }
         @else
         {
             <div class="text-3xl gap-2 m-1 text-gray-100 p-2 bg-slate-600">
-                Transaction 
+                Accounts Receivable
             </div>
         }
         
@@ -27,7 +27,16 @@
                             matInput placeholder="Amount" formControlName="amount"
                             [placeholder]="'Transaction Total'" />
                             <mat-icon class="icon-size-5" matPrefix
-                                    [svgIcon]="'heroicons_solid:currency-dollar'"></mat-icon>
+                                    [svgIcon]="'mat_solid:shop'"></mat-icon>
+                    </mat-form-field>
+                </div>
+                <div class="flex flex-col w-[150px]">
+                    <mat-form-field class="mt-1 flex-start mr-1">
+                        <input type="text" class="text-right"
+                            matInput placeholder="Customer" formControlName="amount"
+                            [placeholder]="'Customer'" />
+                            <mat-icon class="icon-size-5" matPrefix
+                                    [svgIcon]="'heroicons_solid:buyer'"></mat-icon>
                     </mat-form-field>
                 </div>
                 
@@ -149,6 +158,5 @@
                     (beforeItemRender)='addDisabled($event)' 
                     (created)='onCreate()'>
             </ejs-contextmenu>        
-    </div>    
-
+        </div>    
 </div>

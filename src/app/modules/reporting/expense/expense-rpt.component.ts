@@ -24,6 +24,7 @@ export class ExpenseRptComponent implements OnInit, OnDestroy {
   currentPeriod = signal(1);
   currentYear = signal(2024);
   args$ : any;
+  tb: any;
 
   ngOnDestroy(): void {
     
@@ -51,7 +52,8 @@ export class ExpenseRptComponent implements OnInit, OnDestroy {
   } 
 
   onRefresh() {
-    this.updateReport();
+    this.tb = this.store.header();
+    this.updateReport();    
   }
 
   ngOnInit(): void {
@@ -60,8 +62,12 @@ export class ExpenseRptComponent implements OnInit, OnDestroy {
       period_year: this.currentYear()
   }
    this.store.loadHeader(params);
-   
+   if (this.store.accountCount() > 0 ){
+     this.onRefresh()
+   }
   }
+
+  
 
   updateReport() {
     var i = this.START_DETAIL;
@@ -114,5 +120,58 @@ export class ExpenseRptComponent implements OnInit, OnDestroy {
     this.spreadsheetObj.cellFormat({ textAlign: 'right' }, 'D4:G300');
     this.spreadsheetObj.cellFormat({ fontWeight: 'bold', textAlign: 'right', verticalAlign: 'middle', fontSize: '12px' }, 'A53:G53');
     this.spreadsheetObj.setValueRowCol(1, updateDate, 3, 1);
+  
+    this.spreadsheetObj.cellFormat(
+      { fontWeight: 'bold', textAlign: 'left' },
+      'A2:F2'
+    );
+    // this.spreadsheetObj.numberFormat('$#,##0', 'B3:D12');
+    this.spreadsheetObj.numberFormat('0%', 'E50:E60');
+    // Adding custom function for calculating the percentage between two cells.
+    this.spreadsheetObj.addCustomFunction(
+      this.calculatePercentage,
+      'PERCENTAGE'
+    );
+
+    // Calculate percentage using custom added formula in E11 cell.
+    this.spreadsheetObj.updateCell({ formula: '=PERCENTAGE(E11,E12)' }, 'E50');
+    // Calculate expressions using computeExpression in E10 cell.
+    // this.spreadsheetObj.updateCell(
+    //   { value: this.spreadsheetObj.computeExpression('C10/D10') as string },
+    //   'E10'
+    // );
+    // Calculate custom formula values using computeExpression in E12 cell.
+    this.spreadsheetObj.updateCell(
+      {
+        value: this.spreadsheetObj.computeExpression(
+          '=PERCENTAGE(E52,E54)'
+        ) as string,
+      },
+      'E55'
+    );
+    // Calculate SUM (built-in) formula values using computeExpression in D12 cell.
+    this.spreadsheetObj.updateCell(
+      {
+        value: this.spreadsheetObj.computeExpression('=SUM(D3:D11)') as string,
+      },
+      'D50'
+    );
+  
   }
+
+  calculatePercentage(firstCell: string, secondCell: string): number {
+    const first = Number(firstCell);
+    const second = Number(secondCell);
+    if (first !== null && second !== null) {
+      return Number(firstCell) / Number(secondCell);
+    }
+    else 
+    {
+      return 0;
+    }
+  }
+
+  
+  
+
 }
