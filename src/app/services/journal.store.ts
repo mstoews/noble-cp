@@ -8,7 +8,7 @@ import {
 } from '@ngrx/signals';
 
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
-import { exhaustMap, pipe, switchMap, tap } from 'rxjs';
+import { exhaustMap, filter, pipe, switchMap, tap } from 'rxjs';
 import { computed, inject } from '@angular/core';
 import { tapResponse } from '@ngrx/operators';
 import { IJournalDetail, IJournalHeader } from 'app/models/journals';
@@ -17,6 +17,8 @@ import { JournalService } from './journal.service';
 
 export interface JournalStateInterface {
   journals: IJournalHeader[];
+  ap: IJournalHeader[];
+  ar: IJournalHeader[]
   details: IJournalDetail[];
   isLoading: boolean;
   error: string | null;
@@ -25,6 +27,8 @@ export interface JournalStateInterface {
 export const JournalStore = signalStore(
   withState<JournalStateInterface>({
     journals: [],
+    ap:[],
+    ar:[],
     details: [],
     error: null,
     isLoading: false,
@@ -89,6 +93,34 @@ export const JournalStore = signalStore(
           return journalService.readHttpJournalHeader().pipe(
             tapResponse({
               next: (journal) => patchState(state, { journals: journal }),
+              error: console.error,
+              finalize: () => patchState(state, { isLoading: false }),
+            })
+          );
+        })
+      )
+    ),
+    accountsPayable: rxMethod<void>(
+      pipe(
+        tap(() => patchState(state, { isLoading: true })),
+        exhaustMap(() => {
+          return journalService.readHttpJournalHeader().pipe(
+            tapResponse({
+              next: (journal) => patchState(state, { journals: journal.filter(ar => ar.type === 'AP') }),
+              error: console.error,
+              finalize: () => patchState(state, { isLoading: false }),
+            })
+          );
+        })
+      )
+    ),
+    accountsReceivable: rxMethod<void>(
+      pipe(
+        tap(() => patchState(state, { isLoading: true })),
+        exhaustMap(() => {
+          return journalService.readHttpJournalHeader().pipe(
+            tapResponse({
+              next: (journal) => patchState(state, { journals: journal.filter(ar => ar.type === 'AR') }),
               error: console.error,
               finalize: () => patchState(state, { isLoading: false }),
             })

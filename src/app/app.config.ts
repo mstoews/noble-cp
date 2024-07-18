@@ -1,6 +1,6 @@
 
 import { provideHttpClient, withFetch, withInterceptors } from '@angular/common/http';
-import { APP_INITIALIZER, ApplicationConfig } from '@angular/core';
+import { APP_INITIALIZER, ApplicationConfig, ErrorHandler } from '@angular/core';
 import { LuxonDateAdapter } from '@angular/material-luxon-adapter';
 import { DateAdapter, MAT_DATE_FORMATS } from '@angular/material/core';
 import { provideAnimations } from '@angular/platform-browser/animations';
@@ -33,6 +33,7 @@ import { initializeApp } from 'firebase/app';
 
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async'
 import { AuthService } from './modules/auth/auth.service';
+import { GlobalErrorHandler } from './services/error.service';
 
 const app = initializeApp(environment.firebase);
 
@@ -97,11 +98,14 @@ export const appConfig: ApplicationConfig = {
       withPreloading(PreloadAllModules),
       withInMemoryScrolling({ scrollPositionRestoration: 'enabled' }),
     ),
-
     // Material Date Adapter
     {
       provide: DateAdapter,
       useClass: LuxonDateAdapter,
+    },
+    {
+      provide: ErrorHandler,
+      useClass: GlobalErrorHandler,
     },
     {
       provide: MAT_DATE_FORMATS,

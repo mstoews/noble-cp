@@ -11,6 +11,8 @@ import { EntryWizardComponent } from './wizard/wizard-entry.component';
 import { JournalTemplateComponent } from './journal-template.component';
 import { TreeComponent } from '../tree/tree.component';
 import { InventoryComponent } from 'app/modules/shop/shop-inventory-maintenance/inventory-grid.component';
+import { ARTransactionComponent } from './ar-transactions/ar-listing.component';
+import { APTransactionComponent } from './ap-transactions/ap-listing.component';
 
 
 const imports = [
@@ -25,7 +27,9 @@ const imports = [
     EntryWizardComponent,
     JournalTemplateComponent,
     TreeComponent,
-    InventoryComponent
+    InventoryComponent,
+    APTransactionComponent,
+    ARTransactionComponent
 ]
 
 @Component({
@@ -79,14 +83,14 @@ export class TransactionMainComponent {
             },
             {
                 id: 'ar',
-                icon: 'feather:image',
-                title: 'Accounts Receivable Transaction',
+                icon: 'mat_outline:money',
+                title: 'Accounts Receivable Transactions',
                 description: 'Create accounts receivable creation and clearing',
             },
             {
                 id: 'ap',
-                icon: 'feather:image',
-                title: 'Accounts Payable Transaction',
+                icon: 'mat_outline:shop',
+                title: 'Accounts Payable Transactions',
                 description: 'Create accounts payable entries and clearing',
             },
             {
@@ -97,7 +101,7 @@ export class TransactionMainComponent {
             },
             {
                 id: 'artifact',
-                icon: 'feather:image',
+                icon: 'heroicons_outline:document-arrow-up',
                 title: 'Artifact Management',
                 description: 'Manage the documentation of transactions',
             },
@@ -109,7 +113,7 @@ export class TransactionMainComponent {
             // },
             {
                 id: 'artifact-mgmt',
-                icon: 'feather:image',
+                icon: 'heroicons_outline:document-magnifying-glass',
                 title: 'Artifact by Transaction',
                 description: 'List of transactions with assigned artifacts',
             }

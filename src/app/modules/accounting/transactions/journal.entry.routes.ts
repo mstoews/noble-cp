@@ -2,6 +2,7 @@ import { Routes } from '@angular/router';
 import { TransactionMainComponent } from './transaction-main.component';
 import { ARUpdateComponent } from './ar-transactions/ar-update.component';
 import { APUpdateComponent } from './ap-transactions/ap-update.component';
+import { JournalResolver } from 'app/services/journal.resolver';
 
 export default [
     {
@@ -9,12 +10,14 @@ export default [
         component: TransactionMainComponent,
     },
     {
-        path: 'ar/:journalNo',
+        path: 'ar/:journal_id',
         component: ARUpdateComponent,
+        resolve: { journal: JournalResolver },
     },
     {
-        path: 'ap/:journalNo',
+        path: 'ap/:id',
         component: APUpdateComponent,
+        resolve: {journal: JournalResolver },
     },
     {
         path: 'gl/:journalNo',

@@ -57,7 +57,7 @@ const imports = [
 ];
 
 @Component({
-  selector: "journal-update",
+  selector: "ar-journal",
   standalone: true,
   imports: [imports],
   templateUrl: "./ar-update.component.html",

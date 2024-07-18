@@ -77,6 +77,8 @@
                     
                     <!-- entry -->
                     @case ('entry') { <entry-wizard></entry-wizard>  }
+                    @case ('ap')    { <ap-transaction></ap-transaction>}
+                    @case ('ar')    { <ar-transaction></ar-transaction>}
                     <!-- Build and maintain Templates -->
                     @case ('template') { <journal-template></journal-template>  }
                     @case ('artifact') { <app-file-manager></app-file-manager>}

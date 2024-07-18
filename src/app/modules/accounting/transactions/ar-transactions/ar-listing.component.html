@@ -12,25 +12,12 @@
 
     <div class="flex-auto">
         <div class="h-full border-gray-300 rounded-2xl">
-            <mat-drawer class="w-full" #drawer [opened]="false" mode="push" [position]="'end'" [disableClose]="false">                                
-                <journal-update 
-                   [journal_id]="nJournal" 
-                   [sTitle]="'Journal Entry Detail'"
-                   [description]="description"
-                   [transaction_date]="transaction_date"
-                   [amount]="amount"  
-                   [journalType]="journalType"                 
-                   (notifyDrawerClose)="closeDrawer()">
-                </journal-update>
-                                 
-            </mat-drawer>
-            <mat-drawer-container class="flex-col h-full">
                 @defer {
                     <ng-container>
-                        @if (store.journals()) {
+                        @if (store.ar()) {
                         <div class="flex flex-1 flex-col overflow-auto">
                             <ejs-grid  id='journals'
-                                  [dataSource]='store.journals()'   
+                                  [dataSource]='store.ar()'   
                                   allowPaging='true' 
                                   allowSorting='true'                                   
                                   showColumnMenu='true'
@@ -69,14 +56,12 @@
                         }
                         
                     </ng-container>     
-
                 }
                 @placeholder(minimum 1000ms) {
                     <div class="fixed z-[1031] -translate-x-2/4 -translate-y-2/4 left-2/4 top-2/4">
                        <mat-spinner></mat-spinner>
                     </div>
-                }
-            </mat-drawer-container>
+                }            
         </div>
     </div>
     

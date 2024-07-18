@@ -115,15 +115,14 @@ export class JournalService implements OnDestroy  {
       shareReplay());      
   }
 
-  getJournalHeader(journal_id: number) {
+  getJournalHeaderById(journal_id: number) {
     var url = this.baseUrl + '/v1/read_journal_header_by_id';
     return this.httpClient.post<IJournalHeader>(url,
       {
         journal_id: journal_id,
-        status: "Open"
+        status: "open"
       },
-      ).pipe(
-      shareReplay())
+      ).pipe( shareReplay())
   }
 
   reNumberJournalDetail(journal_id: number ) {
@@ -147,7 +146,7 @@ export class JournalService implements OnDestroy  {
   getHttpJournalDetails(journal_id: number) {
     
     var url = this.baseUrl + '/v1/get_journal_detail/'+journal_id;
-    return this.httpClient.get<IJournalDetail[]>(url)
+    return this.httpClient.get<IJournalDetail[]>(url);
   }
 
   getJournalDetail(journal_id: number) {
@@ -156,10 +155,14 @@ export class JournalService implements OnDestroy  {
         tap(data => this.journalDetailList.set(data)),
         take(1),
         catchError(err => {
-            const message = "Could not retrieve journals ...";
-            console.debug(message, err);
-            this.message(message); 
-            return throwError(() => new Error(`${ JSON.stringify(err) }`));         
+          const message = "Could not retrieve journals ...";
+          console.debug(message, err.statusText);
+          this.message(message); 
+          if (err.statusText === "Unauthorized")
+            {
+              this.router.navigate(['auth/login']);            
+            }
+          return throwError(() => new Error(`${ JSON.stringify(err.statusText) }`)); 
         }),
         shareReplay()
       ).subscribe();
@@ -188,7 +191,7 @@ export class JournalService implements OnDestroy  {
           this.message(message); 
           if (err.statusText === "Unauthorized")
             {
-              this.router.navigate(['sign-out']);            
+              this.router.navigate(['auth/login']);            
             }
           return throwError(() => new Error(`${ JSON.stringify(err.statusText) }`));         
       }),
