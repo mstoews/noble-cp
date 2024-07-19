@@ -37,6 +37,7 @@ import { DataManager, Query } from "@syncfusion/ej2-data";
 import { IJournalDetailDelete, IJournalHeader, IJournalHeaderUpdate } from "app/models/journals";
 import { ActivatedRoute } from "@angular/router";
 import { Location } from '@angular/common';
+import { MatDrawer } from "@angular/material/sidenav";
 
 
 declare var __moduleName: string;
@@ -85,6 +86,7 @@ export class APUpdateComponent
   public fundsParams?: IEditCell;
 
   public fields: Object = { text: "description", value: "child" };
+  drawer = viewChild<MatDrawer>('drawer')
 
   @ViewChild("contextmenu")
   private _change = inject(ChangeDetectorRef);
@@ -103,8 +105,15 @@ export class APUpdateComponent
   private dialog = inject(MatDialog);
   private auth = inject(AUTH);
   private activatedRoute = inject(ActivatedRoute)
-
   
+  openDrawer() {    
+      this.drawer().open();
+  }
+
+  closeDrawer() {    
+    this.drawer().close();
+  }
+
   public journalForm!: FormGroup;
   public detailForm!: FormGroup;
   public matDialog = inject(MatDialog);
@@ -148,6 +157,7 @@ export class APUpdateComponent
   transaction_date: string;
   amount: number;
   journalType: string;
+  sTitle = 'Transaction Detail Update';
 
   // drop down searchable list
   public accountList: IDropDownAccounts[] = [];
@@ -344,9 +354,9 @@ export class APUpdateComponent
 
   actionBegin(args: SaveEventArgs): void {
     console.debug('args : ', args.requestType);
-    var data = args.rowData as IJournalHeader;
+    args.cancel = true;
     if (args.requestType === 'beginEdit' || args.requestType === 'add') {
-
+        this.openDrawer();
     }
     if (args.requestType === 'save') {
 
@@ -579,7 +589,7 @@ export class APUpdateComponent
 
 
 
-  closeDrawer() {
+  exitWindow() {
     if (this.bDirty === false) {
       this.journalForm.reset();
       this._location.back();

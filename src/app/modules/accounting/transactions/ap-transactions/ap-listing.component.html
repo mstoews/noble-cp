@@ -17,12 +17,14 @@
                     <ng-container>
                         @if (store.ap()) {
                         <div class="flex flex-1 flex-col overflow-auto">
-                            <ejs-grid  id='journals'
+                            <ejs-grid  id='ap-journals'
                                   [dataSource]='store.ap()'   
                                   allowPaging='true' 
                                   allowSorting='true'                                   
                                   showColumnMenu='true'
                                   allowEditing='true'
+                                  [allowResizing]='true' 
+                                  [allowReordering]='true'
                                   [allowFiltering]='false'
                                   [enablePersistence]='true'
                                   [allowGrouping]='true'
@@ -38,6 +40,7 @@
                                   [searchSetting]="searchOptions" >
                                 <e-columns>
                                     <e-column  field="journal_id"  headerText="ID" width="100" dataType="number" isPrimaryKey='true' textAlign="left"></e-column>
+                                    <e-column  field="party_id"    headerText="Party" type="string" width='120'></e-column>             
                                     <e-column  field="type"        headerText="Type" width="100" dataType="text" textAlign="left"></e-column>
                                     <e-column  field="booked"      [displayAsCheckBox]='true' headerText="Booked" width="100" type="boolean"></e-column>                            
                                     <e-column  field="amount"      headerText="Amount" format='N2' width="150" textAlign="Right"></e-column>
@@ -46,7 +49,7 @@
                                     <e-column  field="description" headerText="Description" width="200"></e-column>                                    
                                     <e-column  field="create_date" width='120' [format]='formatoptions' headerText="Created" type="dateTime"></e-column>                                                        
                                     <e-column  field="create_user" width='120' headerText="User" type="string"></e-column>             
-                                    <e-column  field="party_id" width='120' headerText="Party" type="string"></e-column>             
+                                    
                                 </e-columns>
                             </ejs-grid>                             
                         </div>

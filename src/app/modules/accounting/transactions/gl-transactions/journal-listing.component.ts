@@ -17,7 +17,7 @@ import { MatDrawer } from '@angular/material/sidenav';
 import { MaterialModule } from 'app/services/material.module';
 import { SubTypeService } from 'app/services/subtype.service';
 import { TypeService } from 'app/services/type.service';
-import { DialogEditEventArgs, EditService, SelectionSettingsModel, GroupService, FilterService, GridModule, PageService, SaveEventArgs, SortService, ToolbarService, GridComponent, AggregateService, FilterSettingsModel, ToolbarItems, SearchSettingsModel, GroupSettingsModel, ColumnMenuService, ResizeService, ExcelExport, PdfExportService, ExcelExportService } from '@syncfusion/ej2-angular-grids';
+import { DialogEditEventArgs, EditService, SelectionSettingsModel, GroupService, FilterService, GridModule, PageService, SaveEventArgs, SortService, ToolbarService, GridComponent, AggregateService, FilterSettingsModel, ToolbarItems, SearchSettingsModel, GroupSettingsModel, ColumnMenuService, ResizeService, ExcelExport, PdfExportService, ExcelExportService, ReorderService } from '@syncfusion/ej2-angular-grids';
 import { Browser } from '@syncfusion/ej2-base';
 import { Dialog } from '@syncfusion/ej2-popups';
 
@@ -46,7 +46,7 @@ const imports = [
     standalone: true,
     imports: [imports],
     templateUrl: './journal-listing.component.html',
-    providers: [JournalStore, SortService, ExcelExportService, PdfExportService, PageService, ResizeService,GroupService, FilterService, ToolbarService, EditService, AggregateService, ColumnMenuService],
+    providers: [JournalStore, SortService, ResizeService, ReorderService, ExcelExportService, PdfExportService, PageService, ResizeService,GroupService, FilterService, ToolbarService, EditService, AggregateService, ColumnMenuService],
     })
 export class JournalEntryComponent implements OnInit, OnDestroy {
     

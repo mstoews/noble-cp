@@ -106,7 +106,7 @@ export const JournalStore = signalStore(
         exhaustMap(() => {
           return journalService.readHttpJournalHeader().pipe(
             tapResponse({
-              next: (journal) => patchState(state, { journals: journal.filter(ar => ar.type === 'AP') }),
+              next: (journal) => patchState(state, { ap: journal.filter(ar => ar.type === 'AP') }),
               error: console.error,
               finalize: () => patchState(state, { isLoading: false }),
             })
@@ -120,7 +120,7 @@ export const JournalStore = signalStore(
         exhaustMap(() => {
           return journalService.readHttpJournalHeader().pipe(
             tapResponse({
-              next: (journal) => patchState(state, { journals: journal.filter(ar => ar.type === 'AR') }),
+              next: (journal) => patchState(state, { ar: journal.filter(ar => ar.type === 'AR') }),
               error: console.error,
               finalize: () => patchState(state, { isLoading: false }),
             })
