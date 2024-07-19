@@ -83,8 +83,8 @@
     "zone.js": "0.14.2"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "18.0.1",
-    "@angular/cli": "18.0.1",
+    "@angular-devkit/build-angular": "18.1.1",
+    "@angular/cli": "18.1.1",
     "@angular/compiler-cli": "18.0.0",
     "@parcel/watcher": "^2.3.0",
     "@tailwindcss/line-clamp": "0.4.2",
