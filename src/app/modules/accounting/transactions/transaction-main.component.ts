@@ -13,6 +13,7 @@ import { TreeComponent } from '../tree/tree.component';
 import { InventoryComponent } from 'app/modules/shop/shop-inventory-maintenance/inventory-grid.component';
 import { ARTransactionComponent } from './ar-transactions/ar-listing.component';
 import { APTransactionComponent } from './ap-transactions/ap-listing.component';
+import { APUpdateComponent } from './ap-transactions/ap-update.component';
 
 
 const imports = [
@@ -29,7 +30,8 @@ const imports = [
     TreeComponent,
     InventoryComponent,
     APTransactionComponent,
-    ARTransactionComponent
+    ARTransactionComponent,
+    APUpdateComponent
 ]
 
 @Component({

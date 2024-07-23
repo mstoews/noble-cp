@@ -141,9 +141,6 @@ export class JournalUpdateComponent
   public editSettings: Object;
   public filterSettings: Object;
   public toolbar: string[];
-  public orderidrules: Object;
-  public customeridrules: Object;
-  public freightrules: Object;
   public editparams: Object;
   public pageSettings: Object;
   public formatoptions: Object;
@@ -154,6 +151,7 @@ export class JournalUpdateComponent
   public fundList: IFunds[] = [];
 
   public accountCtrl: FormControl<IDropDownAccounts> = new FormControl<IDropDownAccounts>(null);
+  public partyCtrl: FormControl<IDropDownAccounts> = new FormControl<IDropDownAccounts>(null);
   public accountFilterCtrl: FormControl<string> = new FormControl<string>("");
   public filteredAccounts: ReplaySubject<IDropDownAccounts[]> = new ReplaySubject<IDropDownAccounts[]>(1);
 

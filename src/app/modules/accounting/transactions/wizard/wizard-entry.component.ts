@@ -20,6 +20,12 @@ import { WizardUpdateComponent } from './wizard-update.component';
 import { IJournalDetail, IJournalHeader, ITransactionDate } from 'app/models/journals';
 
 
+interface ITransactionType {
+  value: string;
+  viewValue: string;
+  checked: boolean;
+}
+
 const imports = [
   CommonModule,
   MaterialModule,
@@ -97,13 +103,26 @@ export class EntryWizardComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild('singleCreditSelect', { static: true }) singleCreditSelect: MatSelect;
   bNewTransaction: any;
 
+  public selectedOption: string;
+  
+  types: ITransactionType[] = [
+    { value: "GL", viewValue: "General Ledger", checked: true },
+    { value: "AP", viewValue: "Accounts Payable", checked: false },
+    { value: "AR", viewValue: "Accounts Receivable", checked: false },
+  ];
+
+
+  onTransTypeClicked(e: any){
+    this.selectedOption = e;
+    console.log(e)
+  }
 
   // -----------------------------------------------------------------------------------------------------
   // @ Lifecycle hooks
   // -----------------------------------------------------------------------------------------------------
   ngOnInit(): void {
 
-
+    this.selectedOption = this.types[0].value;
 
     this.accountService.readChildren().pipe(takeUntil(this._onDestroy)).subscribe((accounts) => {
       this.debitAccounts = accounts;
@@ -119,6 +138,8 @@ export class EntryWizardComponent implements OnInit, OnDestroy, AfterViewInit {
         description: ['', Validators.required],
         transaction_date: ['', Validators.required],
         amount: ['', Validators.required],
+        party: ['', Validators.required],
+        invoice_no: ['', Validators.required],
       }),
       step2: this.formBuilder.group({
         debitCtrl: [''],

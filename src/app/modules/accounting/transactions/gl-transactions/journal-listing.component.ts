@@ -1,6 +1,5 @@
 import { Component, OnDestroy, OnInit, ViewChild, inject, viewChild } from '@angular/core';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { JournalService } from 'app/services/journal.service';
 import { Subject } from 'rxjs';
 import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 
@@ -20,10 +19,8 @@ import { TypeService } from 'app/services/type.service';
 import { DialogEditEventArgs, EditService, SelectionSettingsModel, GroupService, FilterService, GridModule, PageService, SaveEventArgs, SortService, ToolbarService, GridComponent, AggregateService, FilterSettingsModel, ToolbarItems, SearchSettingsModel, GroupSettingsModel, ColumnMenuService, ResizeService, ExcelExport, PdfExportService, ExcelExportService } from '@syncfusion/ej2-angular-grids';
 import { Browser } from '@syncfusion/ej2-base';
 import { Dialog } from '@syncfusion/ej2-popups';
-
 import { DropDownListComponent } from '@syncfusion/ej2-angular-dropdowns';
 import { IJournalHeader } from 'app/models/journals';
-import { TransactionDetailStore } from './transaction.store';
 import { JournalStore } from 'app/services/journal.store';
 import { Router } from '@angular/router';
 
@@ -50,7 +47,6 @@ const imports = [
     })
 export class JournalEntryComponent implements OnInit, OnDestroy {
     
-    //public journalService = inject(JournalService);
     public typeService = inject(TypeService);
     public subtypeService = inject(SubTypeService);
     public fundService = inject(FundsService);
@@ -95,7 +91,6 @@ export class JournalEntryComponent implements OnInit, OnDestroy {
     
     
     initialDatagrid() {
-        // this.pageSettings = { pageCount: 10 };        
         this.formatoptions = { type: 'dateTime', format: 'M/dd/yyyy' }        
         this.pageSettings =  { pageSizes: true, pageCount: 10 };
         this.selectionOptions = { mode: 'Cell' };              

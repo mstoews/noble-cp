@@ -79,6 +79,10 @@ export class WizardUpdateComponent implements OnInit, OnDestroy, AfterViewInit {
   @Input() public bNewTransaction = true;
 
 
+  public GL = 'GL';
+  public AP = 'AP';
+  public AR = 'AR';
+
 
   private fb = inject(FormBuilder);
   private journalService = inject(JournalService);

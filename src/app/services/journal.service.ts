@@ -158,10 +158,9 @@ export class JournalService implements OnDestroy  {
           const message = "Could not retrieve journals ...";
           console.debug(message, err.statusText);
           this.message(message); 
-          if (err.statusText === "Unauthorized")
-            {
-              this.router.navigate(['auth/login']);            
-            }
+          if (err.statusText === "Unauthorized") {              
+            this.router.navigate(['auth/login']);            
+          }
           return throwError(() => new Error(`${ JSON.stringify(err.statusText) }`)); 
         }),
         shareReplay()
@@ -191,7 +190,7 @@ export class JournalService implements OnDestroy  {
           this.message(message); 
           if (err.statusText === "Unauthorized")
             {
-              this.router.navigate(['auth/login']);            
+              this.router.navigate(['auth/sign-in']);            
             }
           return throwError(() => new Error(`${ JSON.stringify(err.statusText) }`));         
       }),

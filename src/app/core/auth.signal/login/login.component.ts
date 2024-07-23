@@ -34,6 +34,7 @@ export default class LoginComponent {
     constructor() {
         effect(() => {
             if (this.authService.user()) {
+                this.authService.refreshToken();
                 this.router.navigate(['projects']);
             }
         });

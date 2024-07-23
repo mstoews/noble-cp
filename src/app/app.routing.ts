@@ -57,9 +57,9 @@ export const appRoutes: Route[] = [
                     import('app/modules/auth/sign-in/sign-in.routes'),
             },
             {
-                path: 'sign-up',
+                path: 'sign-in',
                 loadChildren: () =>
-                    import('app/modules/auth/sign-up/sign-up.routes'),
+                    import('app/modules/auth/sign-in/sign-in.routes'),
             },
             {
                 path: 'landing',

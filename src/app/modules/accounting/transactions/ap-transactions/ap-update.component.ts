@@ -34,12 +34,10 @@ import {
 } from "@syncfusion/ej2-angular-grids";
 
 import { DataManager, Query } from "@syncfusion/ej2-data";
-import { IJournalDetailDelete, IJournalHeader, IJournalHeaderUpdate } from "app/models/journals";
+import { IJournalDetail, IJournalDetailDelete, IJournalHeader, IJournalHeaderUpdate } from "app/models/journals";
 import { ActivatedRoute } from "@angular/router";
 import { Location } from '@angular/common';
-
-
-declare var __moduleName: string;
+import { MatDrawer } from "@angular/material/sidenav";
 
 const imports = [
   CommonModule,
@@ -202,6 +200,9 @@ export class APUpdateComponent
     this.journalForm = this.fb.group({
       description: [row.description, Validators.required],
       amount: [row.amount, Validators.required],
+      party: ['Vendor', Validators.required],
+      invoice_no: ['123456', Validators.required],
+      due_date: ['2024-06-12', Validators.required],
       transaction_date: [row.transaction_date, Validators.required],
     });
   }
@@ -341,11 +342,31 @@ export class APUpdateComponent
   
   public selIndex?: number[] = [];
 
+  drawer = viewChild<MatDrawer>('drawer')
+
+  openDrawer() {
+    if (this.drawer().opened !== true)
+        this.drawer().toggle();
+  }
+
 
   actionBegin(args: SaveEventArgs): void {
     console.debug('args : ', args.requestType);
-    var data = args.rowData as IJournalHeader;
+    var data = args.rowData as IJournalDetail;
+    args.cancel = true
     if (args.requestType === 'beginEdit' || args.requestType === 'add') {
+
+      this.detailForm = this.fb.group({        
+        child: [data.child, Validators.required],
+        description: [data.description, Validators.required],
+        fund: [data.fund, Validators.required],
+        sub_type: [data.sub_type, Validators.required],
+        reference: [data.reference, Validators.required],
+        debit: [data.debit, Validators.required],      
+        credit: [data.credit, Validators.required],      
+      });
+
+      this.openDrawer();
 
     }
     if (args.requestType === 'save') {
@@ -578,8 +599,7 @@ export class APUpdateComponent
   }
 
 
-
-  closeDrawer() {
+  back() {
     if (this.bDirty === false) {
       this.journalForm.reset();
       this._location.back();
@@ -603,6 +623,15 @@ export class APUpdateComponent
         }
       });
     }
+  }
+
+
+
+  closeDrawer() {
+
+    this.drawer().close();
+
+  
   }
 
   onDelete(args: any) {
@@ -865,21 +894,6 @@ export class APUpdateComponent
     });
   }
 
-  changeFund($event: any) { }
-
-  changeChildAccount($event: any) { }
-
-  formatNumber(e: any) {
-    const options = {
-      style: "decimal", // Other options: 'currency', 'percent', etc.
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-    };
-    if (e.value === null || e.value === undefined) e.value = 0.0;
-    const formattedWithOptions = e.value.toLocaleString("en-US", options);
-    return formattedWithOptions;
-  }
-
   ngOnDestroy(): void {
     if (this.accountsListSubject) {
       this.accountsListSubject.unsubscribe();
@@ -892,39 +906,4 @@ export class APUpdateComponent
     this._onDestroy.complete();
   }
 
-  public menuItems: MenuItemModel[] = [
-    {
-      text: "Delete Line",
-      iconCss: "e-cm-icons e-cut",
-    },
-    {
-      text: "Copy Line",
-      iconCss: "e-cm-icons e-copy",
-    },
-    {
-      text: "Paste",
-      iconCss: "e-cm-icons e-paste",
-      items: [
-        {
-          text: "Paste Text",
-          iconCss: "e-cm-icons e-pastetext",
-        },
-        {
-          text: "Paste Special",
-          iconCss: "e-cm-icons e-pastespecial",
-        },
-      ],
-    },
-    {
-      separator: true,
-    },
-    {
-      text: "Link",
-      iconCss: "e-cm-icons e-link",
-    },
-    {
-      text: "New Comment",
-      iconCss: "e-cm-icons e-comment",
-    },
-  ];
 }

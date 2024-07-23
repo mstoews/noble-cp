@@ -13,8 +13,9 @@
       <ejs-spreadsheet id="ExpenseSpread" class="w-[calc(100%)] h-[calc(95%)]"  #default 
       sheet="{ rowCount: 100}"
       [scrollSettings]="scrollSettings"       
-      [showRibbon]="false" 
+      [showRibbon]="true" 
       [showFormulaBar]="true" 
+      [openUrl]='openUrl' [saveUrl]='saveUrl'
       (created)="created()"
       [showSheetTabs]="false"
       (contextMenuBeforeOpen)="contextMenuBeforeOpen(args$)" >

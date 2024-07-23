@@ -13,9 +13,7 @@ const getHeaders = (): any => {
   const route = inject(Router);
   var jwt: string;
   let headers: any = {};
-
-  // var jwt = authService.GetToken();  
-
+  
   var jwt = localStorage.getItem('jwt').trim();
 
   if (jwt === null || jwt === undefined )

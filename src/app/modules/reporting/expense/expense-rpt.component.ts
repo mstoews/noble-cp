@@ -1,14 +1,15 @@
 import { Component, Inject, OnDestroy, OnInit, ViewChild, ViewEncapsulation, inject, AfterViewInit, signal } from '@angular/core';
-import { SpreadsheetComponent, SpreadsheetModule } from '@syncfusion/ej2-angular-spreadsheet';
+import { SpreadsheetComponent, SpreadsheetAllModule } from '@syncfusion/ej2-angular-spreadsheet';
 import { CommonModule } from '@angular/common';
 import { DistMenuStandaloneComponent } from '../distributed-ledger/dist-menubar/grid-menubar.component';
 import { TrialBalanceStore } from 'app/services/distribution.ledger.store';
+import { UploaderModule } from '@syncfusion/ej2-angular-inputs';
 
 
 @Component({
   selector: 'expense-rpt',
   standalone: true,
-  imports: [SpreadsheetModule, CommonModule, DistMenuStandaloneComponent],
+  imports: [SpreadsheetAllModule, UploaderModule, CommonModule, DistMenuStandaloneComponent],
   encapsulation: ViewEncapsulation.None,
   templateUrl: './expense-rpt.component.html',
   providers: [TrialBalanceStore]
@@ -25,6 +26,12 @@ export class ExpenseRptComponent implements OnInit, OnDestroy {
   currentYear = signal(2024);
   args$ : any;
   tb: any;
+
+  public openUrl: string = 'https://services.syncfusion.com/angular/production/api/spreadsheet/open';
+  public saveUrl: string = 'https://services.syncfusion.com/angular/production/api/spreadsheet/save';
+  public path: Object = {   saveUrl: 'https://services.syncfusion.com/angular/production/api/FileUploader/Save',  
+                            removeUrl: 'https://services.syncfusion.com/angular/production/api/FileUploader/Remove'
+  };
 
   ngOnDestroy(): void {
     
