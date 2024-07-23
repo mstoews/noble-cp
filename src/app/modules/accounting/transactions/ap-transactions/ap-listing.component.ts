@@ -15,7 +15,7 @@ import { MatDrawer } from '@angular/material/sidenav';
 import { MaterialModule } from 'app/services/material.module';
 import { SubTypeService } from 'app/services/subtype.service';
 import { TypeService } from 'app/services/type.service';
-import { DialogEditEventArgs, EditService, SelectionSettingsModel, GroupService, FilterService, GridModule, PageService, SaveEventArgs, SortService, ToolbarService, GridComponent, AggregateService, FilterSettingsModel, ToolbarItems, SearchSettingsModel, GroupSettingsModel, ColumnMenuService, ResizeService, ExcelExport, PdfExportService, ExcelExportService } from '@syncfusion/ej2-angular-grids';
+import { DialogEditEventArgs, EditService, SelectionSettingsModel, GroupService, FilterService, GridModule, PageService, SaveEventArgs, SortService, ToolbarService, GridComponent, AggregateService, FilterSettingsModel, ToolbarItems, SearchSettingsModel, GroupSettingsModel, ColumnMenuService, ResizeService, ExcelExport, PdfExportService, ExcelExportService, ReorderService } from '@syncfusion/ej2-angular-grids';
 import { Browser } from '@syncfusion/ej2-base';
 import { Dialog } from '@syncfusion/ej2-popups';
 
@@ -42,7 +42,7 @@ const imports = [
     standalone: true,
     imports: [imports],
     templateUrl: './ap-listing.component.html',
-    providers: [JournalStore, SortService, ExcelExportService, PdfExportService, PageService, ResizeService,GroupService, FilterService, ToolbarService, EditService, AggregateService, ColumnMenuService],
+    providers: [JournalStore, ResizeService,  SortService, ReorderService, ExcelExportService, PdfExportService, PageService, ResizeService,GroupService, FilterService, ToolbarService, EditService, AggregateService, ColumnMenuService],
     })
 export class APTransactionComponent implements OnInit, OnDestroy {
     
@@ -122,21 +122,9 @@ export class APTransactionComponent implements OnInit, OnDestroy {
             this.bOpenDetail = true;
             this.journalType = data.type;
 
-            if (data.type === 'AR')
-            {
-                this.route.navigate(['journals/ar', this.nJournal]);
-                return;
-            }
-            else 
-            if (data.type === 'AP')
-            {
-                this.route.navigate(['journals/ap', data.journal_id]);
-                return;
-            }    
-
             this.nJournal = Number(data.journal_id);
             if (this.nJournal > 0 ) {
-                this.openDrawer();        
+                this.route.navigate(['journals/ap', data.journal_id]);
             }            
         }
         if (args.requestType === 'save') {
