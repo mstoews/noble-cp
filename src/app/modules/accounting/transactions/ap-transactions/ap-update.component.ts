@@ -38,12 +38,6 @@ import { IJournalDetail, IJournalDetailDelete, IJournalHeader, IJournalHeaderUpd
 import { ActivatedRoute } from "@angular/router";
 import { Location } from '@angular/common';
 import { MatDrawer } from "@angular/material/sidenav";
-<<<<<<< HEAD
-=======
-
-
-declare var __moduleName: string;
->>>>>>> main
 
 const imports = [
   CommonModule,
@@ -115,6 +109,10 @@ export class APUpdateComponent
 
   closeDrawer() {    
     this.drawer().close();
+  }
+
+  back() {
+    
   }
 
   public journalForm!: FormGroup;
@@ -357,38 +355,13 @@ export class APUpdateComponent
   
   public selIndex?: number[] = [];
 
-  drawer = viewChild<MatDrawer>('drawer')
-
-  openDrawer() {
-    if (this.drawer().opened !== true)
-        this.drawer().toggle();
-  }
 
 
   actionBegin(args: SaveEventArgs): void {
     console.debug('args : ', args.requestType);
-<<<<<<< HEAD
-    var data = args.rowData as IJournalDetail;
-    args.cancel = true
-    if (args.requestType === 'beginEdit' || args.requestType === 'add') {
-
-      this.detailForm = this.fb.group({        
-        child: [data.child, Validators.required],
-        description: [data.description, Validators.required],
-        fund: [data.fund, Validators.required],
-        sub_type: [data.sub_type, Validators.required],
-        reference: [data.reference, Validators.required],
-        debit: [data.debit, Validators.required],      
-        credit: [data.credit, Validators.required],      
-      });
-
-      this.openDrawer();
-
-=======
     args.cancel = true;
     if (args.requestType === 'beginEdit' || args.requestType === 'add') {
         this.openDrawer();
->>>>>>> main
     }
     if (args.requestType === 'save') {
 
@@ -620,12 +593,8 @@ export class APUpdateComponent
   }
 
 
-<<<<<<< HEAD
-  back() {
-=======
 
   exitWindow() {
->>>>>>> main
     if (this.bDirty === false) {
       this.journalForm.reset();
       this._location.back();
@@ -651,14 +620,6 @@ export class APUpdateComponent
     }
   }
 
-
-
-  closeDrawer() {
-
-    this.drawer().close();
-
-  
-  }
 
   onDelete(args: any) {
     
