@@ -11,7 +11,7 @@ import {
   import { debounceTime, distinctUntilChanged, exhaustMap, pipe, shareReplay, switchMap, tap } from 'rxjs';
   import { inject } from '@angular/core';
   import { tapResponse } from '@ngrx/operators';  
-  import { IBudget } from 'app/models';
+  import { IBudget, IFunds } from 'app/models';
   import { BudgetService } from './budget.service';
   import { ISubType } from 'app/services/subtype.service';
   import { IType } from 'app/services/type.service';
@@ -23,7 +23,7 @@ export interface BudgetInterface {
     accounts: IAccounts[],
     types: IType[],
     subTypes: ISubType[],
-    funds: IFund[],
+    funds: IFunds[],
     isLoading: boolean;
     error: string | null;
     query: string
@@ -45,7 +45,7 @@ export const BudgetStore = signalStore(
         pipe(
           switchMap((value) => {
             patchState(store, { isLoading: true });
-            return budgetService.delete(value.).pipe(
+            return budgetService.delete(value.child).pipe(
               tapResponse({
                 next: (budget) => {
                  
@@ -125,7 +125,7 @@ export const BudgetStore = signalStore(
                   patchState(store, { isLoading: true });
                   return budgetService.readSubtypes().pipe(
                     tapResponse({
-                      next: (budget) =>  patchState(store, { budgetAmt : budget }),             
+                      next: (subtypes) =>  patchState(store, { subTypes : subtypes }),             
                       error: console.error,
                       finalize: () => patchState(store, { isLoading: false }),
                     })
@@ -139,7 +139,7 @@ export const BudgetStore = signalStore(
                   patchState(store, { isLoading: true });
                   return budgetService.readFunds().pipe(
                     tapResponse({
-                      next: (budget) =>  patchState(store, { budgetAmt : budget }),             
+                      next: (fund) =>  patchState(store, { funds : fund }),             
                       error: console.error,
                       finalize: () => patchState(store, { isLoading: false }),
                     })
@@ -159,7 +159,7 @@ export const BudgetStore = signalStore(
                     })
                   );
                 })
-              )
+            )
         ),                         
     })),
     withHooks({
