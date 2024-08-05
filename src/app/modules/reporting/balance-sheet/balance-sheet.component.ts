@@ -1,74 +1,53 @@
-import { ChangeDetectionStrategy, Component, OnInit, ViewChild, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MatDrawer, MatSidenavModule } from '@angular/material/sidenav';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from "@angular/material/form-field";
-import { GLAccountsService } from 'app/services/accounts.service';
 import { MaterialModule } from 'app/services/material.module';
+import { TrialBalanceStore } from 'app/services/distribution.ledger.store';
+import { ReportingToolbarComponent } from '../grid-reporting/grid-menubar.component';
+import { CdkTableModule } from '@angular/cdk/table';
 
 const imports = [
     CommonModule,
     ReactiveFormsModule,
     MaterialModule,
     FormsModule,
-    MatFormFieldModule
+    MatFormFieldModule,
+    ReportingToolbarComponent,
+    CdkTableModule
 ];
 
 @Component({
-    selector: 'balance-sheet',
+    selector: 'bs',
     standalone: true,
     imports: [imports],
     templateUrl: './balance-sheet.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class BalanceSheetComponent implements OnInit {
+export class BalanceSheetComponent  {
     private fb = inject(FormBuilder);
-    private accountApiService = inject(GLAccountsService);
-
+    store = inject(TrialBalanceStore);
+    assets: any[]
     // local variables
-    @ViewChild('drawer') drawer!: MatDrawer;
-    collapsed = false;
-    sTitle = 'Income Statement';
-    selectedItemKeys: any[] = [];
-    totalRevenue: any;
-
-    revenue: any[] = [{ account: '', description: 'Total Revenue', balance: 1530, type: '' }];
-
-
-    customizeTooltip = (pointsInfo: { originalValue: string; }) => ({ text: `${parseInt(pointsInfo.originalValue)}%` });
-    accountsForm!: FormGroup;
-    //assets$ = this.accountApiService.read().pipe(map((income) => income.filter((inc) => inc.type === 'Assets')));
-    //liabilities$ = this.accountApiService.read().pipe(map((income) => income.filter((inc) => inc.type === 'Liability')));
-    assets$: any;
-    liabilities$: any;
-
-    ngOnInit() {
-        this.createEmptyForm();
+    refresh() {        
+        var params = {
+            period : 1,
+            period_year: 2024
+        }
+        this.store.loadHeader(params);
+        this.assets = this.store.header();
     }
-
-    add() {
-        this.createEmptyForm();
-
-    }
-
-
-    createEmptyForm() {
-        this.accountsForm = this.fb.group({
-            account: ['', Validators.required],
-            description: ['', Validators.required],
-            balance: ['', Validators.required],
-            type: ['', Validators.required],
-            comments: ['', Validators.required],
-            sub_type: ['', Validators.required],
-            special_assessment: ['', Validators.required],
-            capital_asset_fund: ['', Validators.required],
-            reserve_fund: ['', Validators.required],
-        });
-    }
-
-    selectionChanged(data: any) {
-        console.debug(`selectionChanged ${JSON.stringify(data.data)}`);
-        this.selectedItemKeys = data.selectedRowKeys;
-    }
+    
+    add() {}
 
 }
+
+/*
+  child: string;
+  period: string;
+  period_year: string;
+  description: string;
+  opening_balance: number;
+  debit_balance: number;
+  credit_balance: number;
+*/  

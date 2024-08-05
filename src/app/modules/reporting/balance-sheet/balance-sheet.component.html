@@ -1,46 +1,15 @@
-<div class="absolute inset-0 flex flex-col min-w-0 overflow-y-auto -px-20" cdkScrollable>
+<div class="flex flex-col min-w-0 overflow-y-auto px-20" cdkScrollable>
     <!-- Main -->
+     <p>Title</p>
     <div class="flex-auto p-6 sm:p-10">
-        <div class="h-full border-gray-300 rounded-2xl">
-            <div class="dark:text-white text-3xl mb-10">Balance Sheet</div>
-            <div class="dark:text-white text-2xl ml-20 mb-10">Assets </div>
-            @if (assets$ | async; as assets) {
-            <div class="flex flex-col ml-20">
-                <dx-data-grid [dataSource]="assets" [columnHidingEnabled]="true" [remoteOperations]="false" [showBorders]="false" [showColumnLines]="false" [showRowLines]="false" [showColumnHeaders]="false">
-                    <dxi-column dataField="account" width="100" dataType="string"></dxi-column>
-                    <dxi-column dataField="description" width="400" dataType="string"></dxi-column>
-                    <dxi-column dataField="type" width="100" dataType="string"></dxi-column>
-                    <dxi-column dataField="balance" dataType="number" alignment="right" format="currency"></dxi-column>
-                    <dxo-summary>
-                        <dxi-total-item column="account" summaryType="count"> </dxi-total-item>
-                        <dxi-total-item column="balance" summaryType="sum" valueFormat="currency">
-                        </dxi-total-item>
-                    </dxo-summary>
-
-                </dx-data-grid>
-            </div>
-            }
-
-            <div class="dark:text-white text-2xl mt-10 ml-20 mb-10">Liabilities</div>
-            @if (liabilities$ | async; as assets) {
-            <div class="flex flex-col ml-20">
-                <dx-data-grid [dataSource]="assets" [remoteOperations]="false" [showBorders]="false"
-                    [showColumnLines]="false" [showRowLines]="false" [showColumnHeaders]="false" keyExpr="account">
-
-                    <dxi-column dataField="account" width="100" dataType="string"></dxi-column> -->
-                    <dxi-column dataField="description" width="400" dataType="string"></dxi-column>
-                    <dxi-column dataField="type" width="100" dataType="string"></dxi-column>
-                    <dxi-column dataField="balance" dataType="number" alignment="right" format="currency"></dxi-column>
-                    <dxo-summary>
-                        <dxi-total-item column="account" summaryType="count"> </dxi-total-item>
-                        <dxi-total-item column="balance" summaryType="sum" valueFormat="currency">
-                        </dxi-total-item>
-                    </dxo-summary>
-
-                </dx-data-grid>
-            </div>
-            }
-
+        <div class="h-full border-gray-300 rounded-2xl">            
+            <reporting-toolbar (notifyParentRefresh)="refresh()"></reporting-toolbar>
+            
+             <div class="flex flex-col ml-20">
+                {{"'Income Statement'"}}
+             
+            </div>             
+           
         </div>
     </div>
 </div>

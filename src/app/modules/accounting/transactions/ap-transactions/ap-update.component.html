@@ -16,8 +16,9 @@
             <form [formGroup]="journalForm">
                 <section class="flex flex-col md:flex-row">
                     <div class="flex flex-col grow">
-                        <mat-label class="text-md ml-1">Description</mat-label>
+                        
                         <mat-form-field class="mt-1 mr-1 flex-start">
+                            <mat-label class="text-md ml-1">Description</mat-label>
                             <input matInput placeholder="Journal Description" formControlName="description" />
                             <mat-icon class="icon-size-5" matPrefix [svgIcon]="'heroicons_solid:document'"></mat-icon>
                         </mat-form-field>
@@ -186,7 +187,7 @@
     </mat-drawer-container>
 
     <!-- Drawer For Update Starts -->
-    <mat-drawer class="w-full md:w-[400px]" #drawer [opened]="false" mode="over" [position]="'end'"
+    <mat-drawer class="w-full md:w-[600px]" #drawer [opened]="false" mode="over" [position]="'end'"
         [disableClose]="false">
         <mat-card class="m-2">
             <form [formGroup]="detailForm">
@@ -222,7 +223,7 @@
                     </div>
 
                     <!-- Sub Type -->
-                    
+                    <section class="flex flex-col md:flex-row gap-2">
                     @if (subtype$ | async; as subtypes) {                    
                         <mat-form-field class="flex-col ml-2 mr-2 grow ">
                             <mat-label class="text-md ml-2">Sub Type</mat-label>    
@@ -251,6 +252,7 @@
                             <mat-icon class="icon-size-5" matPrefix [svgIcon]="'heroicons_solid:briefcase'"></mat-icon>
                         </mat-form-field>                    
                     }
+                    </section>    
 
                     <!-- Description  -->
                     
@@ -272,8 +274,25 @@
                                 [placeholder]="'Reference'" />
                             <mat-icon class="icon-size-5" matPrefix [svgIcon]="'heroicons_solid:document'"></mat-icon>
                         </mat-form-field>
+
+                    </section>
+
+                        <section class="flex flex-col md:flex-row gap-2">
+                        <mat-form-field class="flex-col grow mr-2 ml-2">
+                            <mat-label class="text-md ml-2">Due Date</mat-label>    
+                            <input matInput placeholder="Due Date" formControlName="due_date"
+                                [placeholder]="'Due Date'" />
+                            <mat-icon class="icon-size-5" matPrefix [svgIcon]="'heroicons_solid:document'"></mat-icon>
+                        </mat-form-field>
+
+                        <mat-form-field class="flex-col grow mr-2 ml-2">
+                            <mat-label class="text-md ml-2">Invoice No</mat-label>    
+                            <input matInput placeholder="Invoice No" formControlName="invoice_no" />
+                            <mat-icon class="icon-size-5" matPrefix [svgIcon]="'heroicons_solid:document'"></mat-icon>
+                        </mat-form-field>
+                    </section>
                     
-                </section>
+
                     
                 <section class="flex flex-col md:flex-row gap-2">
                     <!-- Debit  -->                                            
@@ -331,65 +350,7 @@
                     <mat-icon [svgIcon]="'mat_outline:close'"></mat-icon>
                 </button>
 
-            </div>
-            <div class="flex flex-col">
-                <div class="text-3xl m-1 text-gray-100 p-2 bg-slate-600">Details</div>
-                <div class="flex flex-col h-full ml-1 mr-1 text-gray-800">
-                    @if ( loading === false) {
-                    @if (journalService.journalDetailList() !== null) {
-                    @if (funds$ | async; as funds) {
-                    @if (subtype$ | async; as subtypes) {
-
-                    <ejs-grid id="grid" #grid [dataSource]='journalService.journalDetailList()'
-                        [selectionSettings]="selectionOptions" [editSettings]='editSettings' [allowFiltering]='false'
-                        [allowRowDragAndDrop]='true' [gridLines]="'Both'" [allowSorting]='true' [allowSelection]='true'
-                        (actionBegin)="actionBegin($event)" (actionComplete)="actionComplete($event)"
-                        (rowDragStartHelper)="rowDragStartHelper($event)" (rowClick)="rowClick($event)"
-                        (rowDrop)="rowDrop($event)" (rowDragStart)="rowDragStart($event)" (rowDrag)="rowDrag($event)">
-
-                        <e-columns>
-                            <e-column field='journal_subid' headerText='ID' [visible]='false' isPrimaryKey='true'
-                                width='100'></e-column>
-                            <e-column field='child' headerText='Account' width='150' editType='dropdownedit'
-                                [edit]='accountParams'></e-column>
-                            <e-column field='fund' editType="dropdownedit" editType='dropdownedit' headerText='Fund'
-                                width='90'></e-column>
-                            <e-column field='sub_type' editType='dropdownedit' headerText='Sub Type'
-                                width='90'></e-column>
-                            <e-column field='description' headerText='Description' width='150'></e-column>
-                            <e-column field='reference' headerText='Reference' width=120></e-column>
-                            <e-column field='debit' headerText='Debit' textAlign='Right' width='100'
-                                format="N2"></e-column>
-                            <e-column field='credit' headerText='Credit' textAlign='Right' width='100'
-                                format="N2"></e-column>
-                        </e-columns>
-
-                        <e-aggregates>
-                            <e-aggregate>
-                                <e-columns>
-                                    <e-column type="Sum" field="debit" format="N2">
-                                        <ng-template #footerTemplate let-data>{{data.Sum}}</ng-template>
-                                    </e-column>
-                                    <e-column type="Sum" field="credit" format="N2">
-                                        <ng-template #footerTemplate let-data>{{data.Sum}}</ng-template>
-                                    </e-column>
-                                </e-columns>
-                            </e-aggregate>
-                        </e-aggregates>
-                    </ejs-grid>
-
-                    } } } }
-                    @else
-                    {
-                    <div class="flex justify-center">
-                        <div>
-                            <mat-progress-spinner diameter="60" [value]="value" mode="indeterminate">
-                            </mat-progress-spinner>
-                        </div>
-                    </div>
-                    }
-                </div>
-            </div>
+            </div>            
         </mat-card>
     </mat-drawer>
 </div>

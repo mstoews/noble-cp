@@ -135,7 +135,7 @@ export class ARJournalService implements OnDestroy  {
     .pipe(tap(results => console.log(results)),
     take(1),
     catchError(err => {
-        const message = "Could not retrieve journals ...";
+        const message = "Could not renumber journals ...";
         console.debug(message, err);
         this.message(message); 
         return throwError(() => new Error(`${ JSON.stringify(err) }`));         
@@ -156,7 +156,7 @@ export class ARJournalService implements OnDestroy  {
         tap(data => this.journalDetailList.set(data)),
         take(1),
         catchError(err => {
-            const message = "Could not retrieve journals ...";
+            const message = "Could not retrieve AR journals ...";
             console.debug(message, err);
             this.message(message); 
             return throwError(() => new Error(`${ JSON.stringify(err) }`));         
@@ -183,7 +183,7 @@ export class ARJournalService implements OnDestroy  {
       tap(data => this.journalHeaderList.set(data)),
       take(1),
       catchError(err => {
-          const message = "Could not retrieve journals ...";
+          const message = "Could not retrieve AR header journals ...";
           console.debug(message, err.statusText);
           this.message(message); 
           if (err.statusText === "Unauthorized")

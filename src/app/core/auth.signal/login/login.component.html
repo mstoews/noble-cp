@@ -3,7 +3,7 @@
     <div class="relative z-20 mx-auto">
         
         <mat-drawer-container>
-            <mat-drawer class="sm:w-4/5 md:w-1/2 h-screen" #drawer [opened]="false" mode="over" [position]="'end'"
+            <mat-drawer class="sm:w-4/5 md:w-3/4 h-screen" #drawer [opened]="false" mode="over" [position]="'end'"
             [disableClose]="false">
             @if(authService.user() === null) {
             <div
@@ -61,7 +61,7 @@
                     <nav class="z-50 flex flex-col md:flex-row md:pl-10 items-center justify-between text-2xl text-gray-900">
                         <button (click)="toggleDrawer()" class="visiable xl:visible">
                             <img class="p-1.5 w-40 h-40 m-2 bg-slate-700 dark:bg-gray-300 rounded-lg shadow hover:caret-context-menu"
-                                src="favicon-32x32.png" />
+                                src="assets/images/logo/logo.png" />
                             <div class="p-1 text-3xl text-gray-900 dark:text-gray-100 font-garamond hover:border-b">
                                 Noble Ledger
                             </div>

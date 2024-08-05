@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { DistMenuStandaloneComponent } from '../distributed-ledger/dist-menubar/grid-menubar.component';
 import { TrialBalanceStore } from 'app/services/distribution.ledger.store';
 import { UploaderModule } from '@syncfusion/ej2-angular-inputs';
+import { IDistributionLedger } from 'app/models';
 
 
 @Component({
@@ -25,8 +26,7 @@ export class ExpenseRptComponent implements OnInit, OnDestroy {
   currentPeriod = signal(1);
   currentYear = signal(2024);
   args$ : any;
-  tb: any;
-
+  public tb: IDistributionLedger[] ;
   public openUrl: string = 'https://services.syncfusion.com/angular/production/api/spreadsheet/open';
   public saveUrl: string = 'https://services.syncfusion.com/angular/production/api/spreadsheet/save';
   public path: Object = {   saveUrl: 'https://services.syncfusion.com/angular/production/api/FileUploader/Save',  
@@ -64,19 +64,12 @@ export class ExpenseRptComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    var params = {
-      period: this.currentPeriod(),
-      period_year: this.currentYear()
-  }
-   this.store.loadHeader(params);
-   if (this.store.accountCount() > 0 ){
-     this.onRefresh()
-   }
+    this.onRefresh();
   }
 
-  
 
   updateReport() {
+    if (this.spreadsheetObj) {
     var i = this.START_DETAIL;
     var row = 0;
     this.store.header().forEach(data => {  
@@ -100,13 +93,14 @@ export class ExpenseRptComponent implements OnInit, OnDestroy {
     this.spreadsheetObj.updateCell({ formula: `=SUM(E4:E$${row})` }, `E${i}`);
     this.spreadsheetObj.updateCell({ formula: `=SUM(F4:F$${row})` }, `F${i}`);            
     this.spreadsheetObj.cellFormat({ fontWeight: 'bold', textAlign: 'right', verticalAlign: 'middle', fontSize: '12px' }, `A${i}:G${i}`);      
+    }
   }
 
   created() {
     const dDate = new Date();
     const updateDate = dDate.toISOString().split('T')[0];
     this.spreadsheetObj.cellFormat({ fontFamily: 'Arial', verticalAlign: 'middle' }, 'A1:h500');
-    this.spreadsheetObj.cellFormat({ fontWeight: 'bold', backgroundColor: '#AAA', color: '#EEE', textAlign: 'left', verticalAlign: 'middle', fontSize: '20px' }, 'A1:G3');
+    this.spreadsheetObj.cellFormat({ fontWeight: 'bold', textAlign: 'left', verticalAlign: 'middle', fontSize: '20px' }, 'A1:G3');
     this.spreadsheetObj.setRowHeight(30, 0);
     this.spreadsheetObj.setValueRowCol(1, 'Noble Ledgers', 1, 1);
     this.spreadsheetObj.setValueRowCol(1, 'Expense Summary By Period', 2, 1);
@@ -140,30 +134,29 @@ export class ExpenseRptComponent implements OnInit, OnDestroy {
       'PERCENTAGE'
     );
 
-    // Calculate percentage using custom added formula in E11 cell.
-    this.spreadsheetObj.updateCell({ formula: '=PERCENTAGE(E11,E12)' }, 'E50');
-    // Calculate expressions using computeExpression in E10 cell.
-    // this.spreadsheetObj.updateCell(
-    //   { value: this.spreadsheetObj.computeExpression('C10/D10') as string },
-    //   'E10'
-    // );
-    // Calculate custom formula values using computeExpression in E12 cell.
-    this.spreadsheetObj.updateCell(
-      {
-        value: this.spreadsheetObj.computeExpression(
-          '=PERCENTAGE(E52,E54)'
-        ) as string,
-      },
-      'E55'
-    );
-    // Calculate SUM (built-in) formula values using computeExpression in D12 cell.
-    this.spreadsheetObj.updateCell(
-      {
-        value: this.spreadsheetObj.computeExpression('=SUM(D3:D11)') as string,
-      },
-      'D50'
-    );
-  
+    this.spreadsheetObj.addCustomFunction(
+      this.getDebitByChildAccount, 
+      'DEBIT'
+    )
+
+    // this.spreadsheetObj.updateCell({ formula: '=PERCENTAGE(E10,E11)' }, 'E50');
+    var params = {
+      period: this.currentPeriod(),
+      period_year: this.currentYear()
+    }
+     this.store.loadHeader(params);
+
+  }
+
+  public getDebitByChildAccount(child: number): number {
+    const childAccount = Number(child);
+    if (childAccount !== null) {
+    this.tb.forEach(account => {
+        if (account.account === childAccount)
+          return account.debit_balance;
+      })
+    }
+    return 0;
   }
 
   calculatePercentage(firstCell: string, secondCell: string): number {
@@ -177,8 +170,5 @@ export class ExpenseRptComponent implements OnInit, OnDestroy {
       return 0;
     }
   }
-
-  
-  
 
 }

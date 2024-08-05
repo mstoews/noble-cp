@@ -122,33 +122,17 @@ export interface IDropDownAccounts {
 // }
 
 export interface IBudget {
-  budget_id: number;
-  description: string;
-  status: string;
-  type: string;
-  amount: number;
-  sub_type: string;
-  transaction_date: Date;
-  create_date: string;
-  create_user: string;
-  period: number;
-  period_year: number;
+    child : number;
+    period_year : number; 
+    sub_type : string;
+    description : string;
+    amount : number;
+    reference : string;
+    create_date : string;
+    create_user : string;
+    update_date : string;
+    update_user : string;
 }
-
-export interface IBudgetDetails {
-  budget_id: number;
-  budget_detail_id: number;
-  child: number;
-  sub_type: string;
-  description: string;
-  debit: number;
-  credit: number;
-  create_date: string;  
-  create_user: string;
-  fund: string;
-  reference: string;
-}
-
 
 export interface IDistributionReport {
   journal_id: number,
@@ -178,10 +162,10 @@ export interface IDistributionParams {
 }
 
 export interface IDistributionLedger {
-  account: string;
-  child: string;
-  period: string;
-  period_year: string;
+  account: number;
+  child: number;
+  period: number;
+  period_year: number;
   description: string;
   opening_balance: number;
   debit_balance: number;
@@ -190,6 +174,18 @@ export interface IDistributionLedger {
   update_date: Date;
   created_user: string;
 }
+
+export interface IDistributionLedgerRpt {
+ 
+  child: number;
+  description: string;
+  opening_balance: number;
+  debit_balance: number;
+  credit_balance: number;
+  closing_balance: number;
+ 
+}
+
 export interface IJournalSummary {
   journal_id      : number,
   journal_subid   : number,

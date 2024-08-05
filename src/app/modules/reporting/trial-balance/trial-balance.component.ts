@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit, ViewChild, inject, AfterViewInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, ViewChild, inject, AfterViewInit, viewChild } from '@angular/core';
 import { CommonModule, NgFor } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TrialBalanceStore } from 'app/services/distribution.ledger.store';
@@ -47,7 +47,7 @@ const imports = [
 export class TrialBalanceComponent implements OnInit, AfterViewInit {
     
     store = inject(TrialBalanceStore);
-    @ViewChild('grid') public grid: GridComponent;
+    public grid = viewChild<GridComponent>('grid')
 
     // datagrid settings start
     public pageSettings: Object;
@@ -121,7 +121,7 @@ export class TrialBalanceComponent implements OnInit, AfterViewInit {
 
     onExportExcel(){
         console.log('Excel');
-        this.grid!.excelExport({ fileName: 'TB-31-01-2024.xlsx', header: {
+        this.grid()!.excelExport({ fileName: 'TB-31-01-2024.xlsx', header: {
             headerRows: 7,
             rows: [
                 { cells: [{ colSpan: 4, value: "Noble Ledgers ", style: { fontColor: '#03396c', fontSize: 20, hAlign: 'Left', bold: true, } }] },    
@@ -140,7 +140,7 @@ export class TrialBalanceComponent implements OnInit, AfterViewInit {
 
     onExportCSV() {
         console.log('Refresh');
-        this.grid!.pdfExport({ pageOrientation: 'Landscape', pageSize: 'A4', fileName: 'TB-31-01-2024.pdf',  header: {
+        this.grid()!.pdfExport({ pageOrientation: 'Landscape', pageSize: 'A4', fileName: 'TB-31-01-2024.pdf',  header: {
             fromTop: 0,
             height: 120,
             contents: [
@@ -160,9 +160,7 @@ export class TrialBalanceComponent implements OnInit, AfterViewInit {
             period: 1,
             period_year: 2024
         });
-        if (this.grid !== null || this.grid !== undefined) {
-            (this.grid as GridComponent).childGrid.dataSource = this.childData;   
-        }                      
+        
     }
 
     // grid.element.addEventListener('click', (e) => { 
@@ -175,7 +173,7 @@ export class TrialBalanceComponent implements OnInit, AfterViewInit {
     // }); 
 
     onClickGrid(e: any) {                
-        (this.grid as GridComponent).childGrid.dataSource = this.store.details();
+        this.grid().childGrid.dataSource = this.store.details();
     }
     
     actionBegin(args: any) {
@@ -189,7 +187,7 @@ export class TrialBalanceComponent implements OnInit, AfterViewInit {
     }
         
     onLoad(): void {     
-        (this.grid as GridComponent).childGrid.dataSource = this.store.details();
+        this.grid().childGrid.dataSource = this.store.details();
         
     }
  }

@@ -1,10 +1,5 @@
 import { Component, Output, EventEmitter, OnInit, Input, ChangeDetectionStrategy } from '@angular/core';
-import { FormGroup } from '@angular/forms';
-import { MatButtonModule } from '@angular/material/button';
-import { MatIconModule } from '@angular/material/icon';
-import { MatToolbarModule } from '@angular/material/toolbar';
 import { MaterialModule } from 'app/services/material.module';
-import { Observable } from 'rxjs';
 
 interface IValue {
   value: string;
@@ -42,27 +37,27 @@ export class KanbanMenubarComponent implements OnInit {
   ngOnInit(): void {}
 
   onClickUpdate(): void {
-    console.debug('Menu bar nofication emit refresh');
+    console.debug('Menu bar notification emit refresh');
     this.notifyParentRefresh.emit();
   }
 
   onClickAdd(): void {
-    console.debug('Menu bar nofication emit add');
+    console.debug('Menu bar notification emit add');
     this.notifyParentAdd.emit();
   }
 
   onClickDelete(): void {
-    console.debug('Menu bar nofication emit delete');
+    console.debug('Menu bar notification emit delete');
     this.notifyParentDelete.emit();
   }
 
   onClickClone(): void {
-    console.debug('Menu bar nofication emit clone');
+    console.debug('Menu bar notification emit clone');
     this.notifyParentClone.emit();
   }
 
   onClickRefresh(): void {
-    console.debug('Menu bar nofication emit refresh');
+    console.debug('Menu bar notification emit refresh');
     this.notifyParentRefresh.emit();
   }
 }

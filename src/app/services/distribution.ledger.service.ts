@@ -8,7 +8,7 @@ import {
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'environments/environment.prod';
-import { shareReplay } from 'rxjs';
+import { debounce, interval, shareReplay } from 'rxjs';
 import { IJournalDetail, IJournalHeader } from 'app/models/journals';
 
 @Injectable({
@@ -21,6 +21,22 @@ export class DistributionLedgerService {
 
     getDistributionReportByPrdAndYear(params: IDistributionParams) {
         return this.http.post<IDistributionLedger[]>(`${this.rootUrl}/v1/dist_list_by_prd`, params).pipe(shareReplay());
+    }
+
+    getLiabilityTotalByPrdAndYear(params: IDistributionParams) {
+        return this.http.post<IDistributionLedger[]>(`${this.rootUrl}/v1/liability_total_by_prd`, params).pipe(shareReplay());
+    }
+
+    getAssetTotalByPrdAndYear(params: IDistributionParams) {
+        return this.http.post<IDistributionLedger[]>(`${this.rootUrl}/v1/asset_total_by_prd`, params).pipe(shareReplay());
+    }
+
+    getRevenueTotalPrdAndYear(params: IDistributionParams) {
+        return this.http.post<IDistributionLedger[]>(`${this.rootUrl}/v1/revenue_total_by_prd`, params).pipe(shareReplay());
+    }
+
+    getExpenseTotalPrdAndYear(params: IDistributionParams) {
+        return this.http.post<IDistributionLedger[]>(`${this.rootUrl}/v1/expense_total_by_prd`, params).pipe(shareReplay());
     }
 
     getDistributionJournalsByChild(params: IJournalParams){

@@ -68,7 +68,7 @@
     <mat-drawer-container class="flex-col">        
         <ng-container>
             
-            <kanban-menubar class="" [inTitle]="'Kanban Task List'" (notifyParentRefresh)="onRefresh()" (notifyParentAdd)="onAdd()"
+            <kanban-menubar (notifyParentRefresh)="onRefresh()" (notifyParentAdd)="onAdd()"
                 (notifyParentDelete)="onDeleteCurrentSelection()"
                 (notifyParentUpdate)="onUpdateCurrentSelection()">
             </kanban-menubar>

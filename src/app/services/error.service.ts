@@ -7,7 +7,7 @@ export class GlobalErrorHandler implements ErrorHandler {
     
     
     handleError(error: any): void {
-        const message = "Could not retrieve journals ...";
+        const message = "Error in retrieval ...";
           console.debug(message, error.statusText);          
           if (error.statusText === "Unauthorized")
             {

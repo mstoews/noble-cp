@@ -125,7 +125,7 @@ export class JournalEntryComponent implements OnInit, OnDestroy {
 
             if (data.type === 'AR')
             {
-                this.route.navigate(['journals/ar', this.nJournal]);
+                this.route.navigate(['journals/ar', data.journal_id]);
                 return;
             }
             else 

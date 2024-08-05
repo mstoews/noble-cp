@@ -34,9 +34,7 @@ import {
       isLoading: false,
       accountCount: 0
     }),
-    withComputed((state) => ({
-      accountCount: computed(() => state.header().length),      
-    })),
+
     withMethods((state, distributionService = inject(DistributionLedgerService)) => ({             
       loadHeader: rxMethod<IDistributionParams>(
         pipe(

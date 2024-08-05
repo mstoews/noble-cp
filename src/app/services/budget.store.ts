@@ -5,21 +5,20 @@ import {
     withHooks,
     withMethods,
     withState,
-
   } from '@ngrx/signals';
-  
   
   import { rxMethod } from '@ngrx/signals/rxjs-interop';
   import { debounceTime, distinctUntilChanged, exhaustMap, pipe, shareReplay, switchMap, tap } from 'rxjs';
   import { inject } from '@angular/core';
   import { tapResponse } from '@ngrx/operators';  
-  import { IAccounts, IBudget } from 'app/models';
+  import { IBudget } from 'app/models';
   import { BudgetService } from './budget.service';
   import { ISubType } from 'app/services/subtype.service';
   import { IType } from 'app/services/type.service';
-import { IFund } from '../kanban/kanban.service';
-  
-  export interface TransactionDetailInterface {
+  import { IAccounts } from 'app/models/journals';
+  import { IFund } from 'app/modules/kanban/kanban.service';
+
+export interface BudgetInterface {
     budgetAmt: IBudget[]
     accounts: IAccounts[],
     types: IType[],
@@ -27,13 +26,11 @@ import { IFund } from '../kanban/kanban.service';
     funds: IFund[],
     isLoading: boolean;
     error: string | null;
-    detailCount: number;
     query: string
   }
   
-  export const TransactionDetailStore = signalStore(
-    
-    withState<TransactionDetailInterface>({
+export const BudgetStore = signalStore(    
+    withState<BudgetInterface>({
       budgetAmt: [],
       accounts: [],
       types: [],
@@ -41,7 +38,6 @@ import { IFund } from '../kanban/kanban.service';
       funds:[],
       error: null,
       isLoading: false,
-      detailCount: 0,
       query: ''
     }),    
     withMethods((store, budgetService = inject(BudgetService)) => ({   
@@ -49,7 +45,7 @@ import { IFund } from '../kanban/kanban.service';
         pipe(
           switchMap((value) => {
             patchState(store, { isLoading: true });
-            return budgetService.delete(value.account, value.child).pipe(
+            return budgetService.delete(value.).pipe(
               tapResponse({
                 next: (budget) => {
                  
@@ -61,7 +57,7 @@ import { IFund } from '../kanban/kanban.service';
           })
         )
       ),
-      addBudget:  rxMethod<IBudget>(
+      addBudget: rxMethod<IBudget>(
         pipe(
           switchMap((value) => {
             patchState(store, { isLoading: true });
@@ -94,21 +90,7 @@ import { IFund } from '../kanban/kanban.service';
             );
           })
         )
-      ),
-      addDetails: rxMethod<IBudget>(
-        pipe(
-          switchMap((value) => {
-            patchState(store, { isLoading: true });
-            return budgetService.create(value).pipe(
-              tapResponse({
-                next: (budget) =>  patchState(store, { budgetAmt : [...store.budgetAmt(), budget ]}),             
-                error: console.error,
-                finalize: () => patchState(store, { isLoading: false }),
-              })
-            );
-          })
-        )
-      ),  
+      ),      
       loadBudget: rxMethod<void>(
         pipe(
             switchMap((value) => { 
@@ -171,7 +153,7 @@ import { IFund } from '../kanban/kanban.service';
                   patchState(store, { isLoading: true });
                   return budgetService.readAccounts().pipe(
                     tapResponse({
-                      next: (budget) =>  patchState(store, { budgetAmt : budget }),             
+                      next: (accounts) =>  patchState(store, { accounts : accounts }),             
                       error: console.error,
                       finalize: () => patchState(store, { isLoading: false }),
                     })

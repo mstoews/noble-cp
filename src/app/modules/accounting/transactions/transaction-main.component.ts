@@ -107,12 +107,12 @@ export class TransactionMainComponent {
                 title: 'Artifact Management',
                 description: 'Manage the documentation of transactions',
             },
-            // {
-            //     id: 'tree',
-            //     icon: 'feather:image',
-            //     title: 'Tree Control Testing',
-            //     description: 'Test the tree control and drop down lists',
-            // },
+            {
+                id: 'tree',
+                icon: 'feather:image',
+                title: 'Tree Control Testing',
+                description: 'Test the tree control and drop down lists',
+            },
             {
                 id: 'artifact-mgmt',
                 icon: 'heroicons_outline:document-magnifying-glass',

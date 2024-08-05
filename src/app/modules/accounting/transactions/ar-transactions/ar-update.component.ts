@@ -34,10 +34,10 @@ import {
 } from "@syncfusion/ej2-angular-grids";
 
 import { DataManager, Query } from "@syncfusion/ej2-data";
-import { IJournalDetailDelete, IJournalHeader, IJournalHeaderUpdate } from "app/models/journals";
-
-
-declare var __moduleName: string;
+import { IJournalDetail, IJournalDetailDelete, IJournalHeader, IJournalHeaderUpdate } from "app/models/journals";
+import { ActivatedRoute } from "@angular/router";
+import { Location } from '@angular/common';
+import { MatDrawer } from "@angular/material/sidenav";
 
 const imports = [
   CommonModule,
@@ -78,16 +78,17 @@ export class ARUpdateComponent
   implements OnInit, OnDestroy, AfterViewInit {
   @Output() notifyDrawerClose: EventEmitter<any> = new EventEmitter();
 
-  
   public accountParams?: IEditCell;
   public subtypeParams?: IEditCell;
   public fundsParams?: IEditCell;
 
   public fields: Object = { text: "description", value: "child" };
+  drawer = viewChild<MatDrawer>('drawer')
 
   @ViewChild("contextmenu")
   private _change = inject(ChangeDetectorRef);
   private _fuseConfirmationService = inject(FuseConfirmationService);
+  private _location = inject(Location);
 
   public contextmenu: ContextMenuComponent;
 
@@ -100,9 +101,22 @@ export class ARUpdateComponent
   private snackBar = inject(MatSnackBar);
   private dialog = inject(MatDialog);
   private auth = inject(AUTH);
+  private activatedRoute = inject(ActivatedRoute)
+  
+  openDrawer() {    
+      this.drawer().open();
+  }
+
+  closeDrawer() {    
+    this.drawer().close();
+  }
+
+  back() {
+    this._location.back();
+  }
 
   public journalForm!: FormGroup;
-  public journalDetailForm!: FormGroup;
+  public detailForm!: FormGroup;
   public matDialog = inject(MatDialog);
 
   public value = 0;
@@ -126,6 +140,7 @@ export class ARUpdateComponent
   public myControl = new FormControl("");
   public accountOptions: Observable<string[]>;
   public bDirty = false;
+  
   public accountsListSubject: Subscription;
   public fundListSubject: Subscription;
   public selectionOptions?: SelectionSettingsModel;
@@ -137,6 +152,13 @@ export class ARUpdateComponent
   public editparams: Object;
   public pageSettings: Object;
   public formatoptions: Object;
+  journal_id: number;
+  
+  description: string;
+  transaction_date: string;
+  amount: number;
+  journalType: string;
+  sTitle = 'Transaction Detail Update';
 
   // drop down searchable list
   public accountList: IDropDownAccounts[] = [];
@@ -159,13 +181,74 @@ export class ARUpdateComponent
   @ViewChild("singleSelect", { static: true })
   singleSelect: MatSelect;
 
-  protected _onDestroy = new Subject<void>();
+  
   public Accounts: IDropDownAccounts[] = [];
 
   public accountsGrid: IDropDownAccountsGridList[] = [];
-  journal_id: any;
+  public dataAccountList = new DataManager(this.accountsGrid);
+  public dFields = { text: "child", value: "child" };
+
+
+  public debitAccounts: IDropDownAccounts[] = [];
+  public debitCtrl: FormControl<IDropDownAccounts> = new FormControl<IDropDownAccounts>(null);
+  public debitAccountFilterCtrl: FormControl<string> = new FormControl<string>(null);
+  public filteredDebitAccounts: ReplaySubject<IDropDownAccounts[]> = new ReplaySubject<IDropDownAccounts[]>(1);
+
+  public creditAccounts: IDropDownAccounts[] = [];
+  public creditCtrl: FormControl<IDropDownAccounts> = new FormControl<IDropDownAccounts>(null);
+  public creditAccountFilterCtrl: FormControl<string> = new FormControl<string>('');
+  public filteredCreditAccounts: ReplaySubject<IDropDownAccounts[]> = new ReplaySubject<IDropDownAccounts[]>(1);
+
+
+  protected _onCreditDestroy = new Subject<void>();
+  protected _onDebitDestroy = new Subject<void>();
+  protected _onDestroyDebitAccountFilter = new Subject<void>();
+  protected _onDestroyCreditAccountFilter = new Subject<void>();
+  protected _onDestroy = new Subject<void>();
+
+  @ViewChild('singleDebitSelect', { static: true }) singleDebitSelect: MatSelect;
+  @ViewChild('singleCreditSelect', { static: true }) singleCreditSelect: MatSelect;
+
+  updateForm(row: IJournalHeader) {    
+    this.journalForm = this.fb.group({
+      description: [row.description, Validators.required],
+      amount: [row.amount, Validators.required],
+      party: ['Vendor', Validators.required],
+      invoice_no: ['123456', Validators.required],
+      due_date: ['2024-06-12', Validators.required],
+      transaction_date: [row.transaction_date, Validators.required],
+    });
+  }
+
+  public journalData: IJournalHeader;
 
   ngOnInit(): void {
+  this.createEmptyForm();
+
+    this.activatedRoute.data.subscribe(( data ) => {        
+        console.log(data.journal.journal_id);
+        this.journalData = {
+          journal_id: data.journal.journal_id,         
+          description:      data.journal.description,
+          booked:           data.journal.booked,
+          booked_date:      data.journal.booked_date,
+          booked_user:      data.journal.booked_user,
+          create_date:      data.journal.create_date,
+          create_user:      data.journal.create_user,
+          period:           data.journal.period,
+          period_year:      data.journal.period_year,
+          transaction_date: data.journal.transaction_date,
+          status:           data.journal.status,
+          type:             data.journal.type,
+          sub_type:         data.journal.sub_type,
+          amount:           data.journal.amount,
+          party_id:        data.journal.party_id 
+        }
+        // this.updateForm(this.journalData)
+    });
+
+    this.refresh(this.journalData.journal_id, this.journalData.description, this.journalData.transaction_date, this.journalData.amount, this.journalData.type);
+
     this.editSettings = {
       allowEditing: true,
     };
@@ -183,7 +266,7 @@ export class ARUpdateComponent
           descriptionName: acct.description,
         };
         this.accountsGrid.push(list);
-      });
+      }); 
     
     this.fundListSubject = this.funds$.subscribe((funds) => {
         funds.forEach((fund) => {
@@ -195,15 +278,75 @@ export class ARUpdateComponent
         });
       });
     });
-
-    this.createEmptyForm();
     
     this.accountFilterCtrl.valueChanges
       .pipe(takeUntil(this._onDestroy))
       .subscribe(() => {
         this.filterAccounts();
       });
+
+
+      this.accountService.readChildren().pipe(takeUntil(this._onDestroy)).subscribe((accounts) => {
+        this.debitAccounts = accounts;
+        this.creditAccounts = accounts;
+        this.filteredDebitAccounts.next(this.debitAccounts.slice());
+        this.filteredCreditAccounts.next(this.creditAccounts.slice());
+  
+      });
+  
+      // Vertical stepper form
+  
+      this.journalService.getLastJournalNo().subscribe(journal_no => {
+        this.journal_id = Number(journal_no);
+      });
+  
+      this.debitAccountFilterCtrl.valueChanges.pipe(takeUntil(this._onDestroyDebitAccountFilter))
+        .subscribe(() => { this.filterDebitAccounts(); })
+  
+      this.creditAccountFilterCtrl.valueChanges.pipe(takeUntil(this._onDestroyCreditAccountFilter))
+        .subscribe(() => { this.filterCreditAccounts(); });
+  
+              
+
   }
+
+
+  protected filterCreditAccounts() {
+    if (!this.creditAccounts) {
+      return;
+    }
+    // get the search keyword
+    let search = this.creditAccountFilterCtrl.value;
+    if (!search) {
+      this.filteredCreditAccounts.next(this.creditAccounts.slice());
+      return;
+    } else {
+      search = search.toLowerCase();
+    }
+    // filter the banks
+    this.filteredCreditAccounts.next(
+      this.creditAccounts.filter(account => account.description.toLowerCase().indexOf(search) > -1)
+    );
+  }
+
+  protected filterDebitAccounts() {
+    if (!this.debitAccounts) {
+      return;
+    }
+    // get the search keyword
+    let search = this.debitAccountFilterCtrl.value;
+    if (!search) {
+      this.filteredDebitAccounts.next(this.debitAccounts.slice());
+      return;
+    } else {
+      search = search.toLowerCase();
+    }
+    // filter the banks
+    this.filteredDebitAccounts.next(
+      this.debitAccounts.filter(account => account.description.toLowerCase().indexOf(search) > -1)
+    );
+  }
+
 
   
   public addDisabled(e: any) {
@@ -212,24 +355,13 @@ export class ARUpdateComponent
   
   public selIndex?: number[] = [];
 
-  // onGridClicked(){
-  //   if (this.selIndex?.length) {
-  //     var cell = this.grid?.selectRows(this.selIndex);
-  //     console.log(cell);
-  //     this.selIndex = [];
-  //   }
-  // }
 
-  // public rowDataBound(args: RowDataBoundEventArgs ): void {    
-  //   this.selIndex = (this.grid as GridComponent).getSelectedRowIndexes();
-  //   this.selIndex?.push(parseInt(((args.row as Element).getAttribute('aria-rowindex') as string), 10));
-  // }
 
   actionBegin(args: SaveEventArgs): void {
     console.debug('args : ', args.requestType);
-    var data = args.rowData as IJournalHeader;
+    args.cancel = true;
     if (args.requestType === 'beginEdit' || args.requestType === 'add') {
-
+        this.openDrawer();
     }
     if (args.requestType === 'save') {
 
@@ -317,8 +449,6 @@ export class ARUpdateComponent
     console.log("onSaved ", e);
   }
 
-  public dataAccountList = new DataManager(this.accountsGrid);
-  public dFields = { text: "child", value: "child" };
 
   protected setInitialValue() {
     // this.journalService.getJournalDetail(this.journal_id);
@@ -366,19 +496,7 @@ export class ARUpdateComponent
     this.editing = true;
   }
 
-  updateForm(row: any) {
-    this.journalForm.reset();
-    this.journalForm = this.fb.group({
-      description: [this.description, Validators.required],
-      amount: [this.amount, Validators.required],
-      transaction_date: [this.transaction_date, Validators.required],
-    });
-  }
 
-  description: string;
-  transaction_date: string;
-  amount: number;
-  journalType: string;
 
   public refresh(
     journal_id: number,
@@ -458,26 +576,28 @@ export class ARUpdateComponent
   
   createEmptyForm() {
     this.journalForm = this.fb.group({
-      description: [this.description, Validators.required],
-      amount: [this.amount, Validators.required],
-      transaction_date: [this.transaction_date, Validators.required],
+      description: ["", Validators.required],
+      amount:      ["", Validators.required],
+      transaction_date: ["", Validators.required],
     });
-    this.journalDetailForm = this.fb.group({
+    
+    this.detailForm = this.fb.group({
       detail_description: ["", Validators.required],
       child: ["", Validators.required],
       fund: ["", Validators.required],
       sub_type: ["", Validators.required],
       reference: [""],
-      debit: ["", Validators.required],
-      credit: ["", Validators.required],
+      amount: ["", Validators.required],      
     });
     this._change.markForCheck();
   }
 
-  closeDrawer() {
+
+
+  exitWindow() {
     if (this.bDirty === false) {
       this.journalForm.reset();
-      this.notifyDrawerClose.emit();
+      this._location.back();
     } else {
       const confirmation = this.fuseConfirmationService.open({
         title: "Unsaved Changes",
@@ -492,13 +612,14 @@ export class ARUpdateComponent
       // Subscribe to the confirmation dialog closed action
       confirmation.afterClosed().subscribe((result) => {
         if (result === "confirmed") {
-          this.journalDetailForm.reset();
+          this.detailForm.reset();
           this.journalForm.reset();
-          this.notifyDrawerClose.emit();
+          this._location.back();
         }
       });
     }
   }
+
 
   onDelete(args: any) {
     
@@ -592,7 +713,7 @@ export class ARUpdateComponent
   }
 
   journalEntryCleanUp() {
-    this.journalDetailForm.reset();
+    this.detailForm.reset();
     this.accountCtrl.reset();
     this.journalService.reNumberJournalDetail(this.journal_id);
   }
@@ -666,7 +787,7 @@ export class ARUpdateComponent
 
   onCreate() {
     var header = this.journalForm.getRawValue();
-    var detail = this.journalDetailForm.getRawValue();
+    var detail = this.detailForm.getRawValue();
     const dDate = new Date();
     const updateDate = dDate.toISOString().split("T")[0];
     const email = this.auth.currentUser?.email;
@@ -760,21 +881,6 @@ export class ARUpdateComponent
     });
   }
 
-  changeFund($event: any) { }
-
-  changeChildAccount($event: any) { }
-
-  formatNumber(e: any) {
-    const options = {
-      style: "decimal", // Other options: 'currency', 'percent', etc.
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-    };
-    if (e.value === null || e.value === undefined) e.value = 0.0;
-    const formattedWithOptions = e.value.toLocaleString("en-US", options);
-    return formattedWithOptions;
-  }
-
   ngOnDestroy(): void {
     if (this.accountsListSubject) {
       this.accountsListSubject.unsubscribe();
@@ -787,39 +893,4 @@ export class ARUpdateComponent
     this._onDestroy.complete();
   }
 
-  public menuItems: MenuItemModel[] = [
-    {
-      text: "Delete Line",
-      iconCss: "e-cm-icons e-cut",
-    },
-    {
-      text: "Copy Line",
-      iconCss: "e-cm-icons e-copy",
-    },
-    {
-      text: "Paste",
-      iconCss: "e-cm-icons e-paste",
-      items: [
-        {
-          text: "Paste Text",
-          iconCss: "e-cm-icons e-pastetext",
-        },
-        {
-          text: "Paste Special",
-          iconCss: "e-cm-icons e-pastespecial",
-        },
-      ],
-    },
-    {
-      separator: true,
-    },
-    {
-      text: "Link",
-      iconCss: "e-cm-icons e-link",
-    },
-    {
-      text: "New Comment",
-      iconCss: "e-cm-icons e-comment",
-    },
-  ];
 }

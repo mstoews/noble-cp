@@ -1,5 +1,5 @@
 import { Routes } from '@angular/router';
-import { DistributedLedgerComponent } from './distributed-ledger.component';
+
 
 
 export default [

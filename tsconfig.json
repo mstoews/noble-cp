@@ -2,7 +2,7 @@
   "compileOnSave": false,
   "compilerOptions": {
     "baseUrl": "./src",
-    "outDir": "./public",
+    "outDir": "./dist",
     "sourceMap": true,
     "esModuleInterop": true,
     "declaration": false,

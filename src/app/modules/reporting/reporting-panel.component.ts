@@ -6,6 +6,8 @@ import { MaterialModule } from 'app/services/material.module';
 import { Subject, takeUntil } from 'rxjs';
 import { TrialBalanceComponent } from './trial-balance/trial-balance.component';
 import { ExpenseRptComponent } from './expense/expense-rpt.component';
+import { BalanceSheetComponent } from './balance-sheet/balance-sheet.component';
+import { BalanceSheetStatementRptComponent } from './financial-statement/balance-sheet-statement-rpt.component';
 
 
 const imports = [
@@ -15,8 +17,9 @@ const imports = [
     NgSwitch,
     NgSwitchCase,
     TrialBalanceComponent,
-    ExpenseRptComponent
-
+    ExpenseRptComponent,
+    BalanceSheetComponent,
+    BalanceSheetStatementRptComponent
 ]
 
 @Component({
@@ -69,9 +72,9 @@ export class ReportingPanelComponent {
                 description: 'Current period expense statement and comparison',
             },
             {
-                id: 'balance-sheet',
+                id: 'balance-sheet-statement',
                 icon: 'heroicons_outline:document-duplicate',
-                title: 'Templates',
+                title: 'Balance Sheet Financial Statement',
                 description: 'Manage your accounting patterns to automate, reduce effort and provide consistency in accounting',
             },
             {

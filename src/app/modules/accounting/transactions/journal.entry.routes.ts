@@ -3,6 +3,7 @@ import { TransactionMainComponent } from './transaction-main.component';
 import { ARUpdateComponent } from './ar-transactions/ar-update.component';
 import { APUpdateComponent } from './ap-transactions/ap-update.component';
 import { JournalResolver } from 'app/services/journal.resolver';
+import { JournalUpdateComponent } from './gl-transactions/journal-update.component';
 
 export default [
     {
@@ -10,7 +11,7 @@ export default [
         component: TransactionMainComponent,
     },
     {
-        path: 'ar/:journal_id',
+        path: 'ar/:id',
         component: ARUpdateComponent,
         resolve: { journal: JournalResolver },
     },
@@ -20,7 +21,8 @@ export default [
         resolve: {journal: JournalResolver },
     },
     {
-        path: 'gl/:journalNo',
-        component: APUpdateComponent,
+        path: 'gl/:id',
+        component: JournalUpdateComponent,
+        resolve: {journal: JournalResolver },
     },
 ] as Routes;

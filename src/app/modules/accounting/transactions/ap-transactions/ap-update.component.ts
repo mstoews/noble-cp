@@ -112,7 +112,7 @@ export class APUpdateComponent
   }
 
   back() {
-    
+    this._location.back();
   }
 
   public journalForm!: FormGroup;
@@ -173,8 +173,6 @@ export class APUpdateComponent
   public selectOptions?: Object;
   public message?: string;
 
-  @ViewChild('grid')
-  public grid!: GridComponent;
   public gridControl = viewChild<GridComponent>('grid');
   public selectedItemKeys: any;
 
@@ -183,6 +181,7 @@ export class APUpdateComponent
 
   
   public Accounts: IDropDownAccounts[] = [];
+  public journalData: IJournalHeader;
 
   public accountsGrid: IDropDownAccountsGridList[] = [];
   public dataAccountList = new DataManager(this.accountsGrid);
@@ -213,19 +212,19 @@ export class APUpdateComponent
     this.journalForm = this.fb.group({
       description: [row.description, Validators.required],
       amount: [row.amount, Validators.required],
-      party: ['Vendor', Validators.required],
-      invoice_no: ['123456', Validators.required],
-      due_date: ['2024-06-12', Validators.required],
+      party: [row.party_id, Validators.required],
+      invoice_no: [row.invoice_no, Validators.required],
+      due_date: [row.due_date, Validators.required],
       transaction_date: [row.transaction_date, Validators.required],
     });
   }
 
-  public journalData: IJournalHeader;
+  
 
   ngOnInit(): void {
-    this.createEmptyForm();
+  this.createEmptyForm();
 
-    this.activatedRoute.data.subscribe(( data ) => {        
+  this.activatedRoute.data.subscribe(( data ) => {        
         console.log(data.journal.journal_id);
         this.journalData = {
           journal_id: data.journal.journal_id,         
@@ -242,6 +241,8 @@ export class APUpdateComponent
           type:             data.journal.type,
           sub_type:         data.journal.sub_type,
           amount:           data.journal.amount,
+          due_date:         data.journal.due_date,
+          invoice_no:        data.journal.invoice_no,
           party_id:        data.journal.party_id 
         }
         // this.updateForm(this.journalData)
@@ -510,6 +511,7 @@ export class APUpdateComponent
     this.amount = amount;
     this.journalService.getJournalDetail(journal_id);
     this.journalType = journalType
+    
 
     this.journalForm = this.fb.group({
       description: [this.description, Validators.required],
@@ -579,6 +581,9 @@ export class APUpdateComponent
       description: ["", Validators.required],
       amount:      ["", Validators.required],
       transaction_date: ["", Validators.required],
+      invoice_no: ["", Validators.required],
+      due_date: ["", Validators.required],
+      party: ["", Validators.required],      
     });
     
     this.detailForm = this.fb.group({
@@ -588,6 +593,8 @@ export class APUpdateComponent
       sub_type: ["", Validators.required],
       reference: [""],
       amount: ["", Validators.required],      
+      credit: ["", Validators.required],      
+      debit: ["", Validators.required],      
     });
     this._change.markForCheck();
   }
@@ -623,10 +630,10 @@ export class APUpdateComponent
 
   onDelete(args: any) {
     
-    const index  = (this.grid as GridComponent).getSelectedRowIndexes()
+    const index  = this.gridControl().getSelectedRowIndexes()
     console.debug(`select index `, index[0])
     
-    const rowData = this.grid.getCurrentViewRecords().at(index[0]) as any;
+    const rowData = this.gridControl().getCurrentViewRecords().at(index[0]) as any;
     
     // const rowData = 
     

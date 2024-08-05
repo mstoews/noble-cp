@@ -62,7 +62,7 @@ export class GLAccountsService {
                 tap(data => this.dropDownList.set(data)),
                 take(1),
                 catchError(err => {
-                    const message = "Could not retrieve journals ...";
+                    const message = "Could not retrieve child accounts ...";
                     console.debug(message, err);
                     return throwError(() => new Error(`${JSON.stringify(err)}`));
                 }),
@@ -79,7 +79,7 @@ export class GLAccountsService {
             tap(data => this.dropDownList.set(data)),
             take(1),
             catchError(err => {
-                const message = "Could not retrieve journals ...";
+                const message = "Could not retrieve chil accounts ...";
                 console.debug(message, err);
                 return throwError(() => new Error(`${JSON.stringify(err)}`));
             }),
@@ -95,7 +95,7 @@ export class GLAccountsService {
                 tap(data => this.parentAccounts.set(data)),
                 take(1),
                 catchError(err => {
-                    const message = "Could not retrieve journals ...";
+                    const message = "Could not retrieve parent accounts ...";
                     console.debug(message, err);
                     return throwError(() => new Error(`${JSON.stringify(err)}`));
                 }),
@@ -113,7 +113,7 @@ export class GLAccountsService {
                 tap(data => this.childrenOfParents.set(data)),
                 take(1),
                 catchError(err => {
-                    const message = "Could not retrieve journals ...";
+                    const message = "Could not retrieve child account ...";
                     console.debug(message, err);
                     return throwError(() => new Error(`${JSON.stringify(err)}`));
                 }),

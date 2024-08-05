@@ -104,10 +104,6 @@ export const appConfig: ApplicationConfig = {
       useClass: LuxonDateAdapter,
     },
     {
-      provide: ErrorHandler,
-      useClass: GlobalErrorHandler,
-    },
-    {
       provide: MAT_DATE_FORMATS,
       useValue: {
         parse: {

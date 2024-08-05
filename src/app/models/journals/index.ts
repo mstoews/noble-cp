@@ -31,7 +31,11 @@ export interface IJournalHeader {
   type: string,
   sub_type: string,
   amount: number,    
-  party_id?: string
+  party_id?: string,
+  invoice_no?: string,
+  due_date?: Date
+  credit?: number,
+  debit?: number
 }
 
 export interface IJournalDetail {
