@@ -166,14 +166,13 @@ export class BalanceSheetStatementRptComponent  {
       imageType: 'image/jpeg',
       imageQuality: 1,
       margin: {
-        top: 10,
-        right: 10,
-        bottom: 10,
-        left: 10,
+        top: 0,
+        right: 0,
+        bottom: 0,
+        left: 0,
       },
       watermark: undefined,
       autoResize: true,
-      output: 'jspdf-generate.pdf',
       init: function() {},
       success: function(pdf) {
         var dReportDate = new Date();
