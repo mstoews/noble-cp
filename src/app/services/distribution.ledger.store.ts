@@ -2,6 +2,7 @@ import {
     patchState,
     signalStore,
     withComputed,
+    withHooks,
     withMethods,
     withState,
   } from '@ngrx/signals';
@@ -77,6 +78,16 @@ import {
         )
       ),
     })),
+    withHooks({
+      
+      onInit(store) {
+        var params = {
+          period: 1,
+          period_year:2024
+        }
+        store.loadHeader(params);
+      },
+    })    
 
   );
   

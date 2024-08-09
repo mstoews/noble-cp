@@ -5,6 +5,8 @@ import { DistMenuStandaloneComponent } from '../distributed-ledger/dist-menubar/
 import { TrialBalanceStore } from 'app/services/distribution.ledger.store';
 import { UploaderModule } from '@syncfusion/ej2-angular-inputs';
 import { IDistributionLedger } from 'app/models';
+import { DistributionLedgerService } from 'app/services/distribution.ledger.service';
+import { map, Observable, tap } from 'rxjs';
 
 
 @Component({
@@ -20,20 +22,36 @@ export class ExpenseRptComponent implements OnInit, OnDestroy {
 
   @ViewChild('default')
   public spreadsheetObj: SpreadsheetComponent;
-  store = inject(TrialBalanceStore);
+  distributionLedgerService = inject(DistributionLedgerService)
   START_DETAIL = 5;
 
   currentPeriod = signal(1);
   currentYear = signal(2024);
-  args$ : any;
-  public tb: IDistributionLedger[] ;
+
+  distLedger$ = this.distributionLedgerService.getDistributionReportByPrdAndYear({ period: this.currentPeriod(), period_year: this.currentYear()})
+  
+  tb: IDistributionLedger[] = []; 
+  
   public openUrl: string = 'https://services.syncfusion.com/angular/production/api/spreadsheet/open';
   public saveUrl: string = 'https://services.syncfusion.com/angular/production/api/spreadsheet/save';
   public path: Object = {   saveUrl: 'https://services.syncfusion.com/angular/production/api/FileUploader/Save',  
                             removeUrl: 'https://services.syncfusion.com/angular/production/api/FileUploader/Remove'
   };
 
+  public scrollSettings: { 
+    isFinite: true, 
+    enableVirtualization: false, 
+  } 
+
   ngOnDestroy(): void {
+    
+  }
+
+  ngOnInit() {
+    this.distLedger$ = this.distributionLedgerService.getDistributionReportByPrdAndYear({ period: this.currentPeriod(), period_year: this.currentYear()})
+    this.distLedger$.subscribe(data => {
+      this.updateReport(data);    
+    });
     
   }
 
@@ -53,31 +71,27 @@ export class ExpenseRptComponent implements OnInit, OnDestroy {
     this.onRefresh();
   }
 
-  public scrollSettings: { 
-    isFinite: true, 
-    enableVirtualization: false, 
-  } 
-
   onRefresh() {
-    this.tb = this.store.header();
-    this.updateReport();    
+    // this.updateReport(this.store.header());
+    
+    var param = {
+      period: this.currentPeriod(),
+      period_year: this.currentYear()
+    }
+    this.distLedger$ = this.distributionLedgerService.getDistributionReportByPrdAndYear({ period: this.currentPeriod(), period_year: this.currentYear()})
+    
   }
 
-  ngOnInit(): void {
-    this.onRefresh();
-  }
-
-
-  updateReport() {
+  updateReport(tb: IDistributionLedger[]) {
     if (this.spreadsheetObj) {
     var i = this.START_DETAIL;
     var row = 0;
-    this.store.header().forEach(data => {  
+    tb.forEach(data => {  
           if (Number(data.child) >= 6000)
           {
-            this.spreadsheetObj.setValueRowCol(1, data.description, i,     3);
-            this.spreadsheetObj.setValueRowCol(1, data.opening_balance, i, 4);
-            this.spreadsheetObj.setValueRowCol(1, data.closing_balance, i, 5);
+            this.spreadsheetObj.setValueRowCol(1, data.description,i, 3);
+            this.spreadsheetObj.setValueRowCol(1, data.opening_balance,i, 4);
+            this.spreadsheetObj.setValueRowCol(1, data.closing_balance,i, 5);
             this.spreadsheetObj.setValueRowCol(1, data.opening_balance + data.closing_balance, i, 6);
             i++;
           }      
@@ -128,47 +142,6 @@ export class ExpenseRptComponent implements OnInit, OnDestroy {
     );
     // this.spreadsheetObj.numberFormat('$#,##0', 'B3:D12');
     this.spreadsheetObj.numberFormat('0%', 'E50:E60');
-    // Adding custom function for calculating the percentage between two cells.
-    this.spreadsheetObj.addCustomFunction(
-      this.calculatePercentage,
-      'PERCENTAGE'
-    );
-
-    this.spreadsheetObj.addCustomFunction(
-      this.getDebitByChildAccount, 
-      'DEBIT'
-    )
-
-    // this.spreadsheetObj.updateCell({ formula: '=PERCENTAGE(E10,E11)' }, 'E50');
-    var params = {
-      period: this.currentPeriod(),
-      period_year: this.currentYear()
-    }
-     this.store.loadHeader(params);
 
   }
-
-  public getDebitByChildAccount(child: number): number {
-    const childAccount = Number(child);
-    if (childAccount !== null) {
-    this.tb.forEach(account => {
-        if (account.account === childAccount)
-          return account.debit_balance;
-      })
-    }
-    return 0;
-  }
-
-  calculatePercentage(firstCell: string, secondCell: string): number {
-    const first = Number(firstCell);
-    const second = Number(secondCell);
-    if (first !== null && second !== null) {
-      return Number(firstCell) / Number(secondCell);
-    }
-    else 
-    {
-      return 0;
-    }
-  }
-
 }

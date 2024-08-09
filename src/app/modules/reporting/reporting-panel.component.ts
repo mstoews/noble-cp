@@ -8,6 +8,7 @@ import { TrialBalanceComponent } from './trial-balance/trial-balance.component';
 import { ExpenseRptComponent } from './expense/expense-rpt.component';
 import { BalanceSheetComponent } from './balance-sheet/balance-sheet.component';
 import { BalanceSheetStatementRptComponent } from './financial-statement/balance-sheet-statement-rpt.component';
+import { IncomeStatementRptComponent } from './financial-statement/income-statement-rpt.component';
 
 
 const imports = [
@@ -19,7 +20,8 @@ const imports = [
     TrialBalanceComponent,
     ExpenseRptComponent,
     BalanceSheetComponent,
-    BalanceSheetStatementRptComponent
+    BalanceSheetStatementRptComponent,
+    IncomeStatementRptComponent
 ]
 
 @Component({
@@ -65,18 +67,49 @@ export class ReportingPanelComponent {
                 title: 'Trial Balance Reporting',
                 description: 'Distributed trial balance listing including the associated journal entries',
             },
-            {
-                id: 'expense-statement',
-                icon: 'heroicons_outline:document-plus',
-                title: 'Expense Statement',
-                description: 'Current period expense statement and comparison',
-            },
+            // {
+            //     id: 'expense-statement',
+            //     icon: 'heroicons_outline:document-plus',
+            //     title: 'Expense Statement',
+            //     description: 'Current period expense statement and comparison',
+            // },
             {
                 id: 'balance-sheet-statement',
                 icon: 'heroicons_outline:document-duplicate',
                 title: 'Balance Sheet Financial Statement',
-                description: 'Manage your accounting patterns to automate, reduce effort and provide consistency in accounting',
+                description: 'Balance sheet by period reporting',
             },
+            {
+                id: 'income-statement',
+                icon: 'heroicons_outline:currency-dollar',
+                title: 'Income Financial Statement',
+                description: 'Income statement by period reporting',
+            },
+            {
+                id: 'cash-flows-statement',
+                icon: 'heroicons_outline:currency-dollar',
+                title: 'Cash Flow Statement',
+                description: 'Inflows and outflow from cash balance by fund',
+            },
+            {
+                id: 'operations-statement',
+                icon: 'heroicons_outline:currency-dollar',
+                title: 'Operations Statement',
+                description: 'Expenses and inflows for operating transactions',
+            },
+            {
+                id: 'ap-aging',
+                icon: 'heroicons_outline:currency-dollar',
+                title: 'Accounts Payable Aging',
+                description: 'Monthly aging of payments for accounts payable',
+            },
+            {
+                id: 'ar-aging',
+                icon: 'heroicons_outline:currency-dollar',
+                title: 'Accounts Receivable Aging',
+                description: 'Monthly aging of receipts from sales or fees',
+            },
+
             {
                 id: 'reconciliations',
                 icon: 'feather:image',

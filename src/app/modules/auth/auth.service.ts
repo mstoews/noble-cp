@@ -5,7 +5,6 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   confirmPasswordReset,
-  reauthenticateWithCredential,
   signOut,
 } from 'firebase/auth';
 import { authState , idToken} from 'rxfire/auth';

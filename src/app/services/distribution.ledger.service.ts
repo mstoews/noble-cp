@@ -49,7 +49,7 @@ export class DistributionLedgerService {
 
 
     getDistributionByPrdAndYear(params: IDistributionParams) {
-        return this.http.post<IDistributionLedgerReport>(`${this.rootUrl}/v1/dist_list_by_prd`, params).pipe(shareReplay());
+        return this.http.post<IDistributionLedgerReport[]>(`${this.rootUrl}/v1/dist_list_by_prd`, params).pipe(shareReplay());
     }
 
     getLoading() {
