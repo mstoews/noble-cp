@@ -12,5 +12,6 @@
         "splitbuttons",
         "updatedte",
         "updateusr"
-    ]
+    ],
+    "angular.enable-strict-mode-prompt": false
 }

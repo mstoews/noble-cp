@@ -11,22 +11,20 @@ import { IDistributionLedger, IDistributionLedgerRpt } from 'app/models';
   
   <div class="grid grid-cols-12 gap-2 mt-1">
             <div class="col-start-1"></div>
-            <div class="col-start-2 col-span-3 text-right mt-2"> Total</div>
-            <div class="col-start-5 text-right  border-t-2 text-bold mt-2">  {{totals.opening_balance | number: '1.2-2'}}</div>
-            <div class="col-start-7 text-right  border-t-2 text-bold mt-2">  {{totals.debit_balance | number: '1.2-2'}}</div>
-            <div class="col-start-9 text-right  border-t-2 text-bold mt-2">  {{totals.credit_balance | number: '1.2-2'}}</div>
-            <div class="col-start-11 text-right border-t-2 text-bold mt-2">  {{totals.closing_balance | number: '1.2-2'}}</div>            
+            <div class="col-start-2 col-span-3  text-gray-700  text-right mt-2"> Total</div>
+            <div class="col-start-5 text-right  text-gray-700  border-t-2 border-gray-700  mt-2">  {{totals.opening_balance | number: '1.2-2'}}</div>
+            <div class="col-start-7 text-right  text-gray-700  border-t-2 border-gray-700 mt-2">  {{totals.debit_balance | number: '1.2-2'}}</div>
+            <div class="col-start-9 text-right  text-gray-700  border-t-2 border-gray-700 mt-2">  {{totals.credit_balance | number: '1.2-2'}}</div>
+            <div class="col-start-11 text-right text-gray-700  border-t-2 border-gray-700 mt-2">  {{totals.closing_balance | number: '1.2-2'}}</div>            
   </div>
 
-  `,
-  styles: ``
+  `
 })
 export class StatementTotalComponent implements OnInit{
   @Input({required: true}) item!: IDistributionLedger[]; 
   
   itemTotals!: IDistributionLedgerRpt;
   totals: IDistributionLedgerRpt;
-
 
   ngOnInit(): void {
     var itemTotals = {
@@ -40,16 +38,14 @@ export class StatementTotalComponent implements OnInit{
     
     this.item.forEach(item => {
       itemTotals.opening_balance = itemTotals.opening_balance + item.opening_balance;
-      itemTotals.debit_balance = itemTotals.debit_balance + item.debit_balance;
-      itemTotals.credit_balance = itemTotals.credit_balance + item.credit_balance;
+      itemTotals.debit_balance   = itemTotals.debit_balance   + item.debit_balance;
+      itemTotals.credit_balance  = itemTotals.credit_balance  + item.credit_balance;
       itemTotals.closing_balance = itemTotals.closing_balance + item.closing_balance;
     })
    
     this.totals = itemTotals;
   }
-
   
-    
 }
 
 // <div class="flex flex-col md:flex-row gap-2 mt-.5">

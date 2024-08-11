@@ -31,7 +31,7 @@ const imports = [
   template: `
   <div class="flex flex-col min-w-0 overflow-y-auto overflow-x-auto" cdkScrollable >
   <!-- Main -->
-  <div id="statement" class="flex-auto p-2 sm:p-10 bg-white">
+  <div id="statement" class="flex-auto p-2 sm:p-10 bg-black">
       <div class="h-max border-gray-300 rounded-2xl">                
           <reporting-toolbar [inTitle]="'Income Statement'"
               (notifyParentRefresh)="onRefresh()"
@@ -39,7 +39,7 @@ const imports = [
               (notifyCSV)="onExportCSV()" >
           </reporting-toolbar>          
       </div>
-      <div id="income-statement" class="pl-20 pt-2 pb-14 mat-elevation-z8 mt-4 bg-white">
+      <div id="income-statement" class="pl-20 pt-2 pb-14 mat-elevation-z8 mt-4 bg-white font-gray-900">
 
           <div class="text-gray-800 text-2xl mt-3">Noble Ledger Ltd.</div>
           <div class="text-gray-800  text-2xl mt-1">Income Statement</div>
@@ -47,10 +47,10 @@ const imports = [
           
           <section class="grid grid-cols-1 mt-10 ">      
           <div class="grid grid-cols-12 gap-2">
-            <div class="col-start-5 text-right">Opening</div>
-            <div class="col-start-7 text-right">Debit</div>
-            <div class="col-start-9 text-right">Credit</div>
-            <div class="col-start-11 text-right">Closing</div>            
+            <div class="col-start-5 text-gray-700 text-right">Opening</div>
+            <div class="col-start-7 text-gray-700   text-right">Debit</div>
+            <div class="col-start-9 text-gray-700  text-right">Credit</div>
+            <div class="col-start-11 text-gray-700  text-right">Closing</div>            
           </div>
         </section>
             
@@ -109,7 +109,7 @@ export class IncomeStatementRptComponent  {
     period_year: this.currentYear()
   }
     
-  revenueReport$= this.distributionService.getDistributionByPrdAndYear(this.params).pipe(map(expense => expense.filter(ex => ex.child > 5000))); 
+  revenueReport$ = this.distributionService.getDistributionByPrdAndYear(this.params).pipe(map(expense => expense.filter(ex => ex.child > 5000))); 
   revenue$ = this.revenueReport$.pipe(map(expense => expense.filter(ex => ex.child > 5000 && ex.child < 6000)));    
   expense$ = this.revenueReport$.pipe(map(expense => expense.filter(ex => ex.child > 6000)));
   

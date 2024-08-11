@@ -10,7 +10,6 @@ import { FundsService } from 'app/services/funds.service';
 import { GLAccountsService } from 'app/services/accounts.service';
 
 import { GridMenubarStandaloneComponent } from '../../grid-menubar/grid-menubar.component';
-import { JournalDetailComponent } from './journal-detail.component';
 import { JournalUpdateComponent } from './journal-update.component';
 import { MatDrawer } from '@angular/material/sidenav';
 import { MaterialModule } from 'app/services/material.module';
@@ -22,14 +21,16 @@ import { Dialog } from '@syncfusion/ej2-popups';
 import { DropDownListComponent } from '@syncfusion/ej2-angular-dropdowns';
 import { IJournalHeader } from 'app/models/journals';
 import { JournalStore } from 'app/services/journal.store';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
+import { MatDialog } from '@angular/material/dialog';
+import { AUTH } from 'app/app.config';
+import { JournalService } from 'app/services/journal.service';
 
 const imports = [
     CommonModule,    
     ReactiveFormsModule,
     MaterialModule,
     FormsModule,
-    JournalDetailComponent,
     JournalUpdateComponent,
     DndComponent,
     GridMenubarStandaloneComponent,    
@@ -52,6 +53,11 @@ export class JournalEntryComponent implements OnInit, OnDestroy {
     public fundService = inject(FundsService);
     public accountService = inject(GLAccountsService);
     public route = inject(Router);
+    private journalService = inject(JournalService);
+    private dialog = inject(MatDialog);
+    private auth = inject(AUTH);
+    private activatedRoute = inject(ActivatedRoute)
+  
 
     store = inject(JournalStore);
 
@@ -95,7 +101,7 @@ export class JournalEntryComponent implements OnInit, OnDestroy {
         this.pageSettings =  { pageSizes: true, pageCount: 10 };
         this.selectionOptions = { mode: 'Cell' };              
         this.editSettings = { allowEditing: true, allowAdding: false, allowDeleting: false };
-        this.searchOptions = { fields: ['description'], operator: 'contains', ignoreCase: true, ignoreAccent:true };
+        this.searchOptions = { fields: ['description'], operator: 'contains', ignoreCase: true, ignoreAccent: true };
         this.toolbarOptions = ['Search'];   
         this.filterSettings = { type: 'CheckBox' };    
     }
@@ -115,6 +121,40 @@ export class JournalEntryComponent implements OnInit, OnDestroy {
         this.initialDatagrid();        
     }
 
+    // actionBegin(args: SaveEventArgs): void {        
+    //     var data = args.rowData as IJournalHeader;
+    //     if (args.requestType === 'beginEdit' || args.requestType === 'add') {
+    //         args.cancel = true;
+    //         this.submitClicked = false;
+    //         this.bOpenDetail = true;
+    //         this.journalType = data.type;
+
+    //         if (data.type === 'AR')
+    //         {
+    //             this.route.navigate(['journals/ar', data.journal_id]);
+    //             return;
+    //         }
+    //         else 
+    //         if (data.type === 'AP')
+    //         {
+    //             this.route.navigate(['journals/ap', data.journal_id]);
+    //             return;
+    //         }    
+
+    //         this.nJournal = Number(data.journal_id);
+    //         if (this.nJournal > 0 ) {
+    //             this.journalViewChildControl().refresh(this.nJournal, data.description, data.create_date, data.amount.toString(), this.journalType);
+    //             this.openDrawer();        
+    //         }            
+    //     }
+    //     if (args.requestType === 'save') {
+    //         args.cancel = true;
+    //         console.log(JSON.stringify(args.data));
+    //         var data = args.data as IJournalHeader;            
+    //         this.submitClicked = true;            
+    //     }
+    // }
+
     actionBegin(args: SaveEventArgs): void {        
         var data = args.rowData as IJournalHeader;
         if (args.requestType === 'beginEdit' || args.requestType === 'add') {
@@ -125,7 +165,7 @@ export class JournalEntryComponent implements OnInit, OnDestroy {
 
             if (data.type === 'AR')
             {
-                this.route.navigate(['journals/ar', data.journal_id]);
+                this.route.navigate(['journals/ar', this.nJournal]);
                 return;
             }
             else 
@@ -134,12 +174,13 @@ export class JournalEntryComponent implements OnInit, OnDestroy {
                 this.route.navigate(['journals/ap', data.journal_id]);
                 return;
             }    
+            else 
+            if (data.type === 'GL')
+            {
+                this.route.navigate(['journals/gl', data.journal_id]);
+                return;
+            }    
 
-            this.nJournal = Number(data.journal_id);
-            if (this.nJournal > 0 ) {
-                this.journalViewChildControl().refresh(this.nJournal, data.description, data.create_date, data.amount.toString(), this.journalType);
-                this.openDrawer();        
-            }            
         }
         if (args.requestType === 'save') {
             args.cancel = true;
@@ -174,7 +215,7 @@ export class JournalEntryComponent implements OnInit, OnDestroy {
         this.bOpenDetail = true;
         this.nJournal = 0;
         this.openDrawer()
-        this.journalViewChildControl().refresh(this.nJournal, this.description, this.transaction_date, this.amount, this.journalType);
+        //this.journalViewChildControl().refresh(this.nJournal, this.description, this.transaction_date, this.amount, this.journalType);
     }
 
     onRefresh() {

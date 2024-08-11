@@ -127,18 +127,6 @@ export class ARTransactionComponent implements OnInit, OnDestroy {
                 this.route.navigate(['journals/ar', this.nJournal]);
                 return;
             }
-            else 
-            if (data.type === 'AP')
-            {
-                this.route.navigate(['journals/ap', data.journal_id]);
-                return;
-            }    
-
-            this.nJournal = Number(data.journal_id);
-            if (this.nJournal > 0 ) {
-
-                this.openDrawer();        
-            }            
         }
         if (args.requestType === 'save') {
             args.cancel = true;

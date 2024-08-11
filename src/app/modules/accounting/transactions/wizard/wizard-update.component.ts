@@ -7,7 +7,7 @@ import { DndComponent } from 'app/modules/drag-n-drop/loaddnd/dnd.component';
 import { FundsService } from 'app/services/funds.service';
 import { GLAccountsService } from 'app/services/accounts.service';
 import { GridMenubarStandaloneComponent } from '../../grid-menubar/grid-menubar.component';
-import { JournalDetailComponent } from '../gl-transactions/journal-detail.component';
+
 import { MaterialModule } from 'app/services/material.module';
 import { SubTypeService } from 'app/services/subtype.service';
 import { TypeService } from 'app/services/type.service';
@@ -34,7 +34,6 @@ const imports = [
   MaterialModule,
   ComboBoxModule,
   FormsModule,
-  JournalDetailComponent,
   DndComponent,
   GridMenubarStandaloneComponent,
   JournalEditComponent,

@@ -603,8 +603,8 @@ export class APUpdateComponent
 
   exitWindow() {
     if (this.bDirty === false) {
-      this.journalForm.reset();
-      this._location.back();
+      // this.detailForm.reset();          
+      this.drawer().close();
     } else {
       const confirmation = this.fuseConfirmationService.open({
         title: "Unsaved Changes",
@@ -619,9 +619,8 @@ export class APUpdateComponent
       // Subscribe to the confirmation dialog closed action
       confirmation.afterClosed().subscribe((result) => {
         if (result === "confirmed") {
-          this.detailForm.reset();
-          this.journalForm.reset();
-          this._location.back();
+          // this.detailForm.reset();          
+          this.drawer().close();
         }
       });
     }

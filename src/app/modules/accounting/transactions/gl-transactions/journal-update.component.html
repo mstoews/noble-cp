@@ -103,13 +103,12 @@
                         (rowDragStartHelper)="rowDragStartHelper($event)"                        
                         (rowClick)="rowClick($event)"
                         (rowDrop)="rowDrop($event)"  
-                        (rowDragStart)="rowDragStart($event)" 
-                        
+                        (rowDragStart)="rowDragStart($event)"                         
                         (rowDrag)="rowDrag($event)" >                    
                     
                         <e-columns>                                                                    
                             <e-column field='journal_subid' headerText='ID' [visible]='false' isPrimaryKey='true' width='100' ></e-column>
-                            <e-column field='child' headerText='Account' width='150' editType='dropdownedit' [edit]='accountParams' ></e-column>
+                            <e-column field='child' headerText='Account' width='250'></e-column>
                             <e-column field='fund' editType="dropdownedit" editType='dropdownedit' headerText='Fund' width='90'></e-column>
                             <e-column field='sub_type' editType='dropdownedit' headerText='Sub Type' width='90'></e-column>
                             <e-column field='description' headerText='Description' width='150'></e-column>                            
@@ -144,11 +143,11 @@
                     }
                 </div>
             </div>
-            <ejs-contextmenu #contextmenu class="bg-white"
+            <!-- <ejs-contextmenu #contextmenu class="bg-white"
                     target='#contextmenutarget' 
                     [items]='menuItems' 
                     (beforeItemRender)='addDisabled($event)' 
                     (created)='onCreate()'>
-            </ejs-contextmenu>        
+            </ejs-contextmenu>         -->
         </div>        
 </div>

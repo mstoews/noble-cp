@@ -27,26 +27,26 @@ export const project = {
         series  : {
             'this-week': [
                 {
-                    name: 'New issues',
+                    name: 'New Transactions',
                     type: 'line',
                     data: [42, 28, 32, 34, 20, 25, 22]
                 },
                 {
-                    name: 'Closed issues',
+                    name: 'Booked Transactions',
                     type: 'column',
-                    data: [11, 10, 15, 16, 8, 10, 17]
+                    data: [38, 26, 32, 32, 19, 25, 22]
                 }
             ],
             'last-week': [
                 {
-                    name: 'New issues',
+                    name: 'New Transactions',
                     type: 'line',
                     data: [37, 32, 39, 27, 18, 24, 20]
                 },
                 {
-                    name: 'Closed issues',
+                    name: 'Booked Transactions',
                     type: 'column',
-                    data: [9, 8, 10, 12, 7, 11, 15]
+                    data: [36, 33, 38, 28, 17, 20, 19]
                 }
             ]
         }

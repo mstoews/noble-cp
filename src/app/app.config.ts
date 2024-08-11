@@ -129,7 +129,7 @@ export const appConfig: ApplicationConfig = {
       },
       fuse: {
         layout: 'dense',
-        scheme: 'light',
+        scheme: 'dark',
         screens: {
           sm: '600px',
           md: '960px',

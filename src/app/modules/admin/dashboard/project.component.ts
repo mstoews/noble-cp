@@ -7,6 +7,7 @@ import {
     ViewEncapsulation,
     effect,
     inject,
+    signal,
 } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
@@ -19,7 +20,7 @@ import { Router } from '@angular/router';
 import { TranslocoModule } from '@ngneat/transloco';
 import { ProjectService } from './project.service';
 import { ApexOptions, NgApexchartsModule } from 'ng-apexcharts';
-import { Subject, takeUntil } from 'rxjs';
+import { single, Subject, takeUntil } from 'rxjs';
 import { AuthService } from 'app/modules/auth/auth.service';
 import { SummaryCardComponent } from './summary-card.component';
 import { FIRESTORE } from 'app/app.config';
@@ -58,7 +59,7 @@ export class ProjectComponent implements OnInit, OnDestroy {
     chartMonthlyExpenses: ApexOptions = {};
     chartYearlyExpenses: ApexOptions = {};
     data: any;
-    selectedProject: string = 'Accounting Tasks Metrics';
+    selectedProject: string = 'Accounting Summary';
     private _unsubscribeAll: Subject<any> = new Subject<any>();
     authService = inject(AuthService);
     private _router = inject(Router);
@@ -66,9 +67,31 @@ export class ProjectComponent implements OnInit, OnDestroy {
 
     firestore = inject(FIRESTORE);
 
-    public cashReserves = 18223.23;
-    public fundCount = 3;
+    public cashReserves = signal(0);
+    public fundCount = signal(0);
     public caption_1 = 'Fund Total';
+
+    public fundTotal = signal(0);
+    public caption_2 = 'Cash Reserves';
+
+    public cashReserve = signal(0);
+    public caption_3 = 'Total Expenses';
+
+    public expense_total = signal(65235);
+    public caption_4 = 'Expense Total';
+
+    public revenue_total = signal(242146);
+
+    public asset = signal(84540);
+    public current_assets = signal(88321);
+
+    public liabilities = signal(5000);
+    public equity = signal(950);
+    public caption_5 = 'Balance Sheet';
+
+    public totalOperating = signal(0);
+    public caption  = 'Operation Reserve';
+
 
 
     constructor() {

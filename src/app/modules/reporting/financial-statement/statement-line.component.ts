@@ -19,12 +19,12 @@ import { IDistributionLedger } from 'app/models';
   `
   
         <div class="grid grid-cols-12 gap-2">
-            <div class="col-start-1">{{item.child}}</div>
-            <div class="col-start-2 col-span-3">  {{item.description}}</div>
-            <div class="col-start-5 text-right"> {{item.opening_balance | number: '1.2-2'}}</div>
-            <div class="col-start-7 text-right">  {{item.debit_balance   | number: '1.2-2'}}</div>
-            <div class="col-start-9 text-right">  {{item.credit_balance  | number: '1.2-2'}}</div>
-            <div class="col-start-11 text-right"> {{item.closing_balance | number: '1.2-2'}}</div>            
+            <div class="col-start-1  text-gray-700 ">{{item.child}}</div>
+            <div class="col-start-2  text-gray-700 font-gray-700 col-span-3">  {{item.description}}</div>
+            <div class="col-start-5  text-gray-700 font-gray-700 text-right"> {{item.opening_balance | number: '1.2-2'}}</div>
+            <div class="col-start-7  text-gray-700 font-gray-700 text-right">  {{item.debit_balance   | number: '1.2-2'}}</div>
+            <div class="col-start-9  text-gray-700 font-gray-700 text-right">  {{item.credit_balance  | number: '1.2-2'}}</div>
+            <div class="col-start-11 text-gray-700 font-gray-700 text-right"> {{item.closing_balance | number: '1.2-2'}}</div>            
         </div>
   
 

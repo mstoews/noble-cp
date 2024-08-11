@@ -12,18 +12,10 @@
 
     <div class="flex-auto">
         <div class="h-full border-gray-300">
-            <mat-drawer class="w-full" #drawer [opened]="false" mode="push" [position]="'end'" [disableClose]="false">                                
-                <journal-update 
-                   [journal_id]="nJournal" 
-                   [sTitle]="'Journal Entry Detail'"
-                   [description]="description"
-                   [transaction_date]="transaction_date"
-                   [amount]="amount"  
-                   [journalType]="journalType"                 
-                   (notifyDrawerClose)="closeDrawer()">
-                </journal-update>
-                                 
-            </mat-drawer>
+            <mat-drawer class="w-full md:w-[400px]" #drawer [opened]="false" mode="over" [position]="'end'"
+        [disableClose]="false">
+        
+    </mat-drawer>
             <mat-drawer-container class="flex-col h-full">
                 @defer {
                     <ng-container>
@@ -37,7 +29,7 @@
                                   allowEditing='true'
                                   [allowResizing]='true' 
                                   [allowReordering]='true'
-                                  [allowFiltering]='false'
+                                  [allowFiltering]='true'
                                   [enablePersistence]='true'
                                   [allowGrouping]='true'
                                   [allowExcelExport]='true'

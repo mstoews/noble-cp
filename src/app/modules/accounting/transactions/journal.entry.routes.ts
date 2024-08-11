@@ -22,7 +22,7 @@ export default [
     },
     {
         path: 'gl/:id',
-        component: JournalUpdateComponent,
+        component: JournalUpdateComponent, 
         resolve: {journal: JournalResolver },
     },
 ] as Routes;
