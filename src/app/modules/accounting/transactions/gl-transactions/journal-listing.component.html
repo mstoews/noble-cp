@@ -19,11 +19,11 @@
             <mat-drawer-container class="flex-col">
                 @defer {
                     <ng-container>
-                        @if (store.journals()) {
+                        @if (store.gl()) {
                         <div class="flex flex-1 flex-col">
                             <ejs-grid #grid id='journals' 
                                   height="250"
-                                  [dataSource]='store.journals()'   
+                                  [dataSource]='store.gl()'   
                                   [enableStickyHeader]=true 
                                   allowPaging='true' 
                                   allowSorting='true'                                   
