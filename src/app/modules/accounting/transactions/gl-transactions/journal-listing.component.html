@@ -1,6 +1,6 @@
 <div class="sm:hide md:visible">
 <grid-menubar class="pl-5 pr-5" 
-    [inTitle]="'Journal Entry'" 
+    [inTitle]="'Journal Entry Hello'" 
     (notifyParentRefresh)="onRefresh()"
     (notifyParentAdd)="onAdd()" 
     (notifyParentDelete)="onDeleteSelection()" 
@@ -8,7 +8,7 @@
 </grid-menubar>
 </div>
 
-<div class="flex flex-col min-w-0 overflow-y-auto -px-10" cdkScrollable>
+<div class="flex flex-col min-w-0 overflow-y-auto -px-10">
 
     <div class="flex-auto">
         <div class="h-full border-gray-300">
@@ -16,13 +16,15 @@
         [disableClose]="false">
         
     </mat-drawer>
-            <mat-drawer-container class="flex-col h-full">
+            <mat-drawer-container class="flex-col">
                 @defer {
                     <ng-container>
                         @if (store.journals()) {
-                        <div class="flex flex-1 flex-col overflow-auto">
-                            <ejs-grid  id='journals'
+                        <div class="flex flex-1 flex-col">
+                            <ejs-grid #grid id='journals' 
+                                  height="250"
                                   [dataSource]='store.journals()'   
+                                  [enableStickyHeader]=true 
                                   allowPaging='true' 
                                   allowSorting='true'                                   
                                   showColumnMenu='true'
@@ -34,6 +36,7 @@
                                   [allowGrouping]='true'
                                   [allowExcelExport]='true'
                                   [allowPdfExport]='true' 
+                                  [enableAdaptiveUI]='true'
                                   [toolbar]='toolbarOptions'
                                   [selectionOptions]="selectionOptions"                                                                       
                                   (actionBegin)="actionBegin($event)" 
@@ -43,7 +46,7 @@
                                   [pageSettings]='pageSettings'
                                   [searchSetting]="searchOptions" >
                                 <e-columns>
-                                    <e-column  field="journal_id"  headerText="ID"          width="100" dataType="number" isPrimaryKey='true' textAlign="left"></e-column>
+                                    <e-column  field="journal_id"  headerText="ID" width="100" dataType="number" isPrimaryKey='true' textAlign="left"></e-column>                                    
                                     <e-column  field="type"        headerText="Type"        width="100" dataType="text" textAlign="left"></e-column>
                                     <e-column  field="booked"      headerText="Booked"      width="100" [displayAsCheckBox]='true' type="boolean"></e-column>                            
                                     <e-column  field="amount"      headerText="Amount"      width="150" format='N2'  textAlign="Right"></e-column>

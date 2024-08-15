@@ -113,7 +113,7 @@ export class JournalUpdateComponent
     this.drawer().close();
   }
 
-  back() {
+  onBack() {
     this._location.back();
   }
 

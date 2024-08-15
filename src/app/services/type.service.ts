@@ -4,7 +4,19 @@ import { Subject, catchError, of, shareReplay, take, tap, throwError } from 'rxj
 import { AUTH } from 'app/app.config';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'environments/environment.prod';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import {
+  patchState,
+  signalStore,
+  withComputed,
+  withHooks,
+  withMethods,
+  withState,
+} from '@ngrx/signals';
+
+import { rxMethod } from '@ngrx/signals/rxjs-interop';
+import { exhaustMap, pipe, switchMap } from 'rxjs';
+import { tapResponse } from '@ngrx/operators';
+
 
 interface TypeState {
   types: IType[];
@@ -33,7 +45,7 @@ export class TypeService {
 
   error$ = new Subject<string>();
 
-  private typeList = signal<IType[]>([])
+  public typeList = signal<IType[]>([])
 
   create(t: IType) {
     var url = this.baseUrl + '/v1/type_create';
@@ -50,11 +62,8 @@ export class TypeService {
 
   // Read
   read() {
-    if (this.typeList().length === 0) {
       var url = this.baseUrl + '/v1/type_list';
-      this.httpClient.get<IType[]>(url).pipe(shareReplay());
-    }
-    return this.typeList;
+      return this.httpClient.get<IType[]>(url).pipe(shareReplay());
   }
 
 
@@ -86,3 +95,39 @@ export class TypeService {
   }
 
 }
+
+
+export interface TypeStateInterface {
+  type: IType[];
+  isLoading: boolean;
+  error: string | null;
+}
+
+export const TypeStore = signalStore(
+  withState<TypeStateInterface>({
+    type: [],
+    error: null,
+    isLoading: false,
+  }),
+  withMethods((state, typeService = inject(TypeService)) => ({       
+    loadType: rxMethod<void>(
+      pipe(
+        tap(() => patchState(state, { isLoading: true })),
+        exhaustMap(() => {
+          return typeService.read().pipe(
+            tapResponse({
+              next: (type) => patchState(state, { type: type }),
+              error: console.error,
+              finalize: () => patchState(state, { isLoading: false }),
+            })
+          );
+        })
+      )
+    ),
+  })),
+  withHooks({
+    onInit(store) {
+      store.loadType();
+    },
+  })
+);

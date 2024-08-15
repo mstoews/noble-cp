@@ -54,14 +54,14 @@
                 "src/@fuse/styles"
               ]
             },
-            "styles": [              
+            "styles": [
               "src/@fuse/styles/tailwind.scss",
               "src/@fuse/styles/themes.scss",
               "src/styles/vendors.scss",
               "src/@fuse/styles/main.scss",
               "src/styles/styles.scss",
               "src/styles/tailwind.scss",
-              "@angular/material/prebuilt-themes/deeppurple-amber.css"
+              "@angular/material/prebuilt-themes/deeppurple-amber.css"              
             ],
             "scripts": []
           },
@@ -90,14 +90,14 @@
           },
           "defaultConfiguration": "production"
         },
-        "serve": {          
+        "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
               "buildTarget": "nobleledger:build:production",
               "port": 43221
             },
-            "development": {              
+            "development": {
               "buildTarget": "nobleledger:build:development",
               "port": 43221
             }
@@ -137,11 +137,46 @@
             "version": 2,
             "browserTarget": "nobleledger:build:production"
           }
+        },
+        "ionic-cordova-serve": {
+          "builder": "@ionic/angular-toolkit:cordova-serve",
+          "options": {
+            "cordovaBuildTarget": "nobleledger:ionic-cordova-build",
+            "devServerTarget": "nobleledger:serve"
+          },
+          "configurations": {
+            "production": {
+              "cordovaBuildTarget": "nobleledger:ionic-cordova-build:production",
+              "devServerTarget": "nobleledger:serve:production"
+            }
+          }
+        },
+        "ionic-cordova-build": {
+          "builder": "@ionic/angular-toolkit:cordova-build",
+          "options": {
+            "browserTarget": "nobleledger:build"
+          },
+          "configurations": {
+            "production": {
+              "browserTarget": "nobleledger:build:production"
+            }
+          }
         }
       }
     }
   },
   "cli": {
-    "analytics": false
+    "analytics": false,
+    "schematicCollections": [
+      "@ionic/angular-toolkit"
+    ]
+  },
+  "schematics": {
+    "@ionic/angular-toolkit:component": {
+      "styleext": "scss"
+    },
+    "@ionic/angular-toolkit:page": {
+      "styleext": "scss"
+    }
   }
 }

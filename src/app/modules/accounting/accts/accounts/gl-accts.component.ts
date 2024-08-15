@@ -1,7 +1,7 @@
-import { Component, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Component, OnInit, ViewChild, inject } from '@angular/core';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { SubTypeService } from 'app/services/subtype.service';
-import { TypeService } from 'app/services/type.service';
+import { TypeStore } from 'app/services/type.service';
 import { CommonModule, JsonPipe } from '@angular/common';
 import { FuseConfirmationService } from '@fuse/services/confirmation';
 import { GLAccountsService } from 'app/services/accounts.service';
@@ -14,9 +14,6 @@ import { AggregateService, ColumnMenuService, DialogEditEventArgs, EditService, 
 import { DropDownListComponent } from '@syncfusion/ej2-angular-dropdowns';
 import { IAccounts } from 'app/models/journals';
 import { AuthService } from 'app/modules/auth/auth.service';
-
-
-
 
 const imports = [
     CommonModule,
@@ -35,7 +32,14 @@ const keyExpr = ["account", "child"];
     standalone: true,
     imports: [imports],
     templateUrl: './gl-accts.component.html',
-    providers: [SortService, GroupService ,PageService, ResizeService, FilterService, ToolbarService, EditService, AggregateService, ColumnMenuService,],
+    providers: [TypeStore, SortService, GroupService ,PageService, ResizeService, FilterService, ToolbarService, EditService, AggregateService, ColumnMenuService],
+    styles: [
+        `        
+        .e-grid {
+         font-family: cursive;
+         border: 1px solid #f0f0f0;
+        }
+        `]
 })
 export class GlAccountsComponent implements OnInit {
     @ViewChild('drawer') drawer!: MatDrawer;
@@ -47,12 +51,13 @@ export class GlAccountsComponent implements OnInit {
     private auth = inject(AuthService);
     accountService = inject(GLAccountsService);
     subtypeService = inject(SubTypeService)
+    typeStore = inject(TypeStore);
 
     public sTitle = "Settings/Account Maintenance"
     public title = 'General Ledger Accounts';
     public selectedItemKeys: any[] = [];
+    public bDirty: boolean = false;
     private currentRow: Object;
-    
 
     readonly displayModes = [{ text: "Display Mode 'full'", value: 'full' }, { text: "Display Mode 'compact'", value: 'compact' }];
     displayMode = 'compact';
@@ -60,13 +65,12 @@ export class GlAccountsComponent implements OnInit {
     showInfo = true;
     showNavButtons = true;
 
-    typeList = inject(TypeService).read();
-
     ngOnInit() {
-        this.accountService.read();
+        this.accountService.read();        
         this.createEmptyForm();
         this.initialDatagrid();
     }
+
 
     // datagrid settings start
     public pageSettings: Object;
@@ -80,7 +84,11 @@ export class GlAccountsComponent implements OnInit {
     public toolbarOptions?: ToolbarItems[];
     public searchOptions?: SearchSettingsModel;
     public filterSettings: FilterSettingsModel;
-    
+
+
+    onBack() {
+        
+    }    
     
     initialDatagrid() {
         // this.pageSettings = { pageCount: 10 };        
@@ -97,7 +105,10 @@ export class GlAccountsComponent implements OnInit {
 
     actionBegin(args: SaveEventArgs): void {        
         var data = args.rowData as IAccounts;
+        
         if (args.requestType === 'beginEdit' || args.requestType === 'add') {        
+           args.cancel = true;
+           this.createForm(data);
            this.openDrawer();        
                         
         }
@@ -226,24 +237,7 @@ export class GlAccountsComponent implements OnInit {
         });
     }
 
-    private assignType(type: string): string {
-        var vType: string;
-
-        if (type !== null && type !== undefined) {
-            const typ = this.typeList().find((x) => x.type === type);
-            if (typ === undefined) {
-                vType = 'Assets';
-            } else {
-                vType = type
-            }
-        } else {
-            vType = 'Assets';
-        }
-        return vType;
-    }
-
-    createForm(e) {
-        const sType = this.assignType(e.type);
+    createForm(e: any) {        
         var parent: boolean;
         parent = e.parent_account;
         this.accountsForm = this.fb.group({
@@ -251,7 +245,7 @@ export class GlAccountsComponent implements OnInit {
             child: [e.child, Validators.required],
             parent_account: parent,
             description: [e.description, Validators.required],
-            type: [sType, Validators.required],
+            type: [e.type, Validators.required],
             comments: [e.comments, Validators.required],
         });
     }
@@ -276,9 +270,7 @@ export class GlAccountsComponent implements OnInit {
 
     onDoubleClicked(args: any) {
         const type = args.data.type;
-        this.assignType(type)
-
-
+        
         const account = {
             account: [args.data.account],
             child: [args.data.child],
@@ -296,7 +288,6 @@ export class GlAccountsComponent implements OnInit {
     onFocusedRowChanged(e: any) {
         this.currentRow = e.row.data;
         const type = e.row.data.type;
-        this.assignType(type)
 
         const account = {
             account: [e.row.data.account],

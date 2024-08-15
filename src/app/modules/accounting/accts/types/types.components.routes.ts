@@ -1,9 +1,9 @@
 import { Routes } from '@angular/router';
-import { GLTypeComponent } from './gl_types.components';
+import { GlTypeComponent } from './types.component';
 
 export default [
     {
         path: '',
-        component: GLTypeComponent
+        component: GlTypeComponent
     },
 ] as Routes;

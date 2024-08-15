@@ -115,9 +115,10 @@ export class APTransactionComponent implements OnInit, OnDestroy {
     }
 
     actionBegin(args: SaveEventArgs): void {        
+        args.cancel = true;
         var data = args.rowData as IJournalHeader;
         if (args.requestType === 'beginEdit' || args.requestType === 'add') {
-            args.cancel = true;
+            
             this.submitClicked = false;
             this.bOpenDetail = true;
             this.journalType = data.type;

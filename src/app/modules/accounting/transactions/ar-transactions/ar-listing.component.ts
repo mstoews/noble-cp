@@ -53,6 +53,7 @@ export class ARTransactionComponent implements OnInit, OnDestroy {
     public route = inject(Router);
 
     store = inject(JournalStore);
+      
 
     @ViewChild('grid')
     public grid?: GridComponent;
@@ -61,15 +62,17 @@ export class ARTransactionComponent implements OnInit, OnDestroy {
     currentRowData: any;
     
     drawOpen: 'open' | 'close' = 'open';
+    
     collapsed = false;
-    sTitle = 'Journal Entry';
+    sTitle = 'Accounts Receivable Transactions';
     selectedItemKeys: any[] = [];
+    
     
     public nJournal = 0;
     public description = '';
     public transaction_date = '';
     public amount = '';
-    public journalType = 'GL';
+    public journalType = 'AR';
     public currentDate: string;
     public journal_details: any[];
     public bOpenDetail: boolean = false;
@@ -96,7 +99,8 @@ export class ARTransactionComponent implements OnInit, OnDestroy {
         this.editSettings = { allowEditing: true, allowAdding: false, allowDeleting: false };
         this.searchOptions = { fields: ['description'], operator: 'contains', ignoreCase: true, ignoreAccent:true };
         this.toolbarOptions = ['Search'];   
-        this.filterSettings = { type: 'CheckBox' };    
+        this.filterSettings = { type: 'CheckBox' }; 
+        
     }
 
 
@@ -107,10 +111,8 @@ export class ARTransactionComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
         // const dDate = new Date();
-        // this.currentDate = dDate.toISOString().split('T')[0];
-        this.store.journals().forEach(journal =>{
-            console.log(`journal ${JSON.stringify(journal)}`)
-        })
+        // this.currentDate = dDate.toISOString().split('T')[0];        
+        this.store.accountsReceivable(); 
         this.initialDatagrid();        
     }
 
@@ -124,7 +126,7 @@ export class ARTransactionComponent implements OnInit, OnDestroy {
 
             if (data.type === 'AR')
             {
-                this.route.navigate(['journals/ar', this.nJournal]);
+                this.route.navigate(['journals/ar', data.journal_id]);
                 return;
             }
         }

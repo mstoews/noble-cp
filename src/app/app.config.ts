@@ -35,6 +35,7 @@ import { provideAnimationsAsync } from '@angular/platform-browser/animations/asy
 import { AuthService } from './modules/auth/auth.service';
 import { GlobalErrorHandler } from './services/error.service';
 
+
 const app = initializeApp(environment.firebase);
 
 export const FIRESTORE = new InjectionToken('Firebase firestore', {
@@ -164,7 +165,7 @@ export const appConfig: ApplicationConfig = {
           },
         ],
       },
-    }), provideAnimationsAsync()
+    }),
   ],
 };
 

@@ -8,7 +8,6 @@
                     </div>
                         <div mat-dialog-content>
                             <form [formGroup]="accountsForm">
-
                                 <div class="flex flex-col m-1">
                                     <section class="flex flex-col md:flex-row">
                                         <div class="flex flex-col grow">
@@ -60,23 +59,37 @@
                         </div>
                     </mat-card>
                 </mat-drawer>
-                <ng-container>                    
-                    <grid-menubar [inTitle]="'Type Maintenance'"></grid-menubar>
-                    @if (typeList() != null) {
-                    <div class="flex flex-col h-[600px]">
-                        <dx-data-grid id="id" [wordWrapEnabled]="true" [columnHidingEnabled]="true" [dataSource]="typeList()" [showColumnLines]="true"
-                            [showRowLines]="true" [showBorders]="true" [focusedRowEnabled]="true" [focusedRowIndex]="0"
-                            keyExpr="type" [repaintChangesOnly]="true">
-
-                            <dxi-column dataField="type" width="150"></dxi-column>
-                            <dxi-column dataField="description" width="400"></dxi-column>
-                            <dxi-column dataField="create_date"></dxi-column>
-                            <dxi-column dataField="create_user"></dxi-column>
-                            <dxi-column dataField="update_date"></dxi-column>
-                            <dxi-column dataField="update_user"></dxi-column>
-
-                        </dx-data-grid>
-                    </div>
+                <ng-container>                                        
+                    @if (typeStore.type().length > 0) {                        
+                        <grid-menubar [inTitle]="'Type Maintenance'"></grid-menubar>
+                        <div class="flex flex-col h-screen">
+                        <ejs-grid id="id" id="id" style="border: 1px"  height="380" 
+                            [dataSource]="typeStore.type()" 
+                            allowPaging='true' 
+                            allowSorting='true'
+                            showColumnMenu='true' 
+                            allowEditing='false' 
+                            [allowFiltering]='true' 
+                            [allowGrouping]='true'
+                            [toolbar]='toolbarOptions' [selectionOptions]='selectionOptions' 
+                            [filterSettings]='filterSettings'
+                            [editSettings]='editSettings' 
+                            [pageSettings]='pageSettings' 
+                            [searchSetting]='searchOptions'
+                            (actionBegin)='actionBegin($event)' (actionComplete)='actionComplete($event)'
+                            [enableStickyHeader]='true' 
+                            [allowResizing]='true' [allowReordering]='true' [allowExcelExport]='true' 
+                        >
+                            <e-columns>
+                                <e-column headerText= "Type" field="type" width="150"></e-column>
+                                <e-column headerText= "Description" field="description" width="200"></e-column>
+                                <e-column headerText= "Date" field="create_date" width="100"></e-column>
+                                <e-column headerText= "User" field="create_user" width="100"></e-column>
+                                <e-column headerText= "Update" field="update_date" width="100"></e-column>
+                                <e-column headerText= "Update User" field="update_user" width="100"></e-column>
+                            </e-columns>                            
+                        </ejs-grid>
+                        </div>
                     }
                 </ng-container>
             </mat-drawer-container>

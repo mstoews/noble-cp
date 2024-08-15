@@ -1,25 +1,46 @@
-import { Component, Output, EventEmitter, OnInit, Input, ChangeDetectionStrategy } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { Component, Output, EventEmitter, Input, ChangeDetectionStrategy } from '@angular/core';
 import { MaterialModule } from 'app/services/material.module';
 
-interface IValue {
-  value: string;
-  viewValue: string;
-  menuDesc: string;
-}
-
 var modules = [
-  MaterialModule
+  MaterialModule,
+  CommonModule
 ]
 
 @Component({
   standalone: true,
   selector: 'grid-menubar',
-  templateUrl: './grid-menubar.component.html',
-  styleUrls: ['./grid-menubar.component.css'],
+  styles: [`
+      ::ng-deep.mat-menu-panel {
+          max-width: none !important;
+        }
+    `],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports:[modules]
+  imports:[modules],
+  template: ` 
+            <mat-toolbar class="text-white font-sans bg-gray-500 mb-1 text-2xlz rounded-lg">
+              {{inTitle}}
+              <!-- menu selected -->
+              <span class="flex-1"></span>
+                  <button (click)="onClickAdd()" color="primary" class="m-1 bg-gray-200 text-gray-100 md:visible" mat-icon-button matTooltip="Add New" aria-label="Add">
+                      <mat-icon class="flex justify-end text-white" [svgIcon]="'mat_outline:note_add'"></mat-icon>
+                  </button>
+
+                  <button (click)="onClickUpdate()" color="primary" class="m-1 bg-gray-200 text-gray-100  md:visible" mat-icon-button matTooltip="Update" aria-label="Update">
+                      <mat-icon class="flex justify-end text-white" [svgIcon]="'mat_outline:update'"></mat-icon>
+                  </button>
+
+                  <button (click)="onClickRefresh()" color="primary" class="m-1 bg-gray-200 text-gray-100 md:visible" mat-icon-button matTooltip="Refresh" aria-label="Add">
+                      <mat-icon class="flex justify-end text-white" [svgIcon]="'mat_outline:refresh'"></mat-icon>
+                  </button>
+
+                    <button (click)="onClickDelete()" color="primary" class="m-1 bg-gray-200 text-gray-100 md:visible" mat-icon-button matTooltip="Delete" aria-label="Delete">
+                      <mat-icon class="flex justify-end text-white hover:bg-white hover:text-gray-700" [svgIcon]="'heroicons_outline:trash'"></mat-icon>
+                    </button>
+              </mat-toolbar>
+  `,
 })
-export class GridMenubarStandaloneComponent implements OnInit {
+export class GridMenubarStandaloneComponent  {
   @Output() notifyParentAdd: EventEmitter<any> = new EventEmitter();
   @Output() notifyParentRefresh: EventEmitter<any> = new EventEmitter();
   @Output() notifyParentDelete: EventEmitter<any> = new EventEmitter();
@@ -27,37 +48,29 @@ export class GridMenubarStandaloneComponent implements OnInit {
   @Output() notifyMenuItemChanged: EventEmitter<any> = new EventEmitter();
 
   @Input() public inTitle: string;
-  @Input() public selected: string;
-  public menuItems: IValue[];
-
+  
   constructor() {
-    this.inTitle = 'Account Maintenance';
+    this.inTitle = 'Grid Menu Bar';
+    console.debug('Grid Menubar: ',this.inTitle);
   }
 
-  ngOnInit(): void {}
+    onClickUpdate(): void {    
+      this.notifyParentRefresh.emit();
+    }
 
-  onClickUpdate(): void {
-    console.debug('Menu bar notification emit refresh');
-    this.notifyParentRefresh.emit();
-  }
+    onClickAdd(): void {
+      this.notifyParentAdd.emit();
+    }
 
-  onClickAdd(): void {
-    console.debug('Menu bar notification emit add');
-    this.notifyParentAdd.emit();
-  }
+    onClickDelete(): void {
+      this.notifyParentDelete.emit();
+    }
 
-  onClickDelete(): void {
-    console.debug('Menu bar notification emit delete');
-    this.notifyParentDelete.emit();
-  }
+    onClickClone(): void {
+      this.notifyParentClone.emit();
+    }
 
-  onClickClone(): void {
-    console.debug('Menu bar notification emit clone');
-    this.notifyParentClone.emit();
-  }
-
-  onClickRefresh(): void {
-    console.debug('Menu bar notification emit refresh');
-    this.notifyParentRefresh.emit();
-  }
+    onClickRefresh(): void {
+      this.notifyParentRefresh.emit();
+    }
 }

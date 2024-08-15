@@ -182,7 +182,8 @@ export class EntryWizardComponent implements OnInit, OnDestroy, AfterViewInit {
           // the form control (i.e. _initializeSelection())
           // this needs to be done after the filteredBanks are loaded initially
           // and after the mat-option elements are available
-          this.singleCreditSelect.compareWith = (a: IDropDownAccounts, b: IDropDownAccounts) => a && b && a.child === b.child;
+          if (this.singleCreditSelect != null || this.singleCreditSelect != undefined)
+           this.singleCreditSelect.compareWith = (a: IDropDownAccounts, b: IDropDownAccounts) => a && b && a.child === b.child;
         });
 
     if (this.filteredDebitAccounts)
@@ -194,6 +195,7 @@ export class EntryWizardComponent implements OnInit, OnDestroy, AfterViewInit {
           // the form control (i.e. _initializeSelection())
           // this needs to be done after the filteredBanks are loaded initially
           // and after the mat-option elements are available
+          if (this.singleDebitSelect != null || this.singleDebitSelect != undefined)
           this.singleDebitSelect.compareWith = (a: IDropDownAccounts, b: IDropDownAccounts) => a && b && a.child === b.child;
         });
   }

@@ -3,7 +3,7 @@ import { BalanceSheetComponent } from '../../../reporting/balance-sheet/balance-
 import { CdkScrollable } from '@angular/cdk/scrolling';
 import { FundsComponent } from '../funds/funds.component';
 import { GlAccountsComponent } from '../accounts/gl-accts.component';
-import { GlTypesComponent } from '../types/types.component';
+import { GlTypeComponent } from '../types/types.component';
 import { HttpClient } from '@angular/common/http';
 import { TrialBalanceComponent } from '../../../reporting/trial-balance/trial-balance.component';
 import { Subject, takeUntil } from 'rxjs';
@@ -39,7 +39,7 @@ import { MatDrawer } from '@angular/material/sidenav';
         TrialBalanceComponent,
         FundsComponent,
         GlAccountsComponent,
-        GlTypesComponent,
+        GlTypeComponent,
         PeriodsComponent,
         GlSubTypeComponent,
         NgFor,

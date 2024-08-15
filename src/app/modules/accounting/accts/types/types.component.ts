@@ -1,23 +1,18 @@
 import {
-    AbstractControl,
     FormBuilder,
     FormGroup,
     FormsModule,
     ReactiveFormsModule,
 } from '@angular/forms';
+
 import { Component, OnInit, ViewChild, inject } from '@angular/core';
-
-
 import { CommonModule } from '@angular/common';
 import { FuseConfirmationService } from '@fuse/services/confirmation';
 import { GridMenubarStandaloneComponent } from '../../grid-menubar/grid-menubar.component';
-import { HttpClient } from '@angular/common/http';
-
 import { MatDrawer } from '@angular/material/sidenav';
 import { MaterialModule } from 'app/services/material.module';
-import { IType, TypeService } from 'app/services/type.service';
-import { environment } from 'environments/environment.prod';
-import { GridModule } from '@syncfusion/ej2-angular-grids';
+import { TypeService, TypeStore } from 'app/services/type.service';
+import { AggregateService, ColumnMenuService, EditService, FilterService, GridModule, GroupService, PageService, ResizeService, SortService, ToolbarService } from '@syncfusion/ej2-angular-grids';
 
 const imports = [
     CommonModule,
@@ -29,23 +24,23 @@ const imports = [
 ];
 
 @Component({
-    selector: 'types',
+    selector: 'gl-types',
     standalone: true,
     imports: [imports],
     templateUrl: './types.component.html',
-    providers: []
+    providers: [TypeStore, SortService, GroupService ,PageService, ResizeService, FilterService, ToolbarService, EditService, AggregateService, ColumnMenuService,]
 })
-export class GlTypesComponent implements OnInit {
+export class GlTypeComponent implements OnInit {
 
     private fuseConfirmationService = inject(FuseConfirmationService);
     private fb = inject(FormBuilder);
-    private typeService = inject(TypeService)
+    private typeApiService = inject(TypeService);
+
     @ViewChild('drawer') drawer!: MatDrawer;
+    typeStore = inject(TypeStore);
 
-    public sTitle = 'General Ledger Types';
-    public accountsForm!: FormGroup;
-
-    typeList = this.typeService.read();
+    sTitle = 'General Ledger Types';
+    accountsForm!: FormGroup;
 
     ngOnInit() {
         this.createEmptyForm();
@@ -73,7 +68,7 @@ export class GlTypesComponent implements OnInit {
             // If the confirm button pressed...
             if (result === 'confirmed') {
                 // Delete the list
-                // this.typeApiService.delete(this.typeId);
+                this.typeApiService.delete(e.type);
             }
         });
         this.closeDrawer();
@@ -89,8 +84,6 @@ export class GlTypesComponent implements OnInit {
             update_user: [''],
         });
     }
-
-
 
     openDrawer() {
         const opened = this.drawer.opened;
@@ -113,7 +106,7 @@ export class GlTypesComponent implements OnInit {
     onUpdate(e: any) {
         const dDate = new Date();
         const updateDate = dDate.toISOString().split('T')[0];
-        const account = { ...this.accountsForm.value } as IType;
+        const account = { ...this.accountsForm.value } ;
         const rawData = {
             type: account.type,
             description: account.description,
