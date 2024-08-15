@@ -92,7 +92,7 @@ export const JournalStore = signalStore(
         exhaustMap(() => {
           return journalService.readHttpJournalHeader().pipe(
             tapResponse({
-              next: (journal) => patchState(state, { journals: journal }),
+              next: (journal) => patchState(state, { ap: journal.filter(ar => ar.type === 'GL') }),
               error: console.error,
               finalize: () => patchState(state, { isLoading: false }),
             })

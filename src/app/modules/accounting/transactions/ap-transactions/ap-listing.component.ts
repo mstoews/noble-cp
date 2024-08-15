@@ -109,6 +109,7 @@ export class APTransactionComponent implements OnInit, OnDestroy {
     ngOnInit() {
         // const dDate = new Date();
         // this.currentDate = dDate.toISOString().split('T')[0];
+        
         this.store.accountsPayable();  
         console.debug('AP :',this.store.ap().length)
         this.initialDatagrid();        
