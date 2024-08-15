@@ -115,45 +115,8 @@ export class JournalEntryComponent implements OnInit, OnDestroy {
     ngOnInit() {
         // const dDate = new Date();
         // this.currentDate = dDate.toISOString().split('T')[0];
-        this.store.journals().forEach(journal =>{
-            console.log(`journal ${JSON.stringify(journal)}`)
-        })
         this.initialDatagrid();        
     }
-
-    // actionBegin(args: SaveEventArgs): void {        
-    //     var data = args.rowData as IJournalHeader;
-    //     if (args.requestType === 'beginEdit' || args.requestType === 'add') {
-    //         args.cancel = true;
-    //         this.submitClicked = false;
-    //         this.bOpenDetail = true;
-    //         this.journalType = data.type;
-
-    //         if (data.type === 'AR')
-    //         {
-    //             this.route.navigate(['journals/ar', data.journal_id]);
-    //             return;
-    //         }
-    //         else 
-    //         if (data.type === 'AP')
-    //         {
-    //             this.route.navigate(['journals/ap', data.journal_id]);
-    //             return;
-    //         }    
-
-    //         this.nJournal = Number(data.journal_id);
-    //         if (this.nJournal > 0 ) {
-    //             this.journalViewChildControl().refresh(this.nJournal, data.description, data.create_date, data.amount.toString(), this.journalType);
-    //             this.openDrawer();        
-    //         }            
-    //     }
-    //     if (args.requestType === 'save') {
-    //         args.cancel = true;
-    //         console.log(JSON.stringify(args.data));
-    //         var data = args.data as IJournalHeader;            
-    //         this.submitClicked = true;            
-    //     }
-    // }
 
     actionBegin(args: SaveEventArgs): void {        
         var data = args.rowData as IJournalHeader;
