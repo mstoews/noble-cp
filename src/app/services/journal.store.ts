@@ -16,7 +16,7 @@ import { JournalService } from './journal.service';
 
 
 export interface JournalStateInterface {
-  journals: IJournalHeader[];
+  gl: IJournalHeader[];
   ap: IJournalHeader[];
   ar: IJournalHeader[]
   details: IJournalDetail[];
@@ -26,7 +26,7 @@ export interface JournalStateInterface {
 
 export const JournalStore = signalStore(
   withState<JournalStateInterface>({
-    journals: [],
+    gl: [],
     ap:[],
     ar:[],
     details: [],
@@ -34,7 +34,7 @@ export const JournalStore = signalStore(
     isLoading: false,
   }),
   withComputed((state) => ({
-    tasksCount: computed(() => state.journals().length),
+    tasksCount: computed(() => state.gl().length),
   })),
   withMethods((state, journalService = inject(JournalService)) => ({       
     removeJournal: rxMethod<IJournalHeader>(
@@ -44,7 +44,7 @@ export const JournalStore = signalStore(
           return journalService.deleteJournalHeader(value.journal_id).pipe(
             tapResponse({
               next: () => {
-                patchState(state, { journals: state.journals().filter((prd) => prd.journal_id !== value.journal_id) });
+                patchState(state, { gl: state.gl().filter((prd) => prd.journal_id !== value.journal_id) });
               },
               error: console.error,
               finalize: () => patchState(state, { isLoading: false }),
@@ -61,7 +61,7 @@ export const JournalStore = signalStore(
           return journalService.createJournalHeader(value).pipe(
             tapResponse({
               next: (journal) => {
-               patchState(state, { journals: [...state.journals(), journal] });
+               patchState(state, { gl: [...state.gl(), journal] });
               },
               error: console.error,
               finalize: () => patchState(state, { isLoading: false }),
@@ -77,7 +77,7 @@ export const JournalStore = signalStore(
           return journalService.updateJournalHeader(value).pipe(
             tapResponse({
               next: (journal) => {
-                patchState(state, { journals: journal });
+                patchState(state, { gl: journal });
               },
               error: console.error,
               finalize: () => patchState(state, { isLoading: false }),
@@ -92,7 +92,7 @@ export const JournalStore = signalStore(
         exhaustMap(() => {
           return journalService.readHttpJournalHeader().pipe(
             tapResponse({
-              next: (journal) => patchState(state, { journals: journal.filter(gl => gl.type === 'GL') }),
+              next: (journal) => patchState(state, { gl: journal.filter(gl => gl.type === 'GL') }),
               error: console.error,
               finalize: () => patchState(state, { isLoading: false }),
             })
@@ -132,6 +132,8 @@ export const JournalStore = signalStore(
   withHooks({
     onInit(store) {
       store.loadJournals();
+      store.accountsPayable();
+      store.accountsReceivable();
     },
   })
 );
