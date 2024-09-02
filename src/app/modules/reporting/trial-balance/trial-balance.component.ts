@@ -67,12 +67,12 @@ export class TrialBalanceComponent implements OnInit, AfterViewInit {
         dataSource: this.childData,        
         queryString: 'child',        
         columns: [
-            { field: 'journal_id',headerText: 'ID', textAlign: 'left', width: 80 },
-            { field: 'child', headerText: 'Child', textAlign: 'left', width: 100 },
-            { field: 'description', headerText: 'Description', textAlign: 'left', width: '200'},
+            { field: 'journal_id',headerText: 'ID', textAlign: 'left', width: 50 },
+            // { field: 'child', headerText: 'Child', textAlign: 'left', width: 100 },
+            { field: 'description', headerText: 'Description', textAlign: 'left', width: 100},
             { field: 'fund', headerText: 'Fund', textAlign: 'left', width: 100 },            
-            { field: 'debit', headerText: 'Debit', textAlign: 'Right', format: 'N2',  width: 120},
-            { field: 'credit', headerText: 'Credit', textAlign: 'Right', format: 'N2', width: 120},
+            { field: 'debit', headerText: 'Debit', textAlign: 'Right', format: 'N2',  width: 100},
+            { field: 'credit', headerText: 'Credit', textAlign: 'Right', format: 'N2', width: 100},
             ],
             aggregates: [
                 {
@@ -124,7 +124,7 @@ export class TrialBalanceComponent implements OnInit, AfterViewInit {
         this.grid()!.excelExport({ fileName: 'TB-31-01-2024.xlsx', header: {
             headerRows: 7,
             rows: [
-                { cells: [{ colSpan: 4, value: "Noble Ledgers ", style: { fontColor: '#03396c', fontSize: 20, hAlign: 'Left', bold: true, } }] },    
+                { cells: [{ colSpan: 4, value: "Company Name", style: { fontColor: '#03396c', fontSize: 20, hAlign: 'Left', bold: true, } }] },    
                 { cells: [{ colSpan: 4, value: "Trial Balance", style: { fontColor: '#03396c', fontSize: 20, hAlign: 'Left', bold: true, } }] },    
             ]
         },
@@ -146,7 +146,7 @@ export class TrialBalanceComponent implements OnInit, AfterViewInit {
             contents: [
                 {
                   type: 'Text',
-                  value: 'Trial Balance 31-01-2024',
+                  value: `Trial Balance ${this.store.header()[0].period} - ${this.store.header()[0].period_year}`,
                   position: { x:10, y: 50 },
                   style: { textBrushColor: '#000000', fontSize: 30 },
                 },

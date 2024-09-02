@@ -24,7 +24,7 @@ const imports = [
 ]
 
 @Component({
-  selector: 'income-statement-rpt',
+  selector: 'income-statement-comparison-rpt',
   standalone: true,
   imports: [imports],
   encapsulation: ViewEncapsulation.None,
@@ -42,23 +42,23 @@ const imports = [
       <div id="income-statement" class="pl-20 pt-2 pb-14 mat-elevation-z8 mt-4 bg-white font-gray-900">
 
           <div class="text-gray-800 text-2xl mt-3">Noble Ledger Ltd.</div>
-          <div class="text-gray-800  text-2xl mt-1">Income Statement</div>
+          <div class="text-gray-800  text-2xl mt-1">Income Statement Comparison</div>
           <div class="text-gray-800  text-2xl mt-1">{{dReportDate}}</div>
           
           <section class="grid grid-cols-1 mt-10 ">      
-          <div class="grid grid-cols-12 gap-2">
-            <div class="col-start-5  text-gray-700 text-right">Opening</div>
-            <div class="col-start-7  text-gray-700 text-right">Debit</div>
-            <div class="col-start-9  text-gray-700 text-right">Credit</div>
-            <div class="col-start-11 text-gray-700 text-right">Closing</div>            
-          </div>
-        </section>
+              <div class="grid grid-cols-12 gap-2">
+                <div class="col-start-5  text-gray-700 text-right">Opening</div>
+                <div class="col-start-7  text-gray-700 text-right">Closing</div>            
+                <div class="col-start-9  text-gray-700 text-right">Change</div>
+                <div class="col-start-11 text-gray-700 text-right">Percentage</div>
+              </div>
+          </section>
             
           <div class="text-gray-800  text-xl mt-5 mb-2 ">Revenues</div>
           <div class="grid grid-cols-1 ">
-            @if (revenue$ | async; as header) {              
-                @for (item of header; track item){                   
-                    <statement-line-item class=" font-gray-800" [item]=item></statement-line-item>                                                       
+            @if (revenue$ | async; as data) {              
+                @for (item of data; track item){                     
+                    <statement-comparison-item class="font-gray-800" [item]=item></statement-comparison-item>
                 }              
             }
             @if (revenue$ | async; as data) {
@@ -71,7 +71,7 @@ const imports = [
           <div class="grid grid-cols-1 ">
             @if (expense$ | async; as header) {              
                 @for (item of header; track item){                   
-                    <statement-line-item class=" font-gray-800" [item]=item></statement-line-item>                                                       
+                  <statement-comparison-item class="font-gray-800" [item]=item></statement-comparison-item>
                 }              
             }
             @if (expense$ | async; as data) {
@@ -92,7 +92,7 @@ const imports = [
   providers: []
 })
 
-export class IncomeStatementRptComponent  {
+export class IncomeStatementComparisonRptComponent  {
 
   public currentPeriod = signal(1);
   public currentYear = signal(2024);
@@ -123,7 +123,6 @@ export class IncomeStatementRptComponent  {
     this.revenueReport$= this.distributionService.getDistributionByPrdAndYear(this.params).pipe(map(expense => expense.filter(ex => ex.child > 5000))); 
     this.revenue$ = this.revenueReport$.pipe(map(expense => expense.filter(ex => ex.child > 5000 && ex.child< 6000)));    
     this.expense$ = this.revenueReport$.pipe(map(expense => expense.filter(ex => ex.child > 6000)));
-    
   }
 
   onPeriodChanged(e: any) {

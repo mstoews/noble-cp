@@ -9,6 +9,7 @@ import { ExpenseRptComponent } from './expense/expense-rpt.component';
 import { BalanceSheetComponent } from './balance-sheet/balance-sheet.component';
 import { BalanceSheetStatementRptComponent } from './financial-statement/balance-sheet-statement-rpt.component';
 import { IncomeStatementRptComponent } from './financial-statement/income-statement-rpt.component';
+import { IncomeStatementComparisonRptComponent } from './financial-statement/income-statement-comparison.component';
 
 
 const imports = [
@@ -21,7 +22,8 @@ const imports = [
     ExpenseRptComponent,
     BalanceSheetComponent,
     BalanceSheetStatementRptComponent,
-    IncomeStatementRptComponent
+    IncomeStatementRptComponent,
+    IncomeStatementComparisonRptComponent
 ]
 
 @Component({
@@ -84,6 +86,12 @@ export class ReportingPanelComponent {
                 icon: 'heroicons_outline:currency-dollar',
                 title: 'Income Financial Statement',
                 description: 'Income statement by period reporting',
+            },
+            {
+                id: 'income-statement-comparison',
+                icon: 'heroicons_outline:currency-dollar',
+                title: 'Income Financial Statement Comparison',
+                description: 'Income statement comparison by period reporting',
             },
             {
                 id: 'cash-flows-statement',

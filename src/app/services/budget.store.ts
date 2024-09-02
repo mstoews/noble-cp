@@ -47,8 +47,8 @@ export const BudgetStore = signalStore(
             patchState(store, { isLoading: true });
             return budgetService.delete(value.child).pipe(
               tapResponse({
-                next: (budget) => {
-                 
+                next: (budget) => {                                   
+                    patchState(store, { budgetAmt : [...store.budgetAmt(), budget ]})                  
                 },
                 error: console.error,
                 finalize: () => patchState(store, { isLoading: false }),

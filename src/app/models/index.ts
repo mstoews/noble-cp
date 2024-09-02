@@ -186,6 +186,17 @@ export interface IDistributionLedgerRpt {
  
 }
 
+export interface IDistributionComparisonRpt {
+ 
+  child: number;
+  description: string;
+  opening_balance: number;
+  closing_balance: number;
+  difference: number;
+  percentage: number;
+}
+
+
 export interface IJournalSummary {
   journal_id      : number,
   journal_subid   : number,

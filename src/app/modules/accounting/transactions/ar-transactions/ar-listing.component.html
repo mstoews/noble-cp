@@ -17,6 +17,7 @@
                         @if (store.ar()) {
                         <div class="flex flex-1 flex-col overflow-auto">
                             <ejs-grid  id='ar-journals'
+                                  height="250"
                                   [dataSource]='store.ar()'   
                                   allowPaging='true' 
                                   allowSorting='true'                                   
