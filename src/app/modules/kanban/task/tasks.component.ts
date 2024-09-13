@@ -13,7 +13,7 @@ import { FuseConfirmationService } from '@fuse/services/confirmation';
 import { provideNativeDateAdapter } from '@angular/material/core';
 import { KanbanMenubarComponent } from '../kanban/kanban-menubar/grid-menubar.component';
 import { AUTH } from 'app/app.config';
-import { IKanban, KanbanService } from '../kanban.service';
+import { IKanban} from '../kanban.service';
 import { KanbanStore } from '../kanban.store';
 import { debounce, defer, from, of, take, timer } from 'rxjs';
 

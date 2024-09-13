@@ -84,15 +84,19 @@
 
                         <div mat-card-actions class="mb-3">
 
-                            <button mat-icon-button (click)="onUpdate()" color="primary" class="m-1">
-                                <mat-icon>update</mat-icon>
+                            <button mat-icon-button (click)="onUpdate()" matTooltip="Update" color="primary" class="bg-slate-100 text-gray-100 hover:bg-slate-300 ml-1">
+                                <mat-icon [svgIcon]="'feather:update'"></mat-icon>
                             </button>
+                                                        
                             <button mat-icon-button (click)="onCopy()" color="primary" class="m-1">
                                 <mat-icon>content_copy</mat-icon>
                             </button>
-                            <button mat-icon-button (click)="onDelete()" color="primary" class="m-1">
-                                <mat-icon>delete</mat-icon>
+                            
+                            <button mat-icon-button color="primary" class="bg-slate-200 text-gray-100 hover:bg-slate-200 ml-1"
+                            (click)="onDelete()" matTooltip="Remove" aria-label="hovered over">
+                            <mat-icon [svgIcon]="'feather:trash'"></mat-icon>
                             </button>
+
                             <button mat-icon-button (click)="closeDrawer()" color="warn" class="m-1">
                                 <mat-icon>close</mat-icon>
                             </button>

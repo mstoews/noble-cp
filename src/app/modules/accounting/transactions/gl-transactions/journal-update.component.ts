@@ -104,21 +104,9 @@ export class JournalUpdateComponent
   private dialog = inject(MatDialog);
   private auth = inject(AUTH);
   private activatedRoute = inject(ActivatedRoute)
-  
-  openDrawer() {    
-      this.drawer().open();
-  }
-
-  closeDrawer() {    
-    this.drawer().close();
-  }
-
-  onBack() {
-    this._location.back();
-  }
 
   public journalForm!: FormGroup;
-  
+
   public matDialog = inject(MatDialog);
 
   public value = 0;
@@ -142,7 +130,7 @@ export class JournalUpdateComponent
   public myControl = new FormControl("");
   public accountOptions: Observable<string[]>;
   public bDirty = false;
-  
+
   public accountsListSubject: Subscription;
   public fundListSubject: Subscription;
   public selectionOptions?: SelectionSettingsModel;
@@ -155,7 +143,7 @@ export class JournalUpdateComponent
   public pageSettings: Object;
   public formatoptions: Object;
   journal_id: number;
-  
+
   description: string;
   transaction_date: string;
   amount: number;
@@ -183,7 +171,7 @@ export class JournalUpdateComponent
   @ViewChild("singleSelect", { static: true })
   singleSelect: MatSelect;
 
-  
+
   public Accounts: IDropDownAccounts[] = [];
 
   public accountsGrid: IDropDownAccountsGridList[] = [];
@@ -211,7 +199,22 @@ export class JournalUpdateComponent
   @ViewChild('singleDebitSelect', { static: true }) singleDebitSelect: MatSelect;
   @ViewChild('singleCreditSelect', { static: true }) singleCreditSelect: MatSelect;
 
-  updateForm(row: IJournalHeader) {    
+
+  openDrawer() {
+    this.drawer().open();
+  }
+
+  closeDrawer() {
+    this.drawer().close();
+  }
+
+  onBack() {
+    this._location.back();
+  }
+
+
+
+  updateForm(row: IJournalHeader) {
     this.journalForm = this.fb.group({
       description: [row.description, Validators.required],
       amount: [row.amount, Validators.required],
@@ -225,28 +228,28 @@ export class JournalUpdateComponent
   public journalData: IJournalHeader;
 
   ngOnInit(): void {
-  this.createEmptyForm();
+    this.createEmptyForm();
 
-    this.activatedRoute.data.subscribe(( data ) => {        
-        console.log(data.journal.journal_id);
-        this.journalData = {
-          journal_id: data.journal.journal_id,         
-          description:      data.journal.description,
-          booked:           data.journal.booked,
-          booked_date:      data.journal.booked_date,
-          booked_user:      data.journal.booked_user,
-          create_date:      data.journal.create_date,
-          create_user:      data.journal.create_user,
-          period:           data.journal.period,
-          period_year:      data.journal.period_year,
-          transaction_date: data.journal.transaction_date,
-          status:           data.journal.status,
-          type:             data.journal.type,
-          sub_type:         data.journal.sub_type,
-          amount:           data.journal.amount,
-          party_id:        data.journal.party_id 
-        }
-        // this.updateForm(this.journalData)
+    this.activatedRoute.data.subscribe((data) => {
+      console.log(data.journal.journal_id);
+      this.journalData = {
+        journal_id: data.journal.journal_id,
+        description: data.journal.description,
+        booked: data.journal.booked,
+        booked_date: data.journal.booked_date,
+        booked_user: data.journal.booked_user,
+        create_date: data.journal.create_date,
+        create_user: data.journal.create_user,
+        period: data.journal.period,
+        period_year: data.journal.period_year,
+        transaction_date: data.journal.transaction_date,
+        status: data.journal.status,
+        type: data.journal.type,
+        sub_type: data.journal.sub_type,
+        amount: data.journal.amount,
+        party_id: data.journal.party_id
+      }
+      // this.updateForm(this.journalData)
     });
 
     this.refresh(this.journalData.journal_id, this.journalData.description, this.journalData.transaction_date, this.journalData.amount, this.journalData.type);
@@ -268,9 +271,9 @@ export class JournalUpdateComponent
           descriptionName: acct.description,
         };
         this.accountsGrid.push(list);
-      }); 
-    
-    this.fundListSubject = this.funds$.subscribe((funds) => {
+      });
+
+      this.fundListSubject = this.funds$.subscribe((funds) => {
         funds.forEach((fund) => {
           var list = {
             fund: fund.fund,
@@ -280,7 +283,7 @@ export class JournalUpdateComponent
         });
       });
     });
-    
+
     this.accountFilterCtrl.valueChanges
       .pipe(takeUntil(this._onDestroy))
       .subscribe(() => {
@@ -288,27 +291,27 @@ export class JournalUpdateComponent
       });
 
 
-      this.accountService.readChildren().pipe(takeUntil(this._onDestroy)).subscribe((accounts) => {
-        this.debitAccounts = accounts;
-        this.creditAccounts = accounts;
-        this.filteredDebitAccounts.next(this.debitAccounts.slice());
-        this.filteredCreditAccounts.next(this.creditAccounts.slice());
-  
-      });
-  
-      // Vertical stepper form
-  
-      this.journalService.getLastJournalNo().subscribe(journal_no => {
-        this.journal_id = Number(journal_no);
-      });
-  
-      this.debitAccountFilterCtrl.valueChanges.pipe(takeUntil(this._onDestroyDebitAccountFilter))
-        .subscribe(() => { this.filterDebitAccounts(); })
-  
-      this.creditAccountFilterCtrl.valueChanges.pipe(takeUntil(this._onDestroyCreditAccountFilter))
-        .subscribe(() => { this.filterCreditAccounts(); });
-  
-              
+    this.accountService.readChildren().pipe(takeUntil(this._onDestroy)).subscribe((accounts) => {
+      this.debitAccounts = accounts;
+      this.creditAccounts = accounts;
+      this.filteredDebitAccounts.next(this.debitAccounts.slice());
+      this.filteredCreditAccounts.next(this.creditAccounts.slice());
+
+    });
+
+    // Vertical stepper form
+
+    this.journalService.getLastJournalNo().subscribe(journal_no => {
+      this.journal_id = Number(journal_no);
+    });
+
+    this.debitAccountFilterCtrl.valueChanges.pipe(takeUntil(this._onDestroyDebitAccountFilter))
+      .subscribe(() => { this.filterDebitAccounts(); })
+
+    this.creditAccountFilterCtrl.valueChanges.pipe(takeUntil(this._onDestroyCreditAccountFilter))
+      .subscribe(() => { this.filterCreditAccounts(); });
+
+
 
   }
 
@@ -350,18 +353,18 @@ export class JournalUpdateComponent
   }
 
 
-  
+
   public addDisabled(e: any) {
 
   }
-  
+
   public selIndex?: number[] = [];
 
   actionBegin(args: SaveEventArgs): void {
     console.debug('args : ', args.requestType);
     args.cancel = true;
     if (args.requestType === 'beginEdit' || args.requestType === 'add') {
-        this.openDrawer();
+      this.openDrawer();
     }
     if (args.requestType === 'save') {
 
@@ -442,7 +445,7 @@ export class JournalUpdateComponent
     };
     this.journalService.updateJournalDetailSignal(journalDetail);
     if (this.journalService.journalDetailList().length > 0) {
-       this.journalService.journalDetailList().forEach((data) => {
+      this.journalService.journalDetailList().forEach((data) => {
         console.log(data);
       });
     }
@@ -519,9 +522,9 @@ export class JournalUpdateComponent
 
     if (journal_id === undefined) {
       this.description = "";
-      this.transaction_date = "";      
+      this.transaction_date = "";
       return;
-    } 
+    }
   }
 
   changeSubtype(e: any) {
@@ -573,21 +576,21 @@ export class JournalUpdateComponent
     });
   }
 
-  
+
   createEmptyForm() {
     this.journalForm = this.fb.group({
       description: ["", Validators.required],
-      amount:      ["", Validators.required],
+      amount: ["", Validators.required],
       transaction_date: ["", Validators.required],
     });
-    
+
     this.detailForm = this.fb.group({
       detail_description: ["", Validators.required],
       child: ["", Validators.required],
       fund: ["", Validators.required],
       sub_type: ["", Validators.required],
       reference: [""],
-      amount: ["", Validators.required],      
+      amount: ["", Validators.required],
     });
     this._change.markForCheck();
   }
@@ -622,14 +625,14 @@ export class JournalUpdateComponent
 
 
   onDelete(args: any) {
-    
-    const index  = (this.grid as GridComponent).getSelectedRowIndexes()
+
+    const index = (this.grid as GridComponent).getSelectedRowIndexes()
     console.debug(`select index `, index[0])
-    
+
     const rowData = this.grid.getCurrentViewRecords().at(index[0]) as any;
-    
+
     // const rowData = 
-    
+
     var journalDetail = {
       journal_id: this.journal_id,
       journal_subid: rowData.journal_subid,
@@ -718,7 +721,7 @@ export class JournalUpdateComponent
     this.journalService.reNumberJournalDetail(this.journal_id);
   }
 
-  
+
   onUpdateJournalEntry() {
     const dDate = new Date();
     const updateDate = dDate.toISOString().split("T")[0];
@@ -742,7 +745,7 @@ export class JournalUpdateComponent
     var journal_subid = 1;
 
     console.log("Detail list length", this.journalService.journalDetailList().length);
-    
+
     this.journalService.journalDetailList().forEach((details) => {
       header.header_amount = Number(details.debit) + header.header_amount;
       this.journal_id = details.journal_id;
@@ -854,7 +857,7 @@ export class JournalUpdateComponent
     });
 
     this.journalService.getJournalDetail(this.journal_id);
-  
+
     this.accountCtrl.reset();
   }
 

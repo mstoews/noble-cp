@@ -253,7 +253,7 @@ export class KanbanService {
       assignee: k.assignee,
       rankid: Number(k.rankid),
       color: k.color,
-      estimate: k.estimate,
+      estimate: Number(k.estimate),
       className: 'class',
       updatedate: updateDate,
       updateuser: email,

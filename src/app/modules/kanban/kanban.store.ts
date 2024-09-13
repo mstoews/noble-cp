@@ -76,11 +76,9 @@ export const KanbanStore = signalStore(
           return kanbanService.update(value).pipe(
             tapResponse({
               next: (task) => {
-                const updatedTasks = state.tasks().filter((kanban) => kanban.id !== task.id);
-                patchState(state, { tasks: updatedTasks });
-                const currentTasks = state.tasks();
-                const updateTask = [task, ...currentTasks.slice(1)];
-                patchState(state, {tasks: updateTask})
+                const updatedTask = state.tasks().filter((kanban) => kanban.id !== task.id);  
+                updatedTask.push(task);
+                patchState(state, { tasks: updatedTask });                                 
               },
               error: console.error,
               finalize: () => patchState(state, { isLoading: false }),
@@ -96,16 +94,11 @@ export const KanbanStore = signalStore(
           return kanbanService.updateStatus(value).pipe(
             tapResponse({
               next: (task) => {
-                // make a copy of the task to update
-                const taskToUpdate = state.tasks().filter((kanban) => kanban.id === task.id);
-                // remove the copy from the array
+                // make a copy of the tasks that were not updated
                 const updatedTasks = state.tasks().filter((kanban) => kanban.id !== task.id);
-                patchState(state, { tasks: updatedTasks });                
-                // update the copy and add it back to the array of tasks
-                var taskCopy = taskToUpdate[0];
-                taskCopy.priority = value.priority;
-                taskCopy.status = value.status;                
-                patchState(state, { tasks: [...state.tasks(), taskCopy]});
+                // push the task that was.
+                updatedTasks.push(task);                            
+                patchState(state, { tasks: updatedTasks });
               },
               error: console.error,
               finalize: () => patchState(state, { isLoading: false }),
