@@ -70,7 +70,13 @@ export const defaultNavigation: FuseNavigationItem[] = [
                 icon: 'heroicons_outline:document-magnifying-glass',
                 link: '/docs',
             },
-
+            {
+                id: 'accounting.settings',
+                title: 'Settings',
+                type: 'basic',
+                icon: 'mat_outline:settings',
+                link: '/settings',
+            },
         ],
     },
     {
@@ -87,13 +93,7 @@ export const defaultNavigation: FuseNavigationItem[] = [
                 icon: 'mat_outline:help_center',
                 link: '/help',
             },
-            {
-                id: 'accounting.settings',
-                title: 'Settings',
-                type: 'basic',
-                icon: 'mat_outline:settings',
-                link: '/settings',
-            },
+
             {
                 id: 'accounting.learning',
                 title: 'Learning',
@@ -104,130 +104,111 @@ export const defaultNavigation: FuseNavigationItem[] = [
         ],
     },
 ];
+
 export const compactNavigation: FuseNavigationItem[] = [
     {
         id: 'home',
         title: 'Noble Ledger',
-        type: 'basic',
+        subtitle: 'Financial and Management Accounting',
+        type: 'group',
         icon: 'heroicons_outline:home',
         link: '/home',
+        children: [
+            {
+                id: 'accounting.dashboard',
+                title: 'Dashboard',
+                type: 'basic',
+                icon: 'mat_outline:insights',
+                link: '/projects',
+            },
+            {
+                id: 'accounts.journals',
+                title: 'Transactions',
+                type: 'basic',
+                icon: 'heroicons_outline:banknotes',
+                link: '/journals',
+            },
+            {
+                id: 'kanban',
+                title: 'Tasks',
+                type: 'basic',
+                icon: 'mat_outline:task',
+                link: '/kanban',
+            },        
+            {
+                id: 'budgeting',
+                title: 'Budget',
+                type: 'basic',
+                icon: 'heroicons_outline:calculator',
+                link: '/budget',
+            },        
+            
+            {
+                id: 'accounting.reporting',
+                title: 'Financial Reporting',
+                type: 'basic',
+                icon: 'mat_outline:money',
+                link: '/reporting',
+            },
+
+        ]
     },
     {
-        id: 'accounting',
-        title: 'Dashboards',
-        subtitle: 'Unique dashboard designs',
+        id: 'settings',
+        title: 'Setting',
+        subtitle: 'Application Data Maintenance',
         type: 'group',
         icon: 'heroicons_outline:home',
         children: [
             {
-                id: 'dashboards.project',
-                title: 'Project',
+                id: 'accounting.general-ledger',
+                title: 'Accounting',
                 type: 'basic',
-                icon: 'heroicons_outline:clipboard-check',
-                link: '/dashboards/project',
+                icon: 'heroicons_outline:bookmark',
+                link: '/gl',
             },
             {
-                id: 'dashboards.analytics',
-                title: 'Analytics',
+                id: 'property.document-management',
+                title: 'Artifacts',
                 type: 'basic',
-                icon: 'heroicons_outline:chart-pie',
-                link: '/dashboards/analytics',
+                icon: 'heroicons_outline:document-magnifying-glass',
+                link: '/docs',
             },
             {
-                id: 'dashboards.finance',
-                title: 'Finance',
+                id: 'accounting.settings',
+                title: 'Settings',
                 type: 'basic',
-                icon: 'heroicons_outline:cash',
-                link: '/dashboards/finance',
-            },
-            {
-                id: 'dashboards.crypto',
-                title: 'Crypto',
-                type: 'basic',
-                icon: 'heroicons_outline:currency-dollar',
-                link: '/dashboards/crypto',
+                icon: 'mat_outline:settings',
+                link: '/settings',
             },
         ],
     },
     {
-        id: 'property',
-        title: 'Property Management',
-        subtitle: 'Administering Property and Assets',
+        id: 'support',
+        title: 'Support',
+        subtitle: 'Documentation and Help Center',
         type: 'group',
         icon: 'heroicons_outline:home',
         children: [
             {
-                id: 'property.real-estate',
-                title: 'Real Estate',
+                id: 'help-center',
+                title: 'Help Center',
                 type: 'basic',
-                icon: 'heroicons_outline:clipboard-check',
-                link: '/general_ledger',
+                icon: 'mat_outline:help_center',
+                link: '/help',
+            },
+
+            {
+                id: 'accounting.learning',
+                title: 'Learning',
+                type: 'basic',
+                icon: 'heroicons_outline:academic-cap',
+                link: '/learning',
             },
         ],
     },
 ];
-export const futuristicNavigation: FuseNavigationItem[] = [
-    {
-        id: 'home',
-        title: 'Noble Ledger',
-        type: 'basic',
-        icon: 'heroicons_outline:home',
-        link: '/home',
-    },
-    {
-        id: 'accounting',
-        title: 'Dashboards',
-        subtitle: 'Unique dashboard designs',
-        type: 'group',
-        icon: 'heroicons_outline:home',
-        children: [
-            {
-                id: 'dashboards.project',
-                title: 'Project',
-                type: 'basic',
-                icon: 'heroicons_outline:clipboard-check',
-                link: '/dashboards/project',
-            },
-            {
-                id: 'dashboards.analytics',
-                title: 'Analytics',
-                type: 'basic',
-                icon: 'heroicons_outline:chart-pie',
-                link: '/dashboards/analytics',
-            },
-            {
-                id: 'dashboards.finance',
-                title: 'Finance',
-                type: 'basic',
-                icon: 'heroicons_outline:cash',
-                link: '/dashboards/finance',
-            },
-            {
-                id: 'dashboards.crypto',
-                title: 'Crypto',
-                type: 'basic',
-                icon: 'heroicons_outline:currency-dollar',
-                link: '/dashboards/crypto',
-            },
-        ],
-    },
-    {
-        id: 'property',
-        title: 'Property Management',
-        subtitle: 'Administering Property and Assets',
-        type: 'group',
-        icon: 'heroicons_outline:home',
-        children: [
-            {
-                id: 'property.real-estate',
-                title: 'Real Estate',
-                type: 'basic',
-                icon: 'heroicons_outline:clipboard-check',
-                link: '/general_ledger',
-            },
-        ],
-    },
-];
+
 export const horizontalNavigation: FuseNavigationItem[] = [
     {
         id: 'home',

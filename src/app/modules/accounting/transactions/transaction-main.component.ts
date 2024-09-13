@@ -49,7 +49,7 @@ export class TransactionMainComponent {
     drawerMode: 'over' | 'side' = 'side';
     drawerOpened: boolean = true;
     panels: any[] = [];
-    selectedPanel: string = 'listing';
+    selectedPanel: string = 'entry';
     private _unsubscribeAll: Subject<any> = new Subject<any>();
 
     /**
@@ -72,28 +72,28 @@ export class TransactionMainComponent {
         // Setup available panels
         this.panels = [
             {
-                id: 'listing',
-                icon: 'heroicons_outline:document-check',
-                title: 'General Transactions',
-                description: 'Manage your transactions and documentation',
-            },
-            {
                 id: 'entry',
                 icon: 'heroicons_outline:document-plus',
                 title: 'Transaction Wizard',
                 description: 'Create transactions and append digital artifacts for each transaction',
             },
             {
+                id: 'listing',
+                icon: 'heroicons_outline:document-check',
+                title: 'General Transactions',
+                description: 'Manage your transactions and documentation',
+            },
+            {
                 id: 'ar',
                 icon: 'mat_outline:money',
-                title: 'Accounts Receivable Transactions',
-                description: 'Create accounts receivable creation and clearing',
+                title: 'Receipts and Receivables',
+                description: 'Record your receipts and manage your accounts receivable',
             },
             {
                 id: 'ap',
                 icon: 'mat_outline:shop',
-                title: 'Accounts Payable Transactions',
-                description: 'Create accounts payable entries and clearing',
+                title: 'Payments and Payables',
+                description: 'Pay your bills and manage your accounts payable',
             },
             {
                 id: 'template',

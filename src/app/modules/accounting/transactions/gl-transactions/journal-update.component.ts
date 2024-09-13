@@ -357,8 +357,6 @@ export class JournalUpdateComponent
   
   public selIndex?: number[] = [];
 
-
-
   actionBegin(args: SaveEventArgs): void {
     console.debug('args : ', args.requestType);
     args.cancel = true;

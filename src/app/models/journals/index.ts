@@ -46,11 +46,11 @@ export interface IJournalDetail {
   fund?         : string,
   sub_type?     : string,
   description   : string,
+  reference     : string,
   debit         : number,
   credit        : number,
   create_date   : string,
-  create_user   : string,
-  reference     : string,
+  create_user   : string,  
 }
 
 export interface IAccounts {

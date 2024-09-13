@@ -43,6 +43,7 @@
             ],
             "assets": [
               "src/assets",
+              "src/favicon.ico",
               {
                 "glob": "_redirects",
                 "input": "src",

@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output, ViewChild, inject } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, inject } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { JournalService } from 'app/services/journal.service';
 import { CommonModule } from '@angular/common';
@@ -6,7 +6,6 @@ import { DndComponent } from 'app/modules/drag-n-drop/loaddnd/dnd.component';
 import { FuseConfirmationService } from '@fuse/services/confirmation';
 import { MatDialog } from '@angular/material/dialog';
 import { MaterialModule } from 'app/services/material.module';
-import { Observable } from 'rxjs';
 
 const imports = [
     CommonModule,
@@ -30,21 +29,18 @@ export class BudgetDetailComponent implements OnInit {
     @Output() notifyTransactionDelete: EventEmitter<any> = new EventEmitter();
     @Output() notifyTransactionEvidence: EventEmitter<any> = new EventEmitter();
     @Output() notifyTransactionEdit: EventEmitter<any> = new EventEmitter();
-
-
-    isModifiable: boolean = false;
-    private fb = inject(FormBuilder);
-
+    
     public journalService = inject(JournalService);
-    matDialog = inject(MatDialog);
-
+    public matDialog = inject(MatDialog);
+    private fb = inject(FormBuilder);
     private fuseConfirmationService = inject(FuseConfirmationService);
 
+    isModifiable: boolean = false;    
     selectedItemKeys: any[] = [];
+    
     customizeTooltip = (pointsInfo: { originalValue: string; }) => ({ text: `${parseInt(pointsInfo.originalValue)}%` });
     journalForm!: FormGroup;
     sTitle = 'Journal Entry Modification';
-
     details$ = this.journalService.getJournalDetail(0);
     glaccts$ = this.journalService.listAccounts();
 
@@ -111,7 +107,6 @@ export class BudgetDetailComponent implements OnInit {
             },
         });
 
-        // Subscribe to the confirmation dialog closed action
         confirmation.afterClosed().subscribe((result) => {
             // If the confirm button pressed...
             if (result === 'confirmed') {
@@ -175,7 +170,6 @@ export class BudgetDetailComponent implements OnInit {
 
         });
     }
-
 
     closeDialog() {
         throw new Error('Method not implemented.');

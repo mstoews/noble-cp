@@ -25,14 +25,14 @@
         <!-- @formatter:on -->
         <!-- Header -->
         <div class="flex flex-col items-center">
-            <h2 class="text-xl font-semibold">PRICING</h2>
+            <h2 class="text-xl text-white font-semibold">PRICING</h2>
             <div
-                class="mt-1 text-4xl sm:text-7xl font-extrabold tracking-tight leading-tight text-center"
+                class="mt-1 text-4xl text-white sm:text-7xl font-extrabold tracking-tight leading-tight text-center"
             >
                 Take control of your productivity
             </div>
             <div
-                class="mt-3 sm:text-2xl text-center tracking-tight text-secondary"
+                class="mt-3 sm:text-2xl text-gray-200 text-center tracking-tight "
             >
                 <div class="">Start small and free, upgrade as you go.</div>
                 <div class="">Take control of everything.</div>
@@ -164,12 +164,8 @@ $9
                                     <div
                                         class="lg:ml-2 text-2xl lg:text-4xl font-bold tracking-tight"
                                     >
-                                        @if (yearlyBilling) {
-$12
-}
-                                        @if (!yearlyBilling) {
-$15
-}
+                                        @if (yearlyBilling) { $12 }
+                                        @if (!yearlyBilling) { $15 }
                                     </div>
                                     <div class="ml-2 text-lg text-secondary">
                                         / mo
@@ -684,12 +680,12 @@ $69
             class="flex flex-col items-center w-full max-w-7xl mx-auto text-center"
         >
             <div
-                class="text-3xl sm:text-4xl sm:text-5xl font-extrabold leading-6 sm:leading-10"
+                class="text-3xl sm:text-5xl font-extrabold leading-6 sm:leading-10"
             >
                 Boost your productivity.
             </div>
             <div
-                class="mt-2 text-3xl sm:text-4xl sm:text-5xl font-extrabold leading-6 sm:leading-10 text-black text-opacity-70"
+                class="mt-2 text-3xl sm:text-5xl font-extrabold leading-6 sm:leading-10 text-black text-opacity-70"
             >
                 Start using Nobleledger today.
             </div>

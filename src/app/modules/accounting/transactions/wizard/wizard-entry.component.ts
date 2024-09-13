@@ -106,9 +106,9 @@ export class EntryWizardComponent implements OnInit, OnDestroy, AfterViewInit {
   public selectedOption: string;
   
   types: ITransactionType[] = [
-    { value: "GL", viewValue: "General Ledger", checked: true },
-    { value: "AP", viewValue: "Accounts Payable", checked: false },
-    { value: "AR", viewValue: "Accounts Receivable", checked: false },
+    { value: "GL", viewValue: "General", checked: true },
+    { value: "AP", viewValue: "Payments", checked: false },
+    { value: "AR", viewValue: "Receipts", checked: false },
   ];
 
 

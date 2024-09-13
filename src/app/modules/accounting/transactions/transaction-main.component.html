@@ -72,19 +72,14 @@
                 <div class="mt-8">
 
                     @switch (selectedPanel) {
-                    <!-- Transaction list -->
-                    @case ('listing') {  <transactions></transactions>   }
-                    
-                    <!-- entry -->
-                    @case ('entry') { <entry-wizard></entry-wizard>  }
-                    @case ('ap')    { <ap-transactions></ap-transactions>}
-                    @case ('ar')    { <ar-transactions></ar-transactions>}
-                    <!-- Build and maintain Templates -->
-                    @case ('template') { <journal-template></journal-template>  }
-                    @case ('artifact') { <app-file-manager></app-file-manager>}
-                    @case ('tree') { <dropdown></dropdown>}
-                    @case ('artifact-mgmt') { <inventory-list></inventory-list> }
-
+                        @case ('entry') { <entry-wizard></entry-wizard>  }
+                        @case ('listing') {  <transactions></transactions>   }                    
+                        @case ('ap')    { <ap-transactions></ap-transactions>}
+                        @case ('ar')    { <ar-transactions></ar-transactions>}
+                        @case ('template') { <journal-template></journal-template>  }
+                        @case ('artifact') { <app-file-manager></app-file-manager>}
+                        @case ('tree') { <dropdown></dropdown>}
+                        @case ('artifact-mgmt') { <inventory-list></inventory-list> }
                     }
 
                 </div>

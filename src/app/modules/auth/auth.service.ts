@@ -11,7 +11,7 @@ import { authState , idToken} from 'rxfire/auth';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Credentials } from 'app/shared/interfaces/credentials';
 import { AUTH } from 'app/app.config';
-import { CacheService } from './cache.service';
+// import { CacheService } from './cache.service';
 
 export type AuthUser = User | null | undefined;
 
@@ -25,7 +25,7 @@ interface AuthState {
 })
 export class AuthService {
   private auth = inject(AUTH);
-  private cache = inject(CacheService);
+  // private cache = inject(CacheService);
   private token: BehaviorSubject<string> = new BehaviorSubject(null);
   token$: Observable<string> = this.token.asObservable();
 

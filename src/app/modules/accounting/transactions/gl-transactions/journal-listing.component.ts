@@ -21,10 +21,7 @@ import { Dialog } from '@syncfusion/ej2-popups';
 import { DropDownListComponent } from '@syncfusion/ej2-angular-dropdowns';
 import { IJournalHeader } from 'app/models/journals';
 import { JournalStore } from 'app/services/journal.store';
-import { ActivatedRoute, Router } from '@angular/router';
-import { MatDialog } from '@angular/material/dialog';
-import { AUTH } from 'app/app.config';
-import { JournalService } from 'app/services/journal.service';
+import { Router } from '@angular/router';
 
 const imports = [
     CommonModule,    
@@ -37,7 +34,6 @@ const imports = [
     NgxMatSelectSearchModule,
     GridModule
 ];
-
 
 @Component({
     selector: 'transactions',
@@ -53,10 +49,10 @@ export class JournalEntryComponent implements OnInit, OnDestroy {
     public fundService = inject(FundsService);
     public accountService = inject(GLAccountsService);
     public route = inject(Router);
-    private journalService = inject(JournalService);
-    private dialog = inject(MatDialog);
-    private auth = inject(AUTH);
-    private activatedRoute = inject(ActivatedRoute)
+    // private journalService = inject(JournalService);
+    //private dialog = inject(MatDialog);
+    //private auth = inject(AUTH);
+    //private activatedRoute = inject(ActivatedRoute)
   
 
     store = inject(JournalStore);
@@ -99,7 +95,7 @@ export class JournalEntryComponent implements OnInit, OnDestroy {
     initialDatagrid() {
         this.formatoptions = { type: 'dateTime', format: 'M/dd/yyyy' }        
         this.pageSettings =  { pageSizes: true, pageCount: 10 };
-        this.selectionOptions = { mode: 'Cell' };              
+        this.selectionOptions = { mode: 'Row' };              
         this.editSettings = { allowEditing: true, allowAdding: false, allowDeleting: false };
         this.searchOptions = { fields: ['description'], operator: 'contains', ignoreCase: true, ignoreAccent: true };
         this.toolbarOptions = ['Search'];   

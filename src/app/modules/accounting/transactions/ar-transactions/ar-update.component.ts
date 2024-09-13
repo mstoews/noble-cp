@@ -84,6 +84,7 @@ export class ARUpdateComponent
 
   public fields: Object = { text: "description", value: "child" };
   drawer = viewChild<MatDrawer>('drawer')
+  transactions = viewChild<MatDrawer>('transactions')
 
   @ViewChild("contextmenu")
   private _change = inject(ChangeDetectorRef);
@@ -102,7 +103,11 @@ export class ARUpdateComponent
   private dialog = inject(MatDialog);
   private auth = inject(AUTH);
   private activatedRoute = inject(ActivatedRoute)
-  
+
+  onToggleTransactions() {
+      this.transactions().toggle();
+  }
+    
   openDrawer() {    
       this.drawer().open();
   }
@@ -223,7 +228,7 @@ export class ARUpdateComponent
   public journalData: IJournalHeader;
 
   ngOnInit(): void {
-  this.createEmptyForm();
+    this.createEmptyForm();
 
     this.activatedRoute.data.subscribe(( data ) => {        
         console.log(data.journal.journal_id);
@@ -247,7 +252,11 @@ export class ARUpdateComponent
         // this.updateForm(this.journalData)
     });
 
-    this.refresh(this.journalData.journal_id, this.journalData.description, this.journalData.transaction_date, this.journalData.amount, this.journalData.type);
+    this.refresh(this.journalData.journal_id, 
+                 this.journalData.description, 
+                 this.journalData.transaction_date, 
+                 this.journalData.amount, 
+                 this.journalData.type);
 
     this.editSettings = {
       allowEditing: true,
@@ -296,9 +305,9 @@ export class ARUpdateComponent
   
       // Vertical stepper form
   
-      this.journalService.getLastJournalNo().subscribe(journal_no => {
-        this.journal_id = Number(journal_no);
-      });
+      // this.journalService.getLastJournalNo().subscribe(journal_no => {
+      //   this.journal_id = Number(journal_no);
+      // });
   
       this.debitAccountFilterCtrl.valueChanges.pipe(takeUntil(this._onDestroyDebitAccountFilter))
         .subscribe(() => { this.filterDebitAccounts(); })

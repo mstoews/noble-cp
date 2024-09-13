@@ -12,17 +12,14 @@
 
     <div class="flex-auto">
         <div class="h-full border-gray-300">
-            <mat-drawer class="w-full md:w-[400px]" #drawer [opened]="false" mode="over" [position]="'end'"
-        [disableClose]="false">
-        
-    </mat-drawer>
-            <mat-drawer-container class="flex-col">
+  
+            <div class="flex-col">
                 @defer {
                     <ng-container>
                         @if (store.gl()) {
                         <div class="flex flex-1 flex-col">
                             <ejs-grid #grid id='journals' 
-                                  height="250"
+                                  height="370"
                                   [dataSource]='store.gl()'   
                                   [enableStickyHeader]=true 
                                   [allowPaging]='true' 
@@ -46,7 +43,7 @@
                                   [pageSettings]='pageSettings'
                                   [searchSetting]="searchOptions" >
                                 <e-columns>
-                                    <e-column  field="journal_id"  headerText="ID" width="100" dataType="number" isPrimaryKey='true' textAlign="left"></e-column>                                    
+                                    <e-column  field="journal_id"  headerText="ID"          width="100" dataType="number" isPrimaryKey='true' textAlign="left"></e-column>  
                                     <e-column  field="type"        headerText="Type"        width="100" dataType="text" textAlign="left"></e-column>
                                     <e-column  field="booked"      headerText="Booked"      width="100" [displayAsCheckBox]='true' type="boolean"></e-column>                            
                                     <e-column  field="amount"      headerText="Amount"      width="150" format='N2'  textAlign="Right"></e-column>
@@ -54,8 +51,7 @@
                                     <e-column  field="period_year" headerText="Yr"          width="100" ></e-column>    
                                     <e-column  field="description" headerText="Description" width="200" ></e-column>                                    
                                     <e-column  field="create_date" headerText="Created"     width='120' [format]='formatoptions'  type="dateTime"></e-column>                                                        
-                                    <e-column  field="create_user" headerText="User"        width='120' type="string"></e-column>             
-                                    <e-column  field="party_id"    headerText="Party"       width='120' headerText="Party" type="string"></e-column>             
+                                    <e-column  field="create_user" headerText="User"        width='120' type="string"></e-column>                                                 
                                 </e-columns>
                             </ejs-grid>                             
                         </div>
@@ -73,7 +69,7 @@
                        <mat-spinner></mat-spinner>
                     </div>
                 }
-            </mat-drawer-container>
+            </div>
         </div>
     </div>
     
