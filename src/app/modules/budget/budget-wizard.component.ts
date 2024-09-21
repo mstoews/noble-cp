@@ -347,6 +347,7 @@ export class BudgetWizardComponent implements OnInit, OnDestroy, AfterViewInit {
         journal_subid: count,
         account: Number(debitAccount.account),
         child: Number(debitAccount.child),
+        child_desc: debitAccount.description,
         description: inputs.step2.detail_description,
         create_date: updateDate,
         create_user: email,
@@ -376,6 +377,7 @@ export class BudgetWizardComponent implements OnInit, OnDestroy, AfterViewInit {
         journal_subid: count,
         account: Number(creditAccount.account),
         child: Number(creditAccount.child),
+        child_desc: creditAccount.description,
         description: inputs.step2.detail_description,
         create_date: updateDate,
         create_user: email,
@@ -394,10 +396,10 @@ export class BudgetWizardComponent implements OnInit, OnDestroy, AfterViewInit {
     var details: any;
     this.journalService.createJournalHeader(this.journalHeader).subscribe(journal => {
       console.debug(JSON.stringify(journal));
-      this.journalDetails.forEach(journalDetail => {
-        journalDetail.journal_id = journal.journal_id
-        this.journalService.createJournalDetail(journalDetail)
-      })
+      // this.journalDetails.forEach(journalDetail => {
+      //   journalDetail.journal_id = journal.journal_id
+      //   this.journalService.createJournalDetail(journalDetail)
+      // })
     });
 
   }

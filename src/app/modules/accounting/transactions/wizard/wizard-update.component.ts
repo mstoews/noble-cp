@@ -24,6 +24,7 @@ import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 import { IDropDownAccounts } from 'app/models';
 import { AggregateService, EditService, FilterService, GridModule, PageService, RowDDService, SortService, ToolbarService } from '@syncfusion/ej2-angular-grids';
 import { IJournalDetailDelete, IJournalHeaderUpdate } from 'app/models/journals';
+import { JournalStore } from 'app/store/journal.store';
 
 
 declare var __moduleName: string;
@@ -90,7 +91,6 @@ export class WizardUpdateComponent implements OnInit, OnDestroy, AfterViewInit {
   private fundService = inject(FundsService);
   private accountService = inject(GLAccountsService);
   private snackBar = inject(MatSnackBar);
-  private dialog = inject(MatDialog);
   private _change = inject(ChangeDetectorRef);
   private _fuseConfirmationService = inject(FuseConfirmationService);
   private auth = inject(AUTH);
@@ -110,8 +110,7 @@ export class WizardUpdateComponent implements OnInit, OnDestroy, AfterViewInit {
   subtype$ = this.subtypeService.read();
   accounts$ = this.accountService.readChildren();
   dropDownChildren$ = this.accountService.readChildren()
-
-  detailsListSignal = this.journalService.getJournalDetail(0);
+  store = inject(JournalStore);
 
   private fuseConfirmationService = inject(FuseConfirmationService);
 
@@ -127,9 +126,7 @@ export class WizardUpdateComponent implements OnInit, OnDestroy, AfterViewInit {
   accountOptions: Observable<string[]>;
   bDirty = false;
 
-
   public accountsListSubject: Subscription;
-
 
   // drop down searchable list
   public accountList: IDropDownAccounts[] = [];
@@ -167,6 +164,7 @@ export class WizardUpdateComponent implements OnInit, OnDestroy, AfterViewInit {
       "journal_subid": changes.journal_subid,
       "account": Number(changes.account),
       "child": Number(changes.child),
+      "child_desc": changes.child_desc,
       "description": changes.description,
       "create_date": updateDate,
       "create_user": email,
@@ -176,17 +174,8 @@ export class WizardUpdateComponent implements OnInit, OnDestroy, AfterViewInit {
       "reference": changes.reference,
       "fund": changes.fund
     }
-    this.journalService.updateJournalDetailSignal(journalDetail);
-    if (this.detailsListSignal.length > 0) {
-      this.detailsListSignal().forEach(data => {
-        console.log(data);
-      })
-    }
-
+    this.store.updateJournalDetail(journalDetail);
   }
-
-
-
 
   ngOnInit(): void {
     this.createEmptyForm();
@@ -204,7 +193,6 @@ export class WizardUpdateComponent implements OnInit, OnDestroy, AfterViewInit {
       console.debug('Length of array: ', this.accountList.length)
     });
 
-    this.updateDetailList();
     this.refresh(this.journal_id, this.description, this.transaction_date, this.amount);
 
     this.accountFilterCtrl.valueChanges.pipe(takeUntil(this._onDestroy))
@@ -214,7 +202,7 @@ export class WizardUpdateComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   protected setInitialValue() {
-    this.detailsListSignal = this.journalService.getJournalDetail(this.journal_id);
+    this.store.loadDetails(this.journal_id);
   }
 
   ngAfterViewInit() {
@@ -244,7 +232,7 @@ export class WizardUpdateComponent implements OnInit, OnDestroy, AfterViewInit {
     this.journal_subid = e.row.data.journal_subid;
     this.updateForm(e.row.data)
     this.editing = true;
-    this.journalHeaderData = this.journalService.readJournalHeaderById(this.journal_id);
+    // this.journalHeaderData = this.journalService.readJournalHeaderById(this.journal_id);
   }
 
 
@@ -271,11 +259,6 @@ export class WizardUpdateComponent implements OnInit, OnDestroy, AfterViewInit {
 
   }
 
-  updateDetailList() {
-    // this.detailsSubject = this.detailsListSignal.subscribe(details => {
-    //   this.journalDetailList = details;
-    // })
-  }
 
   public refresh(journal_id: number, description: string, transaction_date: string, amount: number) {
 
@@ -292,7 +275,7 @@ export class WizardUpdateComponent implements OnInit, OnDestroy, AfterViewInit {
     if (journal_id === undefined) {
       this.description = '';
       this.transaction_date = '';
-      this.detailsListSignal = this.journalService.getJournalDetail(0);
+      // this.detailsListSignal = this.journalService.getJournalDetail(0);
 
       return;
     }
@@ -302,7 +285,7 @@ export class WizardUpdateComponent implements OnInit, OnDestroy, AfterViewInit {
     else {
       this.description = '';
       this.transaction_date = '';
-      this.detailsListSignal = this.journalService.getJournalDetail(0);
+      // this.detailsListSignal = this.journalService.getJournalDetail(0);
       this.journalForm = this.fb.group({
         description: [this.description, Validators.required],
         amount: [this.amount, Validators.required],
@@ -441,7 +424,7 @@ export class WizardUpdateComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   delete(journal: IJournalDetailDelete) {
-    this.journalService.deleteJournalDetail(journal);
+    // this.journalService.deleteJournalDetail(journal);
     this.bDirty = true;
     this.journalService.reNumberJournalDetail(this.journal_id);
   }
@@ -452,16 +435,16 @@ export class WizardUpdateComponent implements OnInit, OnDestroy, AfterViewInit {
     const email = this.auth.currentUser?.email;
     var max = 0;
 
-    for (let i = 0; i < this.detailsListSignal().length; i++) {
-      if (this.detailsListSignal()[i].journal_subid > max)
-        max = this.detailsListSignal()[i].journal_subid
-    }
+    // for (let i = 0; i < this.detailsListSignal().length; i++) {
+    //   if (this.detailsListSignal()[i].journal_subid > max)
+    //     max = this.detailsListSignal()[i].journal_subid
+    // }
 
-    console.debug('max number in subid = ', max);
+    this.store.loadDetails(this.journal_id);
 
-    if (this.detailsListSignal().length > 0) {
-      const sub = this.detailsListSignal().length + 1;
-      const journalCopy = this.detailsListSignal();
+    if (this.store.details().length > 0) {
+      const sub = this.store.details().length + 1;
+      const journalCopy = this.store.details()
       const journalDetail = {
         "journal_id": this.journal_id,
         "journal_subid": max + 1,
@@ -476,7 +459,8 @@ export class WizardUpdateComponent implements OnInit, OnDestroy, AfterViewInit {
         "reference": journalCopy[0].reference,
         "fund": journalCopy[0].fund
       }
-      this.journalService.createJournalDetail(journalDetail);
+      this.store.createJournalDetail(journalDetail);
+
     }
     else {
       const journalDetail = {
@@ -493,10 +477,10 @@ export class WizardUpdateComponent implements OnInit, OnDestroy, AfterViewInit {
         "reference": '',
         "fund": ''
       }
-      this.journalService.createJournalDetail(journalDetail);
+      this.store.createJournalDetail(journalDetail);
+
     }
     this.bDirty = true;
-    console.log('total detail journals items : ', this.detailsListSignal().length)
 
   }
 
@@ -529,8 +513,8 @@ export class WizardUpdateComponent implements OnInit, OnDestroy, AfterViewInit {
     header.header_amount = 0.0;
     var journal_subid = 1;
     var journal_id = 0;
-    console.log('Detail list length', this.detailsListSignal().length);
-    this.detailsListSignal().forEach(details => {
+
+    this.store.details().forEach(details => {
       header.header_amount = Number(details.debit) + header.header_amount;
       journal_id = details.journal_id;
 
@@ -547,8 +531,8 @@ export class WizardUpdateComponent implements OnInit, OnDestroy, AfterViewInit {
         return;
       }
       details.journal_subid = journal_subid;
-      this.journalService.updateJournalDetailSignal(details);
-      this.journalService.updateJournalDetail(details);
+      this.store.updateJournalDetail(details);
+
       journal_subid++;
     })
 
@@ -609,6 +593,7 @@ export class WizardUpdateComponent implements OnInit, OnDestroy, AfterViewInit {
       "journal_subid": this.currentRowData.journal_subid,
       "account": this.currentRowData.account,
       "child": detail.child,
+      "child_desc": this.accountCtrl.value.description,
       "description": detail.detail_description,
       "create_date": updateDate,
       "create_user": email,
@@ -625,7 +610,7 @@ export class WizardUpdateComponent implements OnInit, OnDestroy, AfterViewInit {
       amount: header.amount
     }
 
-    var rc = this.journalService.updateJournalDetail(journalDetail);
+    this.store.updateJournalDetail(journalDetail);
 
     this.snackBar.open('Journal Entry Updated', 'OK', {
       verticalPosition: 'top',
@@ -633,8 +618,6 @@ export class WizardUpdateComponent implements OnInit, OnDestroy, AfterViewInit {
       duration: 2000,
     });
 
-    this.detailsListSignal = null;
-    this.detailsListSignal = this.journalService.getJournalDetail(this.journal_id);
     this.accountCtrl.reset();
   }
 

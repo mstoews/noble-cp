@@ -38,6 +38,7 @@ import { IJournalDetail, IJournalDetailDelete, IJournalHeader, IJournalHeaderUpd
 import { ActivatedRoute } from "@angular/router";
 import { Location } from '@angular/common';
 import { MatDrawer } from "@angular/material/sidenav";
+import { JournalStore } from "app/store/journal.store";
 
 const imports = [
   CommonModule,
@@ -77,6 +78,8 @@ const imports = [
 export class APUpdateComponent
   implements OnInit, OnDestroy, AfterViewInit {
   @Output() notifyDrawerClose: EventEmitter<any> = new EventEmitter();
+
+  store = inject(JournalStore);
 
   public accountParams?: IEditCell;
   public subtypeParams?: IEditCell;
@@ -432,6 +435,7 @@ export class APUpdateComponent
       journal_subid: e.journal_subid,
       account: Number(e.account),
       child: Number(e.child),
+      child_desc: e.child_desc,
       description: e.description,
       create_date: updateDate,
       create_user: email,
@@ -441,18 +445,12 @@ export class APUpdateComponent
       reference: e.reference,
       fund: e.fund,
     };
-    this.journalService.updateJournalDetailSignal(journalDetail);
-    if (this.journalService.journalDetailList().length > 0) {
-       this.journalService.journalDetailList().forEach((data) => {
-        console.log(data);
-      });
-    }
-    console.log("onSaved ", e);
+    this.store.updateJournalDetail(journalDetail);
   }
 
 
   protected setInitialValue() {
-    // this.journalService.getJournalDetail(this.journal_id);
+    this.store.loadDetails(this.journal_id);
     this.accountParams = {
       params: {
         filterType: "Contains",
@@ -509,8 +507,11 @@ export class APUpdateComponent
     this.description = description;
     this.transaction_date = transaction_date;
     this.amount = amount;
-    this.journalService.getJournalDetail(journal_id);
+    
+    this.store.loadDetails(journal_id);
     this.journalType = journalType
+
+    
     
 
     this.journalForm = this.fb.group({
@@ -662,7 +663,7 @@ export class APUpdateComponent
   }
 
   delete(journal: IJournalDetailDelete) {
-    this.journalService.deleteJournalDetail(journal);
+    this.store.deleteJournalDetail(journal)
     this.bDirty = true;
     this.journalService.reNumberJournalDetail(this.journal_id);
   }
@@ -672,17 +673,19 @@ export class APUpdateComponent
     const email = this.auth.currentUser?.email;
     var max = 0;
 
-    for (let i = 0; i < this.journalService.journalDetailList().length; i++) {
-      if (this.journalService.journalDetailList()[i].journal_subid > max)
-        max = this.journalService.journalDetailList()[i].journal_subid;
+
+
+    for (let i = 0; i < this.store.details().length; i++) {
+      if (this.store.details()[i].journal_subid > max)
+        max = this.store.details()[i].journal_subid;
     }
 
     if (this.journal_id === 0) {
       return;
     }
 
-    if (this.journalService.journalDetailList().length > 0) {
-      const journalCopy = this.journalService.journalDetailList();
+    if (this.store.details().length > 0) {
+      const journalCopy = this.store.details().slice();
       const journalDetail = {
         journal_id: this.journal_id,
         journal_subid: max + 1,
@@ -697,7 +700,7 @@ export class APUpdateComponent
         reference: journalCopy[0].reference,
         fund: journalCopy[0].fund,
       };
-      this.journalService.createJournalDetail(journalDetail);
+      this.store.createJournalDetail(journalDetail);      
     } else {
       const journalDetail = {
         journal_id: this.journal_id,
@@ -713,7 +716,7 @@ export class APUpdateComponent
         reference: "",
         fund: "",
       };
-      this.journalService.createJournalDetail(journalDetail);
+      this.store.createJournalDetail(journalDetail);
     }
     this.bDirty = true;
   }
@@ -747,9 +750,7 @@ export class APUpdateComponent
     header.header_amount = 0.0;
     var journal_subid = 1;
 
-    console.log("Detail list length", this.journalService.journalDetailList().length);
-    
-    this.journalService.journalDetailList().forEach((details) => {
+    this.store.details().forEach((details) => {
       header.header_amount = Number(details.debit) + header.header_amount;
       this.journal_id = details.journal_id;
       debit = Number(details.debit);
@@ -835,6 +836,7 @@ export class APUpdateComponent
       journal_subid: this.currentRowData.journal_subid,
       account: this.currentRowData.account,
       child: detail.child,
+      child_desc: detail.child_desc,
       description: detail.detail_description,
       create_date: updateDate,
       create_user: email,
@@ -859,8 +861,8 @@ export class APUpdateComponent
       duration: 2000,
     });
 
-    this.journalService.getJournalDetail(this.journal_id);
-  
+    this.store.loadDetails(this.journal_id);
+
     this.accountCtrl.reset();
   }
 

@@ -1,17 +1,14 @@
 import { CommonModule } from '@angular/common';
-import { Component, DestroyRef, Inject, Input, OnDestroy, OnInit, inject } from '@angular/core';
+import { Component, DestroyRef, Inject, inject } from '@angular/core';
 import { ReactiveFormsModule, FormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { GLAccountsService } from 'app/services/accounts.service';
 import { FundsService } from 'app/services/funds.service';
 import { JournalService } from 'app/services/journal.service';
 import { MaterialModule } from 'app/services/material.module';
 import { Observable, Subject, takeUntil, tap } from 'rxjs';
-import { BudgetTableComponent } from '../budget-table/budget-table.component';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { SubTypeService } from 'app/services/subtype.service';
 import { AUTH } from 'app/app.config';
-
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NgxMaskDirective, NgxMaskPipe, provideNgxMask } from 'ngx-mask';
 import { IJournalDetail } from 'app/models/journals';
 
@@ -21,7 +18,6 @@ const imports = [
   ReactiveFormsModule,
   MaterialModule,
   FormsModule,
-  BudgetTableComponent,
   NgxMaskDirective,
   NgxMaskPipe
 ];
@@ -111,6 +107,7 @@ export class BudgetEditComponent {
       journal_subid: this.journal_subid,
       account: this.account,
       child: journal_details.child,
+      child_desc: journal_details.child_desc,
       description: journal_details.description,
       create_date: createDate,
       create_user: User.email,
@@ -139,6 +136,7 @@ export class BudgetEditComponent {
       journal_subid: this.journal_subid,
       account: this.account,
       child: journal_details.child,
+      child_desc: journal_details.child_desc,
       description: journal_details.description,
       create_date: createDate,
       create_user: User.email,
@@ -148,7 +146,7 @@ export class BudgetEditComponent {
       reference: journal_details.reference,
       fund: journal_details.fund
     }
-    this.journalService.createJournalDetail(rawData);
+    this.journalService.createHttpJournalDetail(rawData);
     this.dialogRef.close('Update');
     this.dialogRef.close('Create');
 

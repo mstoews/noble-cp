@@ -22,8 +22,6 @@ import { AUTH } from 'app/app.config';
 import { MatSelect } from '@angular/material/select';
 import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 import { IDropDownAccounts } from 'app/models';
-import { BudgetDetailComponent } from '../budget-detail/budget-detail.component';
-import { BudgetTableComponent } from '../budget-table/budget-table.component';
 import { JournalService } from 'app/services/journal.service';
 import { IJournalDetail, IJournalDetailDelete } from 'app/models/journals';
 
@@ -34,11 +32,9 @@ const imports = [
   MaterialModule,
   ComboBoxModule,
   FormsModule,
-  BudgetDetailComponent,
   DndComponent,
   GridMenubarStandaloneComponent,
   BudgetEditComponent,
-  BudgetTableComponent,
   NgxMaskDirective,
   NgxMaskPipe,
   FileManagerComponent,
@@ -94,7 +90,6 @@ export class BudgetUpdateComponent implements OnInit, OnDestroy, AfterViewInit {
   accounts$ = this.accountService.readChildren();
   dropDownChildren$ = this.accountService.readChildren()
 
-  detailsListSignal = this.journalService.getJournalDetail(0);
 
   private fuseConfirmationService = inject(FuseConfirmationService);
 
@@ -151,7 +146,7 @@ export class BudgetUpdateComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   protected setInitialValue() {
-    this.detailsListSignal = this.journalService.getJournalDetail(this.journal_id);
+    // this.detailsListSignal = this.journalService.getJournalDetail(this.journal_id);
   }
 
   ngAfterViewInit() {
@@ -181,7 +176,7 @@ export class BudgetUpdateComponent implements OnInit, OnDestroy, AfterViewInit {
     this.journal_subid = e.row.data.journal_subid;
     this.updateForm(e.row.data)
     this.editing = true;
-    this.journalHeaderData = this.journalService.readJournalHeaderById(this.journal_id);
+    // this.journalHeaderData = this.journalService.readJournalHeaderById(this.journal_id);
   }
 
 
@@ -229,7 +224,7 @@ export class BudgetUpdateComponent implements OnInit, OnDestroy, AfterViewInit {
     if (journal_id === undefined) {
       this.description = '';
       this.transaction_date = '';
-      this.detailsListSignal = this.journalService.getJournalDetail(0);
+      //this.detailsListSignal = this.journalService.getJournalDetail(0);
 
       return;
     }
@@ -239,7 +234,7 @@ export class BudgetUpdateComponent implements OnInit, OnDestroy, AfterViewInit {
     else {
       this.description = '';
       this.transaction_date = '';
-      this.detailsListSignal = this.journalService.getJournalDetail(0);
+      //this.detailsListSignal = this.journalService.getJournalDetail(0);
       this.journalForm = this.fb.group({
         description: [this.description, Validators.required],
         header_amount: [this.amount, Validators.required],
@@ -353,7 +348,7 @@ export class BudgetUpdateComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   delete(journal: IJournalDetailDelete) {
-    this.journalService.deleteJournalDetail(journal);
+    // this.journalService.deleteJournalDetail(journal);
   }
 
   onAddLineJournalDetail() {
@@ -367,7 +362,7 @@ export class BudgetUpdateComponent implements OnInit, OnDestroy, AfterViewInit {
 
     var detail = this.journalDetailForm.getRawValue();
 
-    var journal_subid = this.detailsListSignal().length + 1;
+    //var journal_subid = this.detailsListSignal().length + 1;
 
     if (detail.detail_description === '' || detail.detail_description === undefined || detail.detail_description === null) {
       this.snackBar.open('Please select a row to edit', 'OK', {
@@ -394,16 +389,17 @@ export class BudgetUpdateComponent implements OnInit, OnDestroy, AfterViewInit {
 
     var acct = this.accountList.find(x => x.child == detail.child);
 
-    if (journal_subid === this.journalDetailList.length) {
+    if (this.journal_subid === this.journalDetailList.length) {
       return;
     }
 
     if (debit !== undefined && credit !== undefined) {
       journalDetail = {
         "journal_id": this.currentRowData.journal_id,
-        "journal_subid": journal_subid,
+        "journal_subid": this.journal_subid,
         "account": Number(acct.account),
         "child": Number(acct.child),
+        "child_desc": acct.description,
         "description": detail.detail_description,
         "create_date": updateDate,
         "create_user": email,
@@ -416,7 +412,7 @@ export class BudgetUpdateComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     if (journalDetail !== undefined) {
-      this.journalService.createJournalDetail(journalDetail)
+      // this.journalService.createJournalDetail(journalDetail)
       this.journalDetailForm.reset()
     }
 
@@ -445,7 +441,7 @@ export class BudgetUpdateComponent implements OnInit, OnDestroy, AfterViewInit {
 
       if (journalHeader !== undefined) {
 
-        this.journalService.updateJournalHeader(journalHeader);
+        // this.journalService.updateJournalHeader(journalHeader);
         this.snackBar.open('Journal header details updated ... ', 'OK', {
           verticalPosition: 'top',
           horizontalPosition: 'right',
@@ -485,6 +481,7 @@ export class BudgetUpdateComponent implements OnInit, OnDestroy, AfterViewInit {
         "journal_subid": this.currentRowData.journal_subid,
         "account": Number(childAccount.account),
         "child": Number(childAccount.child),
+        "child_desc": childAccount.description,
         "description": detail.detail_description,
         "create_date": updateDate,
         "create_user": email,
@@ -507,7 +504,7 @@ export class BudgetUpdateComponent implements OnInit, OnDestroy, AfterViewInit {
       amount: header.header_amount
     }
 
-    this.journalService.updateJournalHeader(journalHeader);
+    // this.journalService.updateJournalHeader(journalHeader);
 
 
     this.snackBar.open('Journal Entry Updated', 'OK', {
@@ -562,6 +559,7 @@ export class BudgetUpdateComponent implements OnInit, OnDestroy, AfterViewInit {
       "journal_subid": this.currentRowData.journal_subid,
       "account": this.currentRowData.account,
       "child": detail.child,
+      "child_desc": detail.child_desc,
       "description": detail.detail_description,
       "create_date": updateDate,
       "create_user": email,
@@ -590,8 +588,8 @@ export class BudgetUpdateComponent implements OnInit, OnDestroy, AfterViewInit {
     // this.loadContent();
 
     this.journalDetailForm.reset()
-    this.detailsListSignal = null;
-    this.detailsListSignal = this.journalService.getJournalDetail(this.journal_id);
+    //this.detailsListSignal = null;
+    //this.detailsListSignal = this.journalService.getJournalDetail(this.journal_id);
 
   }
 

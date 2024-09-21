@@ -1,7 +1,7 @@
 <div class="flex flex-col w-full min-w-0 sm:absolute sm:inset-0 sm:overflow-hidden">
     <mat-drawer-container class="flex-auto sm:h-full">
         <!-- Drawer -->
-        <mat-drawer class="sm:w-96 dark:bg-gray-900" [autoFocus]="false" [mode]="drawerMode" [opened]="drawerOpened"
+        <mat-drawer class="sm:w-72 dark:bg-gray-900" [autoFocus]="false" [mode]="drawerMode" [opened]="drawerOpened"
             #drawer>
             <!-- Header -->
             <div class="flex items-center justify-between m-8 mr-6 sm:my-10">
@@ -71,15 +71,16 @@
                 <!-- Load settings panel -->
                 <div class="mt-8">
 
-                    
+
                     @switch (selectedPanel) {
-                    
-                        @case ('trial-balance')               { <trial-balance></trial-balance>}                        
-                        @case ('balance-sheet-statement')     { <balance-sheet-statement-rpt></balance-sheet-statement-rpt>  }
-                        @case ('income-statement')            { <income-statement-rpt></income-statement-rpt>  }
-                        @case ('income-statement-comparison') { <income-statement-comparison-rpt></income-statement-comparison-rpt>  }                        
-                        @case ('management')                  { <app-file-manager></app-file-manager>} 
-                        @case ('reconciliations')             { <app-file-manager></app-file-manager>}                     
+
+                    @case ('trial-balance') { <trial-balance></trial-balance>}
+                    @case ('balance-sheet-statement') { <balance-sheet-statement-rpt></balance-sheet-statement-rpt> }
+                    @case ('income-statement') { <income-statement-rpt></income-statement-rpt> }
+                    @case ('income-statement-comparison') {
+                    <income-statement-comparison-rpt></income-statement-comparison-rpt> }
+                    @case ('management') { <app-file-manager></app-file-manager>}
+                    @case ('reconciliations') { <app-file-manager></app-file-manager>}
                     }
 
                 </div>

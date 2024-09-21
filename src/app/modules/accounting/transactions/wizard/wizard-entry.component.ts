@@ -18,6 +18,7 @@ import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 import { IDropDownAccounts } from 'app/models';
 import { WizardUpdateComponent } from './wizard-update.component';
 import { IJournalDetail, IJournalHeader, ITransactionDate } from 'app/models/journals';
+import { JournalStore } from 'app/store/journal.store';
 
 
 interface ITransactionType {
@@ -47,12 +48,10 @@ const imports = [
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
   animations: fuseAnimations,
-  styles: ``,
-  providers: [provideNgxMask()]
+  providers: [provideNgxMask(), JournalStore]
 })
 export class EntryWizardComponent implements OnInit, OnDestroy, AfterViewInit {
-  
-  
+
   journalEntryForm: UntypedFormGroup;
   private journalService = inject(JournalService);
   private subtypeService = inject(SubTypeService);
@@ -95,6 +94,8 @@ export class EntryWizardComponent implements OnInit, OnDestroy, AfterViewInit {
   public journalDetails?: IJournalDetail[];
   public accountsListSubject: Subscription;
 
+  store = inject(JournalStore);
+
   funds$ = this.fundService.read();
   subtype$ = this.subtypeService.read();
   accounts$ = this.accountService.readDropDownChild();
@@ -104,7 +105,7 @@ export class EntryWizardComponent implements OnInit, OnDestroy, AfterViewInit {
   bNewTransaction: any;
 
   public selectedOption: string;
-  
+
   types: ITransactionType[] = [
     { value: "GL", viewValue: "General", checked: true },
     { value: "AP", viewValue: "Payments", checked: false },
@@ -112,7 +113,7 @@ export class EntryWizardComponent implements OnInit, OnDestroy, AfterViewInit {
   ];
 
 
-  onTransTypeClicked(e: any){
+  onTransTypeClicked(e: any) {
     this.selectedOption = e;
     console.log(e)
   }
@@ -142,8 +143,8 @@ export class EntryWizardComponent implements OnInit, OnDestroy, AfterViewInit {
         invoice_no: ['', Validators.required],
       }),
       step2: this.formBuilder.group({
-        debitCtrl: [''],
-        creditCtrl: [''],
+        debitCtrl: ['', Validators.required],
+        creditCtrl: ['', Validators.required],
         detail_description: ['', Validators.required],
         reference: ['', Validators.required],
         sub_type: ['', Validators.required],
@@ -183,7 +184,7 @@ export class EntryWizardComponent implements OnInit, OnDestroy, AfterViewInit {
           // this needs to be done after the filteredBanks are loaded initially
           // and after the mat-option elements are available
           if (this.singleCreditSelect != null || this.singleCreditSelect != undefined)
-           this.singleCreditSelect.compareWith = (a: IDropDownAccounts, b: IDropDownAccounts) => a && b && a.child === b.child;
+            this.singleCreditSelect.compareWith = (a: IDropDownAccounts, b: IDropDownAccounts) => a && b && a.child === b.child;
         });
 
     if (this.filteredDebitAccounts)
@@ -196,7 +197,7 @@ export class EntryWizardComponent implements OnInit, OnDestroy, AfterViewInit {
           // this needs to be done after the filteredBanks are loaded initially
           // and after the mat-option elements are available
           if (this.singleDebitSelect != null || this.singleDebitSelect != undefined)
-          this.singleDebitSelect.compareWith = (a: IDropDownAccounts, b: IDropDownAccounts) => a && b && a.child === b.child;
+            this.singleDebitSelect.compareWith = (a: IDropDownAccounts, b: IDropDownAccounts) => a && b && a.child === b.child;
         });
   }
 
@@ -361,6 +362,7 @@ export class EntryWizardComponent implements OnInit, OnDestroy, AfterViewInit {
         journal_subid: count,
         account: Number(debitAccount.account),
         child: Number(debitAccount.child),
+        child_desc: debitAccount.description,
         description: inputs.step2.detail_description,
         create_date: updateDate,
         create_user: email,
@@ -390,6 +392,7 @@ export class EntryWizardComponent implements OnInit, OnDestroy, AfterViewInit {
         journal_subid: count,
         account: Number(creditAccount.account),
         child: Number(creditAccount.child),
+        child_desc: creditAccount.description,
         description: inputs.step2.detail_description,
         create_date: updateDate,
         create_user: email,
@@ -406,14 +409,16 @@ export class EntryWizardComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   postTransaction() {
-    this.journalService.createJournalHeader(this.journalHeader).subscribe(journal => {
-      console.debug(JSON.stringify(journal));
-      this.journalDetails.forEach(journalDetail => {
-        journalDetail.journal_id = journal.journal_id
-        this.journal_id = journal.journal_id
-        this.journalService.createJournalDetail(journalDetail)
-      })
-    });
+    // this.journalService.createJournalHeader(this.journalHeader).subscribe(journal => {
+    //   console.debug(JSON.stringify(journal));
+    //   this.journalDetails.forEach(journalDetail => {
+    //     journalDetail.journal_id = journal.journal_id
+    //     this.journal_id = journal.journal_id
+    //     this.journalDetail(journalDetail);
+    //   })
+    // });
+
+    //MARK: - This is the code that needs to be refactored
 
   }
 
@@ -423,7 +428,7 @@ export class EntryWizardComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   changeSubtype(e: any) {
-    console.debug('Subytype :', e.value);
+    console.debug('Subtype :', e.value);
   }
 
   changeChildAccount($event: any) {
@@ -508,5 +513,5 @@ export class EntryWizardComponent implements OnInit, OnDestroy, AfterViewInit {
   onCreateTemplate() {
     throw new Error('Method not implemented.');
   }
-  
+
 }

@@ -72,7 +72,6 @@ export class StatusComponent implements OnInit {
         this.orderidrules = { required: true, number: true };
         this.pageSettings = { pageCount: 5 };                
         this.filterSettings = { type: 'Excel' };
-        // this.toolbar = ['Add', 'Edit', 'Delete', 'Update', 'Cancel'];
         this.editSettings = { allowEditing: true, allowAdding: true, allowDeleting: true };
     }
 
@@ -83,8 +82,7 @@ export class StatusComponent implements OnInit {
         }
         if (args.requestType === 'save') {
             console.log(JSON.stringify(args.data));
-            var data = args.data as IStatus;
-            //this.kanbanService.updateTaskStatus(data)
+            var data = args.data as IStatus;        
             this.submitClicked = true;
             if (this.accountsForm.valid) {
                 args.data = this.accountsForm.value;

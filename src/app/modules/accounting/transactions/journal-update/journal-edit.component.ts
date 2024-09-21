@@ -9,13 +9,10 @@ import { map, Observable, Subject, takeUntil, tap } from 'rxjs';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { SubTypeService } from 'app/services/subtype.service';
 
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NgxMaskDirective, NgxMaskPipe, provideNgxMask } from 'ngx-mask';
 import { IJournalDetail } from 'app/models/journals';
 import { AuthService } from 'app/modules/auth/auth.service';
-
-
-
+import { JournalStore } from 'app/store/journal.store';
 
 
 const imports = [
@@ -32,7 +29,6 @@ const imports = [
   standalone: true,
   imports: [imports],
   templateUrl: './journal-edit.component.html',
-  styles: ``,
   providers: [provideNgxMask()]
 })
 export class JournalEditComponent {
@@ -54,6 +50,7 @@ export class JournalEditComponent {
   accounts$ = this.accountService.readChildren();
   childAccount: 'account';
   account: number;
+  store = inject(JournalStore);
 
   constructor(
 
@@ -112,6 +109,7 @@ export class JournalEditComponent {
       journal_subid: this.journal_subid,
       account: this.account,
       child: journal_details.child,
+      child_desc: journal_details.child_desc,
       description: journal_details.description,
       create_date: createDate,
       create_user: email,
@@ -140,6 +138,7 @@ export class JournalEditComponent {
       journal_subid: this.journal_subid,
       account: this.account,
       child: journal_details.child,
+      child_desc: journal_details.child_desc,
       description: journal_details.description,
       create_date: createDate,
       create_user: User.email.split('T')[0],
@@ -149,7 +148,10 @@ export class JournalEditComponent {
       reference: journal_details.reference,
       fund: journal_details.fund
     }
-    this.journalService.createJournalDetail(rawData);
+
+    this.store.createJournalDetail(rawData);
+    
+    
     this.dialogRef.close('Update');
     this.dialogRef.close('Create');
 

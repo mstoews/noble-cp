@@ -43,14 +43,17 @@ export interface IJournalDetail {
   journal_subid : number,
   account       : number,
   child         : number,
-  fund?         : string,
-  sub_type?     : string,
+  child_desc?   : string,
+  fund          : string,
+  sub_type      : string,
   description   : string,
   reference     : string,
   debit         : number,
   credit        : number,
   create_date   : string,
-  create_user   : string,  
+  create_user   : string,
+  period?       : number,
+  period_year?  : number,  
 }
 
 export interface IAccounts {

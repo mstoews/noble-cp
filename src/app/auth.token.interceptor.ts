@@ -29,6 +29,7 @@ const getHeaders = (): any => {
   }
   
   if (jwt !== '') {
+  
     headers['Authorization'] = `Bearer ${jwt}`;
   }
   return headers;

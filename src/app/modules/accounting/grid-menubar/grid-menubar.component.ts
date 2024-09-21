@@ -22,11 +22,14 @@ var modules = [
               {{inTitle}}
               <!-- menu selected -->
               <span class="flex-1"></span>
-                  <button (click)="onClickAdd()" color="primary" class="m-1 bg-gray-200 text-gray-100 md:visible" mat-icon-button matTooltip="Add New" aria-label="Add">
-                      <mat-icon class="flex justify-end text-white" [svgIcon]="'mat_outline:note_add'"></mat-icon>
+              
+                  
+                  <button (click)="onClickAdd()" color="primary" class="m-1 bg-gray-200 text-gray-100 md:visible" mat-icon-button matTooltip="Back" aria-label="Add">
+                      <mat-icon class="flex justify-end text-white" [svgIcon]="'feather:arrow-left'"></mat-icon>
                   </button>
+                  
 
-                  <button (click)="onClickUpdate()" color="primary" class="m-1 bg-gray-200 text-gray-100  md:visible" mat-icon-button matTooltip="Update" aria-label="Update">
+                  <!-- <button (click)="onClickUpdate()" color="primary" class="m-1 bg-gray-200 text-gray-100  md:visible" mat-icon-button matTooltip="Update" aria-label="Update">
                       <mat-icon class="flex justify-end text-white" [svgIcon]="'mat_outline:update'"></mat-icon>
                   </button>
 
@@ -36,7 +39,7 @@ var modules = [
 
                     <button (click)="onClickDelete()" color="primary" class="m-1 bg-gray-200 text-gray-100 md:visible" mat-icon-button matTooltip="Delete" aria-label="Delete">
                       <mat-icon class="flex justify-end text-white hover:bg-white hover:text-gray-700" [svgIcon]="'heroicons_outline:trash'"></mat-icon>
-                    </button>
+                    </button> -->
               </mat-toolbar>
   `,
 })

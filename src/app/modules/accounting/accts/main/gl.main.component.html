@@ -1,7 +1,7 @@
 <div class="flex flex-col w-full min-w-0 sm:absolute sm:inset-0 sm:overflow-hidden">
     <mat-drawer-container class="flex-auto sm:h-full">
         <!-- Drawer -->
-        <mat-drawer class="sm:w-96 dark:bg-gray-900" [autoFocus]="false" [mode]="drawerMode" [opened]="drawerOpened"
+        <mat-drawer class="sm:w-72 dark:bg-gray-900" [autoFocus]="false" [mode]="drawerMode" [opened]="drawerOpened"
             #drawer>
             <!-- Header -->
             <div class="flex items-center justify-between m-8 mr-6 sm:my-10">
@@ -71,14 +71,14 @@
                 <!-- Load settings panel -->
                 <div class="mt-8">
 
-                    @switch (selectedPanel) {                    
-                    @case ('accounts'){ <glaccounts></glaccounts> }                        
-                    @case ('types')   { <gl-types></gl-types> }
+                    @switch (selectedPanel) {
+                    @case ('accounts'){ <glaccounts></glaccounts> }
+                    @case ('types') { <gl-types></gl-types> }
                     @case ('subtypes'){ <subtypes></subtypes> }
-                    @case ('funds')   { <funds></funds> }
+                    @case ('funds') { <funds></funds> }
                     @case ('periods') { <periods></periods> }
-                    @case ('team')    { <team></team> }
-                    @case ('roles')   { <roles></roles> }
+                    @case ('team') { <team></team> }
+                    @case ('roles') { <roles></roles> }
                     }
 
                 </div>

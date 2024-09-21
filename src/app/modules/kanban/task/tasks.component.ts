@@ -357,7 +357,6 @@ export class TasksComponent implements OnInit {
   }
 
 
-
   public getString(assignee: string): string {
     var assign = assignee
     if (assignee != null) {

@@ -46,8 +46,7 @@ const imports = [
   ReactiveFormsModule,
   FormsModule,
   KanbanMenubarComponent,
-  GridModule,
-  DropDownListModule,
+  GridModule
 ];
 
 @Component({

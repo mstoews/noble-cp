@@ -9,6 +9,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MaterialModule } from 'app/services/material.module';
 
 import { GridModule } from '@syncfusion/ej2-angular-grids';
+import { JournalStore } from 'app/store/journal.store';
 
 const imports = [
     CommonModule,
@@ -32,6 +33,7 @@ export class TrnJournalDetailComponent implements OnInit {
 
     public journalService = inject(JournalService);
     matDialog = inject(MatDialog);
+    store = inject(JournalStore);
 
     private fuseConfirmationService = inject(FuseConfirmationService);
     @Input() key: number;
@@ -40,16 +42,18 @@ export class TrnJournalDetailComponent implements OnInit {
     customizeTooltip = (pointsInfo: { originalValue: string; }) => ({ text: `${parseInt(pointsInfo.originalValue)}%` });
     journalForm!: FormGroup;
     sTitle = 'Journal Entry Modification';
+    
 
 
-    details$ = this.journalService.getJournalDetail(0);
     glaccts$ = this.journalService.listAccounts();
 
-    // details$ = this.transactionService.getAllTransactions();
+
     ngOnInit() {
         console.debug('JournalDetailComponent ngOnInit: ', this.key);
         const journalNo = Number(this.key)
-        this.details$ = this.journalService.getJournalDetail(journalNo);
+        //this.details$ = this.journalService.getJournalDetail(journalNo);
+        
+        this.store.loadDetails(journalNo);
         this.journalForm = this.fb.group({
             journal_id: ['', Validators.required],
             account: ['', Validators.required],

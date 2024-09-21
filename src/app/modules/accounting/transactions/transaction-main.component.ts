@@ -10,7 +10,6 @@ import { FileManagerComponent } from 'app/modules/file-manager/file-manager.comp
 import { EntryWizardComponent } from './wizard/wizard-entry.component';
 import { JournalTemplateComponent } from './journal-template.component';
 import { TreeComponent } from '../tree/tree.component';
-import { InventoryComponent } from 'app/modules/shop/shop-inventory-maintenance/inventory-grid.component';
 import { ARTransactionComponent } from './ar-transactions/ar-listing.component';
 import { APTransactionComponent } from './ap-transactions/ap-listing.component';
 import { APUpdateComponent } from './ap-transactions/ap-update.component';
@@ -28,7 +27,6 @@ const imports = [
     EntryWizardComponent,
     JournalTemplateComponent,
     TreeComponent,
-    InventoryComponent,
     APTransactionComponent,
     ARTransactionComponent,
     APUpdateComponent
@@ -49,7 +47,7 @@ export class TransactionMainComponent {
     drawerMode: 'over' | 'side' = 'side';
     drawerOpened: boolean = true;
     panels: any[] = [];
-    selectedPanel: string = 'entry';
+    selectedPanel: string = 'listing';
     private _unsubscribeAll: Subject<any> = new Subject<any>();
 
     /**
