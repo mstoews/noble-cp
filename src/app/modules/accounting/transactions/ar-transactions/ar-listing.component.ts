@@ -24,6 +24,7 @@ import { IJournalHeader } from 'app/models/journals';
 
 import { JournalStore } from 'app/store/journal.store';
 import { Router } from '@angular/router';
+import { SummaryCardComponent } from 'app/modules/admin/dashboard/summary-card.component';
 
 const imports = [
     CommonModule,
@@ -33,7 +34,8 @@ const imports = [
     DndComponent,
     GridMenubarStandaloneComponent,
     NgxMatSelectSearchModule,
-    GridModule
+    GridModule,
+    SummaryCardComponent
 ];
 
 
@@ -45,6 +47,8 @@ const imports = [
     providers: [JournalStore, SortService, ExcelExportService, PdfExportService, PageService, ResizeService, GroupService, FilterService, ToolbarService, EditService, AggregateService, ColumnMenuService],
 })
 export class ARTransactionComponent implements OnInit, OnDestroy {
+
+
 
     public typeService = inject(TypeService);
     public subtypeService = inject(SubTypeService);
@@ -103,7 +107,10 @@ export class ARTransactionComponent implements OnInit, OnDestroy {
 
     }
 
-
+    onReceipts() {
+        alert('Receipts');
+    }
+    
     customizeTooltip = (pointsInfo: { originalValue: string; }) => ({ text: `${parseInt(pointsInfo.originalValue)}%` });
     journalForm!: FormGroup;
     keyField: any;

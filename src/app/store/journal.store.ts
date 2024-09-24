@@ -109,9 +109,9 @@ export const JournalStore = signalStore(
         switchMap((value) => {
           return journalService.updateHttpJournalDetail(value).pipe(
             tapResponse({
-              next: (journal) => {
+              next: () => {
                 const updatedDetail = state.details().filter((journal) => journal.journal_subid !== value.journal_subid);
-                updatedDetail.push(journal);
+                updatedDetail.push(value);
                 patchState(state, { details: updatedDetail });
               },
               error: console.error,
@@ -196,6 +196,20 @@ export const JournalStore = signalStore(
         })
       )
     ),
+    loadAccounts: rxMethod<void>(
+      pipe(
+        tap(() => patchState(state, { isLoading: true })),
+        exhaustMap(() => {
+          return journalService.readHttpAccounts().pipe(
+            tapResponse({
+              next: (accounts) => patchState(state, { accounts: accounts }),
+              error: console.error,
+              finalize: () => patchState(state, { isLoading: false }),
+            })
+          );
+        })
+      )
+    ),
     accountsReceivable: rxMethod<void>(
       pipe(
         tap(() => patchState(state, { isLoading: true })),
@@ -210,10 +224,26 @@ export const JournalStore = signalStore(
         })
       )
     ),
+    renumberJournalDetail: rxMethod<number>(
+      pipe(
+        tap(() => patchState(state, { isLoading: true })),
+        switchMap((value) => {
+          return journalService.reNumberJournalDetail(value).pipe(
+          tapResponse({
+            next: (journal) => patchState(state, { details: journal}),
+            error: console.error,
+            finalize: () => patchState(state, { isLoading: false }),
+          })
+        );
+      })
+    )
+  ),
   })),
+  
   withHooks({
     onInit(store) {
       store.loadJournals();
+      store.loadAccounts();
     },
   })
 );

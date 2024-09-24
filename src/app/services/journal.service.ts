@@ -32,6 +32,11 @@ export class JournalService implements OnDestroy {
     return this.httpClient.get<IJournalTemplate>(url).pipe(shareReplay());
   }
 
+  readHttpAccounts() {
+    var url = this.baseUrl + '/v1/account_list';
+    return this.httpClient.get<IAccounts[]>(url).pipe(shareReplay());
+  }
+
   getLastJournalNo(): Observable<number | Object> {
     var url = this.baseUrl + '/v1/read_last_journal_no';
     return this.httpClient.get(url).pipe(
@@ -72,17 +77,7 @@ export class JournalService implements OnDestroy {
     const update = {
       journal_id: journal_id
     }
-    return this.httpClient.post(url, update)
-      .pipe(tap(results => console.log(results)),
-        take(1),
-        catchError(err => {
-          const message = "Could not renumber journals ...";
-          console.debug(message, err);
-          this.message(message);
-          return throwError(() => new Error(`${JSON.stringify(err)}`));
-        }),
-        shareReplay()
-      ).subscribe();
+    return this.httpClient.post<IJournalDetail[]>(url, update).pipe(shareReplay());
   }
 
   getHttpJournalDetails(journal_id: number) {

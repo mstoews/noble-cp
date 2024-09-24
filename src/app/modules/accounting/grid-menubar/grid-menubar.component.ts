@@ -18,13 +18,13 @@ var modules = [
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports:[modules],
   template: ` 
-            <mat-toolbar class="text-white font-sans bg-gray-500 mb-1 text-2xlz rounded-lg">
+            <mat-toolbar class="text-white font-sans bg-gray-500 text-2xlz rounded-lg">
               {{inTitle}}
               <!-- menu selected -->
               <span class="flex-1"></span>
               
                   
-                  <button (click)="onClickAdd()" color="primary" class="m-1 bg-gray-200 text-gray-100 md:visible" mat-icon-button matTooltip="Back" aria-label="Add">
+                  <button (click)="onClickRefresh()" color="primary" class="m-1 bg-gray-200 text-gray-100 md:visible" mat-icon-button matTooltip="Back" aria-label="Add">
                       <mat-icon class="flex justify-end text-white" [svgIcon]="'feather:arrow-left'"></mat-icon>
                   </button>
                   
