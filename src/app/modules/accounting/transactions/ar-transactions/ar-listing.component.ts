@@ -25,6 +25,7 @@ import { IJournalHeader } from 'app/models/journals';
 import { JournalStore } from 'app/store/journal.store';
 import { Router } from '@angular/router';
 import { SummaryCardComponent } from 'app/modules/admin/dashboard/summary-card.component';
+import { FuseAlertComponent, FuseAlertType } from '@fuse/components/alert';
 
 const imports = [
     CommonModule,
@@ -35,7 +36,8 @@ const imports = [
     GridMenubarStandaloneComponent,
     NgxMatSelectSearchModule,
     GridModule,
-    SummaryCardComponent
+    SummaryCardComponent,
+    FuseAlertComponent
 ];
 
 
@@ -48,7 +50,10 @@ const imports = [
 })
 export class ARTransactionComponent implements OnInit, OnDestroy {
 
-
+    alert: { type: FuseAlertType; message: string } = {
+        type   : 'success',
+        message: '',
+    };
 
     public typeService = inject(TypeService);
     public subtypeService = inject(SubTypeService);
@@ -57,6 +62,7 @@ export class ARTransactionComponent implements OnInit, OnDestroy {
     public route = inject(Router);
 
     store = inject(JournalStore);
+    showAlert: boolean = false;
 
 
     @ViewChild('grid')
@@ -75,7 +81,7 @@ export class ARTransactionComponent implements OnInit, OnDestroy {
     public nJournal = 0;
     public description = '';
     public transaction_date = '';
-    public amount = '';
+    public amount = ''; 
     public journalType = 'AR';
     public currentDate: string;
     public journal_details: any[];
@@ -94,6 +100,10 @@ export class ARTransactionComponent implements OnInit, OnDestroy {
     public searchOptions?: SearchSettingsModel;
     public filterSettings: FilterSettingsModel;
 
+    customizeTooltip = (pointsInfo: { originalValue: string; }) => ({ text: `${parseInt(pointsInfo.originalValue)}%` });
+    journalForm!: FormGroup;
+    keyField: any;
+    protected _onDestroy = new Subject<void>();
 
     initialDatagrid() {
         // this.pageSettings = { pageCount: 10 };        
@@ -104,17 +114,12 @@ export class ARTransactionComponent implements OnInit, OnDestroy {
         this.searchOptions = { fields: ['description'], operator: 'contains', ignoreCase: true, ignoreAccent: true };
         this.toolbarOptions = ['Search'];
         this.filterSettings = { type: 'CheckBox' };
-
     }
 
     onReceipts() {
-        alert('Receipts');
+        alert("Receipts");
     }
     
-    customizeTooltip = (pointsInfo: { originalValue: string; }) => ({ text: `${parseInt(pointsInfo.originalValue)}%` });
-    journalForm!: FormGroup;
-    keyField: any;
-    protected _onDestroy = new Subject<void>();
 
     ngOnInit() {
         // const dDate = new Date();
