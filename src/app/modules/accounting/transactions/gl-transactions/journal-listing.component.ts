@@ -48,19 +48,13 @@ export class JournalEntryComponent implements OnInit, OnDestroy {
     public subtypeService = inject(SubTypeService);
     public fundService = inject(FundsService);
     public accountService = inject(GLAccountsService);
-    public route = inject(Router);
-    // private journalService = inject(JournalService);
-    //private dialog = inject(MatDialog);
-    //private auth = inject(AUTH);
-    //private activatedRoute = inject(ActivatedRoute)
+    public route = inject(Router);    
+    public store = inject(JournalStore);
 
-
-    store = inject(JournalStore);
-
-    @ViewChild('grid')
-    public grid?: GridComponent;
 
     drawer = viewChild<MatDrawer>('drawer')
+    grid = viewChild<GridComponent>('grid');
+    
     journalViewChildControl = viewChild(JournalUpdateComponent);
     currentRowData: any;
 

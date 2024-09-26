@@ -89,6 +89,8 @@ import { MatDrawer } from "@angular/material/sidenav";
 import { JournalStore } from "app/store/journal.store";
 import { MatSort, Sort, MatSortModule } from "@angular/material/sort";
 import { MatTableDataSource, MatTableModule } from "@angular/material/table";
+import { LiveAnnouncer } from '@angular/cdk/a11y';
+
 
 import { SplitterModule } from '@syncfusion/ej2-angular-layouts';
 
@@ -133,15 +135,17 @@ const imports = [
    .mat-mdc-header { height: 36px !important; }
    .mat-mdc-form-field {height: 76px !important;}
    `
-   ],
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class JournalUpdateComponent
-  implements OnInit, OnDestroy, AfterViewInit
-{
+  implements OnInit, OnDestroy, AfterViewInit {
   [x: string]: any;
 
   @Output() notifyDrawerClose: EventEmitter<any> = new EventEmitter();
+  private _liveAnnouncer = inject(LiveAnnouncer);
+  
+  private _fuseConfirmationService = inject(FuseConfirmationService);
 
   public detailForm!: FormGroup;
   public journalForm!: FormGroup;
@@ -149,7 +153,7 @@ export class JournalUpdateComponent
   drawer = viewChild<MatDrawer>("drawer");
 
   @ViewChild("contextmenu")
-  private _fuseConfirmationService = inject(FuseConfirmationService);
+  
   private _location = inject(Location);
 
   public contextmenu: ContextMenuComponent;
@@ -164,10 +168,7 @@ export class JournalUpdateComponent
   private dialog = inject(MatDialog);
   private auth = inject(AUTH);
   private activatedRoute = inject(ActivatedRoute);
-
   public store = inject(JournalStore);
-
-  
   public matDialog = inject(MatDialog);
 
   public value = 0;
@@ -177,7 +178,7 @@ export class JournalUpdateComponent
   public funds$ = this.fundService.read();
   public subtype$ = this.subtypeService.read();
   public types$ = this.typeService.read();
-  // public accounts$ = this.accountService.readChildren();
+
   public dropDownChildren$ = this.accountService.readChildren();
   public fuseConfirmationService = inject(FuseConfirmationService);
 
@@ -246,40 +247,14 @@ export class JournalUpdateComponent
   protected _onDestroy = new Subject<void>();
 
   columnsToDisplay: string[] = ["journal_id", "description"];
+  
+  datastore = new MatTableDataSource(this.store.gl());
 
   @ViewChild("singleDebitSelect", { static: true })
+
   singleDebitSelect: MatSelect;
-
-  openDrawer() {
-    this.bDirty = false;
-    this.drawer().open();
-  }
-
-  closeDrawer() {
-    this.bDirty = false;
-    this.drawer().close();
-  }
-
-  onRefresh() {
-    this.exitWindow();
-  }
-
-  rowClick(event: any) {
-    console.log('Row clicked ...',event);
-  }
-
-  initialDatagrid() {
-    // this.pageSettings = { pageCount: 10 };
-    this.formatoptions = { type: "dateTime", format: "M/dd/yyyy" };
-    this.pageSettings = { pageSizes: true, pageCount: 10 };
-    this.selectionOptions = { mode: "Row" };
-    this.editSettings = {
-      allowEditing: true,
-      allowAdding: false,
-      allowDeleting: false,
-    };
-    this.filterSettings = { type: "CheckBox" };
-  }
+  
+  @ViewChild(MatSort) sort: MatSort;
 
   ngOnInit(): void {
     this.createEmptyForm();
@@ -307,8 +282,6 @@ export class JournalUpdateComponent
       this.onChanges();
     });
 
-    this.initialDatagrid();
-
     this.accountsListSubject = this.dropDownChildren$.subscribe((accounts) => {
       accounts.forEach((acct) => {
         var list = {
@@ -318,7 +291,7 @@ export class JournalUpdateComponent
         this.accountsGrid.push(list);
       });
 
-      this.fundListSubject = this.funds$.subscribe((funds) => {
+    this.fundListSubject = this.funds$.subscribe((funds) => {
         funds.forEach((fund) => {
           var list = {
             fund: fund.fund,
@@ -350,9 +323,54 @@ export class JournalUpdateComponent
       this.journalData.amount,
       this.journalData.type
     );
-
+    
     this.store.loadDetails(this.journal_id);
 
+    this.initialDatagrid();
+  }
+
+  ngAfterViewInit() {
+    this.setInitialValue();
+    this.datastore.sort = this.sort;
+  }
+
+  openDrawer() {
+    this.bDirty = false;
+    this.drawer().open();
+  }
+
+  closeDrawer() {
+    this.bDirty = false;
+    this.drawer().close();
+  }
+
+  onRefresh() {
+    this.exitWindow();
+  }
+
+  rowClick(event: any) {
+    console.log('Row clicked ...', event);
+  }
+
+  initialDatagrid() {
+    // this.pageSettings = { pageCount: 10 };
+    this.formatoptions = { type: "dateTime", format: "M/dd/yyyy" };
+    this.pageSettings = { pageSizes: true, pageCount: 10 };
+    this.selectionOptions = { mode: "Row" };
+    this.editSettings = {
+      allowEditing: true,
+      allowAdding: false,
+      allowDeleting: false,
+    };
+    this.filterSettings = { type: "CheckBox" };
+  }
+
+  public announceSortChange(sortState: Sort) {
+    if (sortState.direction) {
+      console.log('Sort changed ...', sortState.direction );
+    } else {
+      console.log('Sort changed ...', sortState.active);
+    }
   }
 
   public onEditJournal(id: number) {
@@ -417,7 +435,7 @@ export class JournalUpdateComponent
     } as IJournalDetail;
 
     this.currentRowData = JournalDetail;
-    
+
     this.createForm(JournalDetail);
     this.onChanges();
   }
@@ -442,20 +460,20 @@ export class JournalUpdateComponent
   }
 
   public onChanges(): void {
-     this.journalForm.valueChanges.subscribe((dirty) => {
+    this.journalForm.valueChanges.subscribe((dirty) => {
       if (this.journalForm.dirty) {
         this.bHeaderDirty = true;
       }
     });
-  
+
     this.detailForm.valueChanges.subscribe((dirty) => {
-        if (this.detailForm.dirty) {
-          this.bDirty = true;
-        }
-      });
-    this.debitCtrl.valueChanges.subscribe((value) => {      
+      if (this.detailForm.dirty) {
         this.bDirty = true;
-      });
+      }
+    });
+    this.debitCtrl.valueChanges.subscribe((value) => {
+      this.bDirty = true;
+    });
   }
 
   public createEmptyDetailForm() {
@@ -552,9 +570,6 @@ export class JournalUpdateComponent
         });
   }
 
-  ngAfterViewInit() {
-    this.setInitialValue();
-  }
 
   onFocusedDetailRowChanged(e: any) {
 
@@ -655,7 +670,7 @@ export class JournalUpdateComponent
   exitWindow() {
     if (this.bDirty === false) {
       this.journalForm.reset();
-      this._location.back();
+      
     } else {
       const confirmation = this.fuseConfirmationService.open({
         title: "Unsaved Changes",
@@ -680,14 +695,14 @@ export class JournalUpdateComponent
   }
 
   onDeleteDetail() {
-    const index = (this.grid as GridComponent).getSelectedRowIndexes();
-    const rowData = this.grid.getCurrentViewRecords().at(index[0]) as any;
+    
     var journalDetail = {
       journal_id: this.journal_id,
-      journal_subid: rowData.journal_subid,
+      journal_subid: this.currentRowData.journal_subid,
     };
+
     const confirmation = this._fuseConfirmationService.open({
-      title: `Delete  transaction number : ${this.journal_id}-${rowData.journal_subid} `,
+      title: `Delete  transaction number : ${journalDetail.journal_id}-${journalDetail.journal_subid} `,
       message: "Are you sure you want to delete this line entry? ",
       actions: {
         confirm: {
@@ -697,15 +712,19 @@ export class JournalUpdateComponent
     });
 
     // Subscribe to the confirmation dialog closed action
-    confirmation.afterClosed().subscribe((result) => {
+    var sub =confirmation.afterClosed().subscribe((result) => {
       // If the confirm button pressed...
       if (result === "confirmed") {
         // Delete the list
-        this.delete(journalDetail);
+        // this.delete(journalDetail);
         this.store.deleteJournalDetail(journalDetail);
         this.bDirty = false;
+        this.closeDrawer();
       }
     });
+
+    sub.unsubscribe();
+    
   }
 
 
@@ -789,7 +808,7 @@ export class JournalUpdateComponent
         fund: "",
       };
       this.store.createJournalDetail(journalDetail);
-      
+
     }
     this.bDirty = true;
   }
@@ -801,7 +820,7 @@ export class JournalUpdateComponent
   }
 
   onUpdateJournalEntry() {
-    
+
     if (this.bHeaderDirty === false) {
       this.snackBar.open("Journal details have nothing to update ... ", "OK", {
         verticalPosition: "top",
@@ -815,8 +834,8 @@ export class JournalUpdateComponent
     const updateDate = dDate.toISOString().split("T")[0];
 
     var header = this.journalForm.getRawValue();
-      
-  
+
+
     const journalHeaderUpdate: IJournalHeader = {
       journal_id: this.journal_id,
       booked_date: updateDate,
@@ -835,7 +854,7 @@ export class JournalUpdateComponent
     };
 
     this.store.updateJournalHeader(journalHeaderUpdate);
-    
+
     this.snackBar.open("Journal description updated", "", {
       verticalPosition: "top",
       horizontalPosition: "right",
@@ -916,7 +935,7 @@ export class JournalUpdateComponent
         duration: 2000,
       }
     );
-    
+
     this.debitCtrl.reset();
   }
 
@@ -951,11 +970,11 @@ export class JournalUpdateComponent
     const email = this.auth.currentUser?.email;
 
     var debit = Number(detail.debit);
-    
+
     var credit = Number(detail.credit);
 
     var childAccount = this.debitCtrl.getRawValue();
-    
+
     var child_desc = this.store.accounts().find((x) => x.child === Number(childAccount.child)).description;
 
 
