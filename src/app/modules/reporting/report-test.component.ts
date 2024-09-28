@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, OnInit, inject } from '@angular/core';
-import { employeeData, orderDatas } from '../accounting/tree/data';
+import { employeeData, orderDatas } from '../accounting/tree/datasource';
 
 import { GridModule, DetailRowService, FilterService, PageService, SortService } from '@syncfusion/ej2-angular-grids';
 import { TrialBalanceStore } from 'app/services/distribution.ledger.store';

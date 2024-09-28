@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, ViewChild, inject, viewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild, ViewEncapsulation, inject, viewChild } from '@angular/core';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject } from 'rxjs';
 import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
@@ -15,7 +15,28 @@ import { MatDrawer } from '@angular/material/sidenav';
 import { MaterialModule } from 'app/services/material.module';
 import { SubTypeService } from 'app/services/subtype.service';
 import { TypeService } from 'app/services/type.service';
-import { DialogEditEventArgs, EditService, SelectionSettingsModel, GroupService, FilterService, GridModule, PageService, SaveEventArgs, SortService, ToolbarService, GridComponent, AggregateService, FilterSettingsModel, ToolbarItems, SearchSettingsModel, GroupSettingsModel, ColumnMenuService, ResizeService, ExcelExport, PdfExportService, ExcelExportService, ReorderService } from '@syncfusion/ej2-angular-grids';
+
+import { DialogEditEventArgs, 
+    EditService, 
+    SelectionSettingsModel, 
+    GroupService, 
+    FilterService, 
+    GridModule, 
+    PageService, 
+    SaveEventArgs, 
+    SortService, 
+    ToolbarService, 
+    GridComponent, 
+    AggregateService, 
+    FilterSettingsModel, 
+    ToolbarItems, 
+    SearchSettingsModel, 
+    ColumnMenuService, 
+    ResizeService, 
+    PdfExportService, 
+    ExcelExportService, 
+    ReorderService } from '@syncfusion/ej2-angular-grids';
+
 import { Browser } from '@syncfusion/ej2-base';
 import { Dialog } from '@syncfusion/ej2-popups';
 import { DropDownListComponent } from '@syncfusion/ej2-angular-dropdowns';
@@ -39,8 +60,24 @@ const imports = [
     selector: 'transactions',
     standalone: true,
     imports: [imports],
+    encapsulation: ViewEncapsulation.None,
     templateUrl: './journal-listing.component.html',
-    providers: [JournalStore, SortService, ResizeService, ReorderService, ExcelExportService, PdfExportService, PageService, ResizeService, GroupService, FilterService, ToolbarService, EditService, AggregateService, ColumnMenuService],
+    providers: [ ToolbarService, 
+                 FilterService, 
+                 ExcelExportService, 
+                 PdfExportService, 
+                 SortService, 
+                 JournalStore, 
+                 SortService, 
+                 ResizeService, 
+                 ReorderService, 
+                 PageService, 
+                 ResizeService, 
+                 GroupService, 
+                 FilterService, 
+                 EditService, 
+                 AggregateService, 
+                 ColumnMenuService],
 })
 export class JournalEntryComponent implements OnInit, OnDestroy {
 
@@ -48,13 +85,13 @@ export class JournalEntryComponent implements OnInit, OnDestroy {
     public subtypeService = inject(SubTypeService);
     public fundService = inject(FundsService);
     public accountService = inject(GLAccountsService);
-    public route = inject(Router);    
+    public route = inject(Router);
     public store = inject(JournalStore);
 
 
     drawer = viewChild<MatDrawer>('drawer')
     grid = viewChild<GridComponent>('grid');
-    
+
     journalViewChildControl = viewChild(JournalUpdateComponent);
     currentRowData: any;
 
@@ -63,13 +100,8 @@ export class JournalEntryComponent implements OnInit, OnDestroy {
     sTitle = 'Journal Entry';
     selectedItemKeys: any[] = [];
 
-    public nJournal = 0;
-    public description = '';
-    public transaction_date = '';
-    public amount = '';
     public journalType = 'GL';
-    public currentDate: string;
-    public journal_details: any[];
+    
     public bOpenDetail: boolean = false;
 
     // datagrid settings start
@@ -84,27 +116,24 @@ export class JournalEntryComponent implements OnInit, OnDestroy {
     public toolbarOptions?: ToolbarItems[];
     public searchOptions?: SearchSettingsModel;
     public filterSettings: FilterSettingsModel;
-
+    public journalForm!: FormGroup;
+    public keyField: any;
+    
+    customizeTooltip = (pointsInfo: { originalValue: string; }) => ({ text: `${parseInt(pointsInfo.originalValue)}%` });
 
     initialDatagrid() {
+        // this.pageSettings = { pageCount: 10 };        
         this.formatoptions = { type: 'dateTime', format: 'M/dd/yyyy' }
         this.pageSettings = { pageSizes: true, pageCount: 10 };
-        this.selectionOptions = { mode: 'Row' };
+        this.selectionOptions = { mode: 'Cell' };
         this.editSettings = { allowEditing: true, allowAdding: false, allowDeleting: false };
-        this.searchOptions = { fields: ['description'], operator: 'contains', ignoreCase: true, ignoreAccent: true };
-        this.toolbarOptions = ['Search'];
-        this.filterSettings = { type: 'CheckBox' };
+        this.searchOptions = { operator: 'contains', ignoreCase: true, ignoreAccent: true };
+        this.toolbarOptions = ['Search', 'ExcelExport', 'PdfExport', 'CsvExport']
+        this.filterSettings = { type: 'Excel' };
     }
 
-
-    customizeTooltip = (pointsInfo: { originalValue: string; }) => ({ text: `${parseInt(pointsInfo.originalValue)}%` });
-    journalForm!: FormGroup;
-    keyField: any;
-    protected _onDestroy = new Subject<void>();
-
+    
     ngOnInit() {
-        // const dDate = new Date();
-        // this.currentDate = dDate.toISOString().split('T')[0];
         this.initialDatagrid();
     }
 
@@ -116,21 +145,17 @@ export class JournalEntryComponent implements OnInit, OnDestroy {
             this.bOpenDetail = true;
             this.journalType = data.type;
 
-            if (data.type === 'AR') {
-                this.route.navigate(['journals/ar', data.journal_id]);
-                return;
-            }
-            else
-                if (data.type === 'AP') {
+            switch (data.type) {
+                case 'GL':
+                    this.route.navigate(['journals/gl', data.journal_id]);
+                    break;
+                case 'AP':
                     this.route.navigate(['journals/ap', data.journal_id]);
-                    return;
-                }
-                else
-                    if (data.type === 'GL') {
-                        this.route.navigate(['journals/gl', data.journal_id]);
-                        return;
-                    }
-
+                    break;
+                case 'AR':
+                    this.route.navigate(['journals/ar', data.journal_id]);
+                    break;
+            }
         }
         if (args.requestType === 'save') {
             args.cancel = true;
@@ -163,9 +188,7 @@ export class JournalEntryComponent implements OnInit, OnDestroy {
 
     onAdd() {
         this.bOpenDetail = true;
-        this.nJournal = 0;
         this.openDrawer()
-        //this.journalViewChildControl().refresh(this.nJournal, this.description, this.transaction_date, this.amount, this.journalType);
     }
 
     onRefresh() {
@@ -208,25 +231,10 @@ export class JournalEntryComponent implements OnInit, OnDestroy {
         this.openDrawer();
     }
 
-    selectionChanged(data: any) {
-        console.debug(`selectionChanged ${JSON.stringify(data.data)}`);
-        this.selectedItemKeys = data.selectedRowKeys;
-    }
 
     onEdit() {
         this.bOpenDetail = true;
-        // this.refresh(this.hJournal, this.description, this.transaction_date);
         this.openDrawer();
-    }
-
-
-    onFocusedDetailRowChanged(e: any) {
-        this.nJournal = e.row.data.journal_id;
-        this.currentRowData = e.row.data;
-    }
-
-    onFocusedRowChanged(e: any) {
-        console.debug('onFocusRowChanged :', JSON.stringify(e.row.data))
     }
 
     openDrawer() {
@@ -240,7 +248,6 @@ export class JournalEntryComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy() {
-        this._onDestroy.next();
-        this._onDestroy.complete();
+
     }
 }

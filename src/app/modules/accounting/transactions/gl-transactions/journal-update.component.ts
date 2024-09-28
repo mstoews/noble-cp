@@ -83,7 +83,7 @@ import {
   IJournalHeader,
   IJournalHeaderUpdate,
 } from "app/models/journals";
-import { ActivatedRoute } from "@angular/router";
+import { Router, ActivatedRoute } from "@angular/router";
 import { Location } from "@angular/common";
 import { MatDrawer } from "@angular/material/sidenav";
 import { JournalStore } from "app/store/journal.store";
@@ -144,7 +144,7 @@ export class JournalUpdateComponent
 
   @Output() notifyDrawerClose: EventEmitter<any> = new EventEmitter();
   private _liveAnnouncer = inject(LiveAnnouncer);
-  
+
   private _fuseConfirmationService = inject(FuseConfirmationService);
 
   public detailForm!: FormGroup;
@@ -153,8 +153,9 @@ export class JournalUpdateComponent
   drawer = viewChild<MatDrawer>("drawer");
 
   @ViewChild("contextmenu")
-  
+
   private _location = inject(Location);
+  private router = inject(Router);
 
   public contextmenu: ContextMenuComponent;
 
@@ -247,13 +248,11 @@ export class JournalUpdateComponent
   protected _onDestroy = new Subject<void>();
 
   columnsToDisplay: string[] = ["journal_id", "description"];
-  
-  datastore = new MatTableDataSource(this.store.gl());
 
   @ViewChild("singleDebitSelect", { static: true })
 
   singleDebitSelect: MatSelect;
-  
+
   @ViewChild(MatSort) sort: MatSort;
 
   ngOnInit(): void {
@@ -291,7 +290,7 @@ export class JournalUpdateComponent
         this.accountsGrid.push(list);
       });
 
-    this.fundListSubject = this.funds$.subscribe((funds) => {
+      this.fundListSubject = this.funds$.subscribe((funds) => {
         funds.forEach((fund) => {
           var list = {
             fund: fund.fund,
@@ -323,7 +322,7 @@ export class JournalUpdateComponent
       this.journalData.amount,
       this.journalData.type
     );
-    
+
     this.store.loadDetails(this.journal_id);
 
     this.initialDatagrid();
@@ -367,7 +366,7 @@ export class JournalUpdateComponent
 
   public announceSortChange(sortState: Sort) {
     if (sortState.direction) {
-      console.log('Sort changed ...', sortState.direction );
+      console.log('Sort changed ...', sortState.direction);
     } else {
       console.log('Sort changed ...', sortState.active);
     }
@@ -670,7 +669,8 @@ export class JournalUpdateComponent
   exitWindow() {
     if (this.bDirty === false) {
       this.journalForm.reset();
-      
+      this.router.navigate(["journals"]);
+
     } else {
       const confirmation = this.fuseConfirmationService.open({
         title: "Unsaved Changes",
@@ -695,7 +695,7 @@ export class JournalUpdateComponent
   }
 
   onDeleteDetail() {
-    
+
     var journalDetail = {
       journal_id: this.journal_id,
       journal_subid: this.currentRowData.journal_subid,
@@ -712,7 +712,7 @@ export class JournalUpdateComponent
     });
 
     // Subscribe to the confirmation dialog closed action
-    var sub =confirmation.afterClosed().subscribe((result) => {
+    var sub = confirmation.afterClosed().subscribe((result) => {
       // If the confirm button pressed...
       if (result === "confirmed") {
         // Delete the list
@@ -724,7 +724,7 @@ export class JournalUpdateComponent
     });
 
     sub.unsubscribe();
-    
+
   }
 
 
@@ -750,14 +750,10 @@ export class JournalUpdateComponent
       // If the confirm button pressed...
       if (result === "confirmed") {
         // Delete the list
-        this.delete(journalDetail);
+        this.store.deleteJournalDetail(journalDetail);
         this.bDirty = false;
       }
     });
-  }
-
-  delete(journal: IJournalDetailDelete) {
-    this.store.deleteJournalDetail(journal);
   }
 
   onAddLineJournalDetail() {
@@ -835,7 +831,6 @@ export class JournalUpdateComponent
 
     var header = this.journalForm.getRawValue();
 
-
     const journalHeaderUpdate: IJournalHeader = {
       journal_id: this.journal_id,
       booked_date: updateDate,
@@ -862,6 +857,7 @@ export class JournalUpdateComponent
     });
 
     this.bHeaderDirty = false;
+
   }
 
   onCreate() {

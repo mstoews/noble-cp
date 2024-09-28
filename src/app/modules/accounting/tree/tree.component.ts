@@ -1,66 +1,49 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { orderDataSource } from './data';
-import { EditService, ToolbarService, PageService, SortService, FilterService, NewRowPosition, GridModule } from '@syncfusion/ej2-angular-grids';
-import { ChangeEventArgs, DropDownListComponent, DropDownListModule } from '@syncfusion/ej2-angular-dropdowns';
+import { NgModule } from '@angular/core'
+import { BrowserModule } from '@angular/platform-browser'
+import { GridModule, ToolbarService, ExcelExportService, FilterService } from '@syncfusion/ej2-angular-grids'
 
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { data } from './datasource'
+import { GridComponent, ToolbarItems } from '@syncfusion/ej2-angular-grids';
+import { ClickEventArgs } from '@syncfusion/ej2-angular-navigations';
 
 @Component({
-    selector: 'dropdown',
-    templateUrl: 'tree.component.html',
-    providers: [ToolbarService, EditService, PageService, SortService, FilterService],
-    standalone: true,
-    imports: [GridModule, DropDownListModule ]
+imports: [GridModule ],
+providers: [ExcelExportService, ToolbarService, FilterService],
+standalone: true,
+    selector: 'download',
+    template: `<ejs-grid #grid id='Grid' 
+                [dataSource]='data' [toolbar]='toolbarOptions' 
+                height='272px' 
+               [allowExcelExport]='true' 
+               (toolbarClick)='toolbarClick($event)'>
+                <e-columns>
+                    <e-column field='OrderID' headerText='Order ID' textAlign='Right' width=120></e-column>
+                    <e-column field='CustomerID' headerText='Customer ID' width=150> </e-column>
+                    <e-column field='ShipCity' headerText='Ship City' width=150></e-column>
+                    <e-column field='ShipName' headerText='Ship Name' width=150></e-column>
+                </e-columns>
+                </ejs-grid>`
 })
 export class TreeComponent implements OnInit {
- 
-  @ViewChild('ddsample')
-  public dropDown: DropDownListComponent;
-  public data: Object[];
-  public editSettings: Object;
-  public filterSettings: Object;
-  public toolbar: string[];
-  public orderidrules: Object;
-  public customeridrules: Object;
-  public freightrules: Object;
-  public editparams: Object;
-  
-  public formatoptions: Object;
 
-  public ngOnInit(): void {
-      this.data = orderDataSource;
-      this.editSettings = { allowEditing: true, allowAdding: true, allowDeleting: true , newRowPosition: 'Top', showAddNewRow: true };
-      this.toolbar = ['Add', 'Edit', 'Delete', 'Update', 'Cancel'];
-      this.orderidrules = { required: true, number: true };
-      this.customeridrules = { required: true, minLength: 5 };
-      this.freightrules = { required: true, min: 0 };
-      this.editparams = { params: { popupHeight: '300px' } };
-      
-      this.filterSettings = { type: 'Excel'};
-      this.formatoptions = { type: 'dateTime', format: 'M/d/y hh:mm a' }
-  }
+    public data?: object[]; 
+    public toolbarOptions?: ToolbarItems[];
+    @ViewChild('grid') public grid?: GridComponent;
 
-  public newRowPosition: { [key: string]: Object }[] = [
-      { id: 'Top', newRowPosition: 'Top' },
-      { id: 'Bottom', newRowPosition: 'Bottom' }
-  ];
-  public localFields: Object = { text: 'newRowPosition', value: 'id' };
-
-  public onChange(e: ChangeEventArgs): void {
-      let gridInstance: any = (<any>document.getElementById('Normalgrid')).ej2_instances[0];
-      (gridInstance.editSettings as any).newRowPosition = <NewRowPosition>this.dropDown.value;
-      gridInstance.refresh();
-  }
-
-  actionBegin(args: any) :void {
-      let gridInstance: any = (<any>document.getElementById('Normalgrid')).ej2_instances[0];
-      if (args.requestType === 'save') {
-          if (gridInstance.pageSettings.currentPage !== 1 && gridInstance.editSettings.newRowPosition === 'Top') {
-              args.index = (gridInstance.pageSettings.currentPage * gridInstance.pageSettings.pageSize) - gridInstance.pageSettings.pageSize;
-          } else if (gridInstance.editSettings.newRowPosition === 'Bottom') {
-              args.index = (gridInstance.pageSettings.currentPage * gridInstance.pageSettings.pageSize) - 1;
-          }
-      }
-  }
+    ngOnInit(): void {
+        this.data = data;
+        this.toolbarOptions = ['ExcelExport', 'CsvExport'];
+    }
+    toolbarClick(args: ClickEventArgs): void {
+        if (args.item.id === 'Grid_excelexport') { 
+            // 'Grid_excelexport' -> Grid component id + _ + toolbar item name
+            (this.grid as GridComponent).excelExport();
+        }
+        else if (args.item.id === 'Grid_csvexport') { 
+            // 'Grid_csvexport' -> Grid component id + _ + toolbar item name
+            (this.grid as GridComponent).csvExport();
+        }
+    }
 }
-    
 
