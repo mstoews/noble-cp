@@ -12,9 +12,9 @@ imports: [GridModule ],
 providers: [ExcelExportService, ToolbarService, FilterService],
 standalone: true,
     selector: 'download',
-    template: `<ejs-grid #grid id='Grid' 
+    template: `<ejs-grid #grid id='Grid' class="h-[calc(100vh-15rem)]" 
                 [dataSource]='data' [toolbar]='toolbarOptions' 
-                height='272px' 
+                
                [allowExcelExport]='true' 
                (toolbarClick)='toolbarClick($event)'>
                 <e-columns>

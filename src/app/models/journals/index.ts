@@ -38,6 +38,11 @@ export interface IJournalHeader {
   debit?: number
 }
 
+export interface IPeriodParam {
+  period: number,
+  period_year: number
+}
+
 export interface IJournalDetail {
   journal_id    : number,
   journal_subid : number,

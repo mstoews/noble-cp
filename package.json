@@ -28,6 +28,7 @@
     "@ngrx/entity": "^18.0.0",
     "@ngrx/operators": "^18.0.1",
     "@ngrx/signals": "^18.0.0-rc.2",
+    "@ngrx/store": "^18.0.2",
     "@syncfusion/ej2": "^25.1.39",
     "@syncfusion/ej2-angular-base": "^25.1.37",
     "@syncfusion/ej2-angular-buttons": "^25.1.39",

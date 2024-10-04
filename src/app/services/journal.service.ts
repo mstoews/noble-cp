@@ -12,6 +12,7 @@ import {
   IJournalHeaderUpdate,
   IJournalTemplate,
   IPeriod,
+  IPeriodParam,
   ITransactionDate
 } from 'app/models/journals';
 
@@ -85,55 +86,15 @@ export class JournalService implements OnDestroy {
     return this.httpClient.get<IJournalDetail[]>(url);
   }
 
-  /*
-    getJournalDetail(journal_id: number) {
-      if (journal_id != 0) {
-      var url = this.baseUrl + '/v1/get_journal_detail/'+journal_id;
-      this.httpClient.get<IJournalDetail[]>(url).pipe(
-          tap(data => this.journalDetailList.set(data)),
-          take(1),
-          catchError(err => {
-            const message = "Could not retrieve detail journals ...";
-            console.debug(message, err.statusText);
-            this.message(message); 
-            if (err.statusText === "Unauthorized") {              
-              this.router.navigate(['auth/login']);            
-            }
-            return throwError(() => new Error(`${ JSON.stringify(err.statusText) }`)); 
-          }),
-          shareReplay()
-        ).subscribe();      
-      }
-      return this.journalDetailList;
-    }
-  */
-
-
+  getHttpAllJournalDetailsByPeriod(period: IPeriodParam) {
+    var url = this.baseUrl + '/v1/get_journal_detail/';
+    return this.httpClient.post<IJournalDetail[]>(url, period);
+  }
+  
   readHttpJournalHeader() {
     var url = this.baseUrl + '/v1/read_journal_header';
     return this.httpClient.get<IJournalHeader[]>(url).pipe(shareReplay(), retry(2));
   }
-
-  // readJournalHeader() {
-  //   this.readHttpJournalHeader().pipe(
-  //     debounceTime(300),
-  //     distinctUntilChanged(),
-  //     tap(data => this.journalHeaderList.set(data)),
-  //     take(1),
-  //     catchError(err => {
-  //         const message = "Could not retrieve header journals ...";
-  //         console.debug(message, err.statusText);
-  //         this.message(message); 
-  //         if (err.statusText === "Unauthorized")
-  //           {
-  //             this.router.navigate(['auth/sign-in']);            
-  //           }
-  //         return throwError(() => new Error(`${ JSON.stringify(err.statusText) }`));         
-  //     }),
-  //     shareReplay()
-  //   ).subscribe();
-  //   return this.journalHeaderList;
-  // }
 
   getJournalAccountsByPeriod(period: number, periodYear: number, child: number) {
     var url = this.baseUrl + '/v1/read_journal_by_account';
@@ -215,21 +176,7 @@ export class JournalService implements OnDestroy {
 
   updateJournalDetail(detail: IJournalDetail) {
     var url = this.baseUrl + '/v1/update_journal_detail';
-    this.httpClient.post<IJournalDetail>(url, detail)
-      .pipe(
-        // tap( data => this.updateJournalDetailSignal(detail)),
-        catchError(err => {
-          this.message("Could not save journal detail");
-          return throwError(() => new Error(`Invalid time ${err}`));
-        }),
-        shareReplay()
-      ).pipe(takeUntil(this.ngDestroy$)).subscribe(data => {
-        this.snackBar.open('Journal details updated ... ' + data.journal_id, 'OK', {
-          verticalPosition: 'top',
-          horizontalPosition: 'right',
-          duration: 2000,
-        });
-      });
+    return this.httpClient.post<IJournalDetail>(url, detail);
   }
 
 
@@ -248,63 +195,15 @@ export class JournalService implements OnDestroy {
     });
   }
 
-
-
   deleteHttpJournalDetail(journal: IJournalDetailDelete) {
     var url = this.baseUrl + '/v1/delete_journal_details';
     return this.httpClient.post<IJournalDetailDelete>(url, journal);
   }
 
-  // deleteJournalDetail(detail: any){ 
-  //   var url = this.baseUrl + '/v1/delete_journal_details';
-  //   this.httpClient.post<IJournalDetailDelete>(url, detail )
-  //   .pipe(
-  //     tap (data => { 
-  //       console.log('deleted journal id', data);
-  //       this.deleteJournalDetailSignal(detail)
-  //     }),
-  //     catchError(err => {
-  //         this.message("Could not save journal detail"); 
-  //         return throwError(() => new Error(`Invalid time ${ err }`));         
-  //     }),
-  //     shareReplay()
-  //   ).pipe(takeUntil(this.ngDestroy$)).subscribe(data => {
-  //     this.snackBar.open('Journal details updated ... ' + data.journal_id, 'OK', {
-  //       verticalPosition: 'top',
-  //       horizontalPosition: 'right',
-  //       duration: 2000,
-  //     });      
-  //   });
-  // }
-
-
-  // add a line to journal detail
-
   createHttpJournalDetail(detail: IJournalDetail) {
     var url = this.baseUrl + '/v1/create_journal_detail';
     return this.httpClient.post<IJournalDetail>(url, detail);
   }
-
-  // createJournalDetail(detail: any){     
-  //   this.createHttpJournalDetail(detail)
-  //   .pipe(
-  //     tap (data => { 
-  //       console.log('added journal id', data);
-  //       this.addJournalDetailSignal(detail)
-  //     }),
-  //     catchError(err => {
-  //         this.message("Could not save journal detail"); 
-  //         return throwError(() => new Error(`Invalid time ${ err }`));         
-  //     }),
-  //     shareReplay()
-  //   ).pipe(takeUntil(this.ngDestroy$)).subscribe(data => {
-  //     this.snackBar.open('Journal detail added ... ' + data.journal_id, 'OK', {
-  //       verticalPosition: 'top',
-  //       horizontalPosition: 'right',
-  //       duration: 2000,
-  //     });      
-  //   }); 
-  // }
 
   ngOnDestroy(): void {
     this.ngDestroy$.next(true);

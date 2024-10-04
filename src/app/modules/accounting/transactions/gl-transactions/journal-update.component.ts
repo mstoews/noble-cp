@@ -66,29 +66,27 @@ import {
   FilterService,
   FilterSettingsModel,
   GridModule,
-  PageService,
   RowDDService,
   SaveEventArgs,
   RowDragEventArgs,
-  SelectionSettingsModel,
   SortService,
   ToolbarService,
   GridComponent,
   DialogEditEventArgs,
+  SearchService,
+  RowSelectEventArgs,
 } from "@syncfusion/ej2-angular-grids";
 
 import {
   IJournalDetail,
-  IJournalDetailDelete,
   IJournalHeader,
-  IJournalHeaderUpdate,
 } from "app/models/journals";
 import { Router, ActivatedRoute } from "@angular/router";
 import { Location } from "@angular/common";
 import { MatDrawer } from "@angular/material/sidenav";
 import { JournalStore } from "app/store/journal.store";
 import { MatSort, Sort, MatSortModule } from "@angular/material/sort";
-import { MatTableDataSource, MatTableModule } from "@angular/material/table";
+import { MatTableModule } from "@angular/material/table";
 import { LiveAnnouncer } from '@angular/cdk/a11y';
 
 
@@ -122,18 +120,23 @@ const imports = [
   providers: [
     provideNgxMask(),
     SortService,
-    PageService,
     FilterService,
     ToolbarService,
     EditService,
+    SearchService,
     AggregateService,
     RowDDService,
     JournalStore,
   ],
   styles: [`
    .mat-mdc-row { height: 36px !important; } 
-   .mat-mdc-header { height: 36px !important; }
-   .mat-mdc-form-field {height: 76px !important;}
+   .mat-mdc-header { height: 36px !important;  }
+   .mat-mdc-form-field {height: 72px !important;}
+   .mat-mdc-table-sticky-border-elem-top { 
+    height: 36px !important; 
+    margin-top: 2px !important; 
+    background: #64748b !important;     
+    color: white !important; } 
    `
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -143,9 +146,20 @@ export class JournalUpdateComponent
   [x: string]: any;
 
   @Output() notifyDrawerClose: EventEmitter<any> = new EventEmitter();
-  private _liveAnnouncer = inject(LiveAnnouncer);
 
   private _fuseConfirmationService = inject(FuseConfirmationService);
+  private fb = inject(FormBuilder);
+  private typeService = inject(TypeService);
+  private subtypeService = inject(SubTypeService);
+  private fundService = inject(FundsService);
+  private accountService = inject(GLAccountsService);
+  private snackBar = inject(MatSnackBar);
+  private dialog = inject(MatDialog);
+  private auth = inject(AUTH);
+  private activatedRoute = inject(ActivatedRoute);
+  public store = inject(JournalStore);
+  public matDialog = inject(MatDialog);
+
 
   public detailForm!: FormGroup;
   public journalForm!: FormGroup;
@@ -159,19 +173,7 @@ export class JournalUpdateComponent
 
   public contextmenu: ContextMenuComponent;
 
-  private fb = inject(FormBuilder);
-  // private journalService = inject(JournalService);
-  private typeService = inject(TypeService);
-  private subtypeService = inject(SubTypeService);
-  private fundService = inject(FundsService);
-  private accountService = inject(GLAccountsService);
-  private snackBar = inject(MatSnackBar);
-  private dialog = inject(MatDialog);
-  private auth = inject(AUTH);
-  private activatedRoute = inject(ActivatedRoute);
-  public store = inject(JournalStore);
-  public matDialog = inject(MatDialog);
-
+  
   public value = 0;
   public loading = false;
   public height: string = "250px";
@@ -189,7 +191,6 @@ export class JournalUpdateComponent
   public journal_subid: any;
   public editing = false;
   public myControl = new FormControl("");
-  public accountOptions: Observable<string[]>;
   public bDirty = false;
   public bHeaderDirty = false;
 
@@ -202,10 +203,11 @@ export class JournalUpdateComponent
   public toolbar: string[];
   public orderidrules: Object;
   public editparams: Object;
-  public pageSettings: Object;
   public formatoptions: Object;
   public selectionOptions: Object;
+  public searchOptions: Object;
   public selIndex?: number[] = [];
+  
 
   // Global Journal header
   public description: string;
@@ -248,12 +250,11 @@ export class JournalUpdateComponent
   protected _onDestroy = new Subject<void>();
 
   columnsToDisplay: string[] = ["journal_id", "description"];
+  toolbarOptions = ['Search']
 
   @ViewChild("singleDebitSelect", { static: true })
 
   singleDebitSelect: MatSelect;
-
-  @ViewChild(MatSort) sort: MatSort;
 
   ngOnInit(): void {
     this.createEmptyForm();
@@ -329,8 +330,7 @@ export class JournalUpdateComponent
   }
 
   ngAfterViewInit() {
-    this.setInitialValue();
-    this.datastore.sort = this.sort;
+    this.setInitialValue();    
   }
 
   openDrawer() {
@@ -351,10 +351,23 @@ export class JournalUpdateComponent
     console.log('Row clicked ...', event);
   }
 
+  public onRowSelected(args: RowSelectEventArgs): void {
+    const queryData: any =  args.data;
+    this.key = queryData.journal_id;
+    this.refresh(
+      queryData.journal_id,
+      queryData.description,
+      queryData.transaction_date,
+      queryData.amount,
+      queryData.type
+    );
+    this.store.loadDetails(this.key);
+    //const dataSource: object[] = new DataManager(data).executeLocal(new Query().where('CustomerName', 'equal', queryData.ContactName));
+    //this.detailgrid.dataSource = dataSource.slice(0, 5);
+  }
+
   initialDatagrid() {
-    // this.pageSettings = { pageCount: 10 };
     this.formatoptions = { type: "dateTime", format: "M/dd/yyyy" };
-    this.pageSettings = { pageSizes: true, pageCount: 10 };
     this.selectionOptions = { mode: "Row" };
     this.editSettings = {
       allowEditing: true,
@@ -362,14 +375,6 @@ export class JournalUpdateComponent
       allowDeleting: false,
     };
     this.filterSettings = { type: "CheckBox" };
-  }
-
-  public announceSortChange(sortState: Sort) {
-    if (sortState.direction) {
-      console.log('Sort changed ...', sortState.direction);
-    } else {
-      console.log('Sort changed ...', sortState.active);
-    }
   }
 
   public onEditJournal(id: number) {
@@ -408,7 +413,7 @@ export class JournalUpdateComponent
     );
   }
 
-  OnCardDoubleClick(data: any): void {
+  public OnCardDoubleClick(data: any): void {
     this.currentRowData = data;
     const email = this.auth.currentUser.email;
     const dDate = new Date();
@@ -446,7 +451,7 @@ export class JournalUpdateComponent
     );
 
     this.detailForm = this.fb.group({
-      debitCtrl: [journalDetail.child.toString(), Validators.required],
+      debitAccountFilterCtrl: [journalDetail.child.toString(), Validators.required],
       description: [journalDetail.description, Validators.required],
       sub_type: [journalDetail.sub_type, Validators.required],
       debit: [journalDetail.debit, Validators.required],
@@ -478,7 +483,7 @@ export class JournalUpdateComponent
   public createEmptyDetailForm() {
     this.detailForm = this.fb.group({
       account: ["", Validators.required],
-      debitCtrl: ["", Validators.required],
+      debitAccountFilterCtrl: ["", Validators.required],
       description: ["", Validators.required],
       sub_type: ["", Validators.required],
       debit: ["", Validators.required],
@@ -489,11 +494,23 @@ export class JournalUpdateComponent
     this.openDrawer();
   }
 
-  actionBegin(args: SaveEventArgs): void {
+  public actionBegin(args: SaveEventArgs): void {
     if (args.requestType === "beginEdit" || args.requestType === "add") {
       args.cancel = true;
       this.OnCardDoubleClick(args.rowData);
       this.openDrawer();
+    }
+    if (args.requestType === "save") {
+      this.onSaved(args.data);
+    }
+  }
+
+  actionSelectJournal(args: SaveEventArgs): void {
+    if (args.requestType === "beginEdit" || args.requestType === "add") {
+      args.cancel = true;
+      const data = args.rowData as IJournalHeader;
+      this.store.loadDetails(data.journal_id)
+      this.refresh(data.journal_id, data.description, data.transaction_date, data.amount, data.type)
     }
     if (args.requestType === "save") {
       this.onSaved(args.data);
@@ -567,11 +584,10 @@ export class JournalUpdateComponent
               b: IDropDownAccounts
             ) => a && b && a.child === b.child;
         });
+      this.searchOptions = { operator: 'contains', ignoreCase: true, ignoreAccent: true };
   }
 
-
   onFocusedDetailRowChanged(e: any) {
-
     this.journalData = e.row.data;
     this.currentRowData = e.row.data;
     this.journal_subid = e.row.data.journal_subid;
@@ -589,6 +605,7 @@ export class JournalUpdateComponent
     this.transaction_date = transaction_date;
     this.amount = amount;
     this.journalType = journalType;
+    this.journal_id = journal_id;
 
     this.journalForm = this.fb.group({
       description: [this.description, Validators.required],
@@ -603,6 +620,44 @@ export class JournalUpdateComponent
   changeSubtype(e: any) {
     console.debug("Subtype :", e.value);
   }
+
+  onNew(e: any) {
+    const confirmation = this.fuseConfirmationService.open({
+      title: "Create New Transaction",
+      message:
+        "Would you like to create a new transaction? ",
+      actions: {
+        confirm: {
+          label: "New Transaction",
+        },
+      },
+    });
+
+    confirmation.afterClosed().subscribe((result) => {
+      if (result === "confirmed") {
+      }
+    });
+  }
+
+
+  onClone(e: any) {
+    const confirmation = this.fuseConfirmationService.open({
+      title: "Clone Current Transaction",
+      message:
+        "Would you like to clone the current transaction? ",
+      actions: {
+        confirm: {
+          label: "Clone Transaction",
+        },
+      },
+    });
+
+    confirmation.afterClosed().subscribe((result) => {
+      if (result === "confirmed") {
+      }
+    });
+  }
+
 
   onCreateTemplate() {
     const confirmation = this.fuseConfirmationService.open({
@@ -655,7 +710,7 @@ export class JournalUpdateComponent
     });
 
     this.detailForm = this.fb.group({
-      debitCtrl: ["", Validators.required],
+      debitAccountFilterCtrl: ["", Validators.required],
       description: ["", Validators.required],
       child: ["", Validators.required],
       fund: ["", Validators.required],
@@ -702,7 +757,7 @@ export class JournalUpdateComponent
     };
 
     const confirmation = this._fuseConfirmationService.open({
-      title: `Delete  transaction number : ${journalDetail.journal_id}-${journalDetail.journal_subid} `,
+      title: `Delete  transaction detail item : ${journalDetail.journal_id}-${journalDetail.journal_subid} `,
       message: "Are you sure you want to delete this line entry? ",
       actions: {
         confirm: {
@@ -715,15 +770,14 @@ export class JournalUpdateComponent
     var sub = confirmation.afterClosed().subscribe((result) => {
       // If the confirm button pressed...
       if (result === "confirmed") {
-        // Delete the list
-        // this.delete(journalDetail);
         this.store.deleteJournalDetail(journalDetail);
+        this.store.loadDetails(this.journal_id);
         this.bDirty = false;
         this.closeDrawer();
       }
     });
 
-    sub.unsubscribe();
+    
 
   }
 
@@ -756,7 +810,7 @@ export class JournalUpdateComponent
     });
   }
 
-  onAddLineJournalDetail() {
+  public onAddLineJournalDetail() {
     const updateDate = new Date().toISOString().split("T")[0];
     const email = this.auth.currentUser?.email;
     var max = 0;
@@ -860,7 +914,7 @@ export class JournalUpdateComponent
 
   }
 
-  onCreate() {
+  public onCreate() {
     var header = this.journalForm.getRawValue();
     var detail = this.detailForm.getRawValue();
     const dDate = new Date();
@@ -964,13 +1018,9 @@ export class JournalUpdateComponent
     const dDate = new Date();
     const updateDate = dDate.toISOString().split("T")[0];
     const email = this.auth.currentUser?.email;
-
     var debit = Number(detail.debit);
-
     var credit = Number(detail.credit);
-
     var childAccount = this.debitCtrl.getRawValue();
-
     var child_desc = this.store.accounts().find((x) => x.child === Number(childAccount.child)).description;
 
 
@@ -1012,7 +1062,7 @@ export class JournalUpdateComponent
     });
 
     this.bDirty = false;
-  }
+  } 
 
   ngOnDestroy(): void {
     if (this.accountsListSubject) {

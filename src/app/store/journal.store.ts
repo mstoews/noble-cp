@@ -11,7 +11,7 @@ import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { exhaustMap, filter, pipe, switchMap, tap } from 'rxjs';
 import { computed, inject } from '@angular/core';
 import { tapResponse } from '@ngrx/operators';
-import { IAccounts, IJournalDetail, IJournalDetailDelete, IJournalHeader } from 'app/models/journals';
+import { IAccounts, IJournalDetail, IJournalDetailDelete, IJournalHeader, IPeriodParam } from 'app/models/journals';
 import { JournalService } from '../services/journal.service';
 import { IFund, IType } from 'app/modules/kanban/kanban.service';
 import { IParty } from 'app/models/party';
@@ -159,6 +159,20 @@ export const JournalStore = signalStore(
         tap(() => patchState(state, { isLoading: true })),
         switchMap((value) => {
           return journalService.getHttpJournalDetails(value).pipe(
+            tapResponse({
+              next: (journal) => patchState(state, { details: journal }),
+              error: console.error,
+              finalize: () => patchState(state, { isLoading: false }),
+            })
+          );
+        })
+      )
+    ),
+    loadAllDetails: rxMethod<IPeriodParam>(
+      pipe(
+        tap(() => patchState(state, { isLoading: true })),
+        switchMap((value) => {
+          return journalService.getHttpAllJournalDetailsByPeriod(value).pipe(
             tapResponse({
               next: (journal) => patchState(state, { details: journal }),
               error: console.error,

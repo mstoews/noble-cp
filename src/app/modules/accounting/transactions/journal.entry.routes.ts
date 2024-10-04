@@ -12,12 +12,14 @@ export default [
     },
     {
         path: 'ar/:id',
-        component: ARUpdateComponent,
+        // component: ARUpdateComponent,
+        component: JournalUpdateComponent, 
         resolve: { journal: JournalResolver },
     },
     {
         path: 'ap/:id',
-        component: APUpdateComponent,
+        // component: APUpdateComponent,
+        component: JournalUpdateComponent, 
         resolve: {journal: JournalResolver },
     },
     {
