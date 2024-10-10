@@ -11,7 +11,7 @@ import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { exhaustMap, filter, pipe, switchMap, tap } from 'rxjs';
 import { computed, inject } from '@angular/core';
 import { tapResponse } from '@ngrx/operators';
-import { IAccounts, IJournalDetail, IJournalDetailDelete, IJournalHeader, IPeriodParam } from 'app/models/journals';
+import { IAccounts, IArtifacts, IJournalDetail, IJournalDetailDelete, IJournalHeader, IPeriodParam } from 'app/models/journals';
 import { JournalService } from '../services/journal.service';
 import { IFund, IType } from 'app/modules/kanban/kanban.service';
 import { IParty } from 'app/models/party';
@@ -30,6 +30,7 @@ export interface JournalStateInterface {
   period: IPeriod[];
   sub_type: ISubType[];
   funds: IFund[];
+  artifacts: IArtifacts[];
   isLoading: boolean;
   error: string | null;
 }
@@ -46,6 +47,7 @@ export const JournalStore = signalStore(
     period: [],
     sub_type: [],
     funds: [],
+    artifacts: [],
     error: null,
     isLoading: false,
   }),
@@ -231,6 +233,20 @@ export const JournalStore = signalStore(
           return journalService.readHttpJournalHeader().pipe(
             tapResponse({
               next: (journal) => patchState(state, { ar: journal.filter(ar => ar.type === 'AR') }),
+              error: console.error,
+              finalize: () => patchState(state, { isLoading: false }),
+            })
+          );
+        })
+      )
+    ),
+    loadArtifactsByJournalId: rxMethod<number>(
+      pipe(
+        tap(() => patchState(state, { isLoading: true })),
+        switchMap((value) => {
+          return journalService.readHttpLoadArtifactsByJournalId(value).pipe(
+            tapResponse({
+              next: (artifacts) => patchState(state, { artifacts: artifacts }),
               error: console.error,
               finalize: () => patchState(state, { isLoading: false }),
             })

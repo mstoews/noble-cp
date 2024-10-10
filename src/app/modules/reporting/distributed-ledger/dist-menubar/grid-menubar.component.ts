@@ -1,4 +1,4 @@
-import { Component, Output, EventEmitter, OnInit, Input, ChangeDetectionStrategy, inject } from '@angular/core';
+import { Component, Output, EventEmitter, OnInit, Input, ChangeDetectionStrategy, inject, output } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -26,13 +26,14 @@ var modules = [
   imports:[modules]
 })
 export class DistMenuStandaloneComponent implements OnInit {
-  @Output() notifyParentAdd: EventEmitter<any> = new EventEmitter();
-  @Output() notifyParentRefresh: EventEmitter<any> = new EventEmitter();
-  @Output() notifyParentDelete: EventEmitter<any> = new EventEmitter();
-  @Output() notifyParentClone: EventEmitter<any> = new EventEmitter();
-  @Output() notifyMenuItemChanged: EventEmitter<any> = new EventEmitter();
-  @Output() notifyParentPeriod: EventEmitter<any> = new EventEmitter<any>();
-  @Output() notifyParentYear: EventEmitter<any> = new EventEmitter<any>();
+  // @Output() notifyParentAdd = new EventEmitter();
+  notifyParentAdd = output();
+  notifyParentRefresh = output();
+  notifyParentDelete = output();
+  notifyParentClone = output();
+  notifyMenuItemChanged = output();
+  notifyParentPeriod = output<string>();
+  notifyParentYear = output<string>();
 
   @Input() public inTitle: string;
   @Input() public selected: string;
@@ -56,27 +57,27 @@ export class DistMenuStandaloneComponent implements OnInit {
   ngOnInit(): void {}
 
   onClickUpdate(): void {
-    console.debug('Menu bar nofication emit refresh');
+    console.debug('Menu bar notification emit update');
     this.notifyParentRefresh.emit();
   }
 
   onClickAdd(): void {
-    console.debug('Menu bar nofication emit add');
+    console.debug('Menu bar notification add');
     this.notifyParentAdd.emit();
   }
 
   onClickDelete(): void {
-    console.debug('Menu bar nofication emit delete');
+    console.debug('Menu bar notification emit delete');
     this.notifyParentDelete.emit();
   }
 
   onClickClone(): void {
-    console.debug('Menu bar nofication emit clone');
+    console.debug('Menu bar notification emit clone');
     this.notifyParentClone.emit();
   }
 
   onClickRefresh(): void {
-    console.debug('Menu bar nofication emit refresh');
+    console.debug('Menu bar notification emit refresh');
     this.notifyParentRefresh.emit();
   }
 }

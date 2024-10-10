@@ -84,6 +84,16 @@ export interface ITransactionDate {
   end_date: string
 }
 
+export interface IArtifacts {
+  id            : number,
+  journal_id    : number,
+  reference     : string,
+  description   : string,
+  location      : string,
+  date_created  : string,
+  user_created  : string
+}
+
 
 export interface IJournalTemplate {
     template_ref: string,    

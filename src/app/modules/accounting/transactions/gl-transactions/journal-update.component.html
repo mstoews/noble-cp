@@ -1,4 +1,3 @@
-
 <div id="contextmenutarget" class="flex flex-col w-full filter-article filter-interactive text-gray-700">
      <div class="sm:hide md:visible ml-5 mr-5">
         <grid-menubar class="pl-5 pr-5" 
@@ -169,17 +168,16 @@
                                             (actionBegin)="actionSelectJournal($event)"                                         
                                             [gridLines]="'Both'">                                            
                                             <e-columns>
-                                                <e-column field='journal_id'   headerText='ID'     [visible]='true' isPrimaryKey='true' width='100'></e-column>
-                                                <e-column field='description'  headerText='Journal Description' [visible]='true' ></e-column>                                                                                                
-                                                <e-column field='amount'       headerText='Amount' [visible]='false' textAlign='Right' width='150' format="N2"></e-column>     
-                                                <e-column  field="type"        headerText="Type"   [visible]='false' width="100" dataType="text" textAlign="left"></e-column>
-                                                <e-column  field="booked"      headerText="Booked" [visible]='false' width="100" [displayAsCheckBox]='true' type="boolean"></e-column>                            
-                                                <e-column  field="amount"      headerText="Amount" [visible]='false' width="150" format='N2'  textAlign="Right"></e-column>
-                                                <e-column  field="period"      headerText="Prd"    [visible]='false' width="100" ></e-column>
-                                                <e-column  field="period_year" headerText="Yr"     [visible]='false' width="100" ></e-column>                                          
+                                                <e-column field='journal_id'  headerText='ID'      [visible]='true' isPrimaryKey='true' width='100'></e-column>
+                                                <e-column field='description' headerText='Journal Description' [visible]='true' ></e-column>                                                                                                
+                                                <e-column field='amount'      headerText='Amount'  [visible]='false' textAlign='Right' width='150' format="N2"></e-column>     
+                                                <e-column field="type"        headerText="Type"    [visible]='false' width="100" dataType="text" textAlign="left"></e-column>
+                                                <e-column field="booked"      headerText="Booked"  [visible]='false' width="100" [displayAsCheckBox]='true' type="boolean"></e-column>                            
+                                                <e-column field="amount"      headerText="Amount"  [visible]='false' width="150" format='N2'  textAlign="Right"></e-column>
+                                                <e-column field="period"      headerText="Prd"     [visible]='false' width="100" ></e-column>
+                                                <e-column field="period_year" headerText="Yr"      [visible]='false' width="100" ></e-column>                                          
                                             </e-columns>                        
-                                     </ejs-grid>
-                                
+                                     </ejs-grid>                                
                                 </mat-card>
 
                             </div>
@@ -260,12 +258,12 @@
                                         (click)="onCreateTemplate()" matTooltip="Template" aria-label="Template">
                                         <mat-icon [svgIcon]="'feather:layout'"></mat-icon>
                                     </button>
+
+                                    <button mat-icon-button color="primary" class="bg-gray-200 hover:bg-slate-400 ml-1"
+                                        (click)="onCloseTransaction()" matTooltip="Close Transaction" aria-label="Template">
+                                        <mat-icon [svgIcon]="'feather:git-commit'"></mat-icon>
+                                    </button>
                         
-                                    <!-- <button mat-icon-button color="warn" class="bg-gray-200 fill-slate-100 text-white hover:bg-slate-400 ml-1"
-                                        (click)="onBack()" matTooltip="Cancel" aria-label="hovered over">
-                                        <mat-icon [svgIcon]="'mat_outline:close'"></mat-icon>
-                                    </button> 
-                                    -->
                         
                                 </div>
                             @defer () {
@@ -278,9 +276,7 @@
                                             [editSettings]='editSettings' 
                                             [allowFiltering]='false' 
                                             [allowRowDragAndDrop]='true'
-                                            [gridLines]="'Both'" 
-                                            
-                                            (actionBegin)="actionBegin($event)"                                         
+                                            [gridLines]="'Both'"                                                                                         
                                             (rowDrop)="rowDrop($event)"                    
                                             (rowDrag)="rowDrag($event)">
                         
@@ -288,9 +284,9 @@
                                                 <e-column field='journal_subid' headerText='ID' [visible]='false' isPrimaryKey='true' width='100'></e-column>
                                                 <e-column field='child' headerText='Account' width='100'></e-column>
                                                 <e-column field='child_desc' headerText='Account Description' width='200'></e-column>
-                                                <e-column field='fund' headerText='Fund' width='90'></e-column>
-                                                <e-column field='sub_type' headerText='Sub Type' width='90'></e-column>
                                                 <e-column field='description' headerText='Journal Description' width='150'></e-column>
+                                                <e-column field='fund' headerText='Fund' width='90'></e-column>
+                                                <e-column field='sub_type' headerText='Sub Type' width='90'></e-column>                                                
                                                 <e-column field='reference' headerText='Reference' width=120></e-column>
                                                 <e-column field='debit' headerText='Debit' textAlign='Right' width='100' format="N2"></e-column>
                                                 <e-column field='credit' headerText='Credit' textAlign='Right' width='100' format="N2"></e-column>
@@ -308,6 +304,32 @@
                                                     </e-columns>
                                                 </e-aggregate>
                                             </e-aggregates>
+                                        </ejs-grid>
+                                    </div>
+                                </div>
+                                <div class="flex flex-col">
+                                    <div class="text-3xl m-1 text-gray-100 p-2 bg-slate-600 rounded-md">Transaction Artifacts</div>
+                                    <div class="flex flex-col h-full ml-1 mr-1 text-gray-800">
+                        
+                                        <ejs-grid id="grid" #grid 
+                                            [dataSource]="store.artifacts()" 
+                                            [selectionSettings]="selectionOptions"
+                                            [editSettings]='editSettings' 
+                                            [allowFiltering]='false' 
+                                            [allowRowDragAndDrop]='true'
+                                            [gridLines]="'Both'" 
+                                            
+                                            (actionBegin)="actionBegin($event)"                                         
+                                            (rowDrop)="rowDrop($event)"                    
+                                            (rowDrag)="rowDrag($event)">
+                        
+                                            <e-columns>
+                                                <e-column field='journal_id' headerText='ID' [visible]='false' isPrimaryKey='true' width='100'></e-column>
+                                                <e-column field='description' headerText='Description' width='100'></e-column>
+                                                <e-column field='location' headerText='Location' width='100'></e-column>
+                                                <e-column field='reference' headerText='Reference' width='100'></e-column>
+                                            </e-columns>
+                        
                                         </ejs-grid>
                                     </div>
                                 </div>

@@ -1,4 +1,4 @@
-import { Component, Output, EventEmitter, OnInit, Input, ChangeDetectionStrategy } from '@angular/core';
+import { Component, Output, EventEmitter, OnInit, Input, ChangeDetectionStrategy, output } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -18,18 +18,18 @@ var modules = [
 
 @Component({
   standalone: true,
-  selector: 'kanban-menubar',
+  selector: 'kb-menubar',
   templateUrl: './component.html',
   styleUrls: ['./component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports:[modules]
 })
 export class KanbanMenubarComponent implements OnInit {
-  @Output() notifyParentAdd: EventEmitter<any> = new EventEmitter();
-  @Output() notifyParentRefresh: EventEmitter<any> = new EventEmitter();
-  @Output() notifyParentDelete: EventEmitter<any> = new EventEmitter();
-  @Output() notifyParentClone: EventEmitter<any> = new EventEmitter();
-  @Output() notifyMenuItemChanged: EventEmitter<any> = new EventEmitter();
+  notifyParentAdd = output();
+  notifyParentRefresh = output();
+  notifyParentDelete = output();
+  notifyParentClone = output();
+  notifyMenuItemChanged = output();
 
   @Input() public inTitle: string;
   @Input() public selected: string;
@@ -42,27 +42,24 @@ export class KanbanMenubarComponent implements OnInit {
   ngOnInit(): void {}
 
   onClickUpdate(): void {
-    console.debug('Menu bar nofication emit refresh');
+  
     this.notifyParentRefresh.emit();
   }
 
   onClickAdd(): void {
-    console.debug('Menu bar nofication emit add');
+  
     this.notifyParentAdd.emit();
   }
 
   onClickDelete(): void {
-    console.debug('Menu bar nofication emit delete');
     this.notifyParentDelete.emit();
   }
 
   onClickClone(): void {
-    console.debug('Menu bar nofication emit clone');
     this.notifyParentClone.emit();
   }
 
   onClickRefresh(): void {
-    console.debug('Menu bar nofication emit refresh');
     this.notifyParentRefresh.emit();
   }
 }

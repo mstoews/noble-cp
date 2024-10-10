@@ -157,9 +157,11 @@ export class JournalUpdateComponent
   private dialog = inject(MatDialog);
   private auth = inject(AUTH);
   private activatedRoute = inject(ActivatedRoute);
-  public store = inject(JournalStore);
+  
   public matDialog = inject(MatDialog);
 
+  // Store
+  public store = inject(JournalStore);
 
   public detailForm!: FormGroup;
   public journalForm!: FormGroup;
@@ -325,6 +327,7 @@ export class JournalUpdateComponent
     );
 
     this.store.loadDetails(this.journal_id);
+    this.store.loadArtifactsByJournalId(this.journal_id);
 
     this.initialDatagrid();
   }
@@ -362,8 +365,7 @@ export class JournalUpdateComponent
       queryData.type
     );
     this.store.loadDetails(this.key);
-    //const dataSource: object[] = new DataManager(data).executeLocal(new Query().where('CustomerName', 'equal', queryData.ContactName));
-    //this.detailgrid.dataSource = dataSource.slice(0, 5);
+    this.store.loadArtifactsByJournalId(this.key);
   }
 
   initialDatagrid() {
@@ -510,6 +512,7 @@ export class JournalUpdateComponent
       args.cancel = true;
       const data = args.rowData as IJournalHeader;
       this.store.loadDetails(data.journal_id)
+      this.store.loadArtifactsByJournalId(this.journal_id);
       this.refresh(data.journal_id, data.description, data.transaction_date, data.amount, data.type)
     }
     if (args.requestType === "save") {
@@ -702,6 +705,26 @@ export class JournalUpdateComponent
     });
   }
 
+  onCloseTransaction(e: any) {
+    const confirmation = this.fuseConfirmationService.open({
+      title: "Close Transaction",
+      message:
+        "Closing the transaction will commit the transaction and no longer to be edited. Are you sure you want to close the transaction? ",
+      actions: {
+        confirm: {
+          label: "Commit Transaction",
+        },
+      },
+    });
+
+    confirmation.afterClosed().subscribe((result) => {
+      if (result === "confirmed") {
+      }
+    });
+  }
+
+
+
   createEmptyForm() {
     this.journalForm = this.fb.group({
       description: ["", Validators.required],
@@ -772,6 +795,7 @@ export class JournalUpdateComponent
       if (result === "confirmed") {
         this.store.deleteJournalDetail(journalDetail);
         this.store.loadDetails(this.journal_id);
+        this.store.loadArtifactsByJournalId(this.journal_id);
         this.bDirty = false;
         this.closeDrawer();
       }

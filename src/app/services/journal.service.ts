@@ -6,6 +6,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import {
   IAccounts,
+  IArtifacts,
   IJournalDetail,
   IJournalDetailDelete,
   IJournalHeader,
@@ -31,6 +32,11 @@ export class JournalService implements OnDestroy {
   readJournalTemplate() {
     var url = this.baseUrl + '/v1/read_journal_template';
     return this.httpClient.get<IJournalTemplate>(url).pipe(shareReplay());
+  }
+
+  readHttpLoadArtifactsByJournalId(journal_id: number) {
+    var url = this.baseUrl + '/v1/read_artifacts_by_jrn_id/' + journal_id;
+    return this.httpClient.get<IArtifacts[]>(url).pipe(shareReplay());
   }
 
   readHttpAccounts() {

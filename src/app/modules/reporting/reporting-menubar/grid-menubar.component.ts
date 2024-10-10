@@ -1,4 +1,4 @@
-import { Component, Output, EventEmitter, OnInit, Input, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, output, input } from '@angular/core';
 import { MaterialModule } from 'app/services/material.module';
 
 interface IValue {
@@ -20,18 +20,17 @@ var modules = [
   imports:[modules]
 })
 export class KanbanMenubarComponent implements OnInit {
-  @Output() notifyParentAdd: EventEmitter<any> = new EventEmitter();
-  @Output() notifyParentRefresh: EventEmitter<any> = new EventEmitter();
-  @Output() notifyParentDelete: EventEmitter<any> = new EventEmitter();
-  @Output() notifyParentClone: EventEmitter<any> = new EventEmitter();
-  @Output() notifyMenuItemChanged: EventEmitter<any> = new EventEmitter();
+  notifyParentAdd = output();
+  notifyParentRefresh = output();
+  notifyParentDelete = output();
+  notifyParentClone = output();
+  notifyMenuItemChanged = output();
 
-  @Input() public inTitle: string;
-  @Input() public selected: string;
+  inTitle = input('')
+  selected = input();
   public menuItems: IValue[];
 
-  constructor() {
-    this.inTitle = 'Account Maintenance';
+  constructor() {    
   }
 
   ngOnInit(): void {}
