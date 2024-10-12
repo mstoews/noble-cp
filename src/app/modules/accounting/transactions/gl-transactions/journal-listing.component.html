@@ -21,6 +21,7 @@
                             <ejs-grid #grid id='journals'                                   
                                     [dataSource]='store.gl()'   
                                     [enableStickyHeader]=true 
+                                    [childGrid]="childDataGrid"
                                     allowPaging='true' 
                                     allowSorting='true' 
                                     showColumnMenu='true'

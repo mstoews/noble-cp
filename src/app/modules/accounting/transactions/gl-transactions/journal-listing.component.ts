@@ -185,6 +185,39 @@ export class JournalEntryComponent implements OnInit, OnDestroy {
         }
     }
 
+    public childDataGrid: GridModule = {
+        dataSource: this.store.details(),       
+        queryString: 'child',        
+        columns: [
+            { field: 'journal_id',headerText: 'ID', textAlign: 'left', width: 50 },
+            { field: 'child', headerText: 'Child', textAlign: 'left', width: 100 },
+            { field: 'description', headerText: 'Description', textAlign: 'left', width: 100},
+            { field: 'fund', headerText: 'Fund', textAlign: 'left', width: 100 },            
+            { field: 'debit', headerText: 'Debit', textAlign: 'Right', format: 'N2',  width: 100},
+            { field: 'credit', headerText: 'Credit', textAlign: 'Right', format: 'N2', width: 100},
+            ],
+            aggregates: [
+                {
+                  columns: [
+                    {
+                      type: 'Sum',
+                      field: 'debit',
+                      footerTemplate: '${Sum}',
+                      format: 'N2'
+                    },
+                    {
+                        type: 'Sum',
+                        field: 'credit',
+                        footerTemplate: '${Sum}',
+                        format: 'N2'
+                      },
+                  ],
+                },                
+              ],
+        
+    }
+
+
     onAdd() {
         this.bOpenDetail = true;
         this.openDrawer()

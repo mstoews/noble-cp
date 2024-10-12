@@ -201,6 +201,7 @@ export class JournalUpdateComponent
   public fundListSubject: Subscription;
   public filterOptions?: FilterSettingsModel;
   public editSettings: Object;
+  public editArtifactSettings: Object;
   public filterSettings: Object;
   public toolbar: string[];
   public orderidrules: Object;
@@ -376,6 +377,11 @@ export class JournalUpdateComponent
       allowAdding: false,
       allowDeleting: false,
     };
+    this.editArtifactSettings = {
+      allowEditing: true,
+      allowAdding: false,
+      allowDeleting: false,
+    };
     this.filterSettings = { type: "CheckBox" };
   }
 
@@ -508,12 +514,8 @@ export class JournalUpdateComponent
   }
 
   actionSelectJournal(args: SaveEventArgs): void {
-    if (args.requestType === "beginEdit" || args.requestType === "add") {
-      args.cancel = true;
+    if (args.requestType === "beginEdit" || args.requestType === "add") {      
       const data = args.rowData as IJournalHeader;
-      this.store.loadDetails(data.journal_id)
-      this.store.loadArtifactsByJournalId(this.journal_id);
-      this.refresh(data.journal_id, data.description, data.transaction_date, data.amount, data.type)
     }
     if (args.requestType === "save") {
       this.onSaved(args.data);
@@ -549,7 +551,7 @@ export class JournalUpdateComponent
     this.onSaved(args.data[0]);
   }
 
-  onSaved(e: any) {
+  onSavedArtifacts(e: any) {
     this.bDirty = true;
     const updateDate = new Date().toISOString().split("T")[0];
     const email = this.auth.currentUser?.email;

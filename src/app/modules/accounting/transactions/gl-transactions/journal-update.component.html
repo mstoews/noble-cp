@@ -165,7 +165,7 @@
                                             allowSorting='true' 
                                             showColumnMenu='true'      
                                             (rowSelected)="onRowSelected($event)"                                       
-                                            (actionBegin)="actionSelectJournal($event)"                                         
+                                            (actionBegin)="actionBegin($event)"                                         
                                             [gridLines]="'Both'">                                            
                                             <e-columns>
                                                 <e-column field='journal_id'  headerText='ID'      [visible]='true' isPrimaryKey='true' width='100'></e-column>
@@ -276,6 +276,7 @@
                                             [editSettings]='editSettings' 
                                             [allowFiltering]='false' 
                                             [allowRowDragAndDrop]='true'
+                                            (actionBegin)="actionBegin($event)"                                         
                                             [gridLines]="'Both'"                                                                                         
                                             (rowDrop)="rowDrop($event)"                    
                                             (rowDrag)="rowDrag($event)">
@@ -312,14 +313,14 @@
                                     <div class="flex flex-col h-full ml-1 mr-1 text-gray-800">
                         
                                         <ejs-grid id="grid" #grid 
-                                            [dataSource]="store.artifacts()" 
-                                            [selectionSettings]="selectionOptions"
-                                            [editSettings]='editSettings' 
+                                            [dataSource]="store.artifacts()"     
+                                            allowEditing='true'                                         
+                                            [editSettings]='editArtifactSettings' 
                                             [allowFiltering]='false' 
                                             [allowRowDragAndDrop]='true'
                                             [gridLines]="'Both'" 
                                             
-                                            (actionBegin)="actionBegin($event)"                                         
+                                            (actionBegin)="actionSelectJournal($event)"                                         
                                             (rowDrop)="rowDrop($event)"                    
                                             (rowDrag)="rowDrag($event)">
                         
@@ -334,8 +335,7 @@
                                     </div>
                                 </div>
                                 }
-                                @placeholder(minimum 1000ms)
-                                {
+                                @placeholder(minimum 1000ms) {
                                     <div class="flex justify-center">
                                         <div>
                                             <mat-progress-spinner diameter="60" [value]="value" mode="indeterminate">
