@@ -52,7 +52,9 @@
               "moment-duration-format",
               "jspdf-html2canvas",
               "rgbcolor",
-              "core-js/modules/es.array.index-of.js"              
+              "core-js",
+              "jspdf-autotable",
+              "raf"              
             ],
             "assets": [
               "src/assets",
