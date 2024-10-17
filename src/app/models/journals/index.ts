@@ -85,7 +85,7 @@ export interface ITransactionDate {
 }
 
 export interface IArtifacts {
-  id            : number,
+  id?           : number,
   journal_id    : number,
   reference     : string,
   description   : string,

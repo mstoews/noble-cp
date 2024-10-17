@@ -22,13 +22,9 @@ import {
 } from "@angular/forms";
 import { JournalService } from "app/services/journal.service";
 import {
-  Observable,
   ReplaySubject,
   Subject,
   Subscription,
-  interval,
-  map,
-  startWith,
   take,
   takeUntil,
 } from "rxjs";
@@ -85,9 +81,8 @@ import { Router, ActivatedRoute } from "@angular/router";
 import { Location } from "@angular/common";
 import { MatDrawer } from "@angular/material/sidenav";
 import { JournalStore } from "app/store/journal.store";
-import { MatSort, Sort, MatSortModule } from "@angular/material/sort";
+import { MatSortModule } from "@angular/material/sort";
 import { MatTableModule } from "@angular/material/table";
-import { LiveAnnouncer } from '@angular/cdk/a11y';
 
 
 import { SplitterModule } from '@syncfusion/ej2-angular-layouts';
@@ -157,12 +152,10 @@ export class JournalUpdateComponent
   private dialog = inject(MatDialog);
   private auth = inject(AUTH);
   private activatedRoute = inject(ActivatedRoute);
-  
   public matDialog = inject(MatDialog);
 
   // Store
   public store = inject(JournalStore);
-
   public detailForm!: FormGroup;
   public journalForm!: FormGroup;
 
@@ -174,16 +167,12 @@ export class JournalUpdateComponent
   private router = inject(Router);
 
   public contextmenu: ContextMenuComponent;
-
-  
   public value = 0;
   public loading = false;
   public height: string = "250px";
-
   public funds$ = this.fundService.read();
   public subtype$ = this.subtypeService.read();
   public types$ = this.typeService.read();
-
   public dropDownChildren$ = this.accountService.readChildren();
   public fuseConfirmationService = inject(FuseConfirmationService);
 
@@ -397,7 +386,6 @@ export class JournalUpdateComponent
       this.journalData.amount,
       this.journalData.type
     );
-
     this.closeDrawer();
   }
 
@@ -518,7 +506,8 @@ export class JournalUpdateComponent
       const data = args.rowData as IJournalHeader;
     }
     if (args.requestType === "save") {
-      this.onSaved(args.data);
+      this.saveArtifacts(args.data);
+      
     }
   }
 
@@ -551,27 +540,10 @@ export class JournalUpdateComponent
     this.onSaved(args.data[0]);
   }
 
-  onSavedArtifacts(e: any) {
-    this.bDirty = true;
-    const updateDate = new Date().toISOString().split("T")[0];
-    const email = this.auth.currentUser?.email;
-    const debitAccount = this.debitCtrl.getRawValue();
-    const journalDetail = {
-      journal_id: e.journal_id,
-      journal_subid: e.journal_subid,
-      account: Number(e.account),
-      child: Number(e.child),
-      child_desc: debitAccount.description,
-      description: e.description,
-      create_date: updateDate,
-      create_user: email,
-      sub_type: e.sub_type,
-      debit: e.debit,
-      credit: e.credit,
-      reference: e.reference,
-      fund: e.fund,
-    };
-    this.store.updateJournalDetail(journalDetail);
+    saveArtifacts(e: any) {
+    this.bDirty = true;    
+    this.store.updateArtifacts(e);
+    this.bDirty = false;
 
   }
 
@@ -697,6 +669,7 @@ export class JournalUpdateComponent
       if (result === undefined) {
         result = { event: "Cancel" };
       }
+      this.store.loadArtifactsByJournalId(this.journal_id);
       switch (result.event) {
         case "Create":
           console.debug(result.data);
@@ -705,6 +678,7 @@ export class JournalUpdateComponent
           break;
       }
     });
+    
   }
 
   onCloseTransaction(e: any) {

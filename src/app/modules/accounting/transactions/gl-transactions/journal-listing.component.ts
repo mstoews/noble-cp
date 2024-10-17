@@ -34,14 +34,16 @@ import { DialogEditEventArgs,
     ResizeService, 
     PdfExportService, 
     ExcelExportService, 
-    ReorderService } from '@syncfusion/ej2-angular-grids';
+    ReorderService, 
+    DetailRowService} from '@syncfusion/ej2-angular-grids';
 
 import { Browser } from '@syncfusion/ej2-base';
 import { Dialog } from '@syncfusion/ej2-popups';
 import { DropDownListComponent } from '@syncfusion/ej2-angular-dropdowns';
-import { IJournalHeader } from 'app/models/journals';
+import { IJournalDetail, IJournalHeader } from 'app/models/journals';
 import { JournalStore } from 'app/store/journal.store';
 import { Router } from '@angular/router';
+
 
 const imports = [
     CommonModule,
@@ -74,6 +76,7 @@ const imports = [
                  ResizeService, 
                  GroupService, 
                  FilterService, 
+                 DetailRowService,
                  EditService, 
                  AggregateService, 
                  ColumnMenuService],
@@ -88,10 +91,9 @@ export class JournalEntryComponent implements OnInit, OnDestroy {
     public store = inject(JournalStore);
 
 
-    drawer = viewChild<MatDrawer>('drawer')
+    drawer = viewChild<MatDrawer>('drawer');
     grid = viewChild<GridComponent>('grid');
-
-    journalViewChildControl = viewChild(JournalUpdateComponent);
+    
     currentRowData: any;
 
     drawOpen: 'open' | 'close' = 'open';
@@ -117,6 +119,7 @@ export class JournalEntryComponent implements OnInit, OnDestroy {
     public filterSettings: FilterSettingsModel;
     public journalForm!: FormGroup;
     public keyField: any;
+    public childData?: IJournalDetail[] | null;
     
     customizeTooltip = (pointsInfo: { originalValue: string; }) => ({ text: `${parseInt(pointsInfo.originalValue)}%` });
 
@@ -127,13 +130,22 @@ export class JournalEntryComponent implements OnInit, OnDestroy {
         this.selectionOptions = { mode: 'Cell' };
         this.editSettings = { allowEditing: true, allowAdding: false, allowDeleting: false };
         this.searchOptions = { operator: 'contains', ignoreCase: true, ignoreAccent: true };
-        this.toolbarOptions = ['Search', 'ExcelExport', 'PdfExport', 'CsvExport']
+        this.toolbarOptions = ['Search', 'ExcelExport', 'PdfExport', 'CsvExport','Print']
         this.filterSettings = { type: 'Excel' };
     }
 
     
     ngOnInit() {
         this.initialDatagrid();
+        this.onLoad();
+    }
+
+    onLoad(): void {
+        var params = {
+            period: 1,
+            period_year: 2024
+        }
+        this.store.loadAllDetails(params)    
     }
 
     actionBegin(args: SaveEventArgs): void {
@@ -143,6 +155,7 @@ export class JournalEntryComponent implements OnInit, OnDestroy {
             this.submitClicked = false;
             this.bOpenDetail = true;
             this.journalType = data.type;
+            this.currentRowData = data;
 
             switch (data.type) {
                 case 'GL':
@@ -186,10 +199,11 @@ export class JournalEntryComponent implements OnInit, OnDestroy {
     }
 
     public childDataGrid: GridModule = {
-        dataSource: this.store.details(),       
+        dataSource: this.childData,
+        filterSettings: { type: 'Excel' },
         queryString: 'child',        
-        columns: [
-            { field: 'journal_id',headerText: 'ID', textAlign: 'left', width: 50 },
+        columns: [    
+            { field: 'journal_subid',headerText: 'ID', textAlign: 'left', width: 50 },
             { field: 'child', headerText: 'Child', textAlign: 'left', width: 100 },
             { field: 'description', headerText: 'Description', textAlign: 'left', width: 100},
             { field: 'fund', headerText: 'Fund', textAlign: 'left', width: 100 },            
@@ -217,6 +231,11 @@ export class JournalEntryComponent implements OnInit, OnDestroy {
         
     }
 
+    onClickGrid() { 
+        const selectedRecords = this.grid().getSelectedRecords();
+        const records = this.store.details();
+        this.grid().childGrid.dataSource = this.store.details();
+    }
 
     onAdd() {
         this.bOpenDetail = true;

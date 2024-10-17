@@ -2,8 +2,9 @@ import { Component, OnInit, Input, inject } from '@angular/core'
 import { Router } from '@angular/router'
 import { Observable, Subscription } from 'rxjs'
 import { MatSnackBar } from '@angular/material/snack-bar'
-import { IEvidence } from 'app/services/evidence.service'
+
 import { MaterialModule } from 'app/services/material.module'
+import { IArtifacts } from 'app/models/journals'
 
 const imports = [MaterialModule]
   
@@ -15,7 +16,7 @@ const imports = [MaterialModule]
 })
 export class EvidenceCardComponent implements OnInit {
 
-  @Input() evidence: IEvidence
+  @Input() evidence: IArtifacts
   loggedIn: boolean = false;
   productId: string;
   sub: Subscription;

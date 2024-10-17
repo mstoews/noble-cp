@@ -12,6 +12,7 @@
         "ngrx",
         "panetext",
         "Payables",
+        "pdfmake",
         "splitbuttons",
         "updatedte",
         "updateusr"

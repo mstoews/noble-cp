@@ -33,16 +33,30 @@ const imports = [
     ReportingToolbarComponent
 ];
 
+const declarations = [
+    TrialBalanceStore, 
+    PdfExportService ,
+    ExcelExportService ,
+    GroupService, 
+    DetailRowService, 
+    SortService, 
+    PageService, 
+    ResizeService, 
+    FilterService, 
+    ToolbarService, 
+    EditService, 
+    AggregateService, 
+    ColumnMenuService
+];
+
 @Component({
     selector: 'trial-balance',
     standalone: true,
     imports: [imports],
     templateUrl: './trial-balance.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
-    providers: [TrialBalanceStore, PdfExportService ,ExcelExportService ,GroupService, DetailRowService, SortService, PageService, ResizeService, FilterService, ToolbarService, EditService, AggregateService, ColumnMenuService],
-    styles: [`
-               .e-detailcell .e-grid td.e-cellselectionbackground { background-color: #00b7ea; }
-            `]
+    providers: [declarations],
+    styles: [` .e-detailcell .e-grid td.e-cellselectionbackground { background-color: #00b7ea; }`]
 })
 export class TrialBalanceComponent implements OnInit, AfterViewInit {
     
@@ -68,7 +82,7 @@ export class TrialBalanceComponent implements OnInit, AfterViewInit {
         queryString: 'child',        
         columns: [
             { field: 'journal_id',headerText: 'ID', textAlign: 'left', width: 50 },
-            // { field: 'child', headerText: 'Child', textAlign: 'left', width: 100 },
+            { field: 'child', headerText: 'Child', textAlign: 'left', width: 100 },
             { field: 'description', headerText: 'Description', textAlign: 'left', width: 100},
             { field: 'fund', headerText: 'Fund', textAlign: 'left', width: 100 },            
             { field: 'debit', headerText: 'Debit', textAlign: 'Right', format: 'N2',  width: 100},

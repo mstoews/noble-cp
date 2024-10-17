@@ -12,7 +12,8 @@
                 
                     @if (store.isLoading() === false) {
         
-                    <ejs-grid #grid id="grid" (click)="onClickGrid($event)"                        
+                    <ejs-grid #grid id="grid" 
+                        (click)="onClickGrid($event)"                        
                         [dataSource]="store.header()" 
                         [childGrid]="childDataGrid"
                         allowPaging='true' allowSorting='true'  

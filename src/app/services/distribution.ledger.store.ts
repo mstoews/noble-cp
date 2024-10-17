@@ -18,7 +18,7 @@ import {
   export interface DistributionStateInterface {
     header: IDistributionLedger[];
     details: IJournalSummary[],
-    periodParam: IDistributionParams,
+    periodParam: IDistributionParams, 
     accountParam: IJournalParams,
     isLoading: boolean;
     error: string | null;

@@ -254,6 +254,24 @@ export const JournalStore = signalStore(
         })
       )
     ),
+    updateArtifacts: rxMethod<IArtifacts>(
+      pipe(
+        tap(() => patchState(state, { isLoading: true })),
+        switchMap((value) => {
+          return journalService.updateHttpArtifacts(value).pipe(
+            tapResponse({
+              next: () => {                
+                const updatedArtifacts = state.artifacts().filter((journal) => journal.id !== value.id);
+                updatedArtifacts.push(value);
+                patchState(state, { artifacts: updatedArtifacts });
+              },
+              error: console.error,
+              finalize: () => patchState(state, { isLoading: false }),
+            })
+          );
+        })
+      )
+    ),
     renumberJournalDetail: rxMethod<number>(
       pipe(
         tap(() => patchState(state, { isLoading: true })),

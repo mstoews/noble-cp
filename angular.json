@@ -39,7 +39,20 @@
               "crypto-js/hmac-sha256",
               "crypto-js/enc-base64",
               "flat",
-              "excels"
+              "excels",
+              "dompurify",
+              "html2canvas",
+              "xlsx",
+              "pdfmake",
+              "file-saver",
+              "moment",
+              "moment-timezone",
+              "moment-duration-format",
+              "moment-timezone",
+              "moment-duration-format",
+              "jspdf-html2canvas",
+              "rgbcolor",
+              "core-js/modules/es.array.index-of.js"              
             ],
             "assets": [
               "src/assets",

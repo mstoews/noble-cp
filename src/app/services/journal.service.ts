@@ -17,6 +17,8 @@ import {
   ITransactionDate
 } from 'app/models/journals';
 
+
+
 @Injectable({
   providedIn: 'root'
 })
@@ -38,6 +40,12 @@ export class JournalService implements OnDestroy {
     var url = this.baseUrl + '/v1/read_artifacts_by_jrn_id/' + journal_id;
     return this.httpClient.get<IArtifacts[]>(url).pipe(shareReplay());
   }
+
+  updateHttpArtifacts(evidence: IArtifacts) {
+    var url = this.baseUrl + '/v1/update_evidence';
+    return this.httpClient.post(url, evidence).pipe(shareReplay());
+  }
+
 
   readHttpAccounts() {
     var url = this.baseUrl + '/v1/account_list';

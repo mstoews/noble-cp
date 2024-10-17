@@ -10,7 +10,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { STORAGE } from 'app/app.config';
 
 
-import { EvidenceService, IEvidence } from 'app/services/evidence.service';
+import { EvidenceService } from 'app/services/evidence.service';
 import { DateTime } from 'luxon';
 import { MaterialModule } from 'app/services/material.module';
 

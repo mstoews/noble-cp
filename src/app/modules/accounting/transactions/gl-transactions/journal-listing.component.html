@@ -18,7 +18,8 @@
                     <ng-container>
                         @if (store.gl()) {
                         <div class="flex flex-1 flex-col">
-                            <ejs-grid #grid id='journals'                                   
+                            <ejs-grid #grid id='journals' 
+                                    (click)="onClickGrid()"                                  
                                     [dataSource]='store.gl()'   
                                     [enableStickyHeader]=true 
                                     [childGrid]="childDataGrid"
@@ -31,11 +32,13 @@
                                     [selectionOptions]="selectionOptions"
                                     (actionBegin)="actionBegin($event)" 
                                     (actionComplete)="actionComplete($event)"
+                                    (rowSelected)="onRowSelected($event)"
                                     [filterSettings]='filterSettings' 
                                     [editSettings]='editSettings'
                                     [allowExcelExport]='true' 
                                     [allowPdfExport]='true' 
-                                    [allowCsvExport]='true' 
+                                    [allowCsvExport]='true'                                    
+                                    (load)='onLoad()'                                    
                                     [searchSetting]="searchOptions" >
                                 <e-columns>
                                     <e-column  field="journal_id"  headerText="ID"          width="100" dataType="number" isPrimaryKey='true' textAlign="left"></e-column>  
