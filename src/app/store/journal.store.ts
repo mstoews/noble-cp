@@ -17,6 +17,7 @@ import { IFund, IType } from 'app/modules/kanban/kanban.service';
 import { IParty } from 'app/models/party';
 import { IPeriod } from '../services/periods.service';
 import { ISubType } from '../services/subtype.service';
+import { debounce } from 'lodash';
 
 
 export interface JournalStateInterface {
@@ -52,7 +53,6 @@ export const JournalStore = signalStore(
     isLoading: false,
   }),
   withComputed((state) => ({
-    tasksCount: computed(() => state.gl().length),
   })),
   withMethods((state, journalService = inject(JournalService)) => ({
     removeJournalHeader: rxMethod<IJournalHeader>(
@@ -190,7 +190,7 @@ export const JournalStore = signalStore(
         exhaustMap(() => {
           return journalService.readHttpJournalHeader().pipe(
             tapResponse({
-              next: (journal) => patchState(state, { gl: journal.filter(gl => gl.type === 'GL') }),
+              next: (journal) => patchState(state, { gl: journal.filter(gl => gl.type === 'GL') }),              
               error: console.error,
               finalize: () => patchState(state, { isLoading: false }),
             })

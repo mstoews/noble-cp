@@ -1,4 +1,4 @@
-<div class="absolute inset-0 flex flex-col min-w-0 overflow-hidden">
+<div class="absolute inset-0 flex flex-col min-w-0 overflow-hidden m-5">
     <!-- Header -->
     <div
         class="flex flex-col sm:flex-row flex-0 sm:items-center sm:justify-between p-3 sm:py-8 sm:px-10 bg-card dark:bg-transparent">
@@ -93,7 +93,7 @@
                     @if (evidence$ | async; as rows) { 
                     <ul>
                         <li class="grid grid-cols-1 mx-10 gap-y-10 gap-x-6 sm:grid-cols-3 lg:grid-cols-4 xl:gap-x-8">
-                        @for (evidence of rows; track evidence.journal_no) {
+                        @for (evidence of rows; track evidence.id) {
                             <evidence-card [evidence]="evidence" ></evidence-card>
                         }
                         </li>                       

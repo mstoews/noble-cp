@@ -12,9 +12,11 @@ imports: [GridModule ],
 providers: [ExcelExportService, ToolbarService, FilterService],
 standalone: true,
     selector: 'download',
-    template: `<ejs-grid #grid id='Grid' class="h-[calc(100vh-15rem)]" 
-                [dataSource]='data' [toolbar]='toolbarOptions' 
-                
+    template: 
+    `
+        <ejs-grid #grid id='Grid' class="h-[calc(100vh-15rem)]" 
+               [dataSource]='data' 
+               [toolbar]='toolbarOptions'                 
                [allowExcelExport]='true' 
                (toolbarClick)='toolbarClick($event)'>
                 <e-columns>
@@ -23,7 +25,8 @@ standalone: true,
                     <e-column field='ShipCity' headerText='Ship City' width=150></e-column>
                     <e-column field='ShipName' headerText='Ship Name' width=150></e-column>
                 </e-columns>
-                </ejs-grid>`
+        </ejs-grid>
+    `
 })
 export class TreeComponent implements OnInit {
 

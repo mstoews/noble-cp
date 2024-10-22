@@ -27,7 +27,6 @@ export const RolesStore = signalStore(
     isLoading: false,
   }),
   withComputed((state) => ({
-    tasksCount: computed(() => state.roles().length),
     selected: computed(() => state.roles().filter((t) => state.roles()[t.role])),
   })),
   withMethods((state, roleService = inject(RoleService)) => ({       

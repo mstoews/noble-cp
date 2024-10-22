@@ -3,11 +3,9 @@ import { HttpClient } from '@angular/common/http';
 import { environment } from 'environments/environment.prod';
 import { Timestamp } from 'firebase/firestore';
 import { AUTH } from 'app/app.config';
-
-
-import { ISubType } from 'app/services/subtype.service';
 import { IAccounts } from 'app/models/journals';
-import { IBudget, IFunds } from 'app/models';
+import { IBudget } from 'app/models';
+import { shareReplay } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -30,39 +28,19 @@ export class BudgetService {
       create_user: name      
     }
 
-    return this.httpClient.post<IBudget>(url, budget)
+    return this.httpClient.post<IBudget>(url, budget).pipe(shareReplay());
   }
 
   // Read
   read() {
     var url = this.baseUrl + '/v1/read_budget_amt';
-    return this.httpClient.get<IBudget[]>(url)
-  }
-
-  readTypes() {
-    var url = this.baseUrl + '/v1/read_types';
-    return this.httpClient.get<IType[]>(url)
-  }
-
-  readAccounts() {
-    var url = this.baseUrl + '/v1/read_accounts';
-    return this.httpClient.get<IAccounts[]>(url)
-  }
-
-  readSubtypes() {
-    var url = this.baseUrl + '/v1/read_subtypes';
-    return this.httpClient.get<ISubType[]>(url)
-  }
-
-  readFunds() {
-    var url = this.baseUrl + '/v1/read_funds';
-    return this.httpClient.get<IFunds[]>(url)
+    return this.httpClient.get<IBudget[]>(url).pipe(shareReplay());
   }
 
   // Update
   update(t: IBudget) {
     var url = this.baseUrl + '/v1/update_budget_amt';
-    return this.httpClient.post<IBudget>(url, t)
+    return this.httpClient.post<IBudget>(url, t).pipe(shareReplay());
   }
 
   // Delete
@@ -71,7 +49,7 @@ export class BudgetService {
     const param = {
       child: child
     }
-    return this.httpClient.post<IBudget[]>(url, param);
+    return this.httpClient.post<IBudget[]>(url, param).pipe(shareReplay());;
   }
 
 }

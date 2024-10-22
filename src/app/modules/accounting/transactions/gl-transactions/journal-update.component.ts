@@ -83,9 +83,8 @@ import { MatDrawer } from "@angular/material/sidenav";
 import { JournalStore } from "app/store/journal.store";
 import { MatSortModule } from "@angular/material/sort";
 import { MatTableModule } from "@angular/material/table";
-
-
 import { SplitterModule } from '@syncfusion/ej2-angular-layouts';
+import { EvidenceCardComponent } from "app/modules/file-manager/file-manager-card/evidence-card.component";
 
 const imports = [
   CommonModule,
@@ -104,7 +103,8 @@ const imports = [
   DropDownListAllModule,
   MatTableModule,
   MatSortModule,
-  SplitterModule
+  SplitterModule,
+  EvidenceCardComponent
 ];
 
 @Component({
@@ -152,6 +152,7 @@ export class JournalUpdateComponent
   private dialog = inject(MatDialog);
   private auth = inject(AUTH);
   private activatedRoute = inject(ActivatedRoute);
+  
   public matDialog = inject(MatDialog);
 
   // Store
@@ -188,6 +189,8 @@ export class JournalUpdateComponent
   // Datagrid variables
   public accountsListSubject: Subscription;
   public fundListSubject: Subscription;
+  
+  // Data grid settings
   public filterOptions?: FilterSettingsModel;
   public editSettings: Object;
   public editArtifactSettings: Object;
@@ -318,7 +321,7 @@ export class JournalUpdateComponent
 
     this.store.loadDetails(this.journal_id);
     this.store.loadArtifactsByJournalId(this.journal_id);
-
+    
     this.initialDatagrid();
   }
 
@@ -669,10 +672,11 @@ export class JournalUpdateComponent
       if (result === undefined) {
         result = { event: "Cancel" };
       }
-      this.store.loadArtifactsByJournalId(this.journal_id);
+      
       switch (result.event) {
         case "Create":
           console.debug(result.data);
+          this.store.loadArtifactsByJournalId(this.journal_id);
           break;
         case "Cancel":
           break;

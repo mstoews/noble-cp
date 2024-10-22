@@ -85,7 +85,7 @@
                         <div mat-card-actions class="mb-3">
 
                             <button mat-icon-button (click)="onUpdate()" matTooltip="Update" color="primary" class="bg-slate-100 text-gray-100 hover:bg-slate-300 ml-1">
-                                <mat-icon [svgIcon]="'feather:update'"></mat-icon>
+                                <mat-icon [svgIcon]="'feather:save'"></mat-icon>
                             </button>
                                                         
                             <button mat-icon-button (click)="onCopy()" color="primary" class="m-1">
@@ -116,9 +116,6 @@
                                     [dataSource]='store.tasks()'
                                     [cardSettings]='cardSettings' enableTooltip='false'
                                     [swimlaneSettings]='swimlaneSettings' 
-                                    (actionBegin)='OnActionBegin()'
-                                    (actionComplete)='OnActionComplete()' 
-                                    (actionFailure)='OnActionFailure()'
                                     (cardDoubleClick)='OnCardDoubleClick($event)' 
                                     (dragStart)='OnDragStart($event)'
                                     (drag)='OnDrag($event)' 

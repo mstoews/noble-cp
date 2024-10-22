@@ -1,0 +1,71 @@
+<div class="flex flex-col w-full filter-article filter-interactive text-gray-700">
+
+    <!-- <div class="flex flex-col m-2">
+        <div class="text-3xl gap-2 m-1 text-gray-100 p-2  bg-slate-600">Budget Management</div>
+        <form [formGroup]="budgetForm">
+            <section class="flex flex-col md:flex-row">
+                <div class="flex flex-col w-[150px]">
+                    <mat-form-field class="mt-1 mr-1 flex-start">
+                        <input matInput placeholder="Reference" formControlName="reference" />
+                    </mat-form-field>
+                </div>
+                <div class="flex flex-col grow">
+                    <mat-form-field class="mt-1 mr-1 flex-start">
+                        <input matInput placeholder="Journal Description" formControlName="description" />
+                    </mat-form-field>
+                </div>
+                <div class="flex flex-col w-[150px]">
+                    <mat-form-field class="mt-1 flex-start mr-1">
+                        <input type="text" mask="separator.2" [leadZero]="true" thousandSeparator="," class="text-right"
+                            matInput placeholder="Amount" formControlName="amount" [placeholder]="'Amount'" />
+                    </mat-form-field>
+                </div>
+            </section>
+        </form>
+    </div> -->
+
+    <div class="flex flex-col">
+        @defer {            
+        <div class="text-3xl m-1 text-gray-100 p-2  bg-slate-600">Details</div>
+        <div class="flex flex-col h-full ml-1 mr-1 text-gray-800">            
+            
+            <ejs-grid #grid id='grid' class="h-[calc(100vh-15rem)]"
+                        [dataSource]='store.budgetAmt()'         
+                        showColumnMenu='true' 
+                        allowEditing='false' 
+                        [allowFiltering]='true' 
+                        [allowGrouping]='true'
+                        [toolbar]='toolbarOptions' 
+                        [filterSettings]='filterSettings'
+                        [editSettings]='editSettings'                        
+               (toolbarClick)='toolbarClick($event)' >
+                <e-columns>
+                    <e-column headerText="Period" field="period_year" width="100"></e-column>
+                    <e-column headerText="Account" field="child" width="130"></e-column>
+                    <e-column headerText="Description" field="description" width="250"></e-column>
+                    <e-column headerText="Reference" field="reference" width="200"></e-column>                    
+                    <e-column headerText="Amount" field="amount" format='N2' textAlign="Right" width="120"></e-column>
+                    <e-column headerText="Update Date" field="update_date" width="120"></e-column>
+                    <e-column headerText="Update User" field="update_user" width="120"></e-column>
+                </e-columns>        
+
+                <e-aggregates>
+                    <e-aggregate>
+                        <e-columns>
+                            <e-column type="Sum" field="amount" format="N2">
+                                <ng-template #footerTemplate let-data>{{data.Sum}}</ng-template>
+                            </e-column>
+                            
+                        </e-columns>
+                    </e-aggregate>
+                </e-aggregates>
+            </ejs-grid>        
+        </div>
+        } @placeholder(minimum 1000ms) {
+            <div class="flex justify-center items-center">
+               <mat-spinner></mat-spinner>
+            </div>
+        }
+    </div>
+
+</div>

@@ -13,7 +13,8 @@ import { FuseConfirmationService } from '@fuse/services/confirmation';
 import { GridMenubarStandaloneComponent } from '../../grid-menubar/grid-menubar.component';
 import { MaterialModule } from 'app/services/material.module';
 import { IFund } from 'app/modules/kanban/kanban.service';
-import { GridModule } from '@syncfusion/ej2-angular-grids';
+import { FilterSettingsModel, GridModule, SearchSettingsModel, SelectionSettingsModel, ToolbarItems } from '@syncfusion/ej2-angular-grids';
+import { DropDownListComponent } from '@syncfusion/ej2-angular-dropdowns';
 
 
 const imports = [
@@ -22,7 +23,8 @@ const imports = [
     ReactiveFormsModule,
     FormsModule,
     GridModule,
-    GridMenubarStandaloneComponent
+    GridMenubarStandaloneComponent,
+    
 ];
 
 @Component({
@@ -40,10 +42,34 @@ export class FundsComponent implements OnInit {
 
     public sTitle = 'General Ledger Funds';
     public accountsForm!: FormGroup;
+    public pageSettings: Object;
+    public formatoptions: Object;
+    public initialSort: Object;
+    public filterOptions: FilterSettingsModel;
+    public editSettings: Object;
+    public dropDown: DropDownListComponent;
+    public submitClicked: boolean = false;
+    public selectionOptions?: SelectionSettingsModel;
+    public toolbarOptions?: ToolbarItems[];
+    public searchOptions?: SearchSettingsModel;
+    public filterSettings: FilterSettingsModel;
+
 
     funds = this.fundService.read();
 
+    initialDatagrid() {
+        this.formatoptions = { type: 'dateTime', format: 'M/dd/yyyy' }        
+        this.pageSettings =  { pageSizes: true, pageCount: 10 };
+        this.selectionOptions = { mode: 'Cell' };              
+        this.editSettings = { allowEditing: true, allowAdding: false, allowDeleting: false };
+        this.searchOptions = { operator: 'contains', ignoreCase: true, ignoreAccent:true };
+        this.toolbarOptions = ['Search'];   
+        this.filterSettings = { type: 'Excel' };    
+    }
+
+
     ngOnInit() {
+        this.initialDatagrid()
         this.createEmptyForm();
     }
 

@@ -29,7 +29,6 @@ export const PartyStore = signalStore(
   
   }),
   withComputed((state) => ({
-    tasksCount: computed(() => state.party().length),
     selected: computed(() => state.party().filter((t) => state.party()[t.party_id])),
   })),
   withMethods((state, partyService = inject(PartyService)) => ({       

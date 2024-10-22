@@ -65,18 +65,20 @@
                         <div class="flex flex-col h-screen">
                         <ejs-grid id="id" id="id" style="border: 1px"  height="380" 
                             [dataSource]="typeStore.type()" 
-                            allowPaging='true' 
+                            allowPaging='false' 
                             allowSorting='true'
                             showColumnMenu='true' 
                             allowEditing='false' 
-                            [allowFiltering]='true' 
+                            [allowFiltering]='false' 
                             [allowGrouping]='true'
-                            [toolbar]='toolbarOptions' [selectionOptions]='selectionOptions' 
+                            [toolbar]='toolbarOptions' 
+                            [selectionOptions]='selectionOptions' 
                             [filterSettings]='filterSettings'
                             [editSettings]='editSettings' 
                             [pageSettings]='pageSettings' 
                             [searchSetting]='searchOptions'
-                            (actionBegin)='actionBegin($event)' (actionComplete)='actionComplete($event)'
+                            (actionBegin)='actionBegin($event)' 
+                            (actionComplete)='actionComplete($event)'
                             [enableStickyHeader]='true' 
                             [allowResizing]='true' [allowReordering]='true' [allowExcelExport]='true' 
                         >

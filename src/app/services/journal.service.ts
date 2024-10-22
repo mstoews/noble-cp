@@ -38,7 +38,7 @@ export class JournalService implements OnDestroy {
 
   readHttpLoadArtifactsByJournalId(journal_id: number) {
     var url = this.baseUrl + '/v1/read_artifacts_by_jrn_id/' + journal_id;
-    return this.httpClient.get<IArtifacts[]>(url).pipe(shareReplay());
+    return this.httpClient.get<IArtifacts[]>(url).pipe(debounceTime(1000), distinctUntilChanged()).pipe(shareReplay());
   }
 
   updateHttpArtifacts(evidence: IArtifacts) {

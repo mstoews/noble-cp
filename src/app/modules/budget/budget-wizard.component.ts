@@ -12,7 +12,7 @@ import { MaterialModule } from 'app/services/material.module';
 import { SubTypeService } from 'app/services/subtype.service';
 import { NgxMaskDirective, NgxMaskPipe, provideNgxMask } from 'ngx-mask';
 import { ReplaySubject, Subject, Subscription, take, takeUntil } from 'rxjs';
-import { BudgetUpdateComponent } from './budgetl-update/budget-update.component';
+import { BudgetUpdateComponent } from './update/budget-update.component';
 import { MatDialog } from '@angular/material/dialog';
 import { DndComponent } from 'app/modules/drag-n-drop/loaddnd/dnd.component';
 import { MatSelect } from '@angular/material/select';

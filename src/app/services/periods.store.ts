@@ -27,7 +27,6 @@ export const PeriodStore = signalStore(
     isLoading: false,
   }),
   withComputed((state) => ({
-    tasksCount: computed(() => state.periods().length),
     selected: computed(() => state.periods().filter((t) => state.periods()[t.period_id])),
   })),
   withMethods((state, periodService = inject(PeriodsService)) => ({       

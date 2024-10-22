@@ -10,8 +10,8 @@ import { DndComponent } from 'app/modules/drag-n-drop/loaddnd/dnd.component';
 import { FundsService } from 'app/services/funds.service';
 import { GLAccountsService } from 'app/services/accounts.service';
 
-import { GridMenubarStandaloneComponent } from '../grid-menubar/grid-menubar.component';
-import { JournalUpdateComponent } from './gl-transactions/journal-update.component';
+import { GridMenubarStandaloneComponent } from '../../grid-menubar/grid-menubar.component';
+import { JournalUpdateComponent } from '../gl-transactions/journal-update.component';
 import { MatDrawer } from '@angular/material/sidenav';
 import { MaterialModule } from 'app/services/material.module';
 

@@ -30,7 +30,6 @@ export const FundsStore = signalStore(
   
   }),
   withComputed((state) => ({
-    tasksCount: computed(() => state.funds().length),
     selected: computed(() => state.funds().filter((t) => state.funds()[t.id])),
   })),
   withMethods((state, fundService = inject(FundsService)) => ({       

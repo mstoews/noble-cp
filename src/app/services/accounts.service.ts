@@ -23,20 +23,17 @@ const initialState: AccountState = {
 })
 export class GLAccountsService {
 
-    httpClient = inject(HttpClient)
-    private baseUrl = environment.baseUrl;
-
-    accountList = signal<IAccounts[]>([])
     private parentAccounts = signal<IAccounts[]>([])
     private dropDownList = signal<IDropDownAccounts[]>([])
     private childrenOfParents = signal<IAccounts[]>([])
-
     private accountState = signalState(initialState);
-
+    private baseUrl = environment.baseUrl;
+    public readUrl = this.baseUrl + '/v1/account_list';
+    public httpClient = inject(HttpClient)
+    public accountList = signal<IAccounts[]>([])    
+        
     // readonly accountList = this.accountState.account;
     readonly isLoading = this.accountState.isLoading;
-
-    readUrl = this.baseUrl + '/v1/account_list';
 
     readonly read = rxMethod<void>(
         pipe(
@@ -55,7 +52,7 @@ export class GLAccountsService {
     );
 
     // account and description only
-    readDropDownChild() {
+    public readDropDownChild() {
         var url = this.baseUrl + '/v1/read_child_accounts';
         if (this.dropDownList().length === 0) {
             this.httpClient.get<IDropDownAccounts[]>(url).pipe(
@@ -73,7 +70,7 @@ export class GLAccountsService {
     }
 
     // only child account and no parents
-    readChildren() {
+    public readChildren() {
         var url = this.baseUrl + '/v1/read_child_accounts';
         return this.httpClient.get<IDropDownAccounts[]>(url).pipe(
             tap(data => this.dropDownList.set(data)),
@@ -88,7 +85,7 @@ export class GLAccountsService {
     }
 
     // only parent accounts
-    getParents() {
+    public getParents() {
         var url = this.baseUrl + '/v1/account_parent_list';
         if (this.parentAccounts().length === 0) {
             this.httpClient.get<IAccounts[]>(url).pipe(
@@ -105,7 +102,7 @@ export class GLAccountsService {
         return this.parentAccounts;
     }
 
-    getChild(parent: string) {
+    public getChild(parent: string) {
         var url = this.baseUrl + '/v1/account_children_list/' + parent;
 
         if (this.childrenOfParents().length === 0) {
@@ -124,7 +121,7 @@ export class GLAccountsService {
     }
 
     // Add
-    create(accounts: Partial<IAccounts>) {
+    public create(accounts: Partial<IAccounts>) {
 
         var data: IAccounts = {
             account: accounts.account,
@@ -148,7 +145,7 @@ export class GLAccountsService {
     }
 
     // Update
-    update(accounts: Partial<IAccounts>) {
+    public update(accounts: Partial<IAccounts>) {
 
         var url = this.baseUrl + '/v1/account_update';
 
@@ -203,8 +200,6 @@ export class GLAccountsService {
     // Delete
     delete(id: string) {
         var url = this.baseUrl + '/v1/account_delete';
-        return this.httpClient.get<IAccounts[]>(url)
-            .pipe(
-                shareReplay())
+        return this.httpClient.get<IAccounts[]>(url).pipe(shareReplay())
     }
 }

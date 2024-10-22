@@ -12,7 +12,8 @@ import { GridMenubarStandaloneComponent } from '../../grid-menubar/grid-menubar.
 import { MatDrawer } from '@angular/material/sidenav';
 import { MaterialModule } from 'app/services/material.module';
 import { TypeService, TypeStore } from 'app/services/type.service';
-import { AggregateService, ColumnMenuService, EditService, FilterService, GridModule, GroupService, PageService, ResizeService, SortService, ToolbarService } from '@syncfusion/ej2-angular-grids';
+import { AggregateService, ColumnMenuService, DialogEditEventArgs, EditService, ExcelExportService, FilterService, GridModule, GroupService, PageService, ResizeService, SaveEventArgs, SortService, ToolbarService } from '@syncfusion/ej2-angular-grids';
+import { IAccounts } from 'app/models/journals';
 
 const imports = [
     CommonModule,
@@ -28,7 +29,7 @@ const imports = [
     standalone: true,
     imports: [imports],
     templateUrl: './types.component.html',
-    providers: [TypeStore, SortService, GroupService ,PageService, ResizeService, FilterService, ToolbarService, EditService, AggregateService, ColumnMenuService,]
+    providers: [TypeStore, SortService, GroupService, ExcelExportService ,PageService, ResizeService, FilterService, ToolbarService, EditService, AggregateService, ColumnMenuService,]
 })
 export class GlTypeComponent implements OnInit {
 
@@ -93,6 +94,34 @@ export class GlTypeComponent implements OnInit {
             return;
         }
     }
+
+    actionBegin(args: SaveEventArgs): void {        
+        var data = args.rowData as IAccounts;
+        
+        if (args.requestType === 'beginEdit' || args.requestType === 'add') {        
+           args.cancel = true;
+           // this.createForm(data);
+           this.openDrawer();        
+                        
+        }
+        if (args.requestType === 'save') {
+            args.cancel = true;
+            console.log(JSON.stringify(args.data));
+            var data = args.data as IAccounts;                        
+        }
+    }
+
+    actionComplete(args: DialogEditEventArgs): void {
+        if ((args.requestType === 'beginEdit' || args.requestType === 'add')) {
+            if (args.requestType === 'beginEdit') {
+                // (args.form.elements.namedItem('CustomerName') as HTMLInputElement).focus();
+            } else if (args.requestType === 'add') {
+                // (args.form.elements.namedItem('OrderID') as HTMLInputElement).focus();
+            }
+        }
+    }
+
+
 
     closeDrawer() {
         const opened = this.drawer.opened;

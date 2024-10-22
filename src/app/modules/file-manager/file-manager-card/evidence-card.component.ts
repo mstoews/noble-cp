@@ -26,7 +26,7 @@ export class EvidenceCardComponent implements OnInit {
   private snackBar = inject(MatSnackBar);
     
   ngOnInit(): void {
-
+    console.log('Evidence id: ',this.evidence.id);
   }
 
   openEvidenceDetail() {

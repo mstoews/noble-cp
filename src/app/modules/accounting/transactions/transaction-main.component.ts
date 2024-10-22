@@ -8,7 +8,7 @@ import { JournalEntryComponent } from './gl-transactions/journal-listing.compone
 import { JournalUpdateComponent } from './gl-transactions/journal-update.component';
 import { FileManagerComponent } from 'app/modules/file-manager/file-manager.component';
 import { EntryWizardComponent } from './wizard/wizard-entry.component';
-import { JournalTemplateComponent } from './journal-template.component';
+import { JournalTemplateComponent } from './template/journal-template.component';
 import { TreeComponent } from '../tree/tree.component';
 import { ARTransactionComponent } from './ar-transactions/ar-listing.component';
 import { APTransactionComponent } from './ap-transactions/ap-listing.component';

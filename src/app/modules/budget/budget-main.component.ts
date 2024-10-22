@@ -6,6 +6,7 @@ import { MaterialModule } from 'app/services/material.module';
 import { Subject, takeUntil } from 'rxjs';
 import { FileManagerComponent } from 'app/modules/file-manager/file-manager.component';
 import { BudgetWizardComponent } from './budget-wizard.component';
+import { BudgetUpdateComponent } from './update/budget-update.component';
 
 
 const imports = [
@@ -15,7 +16,8 @@ const imports = [
     NgSwitch,
     NgSwitchCase,
     FileManagerComponent,
-    BudgetWizardComponent
+    BudgetWizardComponent,
+    BudgetUpdateComponent
 ]
 
 @Component({
@@ -33,7 +35,7 @@ export class BudgetMainComponent {
     drawerMode: 'over' | 'side' = 'side';
     drawerOpened: boolean = true;
     panels: any[] = [];
-    selectedPanel: string = 'listing';
+    selectedPanel: string = 'budget-update';
     private _unsubscribeAll: Subject<any> = new Subject<any>();
 
     /**
@@ -56,7 +58,7 @@ export class BudgetMainComponent {
         // Setup available panels
         this.panels = [
             {
-                id: 'listing',
+                id: 'budget-update',
                 icon: 'heroicons_outline:document-check',
                 title: 'Budget Maintenance',
                 description: 'Manage your budget transactions',

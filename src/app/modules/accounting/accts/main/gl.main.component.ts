@@ -91,12 +91,12 @@ export class GlMainComponent {
                 title: 'General Ledger Types',
                 description: 'Type definitions for accounts',
             },
-            {
-                id: 'subtypes',
-                icon: 'heroicons_outline:clipboard-document',
-                title: 'Transaction Subtypes',
-                description: 'Sub type definitions for transaction reporting',
-            },
+            // {
+            //     id: 'subtypes',
+            //     icon: 'heroicons_outline:clipboard-document',
+            //     title: 'Transaction Subtypes',
+            //     description: 'Sub type definitions for transaction reporting',
+            // },
             {
                 id: 'funds',
                 icon: 'heroicons_outline:clipboard',
@@ -114,14 +114,13 @@ export class GlMainComponent {
                 icon: 'heroicons_outline:user',
                 title: 'Accounting Team',
                 description: 'List of accounting team members',
-            }
-            ,
-            {
-                id: 'roles',
-                icon: 'heroicons_outline:user-circle',
-                title: 'Role Definitions',
-                description: 'List of  assignable roles for team members',
-            }
+            },
+            // {
+            //     id: 'roles',
+            //     icon: 'heroicons_outline:user-circle',
+            //     title: 'Role Definitions',
+            //     description: 'List of  assignable roles for team members',
+            // }
         ];
 
         // Subscribe to media changes

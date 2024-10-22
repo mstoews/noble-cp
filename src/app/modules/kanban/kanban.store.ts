@@ -19,7 +19,7 @@ export interface KanbanStateInterface {
   team: ITeam[],
   isLoading: boolean;
   error: string | null;
-  tasksCount: number;
+
 }
 
 export const KanbanStore = signalStore(
@@ -29,10 +29,9 @@ export const KanbanStore = signalStore(
     team: [],
     error: null,
     isLoading: false,
-    tasksCount: 0
   }),
   withComputed((state) => ({
-    tasksCount: computed(() => state.tasks().length),
+
     selected: computed(() => state.tasks().filter((t) => state.tasks()[t.id])),
   })),
   withMethods((state, kanbanService = inject(KanbanService)) => ({       
