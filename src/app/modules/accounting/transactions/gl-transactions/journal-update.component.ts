@@ -80,7 +80,7 @@ import {
 import { Router, ActivatedRoute } from "@angular/router";
 import { Location } from "@angular/common";
 import { MatDrawer } from "@angular/material/sidenav";
-import { JournalStore } from "app/store/journal.store";
+import { JournalStore } from "app/services/journal.store";
 import { MatSortModule } from "@angular/material/sort";
 import { MatTableModule } from "@angular/material/table";
 import { SplitterModule } from '@syncfusion/ej2-angular-layouts';

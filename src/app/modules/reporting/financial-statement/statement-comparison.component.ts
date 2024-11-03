@@ -37,5 +37,4 @@ export class StatementComparisonComponent implements OnInit  {
       percentage: this.item.opening_balance === 0 ? 0 : ((this.item.closing_balance - this.item.opening_balance) / this.item.opening_balance) * 100 
     }    
   }
-
 }

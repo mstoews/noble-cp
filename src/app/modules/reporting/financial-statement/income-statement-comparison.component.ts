@@ -41,8 +41,8 @@ const imports = [
       </div>
       <div id="income-statement" class="pl-20 pt-2 pb-14 mat-elevation-z8 mt-4 bg-white font-gray-900">
 
-          <div class="text-gray-800 text-2xl mt-3">Noble Ledger Ltd.</div>
-          <div class="text-gray-800  text-2xl mt-1">Income Statement Comparison</div>
+          <div class="text-gray-800 text-2xl mt-3">{{companyName()}}</div>
+          <div class="text-gray-800  text-2xl mt-1">{{reportName()}}</div>
           <div class="text-gray-800  text-2xl mt-1">{{dReportDate}}</div>
           
           <section class="grid grid-cols-1 mt-10 ">      
@@ -98,8 +98,9 @@ export class IncomeStatementComparisonRptComponent  {
   public currentYear = signal(2024);
 
   public dReportDate = new Date();
+  public reportName = signal('Income Statement Comparison');
+  public companyName = signal('Noble Ledger Ltd.');
 
-  // public balanceSheetReport! : Observable<IDistributionLedgerReport[]>
   public distributionService = inject(DistributionLedgerService)
 
   private _unsubscribeAll: Subject<any> = new Subject<any>();

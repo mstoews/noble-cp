@@ -1,11 +1,11 @@
 <kb-menubar class="" [inTitle]="'Tasks'" (notifyParentRefresh)="onRefresh()" (notifyParentAdd)="onAdd()"
-    (notifyParentDelete)="onDeleteCurrentSelection()"
-    (notifyParentUpdate)="onUpdateCurrentSelection()"></kb-menubar>
+    (notifyParentDelete)="onDeleteCurrentSelection()" (notifyParentUpdate)="onUpdateCurrentSelection()"></kb-menubar>
 <div class="flex flex-col min-w-0 overflow-y-auto bg-transparent" cdkScrollable>
 
     <div class="flex-auto">
         <div class="h-full rounded-2xl">
-            <mat-drawer class="w-128 bg-gray-100" #drawer [opened]="false" mode="over" [position]="'end'" [disableClose]="false">
+            <mat-drawer class="w-128 bg-gray-100" #drawer [opened]="false" mode="over" [position]="'end'"
+                [disableClose]="false">
                 <mat-card class="mt-2 ml-3 mr-3 mat-elevation-z8">
                     <div mat-card-title
                         class="font-semibold text-3xl text-gray-100 bg-gray-500 p-1 border-white m-1 rounded-md">
@@ -16,8 +16,10 @@
                             <div class="flex flex-col m-1">
                                 <div class="flex flex-col grow">
                                     <mat-form-field class="mt-1 flex-start">
-                                        <input #myInput matInput placeholder="Kanban Task Title" formControlName="title" />
-                                        <mat-icon class="icon-size-5" matPrefix [svgIcon]="'heroicons_solid:document'"></mat-icon>
+                                        <input #myInput matInput placeholder="Kanban Task Title"
+                                            formControlName="title" />
+                                        <mat-icon class="icon-size-5" matPrefix
+                                            [svgIcon]="'heroicons_solid:document'"></mat-icon>
                                     </mat-form-field>
                                 </div>
 
@@ -31,9 +33,10 @@
                                     </mat-form-field>
 
                                     <mat-form-field class="grow">
-                                        <mat-select placeholder="Priority" formControlName="priority" (selectionChange)="changePriority($event.value)">
+                                        <mat-select placeholder="Priority" formControlName="priority"
+                                            (selectionChange)="changePriority($event.value)">
                                             @for (item of store.priority(); track item.priority) {
-                                                <mat-option [value]="item.priority"> {{ item.priority }} </mat-option>
+                                            <mat-option [value]="item.priority"> {{ item.priority }} </mat-option>
                                             }
                                         </mat-select>
                                     </mat-form-field>
@@ -69,9 +72,9 @@
                                     <mat-select placeholder="Assigned" formControlName="assignee"
                                         (selectionChange)="changeType($event.value)">
                                         @for (item of store.team(); track item) {
-                                            <mat-option [value]="item.team_member">  
-                                                {{ item.team_member }}  
-                                            </mat-option>
+                                        <mat-option [value]="item.team_member">
+                                            {{ item.team_member }}
+                                        </mat-option>
                                         }
                                     </mat-select>
                                 </mat-form-field>
@@ -84,17 +87,19 @@
 
                         <div mat-card-actions class="mb-3">
 
-                            <button mat-icon-button (click)="onUpdate()" matTooltip="Update" color="primary" class="bg-slate-100 text-gray-100 hover:bg-slate-300 ml-1">
+                            <button mat-icon-button (click)="onUpdate()" matTooltip="Update" color="primary"
+                                class="bg-slate-100 text-gray-100 hover:bg-slate-300 ml-1">
                                 <mat-icon [svgIcon]="'feather:save'"></mat-icon>
                             </button>
-                                                        
+
                             <button mat-icon-button (click)="onCopy()" color="primary" class="m-1">
                                 <mat-icon>content_copy</mat-icon>
                             </button>
-                            
-                            <button mat-icon-button color="primary" class="bg-slate-200 text-gray-100 hover:bg-slate-200 ml-1"
-                            (click)="onDelete()" matTooltip="Remove" aria-label="hovered over">
-                            <mat-icon [svgIcon]="'feather:trash'"></mat-icon>
+
+                            <button mat-icon-button color="primary"
+                                class="bg-slate-200 text-gray-100 hover:bg-slate-200 ml-1" (click)="onDelete()"
+                                matTooltip="Remove" aria-label="hovered over">
+                                <mat-icon [svgIcon]="'feather:trash'"></mat-icon>
                             </button>
 
                             <button mat-icon-button (click)="closeDrawer()" color="warn" class="m-1">
@@ -103,7 +108,7 @@
                         </div>
                     </div>
                 </mat-card>
-                
+
             </mat-drawer>
             <mat-drawer-container>
                 <mat-drawer-content>
@@ -111,16 +116,11 @@
                     <div class="" cdkScrollable>
                         <div class="control-section">
                             <div class="content-wrapper">
-                                <!-- <p>Selected range: {{kanbanData | json}}</p> -->
                                 <ejs-kanban #kanbanObj cssClass='kanban-overview' keyField="status"
-                                    [dataSource]='store.tasks()'
-                                    [cardSettings]='cardSettings' enableTooltip='false'
-                                    [swimlaneSettings]='swimlaneSettings' 
-                                    (cardDoubleClick)='OnCardDoubleClick($event)' 
-                                    (dragStart)='OnDragStart($event)'
-                                    (drag)='OnDrag($event)' 
-                                    (dragStop)='OnDragStop($event)'
-                                    (cardRendered)='cardRendered($event)'>
+                                    [dataSource]='store.tasks()' [cardSettings]='cardSettings' enableTooltip='false'
+                                    [swimlaneSettings]='swimlaneSettings' (cardDoubleClick)='OnCardDoubleClick($event)'
+                                    (dragStart)='OnDragStart($event)' (drag)='OnDrag($event)'
+                                    (dragStop)='OnDragStop($event)' (cardRendered)='cardRendered($event)'>
                                     <e-columns>
                                         <e-column class="text-gray-400" *ngFor="let column of columns;"
                                             headerText={{column.headerText}} keyField='{{column.keyField}}'
@@ -160,11 +160,11 @@
                     </div>
                     } @else
                     {
-                        <div class="flex flex-col items-center justify-center h-screen mat-spinner-color w-full bg-white">
-                            <mat-spinner class="text-gray-100 bg-white" [diameter]="80"></mat-spinner>
-                            <p class="text-gray-100 text-2xl">Loading...</p>
-                        </div>
-                    }                 
+                    <div class="flex flex-col items-center justify-center h-screen mat-spinner-color w-full bg-white">
+                        <mat-spinner class="text-gray-100 bg-white" [diameter]="80"></mat-spinner>
+                        <p class="text-gray-100 text-2xl">Loading...</p>
+                    </div>
+                    }
                 </mat-drawer-content>
             </mat-drawer-container>
         </div>

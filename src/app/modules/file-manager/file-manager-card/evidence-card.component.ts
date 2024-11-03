@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, inject } from '@angular/core'
+import { Component, OnInit, Input, inject, output } from '@angular/core'
 import { Router } from '@angular/router'
 import { Observable, Subscription } from 'rxjs'
 import { MatSnackBar } from '@angular/material/snack-bar'
@@ -16,20 +16,23 @@ const imports = [MaterialModule]
 })
 export class EvidenceCardComponent implements OnInit {
 
-  @Input() evidence: IArtifacts
+  @Input() evidence: IArtifacts;
+  
+  update = output<number>();
+  
   loggedIn: boolean = false;
   productId: string;
   sub: Subscription;
   isLoggedIn$: Observable<boolean>;
 
   private router = inject(Router);  
-  private snackBar = inject(MatSnackBar);
     
   ngOnInit(): void {
     console.log('Evidence id: ',this.evidence.id);
   }
 
   openEvidenceDetail() {
-    this.router.navigate(['artifacts/evidence', this.evidence.reference]);
+    // this.router.navigate(['artifacts/evidence', this.evidence.id]);
+    this.update.emit(this.evidence.id);
   }
 }

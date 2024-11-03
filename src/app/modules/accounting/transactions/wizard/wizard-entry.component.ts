@@ -18,7 +18,7 @@ import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 import { IDropDownAccounts } from 'app/models';
 import { WizardUpdateComponent } from './wizard-update.component';
 import { IJournalDetail, IJournalHeader, ITransactionDate } from 'app/models/journals';
-import { JournalStore } from 'app/store/journal.store';
+import { JournalStore } from 'app/services/journal.store';
 
 
 interface ITransactionType {

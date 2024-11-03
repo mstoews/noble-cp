@@ -117,11 +117,11 @@
                         <div class="control-section">
                             <div class="content-wrapper">
                                 <ejs-grid id='tasks' 
+                                    [dataSource]='store.tasks()' 
                                     allowPaging='true' 
                                     allowSorting='true' 
                                     showColumnMenu='true'
-                                    allowEditing='true' 
-                                    [dataSource]='store.tasks()' 
+                                    allowEditing='true'                                     
                                     [allowFiltering]='false'
                                     [toolbar]='toolbarOptions' 
                                     [selectionOptions]="selectionOptions"

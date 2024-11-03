@@ -12,7 +12,7 @@ import { SubTypeService } from 'app/services/subtype.service';
 import { NgxMaskDirective, NgxMaskPipe, provideNgxMask } from 'ngx-mask';
 import { IJournalDetail } from 'app/models/journals';
 import { AuthService } from 'app/modules/auth/auth.service';
-import { JournalStore } from 'app/store/journal.store';
+import { JournalStore } from 'app/services/journal.store';
 
 
 const imports = [

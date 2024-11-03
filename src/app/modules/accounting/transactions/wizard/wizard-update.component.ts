@@ -24,7 +24,7 @@ import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 import { IDropDownAccounts } from 'app/models';
 import { AggregateService, EditService, FilterService, GridModule, PageService, RowDDService, SortService, ToolbarService } from '@syncfusion/ej2-angular-grids';
 import { IJournalDetailDelete, IJournalHeaderUpdate } from 'app/models/journals';
-import { JournalStore } from 'app/store/journal.store';
+import { JournalStore } from 'app/services/journal.store';
 
 
 declare var __moduleName: string;

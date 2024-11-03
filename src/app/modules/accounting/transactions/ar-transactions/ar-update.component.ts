@@ -34,11 +34,11 @@ import {
 } from "@syncfusion/ej2-angular-grids";
 
 import { DataManager, Query } from "@syncfusion/ej2-data";
-import { IJournalDetail, IJournalDetailDelete, IJournalHeader, IJournalHeaderUpdate } from "app/models/journals";
+import { IJournalDetailDelete, IJournalHeader, IJournalHeaderUpdate } from "app/models/journals";
 import { ActivatedRoute } from "@angular/router";
 import { Location } from '@angular/common';
 import { MatDrawer } from "@angular/material/sidenav";
-import { JournalStore } from "app/store/journal.store";
+import { JournalStore } from "app/services/journal.store";
 
 const imports = [
   CommonModule,

@@ -41,7 +41,7 @@ import { Browser } from '@syncfusion/ej2-base';
 import { Dialog } from '@syncfusion/ej2-popups';
 import { DropDownListComponent } from '@syncfusion/ej2-angular-dropdowns';
 import { IJournalDetail, IJournalHeader } from 'app/models/journals';
-import { JournalStore } from 'app/store/journal.store';
+import { JournalStore } from 'app/services/journal.store';
 import { Router } from '@angular/router';
 
 

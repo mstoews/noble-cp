@@ -1,20 +1,12 @@
 import { Component, OnDestroy, OnInit, ViewChild, inject, viewChild } from '@angular/core';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { JournalService } from 'app/services/journal.service';
 import { Subject } from 'rxjs';
 import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
-
 import { CommonModule } from '@angular/common';
 import { DndComponent } from 'app/modules/drag-n-drop/loaddnd/dnd.component';
-
-import { FundsService } from 'app/services/funds.service';
-import { GLAccountsService } from 'app/services/accounts.service';
-
 import { GridMenubarStandaloneComponent } from '../../grid-menubar/grid-menubar.component';
 import { MatDrawer } from '@angular/material/sidenav';
 import { MaterialModule } from 'app/services/material.module';
-import { SubTypeService } from 'app/services/subtype.service';
-import { TypeService } from 'app/services/type.service';
 import { DialogEditEventArgs, EditService, SelectionSettingsModel, GroupService, FilterService, GridModule, PageService, SaveEventArgs, SortService, ToolbarService, GridComponent, AggregateService, FilterSettingsModel, ToolbarItems, SearchSettingsModel, GroupSettingsModel, ColumnMenuService, ResizeService, ExcelExport, PdfExportService, ExcelExportService, ReorderService } from '@syncfusion/ej2-angular-grids';
 import { Browser } from '@syncfusion/ej2-base';
 import { Dialog } from '@syncfusion/ej2-popups';
@@ -22,7 +14,7 @@ import { Dialog } from '@syncfusion/ej2-popups';
 import { DropDownListComponent } from '@syncfusion/ej2-angular-dropdowns';
 import { IJournalHeader } from 'app/models/journals';
 
-import { JournalStore } from 'app/store/journal.store';
+import { JournalStore } from 'app/services/journal.store';
 import { Router } from '@angular/router';
 
 const imports = [
@@ -46,11 +38,6 @@ const imports = [
 })
 export class APTransactionComponent implements OnInit, OnDestroy {
 
-    //public journalService = inject(JournalService);
-    public typeService = inject(TypeService);
-    public subtypeService = inject(SubTypeService);
-    public fundService = inject(FundsService);
-    public accountService = inject(GLAccountsService);
     public route = inject(Router);
 
     store = inject(JournalStore);
@@ -107,9 +94,6 @@ export class APTransactionComponent implements OnInit, OnDestroy {
     protected _onDestroy = new Subject<void>();
 
     ngOnInit() {
-        // const dDate = new Date();
-        // this.currentDate = dDate.toISOString().split('T')[0];
-
         this.store.accountsPayable();
         console.debug('AP :', this.store.ap().length)
         this.initialDatagrid();

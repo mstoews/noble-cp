@@ -212,21 +212,6 @@ export class TasksComponent implements OnInit {
     return this.cType;
   }
 
-  // private assignAssignee(task: IKanban): string {
-  //   var rc: string;
-  //   if (task.assignee !== null && task.assignee !== undefined) {
-  //     const assignee = this.assignees.find((x) => x.value === task.assignee.toString());
-  //     if (assignee === undefined) {
-  //       rc = 'mstoews';
-  //     } else {
-  //       rc = assignee.value;
-  //     }
-  //   } else {
-  //     rc = 'admin'
-  //   }
-  //   return rc
-  // }
-
   private assignRag(task: IKanban): string {
     if (task.color !== null && task.color !== undefined) {
       const rag = this.rag.find((x) => x.value === task.color.toString());

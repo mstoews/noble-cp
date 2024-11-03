@@ -1,5 +1,5 @@
 
-import { provideHttpClient, withFetch, withInterceptors } from '@angular/common/http';
+import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { APP_INITIALIZER, ApplicationConfig, ErrorHandler } from '@angular/core';
 import { LuxonDateAdapter } from '@angular/material-luxon-adapter';
 import { DateAdapter, MAT_DATE_FORMATS } from '@angular/material/core';
@@ -10,7 +10,7 @@ import { appRoutes } from 'app/app.routing';
 import { provideIcons } from 'app/core/icons/icons.provider';
 import { provideTransloco } from 'app/core/transloco/transloco.provider';
 import { mockApiServices } from 'app/mock-api';
-import { environment } from 'environments/environment';
+import { environment } from 'environments/environment.prod';
 import { InjectionToken } from '@angular/core';
 import { authTokenInterceptor } from './auth.token.interceptor';
 
@@ -27,14 +27,7 @@ import {
 } from 'firebase/storage';
 
 import { getAuth, connectAuthEmulator } from 'firebase/auth';
-
 import { initializeApp } from 'firebase/app';
-
-
-import { provideAnimationsAsync } from '@angular/platform-browser/animations/async'
-import { AuthService } from './modules/auth/auth.service';
-import { GlobalErrorHandler } from './services/error.service';
-
 
 const app = initializeApp(environment.firebase);
 
