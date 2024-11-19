@@ -21,7 +21,7 @@ export interface RoleStateInterface {
 }
 
 export const RolesStore = signalStore(
-  withState<RoleStateInterface>({
+  { protectedState: false }, withState<RoleStateInterface>({
     roles: [],
     error: null,
     isLoading: false,

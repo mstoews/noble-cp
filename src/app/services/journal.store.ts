@@ -36,7 +36,7 @@ export interface JournalStateInterface {
 }
 
 export const JournalStore = signalStore(
-  withState<JournalStateInterface>({
+  { protectedState: false }, withState<JournalStateInterface>({
     gl: [],
     ap: [],
     ar: [],

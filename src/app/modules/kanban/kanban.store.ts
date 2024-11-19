@@ -23,7 +23,7 @@ export interface KanbanStateInterface {
 }
 
 export const KanbanStore = signalStore(
-  withState<KanbanStateInterface>({
+  { protectedState: false }, withState<KanbanStateInterface>({
     tasks: [],
     priority: [],
     team: [],

@@ -25,7 +25,7 @@ import {
   }
   
   export const TrialBalanceStore = signalStore(
-    withState<DistributionStateInterface>({
+    { protectedState: false }, withState<DistributionStateInterface>({
       header: [],
       details: [],
       periodParam: null,

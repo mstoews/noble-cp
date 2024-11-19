@@ -22,7 +22,7 @@ export interface PartyStateInterface {
 }
 
 export const PartyStore = signalStore(
-  withState<PartyStateInterface>({
+  { protectedState: false }, withState<PartyStateInterface>({
     party: [],
     error: null,
     isLoading: false,

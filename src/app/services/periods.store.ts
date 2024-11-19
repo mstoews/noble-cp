@@ -21,7 +21,7 @@ export interface PeriodStateInterface {
 }
 
 export const PeriodStore = signalStore(
-  withState<PeriodStateInterface>({
+  { protectedState: false }, withState<PeriodStateInterface>({
     periods: [],
     error: null,
     isLoading: false,

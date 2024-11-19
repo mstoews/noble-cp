@@ -104,7 +104,7 @@ export interface TypeStateInterface {
 }
 
 export const TypeStore = signalStore(
-  withState<TypeStateInterface>({
+  { protectedState: false }, withState<TypeStateInterface>({
     type: [],
     error: null,
     isLoading: false,

@@ -21,7 +21,7 @@ export interface BudgetInterface {
   }
   
 export const BudgetStore = signalStore(    
-    withState<BudgetInterface>({
+    { protectedState: false }, withState<BudgetInterface>({
       budgetAmt: [],
       error: null,
       isLoading: false,

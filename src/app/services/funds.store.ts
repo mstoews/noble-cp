@@ -23,7 +23,7 @@ export interface FundStateInterface {
 }
 
 export const FundsStore = signalStore(
-  withState<FundStateInterface>({
+  { protectedState: false }, withState<FundStateInterface>({
     funds: [],
     error: null,
     isLoading: false,

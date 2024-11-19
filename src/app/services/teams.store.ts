@@ -20,7 +20,7 @@ export interface TeamStateInterface {
 }
 
 export const TeamStore = signalStore(
-  withState<TeamStateInterface>({
+  { protectedState: false }, withState<TeamStateInterface>({
     team: [],
     error: null,
     isLoading: false,
