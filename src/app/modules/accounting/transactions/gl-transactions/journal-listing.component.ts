@@ -1,16 +1,10 @@
-import { Component, OnDestroy, OnInit, ViewChild, ViewEncapsulation, inject, viewChild } from '@angular/core';
-import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Component, OnDestroy, OnInit, ViewEncapsulation, inject, viewChild } from '@angular/core';
+import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
-
 import { CommonModule } from '@angular/common';
-import { DndComponent } from 'app/modules/drag-n-drop/loaddnd/dnd.component';
-
 import { FundsService } from 'app/services/funds.service';
 import { GLAccountsService } from 'app/services/accounts.service';
-
 import { GridMenubarStandaloneComponent } from '../../grid-menubar/grid-menubar.component';
-import { JournalUpdateComponent } from './journal-update.component';
-import { MatDrawer } from '@angular/material/sidenav';
 import { MaterialModule } from 'app/services/material.module';
 import { SubTypeService } from 'app/services/subtype.service';
 import { TypeService } from 'app/services/type.service';
@@ -43,6 +37,7 @@ import { DropDownListComponent } from '@syncfusion/ej2-angular-dropdowns';
 import { IJournalDetail, IJournalHeader } from 'app/models/journals';
 import { JournalStore } from 'app/services/journal.store';
 import { Router } from '@angular/router';
+import { ClickEventArgs } from '@syncfusion/ej2-navigations';
 
 
 const imports = [
@@ -50,8 +45,6 @@ const imports = [
     ReactiveFormsModule,
     MaterialModule,
     FormsModule,
-    JournalUpdateComponent,
-    DndComponent,
     GridMenubarStandaloneComponent,
     NgxMatSelectSearchModule,
     GridModule
@@ -90,25 +83,18 @@ export class JournalEntryComponent implements OnInit, OnDestroy {
     public route = inject(Router);
     public store = inject(JournalStore);
 
-
-    drawer = viewChild<MatDrawer>('drawer');
-    grid = viewChild<GridComponent>('grid');
-    
+    sTitle = 'Transaction Listings by Journal Type';
+    grid = viewChild<GridComponent>('grid');    
     currentRowData: any;
-
     drawOpen: 'open' | 'close' = 'open';
-    collapsed = false;
-    sTitle = 'Journal Entry';
-    selectedItemKeys: any[] = [];
-
-    public journalType = 'GL';
+    collapsed = false;    
+    public sGridTitle = 'Journal Entry';
     
+    selectedItemKeys: any[] = [];
+    public journalType = 'GL';    
     public bOpenDetail: boolean = false;
-
-    // datagrid settings start
     public pageSettings: Object;
     public formatoptions: Object;
-    public initialSort: Object;
     public filterOptions: FilterSettingsModel;
     public editSettings: Object;
     public dropDown: DropDownListComponent;
@@ -124,20 +110,45 @@ export class JournalEntryComponent implements OnInit, OnDestroy {
     customizeTooltip = (pointsInfo: { originalValue: string; }) => ({ text: `${parseInt(pointsInfo.originalValue)}%` });
 
     initialDatagrid() {
-        // this.pageSettings = { pageCount: 10 };        
         this.formatoptions = { type: 'dateTime', format: 'M/dd/yyyy' }
         this.pageSettings = { pageSizes: true, pageCount: 10 };
         this.selectionOptions = { mode: 'Cell' };
         this.editSettings = { allowEditing: true, allowAdding: false, allowDeleting: false };
         this.searchOptions = { operator: 'contains', ignoreCase: true, ignoreAccent: true };
-        this.toolbarOptions = ['Search', 'ExcelExport', 'PdfExport', 'CsvExport','Print']
+        this.toolbarOptions = ['Search']
         this.filterSettings = { type: 'Excel' };
     }
 
+    toolbarClick(args: ClickEventArgs): void {
+        if (args.item.id === 'grid_excelexport') {             
+            this.grid().excelExport();
+        }
+        else if (args.item.id === 'grid_csvexport') { 
+            this.grid().csvExport();
+        }
+    }
+
+    onBack(e: string) {
+        console.debug('onBack: ', e)
+    }
+
+    onExportXL(e: string) {        
+        this.grid().excelExport();
+    }
+    onExportCSV(e: string) {
+        this.grid().csvExport();
+    }
     
+    onPrint(e: string) {
+        this.grid().print();
+    }
+    
+    onExportPDF(e: string) {
+        this.grid().pdfExport();
+    }
+        
     ngOnInit() {
         this.initialDatagrid();
-        this.onLoad();
     }
 
     onLoad(): void {
@@ -145,33 +156,22 @@ export class JournalEntryComponent implements OnInit, OnDestroy {
             period: 1,
             period_year: 2024
         }
-        this.store.loadAllDetails(params)    
+        // this.store.loadAllDetails(params)    
     }
 
     actionBegin(args: SaveEventArgs): void {
         var data = args.rowData as IJournalHeader;
+        
         if (args.requestType === 'beginEdit' || args.requestType === 'add') {
             args.cancel = true;
             this.submitClicked = false;
             this.bOpenDetail = true;
             this.journalType = data.type;
             this.currentRowData = data;
-
-            switch (data.type) {
-                case 'GL':
-                    this.route.navigate(['journals/gl', data.journal_id]);
-                    break;
-                case 'AP':
-                    this.route.navigate(['journals/ap', data.journal_id]);
-                    break;
-                case 'AR':
-                    this.route.navigate(['journals/ar', data.journal_id]);
-                    break;
-            }
+            this.route.navigate(['journals/gl', data.journal_id]);
         }
         if (args.requestType === 'save') {
-            args.cancel = true;
-            console.log(JSON.stringify(args.data));
+            args.cancel = true;        
             var data = args.data as IJournalHeader;
             this.submitClicked = true;
         }
@@ -191,7 +191,7 @@ export class JournalEntryComponent implements OnInit, OnDestroy {
         }
     }
 
-    dateValidator() {
+    public dateValidator() {
         return (control: FormControl): null | Object => {
             return control.value && control.value.getFullYear &&
                 (1900 <= control.value.getFullYear() && control.value.getFullYear() <= 2099) ? null : { OrderDate: { value: control.value } };
@@ -231,72 +231,51 @@ export class JournalEntryComponent implements OnInit, OnDestroy {
         
     }
 
-    onClickGrid() { 
+    public onClickGrid() { 
         const selectedRecords = this.grid().getSelectedRecords();
         const records = this.store.details();
         this.grid().childGrid.dataSource = this.store.details();
     }
 
-    onAdd() {
-        this.bOpenDetail = true;
-        this.openDrawer()
+    public onAdd() {
+        this.bOpenDetail = true;        
     }
 
-    onRefresh() {
+    public onRefresh() {
         console.debug('Refresh')
     }
 
-    onDeleteSelection() {
+    public onDeleteSelection() {
         console.debug('Delete Selection')
     }
 
-    onUpdateSelection() {
+    public onUpdateSelection() {
         console.debug('onUpdateSelection')
     }
 
-    onDelete(e: any) {
+    public onDelete(e: any) {
         console.debug('onDelete')
     }
 
-    onUpdate($event: any) {
+    public onUpdate($event: any) {
         console.debug('onUpdate')
     }
 
-    onBooked(booked: boolean) {
+    public onBooked(booked: boolean) {
         this.journalForm.patchValue({ booked: booked });
     }
 
-    formatNumber(e) {
-        const options = {
-            style: 'decimal',  // Other options: 'currency', 'percent', etc.
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2,
-        };
-        const formattedWithOptions = e.value.toLocaleString('en-US', options);
-        return formattedWithOptions;
-    }
+    // public formatNumber(e) {
+    //     const options = {
+    //         style: 'decimal',  // Other options: 'currency', 'percent', etc.
+    //         minimumFractionDigits: 2,
+    //         maximumFractionDigits: 2,
+    //     };
+    //     const formattedWithOptions = e.value.toLocaleString('en-US', options);
+    //     return formattedWithOptions;
+    // }
 
     updateBooked() { }
-
-    onCreate() {
-        this.openDrawer();
-    }
-
-
-    onEdit() {
-        this.bOpenDetail = true;
-        this.openDrawer();
-    }
-
-    openDrawer() {
-        if (this.drawer().opened !== true)
-            this.drawer().toggle();
-    }
-
-    closeDrawer() {
-        if (this.drawer().opened === true)
-            this.drawer().toggle();
-    }
 
     ngOnDestroy() {
 

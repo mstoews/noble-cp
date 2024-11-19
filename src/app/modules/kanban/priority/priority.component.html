@@ -55,7 +55,7 @@
     </mat-drawer>
     <ng-container>
         <grid-menubar [inTitle]="'Kanban Priority Maintenance'"></grid-menubar>
-        @if (kanbanService.isLoading() == false ) {        
+        @if (kanbanService.isLoading() == false ) {
         <div class="flex flex-col h-[600px]">
             <!-- 
             <dx-data-grid id="id" [wordWrapEnabled]="true" [columnHidingEnabled]="true" [columnHidingEnabled]="true"
@@ -67,21 +67,14 @@
             </dx-data-grid>  
             -->
 
-            <ejs-grid #normalgrid id='Normalgrid'             
-                [dataSource]='kanbanService.priorityList()' 
-                allowPaging='true' 
-                [allowSorting]='true' 
-                [allowFiltering]='true' 
-                [filterSettings]='filterSettings' 
-                [editSettings]='editSettings' 
-                [toolbar]='toolbar' 
-                [sortSettings]='initialSort'
-                (actionBegin)='actionBegin($event)' 
-                (actionComplete)='actionComplete($event)'                
+            <ejs-grid #normalgrid id='Normalgrid' [dataSource]='kanbanService.priorityList()' allowPaging='true'
+                [allowSorting]='true' [allowFiltering]='true' [filterSettings]='filterSettings'
+                [editSettings]='editSettings' [toolbar]='toolbar' [sortSettings]='initialSort'
+                (actionBegin)='actionBegin($event)' (actionComplete)='actionComplete($event)'
                 [pageSettings]='pageSettings'>
                 <e-columns>
-                    <e-column field='priority' headerText="Priority"   width='140' isPrimaryKey='true' ></e-column>
-                    <e-column field='description' headerText="Description"></e-column>                
+                    <e-column field='priority' headerText="Priority" width='140' isPrimaryKey='true'></e-column>
+                    <e-column field='description' headerText="Description"></e-column>
                 </e-columns>
             </ejs-grid>
         </div>

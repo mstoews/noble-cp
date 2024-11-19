@@ -15,15 +15,17 @@
         <!-- Main -->
         <div class="sm:hide md:visible">
             <grid-menubar class="pl-5 pr-5" [inTitle]="'Artifact by Journal Entry'" (notifyParentRefresh)="onRefresh()"
-                (notifyParentAdd)="onAdd()" (notifyParentDelete)="onDeleteSelection()" (notifyParentUpdate)="onUpdateSelection()">
+                (notifyParentAdd)="onAdd()" (notifyParentDelete)="onDeleteSelection()"
+                (notifyParentUpdate)="onUpdateSelection()">
             </grid-menubar>
         </div>
-            
+
         @defer {
         <div class="flex-auto p-6 sm:p-10">
             <div class="h-full border-gray-900 rounded-2xl">
                 <mat-drawer-container class="flex-col h-full cdkSrollable">
-                <mat-drawer class="w-[600px] bg-white-100" #drawer [opened]="false" mode="over" [position]="'end'"  [disableClose]="false">
+                    <mat-drawer class="w-[600px] bg-white-100" #drawer [opened]="false" mode="over" [position]="'end'"
+                        [disableClose]="false">
                         <div class="flex flex-col w-full filter-article filter-interactive text-gray-700">
                             <div class="bg-slate-600 text-justify pt-2 text-white h-10 text-2xl m-2" mat-dialog-title>
                                 {{ sTitle }}
@@ -35,7 +37,8 @@
                                             <div class="flex flex-col grow">
                                                 <mat-label class="ml-2 dark:text-white text-base">Reference</mat-label>
                                                 <mat-form-field class="m-1 form-element" appearance="outline">
-                                                    <input matInput placeholder="Reference" formControlName="reference_no" />
+                                                    <input matInput placeholder="Reference"
+                                                        formControlName="reference_no" />
                                                 </mat-form-field>
                                             </div>
 
@@ -48,18 +51,16 @@
                                                 </mat-form-field>
                                             </div>
                                             <div class="flex flex-col grow">
-                                                <mat-label
-                                                    class="ml-2 dark:text-white text-base">Location</mat-label>
+                                                <mat-label class="ml-2 dark:text-white text-base">Location</mat-label>
                                                 <mat-form-field class="m-1 form-element grow" appearance="outline">
-                                                    <input matInput placeholder="Location"
-                                                        formControlName="location" />
+                                                    <input matInput placeholder="Location" formControlName="location" />
                                                 </mat-form-field>
-                                            </div>                                            
+                                            </div>
                                         </section>
                                     </div>
                                 </form>
                             </div>
-                            
+
                             <div mat-dialog-actions>
                                 <button mat-raised-button color="primary" class="m-1" (click)="onUpdate($event)"
                                     matTooltip="Save"
@@ -87,24 +88,24 @@
                                 </button>
                             </div>
                         </div>
-                </mat-drawer>                    
-                    @if (evidence$ | async; as rows) { 
+                    </mat-drawer>
+                    @if (evidence$ | async; as rows) {
                     <ul>
                         <li class="grid grid-cols-1 mx-10 gap-y-10 gap-x-6 sm:grid-cols-3 lg:grid-cols-4 xl:gap-x-8">
-                        @for (evidence of rows; track evidence.id) {
-                            <evidence-card [evidence]="evidence" ></evidence-card>
-                        }
-                        </li>                       
+                            @for (evidence of rows; track evidence.id) {
+                            <evidence-card [evidence]="evidence"></evidence-card>
+                            }
+                        </li>
                     </ul>
-                }
+                    }
                 </mat-drawer-container>
             </div>
         </div>
         }
         @placeholder(minimum 1.5s) {
-            <div class="fixed z-[1031] -translate-x-2/4 -translate-y-2/4 left-2/4 top-2/4">
-                <mat-spinner></mat-spinner>
-            </div>
+        <div class="fixed z-[1031] -translate-x-2/4 -translate-y-2/4 left-2/4 top-2/4">
+            <mat-spinner></mat-spinner>
+        </div>
         }
     </div>
 </div>

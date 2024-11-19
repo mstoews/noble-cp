@@ -1,79 +1,104 @@
-import { CommonModule } from '@angular/common';
-import { Component, Output, EventEmitter, Input, ChangeDetectionStrategy } from '@angular/core';
-import { MaterialModule } from 'app/services/material.module';
+import { CommonModule } from "@angular/common";
+import {
+  Component,
+  ChangeDetectionStrategy,
+  output,
+  input,
+} from "@angular/core";
+import { MaterialModule } from "app/services/material.module";
 
-var modules = [
-  MaterialModule,
-  CommonModule
-]
+var modules = [MaterialModule, CommonModule];
 
 @Component({
   standalone: true,
-  selector: 'grid-menubar',
-  styles: [`
-      ::ng-deep.mat-menu-panel {
-          max-width: none !important;
-        }
-    `],
+  selector: "grid-menubar",
+  styles: [
+    ` ::ng-deep.mat-menu-panel {
+        max-width: none !important;
+      }
+    `,
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports:[modules],
-  template: ` 
-            <mat-toolbar class="text-white font-sans bg-gray-500 text-2xlz rounded-lg">
-              {{inTitle}}
-              <!-- menu selected -->
-              <span class="flex-1"></span>
-              
-                  
-                  <button (click)="onClickRefresh()" color="primary" class="m-1 bg-gray-200 text-gray-100 md:visible" mat-icon-button matTooltip="Back" aria-label="Add">
-                      <mat-icon class="flex justify-end text-white" [svgIcon]="'feather:arrow-left'"></mat-icon>
-                  </button>
-                  
+  imports: [modules],
+  template: `
+    <mat-toolbar class="text-white font-sans bg-gray-500 text-2xlz rounded-lg">   {{ inTitle() }}
+      <!-- menu selected -->
+      <span class="flex-1"></span>
 
-                  <!-- <button (click)="onClickUpdate()" color="primary" class="m-1 bg-gray-200 text-gray-100  md:visible" mat-icon-button matTooltip="Update" aria-label="Update">
-                      <mat-icon class="flex justify-end text-white" [svgIcon]="'mat_outline:update'"></mat-icon>
-                  </button>
+    @if (showPrint()) {
+      <button  (click)="onPrint()" color="primary" class="m-1 bg-gray-200 md:visible" mat-icon-button  matTooltip="Print"  aria-label="Print" >
+        <span class="e-icons e-print-2"></span>
+      </button>
+    }
+     
+    @if (showExportPDF()) {
+      <button  (click)="onPDF()" color="primary" class="m-1 bg-gray-200 md:visible" mat-icon-button  matTooltip="Export PDF"  aria-label="PDF" >
+        <span class="e-icons e-export-pdf"></span>
+      </button>
+    }
+     
+    @if (showExportXL()) {
+      <button  (click)="onXL()" color="primary" class="m-1 bg-gray-200 md:visible" mat-icon-button  matTooltip="Export XL"  aria-label="XL" >
+        <span class="e-icons e-export-excel"></span>
+      </button>
+    }
 
-                  <button (click)="onClickRefresh()" color="primary" class="m-1 bg-gray-200 text-gray-100 md:visible" mat-icon-button matTooltip="Refresh" aria-label="Add">
-                      <mat-icon class="flex justify-end text-white" [svgIcon]="'mat_outline:refresh'"></mat-icon>
-                  </button>
+    @if (showExportCSV()) {
+      <button  (click)="onCSV()" color="primary" class="m-1 bg-gray-200 md:visible" mat-icon-button  matTooltip="Export CSV"  aria-label="CSV" >
+        <span class="e-icons text-bold e-export-csv"></span>
+      </button>
+    }  
 
-                    <button (click)="onClickDelete()" color="primary" class="m-1 bg-gray-200 text-gray-100 md:visible" mat-icon-button matTooltip="Delete" aria-label="Delete">
-                      <mat-icon class="flex justify-end text-white hover:bg-white hover:text-gray-700" [svgIcon]="'heroicons_outline:trash'"></mat-icon>
-                    </button> -->
-              </mat-toolbar>
+    @if (showBack()) {
+      <button (click)="onBack()" color="primary" class="m-1 bg-gray-200 md:visible"  mat-icon-button  matTooltip="Back"  aria-label="Back"  >
+        <span class="e-icons e-chevron-left"></span>
+      </button>
+    }
+
+    </mat-toolbar>
   `,
 })
-export class GridMenubarStandaloneComponent  {
-  @Output() notifyParentAdd: EventEmitter<any> = new EventEmitter();
-  @Output() notifyParentRefresh: EventEmitter<any> = new EventEmitter();
-  @Output() notifyParentDelete: EventEmitter<any> = new EventEmitter();
-  @Output() notifyParentClone: EventEmitter<any> = new EventEmitter();
-  @Output() notifyMenuItemChanged: EventEmitter<any> = new EventEmitter();
 
-  @Input() public inTitle: string;
+
+export class GridMenubarStandaloneComponent {
+
+  public exportXL = output<string>();
+  public exportPRD = output<string>();
+  public exportCSV = output<string>();
+  public print = output<string>();
+  public back = output<string>();
+
+  public inTitle = input<string>("General Ledger Transactions");
+
+  public showBack = input<boolean>(false);
+  public showExportXL = input<boolean>(true);
+  public showExportPDF = input<boolean>(true);
+  public showExportCSV = input<boolean>(true);
+  public showPrint = input<boolean>(true);
+  public period = output<string>();
+
+  public changePeriod() {
+    this.period.emit('change');
+  }
   
-  constructor() {
-    this.inTitle = 'Grid Menu Bar';
-    console.debug('Grid Menubar: ',this.inTitle);
+  public onBack() {
+    this.back.emit('back');
   }
 
-    onClickUpdate(): void {    
-      this.notifyParentRefresh.emit();
-    }
+  public onPrint() {
+    this.print.emit('print');
+  }
 
-    onClickAdd(): void {
-      this.notifyParentAdd.emit();
-    }
+  public onPDF() {
+    this.exportPRD.emit('pdf');
+  }
 
-    onClickDelete(): void {
-      this.notifyParentDelete.emit();
-    }
+  public onXL() {
+    this.exportXL.emit('xl');
+  }
 
-    onClickClone(): void {
-      this.notifyParentClone.emit();
-    }
+  public onCSV() {
+    this.exportCSV.emit('csv');
+  }
 
-    onClickRefresh(): void {
-      this.notifyParentRefresh.emit();
-    }
 }

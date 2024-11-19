@@ -88,8 +88,8 @@ export class GlMainComponent {
             {
                 id: 'types',
                 icon: 'heroicons_outline:banknotes',
-                title: 'General Ledger Types',
-                description: 'Type definitions for accounts',
+                title: 'Account Types',
+                description: 'Type of general ledger accounts by classification',
             },
             // {
             //     id: 'subtypes',

@@ -53,6 +53,7 @@ import {
 } from "app/models";
 
 import {
+  ClickEventArgs,
   ContextMenuComponent,
   ContextMenuModule,
 } from "@syncfusion/ej2-angular-navigations";
@@ -91,12 +92,8 @@ const imports = [
   ReactiveFormsModule,
   MaterialModule,
   FormsModule,
-  DndComponent,
   GridMenubarStandaloneComponent,
-  JournalEditComponent,
   NgxMaskDirective,
-  NgxMaskPipe,
-  FileManagerComponent,
   NgxMatSelectSearchModule,
   ContextMenuModule,
   GridModule,
@@ -229,13 +226,9 @@ export class JournalUpdateComponent
   public accountsGrid: IDropDownAccountsGridList[] = [];
   public dFields = { text: "child", value: "child" };
   public debitAccounts: IDropDownAccounts[] = [];
-  public debitCtrl: FormControl<IDropDownAccounts> =
-    new FormControl<IDropDownAccounts>(null);
-  public debitAccountFilterCtrl: FormControl<string> = new FormControl<string>(
-    null
-  );
-  public filteredDebitAccounts: ReplaySubject<IDropDownAccounts[]> =
-    new ReplaySubject<IDropDownAccounts[]>(1);
+  public debitCtrl: FormControl<IDropDownAccounts> =     new FormControl<IDropDownAccounts>(null);
+  public debitAccountFilterCtrl: FormControl<string> = new FormControl<string>(   null  );
+  public filteredDebitAccounts: ReplaySubject<IDropDownAccounts[]> =  new ReplaySubject<IDropDownAccounts[]>(1);
   public journalData: IJournalHeader;
 
   protected _onCreditDestroy = new Subject<void>();

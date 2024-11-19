@@ -1,15 +1,14 @@
 import {
     patchState,
     signalStore,
-    withComputed,
     withHooks,
     withMethods,
     withState,
   } from '@ngrx/signals';
   
   import { rxMethod } from '@ngrx/signals/rxjs-interop';
-  import { exhaustMap, pipe, shareReplay, switchMap, tap } from 'rxjs';
-  import { computed, inject } from '@angular/core';
+  import { pipe, switchMap, tap } from 'rxjs';
+  import { inject } from '@angular/core';
   import { DistributionLedgerService } from './distribution.ledger.service'
   import { tapResponse } from '@ngrx/operators';
   import { IDistributionLedger, IDistributionParams, IJournalParams, IJournalSummary } from 'app/models';

@@ -3,11 +3,10 @@ import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { EMPTY, Observable, Subject, defer, exhaustMap, from } from 'rxjs';
 import { collection, query, orderBy, limit, addDoc, updateDoc } from 'firebase/firestore';
 import { collectionData } from 'rxfire/firestore';
-import { catchError, filter, map, retry } from 'rxjs/operators';
-
+import { filter, map, retry } from 'rxjs/operators';
 import { FIRESTORE } from 'app/app.config';
+import { AuthService } from 'app/modules/auth/auth.service';
 
-import { AuthService } from './auth.signal.service';
 
 export interface Message {
   author: string;

@@ -96,12 +96,13 @@ export class JournalService implements OnDestroy {
   }
 
   getHttpJournalDetails(journal_id: number) {
+    console.log('getHttpJournalDetails', journal_id);
     var url = this.baseUrl + '/v1/get_journal_detail/' + journal_id;
     return this.httpClient.get<IJournalDetail[]>(url);
   }
 
   getHttpAllJournalDetailsByPeriod(period: IPeriodParam) {
-    var url = this.baseUrl + '/v1/get_journal_detail/';
+    var url = this.baseUrl + '/v1/get_journal_detailbyperiod/';
     return this.httpClient.post<IJournalDetail[]>(url, period);
   }
   

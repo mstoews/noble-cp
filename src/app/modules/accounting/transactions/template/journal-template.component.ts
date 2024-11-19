@@ -1,15 +1,8 @@
 import { Component, ViewChild, inject } from '@angular/core';
-
 import { FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { JournalService } from 'app/services/journal.service';
-import { Observable, map, of } from 'rxjs';
-
 import { CommonModule } from '@angular/common';
-import { DndComponent } from 'app/modules/drag-n-drop/loaddnd/dnd.component';
-
-import { FundsService } from 'app/services/funds.service';
 import { GLAccountsService } from 'app/services/accounts.service';
-
 import { GridMenubarStandaloneComponent } from '../../grid-menubar/grid-menubar.component';
 import { JournalUpdateComponent } from '../gl-transactions/journal-update.component';
 import { MatDrawer } from '@angular/material/sidenav';
@@ -20,9 +13,7 @@ const imports = [
     ReactiveFormsModule,
     MaterialModule,
     FormsModule,
-    DndComponent,
-    GridMenubarStandaloneComponent,
-    JournalUpdateComponent
+    GridMenubarStandaloneComponent
 ];
 
 @Component({
@@ -42,7 +33,6 @@ export class JournalTemplateComponent {
     @ViewChild(JournalUpdateComponent) journalUpdate!: JournalUpdateComponent
 
     journalTemplate$ = this.journalService.readJournalTemplate();
-
     accounts$ = this.accountService.readChildren(); // retrieves only the child accounts which can be used for booking
 
     @ViewChild('drawer') drawer!: MatDrawer;

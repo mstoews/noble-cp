@@ -1,7 +1,6 @@
 import {
   patchState,
   signalStore,
-  withComputed,
   withHooks,
   withMethods,
   withState,
@@ -9,12 +8,10 @@ import {
 
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { exhaustMap, pipe, switchMap, tap } from 'rxjs';
-import { computed, inject } from '@angular/core';
+import { inject } from '@angular/core';
 import { tapResponse } from '@ngrx/operators';
 import { TeamService } from './team.service';
 import { ITeam } from 'app/models/team';
-
-
 
 export interface TeamStateInterface {
   team: ITeam[];

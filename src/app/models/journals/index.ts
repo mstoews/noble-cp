@@ -96,14 +96,30 @@ export interface IArtifacts {
 
 
 export interface IJournalTemplate {
-    template_ref: string,    
+    template_ref: number,
+    journal_no: number,
     description: string,
-    type: string,
-    debit_percentage:  number,
-    credit_percentage: number,
-    create_date:       Date,
-    create_user:       string
+    template_name: string,
+    create_date: string,
+    create_user: string,
+    journal_type: string
 }
+
+export interface IJournalDetailTemplate {
+    template_ref: string,
+    journal_no: number,
+    journal_sub: number,
+    description: string,
+    account: number,
+    child: number,
+    sub_type: string,
+    fund: string,
+    debit: number,
+    credit: number,
+}
+
+
+
 
 export interface IJournalViewDetails {
     period?         : number,

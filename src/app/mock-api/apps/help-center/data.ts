@@ -26,6 +26,47 @@ export const faqCategories = [
         title: 'Support'
     }
 ];
+
+/**
+ * [
+  {
+    "a": "1",
+    "b": "2",
+    "c": "3"
+  }
+]
+ */
+
+
+export const faqCategories1 = [
+    {
+        "id"    : "28924eab-97cc-465a-ba21-f232bb95843f",
+        "slug"  : "most-asked",
+        "title" : "Most asked"
+    },
+    {
+        "id"   : "395b0d41-b9a8-4cd6-8b5c-f07855e82d62",
+        "slug" : "general-inquiries",
+        "title": "General inquiries"
+    },
+    {
+        "id"   : "b388a87f-bfbb-44d0-800c-0ddbce2a5d22",
+        "slug" : "licenses",
+        "title": "Licenses"
+    },
+    {
+        "id"   : "71c34043-d89d-4aca-951d-8606c3943c43",
+        "slug" : "payments",
+        "title": "Payments"
+    },
+    {
+        "id"   : "bea49ee0-26da-46ad-97be-116cd7ab416d",
+        "slug" : "support",
+        "title": "Support"
+    }
+];
+
+
 export const faqs = [
     // Most asked
     {
@@ -505,3 +546,183 @@ export const guideContent = `
         sit amet congue felis dignissim at.
     </dd>
 </dl>`;
+
+
+const cat = 
+[
+
+    {
+        "id"        : "f65d517a-6f69-4c88-81f5-416f47405ce1",
+        "categoryId": "28924eab-97cc-465a-ba21-f232bb95843f",
+        "question"  : "Is there a 14-days trial?",
+        "answer"    : "Magna consectetur culpa duis ad est tempor pariatur velit ullamco aute exercitation magna sunt commodo "
+    },
+    {
+        "id"        : "0fcece82-1691-4b98-a9b9-b63218f9deef",
+        "categoryId": "28924eab-97cc-465a-ba21-f232bb95843f",
+        "question"  : "What’s the benefits of the Premium Membership?",
+        "answer"    : "Et in lorem qui ipsum deserunt duis exercitation "
+    },
+    {
+        "id"        : "2e6971cd-49d5-49f1-8cbd-fba5c71e6062",
+        "categoryId": "28924eab-97cc-465a-ba21-f232bb95843f",
+        "question"  : "How much time I will need to learn this app?",
+        "answer"    : "Id fugiat et cupreatat magna nulla nulla eu cillum officia nostrud dolore in veniam ullamco "
+    },
+    {
+        "id"        : "974f93b8-336f-4eec-b011-9ddb412ee828",
+        "categoryId": "28924eab-97cc-465a-ba21-f232bb95843f",
+        "question"  : "Are there any free tutorials available?",
+        "answer"    : "Id fugiat et cupreatat magna nulla nulla eu cillum officia nostrud dolore in veniam ullamco "
+    },
+    {
+        "id"        : "5d877fc7-b881-4527-a6aa-d39d642feb23",
+        "categoryId": "28924eab-97cc-465a-ba21-f232bb95843f",
+        "question"  : "Is there a month-to-month payment option?",
+        "answer"    : "Id fugiat et cupreatat magna nulla nulla eu cillum officia nostrud dolore in veniam ullamco "
+    },
+    {
+        "id"        : "3d1c26c5-1e5e-4eb6-8006-ed6037ed9aca",
+        "categoryId": "395b0d41-b9a8-4cd6-8b5c-f07855e82d62",
+        "question"  : "How to download your items",
+        "answer"    : "Id fugiat et cupreatat magna nulla nulla eu cillum officia nostrud dolore in veniam ullamco "
+    },
+    {
+        "id"        : "11bd2b9a-85b4-41c9-832c-bd600dfa3a52",
+        "categoryId": "395b0d41-b9a8-4cd6-8b5c-f07855e82d62",
+        "question"  : "View and download invoices",
+        "answer"    : "Id fugiat et cupreatat magna nulla nulla eu cillum officia nostrud dolore in veniam ullamco "
+    },
+    {
+        "id"        : "f55c023a-785e-4f0f-b5b7-47da75224deb",
+        "categoryId": "395b0d41-b9a8-4cd6-8b5c-f07855e82d62",
+        "question"  : "I\"ve forgotten my username or password",
+        "answer"    : "Id fugiat et cupreatat magna nulla nulla eu cillum officia nostrud dolore in veniam ullamco "
+    },
+    {
+        "id"        : "c577a67d-357a-4b88-96e8-a0ee1fe9162e",
+        "categoryId": "395b0d41-b9a8-4cd6-8b5c-f07855e82d62",
+        "question"  : "Where is my license code?",
+        "answer"    : "Id fugiat et cupreatat magna nulla nulla eu cillum officia nostrud dolore in veniam ullamco "
+    },
+    {
+        "id"        : "1a680c29-7ece-4a80-9709-277ad4da8b4b",
+        "categoryId": "395b0d41-b9a8-4cd6-8b5c-f07855e82d62",
+        "question"  : "How to contact an author",
+        "answer"    : "Id fugiat et cupreatat magna nulla nulla eu cillum officia nostrud dolore in veniam ullamco "
+    },
+    {
+        "id"        : "c49c2216-8bdb-4df0-be25-d5ea1dbb5688",
+        "categoryId": "395b0d41-b9a8-4cd6-8b5c-f07855e82d62",
+        "question"  : "How does the affiliate program work?",
+        "answer"    : "Id fugiat et cupreatat magna nulla nulla eu cillum officia nostrud dolore in veniam ullamco "
+    },
+    {
+        "id"        : "3ef176fa-6cba-4536-9f43-540c686a4faa",
+        "categoryId": "b388a87f-bfbb-44d0-800c-0ddbce2a5d22",
+        "question"  : "How do licenses work for items I bought?",
+        "answer"    : "Id fugiat et cupreatat magna nulla nulla eu cillum officia nostrud dolore in veniam ullamco "
+    },
+    {
+        "id"        : "7bc6b7b4-7ad8-4cbe-af36-7301642d35fb",
+        "categoryId": "b388a87f-bfbb-44d0-800c-0ddbce2a5d22",
+        "question"  : "Do licenses have an expiry date?",
+        "answer"    : "Id fugiat et cupreatat magna nulla nulla eu cillum officia nostrud dolore in veniam ullamco "
+    },
+    {
+        "id"        : "56c9ed66-a1d2-4803-a160-fba29b826cb4",
+        "categoryId": "b388a87f-bfbb-44d0-800c-0ddbce2a5d22",
+        "question"  : "I want to make multiple end products with the same item",
+        "answer"    : "Id fugiat et cupreatat magna nulla nulla eu cillum officia nostrud dolore in veniam ullamco "
+    },
+    {
+        "id"        : "21c1b662-33c8-44d7-9530-91896afeeac7",
+        "categoryId": "b388a87f-bfbb-44d0-800c-0ddbce2a5d22",
+        "question"  : "How easy is it to change the license type?",
+        "answer"    : "Id fugiat et cupreatat magna nulla nulla eu cillum officia nostrud dolore in veniam ullamco "
+    },
+    {
+        "id"        : "5fa52c90-82be-41ae-96ec-5fc67cf054a4",
+        "categoryId": "b388a87f-bfbb-44d0-800c-0ddbce2a5d22",
+        "question"  : "Do I need a Regular License or an Extended License?",
+        "answer"    : "Id fugiat et cupreatat magna nulla nulla eu cillum officia nostrud dolore in veniam ullamco "
+    },
+    {
+        "id"        : "81ac908c-35a2-4705-8d75-539863c35c09",
+        "categoryId": "71c34043-d89d-4aca-951d-8606c3943c43",
+        "question"  : "Common PayPal, Skrill, and credit card issues",
+        "answer"    : "Id fugiat et cupreatat magna nulla nulla eu cillum officia nostrud dolore in veniam ullamco "
+    },
+    {
+        "id"        : "b6d8909f-f36d-4885-8848-46b8230d4476",
+        "categoryId": "71c34043-d89d-4aca-951d-8606c3943c43",
+        "question"  : "How do I find my transaction ID?",
+        "answer"    : "Id fugiat et cupreatat magna nulla nulla eu cillum officia nostrud dolore in veniam ullamco "
+    },
+    {
+        "id"        : "9496235d-4d0c-430b-817e-1cba96404f95",
+        "categoryId": "71c34043-d89d-4aca-951d-8606c3943c43",
+        "question"  : "PayPal disputes And chargebacks",
+        "answer"    : "Id fugiat et cupreatat magna nulla nulla eu cillum officia nostrud dolore in veniam ullamco "
+    },
+    {
+        "id"        : "7fde17e6-4ac1-47dd-a363-2f4f14dcf76a",
+        "categoryId": "71c34043-d89d-4aca-951d-8606c3943c43",
+        "question"  : "Saving your credit card details",
+        "answer"    : "Id fugiat et cupreatat magna nulla nulla eu cillum officia nostrud dolore in veniam ullamco "
+    },
+    {
+        "id"        : "90a3ed58-e13b-40cf-9219-f933bf9c9b8f",
+        "categoryId": "71c34043-d89d-4aca-951d-8606c3943c43",
+        "question"  : "Why do prepa credits expire?",
+        "answer"    : "Id fugiat et cupreatat magna nulla nulla eu cillum officia nostrud dolore in veniam ullamco "
+    },
+    {
+        "id"        : "153376ed-691f-4dfd-ae99-e204a49edc44",
+        "categoryId": "71c34043-d89d-4aca-951d-8606c3943c43",
+        "question"  : "Why is there a minimum $20 credit?",
+        "answer"    : "Id fugiat et cupreatat magna nulla nulla eu cillum officia nostrud dolore in veniam ullamco "
+    },
+    {
+        "id"        : "4e7ce72f-863a-451f-9160-cbd4fbbc4c3d",
+        "categoryId": "bea49ee0-26da-46ad-97be-116cd7ab416d",
+        "question"  : "What is item support?",
+        "answer"    : "Id fugiat et cupreatat magna nulla nulla eu cillum officia nostrud dolore in veniam ullamco "
+    },
+    {
+        "id"        : "0795a74f-7a84-4edf-8d66-296cdef70003",
+        "categoryId": "bea49ee0-26da-46ad-97be-116cd7ab416d",
+        "question"  : "How to contact an author",
+        "answer"    : "Id fugiat et cupreatat magna nulla nulla eu cillum officia nostrud dolore in veniam ullamco "
+    },
+    {
+        "id"        : "05532574-c102-4228-89a8-55fff32ec6fc",
+        "categoryId": "bea49ee0-26da-46ad-97be-116cd7ab416d",
+        "question"  : "Extending and renewing item support",
+        "answer"    : "Id fugiat et cupreatat magna nulla nulla eu cillum officia nostrud dolore in veniam ullamco "
+    },
+    {
+        "id"        : "b3917466-aa51-4293-9d5b-120b0ce6635c",
+        "categoryId": "bea49ee0-26da-46ad-97be-116cd7ab416d",
+        "question"  : "Rating or review removal policy",
+        "answer"    : "Id fugiat et cupreatat magna nulla nulla eu cillum officia nostrud dolore in veniam ullamco "
+    },
+    {
+        "id"        : "2f2fb472-24d4-4a00-aa80-d513fa6c059c",
+        "categoryId": "bea49ee0-26da-46ad-97be-116cd7ab416d",
+        "question"  : "Purchasing supported and unsupported items",
+        "answer"    : "Id fugiat et cupreatat magna nulla nulla eu cillum officia nostrud dolore in veniam ullamco "
+    },
+    {
+        "id"        : "2fffd148-7644-466d-8737-7dde88c54154",
+        "categoryId": "bea49ee0-26da-46ad-97be-116cd7ab416d",
+        "question"  : "I haven\"t received a response from the author",
+        "answer"    : "Id fugiat et cupreatat magna nulla nulla eu cillum officia nostrud dolore in veniam ullamco "
+    },
+    {
+        "id"        : "24a1034e-b4d6-4a86-a1ea-90516e87e810",
+        "categoryId": "bea49ee0-26da-46ad-97be-116cd7ab416d",
+        "question"  : "Responding to requests outs of support",
+        "answer"    : "Exercitation eu in officia lorem commodo"
+    }
+]

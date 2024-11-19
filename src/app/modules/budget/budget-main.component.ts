@@ -4,9 +4,9 @@ import { MatDrawer } from '@angular/material/sidenav';
 import { FuseMediaWatcherService } from '@fuse/services/media-watcher';
 import { MaterialModule } from 'app/services/material.module';
 import { Subject, takeUntil } from 'rxjs';
-import { FileManagerComponent } from 'app/modules/file-manager/file-manager.component';
 import { BudgetWizardComponent } from './budget-wizard.component';
 import { BudgetUpdateComponent } from './update/budget-update.component';
+import { BudgetLandingComponent } from './budget-landing/budget-landing.component';
 
 
 const imports = [
@@ -15,9 +15,9 @@ const imports = [
     NgClass,
     NgSwitch,
     NgSwitchCase,
-    FileManagerComponent,
-    BudgetWizardComponent,
-    BudgetUpdateComponent
+    BudgetUpdateComponent,
+    BudgetLandingComponent,
+    BudgetWizardComponent
 ]
 
 @Component({
@@ -35,7 +35,7 @@ export class BudgetMainComponent {
     drawerMode: 'over' | 'side' = 'side';
     drawerOpened: boolean = true;
     panels: any[] = [];
-    selectedPanel: string = 'budget-update';
+    selectedPanel: string = 'budget-landing';
     private _unsubscribeAll: Subject<any> = new Subject<any>();
 
     /**
@@ -58,19 +58,25 @@ export class BudgetMainComponent {
         // Setup available panels
         this.panels = [
             {
+                id: 'budget-landing',
+                icon: 'heroicons_outline:document-check',
+                title: 'Budget Dashboard',
+                description: 'Budget dashboard and forecast metrics',
+            },
+            {
                 id: 'budget-update',
                 icon: 'heroicons_outline:document-check',
                 title: 'Budget Maintenance',
                 description: 'Manage your budget transactions',
             },
+            // {
+            //     id: 'entry',
+            //     icon: 'heroicons_outline:document-plus',
+            //     title: 'Add Budget Entry',
+            //     description: 'Create budget entry for each of the current trial balance line entry items.',
+            // },
             {
-                id: 'entry',
-                icon: 'heroicons_outline:document-plus',
-                title: 'Add Budget Entry',
-                description: 'Create budget entry for each of the current trial balance line entry items.',
-            },
-            {
-                id: 'template',
+                id: 'budget-wizard',
                 icon: 'heroicons_outline:document-duplicate',
                 title: 'Forecasts',
                 description: 'Budget and actual amounts combined to create an estimated forecast for year-end results',

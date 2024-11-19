@@ -13,23 +13,24 @@
                     <section class="flex flex-col md:flex-row m-1">
                         <div class="flex flex-col grow">
                             <mat-form-field class="m-1 flex-start">
+                                <mat-label class="text-md ml-2">Group</mat-label>
                                 <input #myInput matInput placeholder="Account" formControlName="account" />
-                                <mat-icon class="icon-size-5 text-teal-800" matPrefix
+                                <mat-icon class="icon-size-5 text-lime-700" matPrefix
                                     [svgIcon]="'heroicons_outline:document'"></mat-icon>
                             </mat-form-field>
-                        </div>
+                        </div>                        
 
                         <div class="flex flex-col grow">
                             <mat-form-field class="m-1 flex-start">
-
+                                <mat-label class="text-md ml-2">Account</mat-label>
                                 <input #myInput matInput placeholder="Child Account" formControlName="child" />
-                                <mat-icon class="icon-size-5 text-teal-800" matPrefix
+                                <mat-icon class="icon-size-5 text-lime-700" matPrefix
                                     [svgIcon]="'heroicons_outline:clipboard-document'"></mat-icon>
                             </mat-form-field>
                         </div>
                         
-                        <div class="flex flex-col grow">
-                            <mat-checkbox color="primary" class="mt-2" formControlName="parent_account">
+                        <div class="flex flex-col grow">                            
+                            <mat-checkbox color="primary" class="mt-5" formControlName="parent_account">
                                 Parent
                             </mat-checkbox>
                         </div>
@@ -38,8 +39,9 @@
 
                     <div class="flex flex-col grow">
                         <mat-form-field class="m-1 flex-start">
+                            <mat-label class="text-md ml-2">Description</mat-label>
                             <input #myInput matInput placeholder="Description" formControlName="description" />
-                            <mat-icon class="icon-size-5 text-teal-800" matPrefix
+                            <mat-icon class="icon-size-5 text-lime-700" matPrefix
                                 [svgIcon]="'heroicons_outline:document-text'"></mat-icon>
                         </mat-form-field>
                     </div>
@@ -47,20 +49,23 @@
                     <section class="flex flex-col md:flex-row">
 
                         <mat-form-field class="m-1 grow">
-
+                            <mat-label class="text-md ml-2">Type</mat-label>
                             <mat-select placeholder="Type" formControlName="type"
                                 (selectionChange)="changeType($event)">
                                 @for (item of typeStore.type(); track item) {
                                     <mat-option [value]="item.type"> {{ item.type }} </mat-option>
                                 }
                             </mat-select>
+                            <span class="e-icons e-notes text-lime-700 m-2 " matPrefix></span>
                         </mat-form-field>
 
                     </section>
 
                     <div class="flex flex-col grow">
                         <mat-form-field class="m-1 flex-start">
+                            <mat-label class="text-md ml-2">Comments</mat-label>
                             <input #myInput matInput placeholder="Comments" formControlName="comments" />
+                            <span class="e-icons e-comment-show text-lime-700 m-2" matPrefix></span> 
                         </mat-form-field>
                     </div>
 
@@ -70,38 +75,39 @@
             <div mat-dialog-actions>
                 <div mat-dialog-actions class="gap-2 mb-3">
                     @if (bDirty === true) {
-                        <button mat-icon-button color="warm" class="bg-green-400  stroke-purple-600 text-gray-900 hover:bg-slate-400 hover:text-gray-100 ml-1"
+                        <button mat-icon-button color="primary" class="bg-green-400  stroke-purple-600 text-gray-900 hover:bg-slate-400 hover:text-gray-100 ml-1"
                         (click)="onUpdateJournalEntry()" matTooltip="Update Transaction" aria-label="hover over">
                         <mat-icon [svgIcon]="'feather:refresh-cw'"></mat-icon>
                         </button>
                     }
             
-                    <button mat-icon-button color="primary" class="bg-slate-200 fill-current hover:fill-white-100 text-gray-100 hover:bg-slate-400 ml-1 focus:ngring-violet-800"
-                        (click)="onAdd()" matTooltip="Add Line" aria-label="hovered over">
-                        <mat-icon class="fill-current" [svgIcon]="'feather:file-plus'"></mat-icon>
+                    <button mat-icon-button color="primary" class="bg-slate-200 fill-current hover:bg-slate-400 ml-1 focus:ngring-violet-800"
+                        (click)="onAdd()" matTooltip="Add Line" aria-label="hovered over">                        
+                        <span class="e-icons e-data-validation"></span>
                     </button>
-            
-                    <button mat-icon-button color="primary" class="bg-slate-200 text-gray-100 hover:bg-slate-400 ml-1"
-                        (click)="onDelete($event)" matTooltip="Remove Line" aria-label="hovered over">
-                        <mat-icon [svgIcon]="'feather:trash'"></mat-icon>
+                    
+                    <button mat-icon-button color="primary" class="bg-slate-200 hover:bg-slate-400 ml-1"
+                        (click)="onDelete($event)" matTooltip="Remove Line" aria-label="hovered over">                        
+                        <span class="e-icons e-redaction"></span>
                     </button>
                                             
-                    <button mat-icon-button color="warn" class="bg-gray-200 fill-slate-100 text-white hover:bg-slate-400 ml-1" 
-                        (click)="onBack()"
+                    <button mat-icon-button color="primary" class="bg-gray-200 fill-slate-100  hover:bg-slate-400 ml-1" 
+                        (click)="onClose()"
                         matTooltip="Cancel" aria-label="hovered over">
-                        <mat-icon [svgIcon]="'mat_outline:close'"></mat-icon>
+                        <!-- <mat-icon [svgIcon]="'mat_outline:close'"></mat-icon> -->
+                         <span class="e-icons e-circle-close"></span>
                     </button>
                     
                 </div>
             </div>
-            <section class="text-xl text-gray-700" [formGroup]="accountsForm">
+            <!-- <section class="text-xl text-gray-700" [formGroup]="accountsForm">
                 {{accountsForm.value | json}}
             </section>
             <section class="text-xl text-gray-700" [formGroup]="accountsForm">
                 @for (item of typeStore.type(); track item) {
                     <div>{{item.type}}</div>
                 }
-            </section>
+            </section> -->
         </mat-card>
     </mat-drawer>
     <mat-drawer-container class="flex-col">
@@ -116,6 +122,7 @@
                 [dataSource]="this.accountService.accountList()" 
                 allowPaging='true' 
                 allowSorting='true'
+                [allowGrouping]='true'
                 showColumnMenu='true' 
                 allowEditing='true' 
                 [allowFiltering]='true'                 

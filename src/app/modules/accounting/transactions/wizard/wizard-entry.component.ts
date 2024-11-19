@@ -17,8 +17,9 @@ import { MatSelect } from '@angular/material/select';
 import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 import { IDropDownAccounts } from 'app/models';
 import { WizardUpdateComponent } from './wizard-update.component';
-import { IJournalDetail, IJournalHeader, ITransactionDate } from 'app/models/journals';
+import { IJournalDetail, IJournalHeader, IJournalTemplate, ITransactionDate } from 'app/models/journals';
 import { JournalStore } from 'app/services/journal.store';
+import { JournalTemplateService } from 'app/services/journal-template.service';
 
 
 interface ITransactionType {
@@ -27,23 +28,21 @@ interface ITransactionType {
   checked: boolean;
 }
 
-const imports = [
+const mods = [
   CommonModule,
   MaterialModule,
   FormsModule,
   ReactiveFormsModule,
   MaterialModule,
   NgxMaskDirective,
-  NgxMaskPipe,
-  WizardUpdateComponent,
-  DndComponent,
+  WizardUpdateComponent,  
   NgxMatSelectSearchModule
 ]
 
 @Component({
   selector: 'entry-wizard',
   standalone: true,
-  imports: [imports],
+  imports: [mods],
   templateUrl: './wizard-entry.component.html',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -52,7 +51,6 @@ const imports = [
 })
 export class EntryWizardComponent implements OnInit, OnDestroy, AfterViewInit {
 
-  journalEntryForm: UntypedFormGroup;
   private journalService = inject(JournalService);
   private subtypeService = inject(SubTypeService);
   private fundService = inject(FundsService);
@@ -60,8 +58,11 @@ export class EntryWizardComponent implements OnInit, OnDestroy, AfterViewInit {
   private snackBar = inject(MatSnackBar);
   private formBuilder = inject(FormBuilder);
   private changeDescriptionRef = inject(ChangeDetectorRef);
-  public matDialog = inject(MatDialog);
-  public description: string;
+  private templateService = inject(JournalTemplateService); 
+  
+  public  journalEntryForm: UntypedFormGroup;
+  public  matDialog = inject(MatDialog);
+  public  description: string;
 
   private subAccountDebit: Subscription;
   private subAccountCredit: Subscription;
@@ -69,10 +70,13 @@ export class EntryWizardComponent implements OnInit, OnDestroy, AfterViewInit {
   public journalHeader: IJournalHeader;
   private auth = inject(AUTH);
   public journal_id = 0;
-  public accountList = [];
+
   public headerAmount = 0;
 
-  // IDropDownAccounts drop down 
+  public templateList: IJournalTemplate[] = [];
+  public templateCtrl: FormControl<IJournalTemplate> = new FormControl<IJournalTemplate>(null);
+  public templateFilterCtrl: FormControl<string> = new FormControl<string>(null);
+  public templateFilter: ReplaySubject<IJournalTemplate[]> = new ReplaySubject<IJournalTemplate[]>(1);
 
   public debitAccounts: IDropDownAccounts[] = [];
   public debitCtrl: FormControl<IDropDownAccounts> = new FormControl<IDropDownAccounts>(null);
@@ -87,8 +91,10 @@ export class EntryWizardComponent implements OnInit, OnDestroy, AfterViewInit {
 
   protected _onCreditDestroy = new Subject<void>();
   protected _onDebitDestroy = new Subject<void>();
+  protected _onTemplateDestroy = new Subject<void>();
   protected _onDestroyDebitAccountFilter = new Subject<void>();
   protected _onDestroyCreditAccountFilter = new Subject<void>();
+  protected _onDestroyTemplateFilter = new Subject<void>();
   protected _onDestroy = new Subject<void>();
 
   public journalDetails?: IJournalDetail[];
@@ -102,6 +108,8 @@ export class EntryWizardComponent implements OnInit, OnDestroy, AfterViewInit {
 
   @ViewChild('singleDebitSelect', { static: true }) singleDebitSelect: MatSelect;
   @ViewChild('singleCreditSelect', { static: true }) singleCreditSelect: MatSelect;
+  @ViewChild('singleTemplateSelect', { static: true }) singleTemplateSelect: MatSelect;
+  
   bNewTransaction: any;
 
   public selectedOption: string;
@@ -133,9 +141,15 @@ export class EntryWizardComponent implements OnInit, OnDestroy, AfterViewInit {
 
     });
 
+    this.templateService.readTemplates().pipe(takeUntil(this._onDestroy)).subscribe((templates) => { 
+      this.templateList = templates;
+      this.templateFilter.next(this.templateList.slice());
+    });
+
     // Vertical stepper form
     this.journalEntryForm = this.formBuilder.group({
       step1: this.formBuilder.group({
+        templateCtrl: ['', Validators.required],
         description: ['', Validators.required],
         transaction_date: ['', Validators.required],
         amount: ['', Validators.required],
@@ -169,6 +183,9 @@ export class EntryWizardComponent implements OnInit, OnDestroy, AfterViewInit {
     this.creditAccountFilterCtrl.valueChanges.pipe(takeUntil(this._onDestroyCreditAccountFilter))
       .subscribe(() => { this.filterCreditAccounts(); });
 
+    this.templateFilterCtrl.valueChanges.pipe(takeUntil(this._onDestroyTemplateFilter))
+      .subscribe(() => { this.filterTemplate(); });   
+
   }
 
 
@@ -178,27 +195,36 @@ export class EntryWizardComponent implements OnInit, OnDestroy, AfterViewInit {
       this.filteredCreditAccounts
         .pipe(take(1), takeUntil(this._onCreditDestroy))
         .subscribe(() => {
-          // setting the compareWith property to a comparison function
-          // triggers initializing the selection according to the initial value of
-          // the form control (i.e. _initializeSelection())
-          // this needs to be done after the filteredBanks are loaded initially
-          // and after the mat-option elements are available
           if (this.singleCreditSelect != null || this.singleCreditSelect != undefined)
             this.singleCreditSelect.compareWith = (a: IDropDownAccounts, b: IDropDownAccounts) => a && b && a.child === b.child;
         });
+
+    if (this.templateFilter)
+          this.templateFilter
+            .pipe(take(1), takeUntil(this._onTemplateDestroy))
+            .subscribe(() => {
+        if (this.singleTemplateSelect != null || this.singleTemplateSelect != undefined)
+             this.singleTemplateSelect.compareWith = (a: IJournalTemplate, b: IJournalTemplate) => a && b && a.template_ref === b.template_ref;
+    });
+        
 
     if (this.filteredDebitAccounts)
       this.filteredDebitAccounts
         .pipe(take(1), takeUntil(this._onDebitDestroy))
         .subscribe(() => {
-          // setting the compareWith property to a comparison function
-          // triggers initializing the selection according to the initial value of
-          // the form control (i.e. _initializeSelection())
-          // this needs to be done after the filteredBanks are loaded initially
-          // and after the mat-option elements are available
+
           if (this.singleDebitSelect != null || this.singleDebitSelect != undefined)
             this.singleDebitSelect.compareWith = (a: IDropDownAccounts, b: IDropDownAccounts) => a && b && a.child === b.child;
-        });
+      });
+      
+      /* 
+          NB 
+          setting the compareWith property to a comparison function
+          triggers initializing the selection according to the initial value of
+          the form control (i.e. _initializeSelection())
+          this needs to be done after the filteredBanks are loaded initially
+          and after the mat-option elements are available 
+      */
   }
 
 
@@ -239,6 +265,24 @@ export class EntryWizardComponent implements OnInit, OnDestroy, AfterViewInit {
     // filter the banks
     this.filteredDebitAccounts.next(
       this.debitAccounts.filter(account => account.description.toLowerCase().indexOf(search) > -1)
+    );
+  }
+
+  protected filterTemplate() {
+    if (!this.templateList) {
+      return;
+    }
+    // get the search keyword
+    let search = this.templateFilterCtrl.value;
+    if (!search) {
+      this.templateFilter.next(this.templateList.slice());
+      return;
+    } else {
+      search = search.toLowerCase();
+    }
+    // filter the banks
+    this.templateFilter.next(
+      this.templateList.filter(template => template.description.toLowerCase().indexOf(search) > -1)
     );
   }
 
@@ -495,6 +539,10 @@ export class EntryWizardComponent implements OnInit, OnDestroy, AfterViewInit {
 
     if (this._onDestroyCreditAccountFilter) {
       this._onDestroyCreditAccountFilter.unsubscribe();
+    }
+
+    if (this._onDestroyTemplateFilter) {
+      this._onDestroyTemplateFilter.unsubscribe();
     }
 
     this._onDestroy.next();

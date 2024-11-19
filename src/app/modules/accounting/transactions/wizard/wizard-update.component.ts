@@ -1,4 +1,4 @@
-import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild, inject } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild, inject, output } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { JournalService } from 'app/services/journal.service';
 import { Observable, ReplaySubject, Subject, Subscription, interval, map, startWith, take, takeUntil } from 'rxjs';
@@ -6,18 +6,15 @@ import { CommonModule } from '@angular/common';
 import { DndComponent } from 'app/modules/drag-n-drop/loaddnd/dnd.component';
 import { FundsService } from 'app/services/funds.service';
 import { GLAccountsService } from 'app/services/accounts.service';
-import { GridMenubarStandaloneComponent } from '../../grid-menubar/grid-menubar.component';
 
 import { MaterialModule } from 'app/services/material.module';
 import { SubTypeService } from 'app/services/subtype.service';
 import { TypeService } from 'app/services/type.service';
-import { JournalEditComponent } from '../journal-update/journal-edit.component';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { NgxMaskDirective, NgxMaskPipe, provideNgxMask } from 'ngx-mask';
 import { FuseConfirmationService } from '@fuse/services/confirmation';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ComboBoxModule, DropDownListAllModule } from '@syncfusion/ej2-angular-dropdowns';
-import { FileManagerComponent } from 'app/modules/file-manager/file-manager.component';
 import { AUTH } from 'app/app.config';
 import { MatSelect } from '@angular/material/select';
 import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
@@ -35,12 +32,7 @@ const imports = [
   MaterialModule,
   ComboBoxModule,
   FormsModule,
-  DndComponent,
-  GridMenubarStandaloneComponent,
-  JournalEditComponent,
   NgxMaskDirective,
-  NgxMaskPipe,
-  FileManagerComponent,
   NgxMatSelectSearchModule,
   GridModule,
   DropDownListAllModule,
@@ -77,6 +69,7 @@ export class WizardUpdateComponent implements OnInit, OnDestroy, AfterViewInit {
   @Input() public transaction_date: string;
   @Input() public amount: number;
   @Input() public bNewTransaction = true;
+
 
 
   public GL = 'GL';

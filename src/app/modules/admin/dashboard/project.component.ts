@@ -7,6 +7,7 @@ import {
     ViewEncapsulation,
     effect,
     inject,
+    input,
     signal,
 } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
@@ -59,11 +60,17 @@ export class ProjectComponent implements OnInit, OnDestroy {
     chartMonthlyExpenses: ApexOptions = {};
     chartYearlyExpenses: ApexOptions = {};
     data: any;
-    selectedProject: string = 'Accounting Summary';
+    selectedProject: string = 'Financial Summary';
     private _unsubscribeAll: Subject<any> = new Subject<any>();
     authService = inject(AuthService);
     private _router = inject(Router);
     private _projectService = inject(ProjectService);
+
+    netRevenue = input(0);
+    special = input(8000);
+    reserve = input(84000);
+    capital = input(1050);
+    operations = input(0);
 
     firestore = inject(FIRESTORE);
 

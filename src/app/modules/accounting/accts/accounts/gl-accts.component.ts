@@ -250,6 +250,11 @@ export class GlAccountsComponent implements OnInit {
         });
     }
 
+
+    onClose() {
+        this.closeDrawer();
+    }
+
     openDrawer() {
         const opened = this.drawer.opened;
         if (opened !== true) {

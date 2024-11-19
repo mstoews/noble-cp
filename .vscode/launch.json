@@ -7,7 +7,7 @@
 
 
         {
-            "type": "chrome",
+            "type": "firefox",
             "request": "launch",
             "name": "Load chrome",
             "url": "http://localhost:43221",

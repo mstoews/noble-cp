@@ -73,13 +73,13 @@
 
                     @switch (selectedPanel) {
                     <!-- Transaction list -->
-                    @case ('budget-update') { <budget-update></budget-update> }
+                    @case ('budget-landing') { <budget-landing></budget-landing> }
+                    @case ('budget-update') { <budget-update></budget-update> }                    
                     <!-- entry -->
                     @case ('entry') { <entry-wizard></entry-wizard> }
                     <!-- Build and maintain Templates -->
-                    @case ('template') { <journal-template></journal-template> }
-                    @case ('artifact') { <app-file-manager></app-file-manager>}
-
+                    @case ('budget-wizard') { <budget-wizard></budget-wizard> }
+                    
                     }
 
                 </div>

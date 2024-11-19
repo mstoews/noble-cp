@@ -32,12 +32,10 @@ const imports = [
     ReactiveFormsModule,
     MaterialModule,
     FormsModule,
-    DndComponent,
     GridMenubarStandaloneComponent,
     NgxMatSelectSearchModule,
     GridModule,
-    SummaryCardComponent,
-    FuseAlertComponent
+    SummaryCardComponent
 ];
 
 

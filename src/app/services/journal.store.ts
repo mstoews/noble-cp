@@ -8,8 +8,8 @@ import {
 } from '@ngrx/signals';
 
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
-import { exhaustMap, filter, pipe, switchMap, tap } from 'rxjs';
-import { computed, inject } from '@angular/core';
+import { exhaustMap, pipe, switchMap, tap } from 'rxjs';
+import { inject } from '@angular/core';
 import { tapResponse } from '@ngrx/operators';
 import { IAccounts, IArtifacts, IJournalDetail, IJournalDetailDelete, IJournalHeader, IPeriodParam } from 'app/models/journals';
 import { JournalService } from '../services/journal.service';
@@ -17,7 +17,6 @@ import { IFund, IType } from 'app/modules/kanban/kanban.service';
 import { IParty } from 'app/models/party';
 import { IPeriod } from '../services/periods.service';
 import { ISubType } from '../services/subtype.service';
-import { debounce } from 'lodash';
 
 
 export interface JournalStateInterface {
@@ -170,27 +169,27 @@ export const JournalStore = signalStore(
         })
       )
     ),
-    loadAllDetails: rxMethod<IPeriodParam>(
-      pipe(
-        tap(() => patchState(state, { isLoading: true })),
-        switchMap((value) => {
-          return journalService.getHttpAllJournalDetailsByPeriod(value).pipe(
-            tapResponse({
-              next: (journal) => patchState(state, { details: journal }),
-              error: console.error,
-              finalize: () => patchState(state, { isLoading: false }),
-            })
-          );
-        })
-      )
-    ),
+    // loadAllDetails: rxMethod<IPeriodParam>(
+    //   pipe(
+    //     tap(() => patchState(state, { isLoading: true })),
+    //     switchMap((value) => {
+    //       return journalService.getHttpAllJournalDetailsByPeriod(value).pipe(
+    //         tapResponse({
+    //           next: (journal) => patchState(state, { details: journal }),
+    //           error: console.error,
+    //           finalize: () => patchState(state, { isLoading: false }),
+    //         })
+    //       );
+    //     })
+    //   )
+    // ),
     loadJournals: rxMethod<void>(
       pipe(
         tap(() => patchState(state, { isLoading: true })),
         exhaustMap(() => {
           return journalService.readHttpJournalHeader().pipe(
             tapResponse({
-              next: (journal) => patchState(state, { gl: journal.filter(gl => gl.type === 'GL') }),              
+              next: (journal) => patchState(state, { gl: journal }),              
               error: console.error,
               finalize: () => patchState(state, { isLoading: false }),
             })
@@ -286,8 +285,7 @@ export const JournalStore = signalStore(
       })
     )
   ),
-  })),
-  
+  })),  
   withHooks({
     onInit(store) {
       store.loadJournals();

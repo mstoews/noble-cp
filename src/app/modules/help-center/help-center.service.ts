@@ -1,6 +1,8 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
-import { FaqCategory, Guide, GuideCategory } from 'app/modules/help-center/help-center.type';
+import { inject, Injectable } from '@angular/core';
+import { tapResponse } from '@ngrx/operators';
+import { Faq, FaqCategory, Guide, GuideCategory } from 'app/modules/help-center/help-center.type';
+import { environment } from 'environments/environment.prod';
 import { Observable, ReplaySubject, tap } from 'rxjs';
 
 @Injectable({providedIn: 'root'})
@@ -9,17 +11,9 @@ export class HelpCenterService
     private _faqs: ReplaySubject<FaqCategory[]> = new ReplaySubject<FaqCategory[]>(1);
     private _guides: ReplaySubject<GuideCategory[]> = new ReplaySubject<GuideCategory[]>(1);
     private _guide: ReplaySubject<Guide> = new ReplaySubject<Guide>(1);
-
-    /**
-     * Constructor
-     */
-    constructor(private _httpClient: HttpClient)
-    {
-    }
-
-    // -----------------------------------------------------------------------------------------------------
-    // @ Accessors
-    // -----------------------------------------------------------------------------------------------------
+    private _httpClient =inject(HttpClient);
+    isLoading: boolean;
+    public baseUrl = environment.baseUrl;
 
     /**
      * Getter for FAQs
@@ -52,14 +46,16 @@ export class HelpCenterService
     /**
      * Get all FAQs
      */
-    getAllFaqs(): Observable<FaqCategory[]>
-    {
-        return this._httpClient.get<FaqCategory[]>('api/apps/help-center/faqs').pipe(
-            tap((response: any) =>
-            {
-                this._faqs.next(response);
-            }),
-        );
+
+    getAllFaqs(): Observable<Faq[]>  {
+        
+        var faqUrl = this.baseUrl + '/v1/read_faq';
+        return this._httpClient.get<Faq[]>(faqUrl).pipe(            
+                tap((response: any) =>
+                {
+                    this._faqs.next(response);
+                }),
+            );        
     }
 
     /**
@@ -67,16 +63,16 @@ export class HelpCenterService
      *
      * @param slug
      */
+
     getFaqsByCategory(slug: string): Observable<FaqCategory[]>
-    {
-        return this._httpClient.get<FaqCategory[]>('api/apps/help-center/faqs', {
-            params: {slug},
-        }).pipe(
-            tap((response: any) =>
-            {
-                this._faqs.next(response);
-            }),
-        );
+    {        
+        var faqUrl = this.baseUrl + '/v1/read_faq_categories';
+        return this._httpClient.get<FaqCategory[]>(faqUrl).pipe(            
+                tap((response: any) =>
+                {
+                    this._faqs.next(response);
+                }),
+            );        
     }
 
     /**
@@ -86,9 +82,8 @@ export class HelpCenterService
      */
     getAllGuides(limit = '4'): Observable<GuideCategory[]>
     {
-        return this._httpClient.get<GuideCategory[]>('api/apps/help-center/guides', {
-            params: {limit},
-        }).pipe(
+        var url = this.baseUrl + '/v1/read_guide_categories';
+        return this._httpClient.get<GuideCategory[]>(url).pipe(
             tap((response: any) =>
             {
                 this._guides.next(response);
@@ -103,7 +98,8 @@ export class HelpCenterService
      */
     getGuidesByCategory(slug: string): Observable<GuideCategory[]>
     {
-        return this._httpClient.get<GuideCategory[]>('api/apps/help-center/guides', {
+        var url = this.baseUrl + '/v1/read_guide_categories';
+        return this._httpClient.get<GuideCategory[]>(url, {
             params: {slug},
         }).pipe(
             tap((response: any) =>
@@ -119,9 +115,11 @@ export class HelpCenterService
      * @param categorySlug
      * @param guideSlug
      */
+    
     getGuide(categorySlug: string, guideSlug: string): Observable<GuideCategory>
     {
-        return this._httpClient.get<GuideCategory>('api/apps/help-center/guide', {
+        var url = this.baseUrl + '/v1/read_guide_categories';
+        return this._httpClient.get<GuideCategory>(url, {
             params: {
                 categorySlug,
                 guideSlug,

@@ -29,10 +29,8 @@ const imports = [
   ReactiveFormsModule,
   MaterialModule,
   NgxMaskDirective,
-  NgxMaskPipe,
+  NgxMatSelectSearchModule,
   BudgetUpdateComponent,
-  DndComponent,
-  NgxMatSelectSearchModule
 ]
 
 @Component({

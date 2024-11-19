@@ -51,24 +51,18 @@
 <mat-drawer-container class="flex-col h-full">
     <ng-container>
         <grid-menubar [inTitle]="'Kanban Status Maintenance'"></grid-menubar>
-        
+
         <div class="flex flex-col h-[600px]">
             <ejs-grid #normalgrid id="Normalgrid" [dataSource]="kanbanService.statusList()" allowPaging="true"
-                [allowSorting]="true" 
-                [allowFiltering]="true" 
-                [filterSettings]="filterSettings"
-                [editSettings]="editSettings" 
-                [toolbar]="toolbar" 
-                [sortSettings]="initialSort"
-                (actionBegin)="actionBegin($event)" 
-                (actionComplete)="actionComplete($event)"
-                [pageSettings]="pageSettings">
+                [allowSorting]="true" [allowFiltering]="true" [filterSettings]="filterSettings"
+                [editSettings]="editSettings" [toolbar]="toolbar" [sortSettings]="initialSort"
+                (actionComplete)="actionComplete($event)" [pageSettings]="pageSettings">
                 <e-columns>
                     <e-column field="Status" headerText="Status" width="140" isPrimaryKey="true"></e-column>
                     <e-column field="description" headerText="Description"></e-column>
                 </e-columns>
             </ejs-grid>
         </div>
-        
+
     </ng-container>
 </mat-drawer-container>

@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core'
+import { NgModule, viewChild } from '@angular/core'
 import { BrowserModule } from '@angular/platform-browser'
 import { GridModule, ToolbarService, ExcelExportService, FilterService } from '@syncfusion/ej2-angular-grids'
 
@@ -14,7 +14,7 @@ standalone: true,
     selector: 'download',
     template: 
     `
-        <ejs-grid #grid id='Grid' class="h-[calc(100vh-15rem)]" 
+        <ejs-grid #grid id='grid' class="h-[calc(100vh-15rem)]" 
                [dataSource]='data' 
                [toolbar]='toolbarOptions'                 
                [allowExcelExport]='true' 
@@ -31,21 +31,20 @@ standalone: true,
 export class TreeComponent implements OnInit {
 
     public data?: object[]; 
-    public toolbarOptions?: ToolbarItems[];
-    @ViewChild('grid') public grid?: GridComponent;
-
+    public toolbarOptions?: ToolbarItems[];    
+    grid = viewChild<GridComponent>('grid');
+    
     ngOnInit(): void {
         this.data = data;
-        this.toolbarOptions = ['ExcelExport', 'CsvExport'];
+        this.toolbarOptions = ['Search', 'ExcelExport', 'PdfExport', 'CsvExport','Print']
     }
+
     toolbarClick(args: ClickEventArgs): void {
-        if (args.item.id === 'Grid_excelexport') { 
-            // 'Grid_excelexport' -> Grid component id + _ + toolbar item name
-            (this.grid as GridComponent).excelExport();
+        if (args.item.id === 'grid_excelexport') {             
+            this.grid().excelExport();
         }
-        else if (args.item.id === 'Grid_csvexport') { 
-            // 'Grid_csvexport' -> Grid component id + _ + toolbar item name
-            (this.grid as GridComponent).csvExport();
+        else if (args.item.id === 'grid_csvexport') { 
+            this.grid().csvExport();
         }
     }
 }
