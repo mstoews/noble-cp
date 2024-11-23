@@ -14,23 +14,21 @@ import { fuseAnimations } from '@fuse/animations/public-api';
 import { debounceTime, filter, map, Subject, takeUntil } from 'rxjs';
 
 @Component({
-    selector     : 'search',
-    templateUrl  : './search.component.html',
+    selector: 'search',
+    templateUrl: './search.component.html',
     encapsulation: ViewEncapsulation.None,
-    exportAs     : 'fuseSearch',
-    animations   : fuseAnimations,
-    standalone   : true,
-    imports      : [NgIf, MatButtonModule, MatIconModule, FormsModule, MatAutocompleteModule, ReactiveFormsModule, MatOptionModule, NgFor, RouterLink, NgTemplateOutlet, MatFormFieldModule, MatInputModule, NgClass],
-    providers    : [
+    exportAs: 'fuseSearch',
+    animations: fuseAnimations,
+    imports: [NgIf, MatButtonModule, MatIconModule, FormsModule, MatAutocompleteModule, ReactiveFormsModule, MatOptionModule, NgFor, RouterLink, NgTemplateOutlet, MatFormFieldModule, MatInputModule, NgClass],
+    providers: [
         {
-            provide   : MAT_AUTOCOMPLETE_SCROLL_STRATEGY,
-            useFactory: () =>
-            {
+            provide: MAT_AUTOCOMPLETE_SCROLL_STRATEGY,
+            useFactory: () => {
                 const overlay = inject(Overlay);
                 return () => overlay.scrollStrategies.block();
             },
         },
-    ],
+    ]
 })
 export class SearchComponent implements OnChanges, OnInit, OnDestroy
 {

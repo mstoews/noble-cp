@@ -9,10 +9,9 @@ import { IArtifacts } from 'app/models/journals'
 const imports = [MaterialModule]
   
 @Component({
-  standalone: true,
-  selector: 'evidence-card',
-  imports:[imports],
-  templateUrl: './evidence-card.component.html',
+    selector: 'evidence-card',
+    imports: [imports],
+    templateUrl: './evidence-card.component.html'
 })
 export class EvidenceCardComponent implements OnInit {
 

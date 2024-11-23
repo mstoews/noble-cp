@@ -1,11 +1,9 @@
 import { Component } from '@angular/core';
 
 @Component({
-  selector: 'app-page-not-found',
-  standalone: true,
-  imports: [],
-  template:
-    `
+    selector: 'app-page-not-found',
+    imports: [],
+    template: `
   <div class="absolute inset-0 flex flex-col min-w-0 overflow-y-auto -px-20" cdkScrollable>
     <div class="flex-auto p-6 sm:p-10">
   <div class="grid min-h-full grid-cols-1 grid-rows-[1fr,auto,1fr] bg-white lg:grid-cols-[max(50%,36rem),1fr]">

@@ -69,13 +69,12 @@ const providers = [
   ColumnMenuService];
 
 @Component({
-  selector: 'budget-update',
-  standalone: true,
-  imports: [imp],
-  templateUrl: './budget-update.component.html',
-  providers: [providers],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  styles: ``,
+    selector: 'budget-update',
+    imports: [imp],
+    templateUrl: './budget-update.component.html',
+    providers: [providers],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    styles: ``
 })
 export class BudgetUpdateComponent implements OnInit, OnDestroy, AfterViewInit {
   public bDirty = false;

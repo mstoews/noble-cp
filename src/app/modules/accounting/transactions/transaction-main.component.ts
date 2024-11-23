@@ -34,7 +34,6 @@ const imports = [
 
 @Component({
     selector: 'transaction-main',
-    standalone: true,
     imports: [imports],
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,

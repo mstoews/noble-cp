@@ -17,12 +17,11 @@ var modules = [
 ]
 
 @Component({
-  standalone: true,
-  selector: 'kb-menubar',
-  templateUrl: './component.html',
-  styleUrls: ['./component.css'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  imports:[modules]
+    selector: 'kb-menubar',
+    templateUrl: './component.html',
+    styleUrls: ['./component.css'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [modules]
 })
 export class KanbanMenubarComponent implements OnInit {
   notifyParentAdd = output();

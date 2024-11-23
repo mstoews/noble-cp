@@ -10,12 +10,11 @@ import { MatSelectModule } from '@angular/material/select';
 import { TextFieldModule } from '@angular/cdk/text-field';
 
 @Component({
-    selector       : 'settings-account',
-    templateUrl    : './account.component.html',
-    encapsulation  : ViewEncapsulation.None,
+    selector: 'settings-account',
+    templateUrl: './account.component.html',
+    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone     : true,
-    imports        : [FormsModule, ReactiveFormsModule, MatFormFieldModule, MatIconModule, MatInputModule, TextFieldModule, MatSelectModule, MatOptionModule, MatButtonModule],
+    imports: [FormsModule, ReactiveFormsModule, MatFormFieldModule, MatIconModule, MatInputModule, TextFieldModule, MatSelectModule, MatOptionModule, MatButtonModule]
 })
 export class SettingsAccountComponent implements OnInit
 {

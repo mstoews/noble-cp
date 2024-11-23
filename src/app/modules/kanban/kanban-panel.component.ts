@@ -27,7 +27,6 @@ import { TeamsComponent } from '../accounting/accts/teams/teams.component';
     selector: 'gl-kanban-panel',
     templateUrl: './kanban-panel.component.html',
     encapsulation: ViewEncapsulation.None,
-    standalone: true,
     imports: [
         MaterialModule,
         RouterLink,
@@ -46,7 +45,7 @@ import { TeamsComponent } from '../accounting/accts/teams/teams.component';
         ScheduleNobleComponent
     ],
     providers: [HttpClient],
-    changeDetection: ChangeDetectionStrategy.OnPush,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class KanbanPanelComponent {
     @ViewChild('drawer') drawer: MatDrawer;

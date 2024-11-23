@@ -13,12 +13,11 @@ import { Subject, takeUntil } from 'rxjs';
 import { Router } from '@angular/router';
 
 @Component({
-    selector       : 'finance',
-    templateUrl    : './finance.component.html',
-    encapsulation  : ViewEncapsulation.None,
+    selector: 'finance',
+    templateUrl: './finance.component.html',
+    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone     : true,
-    imports        : [MatButtonModule, MatIconModule, MatMenuModule, MatDividerModule, NgApexchartsModule, MatTableModule, MatSortModule, NgClass, MatProgressBarModule, CurrencyPipe, DatePipe],
+    imports: [MatButtonModule, MatIconModule, MatMenuModule, MatDividerModule, NgApexchartsModule, MatTableModule, MatSortModule, NgClass, MatProgressBarModule, CurrencyPipe, DatePipe]
 })
 export class FinanceComponent implements OnInit, AfterViewInit, OnDestroy
 {

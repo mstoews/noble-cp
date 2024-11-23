@@ -1,6 +1,6 @@
 
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
-import { APP_INITIALIZER, ApplicationConfig, ErrorHandler } from '@angular/core';
+import { ApplicationConfig, ErrorHandler, provideAppInitializer } from '@angular/core';
 import { LuxonDateAdapter } from '@angular/material-luxon-adapter';
 import { DateAdapter, MAT_DATE_FORMATS } from '@angular/material/core';
 import { provideAnimations } from '@angular/platform-browser/animations';
@@ -73,14 +73,7 @@ export const AUTH = new InjectionToken('Firebase auth', {
 
 const CoreProviders = [
   provideHttpClient(withInterceptors([authTokenInterceptor])),
-  {
-    provide: APP_INITIALIZER,
-    // dummy factory
-    useFactory: () => () => {},
-    multi: true,
-    // injected dependencies, this will be constructed immediately
-    // deps: [AuthService],
-  },
+  provideAppInitializer((() => () => {})()),
 ];
 
 

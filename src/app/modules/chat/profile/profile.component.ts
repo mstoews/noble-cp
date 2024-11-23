@@ -11,12 +11,11 @@ import { Profile } from '../chat.types';
 import { Subject, takeUntil } from 'rxjs';
 
 @Component({
-    selector       : 'chat-profile',
-    templateUrl    : './profile.component.html',
-    encapsulation  : ViewEncapsulation.None,
+    selector: 'chat-profile',
+    templateUrl: './profile.component.html',
+    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone     : true,
-    imports        : [MatButtonModule, MatIconModule, NgIf, MatFormFieldModule, MatInputModule, FormsModule],
+    imports: [MatButtonModule, MatIconModule, NgIf, MatFormFieldModule, MatInputModule, FormsModule]
 })
 export class ProfileComponent implements OnInit, OnDestroy
 {

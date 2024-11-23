@@ -8,12 +8,10 @@ import { GridComponent, ToolbarItems } from '@syncfusion/ej2-angular-grids';
 import { ClickEventArgs } from '@syncfusion/ej2-angular-navigations';
 
 @Component({
-imports: [GridModule ],
-providers: [ExcelExportService, ToolbarService, FilterService],
-standalone: true,
+    imports: [GridModule],
+    providers: [ExcelExportService, ToolbarService, FilterService],
     selector: 'download',
-    template: 
-    `
+    template: `
         <ejs-grid #grid id='grid' class="h-[calc(100vh-15rem)]" 
                [dataSource]='data' 
                [toolbar]='toolbarOptions'                 

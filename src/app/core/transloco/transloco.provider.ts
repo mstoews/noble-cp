@@ -1,4 +1,4 @@
-import { APP_INITIALIZER, EnvironmentProviders, importProvidersFrom, inject, Provider } from '@angular/core';
+import { EnvironmentProviders, importProvidersFrom, inject, Provider, provideAppInitializer } from '@angular/core';
 import { TRANSLOCO_CONFIG, TRANSLOCO_LOADER, translocoConfig, TranslocoModule, TranslocoService } from '@ngneat/transloco';
 import { TranslocoHttpLoader } from 'app/core/transloco/transloco.http-loader';
 
@@ -31,18 +31,13 @@ export const provideTransloco = (): Array<Provider | EnvironmentProviders> =>
             provide : TRANSLOCO_LOADER,
             useClass: TranslocoHttpLoader,
         },
-        {
-            // Preload the default language before the app starts to prevent empty/jumping content
-            provide   : APP_INITIALIZER,
-            useFactory: () =>
+        provideAppInitializer((() =>
             {
                 const translocoService = inject(TranslocoService);
                 const defaultLang = translocoService.getDefaultLang();
                 translocoService.setActiveLang(defaultLang);
 
                 return () => translocoService.load(defaultLang).toPromise();
-            },
-            multi     : true,
-        },
+            })()),
     ];
 };

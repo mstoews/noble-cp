@@ -39,24 +39,23 @@ const imports = [
 ];
 
 @Component({
-  selector: 'wizard-update',
-  standalone: true,
-  imports: [imports],
-  templateUrl: './wizard-update.component.html',
-  providers: [provideNgxMask(), SortService,
-    PageService,
-    FilterService,
-    ToolbarService,
-    EditService,
-    AggregateService,
-    RowDDService],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  styles: `
+    selector: 'wizard-update',
+    imports: [imports],
+    templateUrl: './wizard-update.component.html',
+    providers: [provideNgxMask(), SortService,
+        PageService,
+        FilterService,
+        ToolbarService,
+        EditService,
+        AggregateService,
+        RowDDService],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    styles: `
   ::ng-deep .label {
     color: #767676;
   }
   `,
-  moduleId: __moduleName,
+    moduleId: __moduleName
 })
 export class WizardUpdateComponent implements OnInit, OnDestroy, AfterViewInit {
 

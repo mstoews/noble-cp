@@ -17,12 +17,11 @@ import { Category, Course } from '../academy.types';
 import { BehaviorSubject, combineLatest, Subject, takeUntil } from 'rxjs';
 
 @Component({
-    selector       : 'academy-list',
-    templateUrl    : './list.component.html',
-    encapsulation  : ViewEncapsulation.None,
+    selector: 'academy-list',
+    templateUrl: './list.component.html',
+    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone     : true,
-    imports        : [CdkScrollable, MatFormFieldModule, MatSelectModule, MatOptionModule, NgFor, MatIconModule, MatInputModule, MatSlideToggleModule, NgIf, NgClass, MatTooltipModule, MatProgressBarModule, MatButtonModule, RouterLink, FuseFindByKeyPipe, PercentPipe, I18nPluralPipe],
+    imports: [CdkScrollable, MatFormFieldModule, MatSelectModule, MatOptionModule, NgFor, MatIconModule, MatInputModule, MatSlideToggleModule, NgIf, NgClass, MatTooltipModule, MatProgressBarModule, MatButtonModule, RouterLink, FuseFindByKeyPipe, PercentPipe, I18nPluralPipe]
 })
 export class AcademyListComponent implements OnInit, OnDestroy
 {

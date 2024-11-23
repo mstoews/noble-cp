@@ -15,13 +15,12 @@ import { Shortcut } from 'app/layout/common/shortcuts/shortcuts.types';
 import { Subject, takeUntil } from 'rxjs';
 
 @Component({
-    selector       : 'shortcuts',
-    templateUrl    : './shortcuts.component.html',
-    encapsulation  : ViewEncapsulation.None,
+    selector: 'shortcuts',
+    templateUrl: './shortcuts.component.html',
+    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    exportAs       : 'shortcuts',
-    standalone     : true,
-    imports        : [MatButtonModule, MatIconModule, NgIf, MatTooltipModule, NgFor, NgClass, NgTemplateOutlet, RouterLink, FormsModule, ReactiveFormsModule, MatFormFieldModule, MatInputModule, MatSlideToggleModule],
+    exportAs: 'shortcuts',
+    imports: [MatButtonModule, MatIconModule, NgIf, MatTooltipModule, NgFor, NgClass, NgTemplateOutlet, RouterLink, FormsModule, ReactiveFormsModule, MatFormFieldModule, MatInputModule, MatSlideToggleModule]
 })
 export class ShortcutsComponent implements OnInit, OnDestroy
 {

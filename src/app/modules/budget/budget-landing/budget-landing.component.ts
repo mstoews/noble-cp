@@ -24,10 +24,9 @@ const imports = [
 ]
 
 @Component({
-  standalone: true,
-  selector: 'budget-landing',
-  templateUrl: './budget-landing.component.html',
-  imports: [imports]
+    selector: 'budget-landing',
+    templateUrl: './budget-landing.component.html',
+    imports: [imports]
 })
 export class BudgetLandingComponent  implements OnInit {
 openBudgetAdj() {

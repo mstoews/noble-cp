@@ -2,12 +2,11 @@ import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/
 import { MatIconModule } from '@angular/material/icon';
 
 @Component({
-    selector       : 'chat-empty-conversation',
-    templateUrl    : './empty-conversation.component.html',
-    encapsulation  : ViewEncapsulation.None,
+    selector: 'chat-empty-conversation',
+    templateUrl: './empty-conversation.component.html',
+    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone     : true,
-    imports        : [MatIconModule],
+    imports: [MatIconModule]
 })
 export class EmptyConversationComponent
 {

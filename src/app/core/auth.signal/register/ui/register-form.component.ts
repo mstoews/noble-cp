@@ -10,9 +10,8 @@ import { passwordMatchesValidator } from '../utils/password-matches';
 import { RegisterStatus } from '../data-access/register.service';
 
 @Component({
-  standalone: true,
-  selector: 'app-register-form',
-  template: `
+    selector: 'app-register-form',
+    template: `
     <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" #form="ngForm">
       <mat-form-field appearance="fill">
         <mat-label>email</mat-label>
@@ -69,16 +68,16 @@ import { RegisterStatus } from '../data-access/register.service';
       </button>
     </form>
   `,
-  imports: [
-    ReactiveFormsModule,
-    MatButtonModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatIconModule,
-    MatProgressSpinnerModule,
-  ],
-  styles: [
-    `
+    imports: [
+        ReactiveFormsModule,
+        MatButtonModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatIconModule,
+        MatProgressSpinnerModule,
+    ],
+    styles: [
+        `
       form {
         display: flex;
         flex-direction: column;
@@ -97,7 +96,7 @@ import { RegisterStatus } from '../data-access/register.service';
         margin: 1rem 0;
       }
     `,
-  ],
+    ]
 })
 export class RegisterFormComponent {
   @Input({ required: true }) status!: RegisterStatus;

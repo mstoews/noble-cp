@@ -12,13 +12,12 @@ import { Chat } from 'app/layout/common/quick-chat/quick-chat.types';
 import { Subject, takeUntil } from 'rxjs';
 
 @Component({
-    selector     : 'quick-chat',
-    templateUrl  : './quick-chat.component.html',
-    styleUrls    : ['./quick-chat.component.scss'],
+    selector: 'quick-chat',
+    templateUrl: './quick-chat.component.html',
+    styleUrls: ['./quick-chat.component.scss'],
     encapsulation: ViewEncapsulation.None,
-    exportAs     : 'quickChat',
-    standalone   : true,
-    imports      : [NgClass, NgIf, MatIconModule, MatButtonModule, FuseScrollbarDirective, NgFor, NgTemplateOutlet, MatFormFieldModule, MatInputModule, TextFieldModule, DatePipe],
+    exportAs: 'quickChat',
+    imports: [NgClass, NgIf, MatIconModule, MatButtonModule, FuseScrollbarDirective, NgFor, NgTemplateOutlet, MatFormFieldModule, MatInputModule, TextFieldModule, DatePipe]
 })
 export class QuickChatComponent implements OnInit, AfterViewInit, OnDestroy
 {

@@ -13,11 +13,10 @@ import { AuthService } from 'app/modules/auth/auth.service';
 import { PricingTableComponent } from 'app/modules/pages/pricing/table/table.component';
 
 @Component({
-    standalone: true,
     selector: 'app-login',
     templateUrl: './login.component.html',
     providers: [LoginService],
-    imports: [RouterModule, PricingTableComponent ,LoginFormComponent, MatProgressSpinnerModule, MaterialModule, NgClass, FuseCardComponent, NgIf ],
+    imports: [RouterModule, PricingTableComponent, LoginFormComponent, MatProgressSpinnerModule, MaterialModule, NgClass, FuseCardComponent, NgIf]
 })
 export default class LoginComponent {
     public loginService = inject(LoginService);

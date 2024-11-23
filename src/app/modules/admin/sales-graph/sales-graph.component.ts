@@ -30,11 +30,10 @@ export type ChartOptions = {
   };
 
 @Component({
-  selector: 'sales-graph',
-  standalone: true,
-  imports: [CommonModule, NgApexchartsModule],
-  templateUrl: './sales-graph.component.html',
-  styleUrls: ['./sales-graph.component.scss']
+    selector: 'sales-graph',
+    imports: [CommonModule, NgApexchartsModule],
+    templateUrl: './sales-graph.component.html',
+    styleUrls: ['./sales-graph.component.scss']
 })
 export class SalesGraphComponent implements OnInit{
     @ViewChild("chart") chart: ChartComponent;

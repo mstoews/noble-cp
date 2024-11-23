@@ -11,10 +11,9 @@ import { filter } from 'rxjs';
 
 @Component({
     selector: 'landing',
-    standalone: true,
     templateUrl: './landing.component.html',
     encapsulation: ViewEncapsulation.None,
-    imports: [CommonModule, MatButtonModule, MatIconModule],
+    imports: [CommonModule, MatButtonModule, MatIconModule]
 })
 export class LandingComponent {
     router = inject(Router);

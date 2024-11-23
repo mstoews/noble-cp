@@ -33,7 +33,6 @@ import { FIRESTORE } from 'app/app.config';
     templateUrl: './project.component.html',
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     imports: [
         TranslocoModule,
         MatIconModule,
@@ -50,7 +49,7 @@ import { FIRESTORE } from 'app/app.config';
         CurrencyPipe,
         CommonModule,
         SummaryCardComponent
-    ],
+    ]
 })
 export class ProjectComponent implements OnInit, OnDestroy {
     chartGithubIssues: ApexOptions = {};

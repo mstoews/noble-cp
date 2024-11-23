@@ -11,13 +11,12 @@ import { Message } from 'app/layout/common/messages/messages.types';
 import { Subject, takeUntil } from 'rxjs';
 
 @Component({
-    selector       : 'messages',
-    templateUrl    : './messages.component.html',
-    encapsulation  : ViewEncapsulation.None,
+    selector: 'messages',
+    templateUrl: './messages.component.html',
+    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    exportAs       : 'messages',
-    standalone     : true,
-    imports        : [MatButtonModule, NgIf, MatIconModule, MatTooltipModule, NgFor, NgClass, NgTemplateOutlet, RouterLink, DatePipe],
+    exportAs: 'messages',
+    imports: [MatButtonModule, NgIf, MatIconModule, MatTooltipModule, NgFor, NgClass, NgTemplateOutlet, RouterLink, DatePipe]
 })
 export class MessagesComponent implements OnInit, OnDestroy
 {

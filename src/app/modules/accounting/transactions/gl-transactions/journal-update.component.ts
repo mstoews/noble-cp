@@ -105,22 +105,21 @@ const imports = [
 ];
 
 @Component({
-  selector: "gl-journal",
-  standalone: true,
-  imports: [imports],
-  templateUrl: "./journal-update.component.html",
-  providers: [
-    provideNgxMask(),
-    SortService,
-    FilterService,
-    ToolbarService,
-    EditService,
-    SearchService,
-    AggregateService,
-    RowDDService,
-    JournalStore,
-  ],
-  styles: [`
+    selector: "gl-journal",
+    imports: [imports],
+    templateUrl: "./journal-update.component.html",
+    providers: [
+        provideNgxMask(),
+        SortService,
+        FilterService,
+        ToolbarService,
+        EditService,
+        SearchService,
+        AggregateService,
+        RowDDService,
+        JournalStore,
+    ],
+    styles: [`
    .mat-mdc-row { height: 36px !important; } 
    .mat-mdc-header { height: 36px !important;  }
    .mat-mdc-form-field {height: 72px !important;}
@@ -130,8 +129,8 @@ const imports = [
     background: #64748b !important;     
     color: white !important; } 
    `
-  ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    ],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class JournalUpdateComponent
   implements OnInit, OnDestroy, AfterViewInit {

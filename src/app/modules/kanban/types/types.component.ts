@@ -22,7 +22,6 @@ const imports = [
 
 @Component({
     selector: 'kanban-types',
-    standalone: true,
     imports: [imports],
     templateUrl: 'types.component.html',
     providers: []

@@ -35,14 +35,13 @@ const imports = [
 ]
 
 @Component({
-  selector: 'kanban',
-  standalone: true,
-  encapsulation: ViewEncapsulation.None,
-  imports: [imports],
-  templateUrl: './tasks.component.html',
-  styleUrl: './tasks.component.scss',
-  providers: [provideNativeDateAdapter(), KanbanStore],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'kanban',
+    encapsulation: ViewEncapsulation.None,
+    imports: [imports],
+    templateUrl: './tasks.component.html',
+    styleUrl: './tasks.component.scss',
+    providers: [provideNativeDateAdapter(), KanbanStore],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TasksComponent implements OnInit {
   @ViewChild('kanbanObj') kanbanObj!: KanbanComponent;

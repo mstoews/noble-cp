@@ -6,12 +6,11 @@ import { MatDrawer } from '@angular/material/sidenav';
 import { Chat } from '../chat.types';
 
 @Component({
-    selector       : 'chat-contact-info',
-    templateUrl    : './contact-info.component.html',
-    encapsulation  : ViewEncapsulation.None,
+    selector: 'chat-contact-info',
+    templateUrl: './contact-info.component.html',
+    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone     : true,
-    imports        : [MatButtonModule, MatIconModule, NgIf, NgFor],
+    imports: [MatButtonModule, MatIconModule, NgIf, NgFor]
 })
 export class ContactInfoComponent
 {

@@ -14,12 +14,11 @@ import { ProfileComponent } from '../profile/profile.component';
 import { Subject, takeUntil } from 'rxjs';
 
 @Component({
-    selector       : 'chat-chats',
-    templateUrl    : './chats.component.html',
-    encapsulation  : ViewEncapsulation.None,
+    selector: 'chat-chats',
+    templateUrl: './chats.component.html',
+    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone     : true,
-    imports        : [MatSidenavModule, NgIf, NewChatComponent, ProfileComponent, MatButtonModule, MatIconModule, MatMenuModule, MatFormFieldModule, MatInputModule, NgFor, NgClass, RouterLink, RouterOutlet],
+    imports: [MatSidenavModule, NgIf, NewChatComponent, ProfileComponent, MatButtonModule, MatIconModule, MatMenuModule, MatFormFieldModule, MatInputModule, NgFor, NgClass, RouterLink, RouterOutlet]
 })
 export class ChatsComponent implements OnInit, OnDestroy
 {

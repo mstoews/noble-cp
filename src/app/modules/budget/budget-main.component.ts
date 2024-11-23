@@ -22,7 +22,6 @@ const imports = [
 
 @Component({
     selector: 'budget-main',
-    standalone: true,
     imports: [imports],
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,

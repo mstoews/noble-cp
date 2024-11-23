@@ -28,10 +28,9 @@ const imports = [
 
 @Component({
     selector: 'periods',
-    standalone: true,
     imports: [imports],
     templateUrl: './periods.component.html',
-    providers: [PeriodStore, SortService, GroupService ,PageService, ResizeService, FilterService, ToolbarService, EditService, AggregateService, ColumnMenuService,],
+    providers: [PeriodStore, SortService, GroupService, PageService, ResizeService, FilterService, ToolbarService, EditService, AggregateService, ColumnMenuService,]
 })
 export class PeriodsComponent implements OnInit {
 onRefresh() {

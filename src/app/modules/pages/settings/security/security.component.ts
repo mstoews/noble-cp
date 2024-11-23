@@ -7,12 +7,11 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 
 @Component({
-    selector       : 'settings-security',
-    templateUrl    : './security.component.html',
-    encapsulation  : ViewEncapsulation.None,
+    selector: 'settings-security',
+    templateUrl: './security.component.html',
+    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone     : true,
-    imports        : [FormsModule, ReactiveFormsModule, MatFormFieldModule, MatIconModule, MatInputModule, MatSlideToggleModule, MatButtonModule],
+    imports: [FormsModule, ReactiveFormsModule, MatFormFieldModule, MatIconModule, MatInputModule, MatSlideToggleModule, MatButtonModule]
 })
 export class SettingsSecurityComponent implements OnInit
 {

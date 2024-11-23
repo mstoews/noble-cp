@@ -11,13 +11,12 @@ import { Notification } from 'app/layout/common/notifications/notifications.type
 import { Subject, takeUntil } from 'rxjs';
 
 @Component({
-    selector       : 'notifications',
-    templateUrl    : './notifications.component.html',
-    encapsulation  : ViewEncapsulation.None,
+    selector: 'notifications',
+    templateUrl: './notifications.component.html',
+    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    exportAs       : 'notifications',
-    standalone     : true,
-    imports        : [MatButtonModule, NgIf, MatIconModule, MatTooltipModule, NgFor, NgClass, NgTemplateOutlet, RouterLink, DatePipe],
+    exportAs: 'notifications',
+    imports: [MatButtonModule, NgIf, MatIconModule, MatTooltipModule, NgFor, NgClass, NgTemplateOutlet, RouterLink, DatePipe]
 })
 export class NotificationsComponent implements OnInit, OnDestroy
 {

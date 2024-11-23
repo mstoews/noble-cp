@@ -10,9 +10,9 @@ import { FuseConfig, FuseConfigService, Scheme, Theme, Themes } from '@fuse/serv
 import { Subject, takeUntil } from 'rxjs';
 
 @Component({
-    selector     : 'settings',
-    templateUrl  : './settings.component.html',
-    styles       : [
+    selector: 'settings',
+    templateUrl: './settings.component.html',
+    styles: [
         `
             settings {
                 position: static;
@@ -30,8 +30,7 @@ import { Subject, takeUntil } from 'rxjs';
         `,
     ],
     encapsulation: ViewEncapsulation.None,
-    standalone   : true,
-    imports      : [MatIconModule, FuseDrawerComponent, MatButtonModule, NgFor, NgClass, MatTooltipModule],
+    imports: [MatIconModule, FuseDrawerComponent, MatButtonModule, NgFor, NgClass, MatTooltipModule]
 })
 export class SettingsComponent implements OnInit, OnDestroy
 {

@@ -10,11 +10,10 @@ import { FaqCategory } from 'app/modules/help-center/help-center.type';
 import { Subject, takeUntil } from 'rxjs';
 
 @Component({
-    selector     : 'help-center',
-    templateUrl  : './help-center.component.html',
+    selector: 'help-center',
+    templateUrl: './help-center.component.html',
     encapsulation: ViewEncapsulation.None,
-    standalone   : true,
-    imports      : [MatFormFieldModule, MatInputModule, MatIconModule, RouterLink, MatExpansionModule, NgFor],
+    imports: [MatFormFieldModule, MatInputModule, MatIconModule, RouterLink, MatExpansionModule, NgFor]
 })
 export class HelpCenterComponent implements OnInit, OnDestroy
 {

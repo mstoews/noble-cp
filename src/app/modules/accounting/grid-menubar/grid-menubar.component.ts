@@ -10,17 +10,16 @@ import { MaterialModule } from "app/services/material.module";
 var modules = [MaterialModule, CommonModule];
 
 @Component({
-  standalone: true,
-  selector: "grid-menubar",
-  styles: [
-    ` ::ng-deep.mat-menu-panel {
+    selector: "grid-menubar",
+    styles: [
+        ` ::ng-deep.mat-menu-panel {
         max-width: none !important;
       }
     `,
-  ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [modules],
-  template: `
+    ],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [modules],
+    template: `
     <mat-toolbar class="text-white font-sans bg-gray-500 text-2xlz rounded-lg">   {{ inTitle() }}
       <!-- menu selected -->
       <span class="flex-1"></span>
@@ -56,7 +55,7 @@ var modules = [MaterialModule, CommonModule];
     }
 
     </mat-toolbar>
-  `,
+  `
 })
 
 

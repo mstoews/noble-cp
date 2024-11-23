@@ -14,12 +14,11 @@ import { Category, Course } from '../academy.types';
 import { Subject, takeUntil } from 'rxjs';
 
 @Component({
-    selector       : 'academy-details',
-    templateUrl    : './details.component.html',
-    encapsulation  : ViewEncapsulation.None,
+    selector: 'academy-details',
+    templateUrl: './details.component.html',
+    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone     : true,
-    imports        : [MatSidenavModule, RouterLink, MatIconModule, NgIf, NgClass, NgFor, MatButtonModule, MatProgressBarModule, CdkScrollable, MatTabsModule, FuseFindByKeyPipe],
+    imports: [MatSidenavModule, RouterLink, MatIconModule, NgIf, NgClass, NgFor, MatButtonModule, MatProgressBarModule, CdkScrollable, MatTabsModule, FuseFindByKeyPipe]
 })
 export class AcademyDetailsComponent implements OnInit, OnDestroy
 {

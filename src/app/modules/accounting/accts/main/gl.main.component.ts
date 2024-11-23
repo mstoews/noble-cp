@@ -30,7 +30,6 @@ import { MatDrawer } from '@angular/material/sidenav';
     selector: 'gl-main',
     templateUrl: './gl.main.component.html',
     encapsulation: ViewEncapsulation.None,
-    standalone: true,
     imports: [
         MaterialModule,
         RouterLink,
@@ -50,7 +49,7 @@ import { MatDrawer } from '@angular/material/sidenav';
         TeamsComponent,
     ],
     providers: [HttpClient],
-    changeDetection: ChangeDetectionStrategy.OnPush,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class GlMainComponent {
     @ViewChild('drawer') drawer: MatDrawer;

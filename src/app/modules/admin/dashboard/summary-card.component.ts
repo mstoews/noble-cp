@@ -11,20 +11,19 @@ import { TranslocoModule } from '@ngneat/transloco';
 import { NgApexchartsModule } from 'ng-apexcharts';
 
 @Component({
-  selector: 'summary-card',
-  standalone: true,
-  imports: [
-    MatIconModule,
-    MatButtonModule,
-    MatRippleModule,
-    MatMenuModule,
-    MatTabsModule,
-    MatButtonToggleModule,
-    MatTableModule,
-    CommonModule    
-],
-  templateUrl: './summary-card.component.html',
-  styles: ``
+    selector: 'summary-card',
+    imports: [
+        MatIconModule,
+        MatButtonModule,
+        MatRippleModule,
+        MatMenuModule,
+        MatTabsModule,
+        MatButtonToggleModule,
+        MatTableModule,
+        CommonModule
+    ],
+    templateUrl: './summary-card.component.html',
+    styles: ``
 })
 export class SummaryCardComponent {
   mainValue = input(0);

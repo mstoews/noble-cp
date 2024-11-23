@@ -25,7 +25,6 @@ const imports = [
 
 @Component({
     selector: 'roles',
-    standalone: true,
     imports: [imports],
     templateUrl: './roles.component.html',
     providers: [RoleService]

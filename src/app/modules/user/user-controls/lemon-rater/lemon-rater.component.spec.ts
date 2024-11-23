@@ -7,9 +7,8 @@ import { LemonRaterComponent } from './lemon-rater.component'
 describe('LemonRaterComponent', () => {
   @Component({
     imports: [ReactiveFormsModule, LemonRaterComponent],
-    standalone: true,
-    template: '<app-lemon-rater [formControl]="rating"></app-lemon-rater>',
-  })
+    template: '<app-lemon-rater [formControl]="rating"></app-lemon-rater>'
+})
   class TestHostComponent {
     @ViewChild(LemonRaterComponent)
     LemonRaterComponent!: LemonRaterComponent

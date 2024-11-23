@@ -54,14 +54,13 @@ const mods = [
 ]
 
 @Component({
-  selector: 'entry-wizard',
-  standalone: true,
-  imports: [mods],
-  templateUrl: './wizard-entry.component.html',
-  encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  animations: fuseAnimations,
-  providers: [provideNgxMask(), JournalStore]
+    selector: 'entry-wizard',
+    imports: [mods],
+    templateUrl: './wizard-entry.component.html',
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    animations: fuseAnimations,
+    providers: [provideNgxMask(), JournalStore]
 })
 export class EntryWizardComponent implements OnInit, OnDestroy, AfterViewInit {
 

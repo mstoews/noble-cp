@@ -9,7 +9,6 @@ import { Credentials } from "app/shared/interfaces/credentials";
 import { LoginStatus } from "../data-access/login.service";
 
 @Component({
-    standalone: true,
     selector: "app-login-form",
     template: `
     <form [formGroup]="loginForm" (ngSubmit)="login.emit(loginForm.getRawValue())"  >
@@ -70,7 +69,7 @@ import { LoginStatus } from "../data-access/login.service";
         margin: 1rem 0;
       }
     `,
-    ],
+    ]
 })
 export class LoginFormComponent {
     @Input({ required: true }) loginStatus!: LoginStatus;

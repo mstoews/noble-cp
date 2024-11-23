@@ -29,9 +29,8 @@ const imports = [
 
 @Component({
     selector: 'funds',
-    standalone: true,
     imports: [imports],
-    templateUrl: './funds.component.html',
+    templateUrl: './funds.component.html'
 })
 export class FundsComponent implements OnInit {
     public data: any;

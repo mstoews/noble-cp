@@ -8,12 +8,11 @@ import { Contact } from '../chat.types';
 import { Subject, takeUntil } from 'rxjs';
 
 @Component({
-    selector       : 'chat-new-chat',
-    templateUrl    : './new-chat.component.html',
-    encapsulation  : ViewEncapsulation.None,
+    selector: 'chat-new-chat',
+    templateUrl: './new-chat.component.html',
+    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone     : true,
-    imports        : [MatButtonModule, MatIconModule, NgIf, NgFor],
+    imports: [MatButtonModule, MatIconModule, NgIf, NgFor]
 })
 export class NewChatComponent implements OnInit, OnDestroy
 {

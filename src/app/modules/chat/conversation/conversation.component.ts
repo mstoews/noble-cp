@@ -15,12 +15,11 @@ import { ContactInfoComponent } from '../contact-info/contact-info.component';
 import { Subject, takeUntil } from 'rxjs';
 
 @Component({
-    selector       : 'chat-conversation',
-    templateUrl    : './conversation.component.html',
-    encapsulation  : ViewEncapsulation.None,
+    selector: 'chat-conversation',
+    templateUrl: './conversation.component.html',
+    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone     : true,
-    imports        : [NgIf, MatSidenavModule, ContactInfoComponent, MatButtonModule, RouterLink, MatIconModule, MatMenuModule, NgFor, NgClass, NgTemplateOutlet, MatFormFieldModule, MatInputModule, TextFieldModule, DatePipe],
+    imports: [NgIf, MatSidenavModule, ContactInfoComponent, MatButtonModule, RouterLink, MatIconModule, MatMenuModule, NgFor, NgClass, NgTemplateOutlet, MatFormFieldModule, MatInputModule, TextFieldModule, DatePipe]
 })
 export class ConversationComponent implements OnInit, OnDestroy
 {

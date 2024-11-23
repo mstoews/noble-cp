@@ -34,15 +34,14 @@ const imports = [
 ]
 
 @Component({
-  selector: 'budget-wizard',
-  standalone: true,
-  imports: [imports],
-  templateUrl: './budget-wizard.component.html',
-  encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  animations: fuseAnimations,
-  styles: ``,
-  providers: [provideNgxMask()]
+    selector: 'budget-wizard',
+    imports: [imports],
+    templateUrl: './budget-wizard.component.html',
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    animations: fuseAnimations,
+    styles: ``,
+    providers: [provideNgxMask()]
 })
 export class BudgetWizardComponent implements OnInit, OnDestroy, AfterViewInit {
   onUpdateJournalEntry() {

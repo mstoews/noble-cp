@@ -19,7 +19,6 @@ const imports = [
 
 @Component({
     selector: 'bs',
-    standalone: true,
     imports: [imports],
     templateUrl: './balance-sheet.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush

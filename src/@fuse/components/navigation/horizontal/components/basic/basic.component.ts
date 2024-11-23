@@ -11,11 +11,10 @@ import { FuseUtilsService } from '@fuse/services/utils/utils.service';
 import { Subject, takeUntil } from 'rxjs';
 
 @Component({
-    selector       : 'fuse-horizontal-navigation-basic-item',
-    templateUrl    : './basic.component.html',
+    selector: 'fuse-horizontal-navigation-basic-item',
+    templateUrl: './basic.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone     : true,
-    imports        : [NgClass, NgIf, RouterLink, RouterLinkActive, MatTooltipModule, NgTemplateOutlet, MatMenuModule, MatIconModule],
+    imports: [NgClass, NgIf, RouterLink, RouterLinkActive, MatTooltipModule, NgTemplateOutlet, MatMenuModule, MatIconModule]
 })
 export class FuseHorizontalNavigationBasicItemComponent implements OnInit, OnDestroy
 {

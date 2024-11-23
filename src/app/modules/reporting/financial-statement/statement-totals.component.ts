@@ -4,10 +4,9 @@ import { IDistributionLedger, IDistributionLedgerRpt } from 'app/models';
 
 
 @Component({
-  selector: 'statement-line-totals',
-  standalone: true,
-  imports: [CommonModule, JsonPipe],
-  template: `
+    selector: 'statement-line-totals',
+    imports: [CommonModule, JsonPipe],
+    template: `
   
   <div class="grid grid-cols-12 gap-2 mt-1">
             <div class="col-start-1"></div>

@@ -16,8 +16,7 @@ import { HelpCenterService } from 'app/modules/help-center/help-center.service';
     templateUrl: './support.component.html',
     encapsulation: ViewEncapsulation.None,
     animations: fuseAnimations,
-    standalone: true,
-    imports: [MatButtonModule, RouterLink, MatIconModule, NgIf, FuseAlertComponent, FormsModule, ReactiveFormsModule, MatFormFieldModule, MatInputModule, TextFieldModule],
+    imports: [MatButtonModule, RouterLink, MatIconModule, NgIf, FuseAlertComponent, FormsModule, ReactiveFormsModule, MatFormFieldModule, MatInputModule, TextFieldModule]
 })
 export class HelpCenterSupportComponent implements OnInit {
     @ViewChild('supportNgForm') supportNgForm: NgForm;
