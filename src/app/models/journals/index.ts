@@ -137,3 +137,5 @@ export interface IJournalViewDetails {
     fund            : string,
     reference       : string,
 }
+
+

@@ -1,64 +1,34 @@
 <div class="sm:hide md:visible">
-    <grid-menubar class="pl-5 pr-5" [inTitle]="'Journal Booking Rules'" (notifyParentRefresh)="onRefresh()"
-        (notifyParentAdd)="onAdd()" (notifyParentDelete)="onDeleteSelection()"
+    <grid-menubar class="pl-5 pr-5" 
+        [inTitle]="'Journal Booking Rules'" 
+        (notifyParentRefresh)="onRefresh()"
+        (notifyParentAdd)="onAdd()" 
+        (notifyParentDelete)="onDeleteSelection()"
         (notifyParentUpdate)="onUpdateSelection()">
     </grid-menubar>
 </div>
 
 <div class="flex flex-col min-w-0 overflow-y-auto -px-10" cdkScrollable>
-
     <div class="flex-auto">
-        <div class="h-full border-gray-300 rounded-2xl">
-            <mat-drawer class="w-full" #drawer [opened]="false" mode="push" [position]="'end'" [disableClose]="false">
-                @if (bOpenDetail === true) {
-                <!-- <journal-update 
-                       [journal_id]="nJournal" 
-                       [sTitle]="'Journal Entry Detail'"
-                       [description]="description"
-                       [transaction_date]="transaction_date"
-                       [details$]="details$"
-                        (notifyDrawerClose)="closeDrawer()">
-                    </journal-update> -->
-                }
-            </mat-drawer>
-            <mat-drawer-container class="flex-col h-full">
-                <ng-container>
-                    @if (journalTemplate$ | async; as rows) {
-                    <div class="flex flex-1 flex-col">
-                        <ejs-grid #grid id='journals' (click)="onClickGrid()" [dataSource]='store.gl()'
-                            [enableStickyHeader]=true [childGrid]="childDataGrid" allowPaging='true' allowSorting='true'
-                            showColumnMenu='true' allowEditing='true' [allowFiltering]='false'
-                            [toolbar]='toolbarOptions' [selectionOptions]="selectionOptions"
-                            (actionBegin)="actionBegin($event)" (actionComplete)="actionComplete($event)"
-                            (rowSelected)="onRowSelected($event)" [filterSettings]='filterSettings'
-                            [editSettings]='editSettings' [allowExcelExport]='true' [allowPdfExport]='true'
-                            [allowCsvExport]='true' (load)='onLoad()' [searchSetting]="searchOptions">
-                            <e-columns>
-                                <e-column field="journal_id" headerText="ID" width="100" dataType="number"
-                                    isPrimaryKey='true' textAlign="left"></e-column>
-                                <e-column field="type" headerText="Type" width="100" dataType="text"
-                                    textAlign="left"></e-column>
-                                <e-column field="booked" headerText="Booked" width="100" [displayAsCheckBox]='true'
-                                    type="boolean"></e-column>
-                                <e-column field="amount" headerText="Amount" width="150" format='N2'
-                                    textAlign="Right"></e-column>
-                                <e-column field="period" headerText="Prd" width="100"></e-column>
-                                <e-column field="period_year" headerText="Yr" width="100"></e-column>
-                                <e-column field="description" headerText="Description" width="200"></e-column>
-                                <e-column field="create_date" headerText="Created" width='120' [format]='formatoptions'
-                                    type="dateTime"></e-column>
-                                <e-column field="create_user" headerText="User" width='120' type="string"></e-column>
-                            </e-columns>
-                        </ejs-grid>
-                    </div>
-                    }
-                    @else
-                    {
-                    <p>No transactions to display</p>
-                    }
-
-                </ng-container>
-            </mat-drawer-container>
+        <div class="h-full border-gray-300 rounded-2xl">                                      
+        <div class="flex flex-1 flex-col">
+                <ejs-grid 
+                #grid id='template'                             
+                [dataSource]= 'templateStore.templates()'
+                [enableStickyHeader]=true                                         
+                [allowFiltering]='false'                             
+                [allowExcelExport]='true'
+                [allowPdfExport]='true' >
+                <e-columns>                                
+                    <e-column field="template_ref" headerText="Ref" width="100" isPrimaryKey='true' textAlign="left"></e-column>
+                    <e-column field="journal_no" headerText="ID" width="100" dataType="number" textAlign="left"></e-column>
+                    <e-column field="template_name" headerText="Name" width="100" dataType="text" textAlign="left"></e-column>
+                    <e-column field="description" headerText="Description" width="300"></e-column>                                
+                    <e-column field="journal_type" headerText="Type" width="100" dataType="text" textAlign="left"></e-column>                                                    
+                    <e-column field="create_date" headerText="Created" width='120' [format]='formatoptions' type="dateTime"></e-column>
+                    <e-column field="create_user" headerText="User" width='120' type="string"></e-column>
+                </e-columns>
+            </ejs-grid> 
         </div>
     </div>
 </div>

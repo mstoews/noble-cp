@@ -1,18 +1,18 @@
-import { Component, ViewChild, inject } from '@angular/core';
-import { FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { JournalService } from 'app/services/journal.service';
+import { Component, inject } from '@angular/core';
+import { FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { GLAccountsService } from 'app/services/accounts.service';
 import { GridMenubarStandaloneComponent } from '../../grid-menubar/grid-menubar.component';
-import { JournalUpdateComponent } from '../gl-transactions/journal-update.component';
-import { MatDrawer } from '@angular/material/sidenav';
 import { MaterialModule } from 'app/services/material.module';
+import { TemplateStore } from 'app/services/journal-template.store';
+import { ExcelExportService, GridModule, PdfExportService } from '@syncfusion/ej2-angular-grids';
 
 const imports = [
     CommonModule,
     ReactiveFormsModule,
     MaterialModule,
     FormsModule,
+    GridModule,
     GridMenubarStandaloneComponent
 ];
 
@@ -21,26 +21,21 @@ const imports = [
     standalone: true,
     imports: [imports],
     templateUrl: './journal-template.component.html',
-    providers: []
+    providers: [TemplateStore, PdfExportService, ExcelExportService ]
 })
 
-export class JournalTemplateComponent {
-    private journalService = inject(JournalService);
+export class JournalTemplateComponent {    
     private accountService = inject(GLAccountsService);
     public currentDate: string;
     public journal_details: any[];
     public bOpenDetail: boolean = false;
-    @ViewChild(JournalUpdateComponent) journalUpdate!: JournalUpdateComponent
 
-    journalTemplate$ = this.journalService.readJournalTemplate();
+    templateStore = inject(TemplateStore);
     accounts$ = this.accountService.readChildren(); // retrieves only the child accounts which can be used for booking
 
-    @ViewChild('drawer') drawer!: MatDrawer;
     sTitle = 'Journal Template';
     selectedItemKeys: any[] = [];
 
-    public description = '';
-    public transaction_date = '';
     readonly allowedPageSizes = [10, 20, 'all'];
     currentRowData: any;
 
@@ -49,6 +44,7 @@ export class JournalTemplateComponent {
     showPageSizeSelector = true;
     showInfo = true;
     showNavButtons = true;
+    public formatoptions: Object;
 
     drawOpen: 'open' | 'close' = 'open';
 
@@ -59,16 +55,13 @@ export class JournalTemplateComponent {
     async ngOnInit() {
         const dDate = new Date();
         this.currentDate = dDate.toISOString().split('T')[0];
+        this.formatoptions = { type: 'dateTime', format: 'M/dd/yyyy' }                           
     }
 
     onCellDoubleClicked(e: any) {
         this.bOpenDetail = true;
-        this.description = e.data.description;
-        this.transaction_date = e.data.create_date;
-        this.openDrawer();
+        // this.openDrawer();
     }
-
-
 
     changeType(e) {
         console.debug('changeType ', JSON.stringify(e));
@@ -90,7 +83,7 @@ export class JournalTemplateComponent {
 
     onAdd() {
         this.bOpenDetail = true;
-        this.openDrawer()
+        // this.openDrawer()
     }
 
     onRefresh() {
@@ -128,7 +121,7 @@ export class JournalTemplateComponent {
     }
 
     onCreate() {
-        this.openDrawer();
+        // this.openDrawer();
     }
 
 
@@ -137,12 +130,10 @@ export class JournalTemplateComponent {
         this.selectedItemKeys = data.selectedRowKeys;
     }
 
-
-
     onEdit() {
         this.bOpenDetail = true;
         // this.refresh(this.hJournal, this.description, this.transaction_date);
-        this.openDrawer();
+        // this.openDrawer();
     }
 
 
@@ -155,23 +146,23 @@ export class JournalTemplateComponent {
         console.debug('onFocusRowChanged :', JSON.stringify(e.row.data))
     }
 
-    openDrawer() {
-        const opened = this.drawer.opened;
-        if (opened !== true) {
-            this.drawer.toggle();
-        } else {
-            return;
-        }
-    }
+    // openDrawer() {
+    //     const opened = this.drawer.opened;
+    //     if (opened !== true) {
+    //         this.drawer.toggle();
+    //     } else {
+    //         return;
+    //     }
+    // }
 
-    closeDrawer() {
-        this.bOpenDetail = true;
-        const opened = this.drawer.opened;
-        if (opened === true) {
-            this.drawer.toggle();
-        } else {
-            return;
-        }
-    }
+    // closeDrawer() {
+    //     this.bOpenDetail = true;
+    //     const opened = this.drawer.opened;
+    //     if (opened === true) {
+    //         this.drawer.toggle();
+    //     } else {
+    //         return;
+    //     }
+    // }
 
 }

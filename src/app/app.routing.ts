@@ -164,6 +164,18 @@ export const appRoutes: Route[] = [
                     import('app/modules/kanban/kanban/kanban.routes'),
             },
             {
+                path: 'finance',
+                canActivate: [isAuthenticatedGuard()],
+                loadChildren: () =>
+                    import('app/modules/finance/finance.routes'),
+            },
+            {
+                path: 'chat',
+                canActivate: [isAuthenticatedGuard()],
+                loadChildren: () =>
+                    import('app/modules/chat/chat.routes'),
+            },
+            {
                 path: 'budget',
                 canActivate: [isAuthenticatedGuard()],
                 loadChildren: () =>

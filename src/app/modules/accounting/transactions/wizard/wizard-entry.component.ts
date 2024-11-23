@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild, ViewEncapsulation, inject } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild, ViewEncapsulation, inject, viewChild } from '@angular/core';
 import { FormsModule, ReactiveFormsModule, FormBuilder, UntypedFormGroup, Validators, FormControl } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { fuseAnimations } from '@fuse/animations';
@@ -20,6 +20,12 @@ import { WizardUpdateComponent } from './wizard-update.component';
 import { IJournalDetail, IJournalHeader, IJournalTemplate, ITransactionDate } from 'app/models/journals';
 import { JournalStore } from 'app/services/journal.store';
 import { JournalTemplateService } from 'app/services/journal-template.service';
+import { MatStepperModule } from '@angular/material/stepper';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIcon, MatIconModule } from '@angular/material/icon';
+import { MatDatepickerModule } from '@angular/material/datepicker';
 
 
 interface ITransactionType {
@@ -30,12 +36,20 @@ interface ITransactionType {
 
 const mods = [
   CommonModule,
-  MaterialModule,
   FormsModule,
   ReactiveFormsModule,
-  MaterialModule,
+  MatStepperModule,
+  FormsModule,
+  ReactiveFormsModule,
+  MatFormFieldModule,
+  MatInputModule,
+  MatButtonModule,
   NgxMaskDirective,
-  WizardUpdateComponent,  
+  MatInputModule,
+  MatIconModule,
+  WizardUpdateComponent, 
+  MaterialModule,
+  MatDatepickerModule, 
   NgxMatSelectSearchModule
 ]
 
@@ -106,9 +120,10 @@ export class EntryWizardComponent implements OnInit, OnDestroy, AfterViewInit {
   subtype$ = this.subtypeService.read();
   accounts$ = this.accountService.readDropDownChild();
 
-  @ViewChild('singleDebitSelect', { static: true }) singleDebitSelect: MatSelect;
-  @ViewChild('singleCreditSelect', { static: true }) singleCreditSelect: MatSelect;
-  @ViewChild('singleTemplateSelect', { static: true }) singleTemplateSelect: MatSelect;
+  @ViewChild("singleDebitSelect", { static: true })  singleDebitSelect: MatSelect;
+  @ViewChild("singleCreditSelect", { static: true })  singleCreditSelect: MatSelect;
+  @ViewChild("singleTemplateSelect", { static: true })  singleTemplateSelect: MatSelect;
+
   
   bNewTransaction: any;
 
@@ -146,28 +161,28 @@ export class EntryWizardComponent implements OnInit, OnDestroy, AfterViewInit {
       this.templateFilter.next(this.templateList.slice());
     });
 
-    // Vertical stepper form
     this.journalEntryForm = this.formBuilder.group({
       step1: this.formBuilder.group({
         templateCtrl: ['', Validators.required],
-        description: ['', Validators.required],
-        transaction_date: ['', Validators.required],
-        amount: ['', Validators.required],
-        party: ['', Validators.required],
-        invoice_no: ['', Validators.required],
+        description: ['', Validators.required],              
       }),
       step2: this.formBuilder.group({
+      amount: ['', Validators.required],        
+      transaction_date: ['', Validators.required],
+      vendor: ['', Validators.required],
+      invoice_no: ['', Validators.required],
+      }),
+      step3: this.formBuilder.group({
         debitCtrl: ['', Validators.required],
-        creditCtrl: ['', Validators.required],
+        creditCtrl: ['', Validators.required],        
         detail_description: ['', Validators.required],
         reference: ['', Validators.required],
         sub_type: ['', Validators.required],
         fund: ['', Validators.required],
         debit: ['', Validators.required],
         credit: ['', Validators.required],
-
       }),
-      step3: this.formBuilder.group({
+      step4: this.formBuilder.group({
 
       })
     });
@@ -219,11 +234,12 @@ export class EntryWizardComponent implements OnInit, OnDestroy, AfterViewInit {
       
       /* 
           NB 
+
           setting the compareWith property to a comparison function
           triggers initializing the selection according to the initial value of
           the form control (i.e. _initializeSelection())
           this needs to be done after the filteredBanks are loaded initially
-          and after the mat-option elements are available 
+          and after the mat-option elements are available. 
       */
   }
 
@@ -285,6 +301,11 @@ export class EntryWizardComponent implements OnInit, OnDestroy, AfterViewInit {
       this.templateList.filter(template => template.description.toLowerCase().indexOf(search) > -1)
     );
   }
+
+
+  onCreateHeader() {
+    console.log('Create Header');
+  } 
 
 
   onUpdateHeader() {

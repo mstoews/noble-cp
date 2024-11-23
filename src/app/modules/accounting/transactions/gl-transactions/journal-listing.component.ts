@@ -9,7 +9,8 @@ import { MaterialModule } from 'app/services/material.module';
 import { SubTypeService } from 'app/services/subtype.service';
 import { TypeService } from 'app/services/type.service';
 
-import { DialogEditEventArgs, 
+import { 
+    DialogEditEventArgs, 
     EditService, 
     SelectionSettingsModel, 
     GroupService, 

@@ -47,7 +47,7 @@ export class TransactionMainComponent {
     drawerMode: 'over' | 'side' = 'side';
     drawerOpened: boolean = true;
     panels: any[] = [];
-    selectedPanel: string = 'listing';
+    selectedPanel: string = 'entry';
     private _unsubscribeAll: Subject<any> = new Subject<any>();
 
     /**

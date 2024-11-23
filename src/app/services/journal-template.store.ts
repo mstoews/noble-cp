@@ -27,7 +27,7 @@ import {
     error: string | null;
   }
   
-  export const JournalStore = signalStore(
+  export const TemplateStore = signalStore (
     { protectedState: false }, withState<JournalTemplateInterface>({
       templates: [],
       templateDetails: [],

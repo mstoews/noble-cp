@@ -84,6 +84,8 @@ export class BudgetUpdateComponent implements OnInit, OnDestroy, AfterViewInit {
   @Output() notifyDrawerClose: EventEmitter<any> = new EventEmitter();
   @Input() public sTitle: string;
 
+
+
   private subtypeService = inject(SubTypeService);
   public subtype$ = this.subtypeService.read();
 

@@ -240,9 +240,7 @@ export class JournalUpdateComponent
   columnsToDisplay: string[] = ["journal_id", "description"];
   toolbarOptions = ['Search']
 
-  @ViewChild("singleDebitSelect", { static: true })
-
-  singleDebitSelect: MatSelect;
+  @ViewChild("singleDebitSelect", { static: true })  singleDebitSelect: MatSelect;
 
   ngOnInit(): void {
     this.createEmptyForm();

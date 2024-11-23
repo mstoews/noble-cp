@@ -18,22 +18,22 @@ export const defaultNavigation: FuseNavigationItem[] = [
                 link: '/projects',
             },
             {
+                id: 'finance',
+                title: 'Finance',
+                type: 'basic',
+                icon: 'heroicons_outline:currency-dollar',
+                link: '/finance',
+            },        
+            {
                 id: 'accounts.journals',
                 title: 'Transactions',
                 type: 'basic',
                 icon: 'heroicons_outline:banknotes',
                 link: '/journals',
-            },
-            {
-                id: 'kanban',
-                title: 'Tasks',
-                type: 'basic',
-                icon: 'mat_outline:task',
-                link: '/kanban',
-            },        
+            },            
             {
                 id: 'budgeting',
-                title: 'Budget',
+                title: 'Budget Analysis',
                 type: 'basic',
                 icon: 'heroicons_outline:calculator',
                 link: '/budget',
@@ -46,6 +46,13 @@ export const defaultNavigation: FuseNavigationItem[] = [
                 icon: 'mat_outline:money',
                 link: '/reporting',
             },
+            {
+                id: 'kanban',
+                title: 'Projects',
+                type: 'basic',
+                icon: 'mat_outline:task',
+                link: '/kanban',
+            },        
 
         ]
     },
@@ -86,6 +93,13 @@ export const defaultNavigation: FuseNavigationItem[] = [
         type: 'group',
         icon: 'heroicons_outline:home',
         children: [
+            {
+                id: 'chat',
+                title: 'Chat',
+                type: 'basic',
+                icon: 'mat_outline:chat',
+                link: '/chat',
+            },
             {
                 id: 'help-center',
                 title: 'Help Center',

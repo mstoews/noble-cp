@@ -215,123 +215,13 @@ export const chats = [
         lastMessage  : 'See you tomorrow!',
         lastMessageAt: '26/04/2021'
     },
-    {
-        id           : '4459a3f0-b65e-4df2-8c37-6ec72fcc4b31',
-        contactId    : '16b9e696-ea95-4dd8-86c4-3caf705a1dc6',
-        unreadCount  : 0,
-        muted        : false,
-        lastMessage  : 'See you tomorrow!',
-        lastMessageAt: '26/04/2021'
-    },
-    {
-        id           : 'f73a5a34-a723-4b35-8439-5289e0164c83',
-        contactId    : 'bf172879-423a-4fd6-8df3-6d1938bbfe1f',
-        unreadCount  : 1,
-        muted        : false,
-        lastMessage  : 'See you tomorrow!',
-        lastMessageAt: '26/04/2021'
-    },
-    {
-        id           : '747f101c-0371-4ca3-9f20-cb913a80fe89',
-        contactId    : 'abd9e78b-9e96-428f-b3ff-4d934c401bee',
-        unreadCount  : 0,
-        muted        : true,
-        lastMessage  : 'See you tomorrow!',
-        lastMessageAt: '26/04/2021'
-    },
-    {
-        id           : 'b3facfc4-dfc2-4ac2-b55d-cb70b3e68419',
-        contactId    : '6519600a-5eaa-45f8-8bed-c46fddb3b26a',
-        unreadCount  : 0,
-        muted        : false,
-        lastMessage  : 'See you tomorrow!',
-        lastMessageAt: '26/04/2021'
-    },
-    {
-        id           : 'e3127982-9e53-4611-ac27-eb70c84be4aa',
-        contactId    : 'b62359fd-f2a8-46e6-904e-31052d1cd675',
-        unreadCount  : 0,
-        muted        : false,
-        lastMessage  : 'See you tomorrow!',
-        lastMessageAt: '26/04/2021'
-    },
-    {
-        id           : 'a30351f3-bfa6-4ce3-b13a-82748fe0edee',
-        contactId    : '2c37ed00-427a-46d7-8f8f-d711c768d1ee',
-        unreadCount  : 0,
-        muted        : false,
-        lastMessage  : 'See you tomorrow!',
-        lastMessageAt: '26/04/2021'
-    },
-    {
-        id           : '5636c0ba-fa47-42ca-9160-27340583041e',
-        contactId    : 'b8258ccf-48b5-46a2-9c95-e0bd7580c645',
-        unreadCount  : 0,
-        muted        : false,
-        lastMessage  : 'See you tomorrow!',
-        lastMessageAt: '26/04/2021'
-    },
-    {
-        id           : 'feddd91a-51af-48d8-99b0-cd99ee060a36',
-        contactId    : 'e2946946-b4b5-4fd7-bab4-62c38cdff2f1',
-        unreadCount  : 0,
-        muted        : false,
-        lastMessage  : 'See you tomorrow!',
-        lastMessageAt: '26/04/2021'
-    },
-    {
-        id           : '89421c2f-1751-4040-b09b-4a4268db47b9',
-        contactId    : '12148fa2-e0a4-49fb-b3c5-daeecdb5180a',
-        unreadCount  : 0,
-        muted        : true,
-        lastMessage  : 'See you tomorrow!',
-        lastMessageAt: '26/04/2021'
-    },
-    {
-        id           : 'ffbbfdb4-0485-44aa-8521-5ce1eda3fd2f',
-        contactId    : '81fdc48c-5572-4123-8a73-71b7892120de',
-        muted        : false,
-        lastMessage  : 'See you tomorrow!',
-        lastMessageAt: '26/04/2021'
-    },
-    {
-        id           : 'a477baea-df90-4e2f-b108-7791bcd50bc8',
-        contactId    : 'a9a9f382-e4c3-42fb-9fe9-65aa534732b5',
-        unreadCount  : 0,
-        muted        : false,
-        lastMessage  : 'See you tomorrow!',
-        lastMessageAt: '26/04/2021'
-    },
-    {
-        id           : '450840c8-aa0b-47a4-b6ca-b864ad9a3a88',
-        contactId    : '7e8e1f1e-d19f-45c7-86bd-6fef599dae71',
-        unreadCount  : 0,
-        muted        : false,
-        lastMessage  : 'See you tomorrow!',
-        lastMessageAt: '26/04/2021'
-    },
-    {
-        id           : '427270f0-841c-47f9-912c-3fd8139db5e6',
-        contactId    : '8141dd08-3a6e-4770-912c-59d0ed06dde6',
-        unreadCount  : 0,
-        muted        : false,
-        lastMessage  : 'See you tomorrow!',
-        lastMessageAt: '26/04/2021'
-    },
-    {
-        id           : '491b2918-e71e-4017-919e-0ba009afd003',
-        contactId    : '114642a2-ccb7-4cb1-ad2b-5e9b6a0c1d2e',
-        unreadCount  : 0,
-        muted        : false,
-        lastMessage  : 'See you tomorrow!',
-        lastMessageAt: '26/04/2021'
-    }
+  
 ];
 export const contacts = [
     {
         id         : 'cd5fa417-b667-482d-b208-798d9da3213c',
         avatar     : 'assets/images/avatars/male-01.jpg',
-        name       : 'Dejesus Michael',
+        name       : 'Murray Toews',
         about      : 'Hi there! I\'m using FuseChat.',
         details    : {
             emails      : [
