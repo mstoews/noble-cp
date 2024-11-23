@@ -1,4 +1,4 @@
-import { NgClass, NgIf } from '@angular/common';
+import { NgClass, } from '@angular/common';
 import { Component, Inject, ViewEncapsulation } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
@@ -26,15 +26,13 @@ import { FuseConfirmationConfig } from '@fuse/services/confirmation/confirmation
         `,
     ],
     encapsulation: ViewEncapsulation.None,
-    imports: [NgIf, MatButtonModule, MatDialogModule, MatIconModule, NgClass]
+    imports: [MatButtonModule, MatDialogModule, MatIconModule, NgClass]
 })
-export class FuseConfirmationDialogComponent
-{
+export class FuseConfirmationDialogComponent {
     /**
      * Constructor
      */
-    constructor(@Inject(MAT_DIALOG_DATA) public data: FuseConfirmationConfig)
-    {
+    constructor(@Inject(MAT_DIALOG_DATA) public data: FuseConfirmationConfig) {
     }
 
 }

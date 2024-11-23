@@ -1,5 +1,5 @@
 import { CdkScrollable } from '@angular/cdk/scrolling';
-import { I18nPluralPipe, NgClass, NgFor, NgIf, PercentPipe } from '@angular/common';
+import { I18nPluralPipe, NgClass, PercentPipe } from '@angular/common';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatOptionModule } from '@angular/material/core';
@@ -21,10 +21,9 @@ import { BehaviorSubject, combineLatest, Subject, takeUntil } from 'rxjs';
     templateUrl: './list.component.html',
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [CdkScrollable, MatFormFieldModule, MatSelectModule, MatOptionModule, NgFor, MatIconModule, MatInputModule, MatSlideToggleModule, NgIf, NgClass, MatTooltipModule, MatProgressBarModule, MatButtonModule, RouterLink, FuseFindByKeyPipe, PercentPipe, I18nPluralPipe]
+    imports: [CdkScrollable, MatFormFieldModule, MatSelectModule, MatOptionModule, MatIconModule, MatInputModule, MatSlideToggleModule, NgClass, MatTooltipModule, MatProgressBarModule, MatButtonModule, RouterLink, FuseFindByKeyPipe, PercentPipe, I18nPluralPipe]
 })
-export class AcademyListComponent implements OnInit, OnDestroy
-{
+export class AcademyListComponent implements OnInit, OnDestroy {
     categories: Category[];
     courses: Course[];
     filteredCourses: Course[];
@@ -33,10 +32,10 @@ export class AcademyListComponent implements OnInit, OnDestroy
         query$: BehaviorSubject<string>;
         hideCompleted$: BehaviorSubject<boolean>;
     } = {
-        categorySlug$ : new BehaviorSubject('all'),
-        query$        : new BehaviorSubject(''),
-        hideCompleted$: new BehaviorSubject(false),
-    };
+            categorySlug$: new BehaviorSubject('all'),
+            query$: new BehaviorSubject(''),
+            hideCompleted$: new BehaviorSubject(false),
+        };
 
     private _unsubscribeAll: Subject<any> = new Subject<any>();
 
@@ -48,8 +47,7 @@ export class AcademyListComponent implements OnInit, OnDestroy
         private _changeDetectorRef: ChangeDetectorRef,
         private _router: Router,
         private _academyService: AcademyService,
-    )
-    {
+    ) {
     }
 
     // -----------------------------------------------------------------------------------------------------
@@ -59,13 +57,11 @@ export class AcademyListComponent implements OnInit, OnDestroy
     /**
      * On init
      */
-    ngOnInit(): void
-    {
+    ngOnInit(): void {
         // Get the categories
         this._academyService.categories$
             .pipe(takeUntil(this._unsubscribeAll))
-            .subscribe((categories: Category[]) =>
-            {
+            .subscribe((categories: Category[]) => {
                 this.categories = categories;
 
                 // Mark for check
@@ -75,8 +71,7 @@ export class AcademyListComponent implements OnInit, OnDestroy
         // Get the courses
         this._academyService.courses$
             .pipe(takeUntil(this._unsubscribeAll))
-            .subscribe((courses: Course[]) =>
-            {
+            .subscribe((courses: Course[]) => {
                 this.courses = this.filteredCourses = courses;
 
                 // Mark for check
@@ -85,28 +80,24 @@ export class AcademyListComponent implements OnInit, OnDestroy
 
         // Filter the courses
         combineLatest([this.filters.categorySlug$, this.filters.query$, this.filters.hideCompleted$])
-            .subscribe(([categorySlug, query, hideCompleted]) =>
-            {
+            .subscribe(([categorySlug, query, hideCompleted]) => {
                 // Reset the filtered courses
                 this.filteredCourses = this.courses;
 
                 // Filter by category
-                if ( categorySlug !== 'all' )
-                {
+                if (categorySlug !== 'all') {
                     this.filteredCourses = this.filteredCourses.filter(course => course.category === categorySlug);
                 }
 
                 // Filter by search query
-                if ( query !== '' )
-                {
+                if (query !== '') {
                     this.filteredCourses = this.filteredCourses.filter(course => course.title.toLowerCase().includes(query.toLowerCase())
                         || course.description.toLowerCase().includes(query.toLowerCase())
                         || course.category.toLowerCase().includes(query.toLowerCase()));
                 }
 
                 // Filter by completed
-                if ( hideCompleted )
-                {
+                if (hideCompleted) {
                     this.filteredCourses = this.filteredCourses.filter(course => course.progress.completed === 0);
                 }
             });
@@ -115,8 +106,7 @@ export class AcademyListComponent implements OnInit, OnDestroy
     /**
      * On destroy
      */
-    ngOnDestroy(): void
-    {
+    ngOnDestroy(): void {
         // Unsubscribe from all subscriptions
         this._unsubscribeAll.next(null);
         this._unsubscribeAll.complete();
@@ -131,8 +121,7 @@ export class AcademyListComponent implements OnInit, OnDestroy
      *
      * @param query
      */
-    filterByQuery(query: string): void
-    {
+    filterByQuery(query: string): void {
         this.filters.query$.next(query);
     }
 
@@ -141,8 +130,7 @@ export class AcademyListComponent implements OnInit, OnDestroy
      *
      * @param change
      */
-    filterByCategory(change: MatSelectChange): void
-    {
+    filterByCategory(change: MatSelectChange): void {
         this.filters.categorySlug$.next(change.value);
     }
 
@@ -151,8 +139,7 @@ export class AcademyListComponent implements OnInit, OnDestroy
      *
      * @param change
      */
-    toggleCompleted(change: MatSlideToggleChange): void
-    {
+    toggleCompleted(change: MatSlideToggleChange): void {
         this.filters.hideCompleted$.next(change.checked);
     }
 
@@ -162,8 +149,7 @@ export class AcademyListComponent implements OnInit, OnDestroy
      * @param index
      * @param item
      */
-    trackByFn(index: number, item: any): any
-    {
+    trackByFn(index: number, item: any): any {
         return item.id || index;
     }
 }

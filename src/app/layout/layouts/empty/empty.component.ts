@@ -1,4 +1,4 @@
-import { NgIf } from '@angular/common';
+import { } from '@angular/common';
 import { Component, OnDestroy, ViewEncapsulation } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { FuseLoadingBarComponent } from '@fuse/components/loading-bar';
@@ -8,17 +8,15 @@ import { Subject } from 'rxjs';
     selector: 'empty-layout',
     templateUrl: './empty.component.html',
     encapsulation: ViewEncapsulation.None,
-    imports: [FuseLoadingBarComponent, NgIf, RouterOutlet]
+    imports: [RouterOutlet]
 })
-export class EmptyLayoutComponent implements OnDestroy
-{
+export class EmptyLayoutComponent implements OnDestroy {
     private _unsubscribeAll: Subject<any> = new Subject<any>();
 
     /**
      * Constructor
      */
-    constructor()
-    {
+    constructor() {
     }
 
     // -----------------------------------------------------------------------------------------------------
@@ -28,8 +26,7 @@ export class EmptyLayoutComponent implements OnDestroy
     /**
      * On destroy
      */
-    ngOnDestroy(): void
-    {
+    ngOnDestroy(): void {
         // Unsubscribe from all subscriptions
         this._unsubscribeAll.next(null);
         this._unsubscribeAll.complete();

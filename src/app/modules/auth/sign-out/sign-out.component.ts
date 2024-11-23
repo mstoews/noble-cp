@@ -1,4 +1,4 @@
-import { I18nPluralPipe, NgIf } from '@angular/common';
+import { I18nPluralPipe, } from '@angular/common';
 import { Component, inject, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from 'app/modules/auth/auth.service';
@@ -8,7 +8,7 @@ import { finalize, Subject, takeUntil, takeWhile, tap, timer } from 'rxjs';
     selector: 'auth-sign-out',
     templateUrl: './sign-out.component.html',
     encapsulation: ViewEncapsulation.None,
-    imports: [NgIf, RouterLink, I18nPluralPipe]
+    imports: [RouterLink, I18nPluralPipe]
 })
 export class AuthSignOutComponent implements OnInit, OnDestroy {
     countdown: number = 5;

@@ -1,4 +1,4 @@
-import { NgIf } from '@angular/common';
+import { } from '@angular/common';
 import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { FormsModule, NgForm, ReactiveFormsModule, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
@@ -18,7 +18,7 @@ import { AuthService } from '../auth.service';
     templateUrl: './forgot-password.component.html',
     encapsulation: ViewEncapsulation.None,
     animations: fuseAnimations,
-    imports: [NgIf, FormsModule, ReactiveFormsModule, FuseAlertComponent, MatFormFieldModule, MatInputModule, MatButtonModule, MatProgressSpinnerModule, RouterLink]
+    imports: [FormsModule, ReactiveFormsModule, FuseAlertComponent, MatFormFieldModule, MatInputModule, MatButtonModule, MatProgressSpinnerModule, RouterLink]
 })
 export class AuthForgotPasswordComponent implements OnInit {
     @ViewChild('forgotPasswordNgForm') forgotPasswordNgForm: NgForm;

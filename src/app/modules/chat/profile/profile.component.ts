@@ -1,4 +1,4 @@
-import { NgIf } from '@angular/common';
+import { } from '@angular/common';
 import { ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
@@ -15,10 +15,9 @@ import { Subject, takeUntil } from 'rxjs';
     templateUrl: './profile.component.html',
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [MatButtonModule, MatIconModule, NgIf, MatFormFieldModule, MatInputModule, FormsModule]
+    imports: [MatButtonModule, MatIconModule, MatFormFieldModule, MatInputModule, FormsModule]
 })
-export class ProfileComponent implements OnInit, OnDestroy
-{
+export class ProfileComponent implements OnInit, OnDestroy {
     @Input() drawer: MatDrawer;
     profile: Profile;
     private _unsubscribeAll: Subject<any> = new Subject<any>();
@@ -26,8 +25,7 @@ export class ProfileComponent implements OnInit, OnDestroy
     /**
      * Constructor
      */
-    constructor(private _chatService: ChatService)
-    {
+    constructor(private _chatService: ChatService) {
     }
 
     // -----------------------------------------------------------------------------------------------------
@@ -37,13 +35,11 @@ export class ProfileComponent implements OnInit, OnDestroy
     /**
      * On init
      */
-    ngOnInit(): void
-    {
+    ngOnInit(): void {
         // Profile
         this._chatService.profile$
             .pipe(takeUntil(this._unsubscribeAll))
-            .subscribe((profile: Profile) =>
-            {
+            .subscribe((profile: Profile) => {
                 this.profile = profile;
             });
     }
@@ -51,8 +47,7 @@ export class ProfileComponent implements OnInit, OnDestroy
     /**
      * On destroy
      */
-    ngOnDestroy(): void
-    {
+    ngOnDestroy(): void {
         // Unsubscribe from all subscriptions
         this._unsubscribeAll.next(null);
         this._unsubscribeAll.complete();

@@ -1,5 +1,5 @@
 import { BooleanInput, coerceBooleanProperty } from '@angular/cdk/coercion';
-import { NgIf } from '@angular/common';
+import { } from '@angular/common';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, HostBinding, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges, ViewEncapsulation } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -17,10 +17,9 @@ import { filter, Subject, takeUntil } from 'rxjs';
     changeDetection: ChangeDetectionStrategy.OnPush,
     animations: fuseAnimations,
     exportAs: 'fuseAlert',
-    imports: [NgIf, MatIconModule, MatButtonModule]
+    imports: [MatIconModule, MatButtonModule]
 })
-export class FuseAlertComponent implements OnChanges, OnInit, OnDestroy
-{
+export class FuseAlertComponent implements OnChanges, OnInit, OnDestroy {
     /* eslint-disable @typescript-eslint/naming-convention */
     static ngAcceptInputType_dismissible: BooleanInput;
     static ngAcceptInputType_dismissed: BooleanInput;
@@ -44,8 +43,7 @@ export class FuseAlertComponent implements OnChanges, OnInit, OnDestroy
         private _changeDetectorRef: ChangeDetectorRef,
         private _fuseAlertService: FuseAlertService,
         private _fuseUtilsService: FuseUtilsService,
-    )
-    {
+    ) {
     }
 
     // -----------------------------------------------------------------------------------------------------
@@ -55,25 +53,24 @@ export class FuseAlertComponent implements OnChanges, OnInit, OnDestroy
     /**
      * Host binding for component classes
      */
-    @HostBinding('class') get classList(): any
-    {
+    @HostBinding('class') get classList(): any {
         /* eslint-disable @typescript-eslint/naming-convention */
         return {
-            'fuse-alert-appearance-border' : this.appearance === 'border',
-            'fuse-alert-appearance-fill'   : this.appearance === 'fill',
+            'fuse-alert-appearance-border': this.appearance === 'border',
+            'fuse-alert-appearance-fill': this.appearance === 'fill',
             'fuse-alert-appearance-outline': this.appearance === 'outline',
-            'fuse-alert-appearance-soft'   : this.appearance === 'soft',
-            'fuse-alert-dismissed'         : this.dismissed,
-            'fuse-alert-dismissible'       : this.dismissible,
-            'fuse-alert-show-icon'         : this.showIcon,
-            'fuse-alert-type-primary'      : this.type === 'primary',
-            'fuse-alert-type-accent'       : this.type === 'accent',
-            'fuse-alert-type-warn'         : this.type === 'warn',
-            'fuse-alert-type-basic'        : this.type === 'basic',
-            'fuse-alert-type-info'         : this.type === 'info',
-            'fuse-alert-type-success'      : this.type === 'success',
-            'fuse-alert-type-warning'      : this.type === 'warning',
-            'fuse-alert-type-error'        : this.type === 'error',
+            'fuse-alert-appearance-soft': this.appearance === 'soft',
+            'fuse-alert-dismissed': this.dismissed,
+            'fuse-alert-dismissible': this.dismissible,
+            'fuse-alert-show-icon': this.showIcon,
+            'fuse-alert-type-primary': this.type === 'primary',
+            'fuse-alert-type-accent': this.type === 'accent',
+            'fuse-alert-type-warn': this.type === 'warn',
+            'fuse-alert-type-basic': this.type === 'basic',
+            'fuse-alert-type-info': this.type === 'info',
+            'fuse-alert-type-success': this.type === 'success',
+            'fuse-alert-type-warning': this.type === 'warning',
+            'fuse-alert-type-error': this.type === 'error',
         };
         /* eslint-enable @typescript-eslint/naming-convention */
     }
@@ -87,11 +84,9 @@ export class FuseAlertComponent implements OnChanges, OnInit, OnDestroy
      *
      * @param changes
      */
-    ngOnChanges(changes: SimpleChanges): void
-    {
+    ngOnChanges(changes: SimpleChanges): void {
         // Dismissed
-        if ( 'dismissed' in changes )
-        {
+        if ('dismissed' in changes) {
             // Coerce the value to a boolean
             this.dismissed = coerceBooleanProperty(changes.dismissed.currentValue);
 
@@ -100,15 +95,13 @@ export class FuseAlertComponent implements OnChanges, OnInit, OnDestroy
         }
 
         // Dismissible
-        if ( 'dismissible' in changes )
-        {
+        if ('dismissible' in changes) {
             // Coerce the value to a boolean
             this.dismissible = coerceBooleanProperty(changes.dismissible.currentValue);
         }
 
         // Show icon
-        if ( 'showIcon' in changes )
-        {
+        if ('showIcon' in changes) {
             // Coerce the value to a boolean
             this.showIcon = coerceBooleanProperty(changes.showIcon.currentValue);
         }
@@ -117,16 +110,14 @@ export class FuseAlertComponent implements OnChanges, OnInit, OnDestroy
     /**
      * On init
      */
-    ngOnInit(): void
-    {
+    ngOnInit(): void {
         // Subscribe to the dismiss calls
         this._fuseAlertService.onDismiss
             .pipe(
                 filter(name => this.name === name),
                 takeUntil(this._unsubscribeAll),
             )
-            .subscribe(() =>
-            {
+            .subscribe(() => {
                 // Dismiss the alert
                 this.dismiss();
             });
@@ -137,8 +128,7 @@ export class FuseAlertComponent implements OnChanges, OnInit, OnDestroy
                 filter(name => this.name === name),
                 takeUntil(this._unsubscribeAll),
             )
-            .subscribe(() =>
-            {
+            .subscribe(() => {
                 // Show the alert
                 this.show();
             });
@@ -147,8 +137,7 @@ export class FuseAlertComponent implements OnChanges, OnInit, OnDestroy
     /**
      * On destroy
      */
-    ngOnDestroy(): void
-    {
+    ngOnDestroy(): void {
         // Unsubscribe from all subscriptions
         this._unsubscribeAll.next(null);
         this._unsubscribeAll.complete();
@@ -161,11 +150,9 @@ export class FuseAlertComponent implements OnChanges, OnInit, OnDestroy
     /**
      * Dismiss the alert
      */
-    dismiss(): void
-    {
+    dismiss(): void {
         // Return if the alert is already dismissed
-        if ( this.dismissed )
-        {
+        if (this.dismissed) {
             return;
         }
 
@@ -176,11 +163,9 @@ export class FuseAlertComponent implements OnChanges, OnInit, OnDestroy
     /**
      * Show the dismissed alert
      */
-    show(): void
-    {
+    show(): void {
         // Return if the alert is already showing
-        if ( !this.dismissed )
-        {
+        if (!this.dismissed) {
             return;
         }
 
@@ -198,11 +183,9 @@ export class FuseAlertComponent implements OnChanges, OnInit, OnDestroy
      * @param dismissed
      * @private
      */
-    private _toggleDismiss(dismissed: boolean): void
-    {
+    private _toggleDismiss(dismissed: boolean): void {
         // Return if the alert is not dismissible
-        if ( !this.dismissible )
-        {
+        if (!this.dismissible) {
             return;
         }
 

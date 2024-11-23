@@ -5,7 +5,7 @@ import { IDistributionLedger } from 'app/models';
 
 @Component({
     selector: 'statement-line-item',
-    imports: [CommonModule, JsonPipe],
+    imports: [CommonModule],
     template: `
         <div class="grid grid-cols-12 gap-2">
             <div class="col-start-1  text-gray-100" >{{item.child}}</div>

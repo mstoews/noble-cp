@@ -21,7 +21,7 @@ const imports = [
     ReactiveFormsModule,
     FormsModule,
     GridMenubarStandaloneComponent,
-    JsonPipe,
+   
     GridModule
 ];
 

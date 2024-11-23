@@ -5,7 +5,7 @@ import { RouterLink } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
 import { MatDrawer } from '@angular/material/sidenav';
 import { FuseMediaWatcherService } from '@fuse/services/media-watcher';
-import { NgClass, NgFor, NgSwitch, NgSwitchCase } from '@angular/common';
+import { NgClass, NgSwitch, NgSwitchCase } from '@angular/common';
 
 import {
     ChangeDetectionStrategy,
@@ -20,7 +20,7 @@ import { KanbanTypesComponent } from './types/types.component';
 import { StatusComponent } from './status/status.component';
 import { KanbanListComponent } from './kanban-list/kanban-list.component';
 import { KanbanPriorityComponent } from './priority/priority.component';
-import { ScheduleNobleComponent } from './schedule/schedule.component';
+
 import { TeamsComponent } from '../accounting/accts/teams/teams.component';
 
 @Component({
@@ -29,20 +29,15 @@ import { TeamsComponent } from '../accounting/accts/teams/teams.component';
     encapsulation: ViewEncapsulation.None,
     imports: [
         MaterialModule,
-        RouterLink,
-        CdkScrollable,
-        NgFor,
-        NgClass,
-        NgSwitch,
-        NgSwitchCase,
+        
         TasksComponent,
         KanbanTypesComponent,
         StatusComponent,
         KanbanListComponent,
         KanbanPriorityComponent,
-        ScheduleNobleComponent,
+        
         TeamsComponent,
-        ScheduleNobleComponent
+        
     ],
     providers: [HttpClient],
     changeDetection: ChangeDetectionStrategy.OnPush

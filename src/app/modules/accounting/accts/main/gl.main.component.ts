@@ -8,7 +8,7 @@ import { HttpClient } from '@angular/common/http';
 import { TrialBalanceComponent } from '../../../reporting/trial-balance/trial-balance.component';
 import { Subject, takeUntil } from 'rxjs';
 import { FuseMediaWatcherService } from '@fuse/services/media-watcher';
-import { NgClass, NgFor, NgSwitch, NgSwitchCase } from '@angular/common';
+import { NgClass, NgSwitch, NgSwitchCase } from '@angular/common';
 
 import {
     ChangeDetectionStrategy,
@@ -32,20 +32,11 @@ import { MatDrawer } from '@angular/material/sidenav';
     encapsulation: ViewEncapsulation.None,
     imports: [
         MaterialModule,
-        RouterLink,
-        CdkScrollable,
-        BalanceSheetComponent,
-        TrialBalanceComponent,
         FundsComponent,
         GlAccountsComponent,
         GlTypeComponent,
         PeriodsComponent,
-        GlSubTypeComponent,
-        NgFor,
         NgClass,
-        NgSwitch,
-        NgSwitchCase,
-        RolesComponent,
         TeamsComponent,
     ],
     providers: [HttpClient],

@@ -7,7 +7,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { ScrollService } from 'app/services/scroll.service';
 import { MaterialModule } from 'app/services/material.module';
 import { MatDrawer } from '@angular/material/sidenav';
-import { NgClass, NgIf } from '@angular/common';
+import { NgClass, } from '@angular/common';
 import { FuseCardComponent } from '@fuse/components/card';
 import { AuthService } from 'app/modules/auth/auth.service';
 import { PricingTableComponent } from 'app/modules/pages/pricing/table/table.component';
@@ -16,7 +16,7 @@ import { PricingTableComponent } from 'app/modules/pages/pricing/table/table.com
     selector: 'app-login',
     templateUrl: './login.component.html',
     providers: [LoginService],
-    imports: [RouterModule, PricingTableComponent, LoginFormComponent, MatProgressSpinnerModule, MaterialModule, NgClass, FuseCardComponent, NgIf]
+    imports: [RouterModule, PricingTableComponent, LoginFormComponent, MatProgressSpinnerModule, MaterialModule]
 })
 export default class LoginComponent {
     public loginService = inject(LoginService);
@@ -46,14 +46,14 @@ export default class LoginComponent {
     toggleDrawer() {
         const opened = this.drawer.opened;
         if (opened !== true) {
-          this.drawer.toggle();
-        } else {
-          if (this.drawOpen === 'close') {
             this.drawer.toggle();
-          }
+        } else {
+            if (this.drawOpen === 'close') {
+                this.drawer.toggle();
+            }
         }
-      }
-    
+    }
+
     showMenu() {
         this.show = !this.show;
     }

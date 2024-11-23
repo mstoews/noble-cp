@@ -15,9 +15,9 @@ import html2PDF from 'jspdf-html2canvas';
 
 const imports = [
   CommonModule,
-  DistMenuStandaloneComponent,
+ 
   ReportingToolbarComponent,
-  SimpleDialogComponent,
+ 
   StatementLineComponent,
   MaterialModule,
   StatementTotalComponent,

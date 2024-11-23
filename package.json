@@ -18,8 +18,8 @@
     "@angular/core": "19.0.0",
     "@angular/fire": "^18.0.1",
     "@angular/forms": "19.0.0",
-    "@angular/material": "^18.2.13",
-    "@angular/material-luxon-adapter": "18.2.13",
+    "@angular/material": "^19.0.0",
+    "@angular/material-luxon-adapter": "19.0.0",
     "@angular/platform-browser": "19.0.0",
     "@angular/platform-browser-dynamic": "19.0.0",
     "@angular/router": "19.0.0",
@@ -86,8 +86,7 @@
     "ts-enum-util": "^4.0.2",
     "tslib": "2.4.1",
     "tw-elements": "^2.0.0",
-    "xlsx": "^0.18.5",
-    "zone.js": "0.15.0"
+    "xlsx": "^0.18.5"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "19.0.1",

@@ -1,9 +1,10 @@
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
-import { EnvironmentProviders, importProvidersFrom, inject, Provider, provideEnvironmentInitializer, provideAppInitializer } from '@angular/core';
+import { EnvironmentProviders, importProvidersFrom, inject, Provider, provideEnvironmentInitializer } from '@angular/core';
 import { MATERIAL_SANITY_CHECKS } from '@angular/material/core';
+import { APP_INITIALIZER } from '@angular/core';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field';
-import { FUSE_MOCK_API_DEFAULT_DELAY, mockApiInterceptor } from '@fuse/lib/mock-api';
+import { FUSE_MOCK_API_DEFAULT_DELAY, FuseMockApiService, mockApiInterceptor } from '@fuse/lib/mock-api';
 import { FuseConfig } from '@fuse/services/config';
 import { FUSE_CONFIG } from '@fuse/services/config/config.constants';
 import { FuseConfirmationService } from '@fuse/services/confirmation';
@@ -12,6 +13,9 @@ import { FuseMediaWatcherService } from '@fuse/services/media-watcher';
 import { FusePlatformService } from '@fuse/services/platform';
 import { FuseSplashScreenService } from '@fuse/services/splash-screen';
 import { FuseUtilsService } from '@fuse/services/utils';
+import { AuthMockApi } from 'app/mock-api/common/auth/api';
+import { ChatMockApi } from 'app/mock-api/apps/chat/api';
+import { NavigationMockApi } from 'app/modules/navigation/api';
 
 export type FuseProviderConfig = {
     mockApi?: {
@@ -63,14 +67,17 @@ export const provideFuse = (config: FuseProviderConfig): Array<Provider | Enviro
         provideEnvironmentInitializer(() => inject(FusePlatformService)),
         provideEnvironmentInitializer(() => inject(FuseSplashScreenService)),
         provideEnvironmentInitializer(() => inject(FuseUtilsService)),
+        provideEnvironmentInitializer(() => inject(AuthMockApi)),
+        provideEnvironmentInitializer(() => inject(ChatMockApi)),
+        provideEnvironmentInitializer(() => inject(NavigationMockApi)),
+
     ];
 
     // Mock Api services
     if ( config?.mockApi?.services )
     {
         providers.push(
-            provideHttpClient(withInterceptors([mockApiInterceptor])),
-            provideAppInitializer((() => (): any => null)(inject(...config.mockApi.services))),
+            provideHttpClient(withInterceptors([mockApiInterceptor])),            
         );
     }
 

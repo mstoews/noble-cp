@@ -1,5 +1,5 @@
 import { TextFieldModule } from '@angular/cdk/text-field';
-import { NgIf } from '@angular/common';
+import { } from '@angular/common';
 import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { FormsModule, NgForm, ReactiveFormsModule, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
@@ -16,7 +16,7 @@ import { HelpCenterService } from 'app/modules/help-center/help-center.service';
     templateUrl: './support.component.html',
     encapsulation: ViewEncapsulation.None,
     animations: fuseAnimations,
-    imports: [MatButtonModule, RouterLink, MatIconModule, NgIf, FuseAlertComponent, FormsModule, ReactiveFormsModule, MatFormFieldModule, MatInputModule, TextFieldModule]
+    imports: [MatButtonModule, RouterLink, MatIconModule, FuseAlertComponent, FormsModule, ReactiveFormsModule, MatFormFieldModule, MatInputModule, TextFieldModule]
 })
 export class HelpCenterSupportComponent implements OnInit {
     @ViewChild('supportNgForm') supportNgForm: NgForm;

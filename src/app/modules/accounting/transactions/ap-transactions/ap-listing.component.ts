@@ -22,7 +22,6 @@ const imports = [
     ReactiveFormsModule,
     MaterialModule,
     FormsModule,
-    DndComponent,
     GridMenubarStandaloneComponent,
     NgxMatSelectSearchModule,
     GridModule

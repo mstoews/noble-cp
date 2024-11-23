@@ -13,14 +13,11 @@ import { Subject, takeUntil } from 'rxjs';
 const imports = [
   MaterialModule,
   NgApexchartsModule,
-  
-  
-  
-        MatTableModule,
-        NgClass,
-        CurrencyPipe,
-        CommonModule,
-        SummaryCardComponent
+  MatTableModule,
+  NgClass,
+  CurrencyPipe,
+  CommonModule,
+       
 ]
 
 @Component({
@@ -179,7 +176,7 @@ throw new Error('Method not implemented.');
               hover: {
                   filter: {
                       type: 'darken',
-                      value: 0.75,
+                     
                   },
               },
           },
@@ -248,8 +245,7 @@ throw new Error('Method not implemented.');
           states: {
               hover: {
                   filter: {
-                      type: 'darken',
-                      value: 0.75,
+                      type: 'darken',                     
                   },
               },
           },

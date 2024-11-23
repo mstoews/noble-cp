@@ -12,7 +12,7 @@ import { Subject, takeUntil } from 'rxjs';
     selector: 'help-center-faqs',
     templateUrl: './faqs.component.html',
     encapsulation: ViewEncapsulation.None,
-    imports: [MatButtonModule, RouterLink, MatIconModule, NgFor, MatExpansionModule]
+    imports: [MatButtonModule, RouterLink, MatIconModule, MatExpansionModule]
 })
 export class HelpCenterFaqsComponent implements OnInit, OnDestroy
 {

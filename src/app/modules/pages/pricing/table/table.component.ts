@@ -1,4 +1,4 @@
-import { NgClass, NgIf } from '@angular/common';
+import { NgClass, } from '@angular/common';
 import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -9,16 +9,14 @@ import { FuseCardComponent } from '@fuse/components/card';
     templateUrl: './table.component.html',
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [MatButtonModule, NgClass, FuseCardComponent, NgIf, MatIconModule]
+    imports: [MatButtonModule, NgClass, FuseCardComponent, MatIconModule]
 })
-export class PricingTableComponent
-{
+export class PricingTableComponent {
     yearlyBilling: boolean = true;
 
     /**
      * Constructor
      */
-    constructor()
-    {
+    constructor() {
     }
 }

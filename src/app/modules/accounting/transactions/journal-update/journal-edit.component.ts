@@ -21,7 +21,6 @@ const imports = [
   MaterialModule,
   FormsModule,
   NgxMaskDirective,
-  NgxMaskPipe
 ];
 
 @Component({

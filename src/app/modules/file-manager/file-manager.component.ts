@@ -16,7 +16,6 @@ const imports = [
   MaterialModule,
   ReactiveFormsModule,
   FormsModule,
-  DndComponent,
   EvidenceCardComponent,
   GridMenubarStandaloneComponent,
   GridModule

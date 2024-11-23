@@ -1,4 +1,4 @@
-import { NgFor, NgIf } from '@angular/common';
+import { } from '@angular/common';
 import { ChangeDetectionStrategy, Component, Input, ViewEncapsulation } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -10,17 +10,15 @@ import { Chat } from '../chat.types';
     templateUrl: './contact-info.component.html',
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [MatButtonModule, MatIconModule, NgIf, NgFor]
+    imports: [MatButtonModule, MatIconModule]
 })
-export class ContactInfoComponent
-{
+export class ContactInfoComponent {
     @Input() chat: Chat;
     @Input() drawer: MatDrawer;
 
     /**
      * Constructor
      */
-    constructor()
-    {
+    constructor() {
     }
 }

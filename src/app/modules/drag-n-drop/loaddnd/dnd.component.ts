@@ -16,8 +16,7 @@ import { MaterialModule } from 'app/services/material.module';
 
 @Component({
     imports: [
-        CommonModule,
-        ProgressComponent,
+        CommonModule,       
         DndDirective,
         ReactiveFormsModule,
         MaterialModule,

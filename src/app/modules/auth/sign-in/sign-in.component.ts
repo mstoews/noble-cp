@@ -1,4 +1,4 @@
-import { NgIf } from '@angular/common';
+import { } from '@angular/common';
 import { Component, OnInit, ViewChild, ViewEncapsulation, effect, inject } from '@angular/core';
 
 import {
@@ -24,7 +24,7 @@ import { LoginService } from 'app/core/auth.signal/login/data-access/login.servi
 
 var components = [
     RouterLink,
-    NgIf,
+
     FuseAlertComponent,
     FormsModule,
     ReactiveFormsModule,
@@ -48,12 +48,12 @@ var components = [
 export class AuthSignInComponent implements OnInit {
     @ViewChild('signInNgForm') signInNgForm: NgForm;
 
-    public  _activatedRoute = inject(ActivatedRoute);
-    public  _loginService = inject(LoginService);
-    public  _authService = inject(AuthService);
+    public _activatedRoute = inject(ActivatedRoute);
+    public _loginService = inject(LoginService);
+    public _authService = inject(AuthService);
     private _router = inject(Router);
     private _formBuilder = inject(FormBuilder);
-    
+
 
     alert: { type: FuseAlertType; message: string } = {
         type: 'success',
@@ -64,10 +64,10 @@ export class AuthSignInComponent implements OnInit {
 
     constructor() {
         effect(() => {
-            if (this._authService.user()) {            
-              this._router.navigate(['home']);
+            if (this._authService.user()) {
+                this._router.navigate(['home']);
             }
-          });
+        });
     }
 
     ngOnInit(): void {
@@ -96,8 +96,7 @@ export class AuthSignInComponent implements OnInit {
             password: this.signInForm.value.password,
         };
 
-        this._authService.login(credentials).subscribe( (Credentials) =>
-        {
+        this._authService.login(credentials).subscribe((Credentials) => {
             console.debug(Credentials);
             // Navigate to the redirect url
             // this._router.navigateByUrl(this._activatedRoute.snapshot.queryParams.redirectUrl || 'home');

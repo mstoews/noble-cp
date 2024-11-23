@@ -1,6 +1,6 @@
 
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
-import { ApplicationConfig, ErrorHandler, provideAppInitializer } from '@angular/core';
+import { ApplicationConfig, ErrorHandler, provideAppInitializer, provideExperimentalZonelessChangeDetection } from '@angular/core';
 import { LuxonDateAdapter } from '@angular/material-luxon-adapter';
 import { DateAdapter, MAT_DATE_FORMATS } from '@angular/material/core';
 import { provideAnimations } from '@angular/platform-browser/animations';
@@ -80,6 +80,7 @@ const CoreProviders = [
 export const appConfig: ApplicationConfig = {
   providers: [
     provideAnimations(),
+    provideExperimentalZonelessChangeDetection(),
     ...CoreProviders,
     provideRouter(appRoutes,
       withPreloading(PreloadAllModules),
@@ -110,10 +111,10 @@ export const appConfig: ApplicationConfig = {
     // Fuse
     provideIcons(),
     provideFuse({
-      mockApi: {
-        delay: 0,
-        services: mockApiServices,
-      },
+      // mockApi: {
+      //   delay: 0,
+      //   services: mockApiServices,
+      // },
       fuse: {
         layout: 'dense',
         scheme: 'dark',

@@ -30,7 +30,6 @@ const imports = [
   MaterialModule,
   NgxMaskDirective,
   NgxMatSelectSearchModule,
-  BudgetUpdateComponent,
 ]
 
 @Component({

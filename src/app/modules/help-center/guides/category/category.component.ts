@@ -11,7 +11,7 @@ import { Subject, takeUntil } from 'rxjs';
     selector: 'help-center-guides-category',
     templateUrl: './category.component.html',
     encapsulation: ViewEncapsulation.None,
-    imports: [MatButtonModule, RouterLink, MatIconModule, NgFor]
+    imports: [MatButtonModule, RouterLink, MatIconModule]
 })
 export class HelpCenterGuidesCategoryComponent implements OnInit, OnDestroy
 {

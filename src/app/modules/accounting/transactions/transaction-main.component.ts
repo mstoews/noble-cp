@@ -1,4 +1,4 @@
-import { NgClass, NgFor, NgSwitch, NgSwitchCase } from '@angular/common';
+import { NgClass, NgSwitch, NgSwitchCase } from '@angular/common';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { MatDrawer } from '@angular/material/sidenav';
 import { FuseMediaWatcherService } from '@fuse/services/media-watcher';
@@ -17,19 +17,17 @@ import { APUpdateComponent } from './ap-transactions/ap-update.component';
 
 const imports = [
     MaterialModule,
-    NgFor,
+
     NgClass,
-    NgSwitch,
-    NgSwitchCase,
     JournalEntryComponent,
-    JournalUpdateComponent,
+   
     FileManagerComponent,
     EntryWizardComponent,
     JournalTemplateComponent,
     TreeComponent,
     APTransactionComponent,
     ARTransactionComponent,
-    APUpdateComponent
+   
 ]
 
 @Component({

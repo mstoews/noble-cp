@@ -1,5 +1,5 @@
 import { CdkScrollable } from '@angular/cdk/scrolling';
-import { DOCUMENT, NgClass, NgFor, NgIf } from '@angular/common';
+import { DOCUMENT, NgClass, } from '@angular/common';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, Inject, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -18,11 +18,10 @@ import { Subject, takeUntil } from 'rxjs';
     templateUrl: './details.component.html',
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [MatSidenavModule, RouterLink, MatIconModule, NgIf, NgClass, NgFor, MatButtonModule, MatProgressBarModule, CdkScrollable, MatTabsModule, FuseFindByKeyPipe]
+    imports: [MatSidenavModule, RouterLink, MatIconModule, NgClass, MatButtonModule, MatProgressBarModule, CdkScrollable, MatTabsModule, FuseFindByKeyPipe]
 })
-export class AcademyDetailsComponent implements OnInit, OnDestroy
-{
-    @ViewChild('courseSteps', {static: true}) courseSteps: MatTabGroup;
+export class AcademyDetailsComponent implements OnInit, OnDestroy {
+    @ViewChild('courseSteps', { static: true }) courseSteps: MatTabGroup;
     categories: Category[];
     course: Course;
     currentStep: number = 0;
@@ -39,8 +38,7 @@ export class AcademyDetailsComponent implements OnInit, OnDestroy
         private _changeDetectorRef: ChangeDetectorRef,
         private _elementRef: ElementRef,
         private _fuseMediaWatcherService: FuseMediaWatcherService,
-    )
-    {
+    ) {
     }
 
     // -----------------------------------------------------------------------------------------------------
@@ -50,13 +48,11 @@ export class AcademyDetailsComponent implements OnInit, OnDestroy
     /**
      * On init
      */
-    ngOnInit(): void
-    {
+    ngOnInit(): void {
         // Get the categories
         this._academyService.categories$
             .pipe(takeUntil(this._unsubscribeAll))
-            .subscribe((categories: Category[]) =>
-            {
+            .subscribe((categories: Category[]) => {
                 // Get the categories
                 this.categories = categories;
 
@@ -67,8 +63,7 @@ export class AcademyDetailsComponent implements OnInit, OnDestroy
         // Get the course
         this._academyService.course$
             .pipe(takeUntil(this._unsubscribeAll))
-            .subscribe((course: Course) =>
-            {
+            .subscribe((course: Course) => {
                 // Get the course
                 this.course = course;
 
@@ -82,16 +77,13 @@ export class AcademyDetailsComponent implements OnInit, OnDestroy
         // Subscribe to media changes
         this._fuseMediaWatcherService.onMediaChange$
             .pipe(takeUntil(this._unsubscribeAll))
-            .subscribe(({matchingAliases}) =>
-            {
+            .subscribe(({ matchingAliases }) => {
                 // Set the drawerMode and drawerOpened
-                if ( matchingAliases.includes('lg') )
-                {
+                if (matchingAliases.includes('lg')) {
                     this.drawerMode = 'side';
                     this.drawerOpened = true;
                 }
-                else
-                {
+                else {
                     this.drawerMode = 'over';
                     this.drawerOpened = false;
                 }
@@ -104,8 +96,7 @@ export class AcademyDetailsComponent implements OnInit, OnDestroy
     /**
      * On destroy
      */
-    ngOnDestroy(): void
-    {
+    ngOnDestroy(): void {
         // Unsubscribe from all subscriptions
         this._unsubscribeAll.next(null);
         this._unsubscribeAll.complete();
@@ -120,8 +111,7 @@ export class AcademyDetailsComponent implements OnInit, OnDestroy
      *
      * @param step
      */
-    goToStep(step: number): void
-    {
+    goToStep(step: number): void {
         // Set the current step
         this.currentStep = step;
 
@@ -135,11 +125,9 @@ export class AcademyDetailsComponent implements OnInit, OnDestroy
     /**
      * Go to previous step
      */
-    goToPreviousStep(): void
-    {
+    goToPreviousStep(): void {
         // Return if we already on the first step
-        if ( this.currentStep === 0 )
-        {
+        if (this.currentStep === 0) {
             return;
         }
 
@@ -153,11 +141,9 @@ export class AcademyDetailsComponent implements OnInit, OnDestroy
     /**
      * Go to next step
      */
-    goToNextStep(): void
-    {
+    goToNextStep(): void {
         // Return if we already on the last step
-        if ( this.currentStep === this.course.totalSteps - 1 )
-        {
+        if (this.currentStep === this.course.totalSteps - 1) {
             return;
         }
 
@@ -174,8 +160,7 @@ export class AcademyDetailsComponent implements OnInit, OnDestroy
      * @param index
      * @param item
      */
-    trackByFn(index: number, item: any): any
-    {
+    trackByFn(index: number, item: any): any {
         return item.id || index;
     }
 
@@ -192,18 +177,15 @@ export class AcademyDetailsComponent implements OnInit, OnDestroy
      *
      * @private
      */
-    private _scrollCurrentStepElementIntoView(): void
-    {
+    private _scrollCurrentStepElementIntoView(): void {
         // Wrap everything into setTimeout so we can make sure that the 'current-step' class points to correct element
-        setTimeout(() =>
-        {
+        setTimeout(() => {
             // Get the current step element and scroll it into view
             const currentStepElement = this._document.getElementsByClassName('current-step')[0];
-            if ( currentStepElement )
-            {
+            if (currentStepElement) {
                 currentStepElement.scrollIntoView({
                     behavior: 'smooth',
-                    block   : 'start',
+                    block: 'start',
                 });
             }
         });

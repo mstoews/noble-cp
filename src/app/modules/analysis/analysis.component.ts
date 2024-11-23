@@ -14,7 +14,6 @@ const imports = [
     CommonModule,
     MatButtonModule,
     MatIconModule,
-    SalesGraphComponent,
 ];
 
 @Component({
