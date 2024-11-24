@@ -1,5 +1,5 @@
 import { TextFieldModule } from '@angular/cdk/text-field';
-import { DatePipe, NgClass, NgFor, NgIf, NgTemplateOutlet } from '@angular/common';
+import { DatePipe, NgClass, NgTemplateOutlet } from '@angular/common';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, HostListener, NgZone, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -15,15 +15,14 @@ import { ContactInfoComponent } from '../contact-info/contact-info.component';
 import { Subject, takeUntil } from 'rxjs';
 
 @Component({
-    selector       : 'chat-conversation',
-    templateUrl    : './conversation.component.html',
-    encapsulation  : ViewEncapsulation.None,
+    selector: 'chat-conversation',
+    templateUrl: './conversation.component.html',
+    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone     : true,
-    imports        : [NgIf, MatSidenavModule, ContactInfoComponent, MatButtonModule, RouterLink, MatIconModule, MatMenuModule, NgFor, NgClass, NgTemplateOutlet, MatFormFieldModule, MatInputModule, TextFieldModule, DatePipe],
+    standalone: true,
+    imports: [MatSidenavModule, ContactInfoComponent, MatButtonModule, RouterLink, MatIconModule, MatMenuModule, NgClass, NgTemplateOutlet, MatFormFieldModule, MatInputModule, TextFieldModule, DatePipe],
 })
-export class ConversationComponent implements OnInit, OnDestroy
-{
+export class ConversationComponent implements OnInit, OnDestroy {
     @ViewChild('messageInput') messageInput: ElementRef;
     chat: Chat;
     drawerMode: 'over' | 'side' = 'side';
@@ -38,8 +37,7 @@ export class ConversationComponent implements OnInit, OnDestroy
         private _chatService: ChatService,
         private _fuseMediaWatcherService: FuseMediaWatcherService,
         private _ngZone: NgZone,
-    )
-    {
+    ) {
     }
 
     // -----------------------------------------------------------------------------------------------------
@@ -53,13 +51,10 @@ export class ConversationComponent implements OnInit, OnDestroy
      */
     @HostListener('input')
     @HostListener('ngModelChange')
-    private _resizeMessageInput(): void
-    {
+    private _resizeMessageInput(): void {
         // This doesn't need to trigger Angular's change detection by itself
-        this._ngZone.runOutsideAngular(() =>
-        {
-            setTimeout(() =>
-            {
+        this._ngZone.runOutsideAngular(() => {
+            setTimeout(() => {
                 // Set the height to 'auto' so we can correctly read the scrollHeight
                 this.messageInput.nativeElement.style.height = 'auto';
 
@@ -82,13 +77,11 @@ export class ConversationComponent implements OnInit, OnDestroy
     /**
      * On init
      */
-    ngOnInit(): void
-    {
+    ngOnInit(): void {
         // Chat
         this._chatService.chat$
             .pipe(takeUntil(this._unsubscribeAll))
-            .subscribe((chat: Chat) =>
-            {
+            .subscribe((chat: Chat) => {
                 this.chat = chat;
 
                 // Mark for check
@@ -98,15 +91,12 @@ export class ConversationComponent implements OnInit, OnDestroy
         // Subscribe to media changes
         this._fuseMediaWatcherService.onMediaChange$
             .pipe(takeUntil(this._unsubscribeAll))
-            .subscribe(({matchingAliases}) =>
-            {
+            .subscribe(({ matchingAliases }) => {
                 // Set the drawerMode if the given breakpoint is active
-                if ( matchingAliases.includes('lg') )
-                {
+                if (matchingAliases.includes('lg')) {
                     this.drawerMode = 'side';
                 }
-                else
-                {
+                else {
                     this.drawerMode = 'over';
                 }
 
@@ -118,8 +108,7 @@ export class ConversationComponent implements OnInit, OnDestroy
     /**
      * On destroy
      */
-    ngOnDestroy(): void
-    {
+    ngOnDestroy(): void {
         // Unsubscribe from all subscriptions
         this._unsubscribeAll.next(null);
         this._unsubscribeAll.complete();
@@ -132,8 +121,7 @@ export class ConversationComponent implements OnInit, OnDestroy
     /**
      * Open the contact info
      */
-    openContactInfo(): void
-    {
+    openContactInfo(): void {
         // Open the drawer
         this.drawerOpened = true;
 
@@ -144,8 +132,7 @@ export class ConversationComponent implements OnInit, OnDestroy
     /**
      * Reset the chat
      */
-    resetChat(): void
-    {
+    resetChat(): void {
         this._chatService.resetChat();
 
         // Close the contact info in case it's opened
@@ -158,8 +145,7 @@ export class ConversationComponent implements OnInit, OnDestroy
     /**
      * Toggle mute notifications
      */
-    toggleMuteNotifications(): void
-    {
+    toggleMuteNotifications(): void {
         // Toggle the muted
         this.chat.muted = !this.chat.muted;
 
@@ -173,8 +159,7 @@ export class ConversationComponent implements OnInit, OnDestroy
      * @param index
      * @param item
      */
-    trackByFn(index: number, item: any): any
-    {
+    trackByFn(index: number, item: any): any {
         return item.id || index;
     }
 }

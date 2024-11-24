@@ -1,4 +1,4 @@
-import { CommonModule, CurrencyPipe, NgClass, NgFor, NgIf } from '@angular/common';
+import { CommonModule, CurrencyPipe, NgClass, NgIf } from '@angular/common';
 import {
     ChangeDetectionStrategy,
     Component,
@@ -43,11 +43,7 @@ import { FIRESTORE } from 'app/app.config';
         MatTabsModule,
         MatButtonToggleModule,
         NgApexchartsModule,
-        NgFor,
-        NgIf,
         MatTableModule,
-        NgClass,
-        CurrencyPipe,
         CommonModule,
         SummaryCardComponent
     ],
@@ -97,7 +93,7 @@ export class ProjectComponent implements OnInit, OnDestroy {
     public caption_5 = 'Balance Sheet';
 
     public totalOperating = signal(0);
-    public caption  = 'Operation Reserve';
+    public caption = 'Operation Reserve';
 
 
 
@@ -217,7 +213,7 @@ export class ProjectComponent implements OnInit, OnDestroy {
                 hover: {
                     filter: {
                         type: 'darken',
-                        value: 0.75,
+
                     },
                 },
             },

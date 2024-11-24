@@ -11,15 +11,14 @@ import { Profile } from '../chat.types';
 import { Subject, takeUntil } from 'rxjs';
 
 @Component({
-    selector       : 'chat-profile',
-    templateUrl    : './profile.component.html',
-    encapsulation  : ViewEncapsulation.None,
+    selector: 'chat-profile',
+    templateUrl: './profile.component.html',
+    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone     : true,
-    imports        : [MatButtonModule, MatIconModule, NgIf, MatFormFieldModule, MatInputModule, FormsModule],
+    standalone: true,
+    imports: [MatButtonModule, MatIconModule, MatFormFieldModule, MatInputModule, FormsModule],
 })
-export class ProfileComponent implements OnInit, OnDestroy
-{
+export class ProfileComponent implements OnInit, OnDestroy {
     @Input() drawer: MatDrawer;
     profile: Profile;
     private _unsubscribeAll: Subject<any> = new Subject<any>();
@@ -27,8 +26,7 @@ export class ProfileComponent implements OnInit, OnDestroy
     /**
      * Constructor
      */
-    constructor(private _chatService: ChatService)
-    {
+    constructor(private _chatService: ChatService) {
     }
 
     // -----------------------------------------------------------------------------------------------------
@@ -38,13 +36,11 @@ export class ProfileComponent implements OnInit, OnDestroy
     /**
      * On init
      */
-    ngOnInit(): void
-    {
+    ngOnInit(): void {
         // Profile
         this._chatService.profile$
             .pipe(takeUntil(this._unsubscribeAll))
-            .subscribe((profile: Profile) =>
-            {
+            .subscribe((profile: Profile) => {
                 this.profile = profile;
             });
     }
@@ -52,8 +48,7 @@ export class ProfileComponent implements OnInit, OnDestroy
     /**
      * On destroy
      */
-    ngOnDestroy(): void
-    {
+    ngOnDestroy(): void {
         // Unsubscribe from all subscriptions
         this._unsubscribeAll.next(null);
         this._unsubscribeAll.complete();

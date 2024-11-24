@@ -26,6 +26,9 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIcon, MatIconModule } from '@angular/material/icon';
 import { MatDatepickerModule } from '@angular/material/datepicker';
+import { IParty } from 'app/models/party';
+import { PartyService } from 'app/services/party.service';
+import { GridComponent, GridModule, RowDragEventArgs, SaveEventArgs } from '@syncfusion/ej2-angular-grids';
 
 
 interface ITransactionType {
@@ -50,7 +53,8 @@ const mods = [
   WizardUpdateComponent, 
   MaterialModule,
   MatDatepickerModule, 
-  NgxMatSelectSearchModule
+  NgxMatSelectSearchModule,
+  GridModule, 
 ]
 
 @Component({
@@ -66,6 +70,7 @@ const mods = [
 export class EntryWizardComponent implements OnInit, OnDestroy, AfterViewInit {
 
   private journalService = inject(JournalService);
+  private partyService = inject(PartyService);
   private subtypeService = inject(SubTypeService);
   private fundService = inject(FundsService);
   private accountService = inject(GLAccountsService);
@@ -84,13 +89,21 @@ export class EntryWizardComponent implements OnInit, OnDestroy, AfterViewInit {
   public journalHeader: IJournalHeader;
   private auth = inject(AUTH);
   public journal_id = 0;
+  public editSettings: Object;
 
   public headerAmount = 0;
+  public message?: string;
+  public bDirty = false;
 
   public templateList: IJournalTemplate[] = [];
   public templateCtrl: FormControl<IJournalTemplate> = new FormControl<IJournalTemplate>(null);
   public templateFilterCtrl: FormControl<string> = new FormControl<string>(null);
   public templateFilter: ReplaySubject<IJournalTemplate[]> = new ReplaySubject<IJournalTemplate[]>(1);
+
+  public partyList: IParty[] = [];
+  public partyCtrl: FormControl<IParty> = new FormControl<IParty>(null);
+  public partyFilterCtrl: FormControl<string> = new FormControl<string>(null);
+  public partyFilter: ReplaySubject<IParty[]> = new ReplaySubject<IParty[]>(1);
 
   public debitAccounts: IDropDownAccounts[] = [];
   public debitCtrl: FormControl<IDropDownAccounts> = new FormControl<IDropDownAccounts>(null);
@@ -101,6 +114,9 @@ export class EntryWizardComponent implements OnInit, OnDestroy, AfterViewInit {
   public creditCtrl: FormControl<IDropDownAccounts> = new FormControl<IDropDownAccounts>(null);
   public creditAccountFilterCtrl: FormControl<string> = new FormControl<string>('');
   public filteredCreditAccounts: ReplaySubject<IDropDownAccounts[]> = new ReplaySubject<IDropDownAccounts[]>(1);
+
+  // Grid Options
+  public selectionOptions: Object;
 
 
   protected _onCreditDestroy = new Subject<void>();
@@ -113,6 +129,8 @@ export class EntryWizardComponent implements OnInit, OnDestroy, AfterViewInit {
 
   public journalDetails?: IJournalDetail[];
   public accountsListSubject: Subscription;
+  
+  public gridControl = viewChild<GridComponent>('grid');
 
   store = inject(JournalStore);
 
@@ -123,6 +141,7 @@ export class EntryWizardComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild("singleDebitSelect", { static: true })  singleDebitSelect: MatSelect;
   @ViewChild("singleCreditSelect", { static: true })  singleCreditSelect: MatSelect;
   @ViewChild("singleTemplateSelect", { static: true })  singleTemplateSelect: MatSelect;
+  @ViewChild("singlePartySelect", { static: true })  singlePartySelect: MatSelect;
 
   
   bNewTransaction: any;
@@ -161,18 +180,22 @@ export class EntryWizardComponent implements OnInit, OnDestroy, AfterViewInit {
       this.templateFilter.next(this.templateList.slice());
     });
 
+    
+    this.partyService.read().pipe(takeUntil(this._onDestroy)).subscribe((party) => { 
+      this.partyList = party;
+      this.partyFilter.next(this.partyList.slice());
+    });
+
     this.journalEntryForm = this.formBuilder.group({
       step1: this.formBuilder.group({
-        templateCtrl: ['', Validators.required],
-        description: ['', Validators.required],              
+        templateCtrl: [''],
+        description: ['', Validators.required],                    
+        amount: ['', Validators.required],        
+        transaction_date: ['', Validators.required],
+        partyCtrl: ['', Validators.required],
+        invoice_no: ['', Validators.required],
       }),
       step2: this.formBuilder.group({
-      amount: ['', Validators.required],        
-      transaction_date: ['', Validators.required],
-      vendor: ['', Validators.required],
-      invoice_no: ['', Validators.required],
-      }),
-      step3: this.formBuilder.group({
         debitCtrl: ['', Validators.required],
         creditCtrl: ['', Validators.required],        
         detail_description: ['', Validators.required],
@@ -182,7 +205,7 @@ export class EntryWizardComponent implements OnInit, OnDestroy, AfterViewInit {
         debit: ['', Validators.required],
         credit: ['', Validators.required],
       }),
-      step4: this.formBuilder.group({
+      step3: this.formBuilder.group({
 
       })
     });
@@ -200,7 +223,78 @@ export class EntryWizardComponent implements OnInit, OnDestroy, AfterViewInit {
 
     this.templateFilterCtrl.valueChanges.pipe(takeUntil(this._onDestroyTemplateFilter))
       .subscribe(() => { this.filterTemplate(); });   
+    
+    this.partyFilterCtrl.valueChanges.pipe(takeUntil(this._onDestroyTemplateFilter))
+      .subscribe(() => { this.filterParty(); });     
 
+    this.editSettings = {
+        allowEditing: true,
+        allowAdding: false,
+        allowDeleting: false,
+      };
+  
+  }
+
+
+  actionBegin(args: SaveEventArgs): void {
+    args.cancel = true;
+    var data = args.rowData as IJournalHeader;
+    if (args.requestType === "beginEdit" || args.requestType === "add") {
+      
+    }
+    if (args.requestType === "save") {
+      args.cancel = true;
+      console.log(JSON.stringify(args.data));
+      var data = args.data as IJournalHeader;
+      // this.submitClicked = true;
+    }
+  }
+
+  
+  rowDrag(args: RowDragEventArgs): void {
+    this.message = `rowDrag event triggered ${JSON.stringify(args.data)}`;
+    console.debug(this.message);
+    (args.rows as Element[]).forEach((row: Element) => {
+      row.classList.add('drag-limit');
+    });
+  }
+
+  rowDrop(args: RowDragEventArgs): void {
+    this.message = `Drop  ${args.originalEvent} ${JSON.stringify(args.data)}`;
+    console.debug(this.message);
+    const value = [];
+    for (let r = 0; r < (args.rows as Element[]).length; r++) {
+      value.push((args.fromIndex as number) + r);
+    }
+    // this.grid.reorderRows(value, (args.dropIndex as number));
+
+    this.gridControl().reorderRows(value, (args.dropIndex as number));
+    this.onSaved(args.data[0]);
+  }
+
+
+  onSaved(e: any) {
+    this.bDirty = true;
+    const updateDate = new Date().toISOString().split("T")[0];
+    const email = this.auth.currentUser?.email;
+
+
+    const journalDetail = {
+      journal_id: e.journal_id,
+      journal_subid: e.journal_subid,
+      account: Number(e.account),
+      child: Number(e.child),
+      child_desc: e.child_desc,
+      description: e.description,
+      create_date: updateDate,
+      create_user: email,
+      sub_type: e.sub_type,
+      debit: e.debit,
+      credit: e.credit,
+      reference: e.reference,
+      fund: e.fund,
+    };
+    this.store.updateJournalDetail(journalDetail);
   }
 
 
@@ -221,6 +315,14 @@ export class EntryWizardComponent implements OnInit, OnDestroy, AfterViewInit {
         if (this.singleTemplateSelect != null || this.singleTemplateSelect != undefined)
              this.singleTemplateSelect.compareWith = (a: IJournalTemplate, b: IJournalTemplate) => a && b && a.template_ref === b.template_ref;
     });
+
+    if (this.partyFilter)
+      this.partyFilter
+        .pipe(take(1), takeUntil(this._onTemplateDestroy))
+        .subscribe(() => {
+    if (this.singlePartySelect != null || this.singlePartySelect != undefined)
+         this.singlePartySelect.compareWith = (a: IParty, b: IParty) => a && b && a.party_id === b.party_id;
+});
         
 
     if (this.filteredDebitAccounts)
@@ -285,6 +387,25 @@ export class EntryWizardComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   protected filterTemplate() {
+    if (!this.partyList) {
+      return;
+    }
+    // get the search keyword
+    let search = this.partyFilterCtrl.value;
+    if (!search) {
+      this.partyFilter.next(this.partyList.slice());
+      return;
+    } else {
+      search = search.toLowerCase();
+    }
+    // filter the banks
+    this.partyFilter.next(
+      this.partyList.filter(party => party.party_id.toLowerCase().indexOf(search) > -1)
+    );
+  }
+
+
+  protected filterParty() {
     if (!this.templateList) {
       return;
     }

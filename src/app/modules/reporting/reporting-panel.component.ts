@@ -1,4 +1,4 @@
-import { NgClass, NgFor, NgSwitch, NgSwitchCase } from '@angular/common';
+import { NgClass, NgSwitch, NgSwitchCase } from '@angular/common';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { MatDrawer } from '@angular/material/sidenav';
 import { FuseMediaWatcherService } from '@fuse/services/media-watcher';
@@ -14,13 +14,9 @@ import { IncomeStatementComparisonRptComponent } from './financial-statement/inc
 
 const imports = [
     MaterialModule,
-    NgFor,
+
     NgClass,
-    NgSwitch,
-    NgSwitchCase,
     TrialBalanceComponent,
-    ExpenseRptComponent,
-    BalanceSheetComponent,
     BalanceSheetStatementRptComponent,
     IncomeStatementRptComponent,
     IncomeStatementComparisonRptComponent

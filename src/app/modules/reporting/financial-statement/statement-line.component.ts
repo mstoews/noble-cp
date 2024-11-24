@@ -1,4 +1,4 @@
-import { CommonModule, JsonPipe } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
 import { IDistributionLedger } from 'app/models';
 
@@ -6,7 +6,7 @@ import { IDistributionLedger } from 'app/models';
 @Component({
   selector: 'statement-line-item',
   standalone: true,
-  imports: [CommonModule, JsonPipe],
+  imports: [CommonModule],
   template: 
   `
         <div class="grid grid-cols-12 gap-2">

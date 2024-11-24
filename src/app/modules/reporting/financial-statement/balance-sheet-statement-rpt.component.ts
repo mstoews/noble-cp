@@ -1,23 +1,20 @@
 import { Component, OnDestroy, OnInit, ViewChild, ViewEncapsulation, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { DistMenuStandaloneComponent } from '../distributed-ledger/dist-menubar/grid-menubar.component';
-import { IDistributionLedger, IDistributionLedgerReport, IDistributionLedgerRpt } from 'app/models';
 import { ReportingToolbarComponent } from '../grid-reporting/grid-menubar.component';
 import { DistributionLedgerService } from 'app/services/distribution.ledger.service';
-import { SimpleDialogComponent } from "../../../common/simple-dialog.component";
+
 import { StatementLineComponent } from './statement-line.component';
 import { BehaviorSubject, map, Subject, takeUntil } from 'rxjs';
 import { MaterialModule } from 'app/services/material.module';
 import { StatementTotalComponent } from './statement-totals.component';
-import { Observable } from '@apollo/client/utilities';
 import html2PDF from 'jspdf-html2canvas';
 
 
 const imports = [
   CommonModule,
-  DistMenuStandaloneComponent,
+  
   ReportingToolbarComponent,
-  SimpleDialogComponent,
+  
   StatementLineComponent,
   MaterialModule,
   StatementTotalComponent,

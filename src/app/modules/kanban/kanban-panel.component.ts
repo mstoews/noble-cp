@@ -5,7 +5,7 @@ import { RouterLink } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
 import { MatDrawer } from '@angular/material/sidenav';
 import { FuseMediaWatcherService } from '@fuse/services/media-watcher';
-import { NgClass, NgFor, NgSwitch, NgSwitchCase } from '@angular/common';
+import { NgClass, NgSwitch, NgSwitchCase } from '@angular/common';
 
 import {
     ChangeDetectionStrategy,
@@ -29,13 +29,8 @@ import { TeamsComponent } from '../accounting/accts/teams/teams.component';
     encapsulation: ViewEncapsulation.None,
     standalone: true,
     imports: [
-        MaterialModule,
-        RouterLink,
-        CdkScrollable,
-        NgFor,
+        MaterialModule,        
         NgClass,
-        NgSwitch,
-        NgSwitchCase,
         TasksComponent,
         KanbanTypesComponent,
         StatusComponent,

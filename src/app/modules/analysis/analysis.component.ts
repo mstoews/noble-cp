@@ -13,8 +13,7 @@ import { AuthService } from '../auth/auth.service';
 const imports = [
     CommonModule,
     MatButtonModule,
-    MatIconModule,
-    SalesGraphComponent,
+    MatIconModule
 ];
 
 @Component({

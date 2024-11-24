@@ -6,13 +6,13 @@
         <form class="p-4 bg-card shadow rounded overflow-hidden" [formGroup]="journalEntryForm">
             <mat-vertical-stepper [linear]="true" #verticalStepper>
                 <mat-step [formGroupName]="'step1'" [stepControl]="journalEntryForm.get('step1')" #verticalStepperStep1>
-                    <ng-template matStepLabel>Transaction Template Type</ng-template>
+                    <ng-template matStepLabel>Transaction Template</ng-template>
                     <section class="flex flex-col md:flex-row gap-2">
                         <div class="flex flex-col w-[300px] gap-2">
                             @if (templateFilter | async; as templates ) {
                                 <mat-form-field>
-                                    <mat-select [formControl]="templateCtrl" placeholder="Journal Template"
-                                        #singleTemplateSelect>
+                                    <mat-label class="text-md ml-2">Template</mat-label>
+                                    <mat-select [formControl]="templateCtrl" placeholder="Journal Template"  #singleTemplateSelect>
                                         <mat-option>
                                             <ngx-mat-select-search [formControl]="templateFilterCtrl"
                                                 [noEntriesFoundLabel]="'No entries found'"
@@ -26,42 +26,49 @@
                                     <mat-icon class="icon-size-5" matPrefix [svgIcon]="'heroicons_solid:document-chart-bar'"></mat-icon> 
                                 </mat-form-field>
                             }
+                            
                         </div>
-
                         <mat-form-field class="flex-auto ">
+                            <mat-label class="text-md ml-2">Description</mat-label>
                             <input matInput [formControlName]="'description'" [placeholder]="'Description'" required>
                             <mat-icon class="icon-size-5" matPrefix [svgIcon]="'heroicons_solid:document'"></mat-icon>
                         </mat-form-field>
+                        
                     </section>
-                    <div class="flex justify-end">
-                        <button class="px-8" mat-icon-button color="primary"
-                            class="bg-gray-200  hover:bg-slate-400 ml-1" (click)="onCreateHeader()"
-                            [disabled]="verticalStepperStep1.stepControl.pristine || verticalStepperStep1.stepControl.invalid"
-                            type="button" matTooltip="Next" matStepperNext>
-                            <mat-icon [svgIcon]="'feather:arrow-right'"></mat-icon>
-                        </button>
-                    </div>
-                </mat-step>
-
-                <mat-step [formGroupName]="'step2'" [stepControl]="journalEntryForm.get('step2')" #verticalStepperStep2>
-                    <ng-template matStepLabel>Transaction Item Information</ng-template>
-
+                    
                     <section class="flex flex-col md:flex-row gap-2">    
 
-                        <mat-form-field class="flex-col  w-[300px]">
-                            <input type="text"  class="text-right" matInput placeholder="Vendor" formControlName="vendor"
-                                [placeholder]="'Vendor'" />
-                            <mat-icon class="icon-size-5" matPrefix [svgIcon]="'heroicons_solid:currency-dollar'"></mat-icon>
-                        </mat-form-field>
+                        <div class="flex flex-col w-[300px] gap-2">
+                        @if (partyFilter | async; as parties ) {
+                            <mat-form-field>
+                                <mat-label class="text-md ml-2">Party</mat-label>
+                                <mat-select [formControl]="partyCtrl" placeholder="Party" #singlePartySelect>
+                                    <mat-option>
+                                        <ngx-mat-select-search [formControl]="partyFilterCtrl"
+                                            [noEntriesFoundLabel]="'No entries found'"
+                                            [placeholderLabel]="'Search'">
+                                        </ngx-mat-select-search>
+                                    </mat-option>
+                                    @for (party of parties; track party) {
+                                    <mat-option [value]="party">{{party.party_id}}</mat-option>
+                                    }
+                                </mat-select>
+                                <mat-icon class="icon-size-5" matPrefix [svgIcon]="'heroicons_solid:currency-dollar'"></mat-icon>
+                            </mat-form-field>
+                        }
+                        </div>
+
 
                         <mat-form-field class="flex-auto  grow">
-                            <input type="text"  class="text-right" matInput placeholder="Invoice No" formControlName="vendor" />
+                            <mat-label class="text-md ml-2">Reference Number</mat-label>
+                            <input type="text"  class="text-right" matInput placeholder="Invoice No" formControlName="invoice_no" />
                             <mat-icon class="icon-size-5" matPrefix [svgIcon]="'heroicons_solid:currency-dollar'"></mat-icon>
                         </mat-form-field>
                         
 
 
                         <mat-form-field class="flex-auto  grow">
+                            <mat-label class="text-md ml-2">Transaction Amount</mat-label>
                             <input type="text" mask="separator.2" [leadZero]="true" thousandSeparator=","
                                 class="text-right" matInput placeholder="Amount" formControlName="amount"
                                 [placeholder]="'Transaction Total'" />
@@ -71,6 +78,7 @@
 
 
                         <mat-form-field class="flex-auto  grow">
+                            <mat-label class="text-md ml-2">Transaction Date</mat-label>
                             <input matInput formControlName="transaction_date" [matDatepicker]="picker"
                                 [placeholder]="'Transaction Date'">
                             <mat-datepicker-toggle matIconPrefix [for]="picker"></mat-datepicker-toggle>
@@ -88,9 +96,53 @@
                             <mat-icon [svgIcon]="'feather:arrow-right'"></mat-icon>
                         </button>
                     </div>
-                </mat-step>
+                    @defer () {
+                        <div class="flex flex-col">
+                            <div class="text-3xl m-1 text-gray-100 p-2 bg-slate-600 rounded-md">Details</div>
+                            <div class="flex flex-col h-full ml-1 mr-1 text-gray-800">
 
-                <mat-step [formGroupName]="'step3'" [stepControl]="journalEntryForm.get('step3')" #verticalStepperStep3>
+                                <ejs-grid id="grid" #grid [dataSource]='store.details()'
+                                    [selectionSettings]="selectionOptions" [editSettings]='editSettings'
+                                    [allowFiltering]='false' [allowRowDragAndDrop]='true'
+                                    (actionBegin)="actionBegin($event)" [gridLines]="'Both'"
+                                    (rowDrop)="rowDrop($event)" (rowDrag)="rowDrag($event)">
+
+                                    <e-columns>
+                                        <e-column field='journal_subid' headerText='ID' [visible]='false'
+                                            isPrimaryKey='true' width='100'></e-column>
+                                        <e-column field='child' headerText='Account' width='100'></e-column>
+                                        <e-column field='child_desc' headerText='Account Description'
+                                            width='200'></e-column>
+                                        <e-column field='description' headerText='Journal Description'
+                                            width='150'></e-column>
+                                        <e-column field='fund' headerText='Fund' width='90'></e-column>
+                                        <e-column field='sub_type' headerText='Sub Type' width='90'></e-column>
+                                        <e-column field='reference' headerText='Reference' width=120></e-column>
+                                        <e-column field='debit' headerText='Debit' textAlign='Right' width='100'
+                                            format="N2"></e-column>
+                                        <e-column field='credit' headerText='Credit' textAlign='Right' width='100'
+                                            format="N2"></e-column>
+                                    </e-columns>
+
+                                    <e-aggregates>
+                                        <e-aggregate>
+                                            <e-columns>
+                                                <e-column type="Sum" field="debit" format="N2">
+                                                    <ng-template #footerTemplate let-data>{{data.Sum}}</ng-template>
+                                                </e-column>
+                                                <e-column type="Sum" field="credit" format="N2">
+                                                    <ng-template #footerTemplate let-data>{{data.Sum}}</ng-template>
+                                                </e-column>
+                                            </e-columns>
+                                        </e-aggregate>
+                                    </e-aggregates>
+                                </ejs-grid>
+                            </div>
+                        </div>
+                    }
+                    </mat-step>
+
+                <mat-step [formGroupName]="'step2'" [stepControl]="journalEntryForm.get('step2')" #verticalStepperStep3>
                     <ng-template matStepLabel>Transaction Details</ng-template>
                     <section class="flex flex-row mt-2 gap-2">
                         <div class="flex flex-col md:flex-row grow">
@@ -212,7 +264,7 @@
 
                         <button mat-icon-button color="primary" class="bg-gray-200  hover:bg-slate-400 ml-1"
                             type="button" matTooltip="Post Transaction" aria-label="Template"
-                            [disabled]="verticalStepperStep2.stepControl.pristine || verticalStepperStep2.stepControl.invalid"
+                            [disabled]="verticalStepperStep3.stepControl.pristine || verticalStepperStep3.stepControl.invalid"
                             (click)="onUpdate()" matStepperNext>
                             <mat-icon [svgIcon]="'feather:arrow-right'"></mat-icon>
                         </button>
@@ -221,7 +273,7 @@
 
                 </mat-step>
 
-                <mat-step [formGroupName]="'step4'" [stepControl]="journalEntryForm.get('step4')" #verticalStepperStep4>
+                <mat-step [formGroupName]="'step3'" [stepControl]="journalEntryForm.get('step3')" #verticalStepperStep4>
                     <ng-template matStepLabel>Post/Edit Transaction</ng-template>
                     @if (journalHeader) {
                     <div class="text-gray-800 text-3xl m-1">Confirm Transaction</div>
@@ -250,7 +302,7 @@
 
                         <button mat-icon-button color="primary" class="bg-gray-200  hover:bg-slate-400 ml-1"
                             type="button" matTooltip="Post Transaction" aria-label="Template" matStepperNext
-                            [disabled]="verticalStepperStep2.stepControl.pristine || verticalStepperStep2.stepControl.invalid">
+                            [disabled]="verticalStepperStep3.stepControl.pristine || verticalStepperStep3.stepControl.invalid">
                             <mat-icon [svgIcon]="'feather:arrow-right'"></mat-icon>
                         </button>
 

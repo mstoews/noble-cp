@@ -18,7 +18,7 @@ export class PartyService {
     }
 
     read() {
-      var url = this.baseUrl + '/v1/read_party';
+      var url = this.baseUrl + '/v1/read_parties';
       return this.httpClient.get<IParty[]>(url).pipe(shareReplay()) 
     }
 

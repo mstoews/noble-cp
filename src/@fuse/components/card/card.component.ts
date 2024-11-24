@@ -12,7 +12,7 @@ import { FuseCardFace } from '@fuse/components/card/card.types';
     animations   : fuseAnimations,
     exportAs     : 'fuseCard',
     standalone   : true,
-    imports      : [NgIf],
+    imports      : [],
 })
 export class FuseCardComponent implements OnChanges
 {

@@ -14,9 +14,9 @@ import jsPDF from 'jspdf';
 
 const imports = [
   CommonModule,
-  DistMenuStandaloneComponent,
+  
   ReportingToolbarComponent,
-  SimpleDialogComponent,
+  
   StatementLineComponent,
   MaterialModule,
   StatementTotalComponent,

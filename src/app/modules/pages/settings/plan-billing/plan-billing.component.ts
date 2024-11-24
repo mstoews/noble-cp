@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, OnInit, ViewEncapsulation } from '@angular/core';
-import { CurrencyPipe, NgClass, NgFor, NgIf } from '@angular/common';
+import { CurrencyPipe, NgClass, NgIf } from '@angular/common';
 import { FormsModule, ReactiveFormsModule, UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 
 import { FuseAlertComponent } from '@fuse/components/alert';
@@ -12,15 +12,14 @@ import { MatRadioModule } from '@angular/material/radio';
 import { MatSelectModule } from '@angular/material/select';
 
 @Component({
-    selector       : 'settings-plan-billing',
-    templateUrl    : './plan-billing.component.html',
-    encapsulation  : ViewEncapsulation.None,
+    selector: 'settings-plan-billing',
+    templateUrl: './plan-billing.component.html',
+    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone     : true,
-    imports        : [FormsModule, ReactiveFormsModule, FuseAlertComponent, MatRadioModule, NgFor, NgClass, NgIf, MatIconModule, MatFormFieldModule, MatInputModule, MatSelectModule, MatOptionModule, MatButtonModule, CurrencyPipe],
+    standalone: true,
+    imports: [FormsModule, ReactiveFormsModule, FuseAlertComponent, MatRadioModule, NgClass, MatIconModule, MatFormFieldModule, MatInputModule, MatSelectModule, MatOptionModule, MatButtonModule, CurrencyPipe],
 })
-export class SettingsPlanBillingComponent implements OnInit
-{
+export class SettingsPlanBillingComponent implements OnInit {
     planBillingForm: UntypedFormGroup;
     plans: any[];
 
@@ -29,8 +28,7 @@ export class SettingsPlanBillingComponent implements OnInit
      */
     constructor(
         private _formBuilder: UntypedFormBuilder,
-    )
-    {
+    ) {
     }
 
     // -----------------------------------------------------------------------------------------------------
@@ -40,38 +38,37 @@ export class SettingsPlanBillingComponent implements OnInit
     /**
      * On init
      */
-    ngOnInit(): void
-    {
+    ngOnInit(): void {
         // Create the form
         this.planBillingForm = this._formBuilder.group({
-            plan          : ['team'],
-            cardHolder    : ['Noble Ledger Team'],
-            cardNumber    : [''],
+            plan: ['team'],
+            cardHolder: ['Noble Ledger Team'],
+            cardNumber: [''],
             cardExpiration: [''],
-            cardCVC       : [''],
-            country       : ['usa'],
-            zip           : [''],
+            cardCVC: [''],
+            country: ['usa'],
+            zip: [''],
         });
 
         // Setup the plans
         this.plans = [
             {
-                value  : 'basic',
-                label  : 'BASIC',
+                value: 'basic',
+                label: 'BASIC',
                 details: 'Starter plan for individuals.',
-                price  : '10',
+                price: '10',
             },
             {
-                value  : 'team',
-                label  : 'TEAM',
+                value: 'team',
+                label: 'TEAM',
                 details: 'Collaborate up to 10 people.',
-                price  : '20',
+                price: '20',
             },
             {
-                value  : 'enterprise',
-                label  : 'ENTERPRISE',
+                value: 'enterprise',
+                label: 'ENTERPRISE',
                 details: 'For bigger businesses.',
-                price  : '40',
+                price: '40',
             },
         ];
     }
@@ -86,8 +83,7 @@ export class SettingsPlanBillingComponent implements OnInit
      * @param index
      * @param item
      */
-    trackByFn(index: number, item: any): any
-    {
+    trackByFn(index: number, item: any): any {
         return item.id || index;
     }
 }

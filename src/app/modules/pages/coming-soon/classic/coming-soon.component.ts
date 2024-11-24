@@ -1,28 +1,28 @@
 import { NgIf } from '@angular/common';
 import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
-import { FormsModule, NgForm, ReactiveFormsModule, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { FormsModule, m, ReactiveFormsModule, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { fuseAnimations } from '@fuse/animations';
 import { FuseAlertComponent, FuseAlertType } from '@fuse/components/alert';
-import { AuthService } from 'app/core/auth/auth.service';
+import { AuthService } from 'app/modules/auth/auth.service';
+
 
 @Component({
-    selector     : 'coming-soon-classic',
-    templateUrl  : './coming-soon.component.html',
+    selector: 'coming-soon-classic',
+    templateUrl: './coming-soon.component.html',
     encapsulation: ViewEncapsulation.None,
-    animations   : fuseAnimations,
-    standalone   : true,
-    imports      : [NgIf, FuseAlertComponent, FormsModule, ReactiveFormsModule, MatFormFieldModule, MatInputModule, MatButtonModule, MatProgressSpinnerModule],
+    animations: fuseAnimations,
+    standalone: true,
+    imports: [FuseAlertComponent, FormsModule, ReactiveFormsModule, MatFormFieldModule, MatInputModule, MatButtonModule, MatProgressSpinnerModule],
 })
-export class ComingSoonClassicComponent implements OnInit
-{
-    @ViewChild('comingSoonNgForm') comingSoonNgForm: NgForm;
+export class ComingSoonClassicComponent implements OnInit {
+    @ViewChild('comingSoon m') comingSoonFrom: m;
 
     alert: { type: FuseAlertType; message: string } = {
-        type   : 'success',
+        type: 'success',
         message: '',
     };
     comingSoonForm: UntypedFormGroup;
@@ -34,8 +34,7 @@ export class ComingSoonClassicComponent implements OnInit
     constructor(
         private _authService: AuthService,
         private _formBuilder: UntypedFormBuilder,
-    )
-    {
+    ) {
     }
 
     // -----------------------------------------------------------------------------------------------------
@@ -45,8 +44,7 @@ export class ComingSoonClassicComponent implements OnInit
     /**
      * On init
      */
-    ngOnInit(): void
-    {
+    ngOnInit(): void {
         // Create the form
         this.comingSoonForm = this._formBuilder.group({
             email: ['', [Validators.required, Validators.email]],
@@ -60,11 +58,9 @@ export class ComingSoonClassicComponent implements OnInit
     /**
      * Sign in
      */
-    register(): void
-    {
+    register(): void {
         // Return if the form is invalid
-        if ( this.comingSoonForm.invalid )
-        {
+        if (this.comingSoonForm.invalid) {
             return;
         }
 
@@ -76,17 +72,16 @@ export class ComingSoonClassicComponent implements OnInit
 
         // Do your action here...
         // Emulate server delay
-        setTimeout(() =>
-        {
+        setTimeout(() => {
             // Re-enable the form
             this.comingSoonForm.enable();
 
             // Reset the form
-            this.comingSoonNgForm.resetForm();
+            this.comingSoonFrom.resetForm();
 
             // Set the alert
             this.alert = {
-                type   : 'success',
+                type: 'success',
                 message: 'You have been registered to the list.',
             };
 

@@ -1,4 +1,4 @@
-import { NgFor, NgIf } from '@angular/common';
+import { NgIf } from '@angular/common';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -11,16 +11,15 @@ import { Item, Items } from '../file-manager.types';
 import { Subject, takeUntil } from 'rxjs';
 
 @Component({
-    selector       : 'file-manager-list',
-    templateUrl    : './list.component.html',
-    encapsulation  : ViewEncapsulation.None,
+    selector: 'file-manager-list',
+    templateUrl: './list.component.html',
+    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone     : true,
-    imports        : [MatSidenavModule, RouterOutlet, NgIf, RouterLink, NgFor, MatButtonModule, MatIconModule, MatTooltipModule],
+    standalone: true,
+    imports: [MatSidenavModule, RouterOutlet, RouterLink, MatButtonModule, MatIconModule, MatTooltipModule],
 })
-export class FileManagerListComponent implements OnInit, OnDestroy
-{
-    @ViewChild('matDrawer', {static: true}) matDrawer: MatDrawer;
+export class FileManagerListComponent implements OnInit, OnDestroy {
+    @ViewChild('matDrawer', { static: true }) matDrawer: MatDrawer;
     drawerMode: 'side' | 'over';
     selectedItem: Item;
     items: Items;
@@ -35,8 +34,7 @@ export class FileManagerListComponent implements OnInit, OnDestroy
         private _router: Router,
         private _fileManagerService: FileManagerService,
         private _fuseMediaWatcherService: FuseMediaWatcherService,
-    )
-    {
+    ) {
     }
 
     // -----------------------------------------------------------------------------------------------------
@@ -46,13 +44,11 @@ export class FileManagerListComponent implements OnInit, OnDestroy
     /**
      * On init
      */
-    ngOnInit(): void
-    {
+    ngOnInit(): void {
         // Get the items
         this._fileManagerService.items$
             .pipe(takeUntil(this._unsubscribeAll))
-            .subscribe((items: Items) =>
-            {
+            .subscribe((items: Items) => {
                 this.items = items;
 
                 // Mark for check
@@ -62,8 +58,7 @@ export class FileManagerListComponent implements OnInit, OnDestroy
         // Get the item
         this._fileManagerService.item$
             .pipe(takeUntil(this._unsubscribeAll))
-            .subscribe((item: Item) =>
-            {
+            .subscribe((item: Item) => {
                 this.selectedItem = item;
 
                 // Mark for check
@@ -73,8 +68,7 @@ export class FileManagerListComponent implements OnInit, OnDestroy
         // Subscribe to media query change
         this._fuseMediaWatcherService.onMediaQueryChange$('(min-width: 1440px)')
             .pipe(takeUntil(this._unsubscribeAll))
-            .subscribe((state) =>
-            {
+            .subscribe((state) => {
                 // Calculate the drawer mode
                 this.drawerMode = state.matches ? 'side' : 'over';
 
@@ -86,8 +80,7 @@ export class FileManagerListComponent implements OnInit, OnDestroy
     /**
      * On destroy
      */
-    ngOnDestroy(): void
-    {
+    ngOnDestroy(): void {
         // Unsubscribe from all subscriptions
         this._unsubscribeAll.next(null);
         this._unsubscribeAll.complete();
@@ -100,10 +93,9 @@ export class FileManagerListComponent implements OnInit, OnDestroy
     /**
      * On backdrop clicked
      */
-    onBackdropClicked(): void
-    {
+    onBackdropClicked(): void {
         // Go back to the list
-        this._router.navigate(['./'], {relativeTo: this._activatedRoute});
+        this._router.navigate(['./'], { relativeTo: this._activatedRoute });
 
         // Mark for check
         this._changeDetectorRef.markForCheck();
@@ -115,8 +107,7 @@ export class FileManagerListComponent implements OnInit, OnDestroy
      * @param index
      * @param item
      */
-    trackByFn(index: number, item: any): any
-    {
+    trackByFn(index: number, item: any): any {
         return item.id || index;
     }
 }

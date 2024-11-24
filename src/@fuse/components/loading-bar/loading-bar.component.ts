@@ -6,16 +6,15 @@ import { FuseLoadingService } from '@fuse/services/loading';
 import { Subject, takeUntil } from 'rxjs';
 
 @Component({
-    selector     : 'fuse-loading-bar',
-    templateUrl  : './loading-bar.component.html',
-    styleUrls    : ['./loading-bar.component.scss'],
+    selector: 'fuse-loading-bar',
+    templateUrl: './loading-bar.component.html',
+    styleUrls: ['./loading-bar.component.scss'],
     encapsulation: ViewEncapsulation.None,
-    exportAs     : 'fuseLoadingBar',
-    standalone   : true,
-    imports      : [NgIf, MatProgressBarModule],
+    exportAs: 'fuseLoadingBar',
+    standalone: true,
+    imports: [MatProgressBarModule],
 })
-export class FuseLoadingBarComponent implements OnChanges, OnInit, OnDestroy
-{
+export class FuseLoadingBarComponent implements OnChanges, OnInit, OnDestroy {
     @Input() autoMode: boolean = true;
     mode: 'determinate' | 'indeterminate';
     progress: number = 0;
@@ -25,8 +24,7 @@ export class FuseLoadingBarComponent implements OnChanges, OnInit, OnDestroy
     /**
      * Constructor
      */
-    constructor(private _fuseLoadingService: FuseLoadingService)
-    {
+    constructor(private _fuseLoadingService: FuseLoadingService) {
     }
 
     // -----------------------------------------------------------------------------------------------------
@@ -38,11 +36,9 @@ export class FuseLoadingBarComponent implements OnChanges, OnInit, OnDestroy
      *
      * @param changes
      */
-    ngOnChanges(changes: SimpleChanges): void
-    {
+    ngOnChanges(changes: SimpleChanges): void {
         // Auto mode
-        if ( 'autoMode' in changes )
-        {
+        if ('autoMode' in changes) {
             // Set the auto mode in the service
             this._fuseLoadingService.setAutoMode(coerceBooleanProperty(changes.autoMode.currentValue));
         }
@@ -51,27 +47,23 @@ export class FuseLoadingBarComponent implements OnChanges, OnInit, OnDestroy
     /**
      * On init
      */
-    ngOnInit(): void
-    {
+    ngOnInit(): void {
         // Subscribe to the service
         this._fuseLoadingService.mode$
             .pipe(takeUntil(this._unsubscribeAll))
-            .subscribe((value) =>
-            {
+            .subscribe((value) => {
                 this.mode = value;
             });
 
         this._fuseLoadingService.progress$
             .pipe(takeUntil(this._unsubscribeAll))
-            .subscribe((value) =>
-            {
+            .subscribe((value) => {
                 this.progress = value;
             });
 
         this._fuseLoadingService.show$
             .pipe(takeUntil(this._unsubscribeAll))
-            .subscribe((value) =>
-            {
+            .subscribe((value) => {
                 this.show = value;
             });
 
@@ -80,8 +72,7 @@ export class FuseLoadingBarComponent implements OnChanges, OnInit, OnDestroy
     /**
      * On destroy
      */
-    ngOnDestroy(): void
-    {
+    ngOnDestroy(): void {
         // Unsubscribe from all subscriptions
         this._unsubscribeAll.next(null);
         this._unsubscribeAll.complete();

@@ -1,4 +1,4 @@
-import { NgClass, NgFor, NgSwitch, NgSwitchCase } from '@angular/common';
+import { NgClass, NgSwitch, NgSwitchCase } from '@angular/common';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { MatDrawer } from '@angular/material/sidenav';
 import { FuseMediaWatcherService } from '@fuse/services/media-watcher';
@@ -11,10 +11,7 @@ import { BudgetLandingComponent } from './budget-landing/budget-landing.componen
 
 const imports = [
     MaterialModule,
-    NgFor,
     NgClass,
-    NgSwitch,
-    NgSwitchCase,
     BudgetUpdateComponent,
     BudgetLandingComponent,
     BudgetWizardComponent

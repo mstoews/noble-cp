@@ -18,7 +18,6 @@ import { MaterialModule } from 'app/services/material.module';
   standalone: true,
   imports: [
     CommonModule,
-    ProgressComponent,
     DndDirective,
     ReactiveFormsModule,
     MaterialModule,

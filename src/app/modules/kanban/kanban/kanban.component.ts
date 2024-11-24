@@ -25,8 +25,6 @@ const imports = [
   FormsModule,
   ReactiveFormsModule,
   CommonModule,
-  RouterOutlet,
-  CommonModule,
   KanbanModule,
   CheckBoxAllModule,
   KanbanTypesComponent,

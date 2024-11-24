@@ -1,10 +1,9 @@
 import { Component, OnDestroy, OnInit, ViewChild, ViewEncapsulation, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { DistMenuStandaloneComponent } from '../distributed-ledger/dist-menubar/grid-menubar.component';
+
 import { ReportingToolbarComponent } from '../grid-reporting/grid-menubar.component';
 import { DistributionLedgerService } from 'app/services/distribution.ledger.service';
-import { SimpleDialogComponent } from "../../../common/simple-dialog.component";
-import { StatementLineComponent } from './statement-line.component';
+
 import { map, Subject  } from 'rxjs';
 import { MaterialModule } from 'app/services/material.module';
 import { StatementTotalComponent } from './statement-totals.component';
@@ -14,10 +13,9 @@ import jsPDF from 'jspdf';
 
 const imports = [
   CommonModule,
-  DistMenuStandaloneComponent,
+  
   ReportingToolbarComponent,
-  SimpleDialogComponent,
-  StatementLineComponent,
+  
   MaterialModule,
   StatementTotalComponent,
   

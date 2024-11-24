@@ -1,5 +1,5 @@
 import { BooleanInput } from '@angular/cdk/coercion';
-import { NgClass, NgFor, NgIf, NgTemplateOutlet } from '@angular/common';
+import { NgClass, NgTemplateOutlet } from '@angular/common';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, forwardRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenu, MatMenuModule } from '@angular/material/menu';
@@ -12,14 +12,13 @@ import { FuseNavigationItem } from '@fuse/components/navigation/navigation.types
 import { Subject, takeUntil } from 'rxjs';
 
 @Component({
-    selector       : 'fuse-horizontal-navigation-branch-item',
-    templateUrl    : './branch.component.html',
+    selector: 'fuse-horizontal-navigation-branch-item',
+    templateUrl: './branch.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone     : true,
-    imports        : [NgIf, NgClass, MatMenuModule, NgTemplateOutlet, NgFor, FuseHorizontalNavigationBasicItemComponent, forwardRef(() => FuseHorizontalNavigationBranchItemComponent), FuseHorizontalNavigationDividerItemComponent, MatTooltipModule, MatIconModule],
+    standalone: true,
+    imports: [NgClass, MatMenuModule, NgTemplateOutlet, FuseHorizontalNavigationBasicItemComponent, forwardRef(() => FuseHorizontalNavigationBranchItemComponent), FuseHorizontalNavigationDividerItemComponent, MatTooltipModule, MatIconModule],
 })
-export class FuseHorizontalNavigationBranchItemComponent implements OnInit, OnDestroy
-{
+export class FuseHorizontalNavigationBranchItemComponent implements OnInit, OnDestroy {
     /* eslint-disable @typescript-eslint/naming-convention */
     static ngAcceptInputType_child: BooleanInput;
     /* eslint-enable @typescript-eslint/naming-convention */
@@ -27,7 +26,7 @@ export class FuseHorizontalNavigationBranchItemComponent implements OnInit, OnDe
     @Input() child: boolean = false;
     @Input() item: FuseNavigationItem;
     @Input() name: string;
-    @ViewChild('matMenu', {static: true}) matMenu: MatMenu;
+    @ViewChild('matMenu', { static: true }) matMenu: MatMenu;
 
     private _fuseHorizontalNavigationComponent: FuseHorizontalNavigationComponent;
     private _unsubscribeAll: Subject<any> = new Subject<any>();
@@ -38,8 +37,7 @@ export class FuseHorizontalNavigationBranchItemComponent implements OnInit, OnDe
     constructor(
         private _changeDetectorRef: ChangeDetectorRef,
         private _fuseNavigationService: FuseNavigationService,
-    )
-    {
+    ) {
     }
 
     // -----------------------------------------------------------------------------------------------------
@@ -49,16 +47,14 @@ export class FuseHorizontalNavigationBranchItemComponent implements OnInit, OnDe
     /**
      * On init
      */
-    ngOnInit(): void
-    {
+    ngOnInit(): void {
         // Get the parent navigation component
         this._fuseHorizontalNavigationComponent = this._fuseNavigationService.getComponent(this.name);
 
         // Subscribe to onRefreshed on the navigation component
         this._fuseHorizontalNavigationComponent.onRefreshed.pipe(
             takeUntil(this._unsubscribeAll),
-        ).subscribe(() =>
-        {
+        ).subscribe(() => {
             // Mark for check
             this._changeDetectorRef.markForCheck();
         });
@@ -67,8 +63,7 @@ export class FuseHorizontalNavigationBranchItemComponent implements OnInit, OnDe
     /**
      * On destroy
      */
-    ngOnDestroy(): void
-    {
+    ngOnDestroy(): void {
         // Unsubscribe from all subscriptions
         this._unsubscribeAll.next(null);
         this._unsubscribeAll.complete();
@@ -81,8 +76,7 @@ export class FuseHorizontalNavigationBranchItemComponent implements OnInit, OnDe
     /**
      * Trigger the change detection
      */
-    triggerChangeDetection(): void
-    {
+    triggerChangeDetection(): void {
         // Mark for check
         this._changeDetectorRef.markForCheck();
     }
@@ -93,8 +87,7 @@ export class FuseHorizontalNavigationBranchItemComponent implements OnInit, OnDe
      * @param index
      * @param item
      */
-    trackByFn(index: number, item: any): any
-    {
+    trackByFn(index: number, item: any): any {
         return item.id || index;
     }
 }

@@ -1,4 +1,4 @@
-import { NgClass, NgFor } from '@angular/common';
+import { NgClass, } from '@angular/common';
 import { Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -10,9 +10,9 @@ import { FuseConfig, FuseConfigService, Scheme, Theme, Themes } from '@fuse/serv
 import { Subject, takeUntil } from 'rxjs';
 
 @Component({
-    selector     : 'settings',
-    templateUrl  : './settings.component.html',
-    styles       : [
+    selector: 'settings',
+    templateUrl: './settings.component.html',
+    styles: [
         `
             settings {
                 position: static;
@@ -30,11 +30,10 @@ import { Subject, takeUntil } from 'rxjs';
         `,
     ],
     encapsulation: ViewEncapsulation.None,
-    standalone   : true,
-    imports      : [MatIconModule, FuseDrawerComponent, MatButtonModule, NgFor, NgClass, MatTooltipModule],
+    standalone: true,
+    imports: [MatIconModule, FuseDrawerComponent, MatButtonModule, NgClass, MatTooltipModule],
 })
-export class SettingsComponent implements OnInit, OnDestroy
-{
+export class SettingsComponent implements OnInit, OnDestroy {
     config: FuseConfig;
     layout: string;
     scheme: 'dark' | 'light';
@@ -48,8 +47,7 @@ export class SettingsComponent implements OnInit, OnDestroy
     constructor(
         private _router: Router,
         private _fuseConfigService: FuseConfigService,
-    )
-    {
+    ) {
     }
 
     // -----------------------------------------------------------------------------------------------------
@@ -59,37 +57,34 @@ export class SettingsComponent implements OnInit, OnDestroy
     /**
      * On init
      */
-    ngOnInit(): void
-    {
+    ngOnInit(): void {
         // Subscribe to config changes
         this._fuseConfigService.config$
             .pipe(takeUntil(this._unsubscribeAll))
-            .subscribe((config: FuseConfig) =>
-            {
+            .subscribe((config: FuseConfig) => {
                 // Store the config
                 this.config = config;
             });
 
-            const layout = localStorage.getItem('layout');
-            const scheme = localStorage.getItem('scheme');
-            const theme = localStorage.getItem('theme');
+        const layout = localStorage.getItem('layout');
+        const scheme = localStorage.getItem('scheme');
+        const theme = localStorage.getItem('theme');
 
-            if (layout != null) {
-                this.setLayout(layout);
-            }
-            if (scheme != null) {
-                this.setScheme(scheme as Scheme);
-            }
-            if (theme != null) {
-                this.setTheme(theme);
-            }
+        if (layout != null) {
+            this.setLayout(layout);
+        }
+        if (scheme != null) {
+            this.setScheme(scheme as Scheme);
+        }
+        if (theme != null) {
+            this.setTheme(theme);
+        }
     }
 
     /**
      * On destroy
      */
-    ngOnDestroy(): void
-    {
+    ngOnDestroy(): void {
         // Unsubscribe from all subscriptions
         this._unsubscribeAll.next(null);
         this._unsubscribeAll.complete();
@@ -104,18 +99,16 @@ export class SettingsComponent implements OnInit, OnDestroy
      *
      * @param layout
      */
-    setLayout(layout: string): void
-    {
+    setLayout(layout: string): void {
         // Clear the 'layout' query param to allow layout changes
         this._router.navigate([], {
-            queryParams        : {
+            queryParams: {
                 layout: null,
             },
             queryParamsHandling: 'merge',
-        }).then(() =>
-        {
+        }).then(() => {
             // Set the config
-            this._fuseConfigService.config = {layout};
+            this._fuseConfigService.config = { layout };
         });
         localStorage.setItem('layout', layout);
     }
@@ -125,9 +118,8 @@ export class SettingsComponent implements OnInit, OnDestroy
      *
      * @param scheme
      */
-    setScheme(scheme: Scheme): void
-    {
-        this._fuseConfigService.config = {scheme};
+    setScheme(scheme: Scheme): void {
+        this._fuseConfigService.config = { scheme };
         localStorage.setItem('scheme', scheme);
     }
 
@@ -136,9 +128,8 @@ export class SettingsComponent implements OnInit, OnDestroy
      *
      * @param theme
      */
-    setTheme(theme: Theme): void
-    {
-        this._fuseConfigService.config = {theme};
+    setTheme(theme: Theme): void {
+        this._fuseConfigService.config = { theme };
         localStorage.setItem('theme', theme);
     }
 }
