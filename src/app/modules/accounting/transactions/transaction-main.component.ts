@@ -76,7 +76,7 @@ export class TransactionMainComponent {
             {
                 id: 'listing',
                 icon: 'heroicons_outline:document-check',
-                title: 'General Transactions',
+                title: 'Transactions Listing',
                 description: 'Manage your transactions and documentation',
             },
             {

@@ -1,3 +1,4 @@
+import { TuiRoot } from "@taiga-ui/core";
 import { trigger, transition, query, style, group, animate } from '@angular/animations';
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
@@ -7,7 +8,7 @@ import { RouterOutlet } from '@angular/router';
     templateUrl: './app.component.html',
     styleUrls  : ['./app.component.scss'],
     standalone : true,
-    imports    : [RouterOutlet],
+    imports    : [RouterOutlet, TuiRoot],
     animations: [
         trigger('routerTransition', [
           transition('* <=> *', [

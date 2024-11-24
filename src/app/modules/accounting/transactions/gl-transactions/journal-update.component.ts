@@ -359,7 +359,7 @@ export class JournalUpdateComponent
       allowEditing: true,
       allowAdding: false,
       allowDeleting: false,
-    };
+    }; 
     this.editArtifactSettings = {
       allowEditing: true,
       allowAdding: false,

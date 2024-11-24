@@ -28,7 +28,7 @@
                                     @if (filteredDebitAccounts | async; as accounts ) {
                                     <mat-form-field class="flex flex-col grow ml-2 mr-2 mt-1 ">
                                         <mat-label class="text-md ml-2">Account</mat-label>
-                                        <mat-select [formControl]="debitCtrl" placeholder="Account" #singleDebitSelect>
+                                        <mat-select [formControl]="debitCtrl" placeholder="Account" #singleDebitSelect  required>
                                             <mat-option>
                                                 <ngx-mat-select-search [formControl]="debitAccountFilterCtrl"
                                                     [noEntriesFoundLabel]="'No entries found'"
@@ -41,6 +41,7 @@
                                         </mat-select>
                                         <mat-icon class="icon-size-5 text-lime-700" matPrefix
                                             [svgIcon]="'heroicons_solid:document-chart-bar'"></mat-icon>
+                                           
                                     </mat-form-field>
                                     }
 

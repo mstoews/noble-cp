@@ -1,8 +1,5 @@
 <div class="flex flex-col flex-auto min-w-0">
-
-
     <div class="md:max-w-7xl max-w-4xl">
-
         <form class="p-4 bg-card shadow rounded overflow-hidden" [formGroup]="journalEntryForm">
             <mat-vertical-stepper [linear]="true" #verticalStepper>
                 <mat-step [formGroupName]="'step1'" [stepControl]="journalEntryForm.get('step1')" #verticalStepperStep1>
@@ -12,7 +9,7 @@
                             @if (templateFilter | async; as templates ) {
                                 <mat-form-field>
                                     <mat-label class="text-md ml-2">Template</mat-label>
-                                    <mat-select [formControl]="templateCtrl" placeholder="Journal Template"  #singleTemplateSelect>
+                                    <mat-select [formControl]="templateCtrl" placeholder="Journal Template"  #singleTemplateSelect required>
                                         <mat-option>
                                             <ngx-mat-select-search [formControl]="templateFilterCtrl"
                                                 [noEntriesFoundLabel]="'No entries found'"
@@ -42,7 +39,7 @@
                         @if (partyFilter | async; as parties ) {
                             <mat-form-field>
                                 <mat-label class="text-md ml-2">Party</mat-label>
-                                <mat-select [formControl]="partyCtrl" placeholder="Party" #singlePartySelect>
+                                <mat-select [formControl]="partyCtrl" placeholder="Party" #singlePartySelect required>
                                     <mat-option>
                                         <ngx-mat-select-search [formControl]="partyFilterCtrl"
                                             [noEntriesFoundLabel]="'No entries found'"
@@ -96,6 +93,10 @@
                             <mat-icon [svgIcon]="'feather:arrow-right'"></mat-icon>
                         </button>
                     </div>
+                    </mat-step>
+
+                <mat-step [formGroupName]="'step2'" [stepControl]="journalEntryForm.get('step2')" #verticalStepperStep3>
+                    <ng-template matStepLabel>Transaction Details</ng-template>
                     @defer () {
                         <div class="flex flex-col">
                             <div class="text-3xl m-1 text-gray-100 p-2 bg-slate-600 rounded-md">Details</div>
@@ -140,11 +141,22 @@
                             </div>
                         </div>
                     }
-                    </mat-step>
+                <div class="flex justify-end mt-2">
+                <button mat-icon-button color="primary" class="bg-gray-200  hover:bg-slate-400 ml-1"
+                    type="button" matTooltip="Back" aria-label="Template" matStepperPrevious>
+                    <mat-icon [svgIcon]="'feather:arrow-left'"></mat-icon>
+                </button>
 
-                <mat-step [formGroupName]="'step2'" [stepControl]="journalEntryForm.get('step2')" #verticalStepperStep3>
-                    <ng-template matStepLabel>Transaction Details</ng-template>
-                    <section class="flex flex-row mt-2 gap-2">
+                <button mat-icon-button color="primary" class="bg-gray-200  hover:bg-slate-400 ml-1"
+                    type="button" matTooltip="Post Transaction" aria-label="Template"
+                    [disabled]="verticalStepperStep3.stepControl.pristine || verticalStepperStep3.stepControl.invalid"
+                    (click)="onUpdate()" matStepperNext>
+                    <mat-icon [svgIcon]="'feather:arrow-right'"></mat-icon>
+                </button>
+                </div>  
+
+                    <!-- <section class="flex flex-row mt-2 gap-2">
+
                         <div class="flex flex-col md:flex-row grow">
                             <mat-form-field class="flex-col grow ">
                                 <input matInput placeholder="Description" formControlName="detail_description"
@@ -194,7 +206,6 @@
                         </div>
                         }
                     </section>
-
                     <section class="flex flex-row gap-2">
                         <div class="flex flex-col grow">
                             @if (filteredDebitAccounts | async; as accounts ) {
@@ -253,8 +264,6 @@
                             </mat-form-field>
                         </div>
                     </section>
-
-
                     <div class="flex justify-end">
 
                         <button mat-icon-button color="primary" class="bg-gray-200  hover:bg-slate-400 ml-1"
@@ -269,7 +278,7 @@
                             <mat-icon [svgIcon]="'feather:arrow-right'"></mat-icon>
                         </button>
 
-                    </div>
+                    </div> -->
 
                 </mat-step>
 

@@ -1,3 +1,4 @@
+import { NG_EVENT_PLUGINS } from "@taiga-ui/event-plugins";
 
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { APP_INITIALIZER, ApplicationConfig, ErrorHandler } from '@angular/core';
@@ -86,6 +87,7 @@ const CoreProviders = [
 
 export const appConfig: ApplicationConfig = {
   providers: [
+    NG_EVENT_PLUGINS,
     provideAnimations(),
     ...CoreProviders,
     provideRouter(appRoutes,
@@ -159,6 +161,7 @@ export const appConfig: ApplicationConfig = {
         ],
       },
     }),
-  ],
+
+    ],
 };
 

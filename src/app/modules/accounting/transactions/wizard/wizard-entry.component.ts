@@ -28,7 +28,9 @@ import { MatIcon, MatIconModule } from '@angular/material/icon';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { IParty } from 'app/models/party';
 import { PartyService } from 'app/services/party.service';
-import { GridComponent, GridModule, RowDragEventArgs, SaveEventArgs } from '@syncfusion/ej2-angular-grids';
+import { AggregateService, EditService, FilterService, GridComponent, GridModule, RowDDService, RowDragEventArgs, SaveEventArgs } from '@syncfusion/ej2-angular-grids';
+import { create } from 'lodash';
+import {TuiAlertService} from '@taiga-ui/core';
 
 
 interface ITransactionType {
@@ -54,7 +56,10 @@ const mods = [
   MaterialModule,
   MatDatepickerModule, 
   NgxMatSelectSearchModule,
-  GridModule, 
+  GridModule,
+  
+  GridModule,
+
 ]
 
 @Component({
@@ -65,7 +70,7 @@ const mods = [
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
   animations: fuseAnimations,
-  providers: [provideNgxMask(), JournalStore]
+  providers: [provideNgxMask(), JournalStore, AggregateService, EditService, FilterService, RowDDService],
 })
 export class EntryWizardComponent implements OnInit, OnDestroy, AfterViewInit {
 
@@ -78,6 +83,7 @@ export class EntryWizardComponent implements OnInit, OnDestroy, AfterViewInit {
   private formBuilder = inject(FormBuilder);
   private changeDescriptionRef = inject(ChangeDetectorRef);
   private templateService = inject(JournalTemplateService); 
+  
   
   public  journalEntryForm: UntypedFormGroup;
   public  matDialog = inject(MatDialog);
@@ -137,6 +143,7 @@ export class EntryWizardComponent implements OnInit, OnDestroy, AfterViewInit {
   funds$ = this.fundService.read();
   subtype$ = this.subtypeService.read();
   accounts$ = this.accountService.readDropDownChild();
+  private readonly alerts = inject(TuiAlertService);
 
   @ViewChild("singleDebitSelect", { static: true })  singleDebitSelect: MatSelect;
   @ViewChild("singleCreditSelect", { static: true })  singleCreditSelect: MatSelect;
@@ -153,6 +160,7 @@ export class EntryWizardComponent implements OnInit, OnDestroy, AfterViewInit {
     { value: "AP", viewValue: "Payments", checked: false },
     { value: "AR", viewValue: "Receipts", checked: false },
   ];
+  bHeaderDirty: boolean;
 
 
   onTransTypeClicked(e: any) {
@@ -192,7 +200,7 @@ export class EntryWizardComponent implements OnInit, OnDestroy, AfterViewInit {
         description: ['', Validators.required],                    
         amount: ['', Validators.required],        
         transaction_date: ['', Validators.required],
-        partyCtrl: ['', Validators.required],
+        partyCtrl: [''],
         invoice_no: ['', Validators.required],
       }),
       step2: this.formBuilder.group({
@@ -232,6 +240,8 @@ export class EntryWizardComponent implements OnInit, OnDestroy, AfterViewInit {
         allowAdding: false,
         allowDeleting: false,
       };
+
+    this.onChanges()
   
   }
 
@@ -462,7 +472,6 @@ export class EntryWizardComponent implements OnInit, OnDestroy, AfterViewInit {
     this.journalEntryForm.get('step2').get('credit').setValue(this.headerAmount);
     this.changeDescriptionRef.markForCheck();
 
-
     var transaction_period: ITransactionDate = {
       start_date: transactionDate,
       end_date: transactionDate
@@ -473,11 +482,32 @@ export class EntryWizardComponent implements OnInit, OnDestroy, AfterViewInit {
     //     journalHeader.period_year = period.period_year
     // })
 
+    this.alerts.open('Journal detail created', {label: 'Journal Entry'}).subscribe();
 
   }
 
   onDelete() {
     throw new Error('Method not implemented.');
+  }
+
+
+  public onChanges(): void {
+    this.journalEntryForm.valueChanges.subscribe((dirty) => {
+      if (this.journalEntryForm.dirty) {
+        this.bHeaderDirty = true;
+      }
+    });
+
+    this.templateCtrl.valueChanges.subscribe((value) => {      
+      this.bDirty = true;
+      this.createJournalDetailsFromTemplate(value);
+    });
+
+    console.log('Template control changed 3');
+  }
+
+  createJournalDetailsFromTemplate(value: IJournalTemplate) {
+    console.log('Create journal details from template ... ',  JSON.stringify(value));
   }
 
 

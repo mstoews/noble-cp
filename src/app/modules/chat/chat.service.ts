@@ -2,6 +2,15 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Chat, Contact, Profile } from './chat.types';
 import { BehaviorSubject, filter, map, Observable, of, switchMap, take, tap, throwError } from 'rxjs';
+import { AuthService } from '../auth/auth.service';
+import { FIRESTORE } from 'app/app.config';
+import { toObservable } from '@angular/core/rxjs-interop';
+
+import { EMPTY, Subject, defer, exhaustMap, from } from 'rxjs';
+import { collection, query, orderBy, limit, addDoc, updateDoc } from 'firebase/firestore';
+import { collectionData } from 'rxfire/firestore';
+import { catchError, retry } from 'rxjs/operators';
+
 
 @Injectable({providedIn: 'root'})
 export class ChatService
@@ -13,6 +22,11 @@ export class ChatService
     private _profile: BehaviorSubject<Profile> = new BehaviorSubject(null);
 
     private _httpClient = inject(HttpClient);
+
+    private firestore = inject(FIRESTORE);
+    private authService = inject(AuthService);
+    private authUser$ = toObservable(this.authService.user);
+    
 
     // -----------------------------------------------------------------------------------------------------
     // @ Accessors
@@ -195,4 +209,29 @@ export class ChatService
     {
         this._chat.next(null);
     }
+
+    private getMessages() {
+        const messagesCollection = query(
+          collection(this.firestore, 'chats'),
+          orderBy('createdAt', 'desc'),
+          limit(50)
+        );
+  
+      return collectionData(messagesCollection, { idField: 'id' }).pipe(
+        map((messages) => [...messages].reverse())
+      ) as Observable<Chat[]>;
+    }
+  
+    private addMessage(message: string) {
+      const newMessage = {
+        author: this.authService.user()?.email,
+        content: message,
+        created: Date.now().toString(),
+      };
+  
+  
+      const messagesCollection = collection(this.firestore, 'messages');
+      return defer(() => addDoc(messagesCollection, newMessage));
+    }
+
 }
