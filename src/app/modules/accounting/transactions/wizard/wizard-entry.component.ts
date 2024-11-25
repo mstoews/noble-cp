@@ -29,7 +29,7 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { IParty } from 'app/models/party';
 import { PartyService } from 'app/services/party.service';
 import { AggregateService, EditService, FilterService, GridComponent, GridModule, RowDDService, RowDragEventArgs, SaveEventArgs } from '@syncfusion/ej2-angular-grids';
-import { create } from 'lodash';
+import { create, now } from 'lodash';
 import {TuiAlertService} from '@taiga-ui/core';
 
 
@@ -160,6 +160,7 @@ export class EntryWizardComponent implements OnInit, OnDestroy, AfterViewInit {
     { value: "AP", viewValue: "Payments", checked: false },
     { value: "AR", viewValue: "Receipts", checked: false },
   ];
+
   bHeaderDirty: boolean;
 
 
@@ -332,7 +333,7 @@ export class EntryWizardComponent implements OnInit, OnDestroy, AfterViewInit {
         .subscribe(() => {
     if (this.singlePartySelect != null || this.singlePartySelect != undefined)
          this.singlePartySelect.compareWith = (a: IParty, b: IParty) => a && b && a.party_id === b.party_id;
-});
+    });
         
 
     if (this.filteredDebitAccounts)
@@ -344,15 +345,6 @@ export class EntryWizardComponent implements OnInit, OnDestroy, AfterViewInit {
             this.singleDebitSelect.compareWith = (a: IDropDownAccounts, b: IDropDownAccounts) => a && b && a.child === b.child;
       });
       
-      /* 
-          NB 
-
-          setting the compareWith property to a comparison function
-          triggers initializing the selection according to the initial value of
-          the form control (i.e. _initializeSelection())
-          this needs to be done after the filteredBanks are loaded initially
-          and after the mat-option elements are available. 
-      */
   }
 
 
@@ -477,11 +469,6 @@ export class EntryWizardComponent implements OnInit, OnDestroy, AfterViewInit {
       end_date: transactionDate
     }
 
-    // this.journalService.readPeriodFromTransactionDate(transaction_period).subscribe(period =>{
-    //     journalHeader.period = period.period_id,
-    //     journalHeader.period_year = period.period_year
-    // })
-
     this.alerts.open('Journal detail created', {label: 'Journal Entry'}).subscribe();
 
   }
@@ -506,8 +493,35 @@ export class EntryWizardComponent implements OnInit, OnDestroy, AfterViewInit {
     console.log('Template control changed 3');
   }
 
+  
+
   createJournalDetailsFromTemplate(value: IJournalTemplate) {
-    console.log('Create journal details from template ... ',  JSON.stringify(value));
+    
+    this.store.loadTemplateDetails(value.template_ref.toString());
+    
+    var journalDetails: IJournalDetail[] = [];
+    
+    this.store.templateDetails().forEach((templateDetail) => {
+      var i = 1;
+      var journalDetail: IJournalDetail = {
+        journal_id: this.journal_id,
+        journal_subid: i,
+        account: templateDetail.account,
+        child: templateDetail.child,
+        child_desc: '',
+        description: templateDetail.description,
+        create_date: now().toString(),
+        create_user: '@admin',
+        sub_type: templateDetail.sub_type,
+        debit: templateDetail.debit,
+        credit: templateDetail.credit,
+        reference: '',
+        fund: templateDetail.fund
+      }
+      journalDetails.push(journalDetail);
+      i++;
+    });
+
   }
 
 
@@ -517,8 +531,6 @@ export class EntryWizardComponent implements OnInit, OnDestroy, AfterViewInit {
     const inputs = { ...this.journalEntryForm.value }
     const momentDate = new Date(inputs.step1.transaction_date).toISOString().split('T')[0]; // Replace event.value with your date value
     const email = this.auth.currentUser?.email;
-
-
 
     var count: number;
 

@@ -1,6 +1,6 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable, OnDestroy, inject, signal } from '@angular/core';
-import { Observable, Subject, catchError, debounceTime, distinctUntilChanged, retry, shareReplay, take, takeUntil, tap, throwError } from 'rxjs';
+import { Observable, Subject, TimeoutError, catchError, debounceTime, distinctUntilChanged, retry, shareReplay, take, takeUntil, tap, throwError, timeout, timer } from 'rxjs';
 import { environment } from 'environments/environment.prod';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
@@ -9,6 +9,7 @@ import {
   IArtifacts,
   IJournalDetail,
   IJournalDetailDelete,
+  IJournalDetailTemplate,
   IJournalHeader,
   IJournalHeaderUpdate,
   IJournalTemplate,
@@ -94,6 +95,14 @@ export class JournalService implements OnDestroy {
     }
     return this.httpClient.post<IJournalDetail[]>(url, update).pipe(shareReplay());
   }
+
+  getHttpTemplateDetails(journal_id: number) {
+    console.log('getHttpJournalDetails', journal_id);
+    var url = this.baseUrl + '/v1/get_journal_detail/' + journal_id;
+    return this.httpClient.get<IJournalDetail[]>(url);
+  }
+
+
 
   getHttpJournalDetails(journal_id: number) {
     console.log('getHttpJournalDetails', journal_id);
@@ -218,6 +227,61 @@ export class JournalService implements OnDestroy {
   createHttpJournalDetail(detail: IJournalDetail) {
     var url = this.baseUrl + '/v1/create_journal_detail';
     return this.httpClient.post<IJournalDetail>(url, detail);
+  }
+
+  getTemplateDetails(reference: string): Observable<IJournalDetailTemplate[]> {
+    var url = this.baseUrl + "/v1/read_template_details/" + reference;
+    return this.httpClient.get<IJournalDetailTemplate[]>(url).pipe(
+      timeout(2),
+      retry({
+        count: environment.apiRetryCount,
+        delay: (err, attemptNum) => {
+          console.error(
+            `[JournalTemplateService] => Encountered an error while retrying request on attempt ${attemptNum}: `,
+            err
+          );
+          return timer(1000 * attemptNum);
+        },
+      }),
+      catchError(this.handleErrorWithTimeout)
+    );
+  }  
+
+
+  private handleErrorWithTimeout(error: HttpErrorResponse | TimeoutError) {
+    let errorMessage = "";
+    if (error instanceof TimeoutError) {
+      console.error("[ApiService] => Request timed out!", error);
+      return throwError(() => {
+        return errorMessage;
+      });
+    } else {
+      return this.handleError(error);
+    }
+  }
+
+  private handleError(error: HttpErrorResponse) {
+    let errorMessage = "";
+    if (error.status === 0) {
+      // Get client-side error
+      errorMessage = error.error;
+      console.error(
+        "[ApiService] => Client-side HTTP error occurred: ",
+        errorMessage,
+        error
+      );
+    } else {
+      // Get server-side error
+      errorMessage = `Error Code: ${error.status}\nMessage: ${error.error}`;
+      console.error(
+        "[ApiService] => Server-side HTTP error occurred: ",
+        errorMessage,
+        error
+      );
+    }
+    return throwError(() => {
+      return errorMessage;
+    });
   }
 
   ngOnDestroy(): void {

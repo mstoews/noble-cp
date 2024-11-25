@@ -11,7 +11,7 @@ import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { exhaustMap, pipe, switchMap, tap } from 'rxjs';
 import { inject } from '@angular/core';
 import { tapResponse } from '@ngrx/operators';
-import { IAccounts, IArtifacts, IJournalDetail, IJournalDetailDelete, IJournalHeader, IPeriodParam } from 'app/models/journals';
+import { IAccounts, IArtifacts, IJournalDetail, IJournalDetailDelete, IJournalDetailTemplate, IJournalHeader, IPeriodParam } from 'app/models/journals';
 import { JournalService } from '../services/journal.service';
 import { IFund, IType } from 'app/modules/kanban/kanban.service';
 import { IParty } from 'app/models/party';
@@ -24,6 +24,7 @@ export interface JournalStateInterface {
   ap: IJournalHeader[];
   ar: IJournalHeader[];
   details: IJournalDetail[];
+  templateDetails: IJournalDetailTemplate[];
   accounts: IAccounts[];
   account_type: IType[];
   party: IParty[];
@@ -43,6 +44,7 @@ export const JournalStore = signalStore(
     details: [],
     accounts: [],
     account_type: [],
+    templateDetails: [],
     party: [],
     period: [],
     sub_type: [],
@@ -162,6 +164,20 @@ export const JournalStore = signalStore(
           return journalService.getHttpJournalDetails(value).pipe(
             tapResponse({
               next: (journal) => patchState(state, { details: journal }),
+              error: console.error,
+              finalize: () => patchState(state, { isLoading: false }),
+            })
+          );
+        })
+      )
+    ),
+    loadTemplateDetails: rxMethod<string>(
+      pipe(
+        tap(() => patchState(state, { isLoading: true })),
+        switchMap((value) => {
+          return journalService.getTemplateDetails(value).pipe(
+            tapResponse({
+              next: (templateDetails) => patchState(state, { templateDetails: templateDetails }),
               error: console.error,
               finalize: () => patchState(state, { isLoading: false }),
             })
