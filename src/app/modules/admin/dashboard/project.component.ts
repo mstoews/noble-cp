@@ -4,6 +4,7 @@ import {
     Component,
     OnDestroy,
     OnInit,
+    ViewChild,
     ViewEncapsulation,
     effect,
     inject,
@@ -15,7 +16,7 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatRippleModule } from '@angular/material/core';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
-import { MatTableModule } from '@angular/material/table';
+import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatTabsModule } from '@angular/material/tabs';
 import { Router } from '@angular/router';
 import { TranslocoModule } from '@ngneat/transloco';
@@ -25,6 +26,10 @@ import { single, Subject, takeUntil } from 'rxjs';
 import { AuthService } from 'app/modules/auth/auth.service';
 import { SummaryCardComponent } from './summary-card.component';
 import { FIRESTORE } from 'app/app.config';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatDividerModule } from '@angular/material/divider';
+import { FinanceService } from '../finance/finance.service';
+import { MatSort } from '@angular/material/sort';
 
 
 
@@ -45,10 +50,22 @@ import { FIRESTORE } from 'app/app.config';
         NgApexchartsModule,
         MatTableModule,
         CommonModule,
-        SummaryCardComponent
+        SummaryCardComponent,
+        MatProgressBarModule,
+        MatDividerModule,
+        MatMenuModule, 
+        NgApexchartsModule, 
+        MatTableModule, 
+        NgClass, 
+        CurrencyPipe 
     ],
 })
 export class ProjectComponent implements OnInit, OnDestroy {
+
+    finance_data: any;
+    accountBalanceOptions: ApexOptions;
+    recentTransactionsDataSource: MatTableDataSource<any> = new MatTableDataSource();
+    recentTransactionsTableColumns: string[] = ['transactionId', 'date', 'name', 'amount', 'status'];
     chartGithubIssues: ApexOptions = {};
     chartTaskDistribution: ApexOptions = {};
     chartBudgetDistribution: ApexOptions = {};
@@ -61,6 +78,10 @@ export class ProjectComponent implements OnInit, OnDestroy {
     authService = inject(AuthService);
     private _router = inject(Router);
     private _projectService = inject(ProjectService);
+    private _financeService = inject(FinanceService);
+    private router = inject(Router);
+
+    @ViewChild('recentTransactionsTable', {read: MatSort}) recentTransactionsTableMatSort: MatSort;
 
     netRevenue = input(0);
     special = input(8000);
@@ -138,6 +159,20 @@ export class ProjectComponent implements OnInit, OnDestroy {
                 },
             },
         };
+
+        this._financeService.data$
+        .pipe(takeUntil(this._unsubscribeAll))
+        .subscribe((data) =>
+        {
+            // Store the data
+            this.data = data;
+
+            // Store the table data
+            this.recentTransactionsDataSource.data = data.recentTransactions;
+
+            // Prepare the chart data
+            this._prepareFinanceChartData();
+        });
     }
 
     ngOnDestroy(): void {
@@ -145,6 +180,17 @@ export class ProjectComponent implements OnInit, OnDestroy {
         this._unsubscribeAll.next(null);
         this._unsubscribeAll.complete();
     }
+
+    ngAfterViewInit(): void
+    {
+        // Make the data source sortable
+        this.recentTransactionsDataSource.sort = this.recentTransactionsTableMatSort;
+    }
+
+    onTransactions() {
+        this.router.navigate(['journals'])
+    }
+
 
     trackByFn(index: number, item: any): any {
         return item.id || index;
@@ -173,7 +219,7 @@ export class ProjectComponent implements OnInit, OnDestroy {
      *
      * @private
      */
-    private _prepareChartData(): void {
+    private _prepareFinanceChartData(): void {
         // Github issues
         this.chartGithubIssues = {
             chart: {
@@ -474,5 +520,52 @@ export class ProjectComponent implements OnInit, OnDestroy {
                 },
             },
         };
+    }
+
+    private _prepareChartData(): void
+    {
+            // Account balance
+            this.accountBalanceOptions = {
+                chart  : {
+                    animations: {
+                        speed           : 400,
+                        animateGradually: {
+                            enabled: false,
+                        },
+                    },
+                    fontFamily: 'inherit',
+                    foreColor : 'inherit',
+                    width     : '100%',
+                    height    : '100%',
+                    type      : 'area',
+                    sparkline : {
+                        enabled: true,
+                    },
+                },
+                colors : ['#A3BFFA', '#667EEA'],
+                fill   : {
+                    colors : ['#CED9FB', '#AECDFD'],
+                    opacity: 0.5,
+                    type   : 'solid',
+                },
+                series : this.data.accountBalance.series,
+                stroke : {
+                    curve: 'straight',
+                    width: 2,
+                },
+                tooltip: {
+                    followCursor: true,
+                    theme       : 'dark',
+                    x           : {
+                        format: 'MMM dd, yyyy',
+                    },
+                    y           : {
+                        formatter: (value): string => value + '%',
+                    },
+                },
+                xaxis  : {
+                    type: 'datetime',
+                },
+            };
     }
 }

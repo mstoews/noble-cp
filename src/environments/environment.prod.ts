@@ -14,5 +14,6 @@ export const environment = {
   // baseUrl: "https://noble-server-omq5x5dxza-ue.a.run.app",
   baseUrl: "http://localhost:8080",
   apiRetryCount: 2
+  
 };
 

@@ -88,11 +88,12 @@ export class EntryWizardComponent implements OnInit, OnDestroy, AfterViewInit {
   public  journalEntryForm: UntypedFormGroup;
   public  matDialog = inject(MatDialog);
   public  description: string;
+  public transactionType = 'GL';
 
   private subAccountDebit: Subscription;
   private subAccountCredit: Subscription;
 
-  public journalHeader: IJournalHeader;
+  public  journalHeader: IJournalHeader;
   private auth = inject(AUTH);
   public journal_id = 0;
   public editSettings: Object;
@@ -459,17 +460,30 @@ export class EntryWizardComponent implements OnInit, OnDestroy, AfterViewInit {
       amount: inputs.step1.amount
     }
     this.headerAmount = journalHeader.amount;
-    this.journalHeader = journalHeader;
-    this.journalEntryForm.get('step2').get('debit').setValue(this.headerAmount);
-    this.journalEntryForm.get('step2').get('credit').setValue(this.headerAmount);
     this.changeDescriptionRef.markForCheck();
 
-    var transaction_period: ITransactionDate = {
-      start_date: transactionDate,
-      end_date: transactionDate
-    }
+    this.store.templateDetails().forEach((templateDetail) => {
+      var i = 1;
+      var journalDetail: IJournalDetail = {
+        journal_id: this.journal_id,
+        journal_subid: i,
+        account: templateDetail.account,
+        child: templateDetail.child,
+        child_desc: '',
+        description: templateDetail.description,
+        create_date: transactionDate,
+        create_user: '@admin',
+        sub_type: templateDetail.sub_type,
+        debit: templateDetail.debit,
+        credit: templateDetail.credit,
+        reference: '',
+        fund: templateDetail.fund
+      }
+      this.journalDetails.push(journalDetail);
+      i++;
+    });
 
-    this.alerts.open('Journal detail created', {label: 'Journal Entry'}).subscribe();
+    this.alerts.open('Journal detail created from template', {label: 'Journal Entry'}).subscribe();
 
   }
 
@@ -493,35 +507,15 @@ export class EntryWizardComponent implements OnInit, OnDestroy, AfterViewInit {
     console.log('Template control changed 3');
   }
 
-  
 
   createJournalDetailsFromTemplate(value: IJournalTemplate) {
+    console.log('Template control changed 4', value);    
+    this.store.loadTemplateDetails(value.journal_no.toString());
     
-    this.store.loadTemplateDetails(value.template_ref.toString());
-    
-    var journalDetails: IJournalDetail[] = [];
-    
-    this.store.templateDetails().forEach((templateDetail) => {
-      var i = 1;
-      var journalDetail: IJournalDetail = {
-        journal_id: this.journal_id,
-        journal_subid: i,
-        account: templateDetail.account,
-        child: templateDetail.child,
-        child_desc: '',
-        description: templateDetail.description,
-        create_date: now().toString(),
-        create_user: '@admin',
-        sub_type: templateDetail.sub_type,
-        debit: templateDetail.debit,
-        credit: templateDetail.credit,
-        reference: '',
-        fund: templateDetail.fund
-      }
-      journalDetails.push(journalDetail);
-      i++;
-    });
+  }
 
+  refresh() {
+    this.store.loadTemplateDetails(this.templateCtrl.value.template_ref.toString());
   }
 
 

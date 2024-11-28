@@ -29,6 +29,9 @@ import {
 
 import { getAuth, connectAuthEmulator } from 'firebase/auth';
 import { initializeApp } from 'firebase/app';
+import { jsonCachingInterceptor } from "./caching-interceptor";
+import { loggingInterceptor } from "./logging-interceptor";
+import { retryInterceptor } from "./retry-interceptor";
 
 const app = initializeApp(environment.firebase);
 
@@ -73,7 +76,7 @@ export const AUTH = new InjectionToken('Firebase auth', {
 });
 
 const CoreProviders = [
-  provideHttpClient(withInterceptors([authTokenInterceptor])),
+  provideHttpClient(withInterceptors([authTokenInterceptor, loggingInterceptor, retryInterceptor, jsonCachingInterceptor])),
   {
     provide: APP_INITIALIZER,
     // dummy factory

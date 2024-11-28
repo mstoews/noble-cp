@@ -200,7 +200,7 @@ export class JournalService implements OnDestroy {
 
   updateJournalDetail(detail: IJournalDetail) {
     var url = this.baseUrl + '/v1/update_journal_detail';
-    return this.httpClient.post<IJournalDetail>(url, detail);
+    return this.httpClient.post<IJournalDetail>(url, detail).pipe(shareReplay());
   }
 
 
@@ -244,7 +244,7 @@ export class JournalService implements OnDestroy {
         },
       }),
       catchError(this.handleErrorWithTimeout)
-    );
+    ).pipe(shareReplay());
   }  
 
 
