@@ -10,16 +10,17 @@ import { BalanceSheetComponent } from './balance-sheet/balance-sheet.component';
 import { BalanceSheetStatementRptComponent } from './financial-statement/balance-sheet-statement-rpt.component';
 import { IncomeStatementRptComponent } from './financial-statement/income-statement-rpt.component';
 import { IncomeStatementComparisonRptComponent } from './financial-statement/income-statement-comparison.component';
+import {HandsonComponent} from "./handson/handson.component";
 
 
 const imports = [
     MaterialModule,
-
     NgClass,
     TrialBalanceComponent,
     BalanceSheetStatementRptComponent,
     IncomeStatementRptComponent,
-    IncomeStatementComparisonRptComponent
+    IncomeStatementComparisonRptComponent,
+    HandsonComponent,
 ]
 
 @Component({
@@ -119,6 +120,12 @@ export class ReportingPanelComponent {
                 icon: 'feather:image',
                 title: 'Reconciliation Reporting',
                 description: 'Bank, expense and financial reconciliation reporting',
+            },
+            {
+                id: 'handson-table',
+                icon: 'feather:image',
+                title: 'Handson Table',
+                description: 'Sample Reporting created with a Handson Table',
             }
         ];
 

@@ -198,6 +198,12 @@ export class JournalService implements OnDestroy {
     return this.httpClient.post<IJournalHeader>(url, journalHeader).pipe(shareReplay())
   }
 
+  createHttpJournalDetail(detail: IJournalDetail) {
+    var url = this.baseUrl + '/v1/create_journal_detail';
+    return this.httpClient.post<IJournalDetail>(url, detail);
+  }
+
+
   updateJournalDetail(detail: IJournalDetail) {
     var url = this.baseUrl + '/v1/update_journal_detail';
     return this.httpClient.post<IJournalDetail>(url, detail).pipe(shareReplay());
@@ -224,27 +230,10 @@ export class JournalService implements OnDestroy {
     return this.httpClient.post<IJournalDetailDelete>(url, journal);
   }
 
-  createHttpJournalDetail(detail: IJournalDetail) {
-    var url = this.baseUrl + '/v1/create_journal_detail';
-    return this.httpClient.post<IJournalDetail>(url, detail);
-  }
 
   getTemplateDetails(reference: string): Observable<IJournalDetailTemplate[]> {
     var url = this.baseUrl + "/v1/read_template_details/" + reference;
-    return this.httpClient.get<IJournalDetailTemplate[]>(url).pipe(
-      timeout(2),
-      retry({
-        count: environment.apiRetryCount,
-        delay: (err, attemptNum) => {
-          console.error(
-            `[JournalTemplateService] => Encountered an error while retrying request on attempt ${attemptNum}: `,
-            err
-          );
-          return timer(1000 * attemptNum);
-        },
-      }),
-      catchError(this.handleErrorWithTimeout)
-    ).pipe(shareReplay());
+    return this.httpClient.get<IJournalDetailTemplate[]>(url);
   }  
 
 
@@ -259,6 +248,12 @@ export class JournalService implements OnDestroy {
       return this.handleError(error);
     }
   }
+
+  getSettings(value : string) {
+    var url = this.baseUrl + '/v1/read_settings_value_by_id/' + value;
+    return this.httpClient.get<string>(url).pipe(shareReplay());
+  }
+
 
   private handleError(error: HttpErrorResponse) {
     let errorMessage = "";

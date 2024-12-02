@@ -61,6 +61,7 @@ export class AuthService {
     });
   }
 
+
   UpdateState(token: string) {
     localStorage.setItem('jwt', token);
     this.state().token = token;

@@ -20,7 +20,7 @@ import { MatSelect } from '@angular/material/select';
 import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 import { IDropDownAccounts } from 'app/models';
 import { AggregateService, EditService, FilterService, GridModule, PageService, RowDDService, SortService, ToolbarService } from '@syncfusion/ej2-angular-grids';
-import { IJournalDetailDelete, IJournalHeaderUpdate } from 'app/models/journals';
+import { IJournalDetail, IJournalDetailDelete, IJournalHeaderUpdate } from 'app/models/journals';
 import { JournalStore } from 'app/services/journal.store';
 
 
@@ -69,9 +69,7 @@ export class WizardUpdateComponent implements OnInit, OnDestroy, AfterViewInit {
   @Input() public transaction_date: string;
   @Input() public amount: number;
   @Input() public bNewTransaction = true;
-
-
-
+  
   public GL = 'GL';
   public AP = 'AP';
   public AR = 'AR';
@@ -92,8 +90,6 @@ export class WizardUpdateComponent implements OnInit, OnDestroy, AfterViewInit {
   public journalForm!: FormGroup;
   public journalDetailForm!: FormGroup;
   public matDialog = inject(MatDialog);
-
-
 
   public value = 0;
   public loading = false;

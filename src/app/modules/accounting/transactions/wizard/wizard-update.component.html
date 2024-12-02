@@ -80,7 +80,7 @@
                     @if (filteredAccounts | async; as accounts ) {
               
                     <ejs-grid                     
-                    
+                    [dataSource]="store.details()"
                     [selectionOptions]="selectionOptions"
                     [allowFiltering]="false"
                     [gridLines]="'Both'" 

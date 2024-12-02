@@ -94,8 +94,8 @@ export const appConfig: ApplicationConfig = {
     provideAnimations(),
     ...CoreProviders,
     provideRouter(appRoutes,
-      withPreloading(PreloadAllModules),
-      withInMemoryScrolling({ scrollPositionRestoration: 'enabled' }),
+    withPreloading(PreloadAllModules),
+    withInMemoryScrolling({ scrollPositionRestoration: 'enabled' }),
     ),
     // Material Date Adapter
     {

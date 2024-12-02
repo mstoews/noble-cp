@@ -32,6 +32,8 @@ export interface JournalStateInterface {
   sub_type: ISubType[];
   funds: IFund[];
   artifacts: IArtifacts[];
+  currentPeriod: string;
+  currentYear: string;
   isLoading: boolean;
   error: string | null;
 }
@@ -52,6 +54,8 @@ export const JournalStore = signalStore(
     artifacts: [],
     error: null,
     isLoading: false,
+    currentPeriod: '',
+    currentYear: '',
   }),
   withComputed((state) => ({
   })),
@@ -287,6 +291,35 @@ export const JournalStore = signalStore(
         })
       )
     ),
+    loadPeriod: rxMethod(
+      pipe(
+        tap(() => patchState(state, { isLoading: true })),
+        switchMap((value) => {
+          return journalService.getSettings('Period').pipe(
+            tapResponse({
+              next: (period) => patchState(state, { currentPeriod: period }),
+              error: console.error,
+              finalize: () => patchState(state, { isLoading: false }),
+            })
+          );
+        })
+      )
+    ),
+    loadYear: rxMethod(
+      pipe(
+        tap(() => patchState(state, { isLoading: true })),
+        switchMap((value) => {
+          return journalService.getSettings('Year').pipe(
+            tapResponse({
+              next: (year) => patchState(state, { currentYear: year }),
+              error: console.error,
+              finalize: () => patchState(state, { isLoading: false }),
+            })
+          );
+        })
+      )
+    ),
+    
     renumberJournalDetail: rxMethod<number>(
       pipe(
         tap(() => patchState(state, { isLoading: true })),
@@ -306,6 +339,8 @@ export const JournalStore = signalStore(
     onInit(store) {
       store.loadJournals();
       store.loadAccounts();
+      store.loadPeriod('Period');
+      store.loadYear('Year');
     },
   })
 );

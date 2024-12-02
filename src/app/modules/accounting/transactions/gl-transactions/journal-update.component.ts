@@ -193,9 +193,6 @@ export class JournalUpdateComponent
   public editArtifactSettings: Object;
   public filterSettings: Object;
   public toolbar: string[];
-  public orderidrules: Object;
-  public editparams: Object;
-  public formatoptions: Object;
   public selectionOptions: Object;
   public searchOptions: Object;
   public selIndex?: number[] = [];
@@ -270,7 +267,7 @@ export class JournalUpdateComponent
 
     this.accountsListSubject = this.dropDownChildren$.subscribe((accounts) => {
       accounts.forEach((acct) => {
-        var list = {
+        let list = {
           childName: Number(acct.child),
           descriptionName: acct.description,
         };
@@ -348,6 +345,7 @@ export class JournalUpdateComponent
       queryData.amount,
       queryData.type
     );
+    this.closeDrawer();
     this.store.loadDetails(this.key);
     this.store.loadArtifactsByJournalId(this.key);
   }

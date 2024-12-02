@@ -11,16 +11,15 @@ import { StatementTotalComponent } from './statement-totals.component';
 import html2PDF from 'jspdf-html2canvas'
 import  html2canvas from 'html2canvas'
 import jsPDF from 'jspdf';
+import {HandsonComponent} from "../handson/handson.component";
 
 const imports = [
   CommonModule,
-  
+  HandsonComponent,
   ReportingToolbarComponent,
-  
   StatementLineComponent,
   MaterialModule,
   StatementTotalComponent,
-  
 ]
 
 @Component({
@@ -83,11 +82,13 @@ const imports = [
           <!-- Totals -->
           @if (revenueReport$ | async; as totals) {
               <statement-line-totals class=" font-gray-800" [item]=totals></statement-line-totals>
-          }     
-
+          }
+        
       </div>
-
+    <handson-table></handson-table>
   </div>
+    
+  </div>    
   `,
   providers: []
 })

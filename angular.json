@@ -84,7 +84,8 @@
               "src/styles/tailwind.scss",
               "@angular/material/prebuilt-themes/deeppurple-amber.css",
               "node_modules/@taiga-ui/core/styles/taiga-ui-theme.less",
-              "node_modules/@taiga-ui/core/styles/taiga-ui-fonts.less"
+              "node_modules/@taiga-ui/core/styles/taiga-ui-fonts.less",
+              "node_modules/handsontable/dist/handsontable.full.css"
             ],
             "scripts": []
           },
