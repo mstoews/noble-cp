@@ -250,7 +250,10 @@ export class BudgetWizardComponent implements OnInit, OnDestroy, AfterViewInit {
       status: 'Open',
       sub_type: '',
       type: '',
-      amount: inputs.step1.amount
+      amount: inputs.step1.amount,
+      party_id: inputs.step1.party_id,
+      template_name: inputs.step1.template_name,
+      invoice_no: inputs.step1.invoice_no,
     }
     this.headerAmount = journalHeader.amount;
     this.journalHeader = journalHeader;
@@ -307,7 +310,10 @@ export class BudgetWizardComponent implements OnInit, OnDestroy, AfterViewInit {
       status: 'Open',
       type: '',
       sub_type: inputs.step1.sub_type,
-      amount: Number(inputs.step1.amount)
+      amount: Number(inputs.step1.amount),
+      party_id: inputs.step1.party_id,
+      template_name: inputs.step1.template_name,
+      invoice_no: inputs.step1.reference
     }
 
     this.journalHeader = journalHeader;

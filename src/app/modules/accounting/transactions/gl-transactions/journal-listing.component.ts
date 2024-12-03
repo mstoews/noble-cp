@@ -106,8 +106,7 @@ export class JournalEntryComponent implements OnInit, OnDestroy {
     public filterSettings: FilterSettingsModel;
     public journalForm!: FormGroup;
     public keyField: any;
-    public childData?: IJournalDetail[] | null;
-    
+
     customizeTooltip = (pointsInfo: { originalValue: string; }) => ({ text: `${parseInt(pointsInfo.originalValue)}%` });
 
     initialDatagrid() {
@@ -199,39 +198,6 @@ export class JournalEntryComponent implements OnInit, OnDestroy {
         }
     }
 
-    public childDataGrid: GridModule = {
-        dataSource: this.childData,
-        filterSettings: { type: 'Excel' },
-        queryString: 'child',        
-        columns: [    
-            { field: 'journal_subid',headerText: 'ID', textAlign: 'left', width: 50 },
-            { field: 'child', headerText: 'Child', textAlign: 'left', width: 100 },
-            { field: 'description', headerText: 'Description', textAlign: 'left', width: 100},
-            { field: 'fund', headerText: 'Fund', textAlign: 'left', width: 100 },            
-            { field: 'debit', headerText: 'Debit', textAlign: 'Right', format: 'N2',  width: 100},
-            { field: 'credit', headerText: 'Credit', textAlign: 'Right', format: 'N2', width: 100},
-            ],
-            aggregates: [
-                {
-                  columns: [
-                    {
-                      type: 'Sum',
-                      field: 'debit',
-                      footerTemplate: '${Sum}',
-                      format: 'N2'
-                    },
-                    {
-                        type: 'Sum',
-                        field: 'credit',
-                        footerTemplate: '${Sum}',
-                        format: 'N2'
-                      },
-                  ],
-                },                
-              ],
-        
-    }
-
     public onClickGrid() { 
         const selectedRecords = this.grid().getSelectedRecords();
         const records = this.store.details();
@@ -265,16 +231,6 @@ export class JournalEntryComponent implements OnInit, OnDestroy {
     public onBooked(booked: boolean) {
         this.journalForm.patchValue({ booked: booked });
     }
-
-    // public formatNumber(e) {
-    //     const options = {
-    //         style: 'decimal',  // Other options: 'currency', 'percent', etc.
-    //         minimumFractionDigits: 2,
-    //         maximumFractionDigits: 2,
-    //     };
-    //     const formattedWithOptions = e.value.toLocaleString('en-US', options);
-    //     return formattedWithOptions;
-    // }
 
     updateBooked() { }
 

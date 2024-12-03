@@ -280,7 +280,8 @@ const config = {
         clear             : false,
         placeholderColor  : false,
         placeholderOpacity: false,
-        verticalAlign     : false
+        verticalAlign     : false,
+        preflight         : false,
     },
     plugins    : [
 

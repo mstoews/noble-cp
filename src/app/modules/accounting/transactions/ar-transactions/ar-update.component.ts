@@ -245,7 +245,9 @@ export class ARUpdateComponent
         type: data.journal.type,
         sub_type: data.journal.sub_type,
         amount: data.journal.amount,
-        party_id: data.journal.party_id
+        party_id: data.journal.party_id,
+        template_name: data.journal.template_name,
+        invoice_no: data.journal.invoice_no,
       }
       // this.updateForm(this.journalData)
     });
@@ -776,6 +778,10 @@ export class ARUpdateComponent
       description: header.description,
       transaction_date: header.transaction_date,
       amount: Number(header.header_amount),
+      type: header.type,
+      template_name: header.template_name,
+      party_id: header.party_id,
+      invoice_no: header.invoice_no,
     };
 
     this.journalForm = this.fb.group({

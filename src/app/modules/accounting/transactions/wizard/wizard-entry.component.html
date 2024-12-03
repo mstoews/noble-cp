@@ -274,23 +274,12 @@
                 <mat-step [formGroupName]="'step2'" [stepControl]="journalEntryForm.get('step2')" #verticalStepperStep2>
                     <ng-template matStepLabel>Post/Edit Transaction</ng-template>
                     @if (journalHeader) {
-                    <div class="text-3xl gap-2 m-1 text-gray-100 p-2 bg-slate-600 rounded-md">
-                            Transaction Details
-                    </div>    
-                    <!-- <mat-card class="p-2 m-1 bg-gray-100">
-                        <div class="text-gray-800 text-3xl m-1 dark:text-white">Confirm Transaction</div>
-                        <div class="flex">
-                            <div class="text-gray-600 text-xl m-1 dark:text-gray-100">Description : {{journalHeader.description}} </div>
-                        </div>
-                        <div class="flex">
-                            <div class="text-gray-600 text-xl m-1 dark:text-gray-100">Transaction Date : {{journalHeader.transaction_date}}</div>
-                        </div>
-                        <div class="flex">
-                            <div class="text-gray-600 text-xl m-1 dark:text-gray-100">Amount : {{journalHeader.amount | number:'1.2-2' }}</div>
-                        </div>
-                    </mat-card> -->
-                    
+
                     <ng-container>
+
+                        <div class="text-3xl gap-2 m-1 text-gray-100 p-2 bg-slate-600 rounded-md">
+                            Journal Details
+                        </div>
                     
                         <ejs-grid class="m-1" [dataSource]="journalDetailSignal()" [allowFiltering]="false" [gridLines]="'Both'"
                                   [editSettings]='editSettings'
@@ -323,8 +312,19 @@
                                 </e-aggregate>
                             </e-aggregates>
                         </ejs-grid>
-                            <mat-slide-toggle [aria-label]="Verified"> Verify </mat-slide-toggle>
-                    
+
+
+                        <button mat-icon-button color="primary" class="bg-gray-200 hover:bg-slate-400 ml-1"
+                                (click)="onAddEvidence()" matTooltip="Save Transaction" aria-label="Evidence">
+                            <span class="e-icons e-save"></span>
+                        </button>
+
+
+                        <button mat-icon-button color="primary" class="bg-gray-200 hover:bg-slate-400 ml-1"
+                                (click)="onAddEvidence()" matTooltip="Evidence" aria-label="Evidence">
+                            <span class="e-icons e-text-alternative"></span>
+                        </button>
+
                     </ng-container>
                     <div class="flex justify-end mt-8">
                         <button mat-icon-button color="primary" class="bg-gray-200  hover:bg-slate-400 ml-1"

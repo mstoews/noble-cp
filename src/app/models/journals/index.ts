@@ -11,11 +11,16 @@ export interface IJournalDetailDelete {
 }
 
 export interface  IJournalHeaderUpdate {
-  journal_id: number,
-  description: string,
-  transaction_date: string,
-  amount: number
-};
+    journal_id: number,
+    description: string,
+    transaction_date: string,
+    amount: number,
+    type: string,
+    party_id: string,
+    template_name: string,
+    invoice_no: string
+}
+
 export interface IJournalHeader {
   journal_id: number,         
   description: string,
@@ -31,8 +36,9 @@ export interface IJournalHeader {
   type: string,
   sub_type: string,
   amount: number,    
-  party_id?: string,
-  invoice_no?: string,
+  party_id: string,
+  invoice_no: string,
+  template_name: string,
   due_date?: Date
   credit?: number,
   debit?: number

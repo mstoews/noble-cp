@@ -11,7 +11,16 @@ import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { exhaustMap, pipe, switchMap, tap } from 'rxjs';
 import { inject } from '@angular/core';
 import { tapResponse } from '@ngrx/operators';
-import { IAccounts, IArtifacts, IJournalDetail, IJournalDetailDelete, IJournalDetailTemplate, IJournalHeader, IPeriodParam } from 'app/models/journals';
+import {
+    IAccounts,
+    IArtifacts,
+    IJournalDetail,
+    IJournalDetailDelete,
+    IJournalDetailTemplate,
+    IJournalHeader,
+    IJournalHeaderUpdate,
+    IPeriodParam
+} from 'app/models/journals';
 import { JournalService } from '../services/journal.service';
 import { IFund, IType } from 'app/modules/kanban/kanban.service';
 import { IParty } from 'app/models/party';
@@ -92,7 +101,7 @@ export const JournalStore = signalStore(
         })
       )
     ),
-    updateJournalHeader: rxMethod<IJournalHeader>(
+    updateJournalHeader: rxMethod<IJournalHeaderUpdate>(
       pipe(
         switchMap((value) => {
           return journalService.updateJournalHeader(value).pipe(
@@ -101,7 +110,6 @@ export const JournalStore = signalStore(
                 const updatedHeader = state.gl().filter((jrn) => jrn.journal_id !== value.journal_id);
                 updatedHeader.push(journal);
                 patchState(state, { gl: updatedHeader });
-                
               },
               error: console.error,
               finalize: () => patchState(state, { isLoading: false }),
@@ -189,20 +197,6 @@ export const JournalStore = signalStore(
         })
       )
     ),
-    // loadAllDetails: rxMethod<IPeriodParam>(
-    //   pipe(
-    //     tap(() => patchState(state, { isLoading: true })),
-    //     switchMap((value) => {
-    //       return journalService.getHttpAllJournalDetailsByPeriod(value).pipe(
-    //         tapResponse({
-    //           next: (journal) => patchState(state, { details: journal }),
-    //           error: console.error,
-    //           finalize: () => patchState(state, { isLoading: false }),
-    //         })
-    //       );
-    //     })
-    //   )
-    // ),
     loadJournals: rxMethod<void>(
       pipe(
         tap(() => patchState(state, { isLoading: true })),

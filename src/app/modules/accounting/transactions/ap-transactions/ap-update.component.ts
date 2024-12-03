@@ -240,13 +240,14 @@ export class APUpdateComponent
           sub_type:         data.journal.sub_type,
           amount:           data.journal.amount,
           due_date:         data.journal.due_date,
-          invoice_no:        data.journal.invoice_no,
-          party_id:        data.journal.party_id 
+          invoice_no:       data.journal.invoice_no,
+          party_id:         data.journal.party_id,
+          template_name:    data.journal.template_name
         }
         // this.updateForm(this.journalData)
     });
 
-    this.refresh(this.journalData.journal_id, this.journalData.description, this.journalData.transaction_date, this.journalData.amount, this.journalData.type);
+    this.refreshData(this.journalData.journal_id, this.journalData.description, this.journalData.transaction_date, this.journalData.amount, this.journalData.type);
 
     this.editSettings = {
       allowEditing: true,
@@ -492,7 +493,7 @@ export class APUpdateComponent
 
 
 
-  public refresh(
+  public refreshData(
     journal_id: number,
     description: string,
     transaction_date: string,
@@ -506,13 +507,13 @@ export class APUpdateComponent
     this.store.loadDetails(journal_id);
     this.journalType = journalType
 
-    
-    
-
     this.journalForm = this.fb.group({
       description: [this.description, Validators.required],
       amount: [this.amount, Validators.required],
       transaction_date: [this.transaction_date, Validators.required],
+      invoice_no: ["", Validators.required],
+      due_date: ["", Validators.required],
+      party: ["", Validators.required],
     });
 
     if (journal_id === undefined) {
@@ -774,6 +775,10 @@ export class APUpdateComponent
       description: header.description,
       transaction_date: header.transaction_date,
       amount: Number(header.header_amount),
+      type: header.type,
+      template_name: header.template_name,
+      party_id: header.party_id,
+      invoice_no: header.invoice_no,
     };
 
     this.journalForm = this.fb.group({
@@ -859,29 +864,6 @@ export class APUpdateComponent
     this.store.loadDetails(this.journal_id);
 
     this.accountCtrl.reset();
-  }
-
-  onUpdate(e: any) {
-    if (e.data === undefined) {
-      return;
-    }
-    const dialogConfig = new MatDialogConfig();
-    dialogConfig.disableClose = true;
-    dialogConfig.autoFocus = true;
-    dialogConfig.data = e.data;
-    dialogConfig.width = "450px";
-
-    const dialogRef = this.dialog.open(JournalEditComponent, dialogConfig);
-
-    dialogRef.afterClosed().subscribe((val) => {
-      this.refresh(
-        this.journal_id,
-        this.description,
-        this.transaction_date,
-        this.amount,
-        this.journalType
-      );
-    });
   }
 
   ngOnDestroy(): void {

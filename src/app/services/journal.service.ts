@@ -163,19 +163,22 @@ export class JournalService implements OnDestroy {
   }
 
   listJournalDetail() {
-    var url = this.baseUrl + '/v1/read_journal_detail';
+    let url = this.baseUrl + '/v1/read_journal_detail';
     return this.httpClient.get<IJournalDetail[]>(url).pipe(
       shareReplay())
   }
 
   updateJournalHeader(header: IJournalHeaderUpdate) {
-    var url = this.baseUrl + '/v1/update_journal_header';
-
-     var journalHeaderUpdate: IJournalHeaderUpdate = {
+    let url = this.baseUrl + '/v1/update_journal_header';
+    let journalHeaderUpdate: IJournalHeaderUpdate = {
        journal_id: header.journal_id,
        description: header.description,
        transaction_date: header.transaction_date,
-       amount: Number(header.amount)
+       amount: Number(header.amount),
+       template_name: header.template_name,
+       party_id: header.party_id,
+       invoice_no: header.invoice_no,
+       type: header.type
      }
      return this.httpClient.post<any>(url, journalHeaderUpdate).pipe(
         shareReplay()
@@ -183,23 +186,26 @@ export class JournalService implements OnDestroy {
   }
   
   deleteJournalHeader(journal_id: number) {
-    var url = this.baseUrl + '/v1/delete_journal_header';
+    let url = this.baseUrl + '/v1/delete_journal_header';
     return this.httpClient.post<IJournalHeader>(url, { journal_id: journal_id },).pipe(shareReplay());
   }
 
 
   createJournalHeader(header: IJournalHeader) {
-    var url = this.baseUrl + '/v1/create_journal_header';
-    var journalHeader: any = {
+    let url = this.baseUrl + '/v1/create_journal_header';
+    let journalHeader: any = {
       description: header.description,
       transaction_date: header.transaction_date,
-      amount: header.amount
+      amount: header.amount,
+      type: header.type,
+      template_name: header.template_name,
+      party_id: header.party_id
     }
     return this.httpClient.post<IJournalHeader>(url, journalHeader).pipe(shareReplay())
   }
 
   createHttpJournalDetail(detail: IJournalDetail) {
-    var url = this.baseUrl + '/v1/create_journal_detail';
+    let url = this.baseUrl + '/v1/create_journal_detail';
     return this.httpClient.post<IJournalDetail>(url, detail);
   }
 

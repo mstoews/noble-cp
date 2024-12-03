@@ -130,13 +130,14 @@ export class EntryWizardComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     private journalService = inject(JournalService);
-    private partyService = inject(PartyService);
+
     private subtypeService = inject(SubTypeService);
     private fundService = inject(FundsService);
     private accountService = inject(GLAccountsService);
     private snackBar = inject(MatSnackBar);
     private formBuilder = inject(FormBuilder);
     private changeDescriptionRef = inject(ChangeDetectorRef);
+    private partyService = inject(PartyService);
     private templateService = inject(JournalTemplateService);
     public auth = inject(AUTH);
     public matDialog = inject(MatDialog);
@@ -647,17 +648,13 @@ export class EntryWizardComponent implements OnInit, OnDestroy, AfterViewInit {
             status: 'Open',
             type: '',
             sub_type: inputs.step1.sub_type,
-            amount: Number(inputs.step1.amount)
+            amount: Number(inputs.step1.amount),
+            party_id: inputs.step1.party_id,
+            template_name: inputs.step1.template_name,
+            invoice_no: inputs.step1.invoice_no,
         }
 
         this.journalHeader = journalHeader;
-
-        if (this.journalDetails !== undefined) {
-            count = this.journalDetails.length;
-            count = count + 1;
-        } else {
-            count = this.journalDetails.length + 1;
-        }
 
         this.store.templateDetails().forEach((templateDetail) => {
             let journalDetail: IJournalDetail = {

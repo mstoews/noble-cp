@@ -529,7 +529,11 @@ export class WizardUpdateComponent implements OnInit, OnDestroy, AfterViewInit {
       journal_id: journal_id,
       description: header.description,
       transaction_date: header.transaction_date,
-      amount: Number(header.header_amount)
+      amount: Number(header.header_amount),
+      type: header.type,
+      template_name: header.template_name,
+      party_id: header.party_id,
+      invoice_no: header.invoice_no
     }
 
     this.journalForm = this.fb.group({
