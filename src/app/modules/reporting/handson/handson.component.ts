@@ -42,6 +42,7 @@ const imports = [
     </mat-card>
   `,
 })
+
 export class HandsonComponent  implements OnInit {
    store = inject(JournalStore);
    ngOnInit() {}

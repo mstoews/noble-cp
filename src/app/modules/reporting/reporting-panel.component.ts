@@ -13,7 +13,7 @@ import { IncomeStatementComparisonRptComponent } from './financial-statement/inc
 import {HandsonComponent} from "./handson/handson.component";
 
 
-const imports = [
+const mods = [
     MaterialModule,
     NgClass,
     TrialBalanceComponent,
@@ -26,7 +26,7 @@ const imports = [
 @Component({
     selector: 'transaction-main',
     standalone: true,
-    imports: [imports],
+    imports: [mods],
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
     templateUrl: './reporting-panel.component.html',
