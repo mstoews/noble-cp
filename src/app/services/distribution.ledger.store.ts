@@ -28,7 +28,7 @@ import {
     { protectedState: false }, withState<DistributionStateInterface>({
       header: [],
       details: [],
-      periodParam: null,
+      periodParam: { period: 1, period_year: 2024},
       accountParam: null,
       error: null,      
       isLoading: false,
@@ -78,15 +78,13 @@ import {
       ),
     })),
     withHooks({
-      
       onInit(store) {
-        var params = {
+        let params = {
           period: 2,
           period_year: 2024
         }
         store.loadHeader(params);
       },
-    })    
-
+    })
   );
   

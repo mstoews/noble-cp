@@ -2,8 +2,21 @@ import {Component, inject, OnInit} from '@angular/core';
 import { HotTableModule } from '@handsontable/angular';
 import Handsontable from 'handsontable/base';
 import { HyperFormula } from 'hyperformula';
+import { FunctionPlugin, FunctionArgumentType } from 'hyperformula';
+import {MyCustomPlugin} from "./MyCustomPlugin";
 
 import {registerCellType, NumericCellType, registerAllCellTypes} from 'handsontable/cellTypes';
+
+MyCustomPlugin.implementedFunctions = {
+  // let's define the function's ID as `GREET`
+  GREET: {
+    method: 'greet',
+    parameters: [{ argumentType: FunctionArgumentType.STRING }],
+  },
+};
+
+
+
 
 import {
   registerPlugin,
@@ -58,6 +71,7 @@ selectedRows: any[] = [];
   columnData =  [
     { title: 'Account', data: 'child', className: 'htMiddle' ,  type: 'text'},
     { title: 'Period', data: 'period', type: 'text' },
+    { title: 'Year', data: 'period_year', type: 'text' },
     { title: 'Description', data: 'description', type: 'numeric', numericFormat: { pattern: '0,0.00',  culture: 'en-US' }, },
     { title: 'Opening Balance', data: 'opening_balance', type: 'numeric',numericFormat: { pattern: '0,0.00',  culture: 'en-US' }, },
     { title: 'Debit', data: 'debit_balance',  type:  'numeric',  numericFormat: { pattern: '0,0.00',  culture: 'en-US' }, },
@@ -66,8 +80,8 @@ selectedRows: any[] = [];
   ];
 
   hotSettings: Handsontable.GridSettings = {
-    colHeaders: true,
-    columnSorting: true,
+    colHeaders: false,
+    columnSorting: false,
     manualRowMove: true,
     autoColumnSize: true,
     dropdownMenu: true,
@@ -79,7 +93,7 @@ selectedRows: any[] = [];
     },
 
     columns: this.columnData,
-    colWidths: [40, 40, 150, 100,100,100, 100],
+    colWidths: [40, 40, 40, 150, 90,90,90,90],
 
     contextMenu: {
       items: {

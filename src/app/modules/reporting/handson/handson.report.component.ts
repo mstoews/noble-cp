@@ -52,9 +52,10 @@ export class HandsonFSReportComponent  implements OnInit {
 
   dataset: any[] = [
     {id: 0, name: 'Financial Statement', address: '', amount: '', debit: ''},
-    {id: 0, name: 'Income Statement', address: '', amount: 'Amount', debit: 'Debit'},
-    {id: 1, name: '', description: 'Interest', amount: 1000, debit: 2000.25, difference: '=SUM(D3-C3)'},
-    {id: 1, name: '', description: 'Water', amount: 2000, debit: 2000.45},
+    {id: 0, name: 'Income Statement', address: '', amount: '', debit: ''},
+    {id: 0, name: '', address: '', amount: 'Amount', debit: 'debit', credit: 'Credit'},
+    {id: 1, name: '', description: 'Interest', amount: 1000, debit: 2000.25, credit: 0},
+    {id: 1, name: '', description: 'Water', amount: 2000, debit: 2000.45, credit: 0},
     {id: 1, name: '', description: 'Electricity', amount: 4000, debit: 2000},
     {id: 1, name: '', description: 'Maintenance', amount: 5000, debit: 2000},
     {id: 1, name: '', description: 'Cleaning', amount: 600, debit: 2000},
@@ -71,8 +72,8 @@ columnData =  [
 ];
 
   hotSettings: Handsontable.GridSettings = {
-    colHeaders: true,
-    rowHeaders: true,
+    colHeaders: false,
+    rowHeaders: false,
     columnSorting: false,
     manualRowMove: true,
     autoColumnSize: true,
@@ -107,7 +108,7 @@ columnData =  [
       }
     ],
     height: 'auto',
-    colWidths: [100, 100, 100, 100],
+    colWidths: [100, 80, 80, 80, 80],
     autoWrapRow: true,
     autoWrapCol: true,
     licenseKey: 'non-commercial-and-evaluation'
