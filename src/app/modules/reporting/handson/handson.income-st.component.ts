@@ -11,10 +11,12 @@ import {
 } from 'handsontable/plugins';
 
 import {MatCardModule} from "@angular/material/card";
-import {JournalStore} from "../../../services/journal.store";
+
+
 import {registerAllModules} from "handsontable/registry";
 import { ContextMenu } from 'handsontable/plugins/contextMenu';
 import {GridMenubarStandaloneComponent} from "../../accounting/grid-menubar/grid-menubar.component";
+import {TrialBalanceStore} from "../../../services/distribution.ledger.store";
 
 registerAllCellTypes();
 registerAllModules()
@@ -28,40 +30,40 @@ const imports = [
 
 @Component({
   standalone: true,
-  selector: 'handson-table',
-  providers: [JournalStore],
+  selector: 'handson-income-st',
+  providers: [TrialBalanceStore],
   imports: [imports],
   template: `
     <grid-menubar [inTitle]="'Transaction Listing'"></grid-menubar>
     <mat-card class="w-[100%] mt-2">
       <hot-table 
         class="m-1"
-        [data]="store.gl()"
+        [data]="store.header()"
         [settings]="hotSettings">
       </hot-table>
     </mat-card>
   `,
 })
 
-export class HandsonComponent  implements OnInit {
-   store = inject(JournalStore);
-   ngOnInit() {}
+export class HandsonIncomeStComponent  implements OnInit {
+   store = inject(TrialBalanceStore);
+   ngOnInit() {
 
-  selectedRows: any[] = [];
+   }
 
-columnData =  [
-{ title: 'Journal ID', data: 'journal_id', className: 'htMiddle' ,  type: 'numeric',   numericFormat: { pattern: '0,0',  culture: 'en-US' }, },
-{ title: 'Description', data: 'description', type: 'text' },
-{ title: 'Booked', data: 'booked', type: 'checkbox' },
-{ title: 'Create Date', data: 'create_date', type: 'date' },
-{ title: 'User', data: 'create_user', type: 'text' },
-{ title: 'Year', data: 'period_year', type: 'text' },
-{ title: 'Period', data: 'period', type: 'text' },
-{ title: 'Transaction Date', data: 'transaction_date', type: 'text' },
-{ title: 'Amount', data: 'amount', type: 'numeric',  numericFormat: { pattern: '0,0',  culture: 'en-US' }, },
-{ title: 'Type', data: 'type', type: 'text' },
-{ title: 'Party', data: 'party_id', type: 'text' },
-];
+selectedRows: any[] = [];
+
+ // columns: this.columnData,
+
+  columnData =  [
+    { title: 'Account', data: 'child', className: 'htMiddle' ,  type: 'text'},
+    { title: 'Period', data: 'period', type: 'text' },
+    { title: 'Description', data: 'description', type: 'numeric', numericFormat: { pattern: '0,0.00',  culture: 'en-US' }, },
+    { title: 'Opening Balance', data: 'opening_balance', type: 'numeric',numericFormat: { pattern: '0,0.00',  culture: 'en-US' }, },
+    { title: 'Debit', data: 'debit_balance',  type:  'numeric',  numericFormat: { pattern: '0,0.00',  culture: 'en-US' }, },
+    { title: 'Credit', data: 'credit_balance',  type: 'numeric', numericFormat: { pattern: '0,0.00',  culture: 'en-US' }, },
+    { title: 'Closing Balance', data: 'closing_balance',  type: 'numeric', numericFormat: { pattern: '0,0.00',  culture: 'en-US' }, },
+  ];
 
   hotSettings: Handsontable.GridSettings = {
     colHeaders: true,
@@ -77,6 +79,7 @@ columnData =  [
     },
 
     columns: this.columnData,
+    colWidths: [40, 40, 150, 100,100,100, 100],
 
     contextMenu: {
       items: {

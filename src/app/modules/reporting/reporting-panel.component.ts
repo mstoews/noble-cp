@@ -11,6 +11,8 @@ import { BalanceSheetStatementRptComponent } from './financial-statement/balance
 import { IncomeStatementRptComponent } from './financial-statement/income-statement-rpt.component';
 import { IncomeStatementComparisonRptComponent } from './financial-statement/income-statement-comparison.component';
 import {HandsonComponent} from "./handson/handson.component";
+import {HandsonFSReportComponent} from "./handson/handson.report.component";
+import {HandsonIncomeStComponent} from "./handson/handson.income-st.component";
 
 
 const mods = [
@@ -26,7 +28,7 @@ const mods = [
 @Component({
     selector: 'transaction-main',
     standalone: true,
-    imports: [mods],
+    imports: [mods, HandsonFSReportComponent, HandsonIncomeStComponent],
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
     templateUrl: './reporting-panel.component.html',
@@ -122,11 +124,24 @@ export class ReportingPanelComponent {
                 description: 'Bank, expense and financial reconciliation reporting',
             },
             {
+                id: 'handson-income-st',
+                icon: 'feather:image',
+                title: 'Trial Balance Report',
+                description: 'Trial Balance Report',
+            },
+            {
                 id: 'handson-table',
                 icon: 'feather:image',
                 title: 'Handson Table',
                 description: 'Sample Reporting created with a Handson Table',
+            },
+            {
+                id: 'handson-fs-report',
+                icon: 'feather:image',
+                title: 'Handson Table',
+                description: 'Financial Reporting Example',
             }
+
         ];
 
         // Subscribe to media changes

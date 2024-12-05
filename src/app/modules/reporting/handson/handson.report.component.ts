@@ -28,44 +28,52 @@ const imports = [
 
 @Component({
   standalone: true,
-  selector: 'handson-table',
+  selector: 'handson-fs-report',
   providers: [JournalStore],
-  imports: [imports],
+  imports: [imports, GridMenubarStandaloneComponent],
   template: `
     <grid-menubar [inTitle]="'Transaction Listing'"></grid-menubar>
     <mat-card class="w-[100%] mt-2">
       <hot-table 
         class="m-1"
-        [data]="store.gl()"
+        [data]="dataset"
         [settings]="hotSettings">
       </hot-table>
     </mat-card>
   `,
+  styleUrls : [ './data.scss']
 })
 
-export class HandsonComponent  implements OnInit {
+export class HandsonFSReportComponent  implements OnInit {
    store = inject(JournalStore);
    ngOnInit() {}
 
   selectedRows: any[] = [];
 
+  dataset: any[] = [
+    {id: 0, name: 'Financial Statement', address: '', amount: '', debit: ''},
+    {id: 0, name: 'Income Statement', address: '', amount: 'Amount', debit: 'Debit'},
+    {id: 1, name: '', description: 'Interest', amount: 1000, debit: 2000.25, difference: '=SUM(D3-C3)'},
+    {id: 1, name: '', description: 'Water', amount: 2000, debit: 2000.45},
+    {id: 1, name: '', description: 'Electricity', amount: 4000, debit: 2000},
+    {id: 1, name: '', description: 'Maintenance', amount: 5000, debit: 2000},
+    {id: 1, name: '', description: 'Cleaning', amount: 600, debit: 2000},
+    {id: 1, name: '', description: 'Heating', amount: 10.15, debit: 2000},
+    {id: 1, name: '', description: 'Subtotal', amount: '=sum(C3:C8)', debit:'=sum(D3:D8)'}
+  ];
+
 columnData =  [
-{ title: 'Journal ID', data: 'journal_id', className: 'htMiddle' ,  type: 'numeric',   numericFormat: { pattern: '0,0',  culture: 'en-US' }, },
-{ title: 'Description', data: 'description', type: 'text' },
-{ title: 'Booked', data: 'booked', type: 'checkbox' },
-{ title: 'Create Date', data: 'create_date', type: 'date' },
-{ title: 'User', data: 'create_user', type: 'text' },
-{ title: 'Year', data: 'period_year', type: 'text' },
-{ title: 'Period', data: 'period', type: 'text' },
-{ title: 'Transaction Date', data: 'transaction_date', type: 'text' },
-{ title: 'Amount', data: 'amount', type: 'numeric',  numericFormat: { pattern: '0,0',  culture: 'en-US' }, },
-{ title: 'Type', data: 'type', type: 'text' },
-{ title: 'Party', data: 'party_id', type: 'text' },
+{  data: 'name', className: 'htMiddle' ,  type: 'numeric',   numericFormat: { pattern: '0,0.00',  culture: 'en-US' }, },
+{  data: 'description', className: 'htMiddle' ,  type: 'numeric',   numericFormat: { pattern: '0,0.00',  culture: 'en-US' }, },
+{  data: 'amount', className: 'htMiddle' ,  type: 'numeric',   numericFormat: { pattern: '0,0.00',  culture: 'en-US' }, },
+{  data: 'debit', className: 'htMiddle' ,  type: 'numeric',   numericFormat: { pattern: '0,0.00',  culture: 'en-US' }, },
+{  data: 'difference', className: 'htMiddle' ,  type: 'numeric',   numericFormat: { pattern: '0,0.00',  culture: 'en-US' }, },
 ];
 
   hotSettings: Handsontable.GridSettings = {
     colHeaders: true,
-    columnSorting: true,
+    rowHeaders: true,
+    columnSorting: false,
     manualRowMove: true,
     autoColumnSize: true,
     dropdownMenu: true,
@@ -75,9 +83,7 @@ columnData =  [
       engine: HyperFormula,
       sheetName: 'Sheet1',
     },
-
     columns: this.columnData,
-
     contextMenu: {
       items: {
         'row_above': {
@@ -101,6 +107,7 @@ columnData =  [
       }
     ],
     height: 'auto',
+    colWidths: [100, 100, 100, 100],
     autoWrapRow: true,
     autoWrapCol: true,
     licenseKey: 'non-commercial-and-evaluation'

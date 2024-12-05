@@ -81,8 +81,8 @@ import {
       
       onInit(store) {
         var params = {
-          period: 1,
-          period_year:2024
+          period: 2,
+          period_year: 2024
         }
         store.loadHeader(params);
       },
