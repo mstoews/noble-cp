@@ -28,7 +28,7 @@ const imports = [
 
 @Component({
   standalone: true,
-  selector: 'handson-table',
+  selector: 'hanson-table',
   providers: [JournalStore],
   imports: [imports],
   template: `
@@ -41,6 +41,7 @@ const imports = [
       </hot-table>
     </mat-card>
   `,
+  styleUrls: ['./data.scss'] 
 })
 
 export class HandsonComponent  implements OnInit {

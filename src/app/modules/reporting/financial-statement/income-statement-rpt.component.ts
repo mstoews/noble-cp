@@ -85,7 +85,7 @@ const imports = [
           }
         
       </div>
-    <handson-table></handson-table>
+  
   </div>
     
   </div>    

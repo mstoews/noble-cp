@@ -7,7 +7,7 @@ import {
 } from "@angular/core";
 import { MaterialModule } from "app/services/material.module";
 
-var modules = [MaterialModule, CommonModule];
+let modules = [MaterialModule, CommonModule];
 
 @Component({
   standalone: true,
@@ -20,10 +20,11 @@ var modules = [MaterialModule, CommonModule];
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [modules],
-  template: `
-    <mat-toolbar class="text-white font-sans bg-gray-500 text-2xlz rounded-lg">   {{ inTitle() }}
-      <!-- menu selected -->
-      <span class="flex-1"></span>
+  template: 
+  `
+    <mat-toolbar class="text-white font-sans bg-gray-500 text-2xl rounded-lg">   {{ inTitle() }}
+
+    <span class="flex-1"></span>
 
     @if (showPrint()) {
       <button  (click)="onPrint()" color="primary" class="m-1 bg-gray-200 md:visible" mat-icon-button  matTooltip="Print"  aria-label="Print" >
@@ -54,7 +55,6 @@ var modules = [MaterialModule, CommonModule];
         <span class="e-icons e-chevron-left"></span>
       </button>
     }
-
     </mat-toolbar>
   `,
 })

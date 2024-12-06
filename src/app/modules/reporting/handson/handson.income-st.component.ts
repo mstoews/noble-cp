@@ -50,12 +50,13 @@ const imports = [
     <grid-menubar [inTitle]="'Transaction Listing'"></grid-menubar>
     <mat-card class="w-[100%] mt-2">
       <hot-table 
-        class="m-1"
+        class="m-1 handsontable"
         [data]="store.header()"
         [settings]="hotSettings">
       </hot-table>
     </mat-card>
   `,
+  styleUrls: ['./data.scss'] 
 })
 
 export class HandsonIncomeStComponent  implements OnInit {
