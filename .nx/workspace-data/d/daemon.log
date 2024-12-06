@@ -81,3 +81,14 @@
 [NX Daemon Server] - 2024-12-03T16:53:00.085Z - Closed a connection. Number of open connections: 0
 [NX Daemon Server] - 2024-12-03T16:53:00.085Z - [WATCHER]: Stopping the watcher for /home/mst/Projects/noble/noble-web (sources)
 [NX Daemon Server] - 2024-12-03T16:53:00.086Z - [WATCHER]: Stopping the watcher for /home/mst/Projects/noble/noble-web (outputs)
+[NX Daemon Server] - 2024-12-06T03:20:17.796Z - Started listening on: /tmp/477ee7c10f/d.sock
+[NX Daemon Server] - 2024-12-06T03:20:17.806Z - [WATCHER]: Subscribed to changes within: /home/mst/Projects/noble/noble-web (native)
+[NX Daemon Server] - 2024-12-06T03:20:17.815Z - Established a connection. Number of open connections: 1
+[NX Daemon Server] - 2024-12-06T03:20:17.816Z - Established a connection. Number of open connections: 2
+[NX Daemon Server] - 2024-12-06T03:20:17.820Z - Closed a connection. Number of open connections: 1
+[NX Daemon Server] - 2024-12-06T03:20:17.826Z - [REQUEST]: Responding to the client. Shutdown initiated
+[NX Daemon Server] - 2024-12-06T03:20:17.826Z - Done responding to the client Shutdown initiated
+[NX Daemon Server] - 2024-12-06T03:20:17.826Z - Handled FORCE_SHUTDOWN. Handling time: 0. Response time: 0.
+[NX Daemon Server] - 2024-12-06T03:20:17.828Z - Closed a connection. Number of open connections: 0
+[NX Daemon Server] - 2024-12-06T03:20:17.828Z - [WATCHER]: Stopping the watcher for /home/mst/Projects/noble/noble-web (sources)
+[NX Daemon Server] - 2024-12-06T03:20:17.828Z - [WATCHER]: Stopping the watcher for /home/mst/Projects/noble/noble-web (outputs)

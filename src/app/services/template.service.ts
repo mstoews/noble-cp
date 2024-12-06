@@ -58,5 +58,13 @@ export class TemplateService {
         return this.httpClient.post<IJournalDetailTemplate>(url, update).pipe(shareReplay())
     }
 
+    delete(template_id: string){
+        const update = {
+            template_id: template_id,
+        }
+        var url = this.baseUrl + '/v1/delete_template';
+        return this.httpClient.post<IJournalDetailTemplate>(url, update).pipe(shareReplay())
+    }
+
 
 }

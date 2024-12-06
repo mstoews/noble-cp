@@ -30,15 +30,14 @@ export const TemplateStore = signalStore(
     isLoading: false,
   }),
   withComputed((state) => ({ selected: computed(() => state.template().filter((t) => state.template()[t.template_name])),  })),
-  withMethods((state, templateService = inject(TemplateService)) => (
-      {
-      removeTemplate rxMethod<IJournalTemplate>( pipe(
+  withMethods((state, templateService = inject(TemplateService)) => ({
+    addTemplate: rxMethod<IJournalTemplate>( pipe(
         switchMap((value) => {
           patchState(state, { isLoading: true });
-          return templateService.delete(value.id).pipe(
+          return templateService.create(value).pipe(
             tapResponse({
               next: (template) => {
-                patchState(state, { template: state.template().filter((template_name) => template.template_name.y_id !== value.template_name) });
+               patchState(state, { template :   [...state.template(), template] });
               },
               error: console.error,
               finalize: () => patchState(state, { isLoading: false }),
@@ -47,14 +46,14 @@ export const TemplateStore = signalStore(
         })
       )
     ),
-    addTemplate: rxMethod<ITemplate>(
+    updateTemplate: rxMethod<IJournalTemplate>(
       pipe(
         switchMap((value) => {
-          patchState(state, { isLoading: true });
-          return partyService.create(value).pipe(
+          return templateService.update(value).pipe(
             tapResponse({
-              next: (party) => {
-               patchState(state, { party: [...state.party(), party] });
+              next: (template) => {
+                const updatedTemplate = state.template().filter((template) =>template.template_name !== template.template_name);
+                patchState(state, { template : updatedTemplate});
               },
               error: console.error,
               finalize: () => patchState(state, { isLoading: false }),
@@ -63,63 +62,13 @@ export const TemplateStore = signalStore(
         })
       )
     ),
-    updateTemplate
-: rxMethod<ITemplate
->(
-      pipe(
-        switchMap((value) => {
-          return partyService.update(value).pipe(
-            tapResponse({
-              next: (party) => {
-                const updatedTemplate
- = state.party().filter((party) => party.party_id !== party.party_id);
-                patchState(state, { party: updatedTemplate
- });
-              },
-              error: console.error,
-              finalize: () => patchState(state, { isLoading: false }),
-            })
-          );
-        })
-      )
-    ),
-    readVendor: rxMethod<void>(
+    readTemplate: rxMethod<void>(
       pipe(
         tap(() => patchState(state, { isLoading: true })),
         exhaustMap(() => {
-          return partyService.vendors().pipe(
+          return templateService.read().pipe(
             tapResponse({
-              next: (vendors) => patchState(state, { party: vendors }),
-              error: console.error,
-              finalize: () => patchState(state, { isLoading: false }),
-            })
-          );
-        })
-      )
-    ),
-    readCustomer: rxMethod<void>(
-      pipe(
-        tap(() => patchState(state, { isLoading: true })),
-        exhaustMap(() => {
-          return partyService.customers().pipe(
-            tapResponse({
-              next: (customers) => patchState(state, { party: customers }),
-              error: console.error,
-              finalize: () => patchState(state, { isLoading: false }),
-            })
-          );
-        })
-      )
-    ),
-
-    readTemplate
-: rxMethod<void>(
-      pipe(
-        tap(() => patchState(state, { isLoading: true })),
-        exhaustMap(() => {
-          return partyService.read().pipe(
-            tapResponse({
-              next: (fund) => patchState(state, { party: fund }),
+              next: (template) => patchState(state, { template: template }),
               error: console.error,
               finalize: () => patchState(state, { isLoading: false }),
             })
@@ -130,8 +79,7 @@ export const TemplateStore = signalStore(
   })),
   withHooks({
     onInit(store) {
-      store.readTemplate
-();
+      store.readTemplate();
     },
   })
 );
