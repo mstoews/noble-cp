@@ -64,26 +64,25 @@ const imports = [
 ];
 
 @Component({
-  selector: "ap-transactions",
-  standalone: true,
-  imports: [imports],
-  templateUrl: "./ap-listing.component.html",
-  providers: [
-    JournalStore,
-    ResizeService,
-    SortService,
-    ReorderService,
-    ExcelExportService,
-    PdfExportService,
-    PageService,
-    ResizeService,
-    GroupService,
-    FilterService,
-    ToolbarService,
-    EditService,
-    AggregateService,
-    ColumnMenuService,
-  ],
+    selector: "ap-transactions",
+    imports: [imports],
+    templateUrl: "./ap-listing.component.html",
+    providers: [
+        JournalStore,
+        ResizeService,
+        SortService,
+        ReorderService,
+        ExcelExportService,
+        PdfExportService,
+        PageService,
+        ResizeService,
+        GroupService,
+        FilterService,
+        ToolbarService,
+        EditService,
+        AggregateService,
+        ColumnMenuService,
+    ]
 })
 export class APTransactionComponent implements OnInit, OnDestroy {
   public route = inject(Router);

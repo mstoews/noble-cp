@@ -38,11 +38,10 @@ interface IValue {
   
 
 @Component({
-  selector: 'team',
-  standalone: true,
-  imports: [imports],
-  templateUrl: './teams.component.html',
-  providers: [TeamStore, SortService, GroupService ,PageService, ResizeService, FilterService, ToolbarService, EditService, AggregateService, ColumnMenuService]
+    selector: 'team',
+    imports: [imports],
+    templateUrl: './teams.component.html',
+    providers: [TeamStore, SortService, GroupService, PageService, ResizeService, FilterService, ToolbarService, EditService, AggregateService, ColumnMenuService]
 })
 export class TeamsComponent implements OnInit {
 

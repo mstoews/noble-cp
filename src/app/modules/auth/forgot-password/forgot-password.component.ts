@@ -18,8 +18,7 @@ import { AuthService } from '../auth.service';
     templateUrl: './forgot-password.component.html',
     encapsulation: ViewEncapsulation.None,
     animations: fuseAnimations,
-    standalone: true,
-    imports: [FormsModule, ReactiveFormsModule, FuseAlertComponent, MatFormFieldModule, MatInputModule, MatButtonModule, MatProgressSpinnerModule, RouterLink],
+    imports: [FormsModule, ReactiveFormsModule, FuseAlertComponent, MatFormFieldModule, MatInputModule, MatButtonModule, MatProgressSpinnerModule, RouterLink]
 })
 export class AuthForgotPasswordComponent implements OnInit {
     @ViewChild('forgotPasswordNgForm') forgotPasswordNgForm: NgForm;

@@ -27,7 +27,6 @@ const mods = [
 
 @Component({
     selector: 'transaction-main',
-    standalone: true,
     imports: [mods, HandsonFSReportComponent, HandsonIncomeStComponent],
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,

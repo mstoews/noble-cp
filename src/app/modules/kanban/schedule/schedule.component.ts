@@ -22,8 +22,7 @@ declare var moment: any;
     providers: [DayService, WeekService, WorkWeekService, MonthService, YearService, AgendaService,
         TimelineViewsService, TimelineMonthService, TimelineYearService, ResizeService, DragAndDropService, PrintService, ExcelExportService, ICalendarExportService, ICalendarImportService],
     encapsulation: ViewEncapsulation.None,
-    standalone: true,
-    imports: [AppBarModule,  ButtonModule,  UploaderModule,  DropDownButtonModule,  ToolbarModule,  CheckBoxModule,  ScheduleModule,  ContextMenuModule,  MultiSelectModule,  DropDownListModule,  TimePickerModule]
+    imports: [AppBarModule, ButtonModule, UploaderModule, DropDownButtonModule, ToolbarModule, CheckBoxModule, ScheduleModule, ContextMenuModule, MultiSelectModule, DropDownListModule, TimePickerModule]
 })
 export class ScheduleNobleComponent {
   @ViewChild('scheduleObj') scheduleObj: ScheduleComponent;

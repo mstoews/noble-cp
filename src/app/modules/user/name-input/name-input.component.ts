@@ -13,9 +13,9 @@ import {
 import { IName } from '../user/user'
 
 @Component({
-  selector: 'app-name-input',
-  // prettier-ignore
-  template: `
+    selector: 'app-name-input',
+    // prettier-ignore
+    template: `
     <form [formGroup]="formGroup">
       <div fxLayout="row" fxLayout.lt-sm="column" fxLayoutGap="10px">
         <mat-form-field appearance="outline" fxFlex="40%">
@@ -42,19 +42,18 @@ import { IName } from '../user/user'
       </div>
     </form>
   `,
-  styles: `
+    styles: `
       .mat-mdc-form-field {
         padding-top: 16px;
       }
   `,
-  standalone: true,
-  imports: [
-    ReactiveFormsModule,
-    FlexModule,
-    MatFormFieldModule,
-    MatInputModule,
-    FieldErrorDirective,
-  ],
+    imports: [
+        ReactiveFormsModule,
+        FlexModule,
+        MatFormFieldModule,
+        MatInputModule,
+        FieldErrorDirective,
+    ]
 })
 export class NameInputComponent
   extends BaseFormDirective<IName>

@@ -22,11 +22,10 @@ const imports = [
 ]
 
 @Component({
-  selector: 'balance-sheet-statement-rpt',
-  standalone: true,
-  imports: [imports],
-  encapsulation: ViewEncapsulation.None,
-  template: `
+    selector: 'balance-sheet-statement-rpt',
+    imports: [imports],
+    encapsulation: ViewEncapsulation.None,
+    template: `
   <div class="flex flex-col min-w-0 overflow-y-auto overflow-x-auto" cdkScrollable >
   <!-- Main -->
   <div class="flex-auto p-2 sm:p-10 bg-white">
@@ -91,7 +90,7 @@ const imports = [
     
 </div>
   `,
-  providers: []
+    providers: []
 })
 
 export class BalanceSheetStatementRptComponent  {

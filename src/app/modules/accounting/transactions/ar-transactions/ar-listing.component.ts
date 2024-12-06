@@ -41,10 +41,9 @@ const imports = [
 
 @Component({
     selector: 'ar-transactions',
-    standalone: true,
     imports: [imports],
     templateUrl: './ar-listing.component.html',
-    providers: [JournalStore, SortService, ExcelExportService, PdfExportService, PageService, ResizeService, GroupService, FilterService, ToolbarService, EditService, AggregateService, ColumnMenuService],
+    providers: [JournalStore, SortService, ExcelExportService, PdfExportService, PageService, ResizeService, GroupService, FilterService, ToolbarService, EditService, AggregateService, ColumnMenuService]
 })
 export class ARTransactionComponent implements OnInit, OnDestroy {
 

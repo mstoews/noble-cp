@@ -25,9 +25,8 @@ const imports = [
 
 @Component({
     selector: 'kanban-priority',
-    standalone: true,
     imports: [imports],
-    templateUrl: 'priority.component.html',    
+    templateUrl: 'priority.component.html',
     providers: [SortService, PageService, FilterService, ToolbarService, EditService],
     styles: `
         .e-grid .e-headercell {

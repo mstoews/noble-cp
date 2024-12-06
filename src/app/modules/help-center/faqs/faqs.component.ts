@@ -12,8 +12,7 @@ import { Subject, takeUntil } from 'rxjs';
     selector: 'help-center-faqs',
     templateUrl: './faqs.component.html',
     encapsulation: ViewEncapsulation.None,
-    standalone: true,
-    imports: [MatButtonModule, RouterLink, MatIconModule, MatExpansionModule],
+    imports: [MatButtonModule, RouterLink, MatIconModule, MatExpansionModule]
 })
 export class HelpCenterFaqsComponent implements OnInit, OnDestroy {
     faqCategories: FaqCategory[];

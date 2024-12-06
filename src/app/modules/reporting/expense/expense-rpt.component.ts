@@ -10,12 +10,11 @@ import { map, Observable, tap } from 'rxjs';
 
 
 @Component({
-  selector: 'expense-rpt',
-  standalone: true,
-  imports: [SpreadsheetAllModule, UploaderModule, CommonModule, DistMenuStandaloneComponent],
-  encapsulation: ViewEncapsulation.None,
-  templateUrl: './expense-rpt.component.html',
-  providers: [TrialBalanceStore]
+    selector: 'expense-rpt',
+    imports: [SpreadsheetAllModule, UploaderModule, CommonModule, DistMenuStandaloneComponent],
+    encapsulation: ViewEncapsulation.None,
+    templateUrl: './expense-rpt.component.html',
+    providers: [TrialBalanceStore]
 })
 
 export class ExpenseRptComponent implements OnInit, OnDestroy {

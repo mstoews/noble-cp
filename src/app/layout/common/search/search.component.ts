@@ -19,7 +19,6 @@ import { debounceTime, filter, map, Subject, takeUntil } from 'rxjs';
     encapsulation: ViewEncapsulation.None,
     exportAs: 'fuseSearch',
     animations: fuseAnimations,
-    standalone: true,
     imports: [MatButtonModule, MatIconModule, FormsModule, MatAutocompleteModule, ReactiveFormsModule, MatOptionModule, RouterLink, NgTemplateOutlet, MatFormFieldModule, MatInputModule, NgClass],
     providers: [
         {
@@ -29,7 +28,7 @@ import { debounceTime, filter, map, Subject, takeUntil } from 'rxjs';
                 return () => overlay.scrollStrategies.block();
             },
         },
-    ],
+    ]
 })
 export class SearchComponent implements OnChanges, OnInit, OnDestroy {
     @Input() appearance: 'basic' | 'bar' = 'basic';

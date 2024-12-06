@@ -7,11 +7,10 @@ import { GuideCategory } from 'app/modules/help-center/help-center.type';
 import { Subject, takeUntil } from 'rxjs';
 
 @Component({
-    selector     : 'help-center-guides-guide',
-    templateUrl  : './guide.component.html',
+    selector: 'help-center-guides-guide',
+    templateUrl: './guide.component.html',
     encapsulation: ViewEncapsulation.None,
-    standalone   : true,
-    imports      : [MatButtonModule, RouterLink, MatIconModule],
+    imports: [MatButtonModule, RouterLink, MatIconModule]
 })
 export class HelpCenterGuidesGuideComponent implements OnInit, OnDestroy
 {

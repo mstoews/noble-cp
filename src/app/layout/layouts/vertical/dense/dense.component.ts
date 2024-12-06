@@ -22,8 +22,7 @@ import { Subject, takeUntil } from 'rxjs';
     selector: 'dense-layout',
     templateUrl: './dense.component.html',
     encapsulation: ViewEncapsulation.None,
-    standalone: true,
-    imports: [FuseLoadingBarComponent, FuseVerticalNavigationComponent, MatButtonModule, MatIconModule, FuseFullscreenComponent, SearchComponent,  UserComponent, RouterOutlet],
+    imports: [FuseLoadingBarComponent, FuseVerticalNavigationComponent, MatButtonModule, MatIconModule, FuseFullscreenComponent, SearchComponent, UserComponent, RouterOutlet]
 })
 export class DenseLayoutComponent implements OnInit, OnDestroy {
     isScreenSmall: boolean;

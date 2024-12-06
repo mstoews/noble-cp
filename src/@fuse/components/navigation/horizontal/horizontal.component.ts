@@ -17,8 +17,7 @@ import { FuseHorizontalNavigationSpacerItemComponent } from './components/spacer
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
     exportAs: 'fuseHorizontalNavigation',
-    standalone: true,
-    imports: [FuseHorizontalNavigationBasicItemComponent, FuseHorizontalNavigationBranchItemComponent, FuseHorizontalNavigationSpacerItemComponent],
+    imports: [FuseHorizontalNavigationBasicItemComponent, FuseHorizontalNavigationBranchItemComponent, FuseHorizontalNavigationSpacerItemComponent]
 })
 export class FuseHorizontalNavigationComponent implements OnChanges, OnInit, OnDestroy {
     @Input() name: string = this._fuseUtilsService.randomId();

@@ -15,16 +15,15 @@ import { DateTime } from 'luxon';
 import { MaterialModule } from 'app/services/material.module';
 
 @Component({
-  standalone: true,
-  imports: [
-    CommonModule,
-    DndDirective,
-    ReactiveFormsModule,
-    MaterialModule,
-  ],
-  selector: 'image-dnd',
-  templateUrl: './dnd.component.html',
-  styleUrls: ['./dnd.component.scss'],
+    imports: [
+        CommonModule,
+        DndDirective,
+        ReactiveFormsModule,
+        MaterialModule,
+    ],
+    selector: 'image-dnd',
+    templateUrl: './dnd.component.html',
+    styleUrls: ['./dnd.component.scss']
 })
 export class DndComponent implements OnDestroy {
   subAllImages: any;

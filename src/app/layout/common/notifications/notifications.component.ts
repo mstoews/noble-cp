@@ -16,8 +16,7 @@ import { Subject, takeUntil } from 'rxjs';
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
     exportAs: 'notifications',
-    standalone: true,
-    imports: [MatButtonModule, MatIconModule, MatTooltipModule, NgClass, NgTemplateOutlet, RouterLink, DatePipe],
+    imports: [MatButtonModule, MatIconModule, MatTooltipModule, NgClass, NgTemplateOutlet, RouterLink, DatePipe]
 })
 export class NotificationsComponent implements OnInit, OnDestroy {
     @ViewChild('notificationsOrigin') private _notificationsOrigin: MatButton;

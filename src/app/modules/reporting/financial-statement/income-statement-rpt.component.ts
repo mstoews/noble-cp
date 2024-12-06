@@ -23,11 +23,10 @@ const imports = [
 ]
 
 @Component({
-  selector: 'income-statement-rpt',
-  standalone: true,
-  imports: [imports],
-  encapsulation: ViewEncapsulation.None,
-  template: `
+    selector: 'income-statement-rpt',
+    imports: [imports],
+    encapsulation: ViewEncapsulation.None,
+    template: `
   <div class="flex flex-col min-w-0 overflow-y-auto overflow-x-auto" cdkScrollable >
   <!-- Main -->
   <div id="statement" class="flex-auto p-2 sm:p-10 bg-white">
@@ -90,7 +89,7 @@ const imports = [
     
   </div>    
   `,
-  providers: []
+    providers: []
 })
 
 export class IncomeStatementRptComponent  {

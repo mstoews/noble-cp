@@ -17,8 +17,7 @@ import { Subject, takeUntil } from 'rxjs';
     styleUrls: ['./quick-chat.component.scss'],
     encapsulation: ViewEncapsulation.None,
     exportAs: 'quickChat',
-    standalone: true,
-    imports: [NgClass, MatIconModule, MatButtonModule, FuseScrollbarDirective, NgTemplateOutlet, MatFormFieldModule, MatInputModule, TextFieldModule, DatePipe],
+    imports: [NgClass, MatIconModule, MatButtonModule, FuseScrollbarDirective, NgTemplateOutlet, MatFormFieldModule, MatInputModule, TextFieldModule, DatePipe]
 })
 export class QuickChatComponent implements OnInit, AfterViewInit, OnDestroy {
     @ViewChild('messageInput') messageInput: ElementRef;

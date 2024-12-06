@@ -18,10 +18,9 @@ const imports = [
 
 @Component({
     selector: 'app-analysis',
-    standalone: true,
     imports: [imports],
     templateUrl: './analysis.component.html',
-    styleUrls: ['./analysis.component.scss'],
+    styleUrls: ['./analysis.component.scss']
 })
 export class AnalysisComponent {
     authService = inject(AuthService);

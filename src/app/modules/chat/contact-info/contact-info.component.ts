@@ -10,8 +10,7 @@ import { Chat } from '../chat.types';
     templateUrl: './contact-info.component.html',
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
-    imports: [MatButtonModule, MatIconModule,],
+    imports: [MatButtonModule, MatIconModule,]
 })
 export class ContactInfoComponent {
     @Input() chat: Chat;

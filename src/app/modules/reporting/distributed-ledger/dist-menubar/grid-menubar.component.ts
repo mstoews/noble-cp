@@ -18,12 +18,11 @@ var modules = [
 ]
 
 @Component({
-  standalone: true,
-  selector: 'dist-menubar',
-  templateUrl: './grid-menubar.component.html',
-  styleUrls: ['./grid-menubar.component.css'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  imports:[modules]
+    selector: 'dist-menubar',
+    templateUrl: './grid-menubar.component.html',
+    styleUrls: ['./grid-menubar.component.css'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [modules]
 })
 export class DistMenuStandaloneComponent implements OnInit {
   // @Output() notifyParentAdd = new EventEmitter();

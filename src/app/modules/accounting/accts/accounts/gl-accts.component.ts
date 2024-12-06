@@ -28,17 +28,17 @@ const keyExpr = ["account", "child"];
 
 @Component({
     selector: 'glaccounts',
-    standalone: true,
     imports: [imports],
     templateUrl: './gl-accts.component.html',
-    providers: [TypeStore, SortService, GroupService ,PageService, ResizeService, FilterService, ToolbarService, EditService, AggregateService, ColumnMenuService],
+    providers: [TypeStore, SortService, GroupService, PageService, ResizeService, FilterService, ToolbarService, EditService, AggregateService, ColumnMenuService],
     styles: [
         `        
         .e-grid {
          font-family: cursive;
          border: 1px solid #f0f0f0;
         }
-        `]
+        `
+    ]
 })
 export class GlAccountsComponent implements OnInit {
     @ViewChild('drawer') drawer!: MatDrawer;

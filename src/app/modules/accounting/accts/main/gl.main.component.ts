@@ -30,18 +30,17 @@ import { MatDrawer } from '@angular/material/sidenav';
     selector: 'gl-main',
     templateUrl: './gl.main.component.html',
     encapsulation: ViewEncapsulation.None,
-    standalone: true,
     imports: [
-        MaterialModule,       
+        MaterialModule,
         FundsComponent,
         GlAccountsComponent,
         GlTypeComponent,
-        PeriodsComponent,       
-        NgClass,       
+        PeriodsComponent,
+        NgClass,
         TeamsComponent,
     ],
     providers: [HttpClient],
-    changeDetection: ChangeDetectionStrategy.OnPush,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class GlMainComponent {
     @ViewChild('drawer') drawer: MatDrawer;

@@ -16,8 +16,7 @@ import { SettingsSecurityComponent } from './security/security.component';
     templateUrl: './settings.component.html',
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
-    imports: [MatSidenavModule, MatButtonModule, MatIconModule, NgClass, SettingsAccountComponent, SettingsSecurityComponent, SettingsPlanBillingComponent, SettingsNotificationsComponent],
+    imports: [MatSidenavModule, MatButtonModule, MatIconModule, NgClass, SettingsAccountComponent, SettingsSecurityComponent, SettingsPlanBillingComponent, SettingsNotificationsComponent]
 })
 export class SettingsComponent implements OnInit, OnDestroy {
     @ViewChild('drawer') drawer: MatDrawer;

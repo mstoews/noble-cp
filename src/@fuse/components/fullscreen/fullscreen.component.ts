@@ -6,13 +6,12 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { FSDocument, FSDocumentElement } from '@fuse/components/fullscreen/fullscreen.types';
 
 @Component({
-    selector       : 'fuse-fullscreen',
-    templateUrl    : './fullscreen.component.html',
-    encapsulation  : ViewEncapsulation.None,
+    selector: 'fuse-fullscreen',
+    templateUrl: './fullscreen.component.html',
+    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    exportAs       : 'fuseFullscreen',
-    standalone     : true,
-    imports        : [MatButtonModule, MatTooltipModule, NgTemplateOutlet, MatIconModule],
+    exportAs: 'fuseFullscreen',
+    imports: [MatButtonModule, MatTooltipModule, NgTemplateOutlet, MatIconModule]
 })
 export class FuseFullscreenComponent implements OnInit
 {

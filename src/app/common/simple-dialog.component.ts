@@ -3,8 +3,8 @@ import { MatButtonModule } from '@angular/material/button'
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog'
 
 @Component({
-  // prettier-ignore
-  template: `
+    // prettier-ignore
+    template: `
     <h2 mat-dialog-title>{{ data.title }}</h2>
     <mat-dialog-content>
       <p>{{ data.content }}</p>
@@ -22,8 +22,7 @@ import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/materia
       </button>
     </mat-dialog-actions>
     `,
-  standalone: true,
-  imports: [MatDialogModule, MatButtonModule],
+    imports: [MatDialogModule, MatButtonModule]
 })
 export class SimpleDialogComponent {
   constructor(

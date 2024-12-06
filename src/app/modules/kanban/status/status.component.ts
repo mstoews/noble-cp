@@ -25,7 +25,6 @@ const imports = [
 
 @Component({
     selector: 'kanban-status',
-    standalone: true,
     imports: [imports],
     templateUrl: 'status.component.html',
     providers: [SortService, PageService, FilterService, ToolbarService, EditService],

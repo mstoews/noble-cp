@@ -21,7 +21,6 @@ const imports = [
 ]
 
 @Component({
-    standalone: true,
     selector: 'budget-landing',
     templateUrl: './budget-landing.component.html',
     imports: [imports]

@@ -53,22 +53,20 @@ const imports = [
 ];
 
 @Component({
-  selector: "ar-journal",
-  standalone: true,
-  imports: [imports],
-  templateUrl: "./ar-update.component.html",
-  providers: [
-    provideNgxMask(),
-    SortService,
-    PageService,
-    FilterService,
-    ToolbarService,
-    EditService,
-    AggregateService,
-    RowDDService
-  ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-
+    selector: "ar-journal",
+    imports: [imports],
+    templateUrl: "./ar-update.component.html",
+    providers: [
+        provideNgxMask(),
+        SortService,
+        PageService,
+        FilterService,
+        ToolbarService,
+        EditService,
+        AggregateService,
+        RowDDService
+    ],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ARUpdateComponent
   implements OnInit, OnDestroy, AfterViewInit {

@@ -13,8 +13,7 @@ import { Subject, takeUntil } from 'rxjs';
     selector: 'help-center',
     templateUrl: './help-center.component.html',
     encapsulation: ViewEncapsulation.None,
-    standalone: true,
-    imports: [MatFormFieldModule, MatInputModule, MatIconModule, RouterLink, MatExpansionModule,],
+    imports: [MatFormFieldModule, MatInputModule, MatIconModule, RouterLink, MatExpansionModule,]
 })
 export class HelpCenterComponent implements OnInit, OnDestroy {
     faqCategory: FaqCategory;

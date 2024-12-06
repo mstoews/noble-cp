@@ -42,10 +42,8 @@ var components = [
     templateUrl: './sign-in.component.html',
     encapsulation: ViewEncapsulation.None,
     animations: fuseAnimations,
-    standalone: true,
     imports: [...components],
-    providers: [AuthService, LoginService],
-
+    providers: [AuthService, LoginService]
 })
 export class AuthSignInComponent implements OnInit {
     @ViewChild('signInNgForm') signInNgForm: NgForm;

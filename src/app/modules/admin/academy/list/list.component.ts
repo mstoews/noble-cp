@@ -21,8 +21,7 @@ import { BehaviorSubject, combineLatest, Subject, takeUntil } from 'rxjs';
     templateUrl: './list.component.html',
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
-    imports: [CdkScrollable, MatFormFieldModule, MatSelectModule, MatOptionModule, MatIconModule, MatInputModule, MatSlideToggleModule, NgClass, MatTooltipModule, MatProgressBarModule, MatButtonModule, RouterLink, FuseFindByKeyPipe, PercentPipe, I18nPluralPipe],
+    imports: [CdkScrollable, MatFormFieldModule, MatSelectModule, MatOptionModule, MatIconModule, MatInputModule, MatSlideToggleModule, NgClass, MatTooltipModule, MatProgressBarModule, MatButtonModule, RouterLink, FuseFindByKeyPipe, PercentPipe, I18nPluralPipe]
 })
 export class AcademyListComponent implements OnInit, OnDestroy {
     categories: Category[];

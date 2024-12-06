@@ -50,22 +50,21 @@ const imports = [
 ];
 
 @Component({
-  selector: "kanban-list",
-  standalone: true,
-  imports: [imports],
-  templateUrl: "./kanban-list.component.html",
-  styleUrls: ["./kanban-list.scss"],
-  providers: [
-    KanbanStore,
-    SortService,
-    PageService,
-    FilterService,
-    ToolbarService,
-    EditService,
-    AggregateService,
-    ColumnMenuService,
-    ResizeService
-  ],
+    selector: "kanban-list",
+    imports: [imports],
+    templateUrl: "./kanban-list.component.html",
+    styleUrls: ["./kanban-list.scss"],
+    providers: [
+        KanbanStore,
+        SortService,
+        PageService,
+        FilterService,
+        ToolbarService,
+        EditService,
+        AggregateService,
+        ColumnMenuService,
+        ResizeService
+    ]
 })
 export class KanbanListComponent implements OnInit {
 

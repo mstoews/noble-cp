@@ -26,10 +26,9 @@ const imports = [
 
 @Component({
     selector: 'gl-types',
-    standalone: true,
     imports: [imports],
     templateUrl: './types.component.html',
-    providers: [TypeStore, SortService, GroupService, ExcelExportService ,PageService, ResizeService, FilterService, ToolbarService, EditService, AggregateService, ColumnMenuService,]
+    providers: [TypeStore, SortService, GroupService, ExcelExportService, PageService, ResizeService, FilterService, ToolbarService, EditService, AggregateService, ColumnMenuService,]
 })
 export class GlTypeComponent implements OnInit {
 

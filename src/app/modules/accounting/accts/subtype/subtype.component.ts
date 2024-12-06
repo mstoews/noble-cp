@@ -25,7 +25,6 @@ const imports = [
 
 @Component({
     selector: 'subtypes',
-    standalone: true,
     imports: [imports],
     templateUrl: './subtype.component.html',
     providers: [imports]

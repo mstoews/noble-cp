@@ -18,8 +18,7 @@ import { Subject, takeUntil } from 'rxjs';
     selector: 'classy-layout',
     templateUrl: './classy.component.html',
     encapsulation: ViewEncapsulation.None,
-    standalone: true,
-    imports: [FuseLoadingBarComponent, FuseVerticalNavigationComponent, UserComponent, MatIconModule, MatButtonModule,  FuseFullscreenComponent, SearchComponent,  RouterOutlet ],
+    imports: [FuseLoadingBarComponent, FuseVerticalNavigationComponent, UserComponent, MatIconModule, MatButtonModule, FuseFullscreenComponent, SearchComponent, RouterOutlet]
 })
 export class ClassyLayoutComponent implements OnInit, OnDestroy {
     isScreenSmall: boolean;

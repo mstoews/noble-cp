@@ -52,7 +52,6 @@ const declarations = [
 
 @Component({
     selector: 'trial-balance',
-    standalone: true,
     imports: [imports],
     templateUrl: './trial-balance.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush,

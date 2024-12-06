@@ -18,8 +18,7 @@ import { Subject, takeUntil } from 'rxjs';
     templateUrl: './chats.component.html',
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
-    imports: [MatSidenavModule, NewChatComponent, ProfileComponent, MatButtonModule, MatIconModule, MatMenuModule, MatFormFieldModule, MatInputModule, NgClass, RouterLink, RouterOutlet],
+    imports: [MatSidenavModule, NewChatComponent, ProfileComponent, MatButtonModule, MatIconModule, MatMenuModule, MatFormFieldModule, MatInputModule, NgClass, RouterLink, RouterOutlet]
 })
 export class ChatsComponent implements OnInit, OnDestroy {
     chats: Chat[];

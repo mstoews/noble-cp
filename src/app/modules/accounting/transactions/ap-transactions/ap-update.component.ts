@@ -53,22 +53,20 @@ const imports = [
 ];
 
 @Component({
-  selector: "ap-journal",
-  standalone: true,
-  imports: [imports],
-  templateUrl: "./ap-update.component.html",
-  providers: [
-    provideNgxMask(),
-    SortService,
-    PageService,
-    FilterService,
-    ToolbarService,
-    EditService,
-    AggregateService,
-    RowDDService
-  ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-
+    selector: "ap-journal",
+    imports: [imports],
+    templateUrl: "./ap-update.component.html",
+    providers: [
+        provideNgxMask(),
+        SortService,
+        PageService,
+        FilterService,
+        ToolbarService,
+        EditService,
+        AggregateService,
+        RowDDService
+    ],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class APUpdateComponent
   implements OnInit, OnDestroy, AfterViewInit {

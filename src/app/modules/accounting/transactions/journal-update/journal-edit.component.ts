@@ -24,11 +24,10 @@ const imports = [
 ];
 
 @Component({
-  selector: 'journal-edit',
-  standalone: true,
-  imports: [imports],
-  templateUrl: './journal-edit.component.html',
-  providers: [provideNgxMask()]
+    selector: 'journal-edit',
+    imports: [imports],
+    templateUrl: './journal-edit.component.html',
+    providers: [provideNgxMask()]
 })
 export class JournalEditComponent {
   public journal_id: number;

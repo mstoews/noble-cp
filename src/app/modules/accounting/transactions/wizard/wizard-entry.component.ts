@@ -100,13 +100,12 @@ const mods = [
 
 @Component({
     selector: 'entry-wizard',
-    standalone: true,
     imports: [mods],
     templateUrl: './wizard-entry.component.html',
     encapsulation: ViewEncapsulation.None,
     animations: fuseAnimations,
     providers: [
-        {provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: {appearance: 'outline'}},
+        { provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: { appearance: 'outline' } },
         provideNgxMask(),
         SortService,
         FilterService,
@@ -118,7 +117,8 @@ const mods = [
         ColumnMenuService,
         ResizeService,
         RowDDService,
-        JournalStore],
+        JournalStore
+    ]
 })
 export class EntryWizardComponent implements OnInit, OnDestroy, AfterViewInit {
     onDeleteDetail() {

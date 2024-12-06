@@ -18,10 +18,9 @@ const imports = [
 
 @Component({
     selector: 'journal-template',
-    standalone: true,
     imports: [imports],
     templateUrl: './journal-template.component.html',
-    providers: [TemplateStore, PdfExportService, ExcelExportService ]
+    providers: [TemplateStore, PdfExportService, ExcelExportService]
 })
 
 export class JournalTemplateComponent {    

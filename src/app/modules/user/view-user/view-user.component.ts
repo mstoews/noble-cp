@@ -18,8 +18,8 @@ import { Subscription } from 'rxjs'
 import { IUser, User } from '../user/user'
 
 @Component({
-  selector: 'app-view-user',
-  template: `
+    selector: 'app-view-user',
+    template: `
     @if (currentUser) {
       <div>
         <mat-card appearance="outlined">
@@ -56,20 +56,19 @@ import { IUser, User } from '../user/user'
       </div>
     }
   `,
-  styles: `
+    styles: `
       .bold {
         font-weight: bold;
       }
     `,
-  standalone: true,
-  imports: [
-    MatCardModule,
-    MatIconModule,
-    MatButtonModule,
-    MatDividerModule,
-    AsyncPipe,
-    DatePipe,
-  ],
+    imports: [
+        MatCardModule,
+        MatIconModule,
+        MatButtonModule,
+        MatDividerModule,
+        AsyncPipe,
+        DatePipe,
+    ]
 })
 export class ViewUserComponent implements OnInit, OnChanges, OnDestroy {
   private readonly route = inject(ActivatedRoute)

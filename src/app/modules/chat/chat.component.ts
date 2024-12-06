@@ -2,12 +2,11 @@ import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/
 import { RouterOutlet } from '@angular/router';
 
 @Component({
-    selector       : 'chat',
-    templateUrl    : './chat.component.html',
-    encapsulation  : ViewEncapsulation.None,
+    selector: 'chat',
+    templateUrl: './chat.component.html',
+    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone     : true,
-    imports        : [RouterOutlet],
+    imports: [RouterOutlet]
 })
 export class ChatComponent
 {

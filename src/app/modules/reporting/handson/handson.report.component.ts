@@ -27,11 +27,10 @@ const imports = [
 ]
 
 @Component({
-  standalone: true,
-  selector: 'handson-fs-report',
-  providers: [JournalStore],
-  imports: [imports, GridMenubarStandaloneComponent],
-  template: `
+    selector: 'handson-fs-report',
+    providers: [JournalStore],
+    imports: [imports, GridMenubarStandaloneComponent],
+    template: `
     <grid-menubar [inTitle]="'Transaction Listing'"></grid-menubar>
     <mat-card class="w-[100%] mt-2">
       <hot-table 
@@ -41,7 +40,7 @@ const imports = [
       </hot-table>
     </mat-card>
   `,
-  styleUrls : [ './data.scss']
+    styleUrls: ['./data.scss']
 })
 
 export class HandsonFSReportComponent  implements OnInit {

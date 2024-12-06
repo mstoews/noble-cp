@@ -15,8 +15,7 @@ import { Subject, takeUntil } from 'rxjs';
     templateUrl: './profile.component.html',
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
-    imports: [MatButtonModule, MatIconModule, MatFormFieldModule, MatInputModule, FormsModule],
+    imports: [MatButtonModule, MatIconModule, MatFormFieldModule, MatInputModule, FormsModule]
 })
 export class ProfileComponent implements OnInit, OnDestroy {
     @Input() drawer: MatDrawer;

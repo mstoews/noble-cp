@@ -11,11 +11,10 @@ import { AuthService } from 'app/modules/auth/auth.service';
 import { PricingTableComponent } from 'app/modules/pages/pricing/table/table.component';
 
 @Component({
-    standalone: true,
     selector: 'app-login',
     templateUrl: './login.component.html',
     providers: [LoginService],
-    imports: [RouterModule, PricingTableComponent ,LoginFormComponent, MatProgressSpinnerModule, MaterialModule, ],
+    imports: [RouterModule, PricingTableComponent, LoginFormComponent, MatProgressSpinnerModule, MaterialModule,]
 })
 export default class LoginComponent {
     public loginService = inject(LoginService);

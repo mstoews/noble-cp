@@ -16,8 +16,7 @@ import { MatSelectModule } from '@angular/material/select';
     templateUrl: './plan-billing.component.html',
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
-    imports: [FormsModule, ReactiveFormsModule, FuseAlertComponent, MatRadioModule, NgClass, MatIconModule, MatFormFieldModule, MatInputModule, MatSelectModule, MatOptionModule, MatButtonModule, CurrencyPipe],
+    imports: [FormsModule, ReactiveFormsModule, FuseAlertComponent, MatRadioModule, NgClass, MatIconModule, MatFormFieldModule, MatInputModule, MatSelectModule, MatOptionModule, MatButtonModule, CurrencyPipe]
 })
 export class SettingsPlanBillingComponent implements OnInit {
     planBillingForm: UntypedFormGroup;

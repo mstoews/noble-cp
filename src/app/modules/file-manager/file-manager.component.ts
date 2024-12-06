@@ -22,10 +22,9 @@ const imports = [
 ];
 
 @Component({
-  selector: 'app-file-manager',
-  standalone: true,
-  imports: [imports],
-  templateUrl: './file-manager.component.html',
+    selector: 'app-file-manager',
+    imports: [imports],
+    templateUrl: './file-manager.component.html'
 })
 
 export class FileManagerComponent {

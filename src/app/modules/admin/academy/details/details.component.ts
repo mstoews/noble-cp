@@ -18,8 +18,7 @@ import { Subject, takeUntil } from 'rxjs';
     templateUrl: './details.component.html',
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
-    imports: [MatSidenavModule, RouterLink, MatIconModule, NgClass, MatButtonModule, MatProgressBarModule, CdkScrollable, MatTabsModule, FuseFindByKeyPipe],
+    imports: [MatSidenavModule, RouterLink, MatIconModule, NgClass, MatButtonModule, MatProgressBarModule, CdkScrollable, MatTabsModule, FuseFindByKeyPipe]
 })
 export class AcademyDetailsComponent implements OnInit, OnDestroy {
     @ViewChild('courseSteps', { static: true }) courseSteps: MatTabGroup;

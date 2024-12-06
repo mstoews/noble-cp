@@ -32,11 +32,10 @@ const imports = [
 ]
 
 @Component({
-  selector: 'app-tasks',
-  standalone: true,
-  styleUrls: ['../task/tasks.component.scss'],
-  imports: [imports],
-  templateUrl: './kanban.component.html'
+    selector: 'app-tasks',
+    styleUrls: ['../task/tasks.component.scss'],
+    imports: [imports],
+    templateUrl: './kanban.component.html'
 })
 export class KanbanMainComponent implements OnInit {
 
