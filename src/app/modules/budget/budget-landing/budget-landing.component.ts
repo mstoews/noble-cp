@@ -1,5 +1,6 @@
 import { NgClass, CurrencyPipe, CommonModule } from '@angular/common';
 import { Component, effect, inject, OnInit, signal } from '@angular/core';
+import { MatCard, MatCardModule } from '@angular/material/card';
 import { MatTableModule } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { FIRESTORE } from 'app/app.config';
@@ -14,10 +15,9 @@ const imports = [
     MaterialModule,
     NgApexchartsModule,
     MatTableModule,
-    NgClass,
+    MatCardModule,
     CurrencyPipe,
     CommonModule,
-
 ]
 
 @Component({

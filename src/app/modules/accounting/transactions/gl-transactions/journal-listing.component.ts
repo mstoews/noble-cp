@@ -4,12 +4,13 @@ import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 import { CommonModule } from '@angular/common';
 import { FundsService } from 'app/services/funds.service';
 import { GLAccountsService } from 'app/services/accounts.service';
-import { GridMenubarStandaloneComponent } from '../../grid-menubar/grid-menubar.component';
+
 import { MaterialModule } from 'app/services/material.module';
 import { SubTypeService } from 'app/services/subtype.service';
 import { TypeService } from 'app/services/type.service';
 
-import { 
+import {
+    
     DialogEditEventArgs, 
     EditService, 
     SelectionSettingsModel, 
@@ -39,6 +40,7 @@ import { IJournalDetail, IJournalHeader } from 'app/models/journals';
 import { JournalStore } from 'app/services/journal.store';
 import { Router } from '@angular/router';
 import { ClickEventArgs } from '@syncfusion/ej2-navigations';
+import { GridMenubarStandaloneComponent } from '../../grid-menubar/grid-menubar.component';
 
 
 const imports = [
@@ -46,7 +48,7 @@ const imports = [
     ReactiveFormsModule,
     MaterialModule,
     FormsModule,
-    GridMenubarStandaloneComponent,
+    GridMenubarStandaloneComponent, 
     NgxMatSelectSearchModule,
     GridModule
 ];

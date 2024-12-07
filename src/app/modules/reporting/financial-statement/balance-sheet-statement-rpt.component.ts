@@ -12,13 +12,10 @@ import html2PDF from 'jspdf-html2canvas';
 
 const imports = [
   CommonModule,
-  
   ReportingToolbarComponent,
-  
   StatementLineComponent,
   MaterialModule,
-  StatementTotalComponent,
-  
+  StatementTotalComponent
 ]
 
 @Component({

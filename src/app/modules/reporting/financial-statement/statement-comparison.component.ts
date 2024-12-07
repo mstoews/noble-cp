@@ -1,4 +1,4 @@
-import { CommonModule, JsonPipe } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { Component, Input, OnInit } from '@angular/core';
 import { IDistributionComparisonRpt, IDistributionLedger } from 'app/models';
 
@@ -6,10 +6,9 @@ import { IDistributionComparisonRpt, IDistributionLedger } from 'app/models';
 @Component({
   selector: 'statement-comparison-item',
   standalone: true,
-  imports: [CommonModule, JsonPipe],
+  imports: [CommonModule],  
   template: 
-  `
-        <div class="grid grid-cols-12 gap-2">
+  `      <div class="grid grid-cols-12 gap-2">
             @if (showHeader) {
               <div class="col-start-1  text-gray-100" >{{item.child}}</div>
             }

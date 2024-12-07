@@ -10,7 +10,7 @@ import { BalanceSheetComponent } from './balance-sheet/balance-sheet.component';
 import { BalanceSheetStatementRptComponent } from './financial-statement/balance-sheet-statement-rpt.component';
 import { IncomeStatementRptComponent } from './financial-statement/income-statement-rpt.component';
 import { IncomeStatementComparisonRptComponent } from './financial-statement/income-statement-comparison.component';
-import {HandsonComponent} from "./handson/handson.component";
+
 import {HandsonFSReportComponent} from "./handson/handson.report.component";
 import {HandsonIncomeStComponent} from "./handson/handson.income-st.component";
 
@@ -21,17 +21,19 @@ const mods = [
     TrialBalanceComponent,
     BalanceSheetStatementRptComponent,
     IncomeStatementRptComponent,
-    IncomeStatementComparisonRptComponent,
-    HandsonComponent,
+    IncomeStatementComparisonRptComponent,    
+    HandsonFSReportComponent,
+    HandsonIncomeStComponent
 ]
 
 @Component({
     selector: 'transaction-main',
-    imports: [mods, HandsonFSReportComponent, HandsonIncomeStComponent],
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
     templateUrl: './reporting-panel.component.html',
-    styles: ``
+    styles: ``,
+    imports: [mods],
+    standalone: true
 })
 export class ReportingPanelComponent {
 
@@ -127,12 +129,6 @@ export class ReportingPanelComponent {
                 icon: 'feather:image',
                 title: 'Trial Balance Report',
                 description: 'Trial Balance Report',
-            },
-            {
-                id: 'handson-table',
-                icon: 'feather:image',
-                title: 'Handson Table',
-                description: 'Sample Reporting created with a Handson Table',
             },
             {
                 id: 'handson-fs-report',

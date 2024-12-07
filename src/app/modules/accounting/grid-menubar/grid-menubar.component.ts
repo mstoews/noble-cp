@@ -5,11 +5,14 @@ import {
   output,
   input,
 } from "@angular/core";
-import { MaterialModule } from "app/services/material.module";
+import { MatButtonModule } from "@angular/material/button";
+import { MatIconModule } from "@angular/material/icon";
+import { MatToolbarModule } from "@angular/material/toolbar";
 
-let modules = [MaterialModule, CommonModule];
+let modules = [MatToolbarModule, MatIconModule, MatButtonModule, CommonModule];
 
 @Component({
+    standalone: true,
     selector: "grid-menubar",
     styles: [
         ` ::ng-deep.mat-menu-panel {

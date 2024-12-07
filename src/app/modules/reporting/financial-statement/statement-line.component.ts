@@ -5,6 +5,7 @@ import { IDistributionLedger } from 'app/models';
 
 @Component({
     selector: 'statement-line-item',
+    standalone: true,
     imports: [CommonModule],
     template: `
         <div class="grid grid-cols-12 gap-2">

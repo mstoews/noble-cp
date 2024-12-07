@@ -25,17 +25,18 @@ import {
 
 import {MatCardModule} from "@angular/material/card";
 
-
 import {registerAllModules} from "handsontable/registry";
 import { ContextMenu } from 'handsontable/plugins/contextMenu';
 import {GridMenubarStandaloneComponent} from "../../accounting/grid-menubar/grid-menubar.component";
 import {TrialBalanceStore} from "../../../services/distribution.ledger.store";
+import { CommonModule } from '@angular/common';
 
 registerAllCellTypes();
 registerAllModules()
 registerPlugin(UndoRedo);
 
 const imports = [
+  CommonModule,
   HotTableModule,
   MatCardModule,
   GridMenubarStandaloneComponent
@@ -49,7 +50,7 @@ const imports = [
     <grid-menubar [inTitle]="'Transaction Listing'"></grid-menubar>
     <mat-card class="w-[100%] mt-2">
       <hot-table 
-        class="m-1 handsontable"
+        class="m-1"
         [data]="store.header()"
         [settings]="hotSettings">
       </hot-table>

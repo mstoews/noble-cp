@@ -1,7 +1,6 @@
-import { Component, OnDestroy, OnInit, ViewChild, ViewEncapsulation, inject, signal } from '@angular/core';
+import { Component, ViewEncapsulation, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { ReportingToolbarComponent } from '../grid-reporting/grid-menubar.component';
 import { DistributionLedgerService } from 'app/services/distribution.ledger.service';
 
 import { map, Subject  } from 'rxjs';
@@ -10,15 +9,12 @@ import { StatementTotalComponent } from './statement-totals.component';
 import html2PDF from 'jspdf-html2canvas'
 import  html2canvas from 'html2canvas'
 import jsPDF from 'jspdf';
+import { GridMenubarStandaloneComponent } from 'app/modules/accounting/grid-menubar/grid-menubar.component';
 
 const imports = [
   CommonModule,
-  
-  ReportingToolbarComponent,
-  
-  MaterialModule,
-  StatementTotalComponent,
-  
+  GridMenubarStandaloneComponent,  
+  StatementTotalComponent
 ]
 
 @Component({
@@ -30,11 +26,7 @@ const imports = [
   <!-- Main -->
   <div id="statement" class="flex-auto p-2 sm:p-10 bg-white">
       <div class="h-max border-gray-300 rounded-2xl">                
-          <reporting-toolbar [inTitle]="'Income Statement'"
-              (notifyParentRefresh)="onRefresh()"
-              (notifyExcel)="onExportExcel()" 
-              (notifyCSV)="onExportCSV()" >
-          </reporting-toolbar>          
+        <grid-menubar></grid-menubar>          
       </div>
       <div id="income-statement" class="pl-20 pt-2 pb-14 mat-elevation-z8 mt-4 bg-white font-gray-900">
 

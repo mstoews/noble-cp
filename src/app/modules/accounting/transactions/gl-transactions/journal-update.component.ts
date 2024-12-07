@@ -84,7 +84,7 @@ import {MatDrawer} from "@angular/material/sidenav";
 import {JournalStore} from "app/services/journal.store";
 import {MatSortModule} from "@angular/material/sort";
 import {MatTableModule} from "@angular/material/table";
-import {SplitterModule} from '@syncfusion/ej2-angular-layouts';
+import {Splitter, SplitterComponent, SplitterModule} from '@syncfusion/ej2-angular-layouts';
 import {EvidenceCardComponent} from "app/modules/file-manager/file-manager-card/evidence-card.component";
 import {MAT_FORM_FIELD_DEFAULT_OPTIONS} from "@angular/material/form-field";
 import {IParty} from "../../../../models/party";
@@ -273,8 +273,25 @@ export class JournalUpdateComponent
     @ViewChild("singleTemplateSelect", {static: true}) singleTemplateSelect!: MatSelect;
     @ViewChild("singlePartySelect", {static: true}) singlePartySelect!: MatSelect;
 
+    @ViewChild('splitterInstance') splitterObj?: SplitterComponent;
+    
+    
+    public onCreated () {
+        let splitterObj1 = new Splitter({
+            height: '100%',
+            separatorSize: 3,
+            paneSettings: [
+                { size: '65%'},
+                { size: '35%'}
+            ],
+            orientation: 'Vertical'
+        });
+        splitterObj1.appendTo('#vertical_splitter');
+    }
+
     ngOnInit(): void {
         this.createEmptyForm();
+        
 
         this.activatedRoute.data.subscribe((data) => {
             this.journal_id = data.journal.journal_id;

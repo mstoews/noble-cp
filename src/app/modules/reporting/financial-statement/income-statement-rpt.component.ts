@@ -1,41 +1,36 @@
-import { Component, OnDestroy, OnInit, ViewChild, ViewEncapsulation, inject, signal } from '@angular/core';
+import { Component,  ViewEncapsulation, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { DistMenuStandaloneComponent } from '../distributed-ledger/dist-menubar/grid-menubar.component';
-import { ReportingToolbarComponent } from '../grid-reporting/grid-menubar.component';
+
 import { DistributionLedgerService } from 'app/services/distribution.ledger.service';
-import { SimpleDialogComponent } from "../../../common/simple-dialog.component";
 import { StatementLineComponent } from './statement-line.component';
 import { map, Subject  } from 'rxjs';
-import { MaterialModule } from 'app/services/material.module';
+
 import { StatementTotalComponent } from './statement-totals.component';
-import html2PDF from 'jspdf-html2canvas'
+import  html2PDF from 'jspdf-html2canvas'
 import  html2canvas from 'html2canvas'
-import jsPDF from 'jspdf';
-import {HandsonComponent} from "../handson/handson.component";
+import  jsPDF from 'jspdf';
+import { GridMenubarStandaloneComponent } from 'app/modules/accounting/grid-menubar/grid-menubar.component';
+
 
 const imports = [
-  CommonModule,
-  HandsonComponent,
-  ReportingToolbarComponent,
   StatementLineComponent,
-  MaterialModule,
   StatementTotalComponent,
+  GridMenubarStandaloneComponent,
+  CommonModule
 ]
 
 @Component({
     selector: 'income-statement-rpt',
+    standalone: true,
     imports: [imports],
     encapsulation: ViewEncapsulation.None,
     template: `
   <div class="flex flex-col min-w-0 overflow-y-auto overflow-x-auto" cdkScrollable >
   <!-- Main -->
   <div id="statement" class="flex-auto p-2 sm:p-10 bg-white">
-      <div class="h-max border-gray-300 rounded-2xl">                
-          <reporting-toolbar [inTitle]="'Income Statement'"
-              (notifyParentRefresh)="onRefresh()"
-              (notifyExcel)="onExportExcel()" 
-              (notifyCSV)="onExportCSV()" >
-          </reporting-toolbar>          
+      <div class="h-max border-gray-300 rounded-2xl">   
+        <grid-menubar></grid-menubar>             
+          
       </div>
       <div id="income-statement" class="pl-20 pt-2 pb-14 mat-elevation-z8 mt-4 bg-white font-gray-900">
 
