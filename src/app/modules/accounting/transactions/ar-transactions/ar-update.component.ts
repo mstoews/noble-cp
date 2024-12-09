@@ -5,7 +5,7 @@ import { Observable, ReplaySubject, Subject, Subscription, interval, map, startW
 import { CommonModule } from "@angular/common";
 import { DndComponent } from "app/modules/drag-n-drop/loaddnd/dnd.component";
 import { FundsService } from "app/services/funds.service";
-import { GLAccountsService } from "app/services/accounts.service";
+import { AccountsService } from "app/services/accounts.service";
 import { GridMenubarStandaloneComponent } from "../../grid-menubar/grid-menubar.component";
 import { MaterialModule } from "app/services/material.module";
 import { ISubType, SubTypeService } from "app/services/subtype.service";
@@ -53,20 +53,20 @@ const imports = [
 ];
 
 @Component({
-    selector: "ar-journal",
-    imports: [imports],
-    templateUrl: "./ar-update.component.html",
-    providers: [
-        provideNgxMask(),
-        SortService,
-        PageService,
-        FilterService,
-        ToolbarService,
-        EditService,
-        AggregateService,
-        RowDDService
-    ],
-    changeDetection: ChangeDetectionStrategy.OnPush
+  selector: "ar-journal",
+  imports: [imports],
+  templateUrl: "./ar-update.component.html",
+  providers: [
+    provideNgxMask(),
+    SortService,
+    PageService,
+    FilterService,
+    ToolbarService,
+    EditService,
+    AggregateService,
+    RowDDService
+  ],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ARUpdateComponent
   implements OnInit, OnDestroy, AfterViewInit {
@@ -92,7 +92,7 @@ export class ARUpdateComponent
   private typeService = inject(TypeService);
   private subtypeService = inject(SubTypeService);
   private fundService = inject(FundsService);
-  private accountService = inject(GLAccountsService);
+  private accountService = inject(AccountsService);
   private snackBar = inject(MatSnackBar);
   private dialog = inject(MatDialog);
   private auth = inject(AUTH);

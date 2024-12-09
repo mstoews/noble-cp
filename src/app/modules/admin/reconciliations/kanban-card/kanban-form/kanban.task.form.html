@@ -1,0 +1,78 @@
+<div mat-dialog-title [ngStyle]="{'border-left': '10px solid' + cRAG  }">{{sTitle}}</div>
+<div mat-dialog-content>
+
+        <mat-form-field class="form-element" [ngStyle]="{ width: '100%' }">
+            <input matInput placeholder="Title" formControlName="title" />
+        </mat-form-field>
+
+        <mat-form-field class="mat-form-field" [ngStyle]="{ width: '100%' }">
+            <input matInput placeholder="Description" formControlName="description" />
+        </mat-form-field>
+
+
+        <mat-form-field [ngStyle]="{ width: '18%' }">
+            <mat-select placeholder="RAG" formControlName="color" (selectionChange)="changeRag($event.value)">
+                <mat-option *ngFor="let p of rag" [value]="p.value"> {{ p.viewValue }} </mat-option>
+            </mat-select>
+        </mat-form-field>
+
+        <mat-form-field [ngStyle]="{ width: '18%' }">
+            <mat-select placeholder="Type" formControlName="type" (selectionChange)="changeType($event.value)">
+                <mat-option *ngFor="let p of types" [value]="p.value"> {{ p.viewValue }} </mat-option>
+            </mat-select>
+        </mat-form-field>
+
+
+        <mat-form-field [ngStyle]="{ width: '18%' }">
+            <mat-select placeholder="Priority" formControlName="priority"
+                (selectionChange)="changePriority($event.value)">
+                <mat-option *ngFor="let p of priority" [value]="p.value">
+                    {{ p.viewValue }}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+
+        <mat-form-field [ngStyle]="{ width: '18%' }" class="form-element"><input matInput placeholder="Tags"
+                formControlName="tags" /></mat-form-field>
+
+        <mat-form-field [ngStyle]="{ width: '18%' }" class="form-element">
+            <input matInput placeholder="Estimate" formControlName="estimate" />
+        </mat-form-field>
+
+        <mat-form-field [ngStyle]="{ width: '32%' }" class="form-element">
+            <mat-select placeholder="Assigned" formControlName="assignee" (selectionChange)="changeType($event.value)">
+                <mat-option *ngFor="let p of team" [value]="p.value"> {{ p.viewValue }} </mat-option>
+            </mat-select>
+        </mat-form-field>
+
+        <mat-form-field [ngStyle]="{ width: '32%' }" class="form-element">
+            <input matInput placeholder="Start Date" type="date" id="start_date" formControlName="start_date" />
+        </mat-form-field>
+
+        <mat-form-field [ngStyle]="{ width: '32%' }" class="form-element">
+            <input matInput placeholder="Due Date" type="date" id="due_date" formControlName="due_date" />
+        </mat-form-field>
+
+        <mat-form-field class="mat-form-field" [ngStyle]="{ width: '100%' }">
+            <textarea matInput placeholder="Summary" formControlName="summary" [ngStyle]="{ height: '6em' }">
+          </textarea>
+        </mat-form-field>
+
+</div>
+<div mat-dialog-actions>
+    <button mat-button (click)="onUpdate(task)" [mat-dialog-close]="task" mat-flat-button color="primary">
+        Update
+    </button>
+    <button mat-button (click)="onCreate(task)" [mat-dialog-close]="task" mat-flat-button color="primary">
+        Insert
+    </button>
+    <button mat-button (click)="onDelete(task)" [mat-dialog-close]="task" mat-flat-button color="primary">
+        Delete
+    </button>
+    <button mat-button (click)="onAddComment(task)" [mat-dialog-close]="task" mat-flat-button color="primary">
+        Comment
+    </button>
+    <button mat-button (click)="closeDialog()" mat-flat-button color="warn">
+        Cancel
+    </button>
+</div>

@@ -5,7 +5,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { fuseAnimations } from '@fuse/animations';
 import { AUTH } from 'app/app.config';
-import { GLAccountsService } from 'app/services/accounts.service';
+import { AccountsService } from 'app/services/accounts.service';
 import { FundsService } from 'app/services/funds.service';
 import { JournalService } from 'app/services/journal.service';
 import { MaterialModule } from 'app/services/material.module';
@@ -33,14 +33,14 @@ const imports = [
 ]
 
 @Component({
-    selector: 'budget-wizard',
-    imports: [imports],
-    templateUrl: './budget-wizard.component.html',
-    encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    animations: fuseAnimations,
-    styles: ``,
-    providers: [provideNgxMask()]
+  selector: 'budget-wizard',
+  imports: [imports],
+  templateUrl: './budget-wizard.component.html',
+  encapsulation: ViewEncapsulation.None,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  animations: fuseAnimations,
+  styles: ``,
+  providers: [provideNgxMask()]
 })
 export class BudgetWizardComponent implements OnInit, OnDestroy, AfterViewInit {
   onUpdateJournalEntry() {
@@ -60,7 +60,7 @@ export class BudgetWizardComponent implements OnInit, OnDestroy, AfterViewInit {
   private journalService = inject(JournalService);
   private subtypeService = inject(SubTypeService);
   private fundService = inject(FundsService);
-  private accountService = inject(GLAccountsService);
+  private accountService = inject(AccountsService);
   private snackBar = inject(MatSnackBar);
   private formBuilder = inject(FormBuilder);
   private changeDesctionRef = inject(ChangeDetectorRef);

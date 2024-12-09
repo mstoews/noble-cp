@@ -1,0 +1,36 @@
+<div cdkDropListGroup class="container">
+  <div class="item item--1">
+    <div class="kanban_title">Open</div>
+    <div class="list" cdkDropList #open="cdkDropList" [id]="OPEN" [cdkDropListData]="openTasks" (cdkDropListDropped)="drop($event)">
+    <div *ngFor="let item of openTasks" cdkDrag>
+      <app-task (notifyOpenTaskDialog)="onModifyTaskDialog($event)" [item]="item"></app-task>
+    </div>
+  </div>
+  </div>
+  <div class="item item--2">
+    <div class="kanban_title">In Progress</div>
+         <div class="list" cdkDropList #progress="cdkDropList" [id]="IN_PROGRESS" [cdkDropListData]="progressTasks" (cdkDropListDropped)="drop($event)">
+    <div *ngFor="let item of progressTasks" cdkDrag>
+      <app-task (notifyOpenTaskDialog)="onModifyTaskDialog($event)" [item]="item"></app-task>
+    </div>
+  </div>
+  </div>
+  <div class="item item--3">
+    <div class="kanban_title">In Review</div>
+      <div cdkDropList #review="cdkDropList" [id]="IN_REVIEW" [cdkDropListData]="reviewTasks" class="list"
+    (cdkDropListDropped)="drop($event)">
+    <div *ngFor="let item of reviewTasks" cdkDrag>
+      <app-task (notifyOpenTaskDialog)="onModifyTaskDialog($event)" [item]="item"></app-task>
+    </div>
+  </div>
+  </div>
+  <div class="item item--4">
+    <div class="kanban_title">Completed</div>
+        <div cdkDropList [id]="COMPLETED" [cdkDropListData]="completeTasks" class="list" (cdkDropListDropped)="drop($event)">
+    <div *ngFor="let item of completeTasks" cdkDrag>
+      <app-task (notifyOpenTaskDialog)="onModifyTaskDialog($event)" [item]="item"></app-task>
+    </div>
+  </div>
+</div>
+  </div>
+

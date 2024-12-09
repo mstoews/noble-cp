@@ -64,25 +64,27 @@ export interface IJournalDetail {
   create_date   : string,
   create_user   : string,
   period?       : number,
-  period_year?  : number,  
+  period_year?  : number, 
+  template_name?: string 
 }
 
+
 export interface IAccounts {
-  account       : number,
-  child         : number,
-  parent_account: string,
-  type          : string,
-  sub_type      : string,
-  description   : string,
-  balance       : number,
-  comments      : string,
-  create_date   : string,
-  create_user   : string,
-  update_date   : string,
-  update_user   : string,
-  period?       : number,
-  period_year?  : number,
-  status?       : string
+  account         : number,
+  child           : number,
+  parent_account  : string,
+  type            : string,
+  sub_type        : string,
+  description     : string,
+  balance         : number,
+  comments        : string,
+  create_date     : string,
+  create_user     : string,
+  update_date     : string,
+  update_user     : string,
+  period?         : number,
+  period_year?    : number,
+  status?         : string
 }
 
 export interface ITransactionDate {
@@ -100,6 +102,11 @@ export interface IArtifacts {
   user_created  : string
 }
 
+export interface IReadJournalDetailsParams {
+  child: number;
+  period: number;
+  period_year: number;
+}
 
 export interface IJournalTemplate {
     template_ref: number,

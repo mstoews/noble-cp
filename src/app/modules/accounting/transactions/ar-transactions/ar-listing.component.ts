@@ -8,7 +8,7 @@ import { CommonModule } from '@angular/common';
 import { DndComponent } from 'app/modules/drag-n-drop/loaddnd/dnd.component';
 
 import { FundsService } from 'app/services/funds.service';
-import { GLAccountsService } from 'app/services/accounts.service';
+import { AccountsService } from 'app/services/accounts.service';
 
 import { GridMenubarStandaloneComponent } from '../../grid-menubar/grid-menubar.component';
 import { MatDrawer } from '@angular/material/sidenav';
@@ -48,14 +48,14 @@ const imports = [
 export class ARTransactionComponent implements OnInit, OnDestroy {
 
     alert: { type: FuseAlertType; message: string } = {
-        type   : 'success',
+        type: 'success',
         message: '',
     };
 
     public typeService = inject(TypeService);
     public subtypeService = inject(SubTypeService);
     public fundService = inject(FundsService);
-    public accountService = inject(GLAccountsService);
+    public accountService = inject(AccountsService);
     public route = inject(Router);
 
     store = inject(JournalStore);
@@ -78,7 +78,7 @@ export class ARTransactionComponent implements OnInit, OnDestroy {
     public nJournal = 0;
     public description = '';
     public transaction_date = '';
-    public amount = ''; 
+    public amount = '';
     public journalType = 'AR';
     public currentDate: string;
     public journal_details: any[];
@@ -116,7 +116,7 @@ export class ARTransactionComponent implements OnInit, OnDestroy {
     onReceipts() {
         alert("Receipts");
     }
-    
+
 
     ngOnInit() {
         // const dDate = new Date();

@@ -1,4 +1,4 @@
-import {CommonModule} from '@angular/common';
+import { CommonModule } from '@angular/common';
 import {
     AfterViewInit,
     ChangeDetectionStrategy,
@@ -21,21 +21,21 @@ import {
     FormControl,
     FormGroup
 } from '@angular/forms';
-import {MatSnackBar} from '@angular/material/snack-bar';
-import {fuseAnimations} from '@fuse/animations';
-import {AUTH} from 'app/app.config';
-import {GLAccountsService} from 'app/services/accounts.service';
-import {FundsService} from 'app/services/funds.service';
-import {JournalService} from 'app/services/journal.service';
-import {MaterialModule} from 'app/services/material.module';
-import {SubTypeService} from 'app/services/subtype.service';
-import {NgxMaskDirective, NgxMaskPipe, provideNgxMask} from 'ngx-mask';
-import {ReplaySubject, Subject, Subscription, take, takeUntil} from 'rxjs';
-import {MatDialog} from '@angular/material/dialog';
-import {DndComponent} from 'app/modules/drag-n-drop/loaddnd/dnd.component';
-import {MatSelect} from '@angular/material/select';
-import {NgxMatSelectSearchModule} from 'ngx-mat-select-search';
-import {IDropDownAccounts} from 'app/models';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { fuseAnimations } from '@fuse/animations';
+import { AUTH } from 'app/app.config';
+import { AccountsService } from 'app/services/accounts.service';
+import { FundsService } from 'app/services/funds.service';
+import { JournalService } from 'app/services/journal.service';
+import { MaterialModule } from 'app/services/material.module';
+import { SubTypeService } from 'app/services/subtype.service';
+import { NgxMaskDirective, NgxMaskPipe, provideNgxMask } from 'ngx-mask';
+import { ReplaySubject, Subject, Subscription, take, takeUntil } from 'rxjs';
+import { MatDialog } from '@angular/material/dialog';
+import { DndComponent } from 'app/modules/drag-n-drop/loaddnd/dnd.component';
+import { MatSelect } from '@angular/material/select';
+import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
+import { IDropDownAccounts } from 'app/models';
 import {
     IJournalDetail,
     IJournalDetailTemplate,
@@ -43,16 +43,16 @@ import {
     IJournalTemplate,
     ITransactionDate
 } from 'app/models/journals';
-import {JournalStore} from 'app/services/journal.store';
-import {JournalTemplateService} from 'app/services/journal-template.service';
-import {MatStepperModule} from '@angular/material/stepper';
-import {MAT_FORM_FIELD_DEFAULT_OPTIONS, MatFormFieldModule} from '@angular/material/form-field';
-import {MatInputModule} from '@angular/material/input';
-import {MatButtonModule} from '@angular/material/button';
-import {MatIcon, MatIconModule} from '@angular/material/icon';
-import {MatDatepickerModule} from '@angular/material/datepicker';
-import {IParty} from 'app/models/party';
-import {PartyService} from 'app/services/party.service';
+import { JournalStore } from 'app/services/journal.store';
+import { JournalTemplateService } from 'app/services/journal-template.service';
+import { MatStepperModule } from '@angular/material/stepper';
+import { MAT_FORM_FIELD_DEFAULT_OPTIONS, MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIcon, MatIconModule } from '@angular/material/icon';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { IParty } from 'app/models/party';
+import { PartyService } from 'app/services/party.service';
 import {
     AggregateService, ColumnMenuService,
     EditService,
@@ -63,11 +63,11 @@ import {
     RowDragEventArgs,
     SaveEventArgs, SearchService, SortService, ToolbarService
 } from '@syncfusion/ej2-angular-grids';
-import {TuiAlertService} from '@taiga-ui/core';
-import {MatDrawer, MatSidenav, MatSidenavModule} from '@angular/material/sidenav';
-import {MatCardModule} from "@angular/material/card";
-import {MatTableModule} from "@angular/material/table";
-import {MatTab, MatTabsModule} from "@angular/material/tabs";
+import { TuiAlertService } from '@taiga-ui/core';
+import { MatDrawer, MatSidenav, MatSidenavModule } from '@angular/material/sidenav';
+import { MatCardModule } from "@angular/material/card";
+import { MatTableModule } from "@angular/material/table";
+import { MatTab, MatTabsModule } from "@angular/material/tabs";
 
 
 interface ITransactionType {
@@ -133,7 +133,7 @@ export class EntryWizardComponent implements OnInit, OnDestroy, AfterViewInit {
 
     private subtypeService = inject(SubTypeService);
     private fundService = inject(FundsService);
-    private accountService = inject(GLAccountsService);
+    private accountService = inject(AccountsService);
     private snackBar = inject(MatSnackBar);
     private formBuilder = inject(FormBuilder);
     private changeDescriptionRef = inject(ChangeDetectorRef);
@@ -151,7 +151,7 @@ export class EntryWizardComponent implements OnInit, OnDestroy, AfterViewInit {
     public detailForm: FormGroup
     public description: string;
     public transactionType = 'GL';
-    public isVerified= false;
+    public isVerified = false;
 
     private subAccountDebit: Subscription;
     private subAccountCredit: Subscription;
@@ -211,18 +211,18 @@ export class EntryWizardComponent implements OnInit, OnDestroy, AfterViewInit {
     private readonly alerts = inject(TuiAlertService);
     drawer = viewChild<MatDrawer>("drawer");
 
-    @ViewChild("singleDebitSelect", {static: true}) singleDebitSelect: MatSelect;
-    @ViewChild("singleCreditSelect", {static: true}) singleCreditSelect: MatSelect;
-    @ViewChild("singleTemplateSelect", {static: true}) singleTemplateSelect: MatSelect;
-    @ViewChild("singlePartySelect", {static: true}) singlePartySelect: MatSelect;
+    @ViewChild("singleDebitSelect", { static: true }) singleDebitSelect: MatSelect;
+    @ViewChild("singleCreditSelect", { static: true }) singleCreditSelect: MatSelect;
+    @ViewChild("singleTemplateSelect", { static: true }) singleTemplateSelect: MatSelect;
+    @ViewChild("singlePartySelect", { static: true }) singlePartySelect: MatSelect;
 
     bNewTransaction: any;
     public selectedOption: string;
 
     types: ITransactionType[] = [
-        {value: "GL", viewValue: "General", checked: true},
-        {value: "AP", viewValue: "Payments", checked: false},
-        {value: "AR", viewValue: "Receipts", checked: false},
+        { value: "GL", viewValue: "General", checked: true },
+        { value: "AP", viewValue: "Payments", checked: false },
+        { value: "AR", viewValue: "Receipts", checked: false },
     ];
 
     bHeaderDirty: boolean;
@@ -331,14 +331,14 @@ export class EntryWizardComponent implements OnInit, OnDestroy, AfterViewInit {
         );
 
         this.detailForm.patchValue({
-                debitAccountFilterCtrl: journalDetail.child.toString(),
-                description: journalDetail.description,
-                sub_type: journalDetail.sub_type,
-                debit: journalDetail.debit,
-                credit: journalDetail.credit,
-                reference: journalDetail.reference,
-                fund: journalDetail.fund
-            });
+            debitAccountFilterCtrl: journalDetail.child.toString(),
+            description: journalDetail.description,
+            sub_type: journalDetail.sub_type,
+            debit: journalDetail.debit,
+            credit: journalDetail.credit,
+            reference: journalDetail.reference,
+            fund: journalDetail.fund
+        });
     }
 
 
@@ -410,7 +410,7 @@ export class EntryWizardComponent implements OnInit, OnDestroy, AfterViewInit {
             create_date: currentDate,
             create_user: email,
             sub_type: data.sub_type,
-            debit:  data.debit,
+            debit: data.debit,
             credit: data.credit,
             reference: data.reference,
             fund: data.fund,
@@ -623,7 +623,7 @@ export class EntryWizardComponent implements OnInit, OnDestroy, AfterViewInit {
     public onUpdate() {
 
         const updateDate = new Date().toISOString().split('T')[0];
-        const inputs = {...this.journalEntryForm.value}
+        const inputs = { ...this.journalEntryForm.value }
         const momentDate = new Date(inputs.step1.transaction_date).toISOString().split('T')[0];
         const email = this.auth.currentUser?.email;
 
@@ -680,7 +680,7 @@ export class EntryWizardComponent implements OnInit, OnDestroy, AfterViewInit {
         // this.journalDetailSignal().forEach((journalDetail) => {
         //   console.log(journalDetail);
         // });
-        this.alerts.open('Journal Entry Created', {label: 'success'});
+        this.alerts.open('Journal Entry Created', { label: 'success' });
     }
 
 
@@ -711,7 +711,7 @@ export class EntryWizardComponent implements OnInit, OnDestroy, AfterViewInit {
 
         dialogRef.afterClosed().subscribe((result: any) => {
             if (result === undefined) {
-                result = {event: 'Cancel'};
+                result = { event: 'Cancel' };
             }
             switch (result.event) {
                 case 'Create':

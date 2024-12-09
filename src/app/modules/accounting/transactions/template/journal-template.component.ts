@@ -1,7 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { GLAccountsService } from 'app/services/accounts.service';
+import { AccountsService } from 'app/services/accounts.service';
 import { GridMenubarStandaloneComponent } from '../../grid-menubar/grid-menubar.component';
 import { MaterialModule } from 'app/services/material.module';
 import { TemplateStore } from 'app/services/journal-template.store';
@@ -23,8 +23,8 @@ const imports = [
     providers: [TemplateStore, PdfExportService, ExcelExportService]
 })
 
-export class JournalTemplateComponent {    
-    private accountService = inject(GLAccountsService);
+export class JournalTemplateComponent {
+    private accountService = inject(AccountsService);
     public currentDate: string;
     public journal_details: any[];
     public bOpenDetail: boolean = false;
@@ -54,7 +54,7 @@ export class JournalTemplateComponent {
     async ngOnInit() {
         const dDate = new Date();
         this.currentDate = dDate.toISOString().split('T')[0];
-        this.formatoptions = { type: 'dateTime', format: 'M/dd/yyyy' }                           
+        this.formatoptions = { type: 'dateTime', format: 'M/dd/yyyy' }
     }
 
     onCellDoubleClicked(e: any) {

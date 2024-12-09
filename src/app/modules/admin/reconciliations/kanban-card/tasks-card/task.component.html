@@ -1,0 +1,22 @@
+<mat-card  matRipple class="clickable">
+  <mat-card-content (click)="onAdd(item)">
+    <div [ngStyle]="{'color': item.color}" [ngStyle]="{'border-right': '6px solid' + item.color}"
+        class="thumbnail--32x32 float-right material-icons action-icon"
+        title="{{ item.assignee }}">
+        watch_later
+    </div>
+    <div class="primary-title">
+        <div class="primary-text">
+            <strong> {{ item.task_id }} : {{ item.title }}</strong>
+        </div>
+    </div>
+    <div class="supporting-text">{{ item.description }}</div>
+    <div class="actions">
+        <mat-chip-list>
+            <mat-chip (click)="openMenu()"> {{ item.priority }} </mat-chip>
+            <mat-chip (click)="openMenu()"> {{ item.tags }} </mat-chip>
+            <mat-chip (click)="openMenu()"> {{ item.assignee }}</mat-chip>
+        </mat-chip-list>
+    </div>
+  </mat-card-content>
+</mat-card>

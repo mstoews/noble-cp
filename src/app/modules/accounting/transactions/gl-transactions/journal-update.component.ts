@@ -20,7 +20,7 @@ import {
     ReactiveFormsModule,
     Validators,
 } from "@angular/forms";
-import {JournalService} from "app/services/journal.service";
+import { JournalService } from "app/services/journal.service";
 import {
     ReplaySubject,
     Subject,
@@ -28,24 +28,24 @@ import {
     take,
     takeUntil,
 } from "rxjs";
-import {CommonModule} from "@angular/common";
-import {DndComponent} from "app/modules/drag-n-drop/loaddnd/dnd.component";
-import {FundsService} from "app/services/funds.service";
-import {GLAccountsService} from "app/services/accounts.service";
-import {GridMenubarStandaloneComponent} from "../../grid-menubar/grid-menubar.component";
-import {MaterialModule} from "app/services/material.module";
-import {ISubType, SubTypeService} from "app/services/subtype.service";
-import {TypeService} from "app/services/type.service";
-import {JournalEditComponent} from "../journal-update/journal-edit.component";
-import {MatDialog, MatDialogConfig} from "@angular/material/dialog";
-import {NgxMaskDirective, NgxMaskPipe, provideNgxMask} from "ngx-mask";
-import {FuseConfirmationService} from "@fuse/services/confirmation";
-import {MatSnackBar} from "@angular/material/snack-bar";
-import {DropDownListAllModule} from "@syncfusion/ej2-angular-dropdowns";
-import {FileManagerComponent} from "app/modules/file-manager/file-manager.component";
-import {AUTH} from "app/app.config";
-import {MatSelect} from "@angular/material/select";
-import {NgxMatSelectSearchModule} from "ngx-mat-select-search";
+import { CommonModule } from "@angular/common";
+import { DndComponent } from "app/modules/drag-n-drop/loaddnd/dnd.component";
+import { FundsService } from "app/services/funds.service";
+import { AccountsService } from "app/services/accounts.service";
+import { GridMenubarStandaloneComponent } from "../../grid-menubar/grid-menubar.component";
+import { MaterialModule } from "app/services/material.module";
+import { ISubType, SubTypeService } from "app/services/subtype.service";
+import { TypeService } from "app/services/type.service";
+import { JournalEditComponent } from "../journal-update/journal-edit.component";
+import { MatDialog, MatDialogConfig } from "@angular/material/dialog";
+import { NgxMaskDirective, NgxMaskPipe, provideNgxMask } from "ngx-mask";
+import { FuseConfirmationService } from "@fuse/services/confirmation";
+import { MatSnackBar } from "@angular/material/snack-bar";
+import { DropDownListAllModule } from "@syncfusion/ej2-angular-dropdowns";
+import { FileManagerComponent } from "app/modules/file-manager/file-manager.component";
+import { AUTH } from "app/app.config";
+import { MatSelect } from "@angular/material/select";
+import { NgxMatSelectSearchModule } from "ngx-mat-select-search";
 import {
     IDropDownAccounts,
     IDropDownAccountsGridList,
@@ -78,18 +78,18 @@ import {
     IJournalDetail, IJournalDetailTemplate,
     IJournalHeader, IJournalHeaderUpdate, IJournalTemplate,
 } from "app/models/journals";
-import {Router, ActivatedRoute} from "@angular/router";
-import {Location} from "@angular/common";
-import {MatDrawer} from "@angular/material/sidenav";
-import {JournalStore} from "app/services/journal.store";
-import {MatSortModule} from "@angular/material/sort";
-import {MatTableModule} from "@angular/material/table";
-import {Splitter, SplitterComponent, SplitterModule} from '@syncfusion/ej2-angular-layouts';
-import {EvidenceCardComponent} from "app/modules/file-manager/file-manager-card/evidence-card.component";
-import {MAT_FORM_FIELD_DEFAULT_OPTIONS} from "@angular/material/form-field";
-import {IParty} from "../../../../models/party";
-import {PartyService} from "../../../../services/party.service";
-import {JournalTemplateService} from "../../../../services/journal-template.service";
+import { Router, ActivatedRoute } from "@angular/router";
+import { Location } from "@angular/common";
+import { MatDrawer } from "@angular/material/sidenav";
+import { JournalStore } from "app/services/journal.store";
+import { MatSortModule } from "@angular/material/sort";
+import { MatTableModule } from "@angular/material/table";
+import { Splitter, SplitterComponent, SplitterModule } from '@syncfusion/ej2-angular-layouts';
+import { EvidenceCardComponent } from "app/modules/file-manager/file-manager-card/evidence-card.component";
+import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from "@angular/material/form-field";
+import { IParty } from "../../../../models/party";
+import { PartyService } from "../../../../services/party.service";
+import { JournalTemplateService } from "../../../../services/journal-template.service";
 
 const imports = [
     CommonModule,
@@ -163,7 +163,7 @@ export class JournalUpdateComponent
     private typeService = inject(TypeService);
     private subtypeService = inject(SubTypeService);
     private fundService = inject(FundsService);
-    private accountService = inject(GLAccountsService);
+    private accountService = inject(AccountsService);
     private snackBar = inject(MatSnackBar);
     private dialog = inject(MatDialog);
     private auth = inject(AUTH);
@@ -251,7 +251,7 @@ export class JournalUpdateComponent
 
     public Accounts: IDropDownAccounts[] = [];
     public accountsGrid: IDropDownAccountsGridList[] = [];
-    public dFields = {text: "child", value: "child"};
+    public dFields = { text: "child", value: "child" };
 
     public debitAccounts: IDropDownAccounts[] = [];
     public debitCtrl: FormControl<IDropDownAccounts> = new FormControl<IDropDownAccounts>(null);
@@ -269,20 +269,20 @@ export class JournalUpdateComponent
     columnsToDisplay: string[] = ["journal_id", "description"];
     toolbarOptions = ['Search']
 
-    @ViewChild("singleDebitSelect", {static: true}) singleDebitSelect: MatSelect;
-    @ViewChild("singleTemplateSelect", {static: true}) singleTemplateSelect!: MatSelect;
-    @ViewChild("singlePartySelect", {static: true}) singlePartySelect!: MatSelect;
+    @ViewChild("singleDebitSelect", { static: true }) singleDebitSelect: MatSelect;
+    @ViewChild("singleTemplateSelect", { static: true }) singleTemplateSelect!: MatSelect;
+    @ViewChild("singlePartySelect", { static: true }) singlePartySelect!: MatSelect;
 
     @ViewChild('splitterInstance') splitterObj?: SplitterComponent;
-    
-    
-    public onCreated () {
+
+
+    public onCreated() {
         let splitterObj1 = new Splitter({
             height: '100%',
             separatorSize: 3,
             paneSettings: [
-                { size: '65%'},
-                { size: '35%'}
+                { size: '65%' },
+                { size: '35%' }
             ],
             orientation: 'Vertical'
         });
@@ -291,7 +291,7 @@ export class JournalUpdateComponent
 
     ngOnInit(): void {
         this.createEmptyForm();
-        
+
 
         this.activatedRoute.data.subscribe((data) => {
             this.journal_id = data.journal.journal_id;
@@ -449,8 +449,8 @@ export class JournalUpdateComponent
     }
 
     initialDatagrid() {
-        this.formatoptions = {type: "dateTime", format: "M/dd/yyyy"};
-        this.selectionOptions = {mode: "Row"};
+        this.formatoptions = { type: "dateTime", format: "M/dd/yyyy" };
+        this.selectionOptions = { mode: "Row" };
         this.editSettings = {
             allowEditing: true,
             allowAdding: false,
@@ -461,7 +461,7 @@ export class JournalUpdateComponent
             allowAdding: false,
             allowDeleting: false,
         };
-        this.filterSettings = {type: "CheckBox"};
+        this.filterSettings = { type: "CheckBox" };
 
         if (this.templateFilter)
             this.templateFilter
@@ -666,15 +666,15 @@ export class JournalUpdateComponent
             this.filteredDebitAccounts
                 .pipe(take(1), takeUntil(this._onDebitDestroy))
                 .subscribe(() => {
-                    if (this.singleDebitSelect != null || this.singleDebitSelect != undefined )
-                    this.singleDebitSelect.compareWith = (
-                        a: IDropDownAccounts,
-                        b: IDropDownAccounts
-                    ) => {
-                        return a && b && a.child === b.child;
-                    };
-        });
-        this.searchOptions = {operator: 'contains', ignoreCase: true, ignoreAccent: true};
+                    if (this.singleDebitSelect != null || this.singleDebitSelect != undefined)
+                        this.singleDebitSelect.compareWith = (
+                            a: IDropDownAccounts,
+                            b: IDropDownAccounts
+                        ) => {
+                            return a && b && a.child === b.child;
+                        };
+                });
+        this.searchOptions = { operator: 'contains', ignoreCase: true, ignoreAccent: true };
     }
 
     public refreshHeader(header: IJournalHeader) {
@@ -767,7 +767,7 @@ export class JournalUpdateComponent
 
         dialogRef.afterClosed().subscribe((result: any) => {
             if (result === undefined) {
-                result = {event: "Cancel"};
+                result = { event: "Cancel" };
             }
 
             switch (result.event) {

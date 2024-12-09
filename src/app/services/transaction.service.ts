@@ -1,12 +1,12 @@
 import { inject, Injectable } from '@angular/core';
-import { GLAccountsService } from './accounts.service';
+import { AccountsService } from './accounts.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class TransactionService {
 
-  glAccountService = inject(GLAccountsService);
-  
+  glAccountService = inject(AccountsService);
+
   constructor() { }
 }

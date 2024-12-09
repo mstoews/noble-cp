@@ -32,7 +32,7 @@ export const PartyStore = signalStore(
     selected: computed(() => state.party().filter((t) => state.party()[t.party_id])),
   })),
   withMethods((state, partyService = inject(PartyService)) => ({       
-    removeParty:   rxMethod<IParty>(
+    removeParty: rxMethod<IParty>(
       pipe(
         switchMap((value) => {
           patchState(state, { isLoading: true });

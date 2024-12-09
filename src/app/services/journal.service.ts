@@ -15,6 +15,7 @@ import {
   IJournalTemplate,
   IPeriod,
   IPeriodParam,
+  IReadJournalDetailsParams,
   ITransactionDate
 } from 'app/models/journals';
 
@@ -102,8 +103,6 @@ export class JournalService implements OnDestroy {
     return this.httpClient.get<IJournalDetail[]>(url);
   }
 
-
-
   getHttpJournalDetails(journal_id: number) {
     console.log('getHttpJournalDetails', journal_id);
     var url = this.baseUrl + '/v1/get_journal_detail/' + journal_id;
@@ -138,8 +137,12 @@ export class JournalService implements OnDestroy {
     }).pipe(shareReplay());
   }
 
+  readJournalsByAccount(  params : IReadJournalDetailsParams) {
+    var url = this.baseUrl + "/v1/read_transaction_by_account";
+    return this.httpClient.post(url, { params }).pipe(shareReplay()) as Observable<IJournalDetail[]>;
+  }
 
-  getJournalDetailByChildAccount(child: string) {
+  read_transaction_by_account(child: string) {
     var url = this.baseUrl + '/v1/get_jd_by_child/' + child;
     return this.httpClient.post<IJournalDetail[]>(url, {
       child: child
@@ -242,6 +245,7 @@ export class JournalService implements OnDestroy {
     return this.httpClient.get<IJournalDetailTemplate[]>(url);
   }  
 
+  
 
   private handleErrorWithTimeout(error: HttpErrorResponse | TimeoutError) {
     let errorMessage = "";

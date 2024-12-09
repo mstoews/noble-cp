@@ -21,7 +21,7 @@ const initialState: AccountState = {
 @Injectable({
     providedIn: 'root',
 })
-export class GLAccountsService {
+export class AccountsService {
 
     private parentAccounts = signal<IAccounts[]>([])
     private dropDownList = signal<IDropDownAccounts[]>([])
@@ -30,8 +30,8 @@ export class GLAccountsService {
     private baseUrl = environment.baseUrl;
     public readUrl = this.baseUrl + '/v1/account_list';
     public httpClient = inject(HttpClient)
-    public accountList = signal<IAccounts[]>([])    
-        
+    public accountList = signal<IAccounts[]>([])
+
     // readonly accountList = this.accountState.account;
     readonly isLoading = this.accountState.isLoading;
 

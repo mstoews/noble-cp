@@ -4,7 +4,7 @@ import { SubTypeService } from 'app/services/subtype.service';
 import { TypeStore } from 'app/services/type.service';
 import { CommonModule, JsonPipe } from '@angular/common';
 import { FuseConfirmationService } from '@fuse/services/confirmation';
-import { GLAccountsService } from 'app/services/accounts.service';
+import { AccountsService } from 'app/services/accounts.service';
 import { GridMenubarStandaloneComponent } from '../../grid-menubar/grid-menubar.component';
 
 import { IValue } from 'app/modules/kanban/kanban/kanban.component';
@@ -48,7 +48,7 @@ export class GlAccountsComponent implements OnInit {
 
     private fb = inject(FormBuilder);
     private auth = inject(AuthService);
-    accountService = inject(GLAccountsService);
+    accountService = inject(AccountsService);
     subtypeService = inject(SubTypeService)
     typeStore = inject(TypeStore);
 
@@ -65,7 +65,7 @@ export class GlAccountsComponent implements OnInit {
     showNavButtons = true;
 
     ngOnInit() {
-        this.accountService.read();        
+        this.accountService.read();
         this.createEmptyForm();
         this.initialDatagrid();
     }
@@ -86,35 +86,35 @@ export class GlAccountsComponent implements OnInit {
 
 
     onBack() {
-        
-    }    
-    
+
+    }
+
     initialDatagrid() {
         // this.pageSettings = { pageCount: 10 };        
-        this.formatoptions = { type: 'dateTime', format: 'M/dd/yyyy' }        
-        this.pageSettings =  { pageSizes: true, pageCount: 10 };
-        this.selectionOptions = { mode: 'Cell' };              
+        this.formatoptions = { type: 'dateTime', format: 'M/dd/yyyy' }
+        this.pageSettings = { pageSizes: true, pageCount: 10 };
+        this.selectionOptions = { mode: 'Cell' };
         this.editSettings = { allowEditing: true, allowAdding: false, allowDeleting: false };
-        this.searchOptions = { operator: 'contains', ignoreCase: true, ignoreAccent:true };
-        this.toolbarOptions = ['Search'];   
-        this.filterSettings = { type: 'Excel' };    
+        this.searchOptions = { operator: 'contains', ignoreCase: true, ignoreAccent: true };
+        this.toolbarOptions = ['Search'];
+        this.filterSettings = { type: 'Excel' };
     }
 
 
 
-    actionBegin(args: SaveEventArgs): void {        
+    actionBegin(args: SaveEventArgs): void {
         var data = args.rowData as IAccounts;
-        
-        if (args.requestType === 'beginEdit' || args.requestType === 'add') {        
-           args.cancel = true;
-           this.createForm(data);
-           this.openDrawer();        
-                        
+
+        if (args.requestType === 'beginEdit' || args.requestType === 'add') {
+            args.cancel = true;
+            this.createForm(data);
+            this.openDrawer();
+
         }
         if (args.requestType === 'save') {
             args.cancel = true;
             console.log(JSON.stringify(args.data));
-            var data = args.data as IAccounts;                        
+            var data = args.data as IAccounts;
         }
     }
 
@@ -236,7 +236,7 @@ export class GlAccountsComponent implements OnInit {
         });
     }
 
-    createForm(e: any) {        
+    createForm(e: any) {
         var parent: boolean;
         parent = e.parent_account;
         this.accountsForm = this.fb.group({
@@ -274,7 +274,7 @@ export class GlAccountsComponent implements OnInit {
 
     onDoubleClicked(args: any) {
         const type = args.data.type;
-        
+
         const account = {
             account: [args.data.account],
             child: [args.data.child],

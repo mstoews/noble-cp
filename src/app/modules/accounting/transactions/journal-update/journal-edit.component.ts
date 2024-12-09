@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, DestroyRef, Inject, Input, OnDestroy, OnInit, inject } from '@angular/core';
 import { ReactiveFormsModule, FormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { GLAccountsService } from 'app/services/accounts.service';
+import { AccountsService } from 'app/services/accounts.service';
 import { FundsService } from 'app/services/funds.service';
 import { JournalService } from 'app/services/journal.service';
 import { MaterialModule } from 'app/services/material.module';
@@ -24,10 +24,10 @@ const imports = [
 ];
 
 @Component({
-    selector: 'journal-edit',
-    imports: [imports],
-    templateUrl: './journal-edit.component.html',
-    providers: [provideNgxMask()]
+  selector: 'journal-edit',
+  imports: [imports],
+  templateUrl: './journal-edit.component.html',
+  providers: [provideNgxMask()]
 })
 export class JournalEditComponent {
   public journal_id: number;
@@ -36,7 +36,7 @@ export class JournalEditComponent {
   public journalService = inject(JournalService);
   private fundService = inject(FundsService);
   private subtypeService = inject(SubTypeService);
-  private accountService = inject(GLAccountsService);
+  private accountService = inject(AccountsService);
   private auth = inject(AuthService);
   private fb = inject(FormBuilder);
   private readonly destroyRef = inject(DestroyRef)
@@ -148,8 +148,8 @@ export class JournalEditComponent {
     }
 
     this.store.createJournalDetail(rawData);
-    
-    
+
+
     this.dialogRef.close('Update');
     this.dialogRef.close('Create');
 

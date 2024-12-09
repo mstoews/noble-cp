@@ -30,7 +30,7 @@ import {
   ExcelExportService,
   SaveEventArgs
 } from '@syncfusion/ej2-angular-grids';
-import { GLAccountsService } from 'app/services/accounts.service';
+import { AccountsService } from 'app/services/accounts.service';
 import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 import { MatDrawer } from '@angular/material/sidenav';
 import { AUTH } from 'app/app.config';
@@ -69,12 +69,12 @@ const providers = [
   ColumnMenuService];
 
 @Component({
-    selector: 'budget-update',
-    imports: [imp],
-    templateUrl: './budget-update.component.html',
-    providers: [providers],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    styles: ``
+  selector: 'budget-update',
+  imports: [imp],
+  templateUrl: './budget-update.component.html',
+  providers: [providers],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  styles: ``
 })
 export class BudgetUpdateComponent implements OnInit, OnDestroy, AfterViewInit {
   public bDirty = false;
@@ -91,7 +91,7 @@ export class BudgetUpdateComponent implements OnInit, OnDestroy, AfterViewInit {
   private auth = inject(AUTH);
 
   private fb = inject(FormBuilder);
-  
+
   // Data grid settings
 
   public editSettings: Object;
@@ -131,7 +131,7 @@ export class BudgetUpdateComponent implements OnInit, OnDestroy, AfterViewInit {
   public debitAccounts: IDropDownAccounts[] = [];
   public debitCtrl: FormControl<IDropDownAccounts> = new FormControl<IDropDownAccounts>(null);
   public debitAccountFilterCtrl: FormControl<string> = new FormControl<string>(null);
-  public accountService = inject(GLAccountsService);
+  public accountService = inject(AccountsService);
   protected _onDestroyDebitAccountFilter = new Subject<void>();
 
 

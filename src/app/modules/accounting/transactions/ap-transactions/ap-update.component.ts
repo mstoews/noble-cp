@@ -5,7 +5,7 @@ import { Observable, ReplaySubject, Subject, Subscription, interval, map, startW
 import { CommonModule } from "@angular/common";
 import { DndComponent } from "app/modules/drag-n-drop/loaddnd/dnd.component";
 import { FundsService } from "app/services/funds.service";
-import { GLAccountsService } from "app/services/accounts.service";
+import { AccountsService } from "app/services/accounts.service";
 import { GridMenubarStandaloneComponent } from "../../grid-menubar/grid-menubar.component";
 import { MaterialModule } from "app/services/material.module";
 import { ISubType, SubTypeService } from "app/services/subtype.service";
@@ -53,20 +53,20 @@ const imports = [
 ];
 
 @Component({
-    selector: "ap-journal",
-    imports: [imports],
-    templateUrl: "./ap-update.component.html",
-    providers: [
-        provideNgxMask(),
-        SortService,
-        PageService,
-        FilterService,
-        ToolbarService,
-        EditService,
-        AggregateService,
-        RowDDService
-    ],
-    changeDetection: ChangeDetectionStrategy.OnPush
+  selector: "ap-journal",
+  imports: [imports],
+  templateUrl: "./ap-update.component.html",
+  providers: [
+    provideNgxMask(),
+    SortService,
+    PageService,
+    FilterService,
+    ToolbarService,
+    EditService,
+    AggregateService,
+    RowDDService
+  ],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class APUpdateComponent
   implements OnInit, OnDestroy, AfterViewInit {
@@ -93,17 +93,17 @@ export class APUpdateComponent
   private typeService = inject(TypeService);
   private subtypeService = inject(SubTypeService);
   private fundService = inject(FundsService);
-  private accountService = inject(GLAccountsService);
+  private accountService = inject(AccountsService);
   private snackBar = inject(MatSnackBar);
   private dialog = inject(MatDialog);
   private auth = inject(AUTH);
   private activatedRoute = inject(ActivatedRoute)
-  
-  openDrawer() {    
-      this.drawer().open();
+
+  openDrawer() {
+    this.drawer().open();
   }
 
-  closeDrawer() {    
+  closeDrawer() {
     this.drawer().close();
   }
 
@@ -136,7 +136,7 @@ export class APUpdateComponent
   public myControl = new FormControl("");
   public accountOptions: Observable<string[]>;
   public bDirty = false;
-  
+
   public accountsListSubject: Subscription;
   public fundListSubject: Subscription;
   public selectionOptions?: SelectionSettingsModel;
@@ -149,7 +149,7 @@ export class APUpdateComponent
   public pageSettings: Object;
   public formatoptions: Object;
   journal_id: number;
-  
+
   description: string;
   transaction_date: string;
   amount: number;
@@ -175,7 +175,7 @@ export class APUpdateComponent
   @ViewChild("singleSelect", { static: true })
   singleSelect: MatSelect;
 
-  
+
   public Accounts: IDropDownAccounts[] = [];
   public journalData: IJournalHeader;
 
@@ -204,7 +204,7 @@ export class APUpdateComponent
   @ViewChild('singleDebitSelect', { static: true }) singleDebitSelect: MatSelect;
   @ViewChild('singleCreditSelect', { static: true }) singleCreditSelect: MatSelect;
 
-  updateForm(row: IJournalHeader) {    
+  updateForm(row: IJournalHeader) {
     this.journalForm = this.fb.group({
       description: [row.description, Validators.required],
       amount: [row.amount, Validators.required],
@@ -215,34 +215,34 @@ export class APUpdateComponent
     });
   }
 
-  
+
 
   ngOnInit(): void {
-  this.createEmptyForm();
+    this.createEmptyForm();
 
-  this.activatedRoute.data.subscribe(( data ) => {        
-        console.log(data.journal.journal_id);
-        this.journalData = {
-          journal_id: data.journal.journal_id,         
-          description:      data.journal.description,
-          booked:           data.journal.booked,
-          booked_date:      data.journal.booked_date,
-          booked_user:      data.journal.booked_user,
-          create_date:      data.journal.create_date,
-          create_user:      data.journal.create_user,
-          period:           data.journal.period,
-          period_year:      data.journal.period_year,
-          transaction_date: data.journal.transaction_date,
-          status:           data.journal.status,
-          type:             data.journal.type,
-          sub_type:         data.journal.sub_type,
-          amount:           data.journal.amount,
-          due_date:         data.journal.due_date,
-          invoice_no:       data.journal.invoice_no,
-          party_id:         data.journal.party_id,
-          template_name:    data.journal.template_name
-        }
-        // this.updateForm(this.journalData)
+    this.activatedRoute.data.subscribe((data) => {
+      console.log(data.journal.journal_id);
+      this.journalData = {
+        journal_id: data.journal.journal_id,
+        description: data.journal.description,
+        booked: data.journal.booked,
+        booked_date: data.journal.booked_date,
+        booked_user: data.journal.booked_user,
+        create_date: data.journal.create_date,
+        create_user: data.journal.create_user,
+        period: data.journal.period,
+        period_year: data.journal.period_year,
+        transaction_date: data.journal.transaction_date,
+        status: data.journal.status,
+        type: data.journal.type,
+        sub_type: data.journal.sub_type,
+        amount: data.journal.amount,
+        due_date: data.journal.due_date,
+        invoice_no: data.journal.invoice_no,
+        party_id: data.journal.party_id,
+        template_name: data.journal.template_name
+      }
+      // this.updateForm(this.journalData)
     });
 
     this.refreshData(this.journalData.journal_id, this.journalData.description, this.journalData.transaction_date, this.journalData.amount, this.journalData.type);
@@ -264,9 +264,9 @@ export class APUpdateComponent
           descriptionName: acct.description,
         };
         this.accountsGrid.push(list);
-      }); 
-    
-    this.fundListSubject = this.funds$.subscribe((funds) => {
+      });
+
+      this.fundListSubject = this.funds$.subscribe((funds) => {
         funds.forEach((fund) => {
           var list = {
             fund: fund.fund,
@@ -276,7 +276,7 @@ export class APUpdateComponent
         });
       });
     });
-    
+
     this.accountFilterCtrl.valueChanges
       .pipe(takeUntil(this._onDestroy))
       .subscribe(() => {
@@ -284,27 +284,27 @@ export class APUpdateComponent
       });
 
 
-      this.accountService.readChildren().pipe(takeUntil(this._onDestroy)).subscribe((accounts) => {
-        this.debitAccounts = accounts;
-        this.creditAccounts = accounts;
-        this.filteredDebitAccounts.next(this.debitAccounts.slice());
-        this.filteredCreditAccounts.next(this.creditAccounts.slice());
-  
-      });
-  
-      // Vertical stepper form
-  
-      this.journalService.getLastJournalNo().subscribe(journal_no => {
-        this.journal_id = Number(journal_no);
-      });
-  
-      this.debitAccountFilterCtrl.valueChanges.pipe(takeUntil(this._onDestroyDebitAccountFilter))
-        .subscribe(() => { this.filterDebitAccounts(); })
-  
-      this.creditAccountFilterCtrl.valueChanges.pipe(takeUntil(this._onDestroyCreditAccountFilter))
-        .subscribe(() => { this.filterCreditAccounts(); });
-  
-              
+    this.accountService.readChildren().pipe(takeUntil(this._onDestroy)).subscribe((accounts) => {
+      this.debitAccounts = accounts;
+      this.creditAccounts = accounts;
+      this.filteredDebitAccounts.next(this.debitAccounts.slice());
+      this.filteredCreditAccounts.next(this.creditAccounts.slice());
+
+    });
+
+    // Vertical stepper form
+
+    this.journalService.getLastJournalNo().subscribe(journal_no => {
+      this.journal_id = Number(journal_no);
+    });
+
+    this.debitAccountFilterCtrl.valueChanges.pipe(takeUntil(this._onDestroyDebitAccountFilter))
+      .subscribe(() => { this.filterDebitAccounts(); })
+
+    this.creditAccountFilterCtrl.valueChanges.pipe(takeUntil(this._onDestroyCreditAccountFilter))
+      .subscribe(() => { this.filterCreditAccounts(); });
+
+
 
   }
 
@@ -346,11 +346,11 @@ export class APUpdateComponent
   }
 
 
-  
+
   public addDisabled(e: any) {
 
   }
-  
+
   public selIndex?: number[] = [];
 
 
@@ -359,7 +359,7 @@ export class APUpdateComponent
     console.debug('args : ', args.requestType);
     args.cancel = true;
     if (args.requestType === 'beginEdit' || args.requestType === 'add') {
-        this.openDrawer();
+      this.openDrawer();
     }
     if (args.requestType === 'save') {
 
@@ -501,7 +501,7 @@ export class APUpdateComponent
     this.description = description;
     this.transaction_date = transaction_date;
     this.amount = amount;
-    
+
     this.store.loadDetails(journal_id);
     this.journalType = journalType
 
@@ -516,9 +516,9 @@ export class APUpdateComponent
 
     if (journal_id === undefined) {
       this.description = "";
-      this.transaction_date = "";      
+      this.transaction_date = "";
       return;
-    } 
+    }
   }
 
   changeSubtype(e: any) {
@@ -570,26 +570,26 @@ export class APUpdateComponent
     });
   }
 
-  
+
   createEmptyForm() {
     this.journalForm = this.fb.group({
       description: ["", Validators.required],
-      amount:      ["", Validators.required],
+      amount: ["", Validators.required],
       transaction_date: ["", Validators.required],
       invoice_no: ["", Validators.required],
       due_date: ["", Validators.required],
-      party: ["", Validators.required],      
+      party: ["", Validators.required],
     });
-    
+
     this.detailForm = this.fb.group({
       detail_description: ["", Validators.required],
       child: ["", Validators.required],
       fund: ["", Validators.required],
       sub_type: ["", Validators.required],
       reference: [""],
-      amount: ["", Validators.required],      
-      credit: ["", Validators.required],      
-      debit: ["", Validators.required],      
+      amount: ["", Validators.required],
+      credit: ["", Validators.required],
+      debit: ["", Validators.required],
     });
     this._change.markForCheck();
   }
@@ -623,14 +623,14 @@ export class APUpdateComponent
 
 
   onDelete(args: any) {
-    
-    const index  = this.gridControl().getSelectedRowIndexes()
+
+    const index = this.gridControl().getSelectedRowIndexes()
     console.debug(`select index `, index[0])
-    
+
     const rowData = this.gridControl().getCurrentViewRecords().at(index[0]) as any;
-    
+
     // const rowData = 
-    
+
     var journalDetail = {
       journal_id: this.journal_id,
       journal_subid: rowData.journal_subid,
@@ -694,7 +694,7 @@ export class APUpdateComponent
         reference: journalCopy[0].reference,
         fund: journalCopy[0].fund,
       };
-      this.store.createJournalDetail(journalDetail);      
+      this.store.createJournalDetail(journalDetail);
     } else {
       const journalDetail = {
         journal_id: this.journal_id,
@@ -721,7 +721,7 @@ export class APUpdateComponent
     this.journalService.reNumberJournalDetail(this.journal_id);
   }
 
-  
+
   onUpdateJournalEntry() {
     const dDate = new Date();
     const updateDate = dDate.toISOString().split("T")[0];

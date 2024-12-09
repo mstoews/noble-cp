@@ -79,12 +79,7 @@ import {
     })),
     withHooks({
       onInit(store) {
-        let params = {
-          period: 2,
-          period_year: 2024
-        }
-        store.loadHeader(params);
       },
-    })
+    })  
   );
   

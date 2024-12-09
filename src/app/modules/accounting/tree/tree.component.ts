@@ -1,4 +1,4 @@
-import { NgModule, viewChild } from '@angular/core'
+import { inject, NgModule, viewChild } from '@angular/core'
 import { BrowserModule } from '@angular/platform-browser'
 import { GridModule, ToolbarService, ExcelExportService, FilterService } from '@syncfusion/ej2-angular-grids'
 
@@ -6,24 +6,31 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { data } from './datasource'
 import { GridComponent, ToolbarItems } from '@syncfusion/ej2-angular-grids';
 import { ClickEventArgs } from '@syncfusion/ej2-angular-navigations';
+import { TreeGridComponent, PageService, TreeGridModule} from '@syncfusion/ej2-angular-treegrid';
+import { JournalStore } from 'app/services/journal.store';
+import { TrialBalanceStore } from 'app/services/distribution.ledger.store';
 
 @Component({
-    imports: [GridModule],
-    providers: [ExcelExportService, ToolbarService, FilterService],
+    imports: [TreeGridModule],
+    providers: [ExcelExportService, ToolbarService, FilterService, PageService, JournalStore, TrialBalanceStore],
     selector: 'download',
     template: `
-        <ejs-grid #grid id='grid' class="h-[calc(100vh-15rem)]" 
-               [dataSource]='data' 
-               [toolbar]='toolbarOptions'                 
-               [allowExcelExport]='true' 
-               (toolbarClick)='toolbarClick($event)'>
-                <e-columns>
-                    <e-column field='OrderID' headerText='Order ID' textAlign='Right' width=120></e-column>
-                    <e-column field='CustomerID' headerText='Customer ID' width=150> </e-column>
-                    <e-column field='ShipCity' headerText='Ship City' width=150></e-column>
-                    <e-column field='ShipName' headerText='Ship Name' width=150></e-column>
-                </e-columns>
-        </ejs-grid>
+    <div id="action-description">
+    <p>This sample demonstrates the default rendering of the Tree Grid with minimum configuration.</p>
+</div>
+<div class="control-section">
+    <ejs-treegrid [dataSource]='store.gl()' allowPaging='true' childMapping='subtasks' height='350' [treeColumnIndex]='1'>
+        <e-columns>
+            <e-column field='journal_id' headerText='Task ID' width='70' textAlign='Right'></e-column>
+            <e-column field='journal_subid' headerText='Task Name' width='200'></e-column>
+            <e-column field='startDate' headerText='Start Date' width='90' format="yMd" textAlign='Right'></e-column>
+            <e-column field='endDate' headerText='End Date' width='90' format="yMd" textAlign='Right'></e-column>
+            <e-column field='duration' headerText='Duration' width='80' textAlign='Right'></e-column>
+            <e-column field='progress' headerText='Progress' width='80' textAlign='Right'></e-column>
+            <e-column field='priority' headerText='Priority' width='90'></e-column>
+        </e-columns>
+    </ejs-treegrid>
+</div>
     `
 })
 export class TreeComponent implements OnInit {
@@ -31,6 +38,7 @@ export class TreeComponent implements OnInit {
     public data?: object[]; 
     public toolbarOptions?: ToolbarItems[];    
     grid = viewChild<GridComponent>('grid');
+    store = inject(JournalStore)
     
     ngOnInit(): void {
         this.data = data;

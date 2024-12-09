@@ -5,7 +5,7 @@ import { Observable, ReplaySubject, Subject, Subscription, interval, map, startW
 import { CommonModule } from '@angular/common';
 import { DndComponent } from 'app/modules/drag-n-drop/loaddnd/dnd.component';
 import { FundsService } from 'app/services/funds.service';
-import { GLAccountsService } from 'app/services/accounts.service';
+import { AccountsService } from 'app/services/accounts.service';
 
 import { MaterialModule } from 'app/services/material.module';
 import { SubTypeService } from 'app/services/subtype.service';
@@ -69,7 +69,7 @@ export class WizardUpdateComponent implements OnInit, OnDestroy, AfterViewInit {
   @Input() public transaction_date: string;
   @Input() public amount: number;
   @Input() public bNewTransaction = true;
-  
+
   public GL = 'GL';
   public AP = 'AP';
   public AR = 'AR';
@@ -80,7 +80,7 @@ export class WizardUpdateComponent implements OnInit, OnDestroy, AfterViewInit {
   private typeService = inject(TypeService);
   private subtypeService = inject(SubTypeService);
   private fundService = inject(FundsService);
-  private accountService = inject(GLAccountsService);
+  private accountService = inject(AccountsService);
   private snackBar = inject(MatSnackBar);
   private _change = inject(ChangeDetectorRef);
   private _fuseConfirmationService = inject(FuseConfirmationService);
