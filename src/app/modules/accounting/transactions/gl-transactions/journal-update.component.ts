@@ -1,10 +1,8 @@
 import {
     AfterViewInit,
     ChangeDetectionStrategy,
-    ChangeDetectorRef,
     Component,
     EventEmitter,
-    Input,
     OnDestroy,
     OnInit,
     Output,
@@ -20,7 +18,7 @@ import {
     ReactiveFormsModule,
     Validators,
 } from "@angular/forms";
-import { JournalService } from "app/services/journal.service";
+
 import {
     ReplaySubject,
     Subject,
@@ -36,21 +34,15 @@ import { GridMenubarStandaloneComponent } from "../../grid-menubar/grid-menubar.
 import { MaterialModule } from "app/services/material.module";
 import { ISubType, SubTypeService } from "app/services/subtype.service";
 import { TypeService } from "app/services/type.service";
-import { JournalEditComponent } from "../journal-update/journal-edit.component";
-import { MatDialog, MatDialogConfig } from "@angular/material/dialog";
-import { NgxMaskDirective, NgxMaskPipe, provideNgxMask } from "ngx-mask";
+import { MatDialog  } from "@angular/material/dialog";
+import { NgxMaskDirective , provideNgxMask } from "ngx-mask";
 import { FuseConfirmationService } from "@fuse/services/confirmation";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { DropDownListAllModule } from "@syncfusion/ej2-angular-dropdowns";
-import { FileManagerComponent } from "app/modules/file-manager/file-manager.component";
 import { AUTH } from "app/app.config";
 import { MatSelect } from "@angular/material/select";
 import { NgxMatSelectSearchModule } from "ngx-mat-select-search";
-import {
-    IDropDownAccounts,
-    IDropDownAccountsGridList,
-    IFunds,
-} from "app/models";
+import { IDropDownAccounts, IDropDownAccountsGridList, IFunds} from "app/models";
 
 import {
     ClickEventArgs,
@@ -160,12 +152,10 @@ export class JournalUpdateComponent
 
     private _fuseConfirmationService = inject(FuseConfirmationService);
     private fb = inject(FormBuilder);
-    private typeService = inject(TypeService);
     private subtypeService = inject(SubTypeService);
     private fundService = inject(FundsService);
     private accountService = inject(AccountsService);
     private snackBar = inject(MatSnackBar);
-    private dialog = inject(MatDialog);
     private auth = inject(AUTH);
     private activatedRoute = inject(ActivatedRoute);
     private partyService = inject(PartyService);
@@ -446,6 +436,7 @@ export class JournalUpdateComponent
         this.closeDrawer();
         this.store.loadDetails(this.key);
         this.store.loadArtifactsByJournalId(this.key);
+        this.router.navigate(["journals/gl", this.key]);
     }
 
     initialDatagrid() {
@@ -983,12 +974,13 @@ export class JournalUpdateComponent
         }
 
         let header = this.journalForm.getRawValue();
-
         const dDate = new Date().toISOString().split("T")[0];
-
         let template = this.templateCtrl.value;
-        let partyID = this.partyCtrl.value;
-
+        const partyID = this.partyCtrl.value;
+        
+        if(template.journal_type === 'GL') {
+            partyID.party_id = ''
+        }
 
         const journalHeaderUpdate: IJournalHeaderUpdate = {
             journal_id: this.journal_id,
@@ -1000,7 +992,11 @@ export class JournalUpdateComponent
             party_id: partyID.party_id,
             invoice_no: header.invoice_no
         };
+
+        console.log('Journal Header Update : ', JSON.stringify(journalHeaderUpdate));
+
         this.store.updateJournalHeader(journalHeaderUpdate);
+        
         this.bHeaderDirty = false;
     }
 

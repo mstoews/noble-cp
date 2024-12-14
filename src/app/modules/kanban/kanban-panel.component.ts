@@ -21,7 +21,7 @@ import { StatusComponent } from './status/status.component';
 import { KanbanListComponent } from './kanban-list/kanban-list.component';
 import { KanbanPriorityComponent } from './priority/priority.component';
 import { ScheduleNobleComponent } from './schedule/schedule.component';
-import { TeamsComponent } from '../accounting/accts/teams/teams.component';
+import { TeamsComponent } from '../accounting/accts/accounts/teams.component';
 
 @Component({
     selector: 'gl-kanban-panel',

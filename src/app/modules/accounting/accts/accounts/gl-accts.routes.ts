@@ -1,5 +1,5 @@
 import { Routes } from '@angular/router';
-import { GlAccountsComponent } from './accounts/gl-accts.component';
+import { GlAccountsComponent } from './gl-accts.component';
 
 export default [
     {

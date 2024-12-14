@@ -19,6 +19,7 @@ import { IAccounts } from 'app/models/journals';
 import { TeamStore } from 'app/services/teams.store';
 import { ITeam } from 'app/models/team';
 import { TeamService } from 'app/services/team.service';
+import { GLGridComponent } from '../../grid-menubar/gl-grid.component';
 
 
 
@@ -28,7 +29,8 @@ const imports = [
   ReactiveFormsModule,
   FormsModule,
   GridModule,
-  KanbanMenubarComponent
+  GridMenubarStandaloneComponent,
+  GLGridComponent
 ];
 
 interface IValue {
@@ -38,9 +40,104 @@ interface IValue {
   
 
 @Component({
+  template: `
+  <div class="h-[calc(100vh)-100px] ">
+    
+    <mat-drawer class="w-[450px]" #drawer [opened]="false" mode="over" [position]="'end'" [disableClose]="false">
+        <mat-card class="m-2">
+            <div class="flex flex-col w-full filter-article filter-interactive text-gray-700">
+                <div class="bg-slate-600 text-justify m-2 p-2 text-white h-10 text-2xl border-l-4 border-gray-400"
+                    mat-dialog-title>
+                    {{ title }}
+                </div>
+            </div>
+
+            <form [formGroup]="teamForm" class="form">
+                <div class="div flex flex-col grow">
+                    <section class="flex flex-col md:flex-row m-1">
+                        
+                        <div class="flex flex-col grow">
+                            <mat-form-field class="m-1 flex-start">                                        
+                                <input #myInput matInput placeholder="Account" formControlName="team_member" />
+                                <mat-icon class="icon-size-5 text-teal-800" matPrefix [svgIcon]="'heroicons_outline:document'"></mat-icon>
+                            </mat-form-field>
+                        </div>
+
+                        <div class="flex flex-col grow">
+                            <mat-form-field class="m-1 flex-start">                                
+                                <input #myInput matInput placeholder="Child Account" formControlName="last_name" />
+                                    <mat-icon class="icon-size-5 text-teal-800" matPrefix [svgIcon]="'heroicons_outline:clipboard-document'"></mat-icon>
+                            </mat-form-field>
+                        </div>
+
+                    <div class="flex flex-col grow">
+                        <mat-form-field class="m-1 flex-start">                                    
+                            <input #myInput matInput placeholder="Comments" formControlName="first_name"> 
+                            <mat-icon class="icon-size-5 text-teal-800" matPrefix [svgIcon]="'heroicons_outline:clipboard-document'"></mat-icon>
+                        </mat-form-field>
+                    </div>
+                    </section>
+                </div>
+            </form>
+
+            <div mat-dialog-actions>
+                <button mat-icon-button color="primary" class="m-1" (click)="onUpdate($event)"
+                    matTooltip="Update"
+                    aria-label="Button that displays a tooltip when focused or hovered over">                                
+                    <mat-icon>update</mat-icon>
+                </button>
+                <button mat-icon-button color="primary" class="m-1" (click)="onCreate($event)"
+                    matTooltip="Add"
+                    aria-label="Button that displays a tooltip when focused or hovered over">                                
+                    <mat-icon>add</mat-icon>
+                </button>
+                <button mat-icon-button color="primary" class="m-1" (click)="onDelete()"
+                    matTooltip="Delete"
+                    aria-label="Button that displays a tooltip when focused or hovered over">                                
+                    <mat-icon>delete</mat-icon>
+                </button>
+                <button mat-icon-button color="primary" class="m-1" (click)="closeDrawer()"
+                    matTooltip="Close"
+                    aria-label="Button that displays a tooltip when focused or hovered over">
+                    
+                    <mat-icon>close</mat-icon>
+                </button>
+            </div>
+            <section class="text-xl text-gray-700" [formGroup]="teamForm">                        
+                {{teamForm.value | json}}
+            </section>
+        </mat-card>
+    </mat-drawer>
+    <mat-drawer-container class="flex-col">        
+        <ng-container>
+            <grid-menubar 
+            (notifyParentRefresh)="onRefresh()" 
+            (notifyParentAdd)="onAdd()"
+            (notifyParentDelete)="onDeleteSelection()" 
+            (notifyParentUpdate)="onUpdateSelection()">
+             </grid-menubar>                         
+             
+             @if (store.isLoading() === false) 
+            {                            
+                <gl-grid 
+                    (openTradeId)="selectedRow($event)"
+                    [data]="store.team()"
+                    [columns]="columns">
+                </gl-grid>                        
+            }
+               @else
+            {
+                <div class="fixed z-[1050] -translate-x-2/4 -translate-y-2/4 left-2/4 top-2/4">
+                    <mat-spinner></mat-spinner>
+                </div>
+            }
+    
+    </ng-container>         
+    </mat-drawer-container>
+    </div>
+  `,
     selector: 'team',
     imports: [imports],
-    templateUrl: './teams.component.html',
     providers: [TeamStore, SortService, GroupService, PageService, ResizeService, FilterService, ToolbarService, EditService, AggregateService, ColumnMenuService]
 })
 export class TeamsComponent implements OnInit {
@@ -57,8 +154,21 @@ export class TeamsComponent implements OnInit {
   private fb = inject(FormBuilder);
   teamService = inject(TeamService);
   
-  teamStore = inject(TeamStore);  
+  store = inject(TeamStore);  
   title = "Team Maintenance"
+
+  columns = [
+    { field: 'team_member', headerText: 'Team Member', width: 100 , isPrimaryKey: true},
+    { field: 'first_name', headerText: 'First Name', width: 100 },
+    { field: 'last_name', headerText: 'Last Name', width: 100 },
+    { field: 'location', headerText: 'Location', width: 100 },
+    { field: 'title', headerText: 'Title', width: 100 },
+    { field: 'updatedte', headerText: 'Updated', width: 100 },
+    { field: 'updateusr', headerText: 'Updated By', width: 100 },
+    { field: 'email', headerText: 'Email', width: 100 },
+    { field: 'image', headerText: 'Image', width: 100 },
+    { field: 'uid', headerText: 'UID', width: 100 }
+  ];
   
   public teamForm!: FormGroup;
 

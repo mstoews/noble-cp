@@ -10,7 +10,6 @@ import {
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { exhaustMap, pipe, switchMap, tap } from 'rxjs';
 import { computed, inject } from '@angular/core';
-
 import { tapResponse } from '@ngrx/operators';
 import { FundsService } from './funds.service';
 import { IFunds } from 'app/models';
@@ -27,7 +26,6 @@ export const FundsStore = signalStore(
     funds: [],
     error: null,
     isLoading: false,
-  
   }),
   withComputed((state) => ({
     selected: computed(() => state.funds().filter((t) => state.funds()[t.id])),
@@ -49,7 +47,6 @@ export const FundsStore = signalStore(
         })
       )
     ),
-
     addFund:  rxMethod<IFunds>(
       pipe(
         switchMap((value) => {
@@ -67,17 +64,14 @@ export const FundsStore = signalStore(
       )
     ),
     updateFund: rxMethod<IFunds>(
-      pipe(
+      pipe(        
         switchMap((value) => {
           return fundService.update(value).pipe(
-            tapResponse({
-              next: (fund) => {
-                const updatedTasks = state.funds().filter((fund) => fund.fund !== fund.fund);
-                patchState(state, { funds: updatedTasks });
-                const currentTasks = state.funds();
-                const updateTask = [fund, ...currentTasks.slice(1)];
-                patchState(state, {funds: updateTask})
-              },
+            tapResponse({              
+                next: (fund) => {
+                  const updatedFund = state.funds().filter((fnd) => fnd.fund !== fund.fund);
+                  patchState(state, { funds: updatedFund });                
+                },               
               error: console.error,
               finalize: () => patchState(state, { isLoading: false }),
             })
@@ -85,7 +79,6 @@ export const FundsStore = signalStore(
         })
       )
     ),
-
     loadFunds: rxMethod<void>(
       pipe(
         tap(() => patchState(state, { isLoading: true })),

@@ -10,18 +10,20 @@ import { GridMenubarStandaloneComponent } from '../../grid-menubar/grid-menubar.
 import { IValue } from 'app/modules/kanban/kanban/kanban.component';
 import { MatDrawer } from '@angular/material/sidenav';
 import { MaterialModule } from 'app/services/material.module';
-import { AggregateService, ColumnMenuService, DialogEditEventArgs, EditService, FilterService, FilterSettingsModel, GridModule, GroupService, PageService, ResizeService, SaveEventArgs, SearchSettingsModel, SelectionSettingsModel, SortService, ToolbarItems, ToolbarService } from '@syncfusion/ej2-angular-grids';
+import { AggregateService, ColumnMenuService, ContextMenuItem, ContextMenuService, DialogEditEventArgs, EditService, EditSettingsModel, ExcelExportService, FilterService, FilterSettingsModel, GridModule, GroupService, PageService, ReorderService, ResizeService, SaveEventArgs, SearchSettingsModel, SelectionSettingsModel, SortService, ToolbarItems, ToolbarService } from '@syncfusion/ej2-angular-grids';
 import { DropDownListComponent } from '@syncfusion/ej2-angular-dropdowns';
 import { IAccounts } from 'app/models/journals';
 import { AuthService } from 'app/modules/auth/auth.service';
+import { GLGridComponent } from '../../grid-menubar/gl-grid.component';
+
 
 const imports = [
     CommonModule,
     MaterialModule,
     ReactiveFormsModule,
     FormsModule,
-    GridMenubarStandaloneComponent,
-    GridModule
+    GridMenubarStandaloneComponent,    
+    GLGridComponent
 ];
 
 const keyExpr = ["account", "child"];
@@ -29,8 +31,145 @@ const keyExpr = ["account", "child"];
 @Component({
     selector: 'glaccounts',
     imports: [imports],
-    templateUrl: './gl-accts.component.html',
-    providers: [TypeStore, SortService, GroupService, PageService, ResizeService, FilterService, ToolbarService, EditService, AggregateService, ColumnMenuService],
+    template: `<div class="h-[calc(100vh)-100px] ">
+    <mat-drawer class="w-[450px]" #drawer [opened]="false" mode="over" [position]="'end'" [disableClose]="false">
+        <mat-card class="m-2">
+            <div class="flex flex-col w-full filter-article filter-interactive text-gray-700">
+                <div class="bg-slate-600 text-justify m-2 p-2 text-white h-10 text-2xl border-l-4 border-gray-400"
+                    mat-dialog-title>
+                    {{ sTitle }}
+                </div>
+            </div>
+
+            <form [formGroup]="accountsForm" class="form">
+                <div class="div flex flex-col grow">
+                    <section class="flex flex-col md:flex-row m-1">
+                        <div class="flex flex-col grow">
+                            <mat-form-field class="m-1 flex-start">
+                                <mat-label class="text-md ml-2">Group</mat-label>
+                                <input #myInput matInput placeholder="Account" formControlName="account" />
+                                <mat-icon class="icon-size-5 text-lime-700" matPrefix
+                                    [svgIcon]="'heroicons_outline:document'"></mat-icon>
+                            </mat-form-field>
+                        </div>                        
+
+                        <div class="flex flex-col grow">
+                            <mat-form-field class="m-1 flex-start">
+                                <mat-label class="text-md ml-2">Account</mat-label>
+                                <input #myInput matInput placeholder="Child Account" formControlName="child" />
+                                <mat-icon class="icon-size-5 text-lime-700" matPrefix
+                                    [svgIcon]="'heroicons_outline:clipboard-document'"></mat-icon>
+                            </mat-form-field>
+                        </div>
+                        
+                        <div class="flex flex-col grow">                            
+                            <mat-checkbox color="primary" class="mt-5" formControlName="parent_account">
+                                Parent
+                            </mat-checkbox>
+                        </div>
+
+                    </section>
+
+                    <div class="flex flex-col grow">
+                        <mat-form-field class="m-1 flex-start">
+                            <mat-label class="text-md ml-2">Description</mat-label>
+                            <input #myInput matInput placeholder="Description" formControlName="description" />
+                            <mat-icon class="icon-size-5 text-lime-700" matPrefix
+                                [svgIcon]="'heroicons_outline:document-text'"></mat-icon>
+                        </mat-form-field>
+                    </div>
+
+                    <section class="flex flex-col md:flex-row">
+
+                        <mat-form-field class="m-1 grow">
+                            <mat-label class="text-md ml-2">Type</mat-label>
+                            <mat-select placeholder="Type" formControlName="type"
+                                (selectionChange)="changeType($event)">
+                                @for (item of typeStore.type(); track item) {
+                                    <mat-option [value]="item.type"> {{ item.type }} </mat-option>
+                                }
+                            </mat-select>
+                            <span class="e-icons e-notes text-lime-700 m-2 " matPrefix></span>
+                        </mat-form-field>
+
+                    </section>
+
+                    <div class="flex flex-col grow">
+                        <mat-form-field class="m-1 flex-start">
+                            <mat-label class="text-md ml-2">Comments</mat-label>
+                            <input #myInput matInput placeholder="Comments" formControlName="comments" />
+                            <span class="e-icons e-comment-show text-lime-700 m-2" matPrefix></span> 
+                        </mat-form-field>
+                    </div>
+
+                </div>
+            </form>
+
+            <div mat-dialog-actions>
+                <div mat-dialog-actions class="gap-2 mb-3">
+                    @if (bDirty === true) {
+                        <button mat-icon-button color="primary" class="bg-green-400  stroke-purple-600 text-gray-900 hover:bg-slate-400 hover:text-gray-100 ml-1"
+                        (click)="onUpdateJournalEntry()" matTooltip="Update Transaction" aria-label="hover over">
+                        <mat-icon [svgIcon]="'feather:refresh-cw'"></mat-icon>
+                        </button>
+                    }
+            
+                    <button mat-icon-button color="primary" class="bg-slate-200 fill-current hover:bg-slate-400 ml-1 focus:ngring-violet-800"
+                        (click)="onAdd()" matTooltip="Add Line" aria-label="hovered over">                        
+                        <span class="e-icons e-data-validation"></span>
+                    </button>
+                    
+                    <button mat-icon-button color="primary" class="bg-slate-200 hover:bg-slate-400 ml-1"
+                        (click)="onDelete($event)" matTooltip="Remove Line" aria-label="hovered over">                        
+                        <span class="e-icons e-redaction"></span>
+                    </button>
+                                            
+                    <button mat-icon-button color="primary" class="bg-gray-200 fill-slate-100  hover:bg-slate-400 ml-1" 
+                        (click)="onClose()"
+                        matTooltip="Cancel" aria-label="hovered over">
+                        <!-- <mat-icon [svgIcon]="'mat_outline:close'"></mat-icon> -->
+                         <span class="e-icons e-circle-close"></span>
+                    </button>
+                    
+                </div>
+            </div>
+
+        </mat-card>
+    </mat-drawer>
+    <mat-drawer-container class="flex-col">
+        
+            <ng-container >
+            <div class="border-1 border-gray-500 mt-3">            
+            <grid-menubar 
+            (notifyParentRefresh)="onRefresh()" 
+            (notifyParentAdd)="onAdd()"
+            (notifyParentDelete)="onDeleteSelection()" 
+            (notifyParentUpdate)="onUpdateSelection()" 
+            [inTitle]="'Account Maintenance'">
+            </grid-menubar>
+            @if (accountService.isLoading() === false) 
+            {
+                
+                <gl-grid 
+                    (openTradeId)="selectedRow($event)"
+                    [data]="this.accountService.accountList()" 
+                    [columns]="columns">
+                </gl-grid>
+            
+            }
+            @else
+            {
+            <div class="fixed z-[1050] -translate-x-2/4 -translate-y-2/4 left-2/4 top-2/4">
+                <mat-spinner></mat-spinner>
+            </div>
+            }
+        </div>
+        </ng-container>
+    
+    </mat-drawer-container>
+    </div>
+    `,
+    providers: [TypeStore, ExcelExportService, ContextMenuService, ReorderService,  SortService, GroupService, PageService, ResizeService, FilterService, ToolbarService, EditService, AggregateService, ColumnMenuService],
     styles: [
         `        
         .e-grid {
@@ -58,76 +197,31 @@ export class GlAccountsComponent implements OnInit {
     public bDirty: boolean = false;
     private currentRow: Object;
 
+    public columns = [
+        { field: 'account',     headerText: 'Group', width: 80, textAlign: 'Left' },
+        { field: 'child',     headerText: 'Account', width: 80, textAlign: 'Left', isPrimaryKey: true },
+        { field: 'type',     headerText: 'Type', width: 80, textAlign: 'Left' },
+        { field: 'description', headerText: 'Description', width: 200, textAlign: 'Left' },
+        { field: 'update_date', headerText: 'Date', width: 80, textAlign: 'Left' },
+        { field: 'update_user', headerText: 'User', width: 80, textAlign: 'Left' },
+        { field: 'comments', headerText: 'Comment', width: 80, textAlign: 'Left' }
+    ];
+
     readonly displayModes = [{ text: "Display Mode 'full'", value: 'full' }, { text: "Display Mode 'compact'", value: 'compact' }];
-    displayMode = 'compact';
-    showPageSizeSelector = true;
+    displayMode = 'compact';    
     showInfo = true;
     showNavButtons = true;
+    
 
     ngOnInit() {
         this.accountService.read();
-        this.createEmptyForm();
-        this.initialDatagrid();
+        this.createEmptyForm();                
     }
 
-
-    // datagrid settings start
-    public pageSettings: Object;
-    public formatoptions: Object;
-    public initialSort: Object;
-    public filterOptions: FilterSettingsModel;
-    public editSettings: Object;
-    public dropDown: DropDownListComponent;
-    public submitClicked: boolean = false;
-    public selectionOptions?: SelectionSettingsModel;
-    public toolbarOptions?: ToolbarItems[];
-    public searchOptions?: SearchSettingsModel;
-    public filterSettings: FilterSettingsModel;
-
-
-    onBack() {
-
+    selectedRow($event) {
+        console.log('selectedRow : ', $event);
+        this.onDoubleClicked($event);        
     }
-
-    initialDatagrid() {
-        // this.pageSettings = { pageCount: 10 };        
-        this.formatoptions = { type: 'dateTime', format: 'M/dd/yyyy' }
-        this.pageSettings = { pageSizes: true, pageCount: 10 };
-        this.selectionOptions = { mode: 'Cell' };
-        this.editSettings = { allowEditing: true, allowAdding: false, allowDeleting: false };
-        this.searchOptions = { operator: 'contains', ignoreCase: true, ignoreAccent: true };
-        this.toolbarOptions = ['Search'];
-        this.filterSettings = { type: 'Excel' };
-    }
-
-
-
-    actionBegin(args: SaveEventArgs): void {
-        var data = args.rowData as IAccounts;
-
-        if (args.requestType === 'beginEdit' || args.requestType === 'add') {
-            args.cancel = true;
-            this.createForm(data);
-            this.openDrawer();
-
-        }
-        if (args.requestType === 'save') {
-            args.cancel = true;
-            console.log(JSON.stringify(args.data));
-            var data = args.data as IAccounts;
-        }
-    }
-
-    actionComplete(args: DialogEditEventArgs): void {
-        if ((args.requestType === 'beginEdit' || args.requestType === 'add')) {
-            if (args.requestType === 'beginEdit') {
-                // (args.form.elements.namedItem('CustomerName') as HTMLInputElement).focus();
-            } else if (args.requestType === 'add') {
-                // (args.form.elements.namedItem('OrderID') as HTMLInputElement).focus();
-            }
-        }
-    }
-
 
     // CRUD Functions
     onCreate(e: any) {
@@ -148,6 +242,22 @@ export class GlAccountsComponent implements OnInit {
 
     onUpdateSelection() {
         this.openDrawer()
+    }
+
+    onDoubleClicked(args: any) {
+        const type = args.type;
+        var parent: boolean;
+        parent = args.parent_account;
+        this.accountsForm.setValue({
+            account: [args.account],
+            child: [args.child],
+            parent_account: parent,
+            description: [args.description],
+            type: type,
+            comments: [args.comments],
+        });
+
+        this.openDrawer();
     }
 
     onUpdate(e: any) {
@@ -272,37 +382,4 @@ export class GlAccountsComponent implements OnInit {
         }
     }
 
-    onDoubleClicked(args: any) {
-        const type = args.data.type;
-
-        const account = {
-            account: [args.data.account],
-            child: [args.data.child],
-            parent_account: [args.data.parent_account],
-            description: [args.data.description],
-            balance: [args.data.balance],
-            type: [type],
-            comments: [args.data.comments],
-        }
-        this.createForm(account)
-
-        this.openDrawer();
-    }
-
-    onFocusedRowChanged(e: any) {
-        this.currentRow = e.row.data;
-        const type = e.row.data.type;
-
-        const account = {
-            account: [e.row.data.account],
-            child: [e.row.data.child],
-            parent_account: [e.row.data.parent_account],
-            description: [e.row.data.description],
-            balance: [e.row.data.balance],
-            type: [type],
-            comments: [e.row.data.comments],
-        }
-        this.createForm(account)
-
-    }
 }

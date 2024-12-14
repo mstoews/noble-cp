@@ -47,6 +47,7 @@ export class FuseVerticalNavigationComponent implements OnChanges, OnInit, After
     @Output() readonly modeChanged: EventEmitter<FuseVerticalNavigationMode> = new EventEmitter<FuseVerticalNavigationMode>();
     @Output() readonly openedChanged: EventEmitter<boolean> = new EventEmitter<boolean>();
     @Output() readonly positionChanged: EventEmitter<FuseVerticalNavigationPosition> = new EventEmitter<FuseVerticalNavigationPosition>();
+    
     @ViewChild('navigationContent') private _navigationContentEl: ElementRef;
 
     activeAsideItemId: string | null = null;

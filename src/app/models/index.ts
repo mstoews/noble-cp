@@ -239,8 +239,6 @@ export interface IFunds {
   description: string;
   create_date?: string;
   create_user?: string;
-  update_date?: string;
-  update_user?: string;
 }
 
 

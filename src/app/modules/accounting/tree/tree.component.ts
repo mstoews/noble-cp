@@ -14,12 +14,11 @@ import { TrialBalanceStore } from 'app/services/distribution.ledger.store';
     imports: [TreeGridModule],
     providers: [ExcelExportService, ToolbarService, FilterService, PageService, JournalStore, TrialBalanceStore],
     selector: 'download',
-    template: `
-    <div id="action-description">
-    <p>This sample demonstrates the default rendering of the Tree Grid with minimum configuration.</p>
-</div>
+    template: 
+`
+<div id="action-description"></div>
 <div class="control-section">
-    <ejs-treegrid [dataSource]='store.gl()' allowPaging='true' childMapping='subtasks' height='350' [treeColumnIndex]='1'>
+    <ejs-treegrid [dataSource]='store.gl()' allowPaging='false' childMapping='subtasks' height='350' [treeColumnIndex]='1'>
         <e-columns>
             <e-column field='journal_id' headerText='Task ID' width='70' textAlign='Right'></e-column>
             <e-column field='journal_subid' headerText='Task Name' width='200'></e-column>
@@ -31,7 +30,7 @@ import { TrialBalanceStore } from 'app/services/distribution.ledger.store';
         </e-columns>
     </ejs-treegrid>
 </div>
-    `
+ `
 })
 export class TreeComponent implements OnInit {
 

@@ -17,17 +17,14 @@ import { APUpdateComponent } from './ap-transactions/ap-update.component';
 
 const imports = [
     MaterialModule,
-
     NgClass,
     JournalEntryComponent,
-   
     FileManagerComponent,
     EntryWizardComponent,
     JournalTemplateComponent,
     TreeComponent,
     APTransactionComponent,
-    ARTransactionComponent,
-   
+    ARTransactionComponent,  
 ]
 
 @Component({

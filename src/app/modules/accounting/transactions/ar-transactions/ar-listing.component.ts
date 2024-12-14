@@ -61,9 +61,7 @@ export class ARTransactionComponent implements OnInit, OnDestroy {
     store = inject(JournalStore);
     showAlert: boolean = false;
 
-
-    @ViewChild('grid')
-    public grid?: GridComponent;
+    public grid? = viewChild<GridComponent>('grid');
 
     drawer = viewChild<MatDrawer>('drawer')
     currentRowData: any;

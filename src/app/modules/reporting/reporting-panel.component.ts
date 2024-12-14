@@ -1,18 +1,14 @@
-import { NgClass, NgSwitch, NgSwitchCase } from '@angular/common';
+import { NgClass } from '@angular/common';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { MatDrawer } from '@angular/material/sidenav';
 import { FuseMediaWatcherService } from '@fuse/services/media-watcher';
 import { MaterialModule } from 'app/services/material.module';
 import { Subject, takeUntil } from 'rxjs';
 import { TrialBalanceComponent } from './trial-balance/trial-balance.component';
-import { ExpenseRptComponent } from './expense/expense-rpt.component';
-import { BalanceSheetComponent } from './balance-sheet/balance-sheet.component';
 import { BalanceSheetStatementRptComponent } from './financial-statement/balance-sheet-statement-rpt.component';
 import { IncomeStatementRptComponent } from './financial-statement/income-statement-rpt.component';
 import { IncomeStatementComparisonRptComponent } from './financial-statement/income-statement-comparison.component';
 
-import {HandsonFSReportComponent} from "./handson/handson.report.component";
-import {HandsonIncomeStComponent} from "./handson/handson.income-st.component";
 
 
 const mods = [
@@ -22,8 +18,6 @@ const mods = [
     BalanceSheetStatementRptComponent,
     IncomeStatementRptComponent,
     IncomeStatementComparisonRptComponent,    
-    HandsonFSReportComponent,
-    HandsonIncomeStComponent
 ]
 
 @Component({
@@ -123,20 +117,7 @@ export class ReportingPanelComponent {
                 icon: 'feather:image',
                 title: 'Reconciliation Reporting',
                 description: 'Bank, expense and financial reconciliation reporting',
-            },
-            {
-                id: 'handson-income-st',
-                icon: 'feather:image',
-                title: 'Trial Balance Report',
-                description: 'Trial Balance Report',
-            },
-            {
-                id: 'handson-fs-report',
-                icon: 'feather:image',
-                title: 'Handson Table',
-                description: 'Financial Reporting Example',
-            }
-
+            }          
         ];
 
         // Subscribe to media changes

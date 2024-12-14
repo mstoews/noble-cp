@@ -63,7 +63,7 @@ import {
     RowDragEventArgs,
     SaveEventArgs, SearchService, SortService, ToolbarService
 } from '@syncfusion/ej2-angular-grids';
-import { TuiAlertService } from '@taiga-ui/core';
+
 import { MatDrawer, MatSidenav, MatSidenavModule } from '@angular/material/sidenav';
 import { MatCardModule } from "@angular/material/card";
 import { MatTableModule } from "@angular/material/table";
@@ -208,7 +208,7 @@ export class EntryWizardComponent implements OnInit, OnDestroy, AfterViewInit {
     funds$ = this.fundService.read();
     subtype$ = this.subtypeService.read();
     accounts$ = this.accountService.readDropDownChild();
-    private readonly alerts = inject(TuiAlertService);
+    
     drawer = viewChild<MatDrawer>("drawer");
 
     @ViewChild("singleDebitSelect", { static: true }) singleDebitSelect: MatSelect;
@@ -626,11 +626,9 @@ export class EntryWizardComponent implements OnInit, OnDestroy, AfterViewInit {
         const inputs = { ...this.journalEntryForm.value }
         const momentDate = new Date(inputs.step1.transaction_date).toISOString().split('T')[0];
         const email = this.auth.currentUser?.email;
-
         let count: number;
 
-        if (inputs.step1.amount === 0) {
-            this.alerts.open("Amount must be greater than zero ...");
+        if (inputs.step1.amount === 0) {            
             return;
         }
 
@@ -677,10 +675,10 @@ export class EntryWizardComponent implements OnInit, OnDestroy, AfterViewInit {
         });
         this.journalDetailSignal.set(this.journalDetails);
 
-        // this.journalDetailSignal().forEach((journalDetail) => {
-        //   console.log(journalDetail);
-        // });
-        this.alerts.open('Journal Entry Created', { label: 'success' });
+        this.journalDetailSignal().forEach((journalDetail) => {
+          console.log(journalDetail);
+        });
+        
     }
 
 

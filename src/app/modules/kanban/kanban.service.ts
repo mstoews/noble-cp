@@ -61,14 +61,6 @@ export interface IType {
   updateusr?: string
 }
 
-export interface IFund {
-  fund: string,
-  description: string,
-  fullDescription?: string,
-  updatedte: string,
-  updateusr: string
-}
-
 
 export interface ITeam {
   id?: string;

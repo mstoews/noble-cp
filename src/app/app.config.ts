@@ -1,4 +1,3 @@
-import { NG_EVENT_PLUGINS } from "@taiga-ui/event-plugins";
 
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { APP_INITIALIZER, ApplicationConfig, ErrorHandler } from '@angular/core';
@@ -76,7 +75,7 @@ export const AUTH = new InjectionToken('Firebase auth', {
 });
 
 const CoreProviders = [
-  provideHttpClient(withInterceptors([authTokenInterceptor, loggingInterceptor, retryInterceptor, jsonCachingInterceptor])),
+  provideHttpClient(withInterceptors([authTokenInterceptor, loggingInterceptor, retryInterceptor ])),
   {
     provide: APP_INITIALIZER,
     // dummy factory
@@ -89,8 +88,7 @@ const CoreProviders = [
 
 
 export const appConfig: ApplicationConfig = {
-  providers: [
-    NG_EVENT_PLUGINS,
+  providers: [    
     provideAnimations(),
     ...CoreProviders,
     provideRouter(appRoutes,

@@ -33,7 +33,7 @@ export class RoleService {
 
   // Create
   create(t: IRole) {
-    var url = this.baseUrl + '/v1/role_create';
+    var url = this.baseUrl + '/v1/create_role';
     var email = this.authService.currentUser.email;
     const dDate = new Date();
 
@@ -63,11 +63,8 @@ export class RoleService {
 
   // Delete
   delete(id: string) {
-    var data = {
-      role: id
-    }
-    var url = this.baseUrl + '/v1/delete_role';
-    return this.httpClient.post<IRole>(url, data).pipe(shareReplay());
+    var url = this.baseUrl + '/v1/delete_role/' + id;
+    return this.httpClient.delete<IRole>(url).pipe(shareReplay());
   }
 
 }

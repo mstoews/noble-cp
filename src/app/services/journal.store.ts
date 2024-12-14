@@ -22,10 +22,11 @@ import {
     IPeriodParam
 } from 'app/models/journals';
 import { JournalService } from '../services/journal.service';
-import { IFund, IType } from 'app/modules/kanban/kanban.service';
+   import { IType } from 'app/modules/kanban/kanban.service';
 import { IParty } from 'app/models/party';
 import { IPeriod } from '../services/periods.service';
 import { ISubType } from '../services/subtype.service';
+import { IFunds } from 'app/models';
 
 
 export interface JournalStateInterface {
@@ -39,7 +40,7 @@ export interface JournalStateInterface {
   party: IParty[];
   period: IPeriod[];
   sub_type: ISubType[];
-  funds: IFund[];
+  funds: IFunds[];
   artifacts: IArtifacts[];
   currentPeriod: string;
   currentYear: string;
