@@ -112,19 +112,20 @@ const imports = [
     imports: [imports],
     providers: [imports]
 })
-export class GlSubTypeComponent implements OnInit {
-onRefresh() {
-throw new Error('Method not implemented.');
-}
-onAdd() {
-throw new Error('Method not implemented.');
-}
-onDeleteSelection() {
-throw new Error('Method not implemented.');
-}
-onUpdateSelection() {
-throw new Error('Method not implemented.');
-}
+    export class GlSubTypeComponent implements OnInit {
+
+    onRefresh() {
+        throw new Error('Method not implemented.');
+    }
+    onAdd() {
+        throw new Error('Method not implemented.');
+    }
+    onDeleteSelection() {
+        throw new Error('Method not implemented.');
+    }
+    onUpdateSelection() {
+        throw new Error('Method not implemented.');
+    }
 
     private fuseConfirmationService = inject(FuseConfirmationService);
     private fb = inject(FormBuilder);
@@ -135,7 +136,7 @@ throw new Error('Method not implemented.');
     public accountsForm!: FormGroup;
     public data$: any
     public typeForm?: FormGroup | any;
-store: any;
+    store: any;
 
     ngOnInit() {
         this.createEmptyForm();

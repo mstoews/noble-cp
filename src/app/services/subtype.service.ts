@@ -66,7 +66,7 @@ export class SubTypeService {
 
 
     // Update
-    update(t: ISubType) {
+  update(t: ISubType) {
       var url = this.baseUrl + '/v1/subtype_update';
   
       var data: ISubType = {

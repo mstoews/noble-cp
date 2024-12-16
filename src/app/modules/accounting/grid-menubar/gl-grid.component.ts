@@ -1,6 +1,6 @@
-import { Component, Input, input, OnInit, output} from '@angular/core';
+import { Component, Input, input, OnInit, output, viewChild} from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { AggregateService, ColumnMenuService, ContextMenuItem, ContextMenuService, DialogEditEventArgs, EditService, EditSettingsModel, ExcelExportService, FilterService, FilterSettingsModel, GridLine, GridModule, GroupService, PageService, ReorderService, ResizeService, SaveEventArgs, SearchService, SearchSettingsModel, SelectionSettingsModel, SortService, ToolbarItems, ToolbarService } from '@syncfusion/ej2-angular-grids';
+import { AggregateService, ColumnMenuService, ContextMenuItem, ContextMenuService, DialogEditEventArgs, EditService, EditSettingsModel, ExcelExportService, FilterService, FilterSettingsModel, GridComponent, GridLine, GridModule, GroupService, PageService, ReorderService, ResizeService, SaveEventArgs, SearchService, SearchSettingsModel, SelectionSettingsModel, SortService, ToolbarItems, ToolbarService } from '@syncfusion/ej2-angular-grids';
 import { DropDownListComponent } from '@syncfusion/ej2-angular-dropdowns';
 
 
@@ -17,7 +17,7 @@ const keyExpr = ["account", "child"];
     selector: 'gl-grid',
     imports: [imports],
     template: `
-    <ejs-grid  class="e-grid mt-3"
+    <ejs-grid   #grid id="GlGrid"  class="e-grid mt-3 h-[calc(100vh)-100px]"                
                 [dataSource]="data" 
                 [columns]="columns"
                 allowSorting='true'
@@ -30,7 +30,8 @@ const keyExpr = ["account", "child"];
                 [editSettings]='editSettings' 
                 [pageSettings]='pageSettings'                 
                 [enableStickyHeader]='true' 
-                [allowGrouping]="false"
+                [enablePersistence]='false'
+                [allowGrouping]="true"
                 [allowResizing]='true' 
                 [allowReordering]='true' 
                 [allowExcelExport]='true' 
@@ -68,7 +69,6 @@ export class GLGridComponent implements OnInit {
     public formatoptions: Object;
     public initialSort: Object;
     public pageSettings: Object;
-    public filterOptions: FilterSettingsModel;
     public editSettings: Object;
     public dropDown: DropDownListComponent;
     public submitClicked: boolean = false;
@@ -76,6 +76,10 @@ export class GLGridComponent implements OnInit {
     public toolbarOptions?: ToolbarItems[];
     public searchOptions?: SearchSettingsModel;
     public filterSettings: FilterSettingsModel;
+
+    public grid = viewChild<GridComponent>('grid');
+    public state?: GridComponent;
+    public message?: string;
     
 
     openTrade($event) {
@@ -96,13 +100,39 @@ export class GLGridComponent implements OnInit {
 
     onUpdate(e: any) { }
 
-    changeType(e) {  console.debug('changeType ', JSON.stringify(e));  }
+    changeType(e) { 
+         console.debug('changeType ', JSON.stringify(e));  
+    }
 
     onDeleteSelection() {}
 
     onDelete(e: any) { }
 
     onRefresh() {}
+
+    public setPersistData(grid: string ) 
+     {
+        var persistData = this.grid().getPersistData(); // Grid persistData
+        window.localStorage.setItem(grid, persistData);        
+        this.message = "Grid state saved.";
+        return this.message;
+     }
+
+    public getPersistData(grid: string) {
+        console.log("resetting grid");
+        this.message = "";
+        let value: string = window.localStorage.getItem(grid) as string; 
+        this.state = JSON.parse(value);
+        if (this.state) {
+            this.grid().setProperties(this.state);
+            this.message = "Previous grid state restored.";
+            } else {
+            this.message = "No saved state found.";
+        }        
+        return this.message;
+    }
+
+    
 
     onAdd() { }
 
@@ -112,18 +142,14 @@ export class GLGridComponent implements OnInit {
         this.onFocusChanged.emit(e);
     }
 
-
-    
-
-
     initialDatagrid() {
         this.formatoptions = { type: 'dateTime', format: 'M/dd/yyyy' }
         this.pageSettings = { pageSizes: true, pageCount: 10 };
-        this.selectionOptions = { mode: 'Cell' };
+        this.selectionOptions = { mode: 'Row' };
         this.editSettings = { allowEditing: true, allowAdding: false, allowDeleting: false };
         this.searchOptions = { operator: 'contains', ignoreCase: true, ignoreAccent: true };
         this.toolbarOptions = ['Search'];
-        this.filterSettings = { type: 'Excel' };
+        this.filterSettings = { type: 'Menu' };
     }
 
     actionBegin(args: SaveEventArgs): void {
@@ -131,12 +157,10 @@ export class GLGridComponent implements OnInit {
         
         if (args.requestType === 'beginEdit' || args.requestType === 'add') {
             args.cancel = true;
-            this.openTradeId.emit(data);
-            console.log(JSON.stringify(data));        
+            this.openTradeId.emit(data);            
         }
         if (args.requestType === 'save') {
-            args.cancel = true;
-            console.log(JSON.stringify(args.data));        
+            args.cancel = true;            
         }
     }
 
@@ -149,6 +173,4 @@ export class GLGridComponent implements OnInit {
             }
         }
     }
-
-
 }
