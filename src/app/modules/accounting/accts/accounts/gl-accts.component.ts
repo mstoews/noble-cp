@@ -31,7 +31,8 @@ const keyExpr = ["account", "child"];
 @Component({
     selector: 'glaccounts',
     imports: [imports],
-    template: `<div class="h-[calc(100vh)-100px] ">
+    template: `
+    <div class="h-[calc(100vh)-100px] ">
     <mat-drawer class="w-[450px]" #drawer [opened]="false" mode="over" [position]="'end'" [disableClose]="false">
         <mat-card class="m-2">
             <div class="flex flex-col w-full filter-article filter-interactive text-gray-700">
@@ -105,34 +106,61 @@ const keyExpr = ["account", "child"];
                 </div>
             </form>
 
-            <div mat-dialog-actions>
-                <div mat-dialog-actions class="gap-2 mb-3">
-                    @if (bDirty === true) {
-                        <button mat-icon-button color="primary" class="bg-green-400  stroke-purple-600 text-gray-900 hover:bg-slate-400 hover:text-gray-100 ml-1"
-                        (click)="onUpdateJournalEntry()" matTooltip="Update Transaction" aria-label="hover over">
-                        <mat-icon [svgIcon]="'feather:refresh-cw'"></mat-icon>
-                        </button>
-                    }
             
-                    <button mat-icon-button color="primary" class="bg-slate-200 fill-current hover:bg-slate-400 ml-1 focus:ngring-violet-800"
-                        (click)="onAdd()" matTooltip="Add Line" aria-label="hovered over">                        
-                        <span class="e-icons e-data-validation"></span>
-                    </button>
-                    
-                    <button mat-icon-button color="primary" class="bg-slate-200 hover:bg-slate-400 ml-1"
-                        (click)="onDelete($event)" matTooltip="Remove Line" aria-label="hovered over">                        
-                        <span class="e-icons e-redaction"></span>
-                    </button>
-                                            
-                    <button mat-icon-button color="primary" class="bg-gray-200 fill-slate-100  hover:bg-slate-400 ml-1" 
-                        (click)="onClose()"
-                        matTooltip="Cancel" aria-label="hovered over">
-                        <!-- <mat-icon [svgIcon]="'mat_outline:close'"></mat-icon> -->
-                         <span class="e-icons e-circle-close"></span>
-                    </button>
-                    
-                </div>
-            </div>
+            <div mat-dialog-actions class="gap-2 mb-3">
+                                            @if (bHeaderDirty === true) {
+                                                <button mat-icon-button color="primary"
+                                                        class="bg-slate-200 hover:bg-slate-400 ml-1"
+                                                        (click)="onUpdateJournalEntry()" matTooltip="Save"
+                                                        aria-label="hovered over">
+                                                    
+                                                    <span class="e-icons e-save"></span>
+                                                </button>
+                                            }
+            
+                                            <button mat-icon-button color="primary"
+                                                    class="bg-slate-200 hover:bg-slate-400 ml-1" (click)="onNew($event)"
+                                                    matTooltip="New" aria-label="hovered over">
+                                                
+                                                <span class="e-icons e-circle-add"></span>
+                                            </button>
+            
+            
+                                            <button mat-icon-button color="primary"
+                                                    class="bg-slate-200 hover:bg-slate-400 ml-1" (click)="onClone($event)"
+                                                    matTooltip="Clone" aria-label="hovered over">
+                                                
+                                                <span class="e-icons e-copy"></span>
+                                            </button>
+            
+            
+                                            <button mat-icon-button color="primary"
+                                                    class="bg-slate-200 text-gray-100 hover:bg-slate-400 ml-1"
+                                                    (click)="onDelete($event)" matTooltip="Cancel Transaction"
+                                                    aria-label="hovered over">
+                                                <mat-icon [svgIcon]="'feather:trash-2'"></mat-icon>
+                                            </button>
+            
+                                            <button mat-icon-button color="primary" class="bg-gray-200 hover:bg-slate-400 ml-1"
+                                                    (click)="onAddEvidence()" matTooltip="Evidence" aria-label="Evidence">
+                                                
+                                                <span class="e-icons e-text-alternative"></span>
+            
+                                            </button>
+            
+                                            <button mat-icon-button color="primary" class="bg-gray-200 hover:bg-slate-400 ml-1"
+                                                    (click)="onCreateTemplate()" matTooltip="Template" aria-label="Template">
+                                                <span class="e-icons e-table-overwrite-cells"></span>
+                                            </button>
+            
+                                            <button mat-icon-button color="primary" class="bg-slate-200  hover:bg-slate-400 ml-1"
+                                                    (click)="onCloseTransaction()" matTooltip="Lock Transaction"
+                                                    aria-label="complete">
+                                                <span class="e-icons e-check-box"></span>
+                                            </button>
+            
+                                        </div>       
+            
 
         </mat-card>
     </mat-drawer>
@@ -180,6 +208,21 @@ const keyExpr = ["account", "child"];
     ]
 })
 export class GlAccountsComponent implements OnInit {
+onNew($event: any) {
+throw new Error('Method not implemented.');
+}
+onClone($event: any) {
+throw new Error('Method not implemented.');
+}
+onAddEvidence() {
+throw new Error('Method not implemented.');
+}
+onCreateTemplate() {
+throw new Error('Method not implemented.');
+}
+onCloseTransaction() {
+throw new Error('Method not implemented.');
+}
     @ViewChild('drawer') drawer!: MatDrawer;
     accountsForm!: FormGroup;
 
@@ -211,6 +254,7 @@ export class GlAccountsComponent implements OnInit {
     displayMode = 'compact';    
     showInfo = true;
     showNavButtons = true;
+bHeaderDirty: any;
     
 
     ngOnInit() {

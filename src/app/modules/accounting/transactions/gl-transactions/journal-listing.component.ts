@@ -1,47 +1,14 @@
 import { Component, OnDestroy, OnInit, ViewEncapsulation, inject, viewChild } from '@angular/core';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
+
 import { CommonModule } from '@angular/common';
-import { FundsService } from 'app/services/funds.service';
-import { AccountsService } from 'app/services/accounts.service';
-
 import { MaterialModule } from 'app/services/material.module';
-import { SubTypeService } from 'app/services/subtype.service';
-import { TypeService } from 'app/services/type.service';
 
-import {
-
-    DialogEditEventArgs,
-    EditService,
-    SelectionSettingsModel,
-    GroupService,
-    FilterService,
-    GridModule,
-    PageService,
-    SaveEventArgs,
-    SortService,
-    ToolbarService,
-    GridComponent,
-    AggregateService,
-    FilterSettingsModel,
-    ToolbarItems,
-    SearchSettingsModel,
-    ColumnMenuService,
-    ResizeService,
-    PdfExportService,
-    ExcelExportService,
-    ReorderService,
-    DetailRowService
-} from '@syncfusion/ej2-angular-grids';
-
-import { Browser } from '@syncfusion/ej2-base';
-import { Dialog } from '@syncfusion/ej2-popups';
-import { DropDownListComponent } from '@syncfusion/ej2-angular-dropdowns';
-import { IJournalDetail, IJournalHeader } from 'app/models/journals';
 import { JournalStore } from 'app/services/journal.store';
 import { Router } from '@angular/router';
-import { ClickEventArgs } from '@syncfusion/ej2-navigations';
+
 import { GridMenubarStandaloneComponent } from '../../grid-menubar/grid-menubar.component';
+import { GLGridComponent } from '../../grid-menubar/gl-grid.component';
 
 
 const imports = [
@@ -50,8 +17,7 @@ const imports = [
     MaterialModule,
     FormsModule,
     GridMenubarStandaloneComponent,
-    NgxMatSelectSearchModule,
-    GridModule
+    GLGridComponent
 ];
 
 @Component({
@@ -59,139 +25,60 @@ const imports = [
     imports: [imports],
     encapsulation: ViewEncapsulation.None,
     templateUrl: './journal-listing.component.html',
-    providers: [ToolbarService,
-        FilterService,
-        ExcelExportService,
-        PdfExportService,
-        SortService,
-        JournalStore,
-        SortService,
-        ResizeService,
-        ReorderService,
-        PageService,
-        ResizeService,
-        GroupService,
-        FilterService,
-        DetailRowService,
-        EditService,
-        AggregateService,
-        ColumnMenuService]
+    providers: [JournalStore] 
 })
 export class JournalEntryComponent implements OnInit, OnDestroy {
 
-    public typeService = inject(TypeService);
-    public subtypeService = inject(SubTypeService);
-    public fundService = inject(FundsService);
-    public accountService = inject(AccountsService);
     public route = inject(Router);
     public store = inject(JournalStore);
 
     sTitle = 'Transaction Listings by Journal Type';
-    grid = viewChild<GridComponent>('grid');
+
     currentRowData: any;
     drawOpen: 'open' | 'close' = 'open';
     collapsed = false;
     public sGridTitle = 'Journal Entry';
 
-    selectedItemKeys: any[] = [];
-    public journalType = 'GL';
-    public bOpenDetail: boolean = false;
-    public pageSettings: Object;
-    public formatoptions: Object;
-    public filterOptions: FilterSettingsModel;
-    public editSettings: Object;
-    public dropDown: DropDownListComponent;
-    public submitClicked: boolean = false;
-    public selectionOptions?: SelectionSettingsModel;
-    public toolbarOptions?: ToolbarItems[];
-    public searchOptions?: SearchSettingsModel;
-    public filterSettings: FilterSettingsModel;
-    public journalForm!: FormGroup;
-    public keyField: any;
+    columns = [
+        { field: 'journal_id', headerText: 'Journal ID', isPrimaryKey: true, isIdentity: true, visible: true, width: 100 },
+        { field: 'type', headerText: 'Type', width: 100 },
+        { field: 'booked', headerText: 'Booked', width: 100,  displayAsCheckbox: true},
+        { field: 'transaction_date', headerText: 'Date', width: 100, format: 'M/dd/yyyy' },
+        { field: 'description', headerText: 'Description', width: 200 },
+        { field: 'amount', headerText: 'Amount', width: 80 , format: 'N2', textAlign: 'Right' },
+        { field: 'period', headerText: 'Prd', width: 100, visible: false },
+        { field: 'period_year', headerText: 'Yr', width: 100, visible: false },
+        { field: 'create_date', headerText: 'Created', width: 100, format: 'M/dd/yyyy' , visible: false},
+        { field: 'create_user', headerText: 'User', width: 100 , visible: false},
+        { field: 'party_id', headerText: 'Party', width: 100, visible: false }
+        
+        
+    ];
 
-    customizeTooltip = (pointsInfo: { originalValue: string; }) => ({ text: `${parseInt(pointsInfo.originalValue)}%` });
+    /*
+    <e-column  field="journal_id"  headerText="ID" width="100" dataType="number" isPrimaryKey='true' textAlign="left"></e-column>
+    <e-column  field="type"        headerText="Type" width="100" dataType="text" textAlign="left"></e-column>
+    <e-column  field="booked"      [displayAsCheckBox]='true' headerText="Booked" width="100" type="boolean"></e-column>                            
+    <e-column  field="amount"      headerText="Amount" format='N2' width="150" textAlign="Right"></e-column>
+    <e-column  field="period"      headerText="Prd" width="100" ></e-column>
+    <e-column  field="period_year" headerText="Yr" width="100"></e-column>    
+    <e-column  field="description" headerText="Description" width="200"></e-column>                                    
+    <e-column  field="create_date" width='120' [format]='formatoptions' headerText="Created" type="dateTime"></e-column>                                                        
+    <e-column  field="create_user" width='120' headerText="User" type="string"></e-column>             
+    <e-column  field="party_id" width='120' headerText="Party" type="string"></e-column>             
+    */
 
-    initialDatagrid() {
-        this.formatoptions = { type: 'dateTime', format: 'M/dd/yyyy' }
-        this.pageSettings = { pageSizes: true, pageCount: 10 };
-        this.selectionOptions = { mode: 'Cell' };
-        this.editSettings = { allowEditing: true, allowAdding: false, allowDeleting: false };
-        this.searchOptions = { operator: 'contains', ignoreCase: true, ignoreAccent: true };
-        this.toolbarOptions = ['Search']
-        this.filterSettings = { type: 'Excel' };
-    }
 
-    toolbarClick(args: ClickEventArgs): void {
-        if (args.item.id === 'grid_excelexport') {
-            this.grid().excelExport();
-        }
-        else if (args.item.id === 'grid_csvexport') {
-            this.grid().csvExport();
-        }
-    }
-
-    onBack(e: string) {
-        console.debug('onBack: ', e)
-    }
-
-    onExportXL(e: string) {
-        this.grid().excelExport();
-    }
-    onExportCSV(e: string) {
-        this.grid().csvExport();
-    }
-
-    onPrint(e: string) {
-        this.grid().print();
-    }
-
-    onExportPDF(e: string) {
-        this.grid().pdfExport();
-    }
 
     ngOnInit() {
-        this.initialDatagrid();
+    
     }
 
-    onLoad(): void {
-        var params = {
-            period: 1,
-            period_year: 2024
-        }
-        // this.store.loadAllDetails(params)    
+    selectedRow($event) {
+        this.currentRowData = $event;
+        this.route.navigate(['journals/gl', $event.journal_id]);
     }
 
-    actionBegin(args: SaveEventArgs): void {
-        var data = args.rowData as IJournalHeader;
-
-        if (args.requestType === 'beginEdit' || args.requestType === 'add') {
-            args.cancel = true;
-            this.submitClicked = false;
-            this.bOpenDetail = true;
-            this.journalType = data.type;
-            this.currentRowData = data;
-            this.route.navigate(['journals/gl', data.journal_id]);
-        }
-        if (args.requestType === 'save') {
-            args.cancel = true;
-            var data = args.data as IJournalHeader;
-            this.submitClicked = true;
-        }
-    }
-
-    actionComplete(args: DialogEditEventArgs): void {
-        if ((args.requestType === 'beginEdit' || args.requestType === 'add')) {
-            if (Browser.isDevice) {
-                args.dialog.height = window.innerHeight - 90 + 'px';
-                (<Dialog>args.dialog).dataBind();
-            }
-            if (args.requestType === 'beginEdit') {
-                // (args.form.elements.namedItem('CustomerName') as HTMLInputElement).focus();
-            } else if (args.requestType === 'add') {
-                // (args.form.elements.namedItem('OrderID') as HTMLInputElement).focus();
-            }
-        }
-    }
 
     public dateValidator() {
         return (control: FormControl): null | Object => {
@@ -200,14 +87,9 @@ export class JournalEntryComponent implements OnInit, OnDestroy {
         }
     }
 
-    public onClickGrid() {
-        const selectedRecords = this.grid().getSelectedRecords();
-        const records = this.store.details();
-        this.grid().childGrid.dataSource = this.store.details();
-    }
-
+    
     public onAdd() {
-        this.bOpenDetail = true;
+
     }
 
     public onRefresh() {
@@ -231,7 +113,7 @@ export class JournalEntryComponent implements OnInit, OnDestroy {
     }
 
     public onBooked(booked: boolean) {
-        this.journalForm.patchValue({ booked: booked });
+
     }
 
     updateBooked() { }

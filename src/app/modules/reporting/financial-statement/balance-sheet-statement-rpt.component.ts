@@ -8,11 +8,12 @@ import { BehaviorSubject, map, Subject, takeUntil } from 'rxjs';
 import { MaterialModule } from 'app/services/material.module';
 import { StatementTotalComponent } from './statement-totals.component';
 import html2PDF from 'jspdf-html2canvas';
+import { GridMenubarStandaloneComponent } from 'app/modules/accounting/grid-menubar/grid-menubar.component';
 
 
 const imports = [
   CommonModule,
-  ReportingToolbarComponent,
+  GridMenubarStandaloneComponent,
   StatementLineComponent,
   MaterialModule,
   StatementTotalComponent
@@ -27,24 +28,19 @@ const imports = [
   <!-- Main -->
   <div class="flex-auto p-2 sm:p-10 bg-white">
       <div class="h-max border-gray-300 rounded-2xl">                
-          <reporting-toolbar [inTitle]="'Balance Sheet Analysis '"
-              (notifyParentRefresh)="onRefresh()"
-              (notifyExcel)="onExportExcel()" 
-              (notifyCSV)="onExportCSV()" >
-          </reporting-toolbar>          
+      <grid-menubar [inTitle]= "'Balance Sheet by Period'"></grid-menubar>             
       </div>
       <div id="balance-sheet" class="pl-20 pt-2 pb-14 mat-elevation-z8 mt-4">
           <div class="text-gray-800 text-2xl mt-3">Noble Ledger Ltd.</div>
-          <div class="text-gray-800  text-2xl mt-1">Balance Sheet Statement {{currentYear()}} - {{currentPeriod()}}</div>
-          
-          <div class="text-gray-800  text-2xl mt-1">{{dReportDate}}</div>
+          <div class="text-gray-800  text-2xl mt-1">Balance Sheet Statement {{currentYear()}} - {{currentPeriod()}}</div>          
+          <div class="text-gray-800  text-2xl mt-1">Reporting Date : {{dReportDate}}</div>
           
         <section class="grid grid-cols-1 mt-6">      
           <div class="grid grid-cols-12 gap-2">
-            <div class="col-start-5 text-right">Opening</div>
-            <div class="col-start-7 text-right">Debit</div>
-            <div class="col-start-9 text-right">Credit</div>
-            <div class="col-start-11 text-right">Closing</div>            
+            <div class="col-start-5 text-right text-gray-700">Opening</div>
+            <div class="col-start-7 text-right text-gray-700">Debit</div>
+            <div class="col-start-9 text-right text-gray-700">Credit</div>
+            <div class="col-start-11 text-right text-gray-700">Closing</div>            
           </div>
         </section>
 
@@ -95,7 +91,7 @@ export class BalanceSheetStatementRptComponent  {
   public currentPeriod = signal(1);
   public currentYear = signal(2024);
 
-  public dReportDate = new Date();
+  public dReportDate = new Date().toISOString().split('T')[0];  
 
   // public balanceSheetReport! : Observable<IDistributionLedgerReport[]>
   public distributionService = inject(DistributionLedgerService)

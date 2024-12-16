@@ -26,13 +26,14 @@ import { JournalService } from '../services/journal.service';
 import { IParty } from 'app/models/party';
 import { IPeriod } from '../services/periods.service';
 import { ISubType } from '../services/subtype.service';
-import { IFunds } from 'app/models';
+import { IFunds, ITrialBalance } from 'app/models';
 
 
 export interface JournalStateInterface {
   gl: IJournalHeader[];
   ap: IJournalHeader[];
   ar: IJournalHeader[];
+  tb: ITrialBalance[];
   details: IJournalDetail[];
   templateDetails: IJournalDetailTemplate[];
   accounts: IAccounts[];
@@ -53,6 +54,7 @@ export const JournalStore = signalStore(
     gl: [],
     ap: [],
     ar: [],
+    tb: [],
     details: [],
     accounts: [],
     account_type: [],
@@ -184,6 +186,20 @@ export const JournalStore = signalStore(
         })
       )
     ),
+    // loadTB: rxMethod<IPeriodParam>(
+    //   pipe(
+    //     tap(() => patchState(state, { isLoading: true })),
+    //     switchMap((value) => {
+    //       return journalService.readTbByPeriod(value).pipe(
+    //         tapResponse({
+    //           next: (tb) => patchState(state, { tb: tb }),
+    //           error: console.error,
+    //           finalize: () => patchState(state, { isLoading: false }),
+    //         })
+    //       );
+    //     })
+    //   )
+    // ),
     loadTemplateDetails: rxMethod<string>(
       pipe(
         tap(() => patchState(state, { isLoading: true })),

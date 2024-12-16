@@ -1,13 +1,5 @@
 <div class="sm:hide md:visible">
-<grid-menubar class="pl-5 pr-5" 
-    [inTitle]="sTitle" 
-    [showBack]="false"
-    (back)="onBack($event)"
-    (exportPDF)="onExportPDF($event)"
-    (exportXL)="onExportXL($event)" 
-    (exportCSV)="onExportCSV($event)" 
-    (print)="onPrint($event)">
-</grid-menubar>
+
 </div>
 
 <div class="flex flex-col min-w-0 overflow-y-auto -px-10">
@@ -18,52 +10,29 @@
             <div class="flex-col">
                 @defer (on viewport; on timer(5s)) {
                     <ng-container>
-                        @if (store.gl().length > 0) {
-                        <div class="flex flex-1 flex-col">
-                            <ejs-grid #grid id='grid' 
-                                    (click)="onClickGrid()"                                  
-                                    [dataSource]='store.gl()'   
-                                    [enableStickyHeader]=true                                     
-                                    allowPaging='true' 
-                                    allowSorting='true'  
-                                    [pageSettings]='pageSettings'                                                                     
-                                    showColumnMenu='true'
-                                    allowEditing='true' 
-                                    [allowFiltering]='false'
-                                    [toolbar]='toolbarOptions' 
-                                    (toolbarClick)='toolbarClick($event)'
-                                    [selectionOptions]="selectionOptions"
-                                    (actionBegin)="actionBegin($event)" 
-                                    (actionComplete)="actionComplete($event)"                                                                        
-                                    [filterSettings]='filterSettings' 
-                                    [editSettings]='editSettings'
-                                    [allowExcelExport]='true' 
-                                    [allowPdfExport]='true' 
-                                    [allowCsvExport]='true'                                    
-                                    (load)='onLoad()'                                    
-                                    [searchSetting]="searchOptions" >
-                                <e-columns>
-                                    <e-column  field="journal_id"  headerText="ID"          width="100" dataType="number" isPrimaryKey='true' textAlign="left"></e-column>  
-                                    <e-column  field="type"        headerText="Type"        width="100" dataType="text" textAlign="left"></e-column>
-                                    <e-column  field="booked"      headerText="Booked"      width="100" [displayAsCheckBox]='true' type="boolean"></e-column>                            
-                                    <e-column  field="amount"      headerText="Amount"      width="150" format='N2'  textAlign="Right"></e-column>
-                                    <e-column  field="period"      headerText="Prd"         width="100" ></e-column>
-                                    <e-column  field="period_year" headerText="Yr"          width="80" ></e-column>    
-                                    <e-column  field="description" headerText="Description" width="200" ></e-column>                                    
-                                    <e-column  field="create_date" headerText="Created"     width='120' [format]='formatoptions' type="dateTime"></e-column>                                                        
-                                    <e-column  field="create_user" headerText="User"        width='120' type="string"></e-column>                                                 
-                                </e-columns>
-                            </ejs-grid>                             
-                        </div>
+                        <grid-menubar 
+                        (notifyParentRefresh)="onRefresh()" 
+                        (notifyParentAdd)="onAdd()"
+                        (notifyParentDelete)="onDeleteSelection()" 
+                        (notifyParentUpdate)="onUpdateSelection()">
+                         </grid-menubar>                         
+                         
+                         @if (store.isLoading() === false) 
+                        {                            
+                            <gl-grid 
+                                (openTradeId)="selectedRow($event)"
+                                [data]="store.gl()" 
+                                [columns]="columns">
+                            </gl-grid>                        
                         }
-                        @else 
+                           @else
                         {
-                            <div class="flex justify-center items-center">
+                            <div class="fixed z-[1050] -translate-x-2/4 -translate-y-2/4 left-2/4 top-2/4">
                                 <mat-spinner></mat-spinner>
-                             </div>
+                            </div>
                         }
-                        
-                    </ng-container>     
+                
+                    </ng-container> 
 
                 }
                 @placeholder(minimum 1000ms) {

@@ -70,16 +70,13 @@
 
                 <!-- Load settings panel -->
                 <div class="mt-8">
-
-
                     @switch (selectedPanel) {
-
-                    @case ('trial-balance') { <trial-balance></trial-balance>}
-                    @case ('balance-sheet-statement') { <balance-sheet-statement-rpt></balance-sheet-statement-rpt> }
-                    @case ('income-statement') { <income-statement-rpt></income-statement-rpt> }
-                    @case ('income-statement-comparison') {  <income-statement-comparison-rpt></income-statement-comparison-rpt> }                    
-                    @case ('handson-fs-report') { <handson-fs-report></handson-fs-report> }
-                    @case ('handson-income-st') { <handson-income-st></handson-income-st> }
+                        @case ('trial-balance') { <trial-balance></trial-balance>}
+                        @case ('balance-sheet-statement') { <balance-sheet-statement-rpt></balance-sheet-statement-rpt> }
+                        @case ('income-statement') { <income-statement-rpt></income-statement-rpt> }
+                        @case ('income-statement-comparison') {  <income-statement-comparison-rpt></income-statement-comparison-rpt> }                                        
+                        @case ('distributed-tb') { <distributed-tb></distributed-tb>  }
+                        @case ('tb-grid') { <tb-grid></tb-grid>  }
                     }
 
                 </div>

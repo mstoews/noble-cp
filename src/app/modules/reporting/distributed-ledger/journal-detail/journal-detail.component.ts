@@ -9,7 +9,8 @@ import { MatDialog } from '@angular/material/dialog';
 import { MaterialModule } from 'app/services/material.module';
 
 import { GridModule } from '@syncfusion/ej2-angular-grids';
-import { JournalStore } from 'app/store/journal.store';
+import { JournalStore } from 'app/services/journal.store';
+
 
 const imports = [
     CommonModule,

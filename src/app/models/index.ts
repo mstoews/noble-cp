@@ -242,7 +242,27 @@ export interface IFunds {
 }
 
 
-
+export interface ITrialBalance {
+  account : number;
+  child : number;
+  account_description: string;
+  transaction_date: Date;
+  id: string;
+  trans_type: string;
+  trans_date: Date;
+  type: string;
+  description: string;
+  reference: string;
+  party_id: string;
+  amount: number;
+  opening_balance: number;
+  debit_amount: number;
+  credit_amount: number;
+  close: number;
+  net: number;
+  pd: number;
+  prd_year: number;
+}
 export interface IAccount {
   account: number;
   child: number;

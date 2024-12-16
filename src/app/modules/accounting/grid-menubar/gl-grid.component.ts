@@ -30,6 +30,7 @@ const keyExpr = ["account", "child"];
                 [editSettings]='editSettings' 
                 [pageSettings]='pageSettings'                 
                 [enableStickyHeader]='true' 
+                [allowGrouping]="false"
                 [allowResizing]='true' 
                 [allowReordering]='true' 
                 [allowExcelExport]='true' 
@@ -37,7 +38,7 @@ const keyExpr = ["account", "child"];
                 (actionBegin)='actionBegin($event)' 
                 (actionComplete)='actionComplete($event)'>
     </ejs-grid>`,
-    providers: [ExcelExportService, SearchService, ContextMenuService, ReorderService, SortService, GroupService, PageService, ResizeService, FilterService, ToolbarService, EditService, AggregateService, ColumnMenuService],
+    providers: [ExcelExportService, GroupService, SearchService, ContextMenuService, ReorderService, SortService, GroupService, PageService, ResizeService, FilterService, ToolbarService, EditService, AggregateService, ColumnMenuService],
     styles: [
         `    .e-grid {
              font-family: cursive;

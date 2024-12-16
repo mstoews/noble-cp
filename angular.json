@@ -7,11 +7,16 @@
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
-          "style": "scss",
-          "inlineTemplate": false,
+          "inlineTemplate": true,
           "inlineStyle": true,
-          "skipTests": true,
-          "flat": true
+          "style": "scss",
+          "standalone": true
+        },
+        "@schematics/angular:directive": {
+          "standalone": true
+        },
+        "@schematics/angular:pipe": {
+          "standalone": true
         }
       },
       "root": "",
@@ -187,26 +192,6 @@
   },
   "cli": {
     "analytics": false,
-    "cache": false,
-    "schematicCollections": [
-      "@ionic/angular-toolkit"
-    ]
-  },
-  "schematics": {
-    "@ionic/angular-toolkit:component": {
-      "styleext": "scss"
-    },
-    "@ionic/angular-toolkit:page": {
-      "styleext": "scss"
-    }
   }
 }
 
-/*
-   "node_modules/@taiga-ui/core/styles/taiga-ui-theme.less",
-// "node_modules/@taiga-ui/core/styles/taiga-ui-fonts.less"
-              "node_modules/handsontable/dist/handsontable.css",
-              "node_modules/@taiga-ui/core/styles/taiga-ui-theme.less",
-              "node_modules/@taiga-ui/core/styles/taiga-ui-fonts.less",
-
-*/

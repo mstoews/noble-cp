@@ -49,6 +49,11 @@ export interface IPeriodParam {
   period_year: number
 }
 
+export interface ITBParams {
+  period: number,
+  year: number
+}
+
 export interface IJournalDetail {
   journal_id    : number,
   journal_subid : number,

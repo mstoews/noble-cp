@@ -18,6 +18,7 @@ import {
   IReadJournalDetailsParams,
   ITransactionDate
 } from 'app/models/journals';
+import { ITrialBalance } from 'app/models';
 
 
 
@@ -84,7 +85,7 @@ export class JournalService implements OnDestroy {
     return this.httpClient.post<IJournalHeader>(url,
       {
         journal_id: journal_id,
-        status: "open"
+        status: "CLOSED"
       },
     ).pipe(shareReplay())
   }
@@ -119,6 +120,9 @@ export class JournalService implements OnDestroy {
     return this.httpClient.get<IJournalHeader[]>(url).pipe(shareReplay(), retry(2));
   }
 
+  // read_tb_by_period
+
+  
   getJournalAccountsByPeriod(period: number, periodYear: number, child: number) {
     var url = this.baseUrl + '/v1/read_journal_by_account';
     return this.httpClient.post(url, {

@@ -36,7 +36,7 @@ const imports = [
 
           <div class="text-gray-800 text-2xl mt-3">Noble Ledger Ltd.</div>
           <div class="text-gray-800  text-2xl mt-1">Income Statement</div>
-          <div class="text-gray-800  text-2xl mt-1">{{dReportDate}}</div>
+          <div class="text-gray-800  text-2xl mt-1">Reporting Date : {{dReportDate}}</div>
           
           <section class="grid grid-cols-1 mt-10 ">      
           <div class="grid grid-cols-12 gap-2">
@@ -91,8 +91,7 @@ export class IncomeStatementRptComponent  {
 
   public currentPeriod = signal(1);
   public currentYear = signal(2024);
-
-  public dReportDate = new Date();
+  public dReportDate = new Date().toISOString().split('T')[0];  
 
   // public balanceSheetReport! : Observable<IDistributionLedgerReport[]>
   public distributionService = inject(DistributionLedgerService)

@@ -2,11 +2,11 @@ import { HttpContextToken, HttpHandlerFn, HttpInterceptorFn, HttpRequest, HttpRe
 import { environment } from 'environments/environment.prod';
 import { retry, timer } from 'rxjs';
 
-export const COFFEE_API_RETRY_COUNT = new HttpContextToken(() => environment.apiRetryCount);
+export const API_RETRY_COUNT = new HttpContextToken(() => environment.apiRetryCount);
 
 export const retryInterceptor: HttpInterceptorFn = (req: HttpRequest<unknown>, next: HttpHandlerFn) => {
     // If a retry count given by a context token is available - use that - otherwise fall back to a default from config
-    const retryCount = req.context.get(COFFEE_API_RETRY_COUNT) || environment.apiRetryCount;
+    const retryCount = req.context.get(API_RETRY_COUNT) || environment.apiRetryCount;
 
     return next(req).pipe(
         retry({

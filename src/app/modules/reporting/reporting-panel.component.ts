@@ -8,7 +8,8 @@ import { TrialBalanceComponent } from './trial-balance/trial-balance.component';
 import { BalanceSheetStatementRptComponent } from './financial-statement/balance-sheet-statement-rpt.component';
 import { IncomeStatementRptComponent } from './financial-statement/income-statement-rpt.component';
 import { IncomeStatementComparisonRptComponent } from './financial-statement/income-statement-comparison.component';
-
+import { DistributedTbComponent } from './distributed-tb.component';
+import { TbGridComponent } from './tb-grid/tb-grid.component';
 
 
 const mods = [
@@ -18,6 +19,8 @@ const mods = [
     BalanceSheetStatementRptComponent,
     IncomeStatementRptComponent,
     IncomeStatementComparisonRptComponent,    
+    DistributedTbComponent,
+    TbGridComponent
 ]
 
 @Component({
@@ -57,6 +60,13 @@ export class ReportingPanelComponent {
     ngOnInit(): void {
         // Setup available panels
         this.panels = [
+
+            {
+                id: 'tb-grid',
+                icon: 'heroicons_outline:document-check',
+                title: 'TB Example Grid',
+                description: 'Distributed trial balance listing including the associated journal entries',
+            },
             {
                 id: 'trial-balance',
                 icon: 'heroicons_outline:document-check',
@@ -74,6 +84,12 @@ export class ReportingPanelComponent {
                 icon: 'heroicons_outline:document-duplicate',
                 title: 'Balance Sheet Financial Statement',
                 description: 'Balance sheet by period reporting',
+            },
+            {
+                id: 'distributed-tb',
+                icon: 'heroicons_outline:document-plus',
+                title: 'Distributed Trial Balance',
+                description: 'Tabular summary of trial balance by account',
             },
             {
                 id: 'income-statement',
