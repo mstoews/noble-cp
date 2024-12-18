@@ -412,16 +412,16 @@ export class JournalUpdateComponent
     }
 
 
-    ngAfterViewInit() {
+    public ngAfterViewInit() {
         this.setInitialValue();
     }
 
-    openDrawer() {
+    public openDrawer() {
         this.bDirty = false;
         this.drawer().open();
     }
 
-    closeDrawer() {
+    public closeDrawer() {
         this.bDirty = false;
         this.drawer().close();
     }
@@ -603,7 +603,7 @@ export class JournalUpdateComponent
         }
     }
 
-    actionSelectJournal(args: SaveEventArgs): void {
+    public actionSelectJournal(args: SaveEventArgs): void {
         if (args.requestType === "beginEdit" || args.requestType === "add") {
             const data = args.rowData as IJournalHeader;
         }
@@ -613,7 +613,7 @@ export class JournalUpdateComponent
         }
     }
 
-    actionComplete(args: DialogEditEventArgs): void {
+    public actionComplete(args: DialogEditEventArgs): void {
         console.debug("args : ", args.requestType);
         if (args.requestType === "beginEdit" || args.requestType === "add") {
             if (args.requestType === "beginEdit") {
@@ -622,7 +622,7 @@ export class JournalUpdateComponent
         }
     }
 
-    rowDrag(args: RowDragEventArgs): void {
+    public rowDrag(args: RowDragEventArgs): void {
         this.message = `rowDrag event triggered ${JSON.stringify(args.data)}`;
         console.debug(this.message);
         (args.rows as Element[]).forEach((row: Element) => {
@@ -630,7 +630,7 @@ export class JournalUpdateComponent
         });
     }
 
-    rowDrop(args: RowDragEventArgs): void {
+    public rowDrop(args: RowDragEventArgs): void {
         this.message = `Drop  ${args.originalEvent} ${JSON.stringify(args.data)}`;
         console.debug(this.message);
         const value = [];
@@ -642,7 +642,7 @@ export class JournalUpdateComponent
         this.onSaved(args.data[0]);
     }
 
-    saveArtifacts(e: any) {
+    public saveArtifacts(e: any) {
         this.bDirty = true;
         this.store.updateArtifacts(e);
         this.bDirty = false;
@@ -687,7 +687,7 @@ export class JournalUpdateComponent
         this.onChanges()
     }
 
-    onNew(e: any) {
+    public onNew(e: any) {
         const confirmation = this.fuseConfirmationService.open({
             title: "Create New Transaction",
             message:
@@ -705,7 +705,7 @@ export class JournalUpdateComponent
         });
     }
 
-    onClone(e: any) {
+    public onClone(e: any) {
         const confirmation = this.fuseConfirmationService.open({
             title: "Clone Current Transaction",
             message:
@@ -724,7 +724,7 @@ export class JournalUpdateComponent
     }
 
 
-    onCreateTemplate() {
+    public onCreateTemplate() {
         const confirmation = this.fuseConfirmationService.open({
             title: "Create Template",
             message:
@@ -743,7 +743,7 @@ export class JournalUpdateComponent
         });
     }
 
-    onAddEvidence() {
+    public onAddEvidence() {
         const dialogRef = this.matDialog.open(DndComponent, {
             width: "600px",
             data: {
@@ -770,7 +770,7 @@ export class JournalUpdateComponent
 
     }
 
-    onCloseTransaction(e: any) {
+    public onCloseTransaction(e: any) {
         const confirmation = this.fuseConfirmationService.open({
             title: "Close Transaction",
             message:
@@ -789,7 +789,7 @@ export class JournalUpdateComponent
     }
 
 
-    createEmptyForm() {
+    public createEmptyForm() {
         this.journalForm = this.fb.group({
             description: ["", Validators.required],
             amount: ["", Validators.required],
@@ -811,7 +811,7 @@ export class JournalUpdateComponent
         this.onChanges()
     }
 
-    exitWindow() {
+    public exitWindow() {
         if (this.bDirty === false) {
             this.journalForm.reset();
             this.router.navigate(["journals"]);
@@ -839,7 +839,7 @@ export class JournalUpdateComponent
         }
     }
 
-    onDeleteDetail() {
+    public onDeleteDetail() {
 
         var journalDetail = {
             journal_id: this.journal_id,
@@ -872,7 +872,7 @@ export class JournalUpdateComponent
     }
 
 
-    onDelete(args: any) {
+    public onDelete(args: any) {
         const index = (this.grid as GridComponent).getSelectedRowIndexes();
         const rowData = this.grid.getCurrentViewRecords().at(index[0]) as any;
         var journalDetail = {
@@ -888,8 +888,7 @@ export class JournalUpdateComponent
                 },
             },
         });
-
-        // Subscribe to the confirmation dialog closed action
+        
         confirmation.afterClosed().subscribe((result) => {
             // If the confirm button pressed...
             if (result === "confirmed") {
