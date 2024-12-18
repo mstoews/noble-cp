@@ -1,13 +1,11 @@
 import { Component, Input, OnInit, inject } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { JournalService } from 'app/services/journal.service';
-import { MatDrawer, MatSidenavModule } from '@angular/material/sidenav';
 import { CommonModule } from '@angular/common';
 import { DndComponent } from 'app/modules/drag-n-drop/loaddnd/dnd.component';
 import { FuseConfirmationService } from '@fuse/services/confirmation';
 import { MatDialog } from '@angular/material/dialog';
 import { MaterialModule } from 'app/services/material.module';
-
 import { GridModule } from '@syncfusion/ej2-angular-grids';
 import { JournalStore } from 'app/services/journal.store';
 
@@ -17,7 +15,6 @@ const imports = [
     ReactiveFormsModule,
     MaterialModule,
     FormsModule,
-    DndComponent,
     GridModule
 ];
 
@@ -44,16 +41,11 @@ export class TrnJournalDetailComponent implements OnInit {
     journalForm!: FormGroup;
     sTitle = 'Journal Entry Modification';
     
-
-
     glaccts$ = this.journalService.listAccounts();
-
 
     ngOnInit() {
         console.debug('JournalDetailComponent ngOnInit: ', this.key);
         const journalNo = Number(this.key)
-        //this.details$ = this.journalService.getJournalDetail(journalNo);
-        
         this.store.loadDetails(journalNo);
         this.journalForm = this.fb.group({
             journal_id: ['', Validators.required],

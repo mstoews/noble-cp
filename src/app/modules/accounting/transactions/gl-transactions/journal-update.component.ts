@@ -262,7 +262,6 @@ export class JournalUpdateComponent
     @ViewChild("singleDebitSelect", { static: true }) singleDebitSelect: MatSelect;
     @ViewChild("singleTemplateSelect", { static: true }) singleTemplateSelect!: MatSelect;
     @ViewChild("singlePartySelect", { static: true }) singlePartySelect!: MatSelect;
-
     @ViewChild('splitterInstance') splitterObj?: SplitterComponent;
 
 
@@ -281,8 +280,6 @@ export class JournalUpdateComponent
 
     ngOnInit(): void {
         this.createEmptyForm();
-
-
         this.activatedRoute.data.subscribe((data) => {
             this.journal_id = data.journal.journal_id;
             this.store.loadDetails(this.journal_id);
@@ -321,7 +318,7 @@ export class JournalUpdateComponent
                 this.accountsGrid.push(list);
             });
 
-            this.fundListSubject = this.funds$.subscribe((funds) => {
+        this.fundListSubject = this.funds$.subscribe((funds) => {
                 funds.forEach((fund) => {
                     var list = {
                         fund: fund.fund,
@@ -592,7 +589,7 @@ export class JournalUpdateComponent
             reference: ["", Validators.required],
             fund: ["", Validators.required],
         });
-        this.openDrawer();
+        //this.openDrawer();
     }
 
     public actionBegin(args: SaveEventArgs): void {

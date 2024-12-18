@@ -11,8 +11,7 @@ const mods = [MatProgressSpinnerModule, GridMenubarStandaloneComponent, GLGridCo
 
 @Component({
   
-  template: 
-  `
+  template:   `
   <div class="flex flex-col min-w-0 overflow-y-auto -px-10">
     <div class="flex-auto">
         <div class="h-full border-gray-300">
@@ -21,8 +20,8 @@ const mods = [MatProgressSpinnerModule, GridMenubarStandaloneComponent, GLGridCo
                     <ng-container>
                     
                         <grid-menubar [inTitle]="'Distribution Ledger'"> </grid-menubar>  
-                        <button mat-button id='restore' (click)='getPersistData()' color="primary" class="bg-gray-300 m-1">Get</button>
-                        <button mat-button id='restore' (click)='setPersistData()' color="primary" class="bg-gray-300 m-1">Set</button>
+                        <button mat-flat-button id='restore' (click)='getPersistData()' color="primary" class="bg-gray-300 m-1">Restore</button>
+                        <button mat-flat-button id='restore' (click)='setPersistData()' color="primary" class="bg-gray-300 m-1">Save</button>
                         @if (store.isLoading() === false) 
                         {                            
                             <gl-grid #grid id="DistTb" 
