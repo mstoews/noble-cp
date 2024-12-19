@@ -25,7 +25,6 @@ interface AuthState {
 })
 export class AuthService {
   private auth = inject(AUTH);
-  // private cache = inject(CacheService);
   private token: BehaviorSubject<string> = new BehaviorSubject(null);
   token$: Observable<string> = this.token.asObservable();
 
@@ -43,7 +42,7 @@ export class AuthService {
   }
 
   // selectors
-  user = computed(() => this.state().user);
+  public user = computed(() => this.state().user);
   authState: any;
   tokenSubject: Subject<string>;
 

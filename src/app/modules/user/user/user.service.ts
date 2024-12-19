@@ -8,7 +8,7 @@ import { CacheService } from 'app/common/cache.service'
 import { transformError } from 'app/common/common'
 
 import { environment } from 'environments/environment.prod'
-import { AuthService } from 'app/services/auth.service'
+import { AuthService } from 'app/modules/auth/auth.service'
 
 export interface IUsers {
   data: IUser[]

@@ -1,8 +1,24 @@
-import { Component, Input, input, OnInit, output, viewChild} from '@angular/core';
+import { Component, inject, Input, input, OnInit, output, viewChild} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AggregateService, ColumnMenuService, ContextMenuItem, ContextMenuService, DialogEditEventArgs, EditService, EditSettingsModel, ExcelExportService, FilterService, FilterSettingsModel, GridComponent, GridLine, GridModule, GroupService, PageService, ReorderService, ResizeService, SaveEventArgs, SearchService, SearchSettingsModel, SelectionSettingsModel, SortService, ToolbarItems, ToolbarService } from '@syncfusion/ej2-angular-grids';
 import { DropDownListComponent } from '@syncfusion/ej2-angular-dropdowns';
+import { FIRESTORE} from 'app/app.config';
+import { AuthService } from 'app/modules/auth/auth.service';
+import { toObservable } from '@angular/core/rxjs-interop';
+import { collection, query, orderBy, limit, addDoc, updateDoc } from 'firebase/firestore';
+import { collectionData } from 'rxfire/firestore';
+import { Message } from '@syncfusion/ej2-notifications';
+import { retry, filter, map, Observable, Subject, defer } from 'rxjs';
 
+
+interface Formats {
+    id: string;
+    name: string;
+    grid: string;
+    userId: string;
+    text: string;
+    created: number;
+}
 
 
 const imports = [
@@ -57,6 +73,13 @@ export class GLGridComponent implements OnInit {
     showInfo = true;
     showNavButtons = true;
     public lines: GridLine;
+
+
+    private authService = inject(AuthService);
+    private authUser$ = toObservable(this.authService.user);
+    private firestore = inject(FIRESTORE);
+
+    
     
     @Input() data: Object[];
     @Input() columns: Object[];
@@ -80,8 +103,17 @@ export class GLGridComponent implements OnInit {
     public grid = viewChild<GridComponent>('grid');
     public state?: GridComponent;
     public message?: string;
-    
+    public userId: string;
 
+    messages$ = this.getFormats().pipe(
+        // restart stream when user re-authenticates
+        retry({
+          delay: () => this.authUser$.pipe(filter((user) => !!user)),
+        })
+    );
+
+    
+    
     openTrade($event) {
         console.log('openTrade : ', $event);
     }
@@ -94,49 +126,57 @@ export class GLGridComponent implements OnInit {
             'PdfExport', 'ExcelExport', 'CsvExport', 'FirstPage', 'PrevPage',
             'LastPage', 'NextPage'];
         this.editing = { allowDeleting: true, allowEditing: true };
+        this.userId = this.authService.user()?.uid
     }
-
-    onUpdateSelection() { }
-
-    onUpdate(e: any) { }
-
-    changeType(e) { 
-         console.debug('changeType ', JSON.stringify(e));  
-    }
-
-    onDeleteSelection() {}
-
-    onDelete(e: any) { }
-
-    onRefresh() {}
 
     public setPersistData(grid: string ) 
      {
-        var persistData = this.grid().getPersistData(); // Grid persistData
-        window.localStorage.setItem(grid, persistData);        
+        var persistData = this.getPersistData('DistDB'); // Grid persistData 
+        console.log("setting persist data", persistData[0].text);       
+        this.addFormat(persistData[0].text);
         this.message = "Grid state saved.";
         return this.message;
-     }
+    }
+
+    private addFormat(persistData: string) {
+        const format = {
+          name: 'trial-balance',
+          grid: 'DistTB',
+          userId: this.userId,
+          text: persistData,
+          created: Date.now(),
+        };
+        return addDoc(collection(this.firestore, 'formats'), format);
+    }
 
     public getPersistData(grid: string) {
         console.log("resetting grid");
         this.message = "";
         let value: string = window.localStorage.getItem(grid) as string; 
-        this.state = JSON.parse(value);
-        if (this.state) {
-            this.grid().setProperties(this.state);
-            this.message = "Previous grid state restored.";
-            } else {
-            this.message = "No saved state found.";
-        }        
-        return this.message;
+        const formats = this.getFormats();
+
+        var format: Formats[]
+
+        formats.subscribe(formats => {
+            format = formats;
+        });
+        return format;
     }
 
-    
+    private getFormats() {
+        const formatsCollection = query(
+          collection(this.firestore, 'formats'),
+          orderBy('created', 'desc'),
+          limit(50)
+        );
+  
+      return collectionData(formatsCollection, { idField: 'id' }).pipe(
+        map((formats) => [...formats].reverse())
+      ) as Observable<Formats[]>;
+    }
+
 
     onAdd() { }
-
-    onDoubleClicked(args: any) { }
 
     onFocusedRowChanged(e: any) { 
         this.onFocusChanged.emit(e);
