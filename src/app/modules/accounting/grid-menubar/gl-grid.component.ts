@@ -1,29 +1,37 @@
 import { Component, inject, Input, input, OnInit, output, viewChild} from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { AggregateService, ColumnMenuService, ContextMenuItem, ContextMenuService, DialogEditEventArgs, EditService, EditSettingsModel, ExcelExportService, FilterService, FilterSettingsModel, GridComponent, GridLine, GridModule, GroupService, PageService, ReorderService, ResizeService, SaveEventArgs, SearchService, SearchSettingsModel, SelectionSettingsModel, SortService, ToolbarItems, ToolbarService } from '@syncfusion/ej2-angular-grids';
+import { AggregateService, ColumnMenuService, ContextMenuItem, ContextMenuService, DialogEditEventArgs, EditService, EditSettingsModel, ExcelExportService, FilterService, FilterSettingsModel, GridComponent, GridLine, GridModule, GroupService, PageService, PdfExportService, ReorderService, ResizeService, SaveEventArgs, SearchService, SearchSettingsModel, SelectionSettingsModel, SortService, ToolbarItems, ToolbarService } from '@syncfusion/ej2-angular-grids';
 import { DropDownListComponent } from '@syncfusion/ej2-angular-dropdowns';
-import { FIRESTORE} from 'app/app.config';
 import { AuthService } from 'app/modules/auth/auth.service';
-import { toObservable } from '@angular/core/rxjs-interop';
-import { collection, query, orderBy, limit, addDoc, updateDoc } from 'firebase/firestore';
-import { collectionData } from 'rxfire/firestore';
-import { Message } from '@syncfusion/ej2-notifications';
-import { retry, filter, map, Observable, Subject, defer } from 'rxjs';
+import { Observable } from 'rxjs';
+import { GridSettingsService, IGridSettingsModel } from 'app/services/grid.settings.service';
+import { ReactiveFormsModule, FormsModule, FormBuilder } from '@angular/forms';
+import { MaterialModule } from 'app/services/material.module';
+import { MatDrawer } from '@angular/material/sidenav';
 
 
-interface Formats {
-    id: string;
-    name: string;
-    grid: string;
-    userId: string;
-    text: string;
-    created: number;
-}
-
-
-const imports = [
+const mods = [
     CommonModule,
+    MaterialModule,
+    ReactiveFormsModule,
+    FormsModule,
     GridModule
+];
+
+const providers = [
+    ReorderService, 
+    PdfExportService, 
+    ExcelExportService, 
+    ContextMenuService, 
+    SortService, 
+    PageService, 
+    ResizeService, 
+    FilterService, 
+    ToolbarService, 
+    EditService, 
+    AggregateService, 
+    ColumnMenuService,
+    SearchService
 ];
 
 const keyExpr = ["account", "child"];
@@ -31,9 +39,11 @@ const keyExpr = ["account", "child"];
 @Component({
     standalone: true,
     selector: 'gl-grid',
-    imports: [imports],
-    template: `
-    <ejs-grid   #grid id="GlGrid"  class="e-grid mt-3 h-[calc(100vh)-100px]"                
+    imports: [mods],
+    template: `    
+    <mat-drawer-container class="flex-col">        
+    <ng-container >
+        <ejs-grid  #grid id="grid-parent"  class="e-grid mt-3 h-[calc(100vh)-100px]"                
                 [dataSource]="data" 
                 [columns]="columns"
                 allowSorting='true'
@@ -47,15 +57,20 @@ const keyExpr = ["account", "child"];
                 [pageSettings]='pageSettings'                 
                 [enableStickyHeader]='true' 
                 [enablePersistence]='false'
-                [allowGrouping]="true"
+                [enableStickyHeader]=true
+                [allowGrouping]="false"
                 [allowResizing]='true' 
                 [allowReordering]='true' 
                 [allowExcelExport]='true' 
+                [allowPdfExport]='true' 
                 [contextMenuItems]="contextMenuItems" 
                 (actionBegin)='actionBegin($event)' 
                 (actionComplete)='actionComplete($event)'>
-    </ejs-grid>`,
-    providers: [ExcelExportService, GroupService, SearchService, ContextMenuService, ReorderService, SortService, GroupService, PageService, ResizeService, FilterService, ToolbarService, EditService, AggregateService, ColumnMenuService],
+        </ejs-grid>
+        </ng-container>
+    </mat-drawer-container>
+    `,
+    providers: [providers],
     styles: [
         `    .e-grid {
              font-family: cursive;
@@ -65,6 +80,7 @@ const keyExpr = ["account", "child"];
     ]
 })
 export class GLGridComponent implements OnInit {
+    gridForm: any;
             
     public selectedItemKeys: any[] = [];
     public bDirty: boolean = false;
@@ -73,14 +89,10 @@ export class GLGridComponent implements OnInit {
     showInfo = true;
     showNavButtons = true;
     public lines: GridLine;
-
-
     private authService = inject(AuthService);
-    private authUser$ = toObservable(this.authService.user);
-    private firestore = inject(FIRESTORE);
+    private gridSettingsService = inject(GridSettingsService);
 
-    
-    
+
     @Input() data: Object[];
     @Input() columns: Object[];
 
@@ -88,6 +100,7 @@ export class GLGridComponent implements OnInit {
     public onFocusChanged = output<Object>();
     public contextMenuItems: ContextMenuItem[];
     public editing: EditSettingsModel;
+    public drawer = viewChild<MatDrawer>('drawer'); 
 
     public formatoptions: Object;
     public initialSort: Object;
@@ -101,19 +114,13 @@ export class GLGridComponent implements OnInit {
     public filterSettings: FilterSettingsModel;
 
     public grid = viewChild<GridComponent>('grid');
+    private fb = inject(FormBuilder);
     public state?: GridComponent;
     public message?: string;
     public userId: string;
-
-    messages$ = this.getFormats().pipe(
-        // restart stream when user re-authenticates
-        retry({
-          delay: () => this.authUser$.pipe(filter((user) => !!user)),
-        })
-    );
-
+    sTitle: any;
     
-    
+
     openTrade($event) {
         console.log('openTrade : ', $event);
     }
@@ -121,60 +128,113 @@ export class GLGridComponent implements OnInit {
     ngOnInit() {
         this.initialDatagrid();
         this.lines = 'Both';
-        this.contextMenuItems = ['AutoFit', 'AutoFitAll', 'SortAscending', 'SortDescending',
-            'Copy', 'Edit', 'Delete', 'Save', 'Cancel',
-            'PdfExport', 'ExcelExport', 'CsvExport', 'FirstPage', 'PrevPage',
-            'LastPage', 'NextPage'];
+        this.contextMenuItems = [
+            'AutoFit',
+            'AutoFitAll',
+            'SortAscending',
+            'SortDescending',
+            'Copy',            
+            'Save',
+            'Cancel',
+            'PdfExport',
+            'ExcelExport',
+            'CsvExport',
+            'FirstPage',
+            'PrevPage',
+            'LastPage',
+            'NextPage',
+            'Group',
+            'Ungroup'
+        ]
         this.editing = { allowDeleting: true, allowEditing: true };
         this.userId = this.authService.user()?.uid
+        this.createEmptyForm();
+
     }
 
-    public setPersistData(grid: string ) 
+    public readSettings() {
+        return this.gridSettingsService.readAll();
+    }
+
+    public savePersistData(gridSettings: IGridSettingsModel) 
      {
-        var persistData = this.getPersistData('DistDB'); // Grid persistData 
-        console.log("setting persist data", persistData[0].text);       
-        this.addFormat(persistData[0].text);
-        this.message = "Grid state saved.";
-        return this.message;
+        var persistData = this.grid().getPersistData(); // Grid persistData
+        gridSettings.userId = this.userId;
+        gridSettings.settings = persistData;
+        this.addFormatSettings(gridSettings); // Grid persistData 
+        console.log("Grid state saved.");
     }
 
-    private addFormat(persistData: string) {
-        const format = {
-          name: 'trial-balance',
-          grid: 'DistTB',
-          userId: this.userId,
-          text: persistData,
-          created: Date.now(),
-        };
-        return addDoc(collection(this.firestore, 'formats'), format);
+    public restorePersistData(settingsName: string) {
+        const formats = this.gridSettingsService.readSettingsName(settingsName);
+        formats.subscribe(format => {            
+            var settings = format[0].settings;
+            if(settings) {
+                this.grid().setProperties(JSON.parse(settings));
+            }
+        });        
     }
 
-    public getPersistData(grid: string) {
-        console.log("resetting grid");
-        this.message = "";
-        let value: string = window.localStorage.getItem(grid) as string; 
-        const formats = this.getFormats();
-
-        var format: Formats[]
-
-        formats.subscribe(formats => {
-            format = formats;
+    onExportExcel() {
+        console.log('Excel');
+        const fileName = new Date().toLocaleDateString() + '.xlsx'; 
+        this.grid()!.excelExport({
+            fileName: fileName, header: {
+                headerRows: 7,
+                rows: [
+                    { cells: [{ colSpan: 4, value: "Company Name", style: { fontColor: '#03396c', fontSize: 20, hAlign: 'Left', bold: true, } }] },
+                    { cells: [{ colSpan: 4, value: "Trial Balance", style: { fontColor: '#03396c', fontSize: 20, hAlign: 'Left', bold: true, } }] },
+                ]
+            },
+            footer: {
+                footerRows: 4,
+                rows: [
+                    { cells: [{ colSpan: 4, value: "", style: { hAlign: 'Center', bold: true } }] },
+                    { cells: [{ colSpan: 4, value: "", style: { hAlign: 'Center', bold: true } }] }
+                ]
+            },
         });
-        return format;
     }
 
-    private getFormats() {
-        const formatsCollection = query(
-          collection(this.firestore, 'formats'),
-          orderBy('created', 'desc'),
-          limit(50)
-        );
-  
-      return collectionData(formatsCollection, { idField: 'id' }).pipe(
-        map((formats) => [...formats].reverse())
-      ) as Observable<Formats[]>;
+    onExportCSV() {
+        console.log('Refresh');
+        this.grid()!.csvExport();
     }
 
+    onExportPDF() {
+        console.log('Refresh');
+        this.grid()!.pdfExport({
+            pageOrientation: 'Landscape', pageSize: 'A4', fileName: 'TB-31-01-2024.pdf', header: {
+                fromTop: 0,
+                height: 120,
+                contents: [
+                    {
+                        type: 'Text',
+                        position: { x: 10, y: 50 },
+                        style: { textBrushColor: '#000000', fontSize: 30 },
+                    },
+                ]
+            }
+        });
+
+    }
+
+
+
+    public readAllSettings(): Observable<IGridSettingsModel[]> {         
+        return this.gridSettingsService.readAll();
+    }
+
+    private addFormatSettings(settings: IGridSettingsModel) {        
+        this.gridSettingsService.create(settings);
+    }
+
+    
+    private getFormatByName(userId: string) {        
+        return this.gridSettingsService.readUserId(userId);
+    }
+
+    
 
     onAdd() { }
 
@@ -213,4 +273,48 @@ export class GLGridComponent implements OnInit {
             }
         }
     }
+
+    createEmptyForm() {
+        this.gridForm = this.fb.group({
+            settings_name: [''],
+            grid_name: [''],
+        });
+    }
+
+    public openDrawer() {
+        const opened = this.drawer().opened;
+        if (opened !== true) {
+            this.drawer().toggle();
+        } else {
+            return;
+        }
+    }
+
+    closeDrawer() {
+        const opened = this.drawer().opened;
+        if (opened === true) {
+            this.drawer().toggle();
+        } else {
+            return;
+        }
+    }
+
+    onUpdate(e: any) {        
+        const rawData = {
+            settings_name: this.gridForm.value.settings_name,
+            grid_name: this.gridForm.value.grid_name,            
+        };
+
+        this.closeDrawer();
+    }
+
+    onCreate($event: any) {
+        throw new Error('Method not implemented.');
+        }
+    
+    onDelete($event: any) {
+        throw new Error('Method not implemented.');
+    }
+    
+
 }

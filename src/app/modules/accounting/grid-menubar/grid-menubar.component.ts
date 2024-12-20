@@ -51,6 +51,12 @@ let modules = [MatToolbarModule, MatIconModule, MatButtonModule, CommonModule];
       </button>
     }  
 
+    @if (showSettings()) {
+      <button mat-icon-button  (click)="onOpenSettings()" color="primary" class="m-1 bg-gray-200 md:visible" matTooltip="Export CSV"  aria-label="CSV" >
+        <span class="e-icons text-bold e-settings"></span>
+      </button>
+    }  
+
     @if (showBack()) {
       <button (click)="onBack()" color="primary" class="m-1 bg-gray-200 md:visible"  mat-icon-button  matTooltip="Back"  aria-label="Back"  >
         <span class="e-icons e-chevron-left"></span>
@@ -66,6 +72,7 @@ export class GridMenubarStandaloneComponent {
   public exportXL = output<string>();
   public exportPRD = output<string>();
   public exportCSV = output<string>();
+  public openSettings = output<string>();
   public print = output<string>();
   public back = output<string>();
 
@@ -76,6 +83,7 @@ export class GridMenubarStandaloneComponent {
   public showExportPDF = input<boolean>(true);
   public showExportCSV = input<boolean>(true);
   public showPrint = input<boolean>(true);
+  public showSettings = input<boolean>(true);
   public period = output<string>();
 
   public changePeriod() {
@@ -100,6 +108,10 @@ export class GridMenubarStandaloneComponent {
 
   public onCSV() {
     this.exportCSV.emit('csv');
+  }
+
+  public onOpenSettings() {
+    this.openSettings.emit('settings');
   }
 
 }

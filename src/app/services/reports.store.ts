@@ -14,10 +14,12 @@ import {
   import { ITrialBalance } from 'app/models';
   import { ReportService } from './reports.service';
   import { ITBParams } from 'app/models/journals';
+import { GridSettingsService, IGridSettingsModel } from './grid.settings.service';
   
   
   export interface ReportStateInterface {
     tb: ITrialBalance[];
+    settings: IGridSettingsModel[];
     isLoading: boolean;
     error: string | null;    
   }
@@ -25,11 +27,15 @@ import {
   export const ReportStore = signalStore( { protectedState: false }, 
      withState<ReportStateInterface>({
       tb: [],
+      settings: [],
       error: null,
       isLoading: false,
     }),
     withComputed((state) => ({ })),
-        withMethods((state, reportService = inject(ReportService)) => ({     
+        withMethods((state, 
+          reportService = inject(ReportService),
+          settingsService = inject(GridSettingsService),
+        ) => ({     
         loadTB: rxMethod<ITBParams>(
             pipe(
             tap(() => patchState(state, { isLoading: true })),
@@ -42,10 +48,22 @@ import {
                 }));
             }))
         ),
+        loadSettings: rxMethod<void>(
+          pipe(
+          tap(() => patchState(state, { isLoading: true })),
+          switchMap((value) => {
+              return settingsService.readAll().pipe(
+              tapResponse({
+                  next: (setting) => patchState(state, { settings: setting }),
+                  error: console.error,
+                  finalize: () => patchState(state, { isLoading: false }),
+              }));
+          }))
+      ),
     })),
     withHooks({
       onInit(store) {        
-        // store.loadTB({ period: 1, year: 2024 });
+        store.loadSettings();
       },
     }) 
   );

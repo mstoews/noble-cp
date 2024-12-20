@@ -38,7 +38,7 @@ export class ReportingPanelComponent {
     drawerMode: 'over' | 'side' = 'side';
     drawerOpened: boolean = true;
     panels: any[] = [];
-    selectedPanel: string = 'trial-balance';
+    selectedPanel: string = 'distributed-tb';
     private _unsubscribeAll: Subject<any> = new Subject<any>();
 
     /**
@@ -60,6 +60,12 @@ export class ReportingPanelComponent {
     ngOnInit(): void {
         // Setup available panels
         this.panels = [
+            {
+                id: 'distributed-tb',
+                icon: 'heroicons_outline:document-plus',
+                title: 'Distributed Trial Balance',
+                description: 'Tabular summary of trial balance by account',
+            },
 
             {
                 id: 'tb-grid',
@@ -85,12 +91,7 @@ export class ReportingPanelComponent {
                 title: 'Balance Sheet Financial Statement',
                 description: 'Balance sheet by period reporting',
             },
-            {
-                id: 'distributed-tb',
-                icon: 'heroicons_outline:document-plus',
-                title: 'Distributed Trial Balance',
-                description: 'Tabular summary of trial balance by account',
-            },
+            
             {
                 id: 'income-statement',
                 icon: 'heroicons_outline:currency-dollar',
