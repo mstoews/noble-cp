@@ -5,7 +5,7 @@ import { CommonModule } from '@angular/common';
 import { MaterialModule } from 'app/services/material.module';
 
 import { JournalStore } from 'app/services/journal.store';
-import { Router } from '@angular/router';
+import { Router, NavigationStart } from '@angular/router';
 
 import { GridMenubarStandaloneComponent } from '../../grid-menubar/grid-menubar.component';
 import { GLGridComponent } from '../../grid-menubar/gl-grid.component';
@@ -40,19 +40,17 @@ export class JournalEntryComponent implements OnInit, OnDestroy {
     public sGridTitle = 'Journal Entry';
 
     columns = [
-        { field: 'journal_id', headerText: 'Journal ID', isPrimaryKey: true, isIdentity: true, visible: true, width: 100 },
-        { field: 'type', headerText: 'Type', width: 100 },
-        { field: 'booked', headerText: 'Booked', width: 100,  displayAsCheckbox: true},
+        { field: 'journal_id', headerText: 'Journal ID', isPrimaryKey: true, isIdentity: true, visible: true, width: 80 },
+        { field: 'type', headerText: 'Type', width: 60 },
+        { field: 'booked', headerText: 'Booked', width: 80, type: Boolean,  displayAsCheckbox: true },
         { field: 'transaction_date', headerText: 'Date', width: 100, format: 'M/dd/yyyy' },
         { field: 'description', headerText: 'Description', width: 200 },
-        { field: 'amount', headerText: 'Amount', width: 80 , format: 'N2', textAlign: 'Right' },
-        { field: 'period', headerText: 'Prd', width: 100, visible: false },
+        { field: 'period', headerText: 'Prd', width: 50, visible: true },
+        { field: 'amount', headerText: 'Amount', width: 80 , format: 'N2', textAlign: 'Right' },        
         { field: 'period_year', headerText: 'Yr', width: 100, visible: false },
         { field: 'create_date', headerText: 'Created', width: 100, format: 'M/dd/yyyy' , visible: false},
         { field: 'create_user', headerText: 'User', width: 100 , visible: false},
-        { field: 'party_id', headerText: 'Party', width: 100, visible: false }
-        
-        
+        { field: 'party_id', headerText: 'Party', width: 100, visible: false }  
     ];
 
     /*
@@ -65,13 +63,15 @@ export class JournalEntryComponent implements OnInit, OnDestroy {
     <e-column  field="description" headerText="Description" width="200"></e-column>                                    
     <e-column  field="create_date" width='120' [format]='formatoptions' headerText="Created" type="dateTime"></e-column>                                                        
     <e-column  field="create_user" width='120' headerText="User" type="string"></e-column>             
+    <e-column  field="period" width='80' headerText="Prd" type="numeric"></e-column>             
+    <e-column  field="period_year" width='80' headerText="Year" type="numeric"></e-column>             
     <e-column  field="party_id" width='120' headerText="Party" type="string"></e-column>             
     */
 
 
 
     ngOnInit() {
-    
+        
     }
 
     selectedRow($event) {

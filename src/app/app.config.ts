@@ -13,6 +13,12 @@ import { mockApiServices } from 'app/mock-api';
 import { environment } from 'environments/environment.prod';
 import { InjectionToken } from '@angular/core';
 import { authTokenInterceptor } from './auth.token.interceptor';
+import { provideStore } from '@ngrx/store';
+import { provideToastr} from 'ngx-toastr';
+import  {provideEffects} from '@ngrx/effects';
+import  {provideStoreDevtools} from '@ngrx/store-devtools';
+import { pipe, tap } from 'rxjs';
+
 
 import {
   Firestore,
@@ -31,6 +37,9 @@ import { initializeApp } from 'firebase/app';
 import { jsonCachingInterceptor } from "./caching-interceptor";
 import { loggingInterceptor } from "./logging-interceptor";
 import { retryInterceptor } from "./retry-interceptor";
+import { TemplateReducer } from './store/Template.Reducer';
+import { template } from 'lodash';
+import { templateEffects } from './store/Template.Effects';
 
 const app = initializeApp(environment.firebase);
 
@@ -117,6 +126,12 @@ export const appConfig: ApplicationConfig = {
 
     // Transloco Config
     provideTransloco(),
+    provideStore({
+       'tpl': TemplateReducer,  }),
+    provideEffects([templateEffects]),
+    provideToastr(),
+    provideStoreDevtools({maxAge: 25}),
+  
     // Fuse
     provideIcons(),
     provideFuse({
@@ -165,4 +180,5 @@ export const appConfig: ApplicationConfig = {
 
     ],
 };
+
 

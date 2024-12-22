@@ -252,7 +252,7 @@ export class EntryWizardComponent implements OnInit, OnDestroy, AfterViewInit {
 
         });
 
-        this.templateService.readTemplates().pipe(takeUntil(this._onDestroy)).subscribe((templates) => {
+        this.templateService.read().pipe(takeUntil(this._onDestroy)).subscribe((templates) => {
             this.templateList = templates;
             this.templateFilter.next(this.templateList.slice());
         });

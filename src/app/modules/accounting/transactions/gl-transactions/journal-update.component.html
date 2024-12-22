@@ -4,11 +4,11 @@
         </grid-menubar>
     </div>
 
-    @defer (on viewport; on timer(5s)) {    
+    @defer (on viewport; on timer(1s)) {    
     <mat-drawer-container id="target"
                           class=" control-section default-splitter flex flex-col overflow-auto h-[calc(100vh-14rem)] ml-5 mr-5"
-                          [hasBackdrop]="'false'">
-        <section class="pane1">
+                          [hasBackdrop]="'false'">        
+         <section class="pane1">            
             <mat-drawer class="w-full md:w-[450px]" #drawer [opened]="false" mode="over" [position]="'end'" [disableClose]="true">
                 <mat-tab-group>
                     <mat-tab label="Details">
@@ -149,8 +149,7 @@
 
                                 <button mat-icon-button color="primary"
                                         class="bg-gray-200 fill-slate-100  hover:bg-slate-400 ml-1"
-                                        (click)="closeDrawer()" matTooltip="Cancel" aria-label="hovered over">
-                                    <!-- <mat-icon [svgIcon]="'mat_outline:close'"></mat-icon> -->
+                                        (click)="closeDrawer()" matTooltip="Cancel" aria-label="hovered over">                                    
                                     <span class="e-icons e-circle-close"></span>
                                 </button>
 
@@ -204,7 +203,7 @@
 
                                     <ejs-grid id="grid-journal-list" [dataSource]='store.gl()'
                                               [selectionSettings]="selectionOptions" [editSettings]='editSettings'
-                                              [searchSetting]="searchOptions" [allowFiltering]='false'
+                                              [searchSetting]="searchOptions" [allowFiltering]='true'
                                               [enableStickyHeader]=true [toolbar]='toolbarOptions' allowSorting='true'
                                               showColumnMenu='true' (rowSelected)="onRowSelected($event)"
                                               (actionBegin)="actionBegin($event)" [gridLines]="'Both'">
@@ -235,6 +234,7 @@
                     <e-pane>
                         <ng-template #content>
                             <div id ='vertical_splitter' class="vertical_splitter">
+                                
                                 <div>
                                     <div class="content">
                                         @if (journal_id > 0) {
@@ -246,6 +246,7 @@
                                                 General Ledger
                                             </div>
                                         }
+                                        @defer () {
                                         <form [formGroup]="journalForm">
                                             <section class="flex flex-col md:flex-row">
                                                 @if (templateFilter | async; as templates ) {
@@ -319,12 +320,13 @@
                                                         </div>
                                                     }
                                                     <mat-form-field class="mt-1 ml-1 mr-1 grow">
-                                                        <input type="text" class="text-left" matInput placeholder="Reference Number" formControlName="invoice_no" />
+                                                        <input type="text" class="text-left" matInput placeholder="Reference/Invoice" formControlName="invoice_no" />
                                                         <mat-icon class="icon-size-5" matPrefix [svgIcon]="'heroicons_solid:clipboard-document-check'"></mat-icon>
                                                     </mat-form-field>
                                                 }
                                             </section>
                                         </form>
+                                                                                
                                         <div mat-dialog-actions class="gap-2 mb-3">
                                             @if (bHeaderDirty === true) {
                                                 <button mat-icon-button color="primary"
@@ -378,8 +380,8 @@
                                             </button>
             
                                         </div>       
-                                        @defer () {
-                                            <div class="flex flex-col">
+                                        
+                                        <div class="flex flex-col">
                                                 <div class="text-3xl m-1 text-gray-100 p-2 bg-slate-600 rounded-md">Details</div>
                                                 <div class="flex flex-col h-full ml-1 mr-1 text-gray-800">
                                                     <ejs-grid #grid [dataSource]='store.details()'
@@ -422,7 +424,7 @@
                                                         </e-aggregates>
                                                     </ejs-grid>
                                                 </div>
-                                            </div>
+                                        </div>
                                         }
                                             
                                         @placeholder (minimum 1000ms) {
@@ -506,7 +508,7 @@
                    
                 </e-panes>
             </ejs-splitter>
-        </section>
+        </section>        
     </mat-drawer-container>
     }
     @placeholder(minimum 1000ms) {

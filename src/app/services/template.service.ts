@@ -22,8 +22,8 @@ export class TemplateService {
     }
 
     read() {
-      var url = this.baseUrl + '/v1/read_templates';
-      return this.httpClient.get<IJournalTemplate[]>(url).pipe(shareReplay())
+      var url = this.baseUrl + '/v1/read_journal_template';
+      return this.httpClient.get<IJournalTemplate[]>(url);
     }
 
     delete(template_id: string){

@@ -19,6 +19,7 @@ import {
     IJournalDetailTemplate,
     IJournalHeader,
     IJournalHeaderUpdate,
+    IJournalTemplate,
     IPeriodParam
 } from 'app/models/journals';
 import { JournalService } from '../services/journal.service';
@@ -26,7 +27,8 @@ import { JournalService } from '../services/journal.service';
 import { IParty } from 'app/models/party';
 import { IPeriod } from '../services/periods.service';
 import { ISubType } from '../services/subtype.service';
-import { IFunds, ITrialBalance } from 'app/models';
+import { IFunds, IJournalParams, ITrialBalance } from 'app/models';
+
 
 
 export interface JournalStateInterface {
@@ -35,6 +37,7 @@ export interface JournalStateInterface {
   ar: IJournalHeader[];
   tb: ITrialBalance[];
   details: IJournalDetail[];
+  templates: IJournalTemplate[];
   templateDetails: IJournalDetailTemplate[];
   accounts: IAccounts[];
   account_type: IType[];
@@ -50,7 +53,8 @@ export interface JournalStateInterface {
 }
 
 export const JournalStore = signalStore(
-  { protectedState: false }, withState<JournalStateInterface>({
+  { protectedState: false },
+   withState<JournalStateInterface>({
     gl: [],
     ap: [],
     ar: [],
@@ -59,6 +63,7 @@ export const JournalStore = signalStore(
     accounts: [],
     account_type: [],
     templateDetails: [],
+    templates: [],
     party: [],
     period: [],
     sub_type: [],
@@ -155,6 +160,22 @@ export const JournalStore = signalStore(
         })
       )
     ),
+    createJournalTemplate: rxMethod<IJournalParams>(
+      pipe(
+        tap(() => patchState(state, { isLoading: true })),
+        switchMap((value) => {
+          return journalService.createJournalTemplate(value).pipe(
+            tapResponse({
+              next: (template) => {
+                patchState(state, { templates: [...state.templates(), template] });
+              },
+              error: console.error,
+              finalize: () => patchState(state, { isLoading: false }),
+            })
+          );
+        })
+      )
+    ),
     deleteJournalDetail: rxMethod<IJournalDetailDelete>(
       pipe(
         tap(() => patchState(state, { isLoading: true })),
@@ -186,20 +207,21 @@ export const JournalStore = signalStore(
         })
       )
     ),
-    // loadTB: rxMethod<IPeriodParam>(
-    //   pipe(
-    //     tap(() => patchState(state, { isLoading: true })),
-    //     switchMap((value) => {
-    //       return journalService.readTbByPeriod(value).pipe(
-    //         tapResponse({
-    //           next: (tb) => patchState(state, { tb: tb }),
-    //           error: console.error,
-    //           finalize: () => patchState(state, { isLoading: false }),
-    //         })
-    //       );
-    //     })
-    //   )
-    // ),
+    loadTemplates: rxMethod <void>(
+      pipe(
+        tap(() => patchState(state, { isLoading: true })),
+        exhaustMap(()  => {
+          return journalService.readJournalTemplate().pipe(
+            tapResponse({
+              next: (templates) => patchState(state, { templates: templates }),
+              error: console.error,
+              finalize: () => patchState(state, { isLoading: false }),
+            })
+          );
+        })
+      )
+    ),
+    
     loadTemplateDetails: rxMethod<string>(
       pipe(
         tap(() => patchState(state, { isLoading: true })),
@@ -348,8 +370,9 @@ export const JournalStore = signalStore(
   })),  
   withHooks({
     onInit(store) {
+      store.loadTemplates();
       store.loadJournals();
-      store.loadAccounts();
+      store.loadAccounts();      
       store.loadPeriod('Period');
       store.loadYear('Year');
     },

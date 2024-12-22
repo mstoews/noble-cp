@@ -18,7 +18,7 @@ import {
   IReadJournalDetailsParams,
   ITransactionDate
 } from 'app/models/journals';
-import { ITrialBalance } from 'app/models';
+import { IJournalParams, ITrialBalance } from 'app/models';
 
 
 
@@ -36,8 +36,16 @@ export class JournalService implements OnDestroy {
 
   readJournalTemplate() {
     var url = this.baseUrl + '/v1/read_journal_template';
-    return this.httpClient.get<IJournalTemplate>(url).pipe(shareReplay());
+    return this.httpClient.get<IJournalTemplate[]>(url).pipe(shareReplay());
   }
+
+
+
+  createJournalTemplate(params: IJournalParams) {
+    var url = this.baseUrl + '/v1/create_journal_template';
+    return this.httpClient.post<IJournalTemplate>(url, params).pipe(shareReplay());
+  }
+
 
   readHttpLoadArtifactsByJournalId(journal_id: number) {
     var url = this.baseUrl + '/v1/read_artifacts_by_jrn_id/' + journal_id;

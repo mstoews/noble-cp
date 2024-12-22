@@ -6,6 +6,11 @@ import { GridMenubarStandaloneComponent } from '../../grid-menubar/grid-menubar.
 import { MaterialModule } from 'app/services/material.module';
 import { TemplateStore } from 'app/services/journal-template.store';
 import { ExcelExportService, GridModule, PdfExportService } from '@syncfusion/ej2-angular-grids';
+import { Store } from '@ngrx/store';
+import { getTemplates } from 'app/store/Template.Selector';
+import { loadTemplates } from 'app/store/Template.Action';
+import { IJournalTemplate } from 'app/models/journals';
+import { Observable } from 'rxjs';
 
 const imports = [
     CommonModule,
@@ -30,6 +35,10 @@ export class JournalTemplateComponent {
     public bOpenDetail: boolean = false;
 
     templateStore = inject(TemplateStore);
+    store = inject(Store);
+    
+
+    // templateStore = inject(TemplateStore);
     accounts$ = this.accountService.readChildren(); // retrieves only the child accounts which can be used for booking
 
     sTitle = 'Journal Template';
@@ -44,17 +53,24 @@ export class JournalTemplateComponent {
     showInfo = true;
     showNavButtons = true;
     public formatoptions: Object;
+    public template_list: IJournalTemplate[] = [];
 
     drawOpen: 'open' | 'close' = 'open';
 
     customizeTooltip = (pointsInfo: { originalValue: string; }) => ({ text: `${parseInt(pointsInfo.originalValue)}%` });
     journalForm!: FormGroup;
     keyField: any;
-
+    
     async ngOnInit() {
+        this.store.dispatch(loadTemplates());    
+        this.store.select(getTemplates).subscribe((list) => {
+            this.template_list = list;
+        });
+
         const dDate = new Date();
         this.currentDate = dDate.toISOString().split('T')[0];
         this.formatoptions = { type: 'dateTime', format: 'M/dd/yyyy' }
+        
     }
 
     onCellDoubleClicked(e: any) {

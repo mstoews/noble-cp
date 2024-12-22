@@ -20,6 +20,8 @@ import {
 } from "@angular/forms";
 
 import {
+    debounceTime,
+    of,
     ReplaySubject,
     Subject,
     Subscription,
@@ -42,7 +44,7 @@ import { DropDownListAllModule } from "@syncfusion/ej2-angular-dropdowns";
 import { AUTH } from "app/app.config";
 import { MatSelect } from "@angular/material/select";
 import { NgxMatSelectSearchModule } from "ngx-mat-select-search";
-import { IDropDownAccounts, IDropDownAccountsGridList, IFunds} from "app/models";
+import { IDropDownAccounts, IDropDownAccountsGridList, IFunds, IJournalParams} from "app/models";
 
 import {
     ClickEventArgs,
@@ -70,7 +72,7 @@ import {
     IJournalDetail, IJournalDetailTemplate,
     IJournalHeader, IJournalHeaderUpdate, IJournalTemplate,
 } from "app/models/journals";
-import { Router, ActivatedRoute } from "@angular/router";
+import { Router, ActivatedRoute, NavigationStart } from "@angular/router";
 import { Location } from "@angular/common";
 import { MatDrawer } from "@angular/material/sidenav";
 import { JournalStore } from "app/services/journal.store";
@@ -145,7 +147,7 @@ const imports = [
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class JournalUpdateComponent
-    implements OnInit, OnDestroy, AfterViewInit {
+    implements OnInit, OnDestroy, AfterViewInit, AfterViewInit {
     [x: string]: any;
 
     @Output() notifyDrawerClose: EventEmitter<any> = new EventEmitter();
@@ -263,51 +265,28 @@ export class JournalUpdateComponent
     @ViewChild("singleTemplateSelect", { static: true }) singleTemplateSelect!: MatSelect;
     @ViewChild("singlePartySelect", { static: true }) singlePartySelect!: MatSelect;
     @ViewChild('splitterInstance') splitterObj?: SplitterComponent;
+    
+    subscription: Subscription;
 
 
-    public onCreated() {
-        let splitterObj1 = new Splitter({
-            height: '100%',
-            separatorSize: 3,
-            paneSettings: [
-                { size: '65%' },
-                { size: '35%' }
-            ],
-            orientation: 'Vertical'
-        });
-        splitterObj1.appendTo('#vertical_splitter');
-    }
+    constructor() {
 
-    ngOnInit(): void {
-        this.createEmptyForm();
-        this.activatedRoute.data.subscribe((data) => {
-            this.journal_id = data.journal.journal_id;
-            this.store.loadDetails(this.journal_id);
-            this.store.loadArtifactsByJournalId(this.journal_id);
-
-            this.journalData = {
-                journal_id: data.journal.journal_id,
-                description: data.journal.description,
-                booked: data.journal.booked,
-                booked_date: data.journal.booked_date,
-                booked_user: data.journal.booked_user,
-                create_date: data.journal.create_date,
-                create_user: data.journal.create_user,
-                period: data.journal.period,
-                period_year: data.journal.period_year,
-                transaction_date: data.journal.transaction_date,
-                status: data.journal.status,
-                type: data.journal.type,
-                sub_type: data.journal.sub_type,
-                amount: data.journal.amount,
-                template_name: data.journal.template_name,
-                party_id: data.journal.party_id,
-                invoice_no: data.journal.invoice_no,
-            };
-            this.createEmptyDetailForm();
-            this.onChanges();
+        var list = of(this.store.templates());
+        
+        list.subscribe((templates) => {
+            this.templateList = templates;
+            this.templateFilter.next(this.templateList.slice());
         });
 
+        this.templateService.read().pipe(takeUntil(this._onDestroy)).subscribe((templates) => {
+             this.templateList = templates;
+             this.templateFilter.next(this.templateList.slice());
+        });
+
+        this.partyService.read().pipe(takeUntil(this._onDestroy)).subscribe((party) => {
+            this.partyList = party;
+            this.partyFilter.next(this.partyList.slice());
+        });
 
         this.accountsListSubject = this.dropDownChildren$.subscribe((accounts) => {
             accounts.forEach((acct) => {
@@ -329,43 +308,47 @@ export class JournalUpdateComponent
             });
         });
 
-        this.templateService.readTemplates().pipe(takeUntil(this._onDestroy)).subscribe((templates) => {
-            this.templateList = templates;
-            this.templateFilter.next(this.templateList.slice());
+        // this.subscription = this.route.events.subscribe((event) => {
+        //     if (event instanceof NavigationStart) {
+        //       if (!this.router.navigated) {
+        //         // Page has been refreshed
+        //         console.log('Page refreshed');
+        //       }
+        //     }
+        //   });
+          
+    }
+
+    public onCreated() {
+        let splitterObj1 = new Splitter({
+            height: '100%',
+            separatorSize: 3,
+            paneSettings: [
+                { size: '65%' },
+                { size: '35%' }
+            ],
+            orientation: 'Vertical'
         });
+        splitterObj1.appendTo('#vertical_splitter');
+    }
 
-
-        this.partyService.read().pipe(takeUntil(this._onDestroy)).subscribe((party) => {
-            this.partyList = party;
-            this.partyFilter.next(this.partyList.slice());
-        });
-
-        this.accountService
-            .readChildren()
-            .pipe(takeUntil(this._onDestroy))
-            .subscribe((accounts) => {
-                this.debitAccounts = accounts;
-                this.filteredDebitAccounts.next(this.debitAccounts.slice());
-            });
-
-        this.debitAccountFilterCtrl.valueChanges
-            .pipe(takeUntil(this._onDestroyDebitAccountFilter))
-            .subscribe(() => {
-                this.filterDebitAccounts();
-            });
-
-        this.refreshHeader(this.journalData);
-
-        this.templateCtrl.setValue(
-            this.templateList.find((x) => x.template_name === this.journalData.template_name)
-        );
-
-        this.partyCtrl.setValue(
-            this.partyList.find((x) => x.party_id === this.journalData.party_id)
-        );
-
+    ngOnInit(): void {
+        
+        this.createEmptyForm();
+        this.createEmptyDetailForm();
         this.initialDatagrid();
+        
+        this.activatedRoute.data.subscribe((data) => {
+            this.journal_id = data.journal.journal_id;
+            this.store.loadDetails(this.journal_id);
+            this.store.loadArtifactsByJournalId(this.journal_id);
+            this.journalData =  data.journal;                          
+        });
 
+        this.refreshHeader(this.journalData);        
+        this.onChanges();
+        this.router.navigate(["journals/gl", this.journal_id]);
+        
     }
 
     public createJournalDetailsFromTemplate(value: IJournalTemplate) {
@@ -394,27 +377,66 @@ export class JournalUpdateComponent
 
 
     protected filterTemplate() {
-        if (!this.templateList) {
+        if (!this.store.templates()) {
             return;
         }
         // get the search keyword
         let search = this.templateFilterCtrl.value;
         if (!search) {
-            this.templateFilter.next(this.templateList.slice());
+            this.templateFilter.next(this.store.templates().slice());
             return;
         } else {
             search = search.toLowerCase();
         }
         // filter the banks
         this.templateFilter.next(
-            this.templateList.filter(template => template.description.toLowerCase().indexOf(search) > -1)
+            this.store.templates().filter(template => template.description.toLowerCase().indexOf(search) > -1)
         );
     }
 
 
+
     public ngAfterViewInit() {
-        this.setInitialValue();
+
+        this.templateCtrl.setValue(
+            this.templateList.find((x) => x.template_name === this.journalData.template_name)
+        );
+
+        this.accountService
+            .readChildren()
+            .pipe(takeUntil(this._onDestroy))
+            .subscribe((accounts) => {
+                this.debitAccounts = accounts;
+                this.filteredDebitAccounts.next(this.debitAccounts.slice());
+            });
+
+        this.debitAccountFilterCtrl.valueChanges
+            .pipe(takeUntil(this._onDestroyDebitAccountFilter))
+            .subscribe(() => {
+                this.filterDebitAccounts();
+            });
+
+        if (this.filteredDebitAccounts)
+            this.filteredDebitAccounts
+                .pipe(take(1), takeUntil(this._onDebitDestroy))
+                .subscribe(() => {
+                    if (this.singleDebitSelect != null || this.singleDebitSelect != undefined)
+                        this.singleDebitSelect.compareWith = (
+                            a: IDropDownAccounts,
+                            b: IDropDownAccounts
+                        ) => {
+                            return a && b && a.child === b.child;
+                        };
+                });
+        this.searchOptions = { operator: 'contains', ignoreCase: true, ignoreAccent: true };
+
+        
+        this.partyCtrl.setValue(
+            this.partyList.find((x) => x.party_id === this.journalData.party_id)
+        );
+        
     }
+
 
     public openDrawer() {
         this.bDirty = false;
@@ -500,27 +522,27 @@ export class JournalUpdateComponent
 
     public OnCardClick(data: any): void {
         this.currentRowData = data;
-        const email = this.auth.currentUser.email;
+        const name = this.auth.currentUser.email.split("@")[0];
         const dDate = new Date();
         let currentDate = dDate.toISOString().split("T")[0];
-        data = this.store
+        const dataDetail = this.store
             .details()
             .find((x) => x.journal_subid === data.journal_subid);
 
         const JournalDetail = {
-            journal_id: data.journal_id,
-            journal_subid: data.journal_subid,
-            account: data.account,
-            child: data.child,
-            child_desc: data.child_desc,
-            description: data.description,
+            journal_id: dataDetail.journal_id,
+            journal_subid: dataDetail.journal_subid,
+            account: dataDetail.account,
+            child: dataDetail.child,
+            child_desc: dataDetail.child_desc,
+            description: dataDetail.description,
             create_date: currentDate,
-            create_user: email,
-            sub_type: data.sub_type,
-            debit: data.debit,
-            credit: data.credit,
-            reference: data.reference,
-            fund: data.fund,
+            create_user: '@'+name,
+            sub_type: dataDetail.sub_type,
+            debit: dataDetail.debit,
+            credit: dataDetail.credit,
+            reference: dataDetail.reference,
+            fund: dataDetail.fund,
         } as IJournalDetail;
 
         this.templateCtrl.setValue(
@@ -530,8 +552,7 @@ export class JournalUpdateComponent
         this.partyCtrl.setValue(
             this.partyList.find((x) => x.party_id === this.currentRowData.party_id)
         );
-
-        this.currentRowData = JournalDetail;
+        //this.currentRowData = JournalDetail;
         this.createDetailForm(JournalDetail);
         this.onChanges();
     }
@@ -574,6 +595,10 @@ export class JournalUpdateComponent
 
         this.templateCtrl.valueChanges.subscribe((value) => {
             this.createJournalDetailsFromTemplate(value);
+            this.bDirty = true;
+        });
+
+        this.partyCtrl.valueChanges.subscribe((value) => {            
             this.bDirty = true;
         });
     }
@@ -649,22 +674,7 @@ export class JournalUpdateComponent
 
     }
 
-    protected setInitialValue() {
-        if (this.filteredDebitAccounts)
-            this.filteredDebitAccounts
-                .pipe(take(1), takeUntil(this._onDebitDestroy))
-                .subscribe(() => {
-                    if (this.singleDebitSelect != null || this.singleDebitSelect != undefined)
-                        this.singleDebitSelect.compareWith = (
-                            a: IDropDownAccounts,
-                            b: IDropDownAccounts
-                        ) => {
-                            return a && b && a.child === b.child;
-                        };
-                });
-        this.searchOptions = { operator: 'contains', ignoreCase: true, ignoreAccent: true };
-    }
-
+    
     public refreshHeader(header: IJournalHeader) {
         this.journalForm.patchValue({
             description: header.description,
@@ -675,6 +685,7 @@ export class JournalUpdateComponent
             invoice_no: header.invoice_no
         });
 
+        
         this.templateCtrl.setValue(
             this.templateList.find((x) => x.template_name === header.template_name)
         );
@@ -723,7 +734,7 @@ export class JournalUpdateComponent
         });
     }
 
-
+    // Create template from the current transaction
     public onCreateTemplate() {
         const confirmation = this.fuseConfirmationService.open({
             title: "Create Template",
@@ -735,14 +746,21 @@ export class JournalUpdateComponent
                 },
             },
         });
-
+        
         // Subscribe to the confirmation dialog closed action
         confirmation.afterClosed().subscribe((result) => {
             if (result === "confirmed") {
+                var journalParam = {
+                    child: this.journalData.journal_id,
+                    period: this.journalData.period,
+                    period_year: this.journalData.period_year                                        
+                };
+                this.store.createJournalTemplate(journalParam);
             }
         });
     }
-
+     
+    // Add evidence 
     public onAddEvidence() {
         const dialogRef = this.matDialog.open(DndComponent, {
             width: "600px",
@@ -811,6 +829,7 @@ export class JournalUpdateComponent
         this.onChanges()
     }
 
+    
     public exitWindow() {
         if (this.bDirty === false) {
             this.journalForm.reset();
@@ -839,6 +858,8 @@ export class JournalUpdateComponent
         }
     }
 
+    
+    // On delete journal detail
     public onDeleteDetail() {
 
         var journalDetail = {
@@ -871,7 +892,7 @@ export class JournalUpdateComponent
 
     }
 
-
+    // On delete journal detail
     public onDelete(args: any) {
         const index = (this.grid as GridComponent).getSelectedRowIndexes();
         const rowData = this.grid.getCurrentViewRecords().at(index[0]) as any;
@@ -898,7 +919,9 @@ export class JournalUpdateComponent
             }
         });
     }
-
+    
+    
+    // add a new line entry
     public onAddLineJournalDetail() {
         const updateDate = new Date().toISOString().split("T")[0];
         const email = this.auth.currentUser?.email;
@@ -958,6 +981,7 @@ export class JournalUpdateComponent
         this.store.renumberJournalDetail(this.journal_id);
     }
 
+    // Update journal header
     onUpdateJournalEntry() {
 
         if (this.bHeaderDirty === false) {
@@ -995,7 +1019,7 @@ export class JournalUpdateComponent
         
         this.bHeaderDirty = false;
     }
-
+    // Create or new journal entry
     public onCreate() {
         var header = this.journalForm.getRawValue();
         var detail = this.detailForm.getRawValue();
