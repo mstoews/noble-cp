@@ -84,6 +84,10 @@ import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from "@angular/material/form-field";
 import { IParty } from "../../../../models/party";
 import { PartyService } from "../../../../services/party.service";
 import { JournalTemplateService } from "../../../../services/journal-template.service";
+import { Store } from "@ngrx/store";
+import { getTemplates } from 'app/store/Template.Selector';
+import { loadTemplates } from 'app/store/Template.Action';
+
 
 const imports = [
     CommonModule,
@@ -268,6 +272,9 @@ export class JournalUpdateComponent
     
     subscription: Subscription;
 
+    tmpLst : any;
+
+    templateStore = inject(Store);
 
     constructor() {
 
@@ -278,10 +285,13 @@ export class JournalUpdateComponent
             this.templateFilter.next(this.templateList.slice());
         });
 
-        this.templateService.read().pipe(takeUntil(this._onDestroy)).subscribe((templates) => {
-             this.templateList = templates;
-             this.templateFilter.next(this.templateList.slice());
-        });
+        this.templateStore.dispatch(loadTemplates());    
+        this.tmpLst = this.templateStore.select(getTemplates);
+        
+        // this.templateService.read().pipe(takeUntil(this._onDestroy)).subscribe((templates) => {
+        //      this.templateList = templates;
+        //      this.templateFilter.next(this.templateList.slice());
+        // });
 
         this.partyService.read().pipe(takeUntil(this._onDestroy)).subscribe((party) => {
             this.partyList = party;
@@ -337,6 +347,7 @@ export class JournalUpdateComponent
         this.createEmptyForm();
         this.createEmptyDetailForm();
         this.initialDatagrid();
+
         
         this.activatedRoute.data.subscribe((data) => {
             this.journal_id = data.journal.journal_id;

@@ -10,7 +10,7 @@ import { Store } from '@ngrx/store';
 import { getTemplates } from 'app/store/Template.Selector';
 import { loadTemplates } from 'app/store/Template.Action';
 import { IJournalTemplate } from 'app/models/journals';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 
 const imports = [
     CommonModule,
@@ -25,7 +25,7 @@ const imports = [
     selector: 'journal-template',
     imports: [imports],
     templateUrl: './journal-template.component.html',
-    providers: [Store,PdfExportService, ExcelExportService]
+    providers: [PdfExportService, ExcelExportService]
 })
 
 export class JournalTemplateComponent implements OnInit {
@@ -59,17 +59,14 @@ export class JournalTemplateComponent implements OnInit {
     customizeTooltip = (pointsInfo: { originalValue: string; }) => ({ text: `${parseInt(pointsInfo.originalValue)}%` });
     journalForm!: FormGroup;
     keyField: any;
+    detailsList: any
     
-    ngOnInit() {
-        
+    ngOnInit() {        
         this.store.dispatch(loadTemplates());    
-        this.store.select(getTemplates).subscribe((list) => {            
-            this.template_list = list;
-        });
+        this.detailsList = this.store.select(getTemplates);
         const dDate = new Date();
         this.currentDate = dDate.toISOString().split('T')[0];
-        this.formatoptions = { type: 'dateTime', format: 'M/dd/yyyy' }
-        
+        this.formatoptions = { type: 'dateTime', format: 'M/dd/yyyy' }        
     }
 
     onCellDoubleClicked(e: any) {
