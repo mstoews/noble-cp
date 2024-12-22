@@ -4,7 +4,7 @@ const getTemplateState = createFeatureSelector<TemplateModel>('tpl');
 
 export const getTemplates = createSelector(
     getTemplateState, (state) => { 
-        return state.templatesList
+        return state.list
     }
 );
 

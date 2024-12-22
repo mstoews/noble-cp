@@ -13,8 +13,22 @@ export class templateEffects {
         ofType(loadTemplates),
         exhaustMap(() => {
             return this.templateService.read().pipe(
-                map((data) => loadTemplatesSuccess({ templates: data })),
+                map((data) => loadTemplatesSuccess({ list: data })),
                 catchError((error) => of(loadTemplatesFailure({ error })))
             )
-     })))           
+     })
+    ))           
 }
+
+
+/*
+exhaustMap(() => {
+          return templateService.read().pipe(
+            tapResponse({
+              next: (template) => patchState(state, { template: template }),
+              error: console.error,
+              finalize: () => patchState(state, { isLoading: false }),
+            })
+          );
+        })
+*/

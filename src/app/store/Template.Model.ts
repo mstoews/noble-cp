@@ -2,7 +2,7 @@
 import { IJournalTemplate,  IJournalDetailTemplate  } from  'app/models/journals';
 
 export interface TemplateModel {
-    templatesList: IJournalTemplate[];
+    list: IJournalTemplate[];
     isLoading: boolean;
     error: string | null;
 }

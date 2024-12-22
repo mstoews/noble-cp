@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { AfterViewInit, Component, inject, OnInit } from '@angular/core';
 import { FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { AccountsService } from 'app/services/accounts.service';
@@ -25,19 +25,18 @@ const imports = [
     selector: 'journal-template',
     imports: [imports],
     templateUrl: './journal-template.component.html',
-    providers: [TemplateStore, PdfExportService, ExcelExportService]
+    providers: [Store,PdfExportService, ExcelExportService]
 })
 
-export class JournalTemplateComponent {
+export class JournalTemplateComponent implements OnInit {
     private accountService = inject(AccountsService);
     public currentDate: string;
     public journal_details: any[];
     public bOpenDetail: boolean = false;
 
-    templateStore = inject(TemplateStore);
+    // templateStore = inject(TemplateStore);
     store = inject(Store);
     
-
     // templateStore = inject(TemplateStore);
     accounts$ = this.accountService.readChildren(); // retrieves only the child accounts which can be used for booking
 
@@ -53,7 +52,7 @@ export class JournalTemplateComponent {
     showInfo = true;
     showNavButtons = true;
     public formatoptions: Object;
-    public template_list: IJournalTemplate[] = [];
+    public template_list: any;
 
     drawOpen: 'open' | 'close' = 'open';
 
@@ -61,12 +60,12 @@ export class JournalTemplateComponent {
     journalForm!: FormGroup;
     keyField: any;
     
-    async ngOnInit() {
+    ngOnInit() {
+        
         this.store.dispatch(loadTemplates());    
-        this.store.select(getTemplates).subscribe((list) => {
+        this.store.select(getTemplates).subscribe((list) => {            
             this.template_list = list;
         });
-
         const dDate = new Date();
         this.currentDate = dDate.toISOString().split('T')[0];
         this.formatoptions = { type: 'dateTime', format: 'M/dd/yyyy' }

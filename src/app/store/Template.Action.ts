@@ -7,7 +7,7 @@ export const LOAD_TEMPLATES_FAILURE = 'templates getall failure';
 
 
 export const loadTemplates = createAction(LOAD_TEMPLATES);
-export const loadTemplatesSuccess = createAction(LOAD_TEMPLATES_SUCCESS, props<{ templates: IJournalTemplate[] }>());
+export const loadTemplatesSuccess = createAction(LOAD_TEMPLATES_SUCCESS, props<{ list: IJournalTemplate[] }>());
 export const loadTemplatesFailure = createAction(LOAD_TEMPLATES_FAILURE, props<{ error: string }>());
 
 

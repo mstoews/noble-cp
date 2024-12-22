@@ -6,7 +6,7 @@ const templateReducer = createReducer(  templateState,
     on(loadTemplatesSuccess, (state, action ) => {
         return {
             ...state,
-            list: action.templates,
+            list: action.list,
             error: null,
         }
     }),
