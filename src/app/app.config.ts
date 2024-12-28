@@ -126,8 +126,7 @@ export const appConfig: ApplicationConfig = {
 
     // Transloco Config
     provideTransloco(),
-    provideStore({
-       'tpl': TemplateReducer,  }),
+    provideStore({ 'tpl': TemplateReducer, }),
     provideEffects([templateEffects]),
     provideToastr(),
     provideStoreDevtools({maxAge: 25}),
