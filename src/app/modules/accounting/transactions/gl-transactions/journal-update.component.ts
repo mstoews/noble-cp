@@ -86,8 +86,8 @@ import { IParty } from "../../../../models/party";
 import { PartyService } from "../../../../services/party.service";
 import { JournalTemplateService } from "../../../../services/journal-template.service";
 import { Store } from "@ngrx/store";
-import { getTemplates } from 'app/state/Template.Selector';
-import { loadTemplates } from 'app/state/Template.Action';
+import { getTemplates } from 'app/state/template/Template.Selector';
+import { loadTemplates } from 'app/state/template/Template.Action';
 
 
 const imports = [

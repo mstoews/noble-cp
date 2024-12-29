@@ -1,5 +1,5 @@
 import { Injectable, inject, signal } from '@angular/core';
-import { Subject, catchError, exhaustMap, of, pipe, shareReplay, take, tap, throwError } from 'rxjs';
+import { Subject, catchError, exhaustMap, of, pipe, share, shareReplay, take, tap, throwError } from 'rxjs';
 import { signalState, patchState } from '@ngrx/signals'
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { tapResponse } from '@ngrx/operators';
@@ -16,7 +16,6 @@ const initialState: AccountState = {
     account: [],
     isLoading: false,
 }
-
 
 @Injectable({
     providedIn: 'root',
@@ -35,6 +34,10 @@ export class AccountsService {
     // readonly accountList = this.accountState.account;
     readonly isLoading = this.accountState.isLoading;
 
+    readAccounts() {
+        return this.httpClient.get<IAccounts[]>(this.readUrl).pipe(shareReplay());
+    }
+        
     readonly read = rxMethod<void>(
         pipe(
             tap(() => patchState(this.accountState, { isLoading: true })),
@@ -50,6 +53,11 @@ export class AccountsService {
             })
         )
     );
+
+    readAccountDropdown() {
+        var url = this.baseUrl + '/v1/read_child_accounts';
+        return this.httpClient.get<IDropDownAccounts[]>(url).pipe(shareReplay());
+    }
 
     // account and description only
     public readDropDownChild() {
@@ -174,7 +182,6 @@ export class AccountsService {
             }),
             shareReplay()
         )
-            .subscribe();
     }
 
     // update account signal array

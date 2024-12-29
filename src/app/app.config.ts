@@ -37,9 +37,9 @@ import { initializeApp } from 'firebase/app';
 import { jsonCachingInterceptor } from "./caching-interceptor";
 import { loggingInterceptor } from "./logging-interceptor";
 import { retryInterceptor } from "./retry-interceptor";
-import { TemplateReducer } from './state/Template.Reducer';
+import { TemplateReducer } from './state/template/Template.Reducer';
 import { template } from 'lodash';
-import { templateEffects } from './state/Template.Effects';
+import { templateEffects } from './state/template/Template.Effects';
 
 const app = initializeApp(environment.firebase);
 

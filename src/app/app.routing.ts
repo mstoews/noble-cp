@@ -67,6 +67,7 @@ export const appRoutes: Route[] = [
                 loadChildren: () =>
                     import('app/modules/landing/landing.routing'),
             },
+
         ],
     },
     {
