@@ -14,9 +14,9 @@ import { environment } from 'environments/environment.prod';
 import { InjectionToken } from '@angular/core';
 import { authTokenInterceptor } from './auth.token.interceptor';
 import { provideStore } from '@ngrx/store';
-import { provideToastr} from 'ngx-toastr';
-import  {provideEffects} from '@ngrx/effects';
-import  {provideStoreDevtools} from '@ngrx/store-devtools';
+import { provideToastr } from 'ngx-toastr';
+import { provideEffects } from '@ngrx/effects';
+import { provideStoreDevtools } from '@ngrx/store-devtools';
 import { pipe, tap } from 'rxjs';
 
 
@@ -37,9 +37,9 @@ import { initializeApp } from 'firebase/app';
 import { jsonCachingInterceptor } from "./caching-interceptor";
 import { loggingInterceptor } from "./logging-interceptor";
 import { retryInterceptor } from "./retry-interceptor";
-import { TemplateReducer } from './store/Template.Reducer';
+import { TemplateReducer } from './state/Template.Reducer';
 import { template } from 'lodash';
-import { templateEffects } from './store/Template.Effects';
+import { templateEffects } from './state/Template.Effects';
 
 const app = initializeApp(environment.firebase);
 
@@ -84,11 +84,11 @@ export const AUTH = new InjectionToken('Firebase auth', {
 });
 
 const CoreProviders = [
-  provideHttpClient(withInterceptors([authTokenInterceptor, loggingInterceptor, retryInterceptor ])),
+  provideHttpClient(withInterceptors([authTokenInterceptor, loggingInterceptor, retryInterceptor])),
   {
     provide: APP_INITIALIZER,
     // dummy factory
-    useFactory: () => () => {},
+    useFactory: () => () => { },
     multi: true,
     // injected dependencies, this will be constructed immediately
     // deps: [AuthService],
@@ -97,12 +97,12 @@ const CoreProviders = [
 
 
 export const appConfig: ApplicationConfig = {
-  providers: [    
+  providers: [
     provideAnimations(),
     ...CoreProviders,
     provideRouter(appRoutes,
-    withPreloading(PreloadAllModules),
-    withInMemoryScrolling({ scrollPositionRestoration: 'enabled' }),
+      withPreloading(PreloadAllModules),
+      withInMemoryScrolling({ scrollPositionRestoration: 'enabled' }),
     ),
     // Material Date Adapter
     {
@@ -126,11 +126,14 @@ export const appConfig: ApplicationConfig = {
 
     // Transloco Config
     provideTransloco(),
-    provideStore({ 'tpl': TemplateReducer, }),
+    provideStore({
+      'tpl': TemplateReducer,
+      'tok': TemplateReducer,
+    }),
     provideEffects([templateEffects]),
     provideToastr(),
-    provideStoreDevtools({maxAge: 25}),
-  
+    provideStoreDevtools({ maxAge: 25 }),
+
     // Fuse
     provideIcons(),
     provideFuse({
@@ -177,7 +180,7 @@ export const appConfig: ApplicationConfig = {
       },
     }),
 
-    ],
+  ],
 };
 
 

@@ -7,8 +7,8 @@ import { MaterialModule } from 'app/services/material.module';
 import { TemplateStore } from 'app/services/journal-template.store';
 import { ExcelExportService, GridModule, PdfExportService } from '@syncfusion/ej2-angular-grids';
 import { Store } from '@ngrx/store';
-import { getTemplates } from 'app/store/Template.Selector';
-import { loadTemplates } from 'app/store/Template.Action';
+import { getTemplates } from 'app/state/Template.Selector';
+import { loadTemplates } from 'app/state/Template.Action';
 import { IJournalTemplate } from 'app/models/journals';
 import { Observable, of } from 'rxjs';
 
@@ -36,7 +36,7 @@ export class JournalTemplateComponent implements OnInit {
 
     // templateStore = inject(TemplateStore);
     store = inject(Store);
-    
+
     // templateStore = inject(TemplateStore);
     accounts$ = this.accountService.readChildren(); // retrieves only the child accounts which can be used for booking
 
@@ -60,13 +60,13 @@ export class JournalTemplateComponent implements OnInit {
     journalForm!: FormGroup;
     keyField: any;
     detailsList: any
-    
-    ngOnInit() {        
-        this.store.dispatch(loadTemplates());    
+
+    ngOnInit() {
+        this.store.dispatch(loadTemplates());
         this.detailsList = this.store.select(getTemplates);
         const dDate = new Date();
         this.currentDate = dDate.toISOString().split('T')[0];
-        this.formatoptions = { type: 'dateTime', format: 'M/dd/yyyy' }        
+        this.formatoptions = { type: 'dateTime', format: 'M/dd/yyyy' }
     }
 
     onCellDoubleClicked(e: any) {

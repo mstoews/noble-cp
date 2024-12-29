@@ -249,7 +249,7 @@
                                         @defer () {
                                         <form [formGroup]="journalForm">
                                             <section class="flex flex-col md:flex-row">
-                                                @if (tmpLst | async;  as List) { 
+                                                @if (tmpLst | async; as List) { 
                                                 <div class="flex flex-col w-[300px]">
                                                 <mat-form-field class="mt-1 ml-1 mr-1 flex-start">
             
@@ -260,7 +260,7 @@
                                                                                    [noEntriesFoundLabel]="'No entries found'" [placeholderLabel]="'Search'">
                                                             </ngx-mat-select-search>
                                                         </mat-option>
-                                                        @for (template of tmpLst; track template) {
+                                                        @for (template of List; track template) {
                                                             <mat-option [value]="template">{{template.description}}</mat-option>
                                                         }
                                                     </mat-select>
@@ -427,14 +427,14 @@
                                         </div>
                                         }
                                             
-                                        @placeholder (minimum 1000ms) {
+                                        @placeholder (minimum 200ms) {
                                                 <div class="flex justify-center">
                                                     <div>
                                                         <mat-progress-spinner diameter="60" [value]="value" mode="indeterminate">
                                                         </mat-progress-spinner>
                                                     </div>
                                                 </div>
-                                        } @loading (minimum 1000ms) {
+                                        } @loading (minimum 200ms) {
                                                 <div class="flex justify-center">
                                                     <div>
                                                         <mat-progress-spinner diameter="60" [value]="value" mode="indeterminate">
@@ -484,14 +484,14 @@
                                             </ng-template>
                                         </div>
                                     }
-                                    @placeholder (minimum 1000ms) {
+                                    @placeholder (minimum 200ms) {
                                         <div class="flex justify-center">
                                             <div>
                                                 <mat-progress-spinner diameter="60" [value]="value" mode="indeterminate">
                                                 </mat-progress-spinner>
                                             </div>
                                         </div>
-                                    } @loading (minimum 1000ms) {
+                                    } @loading (minimum 200ms) {
                                         <div class="flex justify-center">
                                             <div>
                                                 <mat-progress-spinner diameter="60" [value]="value" mode="indeterminate">
@@ -509,9 +509,9 @@
                 </e-panes>
             </ejs-splitter>
         </section>        
-    </mat-drawer-container>
+    </mat-drawer-container>,
     }
-    @placeholder(minimum 1000ms) {
+    @placeholder(minimum 200ms) {
         <div class="flex justify-center items-center">
             <mat-spinner></mat-spinner>
         </div>
