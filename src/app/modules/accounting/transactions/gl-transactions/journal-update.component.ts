@@ -275,6 +275,8 @@ export class JournalUpdateComponent
     @ViewChild("singlePartySelect", { static: true }) singlePartySelect!: MatSelect;
     @ViewChild('splitterInstance') splitterObj?: SplitterComponent;
 
+    singleDebitSelection = viewChild<MatSelect>("singleDebitSelection");
+
     subscription: Subscription;
 
     public tmpLst$: Observable<IJournalTemplate[]>;
@@ -440,8 +442,8 @@ export class JournalUpdateComponent
             this.filteredDebitAccounts
                 .pipe(take(1), takeUntil(this._onDebitDestroy))
                 .subscribe(() => {
-                    if (this.singleDebitSelect != null || this.singleDebitSelect != undefined)
-                        this.singleDebitSelect.compareWith = (
+                    if (this.singleDebitSelection() != null || this.singleDebitSelection() != undefined)
+                        this.singleDebitSelection().compareWith = (
                             a: IDropDownAccounts,
                             b: IDropDownAccounts
                         ) => {
@@ -569,13 +571,13 @@ export class JournalUpdateComponent
             fund: dataDetail.fund,
         } as IJournalDetail;
 
-        this.templateCtrl.setValue(
-            this.templateList.find((x) => x.template_name === this.currentRowData.template_name)
-        );
+         this.templateCtrl.setValue(
+             this.templateList.find((x) => x.template_name === this.currentRowData.template_name)
+         );
 
-        this.partyCtrl.setValue(
-            this.partyList.find((x) => x.party_id === this.currentRowData.party_id)
-        );
+        //  this.partyCtrl.setValue(
+        //      this.partyList.find((x) => x.party_id === this.currentRowData.party_id)
+        //  );
         //this.currentRowData = JournalDetail;
         this.createDetailForm(JournalDetail);
         this.onChanges();

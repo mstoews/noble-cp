@@ -249,12 +249,10 @@
                                         @defer () {
                                         <form [formGroup]="journalForm">
                                             <section class="flex flex-col md:flex-row">
-                                                @if (tmpLst | async; as List) { 
+                                                @if (tmpLst$ | async; as List) {  
                                                 <div class="flex flex-col w-[300px]">
-                                                <mat-form-field class="mt-1 ml-1 mr-1 flex-start">
-            
-                                                    <mat-select [formControl]="templateCtrl" [placeholder]="'Journal Template'"
-                                                                #singleTemplateSelect required>
+                                                <mat-form-field class="mt-1 ml-1 mr-1 flex-start">            
+                                                    <mat-select [formControl]="templateCtrl" [placeholder]="'Journal Template'" #singleTemplateSelect required>
                                                         <mat-option>
                                                             <ngx-mat-select-search [formControl]="templateFilterCtrl"
                                                                                    [noEntriesFoundLabel]="'No entries found'" [placeholderLabel]="'Search'">
@@ -268,7 +266,7 @@
                                                               [svgIcon]="'heroicons_solid:document-chart-bar'"></mat-icon>
                                                     </mat-form-field>
                                                 </div>
-                                                }
+                                                } 
                                                 <div class="flex flex-col grow">
                                                     <mat-form-field class="mt-1 ml-1 mr-1 flex-start">
                                                         <input matInput placeholder="Journal Description"

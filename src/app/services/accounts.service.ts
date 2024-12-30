@@ -24,21 +24,41 @@ const initialState: AccountState = {
 })
 export class AccountsService {
 
-    public httpClient = inject(HttpClient)
+    public httpClient = inject(HttpClient)    
+    
     private parentAccounts = signal<IAccounts[]>([])
     private dropDownList = signal<IDropDownAccounts[]>([])
     private childrenOfParents = signal<IAccounts[]>([])
+
+    public accountList = signal<IAccounts[]>([])
     private accountState = signalState(initialState);
+
+    
     private baseUrl = environment.baseUrl;
     public readUrl = this.baseUrl + '/v1/account_list';    
-    public accountList = signal<IAccounts[]>([])
-
+        
     // readonly accountList = this.accountState.account;
     readonly isLoading = this.accountState.isLoading;
 
     readAccounts() {
         return this.httpClient.get<IAccounts[]>(this.readUrl).pipe(shareReplay());
     }
+
+    readAccountDropdown() {
+        var url = this.baseUrl + '/v1/read_child_accounts';
+        return this.httpClient.get<IDropDownAccounts[]>(url).pipe(shareReplay());
+    }
+
+    readParents() {
+        var url = this.baseUrl + '/v1/account_parent_list';
+        return this.httpClient.get<IAccounts[]>(url).pipe(shareReplay());
+    }
+
+    delete(id: string) {
+        var url = this.baseUrl + '/v1/account_delete/:' + id;
+        return this.httpClient.delete<IAccounts[]>(url).pipe(shareReplay())
+    }
+
         
     readonly read = rxMethod<void>(
         pipe(
@@ -56,10 +76,6 @@ export class AccountsService {
         )
     );
 
-    readAccountDropdown() {
-        var url = this.baseUrl + '/v1/read_child_accounts';
-        return this.httpClient.get<IDropDownAccounts[]>(url).pipe(shareReplay());
-    }
 
     // account and description only
     public readDropDownChild() {
@@ -93,10 +109,6 @@ export class AccountsService {
         )
     }
 
-    readParents() {
-        var url = this.baseUrl + '/v1/account_parent_list';
-        return this.httpClient.get<IAccounts[]>(url).pipe(shareReplay());
-    }
 
 
     // only parent accounts
@@ -157,7 +169,7 @@ export class AccountsService {
     }
 
     // Update
-    public update(accounts: Partial<IAccounts>) {
+    public update(accounts: IAccounts) {
 
         var url = this.baseUrl + '/v1/account_update';
 
@@ -183,15 +195,10 @@ export class AccountsService {
                 const message = "Could not save journal header ...";
                 console.debug(message, err);
                 return throwError(() => new Error(`Invalid time ${err}`));
-            }),
-            shareReplay()
-        )
+            }), shareReplay()
+        );
     }
         // Delete
-    delete(id: string) {
-            var url = this.baseUrl + '/v1/account_delete/:' + id;
-            return this.httpClient.delete<IAccounts[]>(url).pipe(shareReplay())
-    }
 
     // update account signal array
     updateAccountList(data: any) {
