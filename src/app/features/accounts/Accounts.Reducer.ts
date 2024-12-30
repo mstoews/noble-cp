@@ -1,8 +1,12 @@
 import { createReducer, on } from '@ngrx/store';
-import { accountState } from './Accounts.State';
-import { addAccountsSuccess, deleteAccountsSuccess, getAccounts, getAccountsSuccess, loadAccountsFailure, loadAccountsSuccess, updateAccountsSuccess } from './Accounts.Action';
+import { IAccounts } from 'app/models/journals';
+import { addAccountsSuccess, deleteAccountsSuccess, getAccount, getAccountsSuccess, loadAccountsFailure, loadAccountsSuccess, updateAccountsSuccess } from './Accounts.Action';
+import { initialState } from './Accounts.State';
 
-const accountsReducer = createReducer(accountState,
+
+
+const accountsReducer = createReducer(
+    initialState,
     on(loadAccountsSuccess, (state, action) => {
         return {
             ...state,
@@ -35,7 +39,7 @@ const accountsReducer = createReducer(accountState,
     on(updateAccountsSuccess, (state, action) => {
         return {
             ...state,
-            list: state.accounts.map(x => x.id === action.account.child ? action.account : x),
+            list: state.accounts.map(x => x.child === action.account.child ? action.account : x),
             error: null,
         }
     }),

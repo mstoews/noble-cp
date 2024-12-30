@@ -63,7 +63,7 @@ export class accountEffects {
       exhaustMap((action) => {
         return this.accountsService.update(action.account).pipe(
           map(() => updateAccountsSuccess({ account: action.account })),
-          catchError((error) => of(loadAccountsFailure({ error }))
+          catchError((error) => of(loadAccountsFailure({ error })))
         );
       })
     )

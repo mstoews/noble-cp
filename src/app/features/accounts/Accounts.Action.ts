@@ -31,7 +31,7 @@ export const addAccountsSuccess = createAction(ADD_ACCOUNTS_SUCCESS, props<{ acc
 export const updateAccounts = createAction(UPDATE_ACCOUNTS, props<{ account: IAccounts }>());
 export const updateAccountsSuccess = createAction(UPDATE_ACCOUNTS_SUCCESS, props<{ account: IAccounts }>());
 
-export const getAccounts = createAction(GET_ACCOUNTS, props<{ id: number }>());
+export const getAccount = createAction(GET_ACCOUNTS, props<{ child: number }>());
 export const getAccountsSuccess = createAction(UPDATE_ACCOUNTS_SUCCESS, props<{ account: IAccounts }>());
 export const getAccountsFailure = createAction(LOAD_ACCOUNTS_FAILURE, props<{ error: string }>());
 

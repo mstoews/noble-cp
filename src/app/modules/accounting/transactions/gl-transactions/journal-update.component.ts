@@ -70,6 +70,7 @@ import {
 } from "@syncfusion/ej2-angular-grids";
 
 import {
+    IAccounts,
     IJournalDetail, IJournalDetailTemplate,
     IJournalHeader, IJournalHeaderUpdate, IJournalTemplate,
 } from "app/models/journals";
@@ -86,8 +87,11 @@ import { IParty } from "../../../../models/party";
 import { PartyService } from "../../../../services/party.service";
 import { JournalTemplateService } from "../../../../services/journal-template.service";
 import { Store } from "@ngrx/store";
-import { getTemplates } from 'app/state/template/Template.Selector';
-import { loadTemplates } from 'app/state/template/Template.Action';
+import { getTemplates } from 'app/features/template/Template.Selector';
+import { loadTemplates } from 'app/features/template/Template.Action';
+import { getAccount, loadAccounts } from "app/features/accounts/Accounts.Action";
+import { select } from "@syncfusion/ej2-base";
+import { getAccounts } from "app/features/accounts/Accounts.Selector";
 
 
 const imports = [
@@ -166,7 +170,7 @@ export class JournalUpdateComponent
     private auth = inject(AUTH);
     private activatedRoute = inject(ActivatedRoute);
     private partyService = inject(PartyService);
-    private templateService = inject(JournalTemplateService);
+    //private templateService = inject(JournalTemplateService);
 
     public matDialog = inject(MatDialog);
 
@@ -273,14 +277,14 @@ export class JournalUpdateComponent
 
     subscription: Subscription;
 
-    public tmpLst: Observable<IJournalTemplate[]>;
+    public tmpLst$: Observable<IJournalTemplate[]>;
+    public accountList$: Observable<IAccounts[]>;
 
     Store = inject(Store);
 
     constructor() {
-
         this.Store.dispatch(loadTemplates());
-
+        this.Store.dispatch(loadAccounts());
     }
 
     public onCreated() {
@@ -302,8 +306,8 @@ export class JournalUpdateComponent
         this.createEmptyDetailForm();
         this.initialDatagrid();
 
-        this.tmpLst = this.Store.select(getTemplates);
-
+        this.tmpLst$ = this.Store.select(getTemplates);
+        this.accountList$ = this.Store.select(getAccounts);
 
         this.accountsListSubject = this.dropDownChildren$.subscribe((accounts) => {
             accounts.forEach((acct) => {
@@ -314,7 +318,7 @@ export class JournalUpdateComponent
                 this.accountsGrid.push(list);
             });
 
-            this.fundListSubject = this.funds$.subscribe((funds) => {
+        this.fundListSubject = this.funds$.subscribe((funds) => {
                 funds.forEach((fund) => {
                     var list = {
                         fund: fund.fund,
@@ -345,7 +349,7 @@ export class JournalUpdateComponent
             this.router.navigate(["journals/gl", this.journal_id]);
         });
 
-        this.tmpLst.subscribe((templates) => {
+        this.tmpLst$.subscribe((templates) => {
             this.templateList = templates;
             this.templateFilter.next(this.templateList.slice());
             if (this.journalData.template_name != null) {

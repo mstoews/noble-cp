@@ -37,9 +37,10 @@ import { initializeApp } from 'firebase/app';
 import { jsonCachingInterceptor } from "./caching-interceptor";
 import { loggingInterceptor } from "./logging-interceptor";
 import { retryInterceptor } from "./retry-interceptor";
-import { TemplateReducer } from './state/template/Template.Reducer';
+import { TemplateReducer } from './features/template/Template.Reducer';
 import { template } from 'lodash';
-import { templateEffects } from './state/template/Template.Effects';
+import { templateEffects } from './features/template/Template.Effects';
+import { AccountsReducer } from './features/accounts/Accounts.Reducer';
 
 const app = initializeApp(environment.firebase);
 
@@ -128,7 +129,7 @@ export const appConfig: ApplicationConfig = {
     provideTransloco(),
     provideStore({
       'tpl': TemplateReducer,
-      'tok': TemplateReducer,
+      'act': AccountsReducer,
     }),
     provideEffects([templateEffects]),
     provideToastr(),

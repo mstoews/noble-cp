@@ -1,16 +1,18 @@
 import { Injectable, inject, signal } from '@angular/core';
-import { Subject, catchError, exhaustMap, of, pipe, share, shareReplay, take, tap, throwError } from 'rxjs';
+import { catchError, exhaustMap,  pipe, shareReplay, take, tap, throwError } from 'rxjs';
 import { signalState, patchState } from '@ngrx/signals'
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { tapResponse } from '@ngrx/operators';
-
 
 import { HttpClient } from '@angular/common/http';
 import { IDropDownAccounts } from '../models';
 import { environment } from 'environments/environment.prod';
 import { IAccounts } from 'app/models/journals';
 
-type AccountState = { account: IAccounts[], isLoading: boolean }
+type AccountState = { 
+    account: IAccounts[], 
+    isLoading: boolean 
+}
 
 const initialState: AccountState = {
     account: [],
@@ -22,13 +24,13 @@ const initialState: AccountState = {
 })
 export class AccountsService {
 
+    public httpClient = inject(HttpClient)
     private parentAccounts = signal<IAccounts[]>([])
     private dropDownList = signal<IDropDownAccounts[]>([])
     private childrenOfParents = signal<IAccounts[]>([])
     private accountState = signalState(initialState);
     private baseUrl = environment.baseUrl;
-    public readUrl = this.baseUrl + '/v1/account_list';
-    public httpClient = inject(HttpClient)
+    public readUrl = this.baseUrl + '/v1/account_list';    
     public accountList = signal<IAccounts[]>([])
 
     // readonly accountList = this.accountState.account;
@@ -42,7 +44,7 @@ export class AccountsService {
         pipe(
             tap(() => patchState(this.accountState, { isLoading: true })),
             exhaustMap(() => {
-                return this.httpClient.get<IAccounts[]>(this.readUrl).pipe(
+                return this.readAccounts().pipe(                
                     tapResponse({
                         // next: (account) => patchState(this.accountState, { account }),
                         next: (account) => this.accountList.set(account),
@@ -63,7 +65,7 @@ export class AccountsService {
     public readDropDownChild() {
         var url = this.baseUrl + '/v1/read_child_accounts';
         if (this.dropDownList().length === 0) {
-            this.httpClient.get<IDropDownAccounts[]>(url).pipe(
+            this.readAccountDropdown().pipe(
                 tap(data => this.dropDownList.set(data)),
                 take(1),
                 catchError(err => {
@@ -78,13 +80,12 @@ export class AccountsService {
     }
 
     // only child account and no parents
-    public readChildren() {
-        var url = this.baseUrl + '/v1/read_child_accounts';
-        return this.httpClient.get<IDropDownAccounts[]>(url).pipe(
+    public readChildren() {        
+        return this.readAccountDropdown().pipe(
             tap(data => this.dropDownList.set(data)),
             take(1),
             catchError(err => {
-                const message = "Could not retrieve chil accounts ...";
+                const message = "Could not retrieve child accounts ...";
                 console.debug(message, err);
                 return throwError(() => new Error(`${JSON.stringify(err)}`));
             }),
@@ -92,11 +93,16 @@ export class AccountsService {
         )
     }
 
-    // only parent accounts
-    public getParents() {
+    readParents() {
         var url = this.baseUrl + '/v1/account_parent_list';
+        return this.httpClient.get<IAccounts[]>(url).pipe(shareReplay());
+    }
+
+
+    // only parent accounts
+    public getParents() {        
         if (this.parentAccounts().length === 0) {
-            this.httpClient.get<IAccounts[]>(url).pipe(
+            this.readParents().pipe(
                 tap(data => this.parentAccounts.set(data)),
                 take(1),
                 catchError(err => {
@@ -147,9 +153,7 @@ export class AccountsService {
             update_user: accounts.update_user,
         }
         var url = this.baseUrl + '/v1/account_create';
-        return this.httpClient.post(url, data)
-            .pipe(
-                shareReplay())
+        return this.httpClient.post(url, data).pipe( shareReplay())
     }
 
     // Update
@@ -183,6 +187,11 @@ export class AccountsService {
             shareReplay()
         )
     }
+        // Delete
+    delete(id: string) {
+            var url = this.baseUrl + '/v1/account_delete/:' + id;
+            return this.httpClient.delete<IAccounts[]>(url).pipe(shareReplay())
+    }
 
     // update account signal array
     updateAccountList(data: any) {
@@ -204,9 +213,4 @@ export class AccountsService {
     }
 
 
-    // Delete
-    delete(id: string) {
-        var url = this.baseUrl + '/v1/account_delete';
-        return this.httpClient.get<IAccounts[]>(url).pipe(shareReplay())
-    }
 }

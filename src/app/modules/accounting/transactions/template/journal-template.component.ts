@@ -7,8 +7,8 @@ import { MaterialModule } from 'app/services/material.module';
 import { TemplateStore } from 'app/services/journal-template.store';
 import { ExcelExportService, GridModule, PdfExportService } from '@syncfusion/ej2-angular-grids';
 import { Store } from '@ngrx/store';
-import { getTemplates } from 'app/state/template/Template.Selector';
-import { loadTemplates } from 'app/state/template/Template.Action';
+import { getTemplates } from 'app/features/template/Template.Selector';
+import { loadTemplates } from 'app/features/template/Template.Action';
 import { IJournalTemplate } from 'app/models/journals';
 import { Observable, of } from 'rxjs';
 
