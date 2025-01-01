@@ -568,17 +568,9 @@ export class JournalUpdateComponent
             debit: dataDetail.debit,
             credit: dataDetail.credit,
             reference: dataDetail.reference,
-            fund: dataDetail.fund,
+            fund: dataDetail.fund,            
         } as IJournalDetail;
 
-         this.templateCtrl.setValue(
-             this.templateList.find((x) => x.template_name === this.currentRowData.template_name)
-         );
-
-        //  this.partyCtrl.setValue(
-        //      this.partyList.find((x) => x.party_id === this.currentRowData.party_id)
-        //  );
-        //this.currentRowData = JournalDetail;
         this.createDetailForm(JournalDetail);
         this.onChanges();
     }

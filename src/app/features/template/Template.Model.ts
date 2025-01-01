@@ -1,4 +1,3 @@
-
 import { IJournalTemplate,  IJournalDetailTemplate  } from  'app/models/journals';
 
 export interface TemplateModel {

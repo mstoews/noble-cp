@@ -16,8 +16,10 @@ export class templateEffects {
                 map((data) => loadTemplatesSuccess({ list: data })),
                 catchError((error) => of(loadTemplatesFailure({ error })))
             )
-     })
-    ))           
+        })
+      )
+    );
+    
 }
 
 

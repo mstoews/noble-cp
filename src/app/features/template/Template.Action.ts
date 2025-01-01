@@ -16,8 +16,6 @@ export const UPDATE_TEMPLATES_SUCCESS = 'account update success'
 
 export const GET_TEMPLATES = 'account get account'
 
-
-
 export const loadTemplates = createAction(LOAD_TEMPLATES);
 export const loadTemplatesSuccess = createAction(LOAD_TEMPLATES_SUCCESS, props<{ list: IJournalTemplate[] }>());
 export const loadTemplatesFailure = createAction(LOAD_TEMPLATES_FAILURE, props<{ error: string }>());

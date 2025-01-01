@@ -13,7 +13,7 @@ import { mockApiServices } from 'app/mock-api';
 import { environment } from 'environments/environment.prod';
 import { InjectionToken } from '@angular/core';
 import { authTokenInterceptor } from './auth.token.interceptor';
-import { provideStore } from '@ngrx/store';
+import { provideState, provideStore } from '@ngrx/store';
 import { provideToastr } from 'ngx-toastr';
 import { provideEffects } from '@ngrx/effects';
 import { provideStoreDevtools } from '@ngrx/store-devtools';
@@ -38,9 +38,10 @@ import { jsonCachingInterceptor } from "./caching-interceptor";
 import { loggingInterceptor } from "./logging-interceptor";
 import { retryInterceptor } from "./retry-interceptor";
 import { TemplateReducer } from './features/template/Template.Reducer';
-import { template } from 'lodash';
+import { templateState } from './features/template/Template.State';
 import { templateEffects } from './features/template/Template.Effects';
 import { AccountsReducer } from './features/accounts/Accounts.Reducer';
+import { template } from 'lodash';
 
 const app = initializeApp(environment.firebase);
 

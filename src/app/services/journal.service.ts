@@ -1,9 +1,9 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { Injectable, OnDestroy, inject, signal } from '@angular/core';
-import { Observable, Subject, TimeoutError, catchError, debounceTime, distinctUntilChanged, retry, shareReplay, take, takeUntil, tap, throwError, timeout, timer } from 'rxjs';
+import { Injectable, OnDestroy, inject } from '@angular/core';
+import { Observable, TimeoutError, catchError, debounceTime, distinctUntilChanged, retry, shareReplay, take, takeUntil, tap, throwError, timeout, timer } from 'rxjs';
 import { environment } from 'environments/environment.prod';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { Router } from '@angular/router';
+import { ToastrService } from "ngx-toastr";
+
 import {
   IAccounts,
   IArtifacts,
@@ -18,8 +18,8 @@ import {
   IReadJournalDetailsParams,
   ITransactionDate
 } from 'app/models/journals';
-import { IJournalParams, ITrialBalance } from 'app/models';
 
+import { IJournalParams } from 'app/models';
 
 
 @Injectable({
@@ -28,48 +28,71 @@ import { IJournalParams, ITrialBalance } from 'app/models';
 export class JournalService implements OnDestroy {
 
   httpClient = inject(HttpClient)
-  snackBar = inject(MatSnackBar);
-  router = inject(Router);
-
+  toastr = inject(ToastrService);
   private baseUrl = environment.baseUrl;
-  ngDestroy$ = new Subject();
-
+  
   readJournalTemplate() {
     var url = this.baseUrl + '/v1/read_journal_template';
-    return this.httpClient.get<IJournalTemplate[]>(url).pipe(shareReplay());
+    return this.httpClient.get<IJournalTemplate[]>(url).pipe(
+      catchError(err => {
+        const message = "Failed to connect to server for templates ...";
+        this.ShowAlert(message, 'failed');                
+        return throwError(() => new Error(`${JSON.stringify(err)}`));
+      }),
+      shareReplay());
   }
-
-
 
   createJournalTemplate(params: IJournalParams) {
     var url = this.baseUrl + '/v1/create_journal_template';
-    return this.httpClient.post<IJournalTemplate>(url, params).pipe(shareReplay());
+    return this.httpClient.post<IJournalTemplate>(url, params).pipe(
+      catchError(err => {
+        const message = "Failed to connect to server for templates ...";
+        this.ShowAlert(message, 'failed');                
+        return throwError(() => new Error(`${JSON.stringify(err)}`));
+      }),
+      shareReplay());
   }
 
 
   readHttpLoadArtifactsByJournalId(journal_id: number) {
     var url = this.baseUrl + '/v1/read_artifacts_by_jrn_id/' + journal_id;
-    return this.httpClient.get<IArtifacts[]>(url).pipe(debounceTime(1000), distinctUntilChanged()).pipe(shareReplay());
+    return this.httpClient.get<IArtifacts[]>(url).pipe(debounceTime(1000), distinctUntilChanged()).pipe(
+      catchError(err => {
+        const message = "Failed to connect to server for journals ...";
+        this.ShowAlert(message, 'failed');                
+        return throwError(() => new Error(`${JSON.stringify(err)}`));
+      }),shareReplay());
   }
 
   updateHttpArtifacts(evidence: IArtifacts) {
     var url = this.baseUrl + '/v1/update_evidence';
-    return this.httpClient.post(url, evidence).pipe(shareReplay());
+    return this.httpClient.post(url, evidence).pipe(
+      catchError(err => {
+        const message = "Failed to connect to server for artifacts ...";
+        this.ShowAlert(message, 'failed');                
+        return throwError(() => new Error(`${JSON.stringify(err)}`));
+      }),
+      shareReplay());
   }
 
 
   readHttpAccounts() {
     var url = this.baseUrl + '/v1/account_list';
-    return this.httpClient.get<IAccounts[]>(url).pipe(shareReplay());
+    return this.httpClient.get<IAccounts[]>(url).pipe(
+      catchError(err => {
+        const message = "Failed to connect to server for accounts ...";
+        this.ShowAlert(message, 'failed');                
+        return throwError(() => new Error(`${JSON.stringify(err)}`));
+      }),
+      shareReplay());
   }
 
   getLastJournalNo(): Observable<number | Object> {
     var url = this.baseUrl + '/v1/read_last_journal_no';
     return this.httpClient.get(url).pipe(
       catchError(err => {
-        const message = "Could not retrieve id ...";
-        console.debug(message, err);
-        this.message(message);
+        const message = "Failed to connect to server for journals ...";
+        this.ShowAlert(message, 'failed');                
         return throwError(() => new Error(`${JSON.stringify(err)}`));
       }),
       shareReplay()
@@ -80,9 +103,8 @@ export class JournalService implements OnDestroy {
     var url = this.baseUrl + '/v1/read_period_from_transaction';
     this.httpClient.post<IPeriod>(url, transaction_date).pipe(
       catchError(err => {
-        const message = "Could not retrieve id ...";
-        console.debug(message, err);
-        this.message(message);
+        const message = "Failed to connect to server for periods ...";        
+        this.ShowAlert(message, 'failed');                
         return throwError(() => new Error(`${JSON.stringify(err)}`));
       }),
       shareReplay());
@@ -95,7 +117,13 @@ export class JournalService implements OnDestroy {
         journal_id: journal_id,
         status: "CLOSED"
       },
-    ).pipe(shareReplay())
+    ).pipe(
+      catchError(err => {
+        const message = "Failed to connect to server journal header ...";
+        this.ShowAlert(message, 'failed');                
+        return throwError(() => new Error(`${JSON.stringify(err)}`));
+      }),
+      shareReplay())
   }
 
   reNumberJournalDetail(journal_id: number) {
@@ -103,29 +131,59 @@ export class JournalService implements OnDestroy {
     const update = {
       journal_id: journal_id
     }
-    return this.httpClient.post<IJournalDetail[]>(url, update).pipe(shareReplay());
+    return this.httpClient.post<IJournalDetail[]>(url, update).pipe(
+      catchError(err => {
+        const message = "Failed to connect to server for journal details ...";
+        this.ShowAlert(message, 'failed');                
+        return throwError(() => new Error(`${JSON.stringify(err)}`));
+      }),
+      shareReplay());
   }
 
   getHttpTemplateDetails(journal_id: number) {
     console.log('getHttpJournalDetails', journal_id);
     var url = this.baseUrl + '/v1/get_journal_detail/' + journal_id;
-    return this.httpClient.get<IJournalDetail[]>(url);
+    return this.httpClient.get<IJournalDetail[]>(url).pipe(
+      catchError(err => {
+        const message = "Failed to connect to server for template details ...";
+        this.ShowAlert(message, 'failed');                
+        return throwError(() => new Error(`${JSON.stringify(err)}`));
+      }),
+      shareReplay());
   }
 
   getHttpJournalDetails(journal_id: number) {
     console.log('getHttpJournalDetails', journal_id);
     var url = this.baseUrl + '/v1/get_journal_detail/' + journal_id;
-    return this.httpClient.get<IJournalDetail[]>(url);
+    return this.httpClient.get<IJournalDetail[]>(url).pipe(
+      catchError(err => {
+        const message = "Failed to connect to server for journal details ...";
+        this.ShowAlert(message, 'failed');                
+        return throwError(() => new Error(`${JSON.stringify(err)}`));
+      }),
+      shareReplay());;
   }
 
   getHttpAllJournalDetailsByPeriod(period: IPeriodParam) {
     var url = this.baseUrl + '/v1/get_journal_detailbyperiod/';
-    return this.httpClient.post<IJournalDetail[]>(url, period);
+    return this.httpClient.post<IJournalDetail[]>(url, period).pipe(
+      catchError(err => {
+        const message = "Failed to connect to server for periods ...";
+        this.ShowAlert(message, 'failed');                
+        return throwError(() => new Error(`${JSON.stringify(err)}`));
+      }),
+      shareReplay());
   }
   
   readHttpJournalHeader() {
     var url = this.baseUrl + '/v1/read_journal_header';
-    return this.httpClient.get<IJournalHeader[]>(url).pipe(shareReplay(), retry(2));
+    return this.httpClient.get<IJournalHeader[]>(url).pipe(
+      catchError(err => {
+        const message = "Failed to connect to server for journal header ...";
+        this.ShowAlert(message, 'failed');                
+        return throwError(() => new Error(`${JSON.stringify(err)}`));
+      }),
+      shareReplay());
   }
 
   // read_tb_by_period
@@ -137,7 +195,13 @@ export class JournalService implements OnDestroy {
       period: period,
       period_year: periodYear,
       child: child
-    });
+    }).pipe(
+      catchError(err => {
+        const message = "Failed to connect to server for accounts ...";
+        this.ShowAlert(message, 'failed');                
+        return throwError(() => new Error(`${JSON.stringify(err)}`));
+      }),
+      shareReplay());;
   }
 
   readJournalDetails(period: number, periodYear: number, child: number) {
@@ -151,7 +215,13 @@ export class JournalService implements OnDestroy {
 
   readJournalsByAccount(  params : IReadJournalDetailsParams) {
     var url = this.baseUrl + "/v1/read_transaction_by_account";
-    return this.httpClient.post(url, { params }).pipe(shareReplay()) as Observable<IJournalDetail[]>;
+    return this.httpClient.post(url, { params }).pipe(
+      catchError(err => {
+        const message = "Failed to connect to server for journals ...";
+        this.ShowAlert(message, 'failed');                
+        return throwError(() => new Error(`${JSON.stringify(err)}`));
+      }),
+      shareReplay()) as Observable<IJournalDetail[]>;
   }
 
   read_transaction_by_account(child: string) {
@@ -236,16 +306,6 @@ export class JournalService implements OnDestroy {
     return this.httpClient.post<IJournalDetail>(url, detail);
   }
 
-
-  message(msg: string) {
-    this.snackBar.open(msg, 'OK', {
-      verticalPosition: 'top',
-      horizontalPosition: 'right',
-      panelClass: 'bg-white',
-      duration: 2000,
-    });
-  }
-
   deleteHttpJournalDetail(journal: IJournalDetailDelete) {
     var url = this.baseUrl + '/v1/delete_journal_details';
     return this.httpClient.post<IJournalDetailDelete>(url, journal);
@@ -256,8 +316,6 @@ export class JournalService implements OnDestroy {
     var url = this.baseUrl + "/v1/read_template_details/" + reference;
     return this.httpClient.get<IJournalDetailTemplate[]>(url);
   }  
-
-  
 
   private handleErrorWithTimeout(error: HttpErrorResponse | TimeoutError) {
     let errorMessage = "";
@@ -275,7 +333,6 @@ export class JournalService implements OnDestroy {
     var url = this.baseUrl + '/v1/read_settings_value_by_id/' + value;
     return this.httpClient.get<string>(url).pipe(shareReplay());
   }
-
 
   private handleError(error: HttpErrorResponse) {
     let errorMessage = "";
@@ -301,10 +358,15 @@ export class JournalService implements OnDestroy {
     });
   }
 
-  ngOnDestroy(): void {
-    this.ngDestroy$.next(true);
-    this.ngDestroy$.complete();
+  ShowAlert(message: string, response: string) {
+    if (response == "pass") {
+      this.toastr.success(message);
+    } else {
+      this.toastr.error(message);
+    }    
   }
+
+  ngOnDestroy(): void { }
 
 }
 
