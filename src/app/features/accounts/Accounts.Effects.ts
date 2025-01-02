@@ -69,8 +69,6 @@ export class accountEffects {
     )
   );
 
-  
-
   ShowAlert(message: string, response: string) {
     if (response == "pass") {
       this.toastr.success(message);
