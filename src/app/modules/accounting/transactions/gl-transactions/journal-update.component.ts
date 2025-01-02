@@ -92,6 +92,8 @@ import { loadTemplates } from 'app/features/template/Template.Action';
 import { getAccount, loadAccounts } from "app/features/accounts/Accounts.Action";
 import { select } from "@syncfusion/ej2-base";
 import { getAccounts } from "app/features/accounts/Accounts.Selector";
+import { getJournalHeader, loadJournalHeader } from "app/features/journal/Journal.Action";
+import { getJournals } from "app/features/journal/Journal.Selector";
 
 
 const imports = [
@@ -170,14 +172,21 @@ export class JournalUpdateComponent
     private auth = inject(AUTH);
     private activatedRoute = inject(ActivatedRoute);
     private partyService = inject(PartyService);
-    //private templateService = inject(JournalTemplateService);
+
+    private Store = inject(Store);
+
+    public tmpLst$: Observable<IJournalTemplate[]>;
+    public accountList$: Observable<IAccounts[]>;
+    public journalHeader$: Observable<IJournalHeader[]>;
 
     public matDialog = inject(MatDialog);
 
     // Store
     public store = inject(JournalStore);
-    public detailForm!: FormGroup;
+
     public journalForm!: FormGroup;
+    public detailForm!: FormGroup;
+
 
     drawer = viewChild<MatDrawer>("drawer");
 
@@ -208,7 +217,7 @@ export class JournalUpdateComponent
     public fundListSubject: Subscription;
 
     // Data grid settings
-    public filterOptions?: FilterSettingsModel;
+
     public editSettings: Object;
     public editArtifactSettings: Object;
     public filterSettings: Object;
@@ -216,27 +225,17 @@ export class JournalUpdateComponent
     public selectionOptions: Object;
     public searchOptions: Object;
 
-
-    // Global Journal header
-    public description: string;
-    public transaction_date: string;
-    public amount: number;
-    public journalType: string;
-    public sTitle = "Transaction Detail Update";
-    public journal_id: number;
-
     // drop down searchable list
     public accountList: IDropDownAccounts[] = [];
     public subtypeList: ISubType[] = [];
     public fundList: IFunds[] = [];
 
-    public selectOptions?: Object;
+    
     public message?: string;
 
     @ViewChild("grid")
     public grid!: GridComponent;
     public gridControl = viewChild<GridComponent>("grid");
-    public selectedItemKeys: any;
     public transactionType = 'GL';
 
     public templateList: IJournalTemplate[] = [];
@@ -277,16 +276,10 @@ export class JournalUpdateComponent
 
     singleDebitSelection = viewChild<MatSelect>("singleDebitSelection");
 
-    subscription: Subscription;
-
-    public tmpLst$: Observable<IJournalTemplate[]>;
-    public accountList$: Observable<IAccounts[]>;
-
-    Store = inject(Store);
-
     constructor() {
         this.Store.dispatch(loadTemplates());
         this.Store.dispatch(loadAccounts());
+        this.Store.dispatch(loadJournalHeader());
     }
 
     public onCreated() {
@@ -309,7 +302,10 @@ export class JournalUpdateComponent
         this.initialDatagrid();
 
         this.tmpLst$ = this.Store.select(getTemplates);
+        
         this.accountList$ = this.Store.select(getAccounts);
+        this.journalHeader$ = this.Store.select(getJournals);
+        
 
         this.accountsListSubject = this.dropDownChildren$.subscribe((accounts) => {
             accounts.forEach((acct) => {
@@ -320,7 +316,7 @@ export class JournalUpdateComponent
                 this.accountsGrid.push(list);
             });
 
-        this.fundListSubject = this.funds$.subscribe((funds) => {
+            this.fundListSubject = this.funds$.subscribe((funds) => {
                 funds.forEach((fund) => {
                     var list = {
                         fund: fund.fund,
@@ -423,7 +419,6 @@ export class JournalUpdateComponent
 
     public ngAfterViewInit() {
 
-
         this.accountService
             .readChildren()
             .pipe(takeUntil(this._onDestroy))
@@ -478,10 +473,10 @@ export class JournalUpdateComponent
         const queryData: any = args.data;
         this.key = queryData.journal_id;
         this.refreshHeader(queryData);
+        this.store.loadDetails(queryData.journal_id);
+        this.store.loadArtifactsByJournalId(queryData.journal_id);
+        this.router.navigate(["journals/gl", queryData.journal_id]);
         this.closeDrawer();
-        this.store.loadDetails(this.key);
-        this.store.loadArtifactsByJournalId(this.key);
-        this.router.navigate(["journals/gl", this.key]);
     }
 
     initialDatagrid() {
@@ -568,7 +563,7 @@ export class JournalUpdateComponent
             debit: dataDetail.debit,
             credit: dataDetail.credit,
             reference: dataDetail.reference,
-            fund: dataDetail.fund,            
+            fund: dataDetail.fund,
         } as IJournalDetail;
 
         this.createDetailForm(JournalDetail);
@@ -666,16 +661,14 @@ export class JournalUpdateComponent
     }
 
     public rowDrag(args: RowDragEventArgs): void {
-        this.message = `rowDrag event triggered ${JSON.stringify(args.data)}`;
-        console.debug(this.message);
+        
         (args.rows as Element[]).forEach((row: Element) => {
             row.classList.add("drag-limit");
         });
     }
 
     public rowDrop(args: RowDragEventArgs): void {
-        this.message = `Drop  ${args.originalEvent} ${JSON.stringify(args.data)}`;
-        console.debug(this.message);
+        
         const value = [];
         for (let r = 0; r < (args.rows as Element[]).length; r++) {
             value.push((args.fromIndex as number) + r);

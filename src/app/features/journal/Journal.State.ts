@@ -1,6 +1,6 @@
 import { JournalState } from './Journal.Model';
 
-export const initialState : JournalState = {
+export const journalState : JournalState = {
     journals: [],
     journalDetails: [],
     isLoading: false,

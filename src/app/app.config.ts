@@ -34,14 +34,16 @@ import {
 
 import { getAuth, connectAuthEmulator } from 'firebase/auth';
 import { initializeApp } from 'firebase/app';
-import { jsonCachingInterceptor } from "./caching-interceptor";
 import { loggingInterceptor } from "./logging-interceptor";
 import { retryInterceptor } from "./retry-interceptor";
 import { TemplateReducer } from './features/template/Template.Reducer';
-import { templateState } from './features/template/Template.State';
-import { templateEffects } from './features/template/Template.Effects';
+
 import { AccountsReducer } from './features/accounts/Accounts.Reducer';
-import { template } from 'lodash';
+import { JournalReducer } from './features/journal/Journal.Reducer';
+// Effects 
+
+import { journalHeaderEffects } from './features/journal/Journal.Effects';
+import { templateEffects } from './features/template/Template.Effects';
 
 const app = initializeApp(environment.firebase);
 
@@ -103,8 +105,8 @@ export const appConfig: ApplicationConfig = {
     provideAnimations(),
     ...CoreProviders,
     provideRouter(appRoutes,
-      withPreloading(PreloadAllModules),
-      withInMemoryScrolling({ scrollPositionRestoration: 'enabled' }),
+    withPreloading(PreloadAllModules),
+    withInMemoryScrolling({ scrollPositionRestoration: 'enabled' }),
     ),
     // Material Date Adapter
     {
@@ -131,8 +133,9 @@ export const appConfig: ApplicationConfig = {
     provideStore({
       'tpl': TemplateReducer,
       'act': AccountsReducer,
+      'jnl': JournalReducer
     }),
-    provideEffects([templateEffects]),
+    provideEffects([templateEffects, journalHeaderEffects]),
     provideToastr(),
     provideStoreDevtools({ maxAge: 25 }),
 

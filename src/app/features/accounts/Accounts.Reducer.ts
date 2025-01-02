@@ -1,12 +1,12 @@
 import { createReducer, on } from '@ngrx/store';
 import { IAccounts } from 'app/models/journals';
 import { addAccountsSuccess, deleteAccountsSuccess, getAccount, getAccountsSuccess, loadAccountsFailure, loadAccountsSuccess, updateAccountsSuccess } from './Accounts.Action';
-import { initialState } from './Accounts.State';
+import { accountState } from './Accounts.State';
 
 
 
 const accountsReducer = createReducer(
-    initialState,
+    accountState,
     on(loadAccountsSuccess, (state, action) => {
         return {
             ...state,

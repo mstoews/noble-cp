@@ -1,6 +1,6 @@
 import { AccountState } from './Accounts.Model';
 
-export const initialState : AccountState = {
+export const accountState : AccountState = {
     accounts: [],
     isLoading: false,
     status: 'pending',

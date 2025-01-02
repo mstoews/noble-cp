@@ -6,8 +6,7 @@ import {
         getJournalHeaderSuccess,
         loadJournalHeaderFailure,
         updateJournalHeaderSuccess,
-        loadJournalHeaderSuccess, 
-         
+        loadJournalHeaderSuccess,          
         loadJournalDetailSuccess,
         loadJournalDetailFailure,
         deleteJournalDetailSuccess,
@@ -17,30 +16,22 @@ import {
         loadJournalDetail,
           } from './Journal.Action'; 
          
-import { initialState } from './Journal.State';
+import { journalState } from './Journal.State';
 
 const journalReducer = createReducer(
-    initialState,
+    journalState,
     on(loadJournalHeaderSuccess, (state, action) => {
         return {
             ...state,
-            journal_header : action.journal_headers,
+            journals : action.journals,
             error: null,
         }
     }),
 
-    on(getJournalDetailSuccess, (state, action) => {
+    on(loadJournalDetailSuccess, (state, action) => {
         return {
             ...state,
-            journal_details : action.journal_details,
-            error: null,
-        }
-    }),
-
-    on(loadJournalHeaderSuccess, (state, action) => {
-        return {
-            ...state,
-            journal_details : action.journal_headers,
+            journalDetails : action.journalDetails,
             error: null,
         }
     }),
@@ -63,21 +54,21 @@ const journalReducer = createReducer(
     on(addJournalHeaderSuccess, (state, action) => {
         return {
             ...state,
-            journals: [...state.journals, action.journal_header],
+            journals: [...state.journals, action.journals],
             error: null,
         }
     }),
     on(updateJournalHeaderSuccess, (state, action) => {
         return {
             ...state,
-            journal_selected: state.journals.map(x => x.journal_id === action.journal_header.journal_id ? action.journal_header.journal_id : x),
+            journal_selected: state.journals.map(x => x.journal_id === action.journals.journal_id ? action.journals.journal_id : x),
             error: null,
         }
     }),
     on(getJournalHeaderSuccess, (state, action) => {
          return {
              ...state,
-             journal_selected: action.journal_header,
+             journal_selected: action.journals,
              error: null,
          }
      })

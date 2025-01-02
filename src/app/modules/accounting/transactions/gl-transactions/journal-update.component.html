@@ -200,32 +200,34 @@
                                     <div class="text-3xl gap-2 m-1 text-gray-100 p-2 bg-slate-600 rounded-md">
                                         Transaction List
                                     </div>
-
-                                    <ejs-grid id="grid-journal-list" [dataSource]='store.gl()'
-                                              [selectionSettings]="selectionOptions" [editSettings]='editSettings'
-                                              [searchSetting]="searchOptions" [allowFiltering]='true'
-                                              [enableStickyHeader]=true [toolbar]='toolbarOptions' allowSorting='true'
-                                              showColumnMenu='true' (rowSelected)="onRowSelected($event)"
-                                              (actionBegin)="actionBegin($event)" [gridLines]="'Both'">
-                                        <e-columns>
-                                            <e-column field='journal_id' headerText='ID' [visible]='true'
-                                                      isPrimaryKey='true' width='100'></e-column>
-                                            <e-column field='description' headerText='Journal Description'
-                                                      [visible]='true'></e-column>
-                                            <e-column field='amount' headerText='Amount' [visible]='false'
-                                                      textAlign='Right' width='150' format="N2"></e-column>
-                                            <e-column field="type" headerText="Type" [visible]='false' width="100"
-                                                      dataType="text" textAlign="left"></e-column>
-                                            <e-column field="booked" headerText="Booked" [visible]='false' width="100"
-                                                      [displayAsCheckBox]='true' type="boolean"></e-column>
-                                            <e-column field="amount" headerText="Amount" [visible]='false' width="150"
-                                                      format='N2' textAlign="Right"></e-column>
-                                            <e-column field="period" headerText="Prd" [visible]='false'
-                                                      width="100"></e-column>
-                                            <e-column field="period_year" headerText="Yr" [visible]='false'
-                                                      width="100"></e-column>
-                                        </e-columns>
-                                    </ejs-grid>
+                                    @if(journalHeader$ | async; as headers) {
+                                        <ejs-grid id="grid-journal-list" [dataSource]='headers'
+                                                  [selectionSettings]="selectionOptions" [editSettings]='editSettings'
+                                                  [searchSetting]="searchOptions" [allowFiltering]='true'
+                                                  [enableStickyHeader]=true [toolbar]='toolbarOptions' allowSorting='true'
+                                                  showColumnMenu='true' (rowSelected)="onRowSelected($event)"
+                                                  (actionBegin)="actionBegin($event)" [gridLines]="'Both'">
+                                            <e-columns>
+                                                <e-column field='journal_id' headerText='ID' [visible]='true'
+                                                          isPrimaryKey='true' width='100'></e-column>
+                                                <e-column field='description' headerText='Journal Description'
+                                                          [visible]='true'></e-column>
+                                                <e-column field='amount' headerText='Amount' [visible]='false'
+                                                          textAlign='Right' width='150' format="N2"></e-column>
+                                                <e-column field="type" headerText="Type" [visible]='false' width="100"
+                                                          dataType="text" textAlign="left"></e-column>
+                                                <e-column field="booked" headerText="Booked" [visible]='false' width="100"
+                                                          [displayAsCheckBox]='true' type="boolean"></e-column>
+                                                <e-column field="amount" headerText="Amount" [visible]='false' width="150"
+                                                          format='N2' textAlign="Right"></e-column>
+                                                <e-column field="period" headerText="Prd" [visible]='false'
+                                                          width="100"></e-column>
+                                                <e-column field="period_year" headerText="Yr" [visible]='false'
+                                                          width="100"></e-column>
+                                            </e-columns>
+                                        </ejs-grid>
+                                        }
+                                    
                                 </mat-card>
                             </div>
                         </ng-template>

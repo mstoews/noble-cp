@@ -1,4 +1,5 @@
-import { createFeatureSelector, createSelector } from "@ngrx/store";import { TemplateModel } from "./Template.Model";
+import { createFeatureSelector, createSelector } from "@ngrx/store";
+import { TemplateModel } from "./Template.Model";
 
 const getTemplateState = createFeatureSelector<TemplateModel>('tpl');
 

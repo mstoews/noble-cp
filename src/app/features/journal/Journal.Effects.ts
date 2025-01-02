@@ -34,7 +34,7 @@ export class journalHeaderEffects {
       ofType(loadJournalHeader),
       exhaustMap(() => {
         return this.journalService.readHttpJournalHeader().pipe(
-          map((data) => loadJournalHeaderSuccess({ journal_headers: data })),
+          map((data) => loadJournalHeaderSuccess({ journals : data })),
           catchError((error) => of(loadJournalHeaderFailure({ error })))
         );
       })
@@ -46,7 +46,7 @@ export class journalHeaderEffects {
       ofType(loadJournalDetail),
       exhaustMap((action) => {
         return this.journalService.getHttpJournalDetails(action.journal_id).pipe(
-          map((data) => loadJournalDetailSuccess({ journal_details: data })),
+          map((data) => loadJournalDetailSuccess({ journalDetails: data })),
           catchError((error) => of(loadJournalHeaderFailure({ error })))
         );
       })
@@ -69,8 +69,8 @@ export class journalHeaderEffects {
     this.actions.pipe(
       ofType(addJournalHeader),
       exhaustMap((action) => {
-        return this.journalService.createJournalHeader( action.journal_header ).pipe(
-          map(() => addJournalHeaderSuccess({ journal_header: action.journal_header })),
+        return this.journalService.createJournalHeader( action.journals ).pipe(
+          map(() => addJournalHeaderSuccess({ journals: action.journals })),
           catchError((error) => of(loadJournalHeaderFailure({ error })))
         );
       })
@@ -81,8 +81,8 @@ export class journalHeaderEffects {
     this.actions.pipe(
       ofType(updateJournalHeader),
       exhaustMap((action) => {
-        return this.journalService.updateJournalHeader(action.journal_header).pipe(
-          map(() => updateJournalHeaderSuccess({ journal_header: action.journal_header })),
+        return this.journalService.updateJournalHeader(action.journals).pipe(
+          map(() => updateJournalHeaderSuccess({ journals: action.journals})),
           catchError((error) => of(loadJournalHeaderFailure({ error })))
         );
       })

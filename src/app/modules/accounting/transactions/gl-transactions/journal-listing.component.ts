@@ -9,6 +9,12 @@ import { Router, NavigationStart } from '@angular/router';
 
 import { GridMenubarStandaloneComponent } from '../../grid-menubar/grid-menubar.component';
 import { GLGridComponent } from '../../grid-menubar/gl-grid.component';
+import { Store } from '@ngrx/store';
+import { loadJournalHeader } from 'app/features/journal/Journal.Action';
+import { Observable } from 'rxjs';
+import { IJournalHeader } from 'app/models/journals';
+import { getJournals } from 'app/features/journal/Journal.Selector';
+
 
 
 const imports = [
@@ -30,9 +36,11 @@ const imports = [
 export class JournalEntryComponent implements OnInit, OnDestroy {
 
     public route = inject(Router);
-    public store = inject(JournalStore);
+    //public store = inject(JournalStore);
+    private Store = inject(Store);
 
     sTitle = 'Transaction Listings by Journal Type';
+    public journalHeader$: Observable<IJournalHeader[]>;
 
     currentRowData: any;
     drawOpen: 'open' | 'close' = 'open';
@@ -71,7 +79,8 @@ export class JournalEntryComponent implements OnInit, OnDestroy {
 
 
     ngOnInit() {
-        
+        this.Store.dispatch(loadJournalHeader());
+        this.journalHeader$ = this.Store.select(getJournals);
     }
 
     selectedRow($event) {

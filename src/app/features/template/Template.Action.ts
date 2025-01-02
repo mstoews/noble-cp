@@ -34,7 +34,18 @@ export const getTemplatesSuccess = createAction(UPDATE_TEMPLATES_SUCCESS, props<
 export const getTemplatesFailure = createAction(LOAD_TEMPLATES_FAILURE, props<{ error: string }>());
 
 export const TemplateActions = {
-    loadTemplates
+    loadTemplates,
+    loadTemplatesSuccess,
+    loadTemplatesFailure,
+    deleteTemplates,
+    deleteTemplatesSuccess,
+    addTemplates,
+    addTemplatesSuccess,
+    updateTemplates,
+    updateTemplatesSuccess,
+    getTemplates,
+    getTemplatesSuccess,
+    getTemplatesFailure
 };
 
 
