@@ -1,6 +1,6 @@
 import type { User } from "firebase/auth";
 import { DocumentReference, Timestamp, FieldValue } from "firebase/firestore";
-
+import * as subtypes from './subtypes';
 
 export interface IDashboardFund {
   fund: string,
@@ -48,12 +48,12 @@ export interface CategorySnap extends ICategory {
 }
 
 export type IType = {
-  id?: string;
-  type: string;
+  id: string;
+  transaction_type: string;
   description: string;
   create_date: string;
   create_user: string;
-  update_date: Date;
+  update_date: string;
   update_user: string;  
 }
 

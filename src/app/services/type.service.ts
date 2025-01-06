@@ -16,21 +16,8 @@ import {
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { exhaustMap, pipe, switchMap } from 'rxjs';
 import { tapResponse } from '@ngrx/operators';
+import { IType } from 'app/models';
 
-
-interface TypeState {
-  types: IType[];
-  error: string | null;
-}
-
-export interface IType {
-  type: string,
-  description: string,
-  create_date: Date,
-  create_user: string,
-  update_date: Date,
-  update_user: string
-}
 
 @Injectable({
   providedIn: 'root',
@@ -49,15 +36,12 @@ export class TypeService {
 
   create(t: IType) {
     var url = this.baseUrl + '/v1/type_create';
-    var data: IType = {
-      type: t.type,
-      description: t.description,
-      create_date: new Date(),
-      create_user: this.authService.currentUser.email,
-      update_date: new Date(),
-      update_user: this.authService.currentUser.email,
-    }
-    return this.httpClient.post<IType>(url, data).pipe( shareReplay())
+    t.create_date = new Date().toISOString().split('T')[0];
+    t.update_date = new Date().toISOString().split('T')[0];
+    t.create_user = '@' + this.authService.currentUser.email.split('@')[0];
+    t.update_user = '@' + this.authService.currentUser.email.split('@')[0];
+  
+    return this.httpClient.post<IType>(url, t).pipe( shareReplay())
   }
 
   // Read
@@ -72,7 +56,8 @@ export class TypeService {
     var url = this.baseUrl + '/v1/type_create';
 
     var data: IType = {
-      type: t.type,
+      id: t.id,
+      transaction_type: t.transaction_type,
       description: t.description,
       create_date: t.create_date,
       create_user: t.create_user,

@@ -8,8 +8,7 @@ import {
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'environments/environment.prod';
-import { debounce, interval, shareReplay } from 'rxjs';
-import { IJournalDetail, IJournalHeader } from 'app/models/journals';
+import { shareReplay } from 'rxjs';
 
 @Injectable({
     providedIn: 'root'

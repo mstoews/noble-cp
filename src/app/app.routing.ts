@@ -35,37 +35,37 @@ export const appRoutes: Route[] = [
                 path: 'confirmation-required',
                 loadChildren: () =>
                     import(
-                        'app/modules/auth/confirmation-required/confirmation-required.routes'
+                        'app/features/auth/confirmation-required/confirmation-required.routes'
                     ),
             },
             {
                 path: 'forgot-password',
                 loadChildren: () =>
                     import(
-                        'app/modules/auth/forgot-password/forgot-password.routes'
+                        'app/features/auth/forgot-password/forgot-password.routes'
                     ),
             },
             {
                 path: 'reset-password',
                 loadChildren: () =>
                     import(
-                        'app/modules/auth/reset-password/reset-password.routes'
+                        'app/features/auth/reset-password/reset-password.routes'
                     ),
             },
             {
                 path: 'auth/login',
                 loadChildren: () =>
-                    import('app/modules/auth/sign-in/sign-in.routes'),
+                    import('app/features/auth/sign-in/sign-in.routes'),
             },
             {
                 path: 'sign-in',
                 loadChildren: () =>
-                    import('app/modules/auth/sign-in/sign-in.routes'),
+                    import('app/features/auth/sign-in/sign-in.routes'),
             },
             {
                 path: 'landing',
                 loadChildren: () =>
-                    import('app/modules/landing/landing.routing'),
+                    import('app/features/landing/landing.routing'),
             },
 
         ],
@@ -85,13 +85,13 @@ export const appRoutes: Route[] = [
                 path: 'sign-out',
                 canActivate: [isAuthenticatedGuard()],
                 loadChildren: () =>
-                    import('app/modules/auth/sign-out/sign-out.routes'),
+                    import('app/features/auth/sign-out/sign-out.routes'),
             },
             {
                 path: 'unlock-session',
                 loadChildren: () =>
                     import(
-                        'app/modules/auth/unlock-session/unlock-session.routes'
+                        'app/features/auth/unlock-session/unlock-session.routes'
                     ),
             },
         ],
@@ -110,102 +110,102 @@ export const appRoutes: Route[] = [
                 canActivate: [isAuthenticatedGuard()],
                 loadChildren: () =>
                     import(
-                        'app/modules/accounting/accts/accounts/gl.main.components.routes'
+                        'app/features/accounting/static/accounts/gl.01.main.components.routes'
                     ),
             },
             {
                 path: 'help',
                 canActivate: [isAuthenticatedGuard()],
                 loadChildren: () =>
-                    import('app/modules/help-center/help-center.routes'),
+                    import('app/features/help-center/help-center.routes'),
             },
             {
                 path: 'analysis',
                 canActivate: [isAuthenticatedGuard()],
                 loadChildren: () =>
-                    import('app/modules/analysis/analysis.component.routes'),
+                    import('app/features/analysis/analysis.component.routes'),
             },
             {
                 path: 'journals',
                 canActivate: [isAuthenticatedGuard()],
                 loadChildren: () =>
                     import(
-                        'app/modules/accounting/transactions/journal.entry.routes'
+                        'app/features/accounting/transactions/journal.entry.routes'
                     ),
             },
             {
                 path: 'analytics',
                 canActivate: [isAuthenticatedGuard()],
                 loadChildren: () =>
-                    import('app/modules/admin/finance/finance.routes'),
+                    import('app/features/admin/finance/finance.routes'),
             },
             {
                 path: 'projects',
                 canActivate: [isAuthenticatedGuard()],
                 loadChildren: () =>
-                    import('app/modules/admin/dashboard/project.routes'),
+                    import('app/features/admin/dashboard/project.routes'),
             },
             {
                 path: 'reporting',
                 canActivate: [isAuthenticatedGuard()],
                 loadChildren: () =>
-                    import('app/modules/reporting/reporting.routes'),
+                    import('app/features/reporting/reporting.routes'),
             },
 
             {
                 path: 'expense-reports',
                 canActivate: [isAuthenticatedGuard()],
                 loadChildren: () =>
-                    import('app/modules/reporting/expense/expense.routes'),
+                    import('app/features/reporting/expense/expense.routes'),
             },
             {
                 path: 'kanban',
                 canActivate: [isAuthenticatedGuard()],
                 loadChildren: () =>
-                    import('app/modules/kanban/kanban/kanban.routes'),
+                    import('app/features/kanban/kanban/kanban.routes'),
             },
             {
                 path: 'finance',
                 canActivate: [isAuthenticatedGuard()],
                 loadChildren: () =>
-                    import('app/modules/finance/finance.routes'),
+                    import('app/features/finance/finance.routes'),
             },
             {
                 path: 'chat',
                 canActivate: [isAuthenticatedGuard()],
                 loadChildren: () =>
-                    import('app/modules/chat/chat.routes'),
+                    import('app/features/chat/chat.routes'),
             },
             {
                 path: 'budget',
                 canActivate: [isAuthenticatedGuard()],
                 loadChildren: () =>
-                    import('app/modules/budget/budget.entry.routes'),
+                    import('app/features/budget/budget.entry.routes'),
             },
 
             {
                 path: 'learning',
                 canActivate: [isAuthenticatedGuard()],
                 loadChildren: () =>
-                    import('app/modules/admin/academy/academy.routes'),
+                    import('app/features/admin/academy/academy.routes'),
             },
             {
                 path: 'glaccts',
                 canActivate: [isAuthenticatedGuard()],
                 loadChildren: () =>
-                    import('app/modules/accounting/accts/accounts/gl-accts.routes'),
+                    import('app/features/accounting/static/accounts/gl.accts.routes'),
             },
             {
                 path: 'settings',
                 canActivate: [isAuthenticatedGuard()],
                 loadChildren: () =>
-                    import('app/modules/pages/settings/settings.routes'),
+                    import('app/features/pages/settings/settings.routes'),
             },
             {
                 path: 'docs',
                 canActivate: [isAuthenticatedGuard()],
                 loadChildren: () =>
-                    import('app/modules/file-manager/file-manager.routes'),
+                    import('app/features/file-manager/file-manager.routes'),
             },
             // {
             //     path: '**', loadChildren: () =>

@@ -1,7 +1,3 @@
-export interface IPeriod {
-  period_id: number,
-  period_year: number,
-}
 
 
 export interface IJournalDetailDelete {
@@ -44,10 +40,6 @@ export interface IJournalHeader {
   debit?: number
 }
 
-export interface IPeriodParam {
-  period: number,
-  period_year: number
-}
 
 export interface ITBParams {
   period: number,

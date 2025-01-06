@@ -2,20 +2,13 @@ import { Injectable, computed, inject, signal } from '@angular/core';
 import { shareReplay, Subject } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'environments/environment.prod';
+import { ISubType } from 'app/models/subtypes';
 
 interface SubtypeState {
   types: ISubType[];
   error: string | null;
 }
 
-export interface ISubType {
-  subtype: string,
-  description: string,
-  create_date: Date,
-  create_user: string,
-  update_date: Date,
-  update_user: string
-}
 
 @Injectable({
   providedIn: 'root',
@@ -41,6 +34,7 @@ export class SubTypeService {
     var url = this.baseUrl + '/v1/subtype_create';
 
     var data: ISubType = {
+      id: t.id,
       subtype: t.subtype,
       description: t.description,
       create_date: t.create_date,
@@ -70,6 +64,7 @@ export class SubTypeService {
       var url = this.baseUrl + '/v1/subtype_update';
   
       var data: ISubType = {
+        id: t.id,
         subtype: t.subtype,
         description: t.description,
         create_date: t.create_date,

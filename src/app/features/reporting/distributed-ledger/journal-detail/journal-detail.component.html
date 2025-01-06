@@ -1,0 +1,23 @@
+<div class="h-full border-gray-300 rounded-2xl">
+    <ng-container>
+        <div class="flex flex-col h-full mb-2">
+            @if (store.details() !== null) {
+            <ejs-grid id="journal_child_id" [dataSource]="store.details()" [rowHeight]='30'>
+
+                <e-columns>
+                   <e-column field="journal_subid" caption="ID" width="100" alignment="middle"> </e-column>
+                   <e-column field="account" width="100"> </e-column>
+                   <e-column field="child" width="100"> </e-column>
+                   <e-column field="sub_type" caption="Sub Type" width="120"> </e-column>
+                   <e-column field="description"> </e-column>
+                   <e-column field="debit" dataType="number" width="120" alignment="right"  [customizeText]="formatNumber"> </e-column>
+                   <e-column field="credit" dataType="number" alignment="right" [customizeText]="formatNumber" width="120"> </e-column>
+                   <e-column field="create_date" caption="Date" width="120"> </e-column>
+                   <e-column field="create_user" caption="User" width="100"> </e-column>
+                </e-columns>    
+
+            </ejs-grid>
+            }
+        </div>
+    </ng-container>
+</div>

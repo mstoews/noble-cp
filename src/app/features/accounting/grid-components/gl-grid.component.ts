@@ -1,0 +1,321 @@
+import { Component, inject, Input, input, OnInit, output, viewChild } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { AggregateService, ColumnMenuService, ContextMenuItem, ContextMenuService, DialogEditEventArgs, EditService, EditSettingsModel, ExcelExportService, FilterService, FilterSettingsModel, GridComponent, GridLine, GridModule, GroupService, PageService, PdfExportService, ReorderService, ResizeService, SaveEventArgs, SearchService, SearchSettingsModel, SelectionSettingsModel, SortService, ToolbarItems, ToolbarService } from '@syncfusion/ej2-angular-grids';
+import { DropDownListComponent } from '@syncfusion/ej2-angular-dropdowns';
+import { AuthService } from 'app/features/auth/auth.service';
+import { Observable } from 'rxjs';
+import { GridSettingsService, IGridSettingsModel } from 'app/services/grid.settings.service';
+import { ReactiveFormsModule, FormsModule, FormBuilder } from '@angular/forms';
+import { MaterialModule } from 'app/services/material.module';
+import { MatDrawer } from '@angular/material/sidenav';
+
+
+const mods = [
+    CommonModule,
+    MaterialModule,
+    ReactiveFormsModule,
+    FormsModule,
+    GridModule
+];
+
+const providers = [
+    ReorderService,
+    PdfExportService,
+    ExcelExportService,
+    ContextMenuService,
+    SortService,
+    PageService,
+    ResizeService,
+    FilterService,
+    ToolbarService,
+    EditService,
+    AggregateService,
+    ColumnMenuService,
+    SearchService
+];
+
+const keyExpr = ["account", "child"];
+
+@Component({
+    standalone: true,
+    selector: 'gl-grid',
+    imports: [mods],
+    template: `    
+    <mat-drawer-container class="flex-col">        
+    <ng-container >
+        <ejs-grid  #grid id="grid-parent"  class="e-grid mt-3 h-[calc(100vh)-100px]"         
+                [rowHeight]='30'               
+                [dataSource]="data" 
+                [columns]="columns"
+                allowSorting='true'
+                showColumnMenu='true' 
+                allowEditing='true' 
+                [gridLines]="lines"
+                [allowFiltering]='true'                 
+                [toolbar]='toolbarOptions'                 
+                [filterSettings]='filterSettings'
+                [editSettings]='editSettings' 
+                [pageSettings]='pageSettings'                 
+                [enableStickyHeader]='true' 
+                [enablePersistence]='false'
+                [enableStickyHeader]=true
+                [allowGrouping]="false"
+                [allowResizing]='true' 
+                [allowReordering]='true' 
+                [allowExcelExport]='true' 
+                [allowPdfExport]='true' 
+                [contextMenuItems]="contextMenuItems" 
+                (actionBegin)='actionBegin($event)' 
+                (actionComplete)='actionComplete($event)'>
+        </ejs-grid>
+        </ng-container>
+    </mat-drawer-container>
+    `,
+    providers: [providers],
+    styles: [
+        `    .e-grid {
+             font-family: cursive;
+             border: 1px solid #f0f0f0;
+             
+        }
+        `
+    ]
+})
+export class GLGridComponent implements OnInit {
+    gridForm: any;
+
+    public selectedItemKeys: any[] = [];
+    public bDirty: boolean = false;
+    readonly displayModes = [{ text: "Display Mode 'full'", value: 'full' }, { text: "Display Mode 'compact'", value: 'compact' }];
+    showPageSizeSelector = true;
+    showInfo = true;
+    showNavButtons = true;
+    public lines: GridLine;
+    private authService = inject(AuthService);
+    private gridSettingsService = inject(GridSettingsService);
+
+
+    @Input() data: Object[];
+    @Input() columns: Object[];
+
+    public onUpdateSelection = output<Object>();
+    public onFocusChanged = output<Object>();
+    public contextMenuItems: ContextMenuItem[];
+    public editing: EditSettingsModel;
+    public drawer = viewChild<MatDrawer>('drawer');
+
+    public formatoptions: Object;
+    public initialSort: Object;
+    public pageSettings: Object;
+    public editSettings: Object;
+    public dropDown: DropDownListComponent;
+    public submitClicked: boolean = false;
+    public selectionOptions?: SelectionSettingsModel;
+    public toolbarOptions?: ToolbarItems[];
+    public searchOptions?: SearchSettingsModel;
+    public filterSettings: FilterSettingsModel;
+
+    public grid = viewChild<GridComponent>('grid');
+    private fb = inject(FormBuilder);
+    public state?: GridComponent;
+    public message?: string;
+    public userId: string;
+    sTitle: any;
+
+
+    openTrade($event) {
+        console.log('openTrade : ', $event);
+    }
+
+    ngOnInit() {
+        this.initialDatagrid();
+        this.lines = 'Both';
+        this.contextMenuItems = [
+            'AutoFit',
+            'AutoFitAll',
+            'SortAscending',
+            'SortDescending',
+            'Copy',
+            'Save',
+            'Cancel',
+            'PdfExport',
+            'ExcelExport',
+            'CsvExport',
+            'FirstPage',
+            'PrevPage',
+            'LastPage',
+            'NextPage',
+            'Group',
+            'Ungroup'
+        ]
+        this.editing = { allowDeleting: true, allowEditing: true };
+        this.userId = this.authService.user()?.uid
+        this.createEmptyForm();
+
+    }
+
+    public readSettings() {
+        return this.gridSettingsService.readAll();
+    }
+
+    public savePersistData(gridSettings: IGridSettingsModel) {
+        var persistData = this.grid().getPersistData(); // Grid persistData
+        gridSettings.userId = this.userId;
+        gridSettings.settings = persistData;
+        this.addFormatSettings(gridSettings); // Grid persistData 
+        console.log("Grid state saved.");
+    }
+
+    public restorePersistData(settingsName: string) {
+        const formats = this.gridSettingsService.readSettingsName(settingsName);
+        formats.subscribe(format => {
+            var settings = format[0].settings;
+            if (settings) {
+                this.grid().setProperties(JSON.parse(settings));
+            }
+        });
+    }
+
+    onExportExcel() {
+        console.log('Excel');
+        const fileName = new Date().toLocaleDateString() + '.xlsx';
+        this.grid()!.excelExport({
+            fileName: fileName, header: {
+                headerRows: 7,
+                rows: [
+                    { cells: [{ colSpan: 4, value: "Company Name", style: { fontColor: '#03396c', fontSize: 20, hAlign: 'Left', bold: true, } }] },
+                    { cells: [{ colSpan: 4, value: "Trial Balance", style: { fontColor: '#03396c', fontSize: 20, hAlign: 'Left', bold: true, } }] },
+                ]
+            },
+            footer: {
+                footerRows: 4,
+                rows: [
+                    { cells: [{ colSpan: 4, value: "", style: { hAlign: 'Center', bold: true } }] },
+                    { cells: [{ colSpan: 4, value: "", style: { hAlign: 'Center', bold: true } }] }
+                ]
+            },
+        });
+    }
+
+    onExportCSV() {
+        console.log('Refresh');
+        this.grid()!.csvExport();
+    }
+
+    onExportPDF() {
+        console.log('Refresh');
+        this.grid()!.pdfExport({
+            pageOrientation: 'Landscape', pageSize: 'A4', fileName: 'TB-31-01-2024.pdf', header: {
+                fromTop: 0,
+                height: 120,
+                contents: [
+                    {
+                        type: 'Text',
+                        position: { x: 10, y: 50 },
+                        style: { textBrushColor: '#000000', fontSize: 30 },
+                    },
+                ]
+            }
+        });
+
+    }
+
+
+
+    public readAllSettings(): Observable<IGridSettingsModel[]> {
+        return this.gridSettingsService.readAll();
+    }
+
+    private addFormatSettings(settings: IGridSettingsModel) {
+        this.gridSettingsService.create(settings);
+    }
+
+
+    private getFormatByName(userId: string) {
+        return this.gridSettingsService.readUserId(userId);
+    }
+
+
+
+    onAdd() { }
+
+    onFocusedRowChanged(e: any) {
+        this.onFocusChanged.emit(e);
+    }
+
+    initialDatagrid() {
+        this.formatoptions = { type: 'dateTime', format: 'M/dd/yyyy' }
+        this.pageSettings = { pageSizes: true, pageCount: 10 };
+        this.selectionOptions = { mode: 'Row' };
+        this.editSettings = { allowEditing: true, allowAdding: false, allowDeleting: false };
+        this.searchOptions = { operator: 'contains', ignoreCase: true, ignoreAccent: true };
+        this.toolbarOptions = ['Search'];
+        this.filterSettings = { type: 'Menu' };
+    }
+
+    actionBegin(args: SaveEventArgs): void {
+        var data = args.rowData;
+
+        if (args.requestType === 'beginEdit' || args.requestType === 'add') {
+            args.cancel = true;
+            this.onUpdateSelection.emit(data);
+        }
+        if (args.requestType === 'save') {
+            args.cancel = true;
+        }
+    }
+
+    actionComplete(args: DialogEditEventArgs): void {
+        if ((args.requestType === 'beginEdit' || args.requestType === 'add')) {
+            if (args.requestType === 'beginEdit') {
+
+            } else if (args.requestType === 'add') {
+
+            }
+        }
+    }
+
+    createEmptyForm() {
+        this.gridForm = this.fb.group({
+            settings_name: [''],
+            grid_name: [''],
+        });
+    }
+
+    public openDrawer() {
+        const opened = this.drawer().opened;
+        if (opened !== true) {
+            this.drawer().toggle();
+        } else {
+            return;
+        }
+    }
+
+    closeDrawer() {
+        const opened = this.drawer().opened;
+        if (opened === true) {
+            this.drawer().toggle();
+        } else {
+            return;
+        }
+    }
+
+    onUpdate(e: any) {
+        const rawData = {
+            settings_name: this.gridForm.value.settings_name,
+            grid_name: this.gridForm.value.grid_name,
+        };
+
+        this.closeDrawer();
+    }
+
+    onCreate($event: any) {
+        throw new Error('Method not implemented.');
+    }
+
+    onDelete($event: any) {
+        throw new Error('Method not implemented.');
+    }
+
+
+}

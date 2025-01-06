@@ -2,11 +2,11 @@ import { Component, effect, inject } from '@angular/core';
 import { RegisterFormComponent } from './ui/register-form.component';
 import { RegisterService } from './data-access/register.service';
 import { Router } from '@angular/router';
-import { AuthService } from 'app/modules/auth/auth.service';
+import { AuthService } from 'app/features/auth/auth.service';
 
 @Component({
-    selector: 'app-register',
-    template: `
+  selector: 'app-register',
+  template: `
     <div class="container gradient-bg">
       <app-register-form
         [status]="registerService.status()"
@@ -14,8 +14,8 @@ import { AuthService } from 'app/modules/auth/auth.service';
       />
     </div>
   `,
-    providers: [RegisterService],
-    imports: [RegisterFormComponent]
+  providers: [RegisterService],
+  imports: [RegisterFormComponent]
 })
 export default class RegisterComponent {
   public registerService = inject(RegisterService);

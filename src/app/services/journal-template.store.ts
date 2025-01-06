@@ -13,7 +13,7 @@ import {
   import { tapResponse } from '@ngrx/operators';
   import { IAccounts } from 'app/models/journals';
   import { IJournalDetailTemplate, IJournalTemplate } from 'app/models/journals';
-  import { IType } from 'app/modules/kanban/kanban.service';
+  import { IType } from 'app/models/kanban';
   import { IParty } from 'app/models/party';
   import { JournalTemplateService } from './journal-template.service';
   

@@ -1,19 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
+import { IPeriod } from 'app/models/period';
 import { environment } from 'environments/environment.prod';
 import { shareReplay } from 'rxjs';
 
-export interface IPeriod {
-  period_id : number,
-  period_year: number,
-  start_date: Date, 
-  end_date:  Date,
-  description: string,
-  create_date: Date,
-  create_user: string,
-  update_date: Date,
-  update_user: string
-}
 
 
 @Injectable({
@@ -30,7 +20,8 @@ export class PeriodsService {
     var url = this.baseUrl + '/v1/period_create';
 
     var data: IPeriod = {
-      period_id : period.period_id,
+      id: period.id,
+      period : period.period,
       period_year: period.period_year,
       start_date:  period.start_date, 
       end_date:    period.end_date,

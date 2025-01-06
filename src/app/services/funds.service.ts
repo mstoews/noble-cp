@@ -35,8 +35,8 @@ export class FundsService {
 
   // Delete
   delete(id: string) {    
-    var url = this.baseUrl + '/v1/fund_delete';
-    return this.httpClient.post<IFunds[]>(url, id).pipe( shareReplay());
+    var url = this.baseUrl + `/v1/fund_delete/'{id}'`;
+    return this.httpClient.delete<IFunds[]>(url).pipe( shareReplay());
   }
 
 }

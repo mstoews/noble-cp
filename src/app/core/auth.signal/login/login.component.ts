@@ -7,8 +7,8 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { ScrollService } from 'app/services/scroll.service';
 import { MaterialModule } from 'app/services/material.module';
 import { MatDrawer } from '@angular/material/sidenav';
-import { AuthService } from 'app/modules/auth/auth.service';
-import { PricingTableComponent } from 'app/modules/pages/pricing/table/table.component';
+import { AuthService } from 'app/features/auth/auth.service';
+import { PricingTableComponent } from 'app/features/pages/pricing/table/table.component';
 
 @Component({
     selector: 'app-login',
@@ -44,14 +44,14 @@ export default class LoginComponent {
     toggleDrawer() {
         const opened = this.drawer.opened;
         if (opened !== true) {
-          this.drawer.toggle();
-        } else {
-          if (this.drawOpen === 'close') {
             this.drawer.toggle();
-          }
+        } else {
+            if (this.drawOpen === 'close') {
+                this.drawer.toggle();
+            }
         }
-      }
-    
+    }
+
     showMenu() {
         this.show = !this.show;
     }

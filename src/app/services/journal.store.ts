@@ -20,15 +20,15 @@ import {
     IJournalHeader,
     IJournalHeaderUpdate,
     IJournalTemplate,
-    IPeriodParam
+    
 } from 'app/models/journals';
 import { JournalService } from '../services/journal.service';
-   import { IType } from 'app/modules/kanban/kanban.service';
 import { IParty } from 'app/models/party';
-import { IPeriod } from '../services/periods.service';
-import { ISubType } from '../services/subtype.service';
-import { IFunds, IJournalParams, ITrialBalance } from 'app/models';
 
+import { IFunds, IJournalParams, ITrialBalance } from 'app/models';
+import { IType } from 'app/models';
+import { IPeriod } from 'app/models/period';
+import { ISubType } from 'app/models/subtypes';
 
 
 export interface JournalStateInterface {

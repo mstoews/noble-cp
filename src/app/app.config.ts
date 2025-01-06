@@ -1,6 +1,6 @@
 
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
-import { APP_INITIALIZER, ApplicationConfig, ErrorHandler } from '@angular/core';
+import { ApplicationConfig, provideAppInitializer } from '@angular/core';
 import { LuxonDateAdapter } from '@angular/material-luxon-adapter';
 import { DateAdapter, MAT_DATE_FORMATS } from '@angular/material/core';
 import { provideAnimations } from '@angular/platform-browser/animations';
@@ -17,7 +17,13 @@ import { provideState, provideStore } from '@ngrx/store';
 import { provideToastr } from 'ngx-toastr';
 import { provideEffects } from '@ngrx/effects';
 import { provideStoreDevtools } from '@ngrx/store-devtools';
-import { pipe, tap } from 'rxjs';
+
+import * as fromPriority from 'app/state/kanban-state/priority/priority.state';
+import * as fromKanban from 'app/state/kanban-state/kanban/kanban.reducer';
+import * as fromPeriods from 'app/state/periods/periods.state';
+import * as fromSubtype from 'app/state/subtype/sub-type.state';
+import * as periodEffects from 'app/state/periods/periods.effects';
+import * as subtypeEffects from 'app/state/subtype/sub-type.effects';
 
 
 import {
@@ -36,14 +42,20 @@ import { getAuth, connectAuthEmulator } from 'firebase/auth';
 import { initializeApp } from 'firebase/app';
 import { loggingInterceptor } from "./logging-interceptor";
 import { retryInterceptor } from "./retry-interceptor";
-import { TemplateReducer } from './features/template/Template.Reducer';
+import { TemplateReducer } from './state/template/Template.Reducer';
 
-import { AccountsReducer } from './features/accounts/Accounts.Reducer';
-import { JournalReducer } from './features/journal/Journal.Reducer';
+import { AccountsReducer } from './state/accounts/Accounts.Reducer';
+import { JournalReducer } from './state/journal/Journal.Reducer';
 // Effects 
 
-import { journalHeaderEffects } from './features/journal/Journal.Effects';
-import { templateEffects } from './features/template/Template.Effects';
+import { journalHeaderEffects } from './state/journal/Journal.Effects';
+import { templateEffects } from './state/template/Template.Effects';
+import { provideRouterStore } from '@ngrx/router-store';
+import { KanbanEffects } from './state/kanban-state/kanban/kanban.effects';
+import { FundsReducer } from './state/funds/Funds.Reducer';
+import { fundsEffects } from './state/funds/Funds.Effects';
+
+
 
 const app = initializeApp(environment.firebase);
 
@@ -89,24 +101,20 @@ export const AUTH = new InjectionToken('Firebase auth', {
 
 const CoreProviders = [
   provideHttpClient(withInterceptors([authTokenInterceptor, loggingInterceptor, retryInterceptor])),
-  {
-    provide: APP_INITIALIZER,
-    // dummy factory
-    useFactory: () => () => { },
-    multi: true,
-    // injected dependencies, this will be constructed immediately
-    // deps: [AuthService],
-  },
 ];
 
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideAnimations(),
+    provideAppInitializer(() => {
+      console.log('App initialized');
+
+    },),
     ...CoreProviders,
     provideRouter(appRoutes,
-    withPreloading(PreloadAllModules),
-    withInMemoryScrolling({ scrollPositionRestoration: 'enabled' }),
+      withPreloading(PreloadAllModules),
+      withInMemoryScrolling({ scrollPositionRestoration: 'enabled' }),
     ),
     // Material Date Adapter
     {
@@ -127,16 +135,22 @@ export const appConfig: ApplicationConfig = {
         },
       },
     },
-
-    // Transloco Config
     provideTransloco(),
+
+    /// NGRX Store and Effects
     provideStore({
       'tpl': TemplateReducer,
       'act': AccountsReducer,
-      'jnl': JournalReducer
+      'jnl': JournalReducer,
+      'fnd': FundsReducer
     }),
-    provideEffects([templateEffects, journalHeaderEffects]),
+    provideState(fromKanban.kanbanFeature),
+    provideState(fromPriority.priorityFeature),
+    provideState(fromPeriods.periodsFeature),
+    provideState(fromSubtype.subtypeFeature),
+    provideEffects([templateEffects, journalHeaderEffects, KanbanEffects, periodEffects, fundsEffects, subtypeEffects]),
     provideToastr(),
+    provideRouterStore(),
     provideStoreDevtools({ maxAge: 25 }),
 
     // Fuse

@@ -3,6 +3,7 @@ import { Injectable, OnDestroy, inject } from '@angular/core';
 import { Observable, TimeoutError, catchError, debounceTime, distinctUntilChanged, retry, shareReplay, take, takeUntil, tap, throwError, timeout, timer } from 'rxjs';
 import { environment } from 'environments/environment.prod';
 import { ToastrService } from "ngx-toastr";
+import { IPeriod } from 'app/models/period';
 
 import {
   IAccounts,
@@ -13,13 +14,12 @@ import {
   IJournalHeader,
   IJournalHeaderUpdate,
   IJournalTemplate,
-  IPeriod,
-  IPeriodParam,
   IReadJournalDetailsParams,
   ITransactionDate
 } from 'app/models/journals';
 
 import { IJournalParams } from 'app/models';
+import { IPeriodParam } from 'app/models/period';
 
 
 @Injectable({
@@ -163,6 +163,17 @@ export class JournalService implements OnDestroy {
       }),
       shareReplay());;
   }
+
+  getJournalHeaderByPeriod(period: IPeriodParam) {
+    var url = this.baseUrl + '/v1/read_journal_header_by_period';
+    return this.httpClient.post<IJournalHeader[]>(url, period).pipe(
+      catchError(err => {
+        const message = "Failed to connect to server for journal header ...";
+        this.ShowAlert(message, 'failed');                
+        return throwError(() => new Error(`${JSON.stringify(err)}`));
+      }),
+      shareReplay());
+  } 
 
   getHttpAllJournalDetailsByPeriod(period: IPeriodParam) {
     var url = this.baseUrl + '/v1/get_journal_detailbyperiod/';
