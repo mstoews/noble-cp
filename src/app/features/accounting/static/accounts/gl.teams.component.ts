@@ -79,30 +79,29 @@ interface IValue {
                     </section>
                 </div>
             </form>
+            @if (bDirty === true) {
+                    <button mat-icon-button color="primary" class="bg-slate-200 hover:bg-slate-400 ml-1" (click)="onUpdateJournalEntry()"
+                      matTooltip="Save" aria-label="hovered over">
+                      <span class="e-icons e-save"></span>
+                    </button>
+                    }
 
-            <div mat-dialog-actions>
-                <button mat-icon-button color="primary" class="m-1" (click)="onUpdate($event)"
-                    matTooltip="Update"
-                    aria-label="Button that displays a tooltip when focused or hovered over">                                
-                    <mat-icon>update</mat-icon>
-                </button>
-                <button mat-icon-button color="primary" class="m-1" (click)="onCreate($event)"
-                    matTooltip="Add"
-                    aria-label="Button that displays a tooltip when focused or hovered over">                                
-                    <mat-icon>add</mat-icon>
-                </button>
-                <button mat-icon-button color="primary" class="m-1" (click)="onDelete()"
-                    matTooltip="Delete"
-                    aria-label="Button that displays a tooltip when focused or hovered over">                                
-                    <mat-icon>delete</mat-icon>
-                </button>
-                <button mat-icon-button color="primary" class="m-1" (click)="closeDrawer()"
-                    matTooltip="Close"
-                    aria-label="Button that displays a tooltip when focused or hovered over">
-                    
-                    <mat-icon>close</mat-icon>
-                </button>
-            </div>
+                    <button mat-icon-button color="primary" 
+                            class=" hover:bg-slate-400 ml-1" (click)="onAdd()" matTooltip="New" aria-label="hovered over">                        
+                        <span class="e-icons e-circle-add"></span>
+                    </button>
+
+                    <button mat-icon-button color="primary" 
+                            class=" hover:bg-slate-400 ml-1" (click)="onDelete()" matTooltip="Delete" aria-label="hovered over">                        
+                        <span class="e-icons e-trash"></span>
+                    </button>
+
+                    <button mat-icon-button color="primary"
+                            class=" hover:bg-slate-400 ml-1"  (click)="onCancel()" matTooltip="Close"
+                            aria-label="hovered over">
+                            <span class="e-icons e-circle-close"></span>
+                    </button>   
+            
             <section class="text-xl text-gray-700" [formGroup]="teamForm">                        
                 {{teamForm.value | json}}
             </section>
@@ -120,7 +119,7 @@ interface IValue {
              @if (store.isLoading() === false) 
             {                            
                 <gl-grid 
-                    (openTradeId)="selectedRow($event)"
+                    (onUpdateSelection)="selectedRow($event)"
                     [data]="store.team()"
                     [columns]="columns">
                 </gl-grid>                        
@@ -153,6 +152,8 @@ export class TeamsComponent implements OnInit {
     private fuseConfirmationService = inject(FuseConfirmationService);
     private fb = inject(FormBuilder);
     teamService = inject(TeamService);
+
+    public bDirty  = false;
 
     store = inject(TeamStore);
     title = "Team Maintenance"
@@ -196,7 +197,14 @@ export class TeamsComponent implements OnInit {
         this.filterSettings = { type: 'Excel' };
     }
 
+    public onCancel() {
+        this.closeDrawer();
+    }
 
+    selectedRow(event: any) {
+        console.log(event);
+        this.openDrawer();
+    }
 
     actionBegin(args: SaveEventArgs): void {
         var data = args.rowData as IAccounts;

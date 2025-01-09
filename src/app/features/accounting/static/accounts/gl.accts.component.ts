@@ -131,108 +131,57 @@ const keyExpr = ["account", "child"];
               <div class="flex flex-col grow">
                 <mat-form-field class="m-1 flex-start">
                   <mat-label class="text-md ml-2">Description</mat-label>
-                  <input
-                    #myInput
-                    matInput
-                    placeholder="Description"
-                    formControlName="description"
-                  />
-                  <mat-icon
-                    class="icon-size-5 text-lime-700"
-                    matPrefix
-                    [svgIcon]="'heroicons_outline:document-text'"
-                  ></mat-icon>
+                  <input #myInput matInput placeholder="Description" formControlName="description" />
+                  <mat-icon class="icon-size-5 text-lime-700" matPrefix [svgIcon]="'heroicons_outline:document-text'"></mat-icon>
                 </mat-form-field>
               </div>
 
               <section class="flex flex-col md:flex-row">
                 <mat-form-field class="m-1 grow">
                   <mat-label class="text-md ml-2">Type</mat-label>
-                  <mat-select
-                    placeholder="Type"
-                    formControlName="type"
-                    (selectionChange)="changeType($event)"
-                  >
+                  <mat-select placeholder="Type" formControlName="type"  (selectionChange)="changeType($event)">
                     @for (item of typeStore.type(); track item) {
-                    <mat-option [value]="item.type">
-                      {{ item.type }}
-                    </mat-option>
+                      <mat-option [value]="item.type"> {{ item.type }}  </mat-option>
                     }
                   </mat-select>
-                  <span
-                    class="e-icons e-notes text-lime-700 m-2 "
-                    matPrefix
-                  ></span>
+                  <span class="e-icons e-notes text-lime-700 m-2 " matPrefix></span>
                 </mat-form-field>
               </section>
 
               <div class="flex flex-col grow">
                 <mat-form-field class="m-1 flex-start">
                   <mat-label class="text-md ml-2">Comments</mat-label>
-                  <input
-                    #myInput
-                    matInput
-                    placeholder="Comments"
-                    formControlName="comments"
-                  />
-                  <span
-                    class="e-icons e-comment-show text-lime-700 m-2"
-                    matPrefix
-                  ></span>
+                  <input #myInput matInput placeholder="Comments" formControlName="comments" />
+                  <span class="e-icons e-comment-show text-lime-700 m-2" matPrefix></span>
                 </mat-form-field>
               </div>
             </div>
           </form>
 
           <div mat-dialog-actions class="gap-2 mb-3">
-            @if (bHeaderDirty === true) {
-            <button
-              mat-icon-button
-              color="primary"
-              class="bg-slate-200 hover:bg-slate-400 ml-1"
-              (click)="onUpdateJournalEntry()"
-              matTooltip="Save"
-              aria-label="hovered over"
-            >
-              <span class="e-icons e-save"></span>
-            </button>
-            }
+                  @if (bHeaderDirty === true) {
+                    <button mat-icon-button color="primary" class="bg-slate-200 hover:bg-slate-400 ml-1" (click)="onUpdateJournalEntry()"
+                      matTooltip="Save" aria-label="hovered over">
+                      <span class="e-icons e-save"></span>
+                    </button>
+                    }
 
-            <button mat-icon-button
-              color="primary"
-              class="bg-slate-200 hover:bg-slate-400 ml-1"
-              (click)="onNew($event)"
-              matTooltip="New"
-              aria-label="hovered over" >
-              <span class="e-icons e-circle-add"></span>
-            </button>
+                    <button mat-icon-button color="primary" 
+                            class=" hover:bg-slate-400 ml-1" (click)="onAdd()" matTooltip="New" aria-label="hovered over">                        
+                        <span class="e-icons e-circle-add"></span>
+                    </button>
 
-            
+                    <button mat-icon-button color="primary" 
+                            class=" hover:bg-slate-400 ml-1" (click)="onDelete($event)" matTooltip="Delete" aria-label="hovered over">                        
+                        <span class="e-icons e-trash"></span>
+                    </button>
 
-            <button
-              mat-icon-button
-              color="primary"
-              class="bg-slate-200 text-gray-100 hover:bg-slate-400 ml-1"
-              (click)="onDelete($event)"
-              matTooltip="Cancel Transaction"
-              aria-label="hovered over"
-            >
-              <mat-icon [svgIcon]="'feather:trash-2'"></mat-icon>
-            </button>
-
-            
-
-            <button
-              mat-icon-button
-              color="primary"
-              class="bg-slate-200  hover:bg-slate-400 ml-1"
-              (click)="onCloseTransaction()"
-              matTooltip="Lock Transaction"
-              aria-label="complete"
-            >
-              <span class="e-icons e-close"></span>
-            </button>
-          </div>
+                    <button mat-icon-button color="primary"
+                            class=" hover:bg-slate-400 ml-1"  (click)="onCancel()" matTooltip="Close"
+                            aria-label="hovered over">
+                            <span class="e-icons e-circle-close"></span>
+                    </button>                    
+            </div>
         </mat-card>
       </mat-drawer>
       <mat-drawer-container class="flex-col">
@@ -335,6 +284,7 @@ export class GlAccountsComponent implements OnInit {
     { text: "Display Mode 'full'", value: "full" },
     { text: "Display Mode 'compact'", value: "compact" },
   ];
+  
   displayMode = "compact";
   showInfo = true;
   showNavButtons = true;
@@ -387,18 +337,12 @@ export class GlAccountsComponent implements OnInit {
   }
 
   onNew($event: any) {
+    this.createEmptyForm();
+    this.openDrawer();
     
   }
-  onClone($event: any) {
-    
-  }
-  onAddEvidence() {
-    
-  }
-  onCreateTemplate() {
-    
-  }
-  onCloseTransaction() {
+  
+  onCancel() {
       this.drawer.toggle();
   }
 

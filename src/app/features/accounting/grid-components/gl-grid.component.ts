@@ -179,22 +179,7 @@ export class GLGridComponent implements OnInit {
     onExportExcel() {
         console.log('Excel');
         const fileName = new Date().toLocaleDateString() + '.xlsx';
-        this.grid()!.excelExport({
-            fileName: fileName, header: {
-                headerRows: 7,
-                rows: [
-                    { cells: [{ colSpan: 4, value: "Company Name", style: { fontColor: '#03396c', fontSize: 20, hAlign: 'Left', bold: true, } }] },
-                    { cells: [{ colSpan: 4, value: "Trial Balance", style: { fontColor: '#03396c', fontSize: 20, hAlign: 'Left', bold: true, } }] },
-                ]
-            },
-            footer: {
-                footerRows: 4,
-                rows: [
-                    { cells: [{ colSpan: 4, value: "", style: { hAlign: 'Center', bold: true } }] },
-                    { cells: [{ colSpan: 4, value: "", style: { hAlign: 'Center', bold: true } }] }
-                ]
-            },
-        });
+        this.grid()!.excelExport({ fileName: fileName });
     }
 
     onExportCSV() {
@@ -204,7 +189,8 @@ export class GLGridComponent implements OnInit {
 
     onExportPDF() {
         console.log('Refresh');
-        this.grid()!.pdfExport({
+        const fileName = new Date().toLocaleDateString() + '.xlsx';
+        this.grid()!.pdfExport({            
             pageOrientation: 'Landscape', pageSize: 'A4', fileName: 'TB-31-01-2024.pdf', header: {
                 fromTop: 0,
                 height: 120,
@@ -217,10 +203,11 @@ export class GLGridComponent implements OnInit {
                 ]
             }
         });
-
     }
 
-
+    public onAdd() { 
+        
+    }
 
     public readAllSettings(): Observable<IGridSettingsModel[]> {
         return this.gridSettingsService.readAll();
@@ -237,7 +224,7 @@ export class GLGridComponent implements OnInit {
 
 
 
-    onAdd() { }
+    
 
     onFocusedRowChanged(e: any) {
         this.onFocusChanged.emit(e);

@@ -60,20 +60,19 @@ const imports = [
                             </div>
 
                         </div>
-                        </form>
+                    </form>
                     </div>
+                </div>
+                <div mat-dialog-actions class="gap-2 mb-3">
+                  @if (bDirty === true) {
+                    <button mat-icon-button color="primary" class="bg-slate-200 hover:bg-slate-400 ml-1" (click)="onUpdateJournalEntry()"
+                      matTooltip="Save" aria-label="hovered over">
+                      <span class="e-icons e-save"></span>
+                    </button>
+                    }
 
-                <div mat-dialog-actions>
-                
-                    @if (bDirty === true) {
-                            <button mat-icon-button color="primary" class="hover:bg-slate-400 ml-1"
-                                        (click)="onUpdate()" matTooltip="Save"
-                                        aria-label="hovered over">                                    
-                                    <span class="e-icons e-save"></span>
-                            </button>
-                     }
                     <button mat-icon-button color="primary" 
-                            class=" hover:bg-slate-400 ml-1" (click)="onAdd($event)" matTooltip="New" aria-label="hovered over">                        
+                            class=" hover:bg-slate-400 ml-1" (click)="onAdd()" matTooltip="New" aria-label="hovered over">                        
                         <span class="e-icons e-circle-add"></span>
                     </button>
 
@@ -83,16 +82,12 @@ const imports = [
                     </button>
 
                     <button mat-icon-button color="primary"
-                            class=" hover:bg-slate-400 ml-1"  (click)="onCancel($event)" matTooltip="Close"
+                            class=" hover:bg-slate-400 ml-1"  (click)="onCancel()" matTooltip="Close"
                             aria-label="hovered over">
                             <span class="e-icons e-circle-close"></span>
-                    </button>
-                    
-
-                    </div>
-                    
-                </div>
-            </mat-card>
+                    </button>                    
+                  </div>
+        </mat-card>
         </mat-drawer>
 
         <mat-drawer-container class="flex-col h-full">    
@@ -117,12 +112,12 @@ export class FundsComponent implements OnInit {
     private confirmation = inject(FuseConfirmationService);
     private Store = inject(Store);
     public funds$: Observable<IFunds[]>;
+    bDirty: boolean = false;
     
     drawer = viewChild<MatDrawer>('drawer');
 
     public sTitle = 'Reserve Funds';
     public fundsForm!: FormGroup;
-    public bDirty = false;
     public formdata: any = {};
 
     // definition of the columns if you want to change the default
@@ -162,7 +157,7 @@ export class FundsComponent implements OnInit {
         });
     }
 
-    public onAdd($event: any) {
+    public onAdd() {
         const dDate = new Date();
         const updateDate = dDate.toISOString().split('T')[0];
         const fund = { ...this.fundsForm.value } as IFunds;
@@ -183,7 +178,11 @@ export class FundsComponent implements OnInit {
         this.openDrawer();        
     }
 
-    public onCancel($event: any) {
+    public onCancel() {
+        this.closeDrawer();
+    }
+
+    public public () {
         if (this.bDirty === true) {
             const confirm = this.confirmation.open({
                 title: 'Fund Modified',

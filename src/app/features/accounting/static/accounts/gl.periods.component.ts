@@ -35,6 +35,7 @@ const imports = [
     template: `
         <div class="h-[calc(100vh)-100px]">
             <mat-drawer class="lg:w-1/3 sm:w-full bg-white-100" #drawer [opened]="false" mode="over" [position]="'end'" [disableClose]="false">
+                 <mat-card class="m-2">   
                     <div class="flex flex-col w-full text-gray-700 max-w-140 filter-article filter-interactive">
                         <div class="h-10 pt-2 text-2xl text-justify text-black bg-slate-100" mat-dialog-title> {{ sTitle }} </div>
                         <div mat-dialog-content>
@@ -87,87 +88,32 @@ const imports = [
                                 </section>
                             </form>
                         </div>
-                        <div mat-dialog-actions class="gap-2 mb-3 ml-4">
-                        @if (bHeaderDirty === true) {
-                        <button
-                          mat-icon-button
-                          color="primary"
-                          class="bg-slate-200 hover:bg-slate-400 ml-1"
-                          (click)="onUpdateJournalEntry()"
-                          matTooltip="Save"
-                          aria-label="hovered over"
-                        >
-                          <span class="e-icons e-save"></span>
-                        </button>
-                        }
-            
-                        <button
-                          mat-icon-button
-                          color="primary"
-                          class="bg-slate-200 hover:bg-slate-400 ml-1"
-                          (click)="onNew($event)"
-                          matTooltip="New"
-                          aria-label="hovered over"
-                        >
-                          <span class="e-icons e-circle-add"></span>
-                        </button>
-            
-                        <button
-                          mat-icon-button
-                          color="primary"
-                          class="bg-slate-200 hover:bg-slate-400 ml-1"
-                          (click)="onClone($event)"
-                          matTooltip="Clone"
-                          aria-label="hovered over"
-                        >
-                          <span class="e-icons e-copy"></span>
-                        </button>
-            
-                        <button
-                          mat-icon-button
-                          color="primary"
-                          class="bg-slate-200 text-gray-100 hover:bg-slate-400 ml-1"
-                          (click)="onDelete($event)"
-                          matTooltip="Cancel Transaction"
-                          aria-label="hovered over"
-                        >
-                          <mat-icon [svgIcon]="'feather:trash-2'"></mat-icon>
-                        </button>
-            
-                        <button
-                          mat-icon-button
-                          color="primary"
-                          class="bg-gray-200 hover:bg-slate-400 ml-1"
-                          (click)="onAddEvidence()"
-                          matTooltip="Evidence"
-                          aria-label="Evidence"
-                        >
-                          <span class="e-icons e-text-alternative"></span>
-                        </button>
-            
-                        <button
-                          mat-icon-button
-                          color="primary"
-                          class="bg-gray-200 hover:bg-slate-400 ml-1"
-                          (click)="onCreateTemplate()"
-                          matTooltip="Template"
-                          aria-label="Template"
-                        >
-                          <span class="e-icons e-table-overwrite-cells"></span>
-                        </button>
-            
-                        <button
-                          mat-icon-button
-                          color="primary"
-                          class="bg-slate-200  hover:bg-slate-400 ml-1"
-                          (click)="onClose()"
-                          matTooltip="Lock Transaction"
-                          aria-label="complete"
-                        >
-                          <span class="e-icons e-check-box"></span>
-                        </button>
-                      </div>
+                        <div mat-dialog-actions class="gap-2 mb-3">
+                  @if (bDirty === true) {
+                    <button mat-icon-button color="primary" class="bg-slate-200 hover:bg-slate-400 ml-1" (click)="onUpdateJournalEntry()"
+                      matTooltip="Save" aria-label="hovered over">
+                      <span class="e-icons e-save"></span>
+                    </button>
+                    }
+
+                    <button mat-icon-button color="primary" 
+                            class=" hover:bg-slate-400 ml-1" (click)="onAdd()" matTooltip="New" aria-label="hovered over">                        
+                        <span class="e-icons e-circle-add"></span>
+                    </button>
+
+                    <button mat-icon-button color="primary" 
+                            class=" hover:bg-slate-400 ml-1" (click)="onDelete($event)" matTooltip="Delete" aria-label="hovered over">                        
+                        <span class="e-icons e-trash"></span>
+                    </button>
+
+                    <button mat-icon-button color="primary"
+                            class=" hover:bg-slate-400 ml-1"  (click)="onCancel()" matTooltip="Close"
+                            aria-label="hovered over">
+                            <span class="e-icons e-circle-close"></span>
+                    </button>                    
+                  </div>
                     </div>
+                  </mat-card>    
             </mat-drawer>
             <mat-drawer-container class="flex-col">
                 
@@ -202,7 +148,6 @@ const imports = [
     providers: [PeriodStore, SortService, GroupService, PageService, ResizeService, FilterService, ToolbarService, EditService, AggregateService, ColumnMenuService,]
 })
 export class PeriodsComponent implements OnInit {
-    
 
     public data: any;
     private _fuseConfirmationService = inject(FuseConfirmationService);
@@ -210,7 +155,7 @@ export class PeriodsComponent implements OnInit {
     public sTitle = 'General Ledger Periods';
     public drawer = viewChild<MatDrawer>("drawer");
     periodsForm!: FormGroup;
-    bHeaderDirty: any;
+    bDirty: any;
     
     Store = inject(Store);
     periods$= this.Store.select(periodsFeature.selectPeriods);    
@@ -261,6 +206,12 @@ export class PeriodsComponent implements OnInit {
             
         });
     }
+
+    onCancel() {
+        this.closeDrawer();
+    }
+            
+        
    
 
     public selectingEvent(e: any): void {
