@@ -8,8 +8,7 @@ export const initialState : JournalState = {
     error: null,
     journal: null,
     period: null,
-    journalLedgerPanel: null,
-    currentUser: null,
+    journalLedgerPanel: null
 };
 
 

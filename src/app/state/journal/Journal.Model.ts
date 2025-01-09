@@ -10,6 +10,5 @@ export interface JournalState {
     error: string | null;
     journal: number | null;
     period: IPeriodParam | null;    
-    currentUser: string | null;
     journalLedgerPanel: string | null;
 }

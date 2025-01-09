@@ -14,15 +14,6 @@ export const selectPanelCode = createSelector(
     ({ journalLedgerPanel }) => journalLedgerPanel
 );
 
-export const selectCurrentUser = createSelector (
-    getJournalState,
-    ({currentUser}) => currentUser
-)
-
-export const selectPeriod = createSelector(
-    getJournalState,
-    ({ period }) => period
-);
   
 export const selectError = createSelector(
     getJournalState,

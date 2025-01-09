@@ -1,6 +1,6 @@
 import { HttpClient } from "@angular/common/http";
 import { inject, Injectable } from "@angular/core";
-import { IType } from "app/models";
+import { IType } from "app/models/types";
 import { IAccounts, IJournalDetailTemplate, IJournalTemplate } from "app/models/journals";
 import { IParty } from "app/models/party";
 import { environment } from "environments/environment.prod";

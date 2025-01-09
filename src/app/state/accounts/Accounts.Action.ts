@@ -1,10 +1,17 @@
 import { createAction, props } from "@ngrx/store";
 import { IAccounts }  from "app/models/journals";
+import { IDropDownAccounts } from 'app/models';
 
 
 export const LOAD_ACCOUNTS = 'accounts getall';
 export const LOAD_ACCOUNTS_SUCCESS = 'accounts getall success';
 export const LOAD_ACCOUNTS_FAILURE = 'accounts getall failure'; 
+
+
+export const LOAD_ACCOUNTS_DROPDOWN = 'accounts getDropdown';
+export const LOAD_ACCOUNTS_DROPDOWN_SUCCESS = 'accounts getDropdown success';
+export const LOAD_ACCOUNTS_DROPDOWN_FAILURE = 'accounts getDropdown failure'; 
+
 
 export const DELETE_ACCOUNTS = 'account delete'
 export const DELETE_ACCOUNTS_SUCCESS = 'account delete success'
@@ -20,6 +27,11 @@ export const GET_ACCOUNTS = 'account get account'
 export const loadAccounts = createAction(LOAD_ACCOUNTS);
 export const loadAccountsSuccess = createAction(LOAD_ACCOUNTS_SUCCESS, props<{ accounts: IAccounts[] }>());
 export const loadAccountsFailure = createAction(LOAD_ACCOUNTS_FAILURE, props<{ error: string }>());
+
+export const loadAccountsDropdown = createAction(LOAD_ACCOUNTS_DROPDOWN);
+export const loadAccountsDropdownSuccess = createAction(LOAD_ACCOUNTS_DROPDOWN_SUCCESS, props<{ accountsDropdown: IDropDownAccounts[] }>());
+export const loadAccountsDropdownFailure = createAction(LOAD_ACCOUNTS_DROPDOWN_FAILURE, props<{ error: string }>());
+
 
 
 export const deleteAccounts = createAction(DELETE_ACCOUNTS, props<{ id: number }>());

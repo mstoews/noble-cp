@@ -16,6 +16,11 @@ import {
         getJournalDetailSuccess,
         loadJournalDetail,
         loadJournalHeaderByPeriodSuccess,
+        loadJournalHeaderByPeriodFailure,
+        loadPeriodSuccess,
+        loadPeriodFailure,
+        loadPeriod,
+                
         } from './Journal.Action'; 
          
 

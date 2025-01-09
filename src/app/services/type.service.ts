@@ -16,7 +16,7 @@ import {
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { exhaustMap, pipe, switchMap } from 'rxjs';
 import { tapResponse } from '@ngrx/operators';
-import { IType } from 'app/models';
+import { IGLType } from 'app/models/types';
 
 
 @Injectable({
@@ -32,32 +32,31 @@ export class TypeService {
 
   error$ = new Subject<string>();
 
-  public typeList = signal<IType[]>([])
+  public typeList = signal<IGLType[]>([])
 
-  create(t: IType) {
+  create(t: IGLType) {
     var url = this.baseUrl + '/v1/type_create';
     t.create_date = new Date().toISOString().split('T')[0];
     t.update_date = new Date().toISOString().split('T')[0];
     t.create_user = '@' + this.authService.currentUser.email.split('@')[0];
     t.update_user = '@' + this.authService.currentUser.email.split('@')[0];
   
-    return this.httpClient.post<IType>(url, t).pipe( shareReplay())
+    return this.httpClient.post<IGLType>(url, t).pipe( shareReplay())
   }
 
   // Read
   read() {
       var url = this.baseUrl + '/v1/type_list';
-      return this.httpClient.get<IType[]>(url).pipe(shareReplay());
+      return this.httpClient.get<IGLType[]>(url).pipe(shareReplay());
   }
 
 
   // Update
-  update(t: IType) {
+  update(t: IGLType) {
     var url = this.baseUrl + '/v1/type_create';
 
-    var data: IType = {
-      id: t.id,
-      transaction_type: t.transaction_type,
+    var data: IGLType = {
+      gltype: t.gltype,      
       description: t.description,
       create_date: t.create_date,
       create_user: t.create_user,
@@ -65,7 +64,7 @@ export class TypeService {
       update_user: t.update_user,
     }
 
-    return this.httpClient.post<IType>(url, data).pipe(
+    return this.httpClient.post<IGLType>(url, data).pipe(
       shareReplay())
   }
 
@@ -75,15 +74,14 @@ export class TypeService {
       type: id
     }
     var url = this.baseUrl + '/v1/type_list';
-    return this.httpClient.post<IType[]>(url, data).pipe(
+    return this.httpClient.post<IGLType[]>(url, data).pipe(
       shareReplay())
   }
 
 }
 
-
 export interface TypeStateInterface {
-  type: IType[];
+  type: IGLType[];
   isLoading: boolean;
   error: string | null;
 }

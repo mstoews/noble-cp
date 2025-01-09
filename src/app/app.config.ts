@@ -1,4 +1,3 @@
-
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { ApplicationConfig, provideAppInitializer } from '@angular/core';
 import { LuxonDateAdapter } from '@angular/material-luxon-adapter';
@@ -25,7 +24,6 @@ import * as fromSubtype from 'app/state/subtype/sub-type.state';
 import * as periodEffects from 'app/state/periods/periods.effects';
 import * as subtypeEffects from 'app/state/subtype/sub-type.effects';
 
-
 import {
   Firestore,
   initializeFirestore,
@@ -46,15 +44,17 @@ import { TemplateReducer } from './state/template/Template.Reducer';
 
 import { AccountsReducer } from './state/accounts/Accounts.Reducer';
 import { JournalReducer } from './state/journal/Journal.Reducer';
+import { UsersReducer } from './state/users/Users.Reducer';
 // Effects 
 
 import { journalHeaderEffects } from './state/journal/Journal.Effects';
 import { templateEffects } from './state/template/Template.Effects';
+import { userEffects } from './state/users/Users.Effects';
 import { provideRouterStore } from '@ngrx/router-store';
 import { KanbanEffects } from './state/kanban-state/kanban/kanban.effects';
 import { FundsReducer } from './state/funds/Funds.Reducer';
 import { fundsEffects } from './state/funds/Funds.Effects';
-
+import { UserService } from './services/user.service';
 
 
 const app = initializeApp(environment.firebase);
@@ -106,17 +106,14 @@ const CoreProviders = [
 
 export const appConfig: ApplicationConfig = {
   providers: [
+    UserService,
     provideAnimations(),
     provideAppInitializer(() => {
       console.log('App initialized');
 
     },),
     ...CoreProviders,
-    provideRouter(appRoutes,
-      withPreloading(PreloadAllModules),
-      withInMemoryScrolling({ scrollPositionRestoration: 'enabled' }),
-    ),
-    // Material Date Adapter
+    provideRouter(appRoutes, withPreloading(PreloadAllModules), withInMemoryScrolling({ scrollPositionRestoration: 'enabled' }), ),
     {
       provide: DateAdapter,
       useClass: LuxonDateAdapter,
@@ -142,16 +139,19 @@ export const appConfig: ApplicationConfig = {
       'tpl': TemplateReducer,
       'act': AccountsReducer,
       'jnl': JournalReducer,
-      'fnd': FundsReducer
+      'fnd': FundsReducer,
+      'usr': UsersReducer
     }),
     provideState(fromKanban.kanbanFeature),
     provideState(fromPriority.priorityFeature),
     provideState(fromPeriods.periodsFeature),
     provideState(fromSubtype.subtypeFeature),
-    provideEffects([templateEffects, journalHeaderEffects, KanbanEffects, periodEffects, fundsEffects, subtypeEffects]),
-    provideToastr(),
+    provideEffects([userEffects, templateEffects, journalHeaderEffects, KanbanEffects, periodEffects, fundsEffects, subtypeEffects]),
     provideRouterStore(),
     provideStoreDevtools({ maxAge: 25 }),
+
+    // Toastr
+    provideToastr(),
 
     // Fuse
     provideIcons(),

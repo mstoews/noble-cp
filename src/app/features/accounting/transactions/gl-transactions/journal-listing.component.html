@@ -64,7 +64,9 @@
                           (showSettings)="true"
                           (showBack)="false" >
                         </grid-menubar>  
-
+                        @if(user$ | async; as user ) {
+                            <div>USER : {{user}}</div>
+                        }                          
                         <gl-grid  (onUpdateSelection)="selectedRow($event)" [data]="headers"  [columns]="columns">                                                                
                         </gl-grid>                        
                     </ng-container> 

@@ -47,16 +47,6 @@ export interface CategorySnap extends ICategory {
   category: ICategory[];
 }
 
-export type IType = {
-  id: string;
-  transaction_type: string;
-  description: string;
-  create_date: string;
-  create_user: string;
-  update_date: string;
-  update_user: string;  
-}
-
 export type NobleLedgerUser = {
   photoURL: string | null;
   displayName: string | null;
@@ -105,21 +95,6 @@ export interface IDropDownAccounts {
   description: string;
 }
 
-// export interface IAccounts {
-//   account: string;
-//   child: string;
-//   parent_account?: boolean;
-//   type: string;
-//   sub_type: string;
-//   balance: number;
-//   description: string;
-//   comments: string;
-//   status: string;
-//   create_date: string;
-//   create_user: string;
-//   update_date: string;
-//   update_user: string;
-// }
 
 export interface IBudget {
     child : number;

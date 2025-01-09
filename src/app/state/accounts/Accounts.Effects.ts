@@ -11,7 +11,10 @@ import {
   updateAccountsSuccess,
   deleteAccountsSuccess,
   deleteAccounts,
-  emptyAction
+  emptyAction,
+  loadAccountsDropdown,
+  loadAccountsDropdownSuccess,
+  loadAccountsDropdownFailure
 } from "./Accounts.Action";
 import { inject } from "@angular/core";
 import { ToastrService } from "ngx-toastr";
@@ -32,6 +35,21 @@ export class accountEffects {
       })
     )
   );
+
+  // loadAccountsDropdown
+
+  _loadAccountsDropdown = createEffect(() =>
+    this.actions.pipe(
+      ofType(loadAccountsDropdown),
+      exhaustMap(() => {
+        return this.accountsService.readAccountDropdown().pipe(
+          map((data) => loadAccountsDropdownSuccess({ accountsDropdown: data })),
+          catchError((error) => of(loadAccountsDropdownFailure({ error })))
+        );
+      })
+    )
+  );
+
 
   _deleteAccounts = createEffect(() =>
     this.actions.pipe(

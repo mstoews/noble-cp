@@ -9,4 +9,9 @@ export const getAccounts = createSelector(
     }
 );
 
+export const getAccountsDropdown = createSelector(
+    getAccountsState, (state) => {
+        return state.accountsDropdown
+    }
+);
 

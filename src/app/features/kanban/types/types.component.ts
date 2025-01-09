@@ -10,7 +10,7 @@ import { GridMenubarStandaloneComponent } from 'app/features/accounting/grid-com
 import { Subject, map, takeUntil } from 'rxjs';
 import { KanbanService } from '../kanban.service';
 import { GridModule } from '@syncfusion/ej2-angular-grids';
-import { IType } from 'app/models';
+import { IType } from 'app/models/types';
 
 const imports = [
     CommonModule,
@@ -113,10 +113,10 @@ export class KanbanTypesComponent implements OnInit, OnDestroy {
     onUpdate(e: any) {
         const dDate = new Date();
         const updateDate = dDate.toISOString().split('T')[0];
-        const account = { ...this.accountsForm.value } as IType;
+        const types = { ...this.accountsForm.value } as IType;
         const rawData = {
-            type: account.transaction_type,
-            description: account.description,
+            type: types.type,
+            description: types.description,
         };
 
         this.closeDrawer();

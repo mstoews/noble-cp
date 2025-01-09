@@ -17,8 +17,6 @@ import { getJournals } from 'app/state/journal/Journal.Selector';
 import { IPeriod, IPeriodParam } from 'app/models/period';
 import { MatDrawer } from '@angular/material/sidenav';
 
-
-
 const imports = [
     CommonModule,
     ReactiveFormsModule,
@@ -47,6 +45,7 @@ export class JournalEntryComponent implements OnInit, OnDestroy {
 
     sTitle = 'Transaction Listings by Journal Type';
     public journalHeader$: Observable<IJournalHeader[]>;
+    public user$: Observable<string>;
 
     currentRowData: any;
     drawOpen: 'open' | 'close' = 'open';
@@ -67,25 +66,12 @@ export class JournalEntryComponent implements OnInit, OnDestroy {
         { field: 'party_id', headerText: 'Party', width: 100, visible: false }
     ];
 
-    /*
-    <e-column  field="journal_id"  headerText="ID" width="100" dataType="number" isPrimaryKey='true' textAlign="left"></e-column>
-    <e-column  field="type"        headerText="Type" width="100" dataType="text" textAlign="left"></e-column>
-    <e-column  field="booked"      [displayAsCheckBox]='true' headerText="Booked" width="100" type="boolean"></e-column>                            
-    <e-column  field="amount"      headerText="Amount" format='N2' width="150" textAlign="Right"></e-column>
-    <e-column  field="period"      headerText="Prd" width="100" ></e-column>
-    <e-column  field="period_year" headerText="Yr" width="100"></e-column>    
-    <e-column  field="description" headerText="Description" width="200"></e-column>                                    
-    <e-column  field="create_date" width='120' [format]='formatoptions' headerText="Created" type="dateTime"></e-column>                                                        
-    <e-column  field="create_user" width='120' headerText="User" type="string"></e-column>             
-    <e-column  field="period" width='80' headerText="Prd" type="numeric"></e-column>             
-    <e-column  field="period_year" width='80' headerText="Year" type="numeric"></e-column>             
-    <e-column  field="party_id" width='120' headerText="Party" type="string"></e-column>             
-    */
-
     ngOnInit() {        
         this.param = { period: 1, period_year: 2024 };
         this.Store.dispatch(loadJournalHeaderByPeriod({ period: this.param }));           
         this.journalHeader$ = this.Store.select(getJournals);
+        
+        
         this.toolbarTitle = "Journal Transactions : " + this.param.period + " - " + this.param.period_year;
         this.periodForm = this.fb.group({
             period: ['', Validators.required],

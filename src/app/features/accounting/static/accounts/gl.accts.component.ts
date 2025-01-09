@@ -198,27 +198,16 @@ const keyExpr = ["account", "child"];
             </button>
             }
 
-            <button
-              mat-icon-button
+            <button mat-icon-button
               color="primary"
               class="bg-slate-200 hover:bg-slate-400 ml-1"
               (click)="onNew($event)"
               matTooltip="New"
-              aria-label="hovered over"
-            >
+              aria-label="hovered over" >
               <span class="e-icons e-circle-add"></span>
             </button>
 
-            <button
-              mat-icon-button
-              color="primary"
-              class="bg-slate-200 hover:bg-slate-400 ml-1"
-              (click)="onClone($event)"
-              matTooltip="Clone"
-              aria-label="hovered over"
-            >
-              <span class="e-icons e-copy"></span>
-            </button>
+            
 
             <button
               mat-icon-button
@@ -231,27 +220,7 @@ const keyExpr = ["account", "child"];
               <mat-icon [svgIcon]="'feather:trash-2'"></mat-icon>
             </button>
 
-            <button
-              mat-icon-button
-              color="primary"
-              class="bg-gray-200 hover:bg-slate-400 ml-1"
-              (click)="onAddEvidence()"
-              matTooltip="Evidence"
-              aria-label="Evidence"
-            >
-              <span class="e-icons e-text-alternative"></span>
-            </button>
-
-            <button
-              mat-icon-button
-              color="primary"
-              class="bg-gray-200 hover:bg-slate-400 ml-1"
-              (click)="onCreateTemplate()"
-              matTooltip="Template"
-              aria-label="Template"
-            >
-              <span class="e-icons e-table-overwrite-cells"></span>
-            </button>
+            
 
             <button
               mat-icon-button
@@ -261,7 +230,7 @@ const keyExpr = ["account", "child"];
               matTooltip="Lock Transaction"
               aria-label="complete"
             >
-              <span class="e-icons e-check-box"></span>
+              <span class="e-icons e-close"></span>
             </button>
           </div>
         </mat-card>
@@ -280,7 +249,7 @@ const keyExpr = ["account", "child"];
             @if (accountService.isLoading() === false) {
 
             <gl-grid
-              (openTradeId)="selectedRow($event)"
+              (onUpdateSelection)="selectedRow($event)"
               [data]="this.accountService.accountList()"
               [columns]="columns"
             >
@@ -323,21 +292,7 @@ const keyExpr = ["account", "child"];
   ],
 })
 export class GlAccountsComponent implements OnInit {
-  onNew($event: any) {
-    throw new Error("Method not implemented.");
-  }
-  onClone($event: any) {
-    throw new Error("Method not implemented.");
-  }
-  onAddEvidence() {
-    throw new Error("Method not implemented.");
-  }
-  onCreateTemplate() {
-    throw new Error("Method not implemented.");
-  }
-  onCloseTransaction() {
-    throw new Error("Method not implemented.");
-  }
+  
   @ViewChild("drawer") drawer!: MatDrawer;
   accountsForm!: FormGroup;
 
@@ -391,7 +346,6 @@ export class GlAccountsComponent implements OnInit {
   }
 
   selectedRow($event) {
-    console.log("selectedRow : ", $event);
     this.onDoubleClicked($event);
   }
 
@@ -429,7 +383,23 @@ export class GlAccountsComponent implements OnInit {
       comments: [args.comments],
     });
 
-    this.openDrawer();
+    this.openDrawer();  
+  }
+
+  onNew($event: any) {
+    
+  }
+  onClone($event: any) {
+    
+  }
+  onAddEvidence() {
+    
+  }
+  onCreateTemplate() {
+    
+  }
+  onCloseTransaction() {
+      this.drawer.toggle();
   }
 
   onUpdate(e: any) {

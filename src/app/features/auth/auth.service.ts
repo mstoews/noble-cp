@@ -11,6 +11,10 @@ import { authState , idToken} from 'rxfire/auth';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Credentials } from 'app/shared/interfaces/credentials';
 import { AUTH } from 'app/app.config';
+import { Store } from '@ngrx/store';
+import { getUser, loadUsers } from 'app/state/users/Users.Action';
+import { getUserById, selectUsers } from 'app/state/users/Users.Selector';
+import { IUser } from 'app/models/user';
 // import { CacheService } from './cache.service';
 
 export type AuthUser = User | null | undefined;
@@ -27,6 +31,9 @@ export class AuthService {
   private auth = inject(AUTH);
   private token: BehaviorSubject<string> = new BehaviorSubject(null);
   token$: Observable<string> = this.token.asObservable();
+
+  Store = inject(Store);
+  public User$: Observable<IUser[]>;
 
   // sources
   private user$ = authState(this.auth);
@@ -47,6 +54,7 @@ export class AuthService {
   tokenSubject: Subject<string>;
 
   constructor() {
+    this.Store.dispatch(loadUsers());           
     this.user$.pipe(takeUntilDestroyed()).subscribe((user) =>
       this.state.update((state) => ({
         ...state,
@@ -57,9 +65,21 @@ export class AuthService {
       next: (token) => {
         this.UpdateState(token);
       },
-    });
+    });    
   }
 
+  getCurrentUser() {
+    var uid: string;
+    var rc: any
+    this.Store.dispatch(getUserState());
+    this.user$.pipe(takeUntilDestroyed()).subscribe((user) => {
+        uid = user.uid;
+        this.Store.select(getUserById(uid)).subscribe((user) => {
+          rc = user;
+        });    
+      });
+      return rc;  
+  }
 
   UpdateState(token: string) {
     localStorage.setItem('jwt', token);
@@ -152,3 +172,7 @@ export class AuthService {
     );
   }
 }
+function getUserState(): any {
+  throw new Error('Function not implemented.');
+}
+

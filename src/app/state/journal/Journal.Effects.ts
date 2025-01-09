@@ -1,5 +1,4 @@
 import { Actions, createEffect, ofType } from "@ngrx/effects";
-import { IPeriodParam } from "app/models/period";
 import { JournalService } from "app/services/journal.service";
 import { exhaustMap, map, catchError, of } from "rxjs";
 import {
@@ -18,35 +17,24 @@ import {
 
   loadJournalDetail,
   
-  emptyAction,
+  
   loadJournalDetailSuccess,
+
   loadJournalHeaderByPeriod,
   loadJournalHeaderByPeriodSuccess,
   loadJournalHeaderByPeriodFailure,
-  get_current_user
+
+  emptyAction,
+
 } from "./Journal.Action";
 import { inject } from "@angular/core";
 import { ToastrService } from "ngx-toastr";
-import { AuthService } from "app/features/auth/auth.service";
 
 
 export class journalHeaderEffects {
   private journalService = inject(JournalService);
-  private authService = inject(AuthService);
   private actions = inject(Actions);
   private toastr = inject(ToastrService);
-
-  _loadCurrentUser = createEffect(() =>
-    this.actions.pipe(
-      ofType(get_current_user),
-      exhaustMap(() => {
-        return this.authService.readHttpJournalHeader().pipe(
-          map((data) => loadJournalHeaderSuccess({ journals: data })),
-          catchError((error) => of(loadJournalHeaderFailure({ error })))
-        );
-      })
-    )
-  );
 
   _loadJournalHeader = createEffect(() =>
     this.actions.pipe(
@@ -108,8 +96,6 @@ export class journalHeaderEffects {
     )
   );
 
-
-
   _updateJournalHeader = createEffect(() =>
     this.actions.pipe(
       ofType(updateJournalHeader),
@@ -130,8 +116,5 @@ export class journalHeaderEffects {
     }
     return emptyAction();
   }
-}
-function switchMap(arg0: (action: any) => import("rxjs").Observable<({ journal_headers: import("../../models/journals").IJournalHeader[]; } & import("@ngrx/store").Action<"[journal_headers] getall success">) | ({ error: string; } & import("@ngrx/store").Action<"[journal_headers] getall failure">) >): import("rxjs").OperatorFunction<import("@ngrx/store").Action<"[journal_headers] getall">, unknown> {
-  throw new Error("Function not implemented.");
 }
 

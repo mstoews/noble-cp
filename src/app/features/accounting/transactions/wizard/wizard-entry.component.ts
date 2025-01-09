@@ -30,12 +30,12 @@ import { JournalService } from 'app/services/journal.service';
 import { MaterialModule } from 'app/services/material.module';
 import { SubTypeService } from 'app/services/subtype.service';
 import { NgxMaskDirective, NgxMaskPipe, provideNgxMask } from 'ngx-mask';
-import { ReplaySubject, Subject, Subscription, take, takeUntil } from 'rxjs';
+import { Observable, ReplaySubject, Subject, Subscription, take, takeUntil } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { DndComponent } from 'app/features/drag-n-drop/loaddnd/dnd.component';
 import { MatSelect } from '@angular/material/select';
 import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
-import { IDropDownAccounts } from 'app/models';
+import { IDropDownAccounts, IFunds } from 'app/models';
 import {
     IJournalDetail,
     IJournalDetailTemplate,
@@ -49,7 +49,7 @@ import { MatStepperModule } from '@angular/material/stepper';
 import { MAT_FORM_FIELD_DEFAULT_OPTIONS, MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
-import { MatIcon, MatIconModule } from '@angular/material/icon';
+import { MatIconModule } from '@angular/material/icon';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { IParty } from 'app/models/party';
 import { PartyService } from 'app/services/party.service';
@@ -66,8 +66,13 @@ import {
 
 import { MatDrawer, MatSidenav, MatSidenavModule } from '@angular/material/sidenav';
 import { MatCardModule } from "@angular/material/card";
-import { MatTableModule } from "@angular/material/table";
 import { MatTab, MatTabsModule } from "@angular/material/tabs";
+import { Store } from '@ngrx/store';
+import { loadTemplates } from 'app/state/template/Template.Action';
+import { getTemplates } from 'app/state/template/Template.Selector';
+import { loadAccounts, loadAccountsDropdown } from 'app/state/accounts/Accounts.Action';
+import { getAccounts, getAccountsDropdown } from 'app/state/accounts/Accounts.Selector';
+import { ISubType } from 'app/models/subtypes';
 
 
 interface ITransactionType {
@@ -123,12 +128,10 @@ const mods = [
 export class EntryWizardComponent implements OnInit, OnDestroy, AfterViewInit {
 
     private journalService = inject(JournalService);
-    private subtypeService = inject(SubTypeService);
-    private fundService    = inject(FundsService);
-    private accountService = inject(AccountsService);
     private formBuilder      = inject(FormBuilder);
     private partyService = inject(PartyService);
-    private templateService = inject(JournalTemplateService);
+
+    
     public  auth = inject(AUTH);
     public  matDialog = inject(MatDialog);
 
@@ -143,9 +146,7 @@ export class EntryWizardComponent implements OnInit, OnDestroy, AfterViewInit {
     public transactionType = 'GL';
     public isVerified = false;
 
-    private subAccountDebit: Subscription;
-    private subAccountCredit: Subscription;
-
+    
     public journalHeader: IJournalHeader;
 
     public journal_id = 0;
@@ -195,10 +196,7 @@ export class EntryWizardComponent implements OnInit, OnDestroy, AfterViewInit {
     public currentRowData: any;
 
     store = inject(JournalStore);
-    funds$ = this.fundService.read();
-    subtype$ = this.subtypeService.read();
-    accounts$ = this.accountService.readDropDownChild();
-
+    
     drawer = viewChild<MatDrawer>("drawer");
 
     @ViewChild("singleDebitSelect", { static: true }) singleDebitSelect: MatSelect;
@@ -217,24 +215,28 @@ export class EntryWizardComponent implements OnInit, OnDestroy, AfterViewInit {
 
     bHeaderDirty: boolean;
 
-
-    onTransTypeClicked(e: any) {
-        this.selectedOption = e;
-        console.log(e)
-    }
-
+    Store = inject(Store);
+    template$ : Observable<IJournalTemplate[]>; 
+    accountsDropdown$ : Observable<IDropDownAccounts[]>;
+    funds$ : Observable<IFunds[]>;
+    subtype$ : Observable<ISubType[]>;
+    
     // -----------------------------------------------------------------------------------------------------
     // @ Lifecycle hooks
     // -----------------------------------------------------------------------------------------------------
 
     ngOnInit(): void {
+        
+        this.Store.dispatch(loadTemplates());           
+        
+        this.Store.select(getTemplates).subscribe((templates) => {
+            this.templateList = templates;
+            this.templateFilter.next(templates.slice());
+        });
 
-        this.selectedOption = this.types[0].value;
+        this.Store.dispatch(loadAccountsDropdown());           
 
-        this.currentPeriod = this.store.currentPeriod();
-        this.currentYear = this.store.currentYear();
-
-        this.accountService.readChildren().pipe(takeUntil(this._onDestroy)).subscribe((accounts) => {
+        this.Store.select(getAccountsDropdown).subscribe((accounts) => {
             this.debitAccounts = accounts;
             this.creditAccounts = accounts;
             this.filteredDebitAccounts.next(this.debitAccounts.slice());
@@ -242,16 +244,37 @@ export class EntryWizardComponent implements OnInit, OnDestroy, AfterViewInit {
 
         });
 
-        this.templateService.read().pipe(takeUntil(this._onDestroy)).subscribe((templates) => {
-            this.templateList = templates;
-            this.templateFilter.next(this.templateList.slice());
-        });
+        this.selectedOption = this.types[0].value;
 
+        //this.currentPeriod = this.store.currentPeriod();
+        //this.currentYear = this.store.currentYear();
 
         this.partyService.read().pipe(takeUntil(this._onDestroy)).subscribe((party) => {
             this.partyList = party;
             this.partyFilter.next(this.partyList.slice());
         });
+
+        
+        this.journalService.getLastJournalNo().subscribe(journal_no => {
+            this.journal_id = Number(journal_no) + 1;
+        });
+
+
+        this.editSettings = {
+            allowEditing: true,
+            allowAdding: false,
+            allowDeleting: false,
+        };
+
+        this.createEmptyForms();
+        this.onChanges()
+
+    }
+
+    public createEmptyForms() {
+        let currentDate = new Date().toISOString().split("T")[0];
+
+        
 
         this.detailForm = this.formBuilder.group({
             debitAccountFilterCtrl: ["", Validators.required],
@@ -265,7 +288,7 @@ export class EntryWizardComponent implements OnInit, OnDestroy, AfterViewInit {
             credit: ["", Validators.required],
         });
 
-        let currentDate = new Date().toISOString().split("T")[0];
+        
 
         this.journalEntryForm = this.formBuilder.group({
             step1: this.formBuilder.group({
@@ -280,10 +303,9 @@ export class EntryWizardComponent implements OnInit, OnDestroy, AfterViewInit {
 
         });
 
-        this.journalService.getLastJournalNo().subscribe(journal_no => {
-            this.journal_id = Number(journal_no) + 1;
-        });
+    }
 
+    public onChanges(): void {
         this.debitAccountFilterCtrl.valueChanges.pipe(takeUntil(this._onDestroyDebitAccountFilter))
             .subscribe(() => {
                 this.filterDebitAccounts();
@@ -304,14 +326,23 @@ export class EntryWizardComponent implements OnInit, OnDestroy, AfterViewInit {
                 this.filterParty();
             });
 
-        this.editSettings = {
-            allowEditing: true,
-            allowAdding: false,
-            allowDeleting: false,
-        };
+        this.journalEntryForm.valueChanges.subscribe((dirty) => {
+            if (this.journalEntryForm.dirty) {
+                this.bHeaderDirty = true;
+            }
+        });
 
-        this.onChanges()
+        this.templateCtrl.valueChanges.subscribe((value) => {
+            this.bDirty = true;
+            this.createJournalDetailsFromTemplate(value);
+        });
 
+    }
+
+
+    public onTransTypeClicked(e: any) {
+        this.selectedOption = e;
+        console.log(e)
     }
 
     public updateForm(journalDetail: IJournalDetail) {
@@ -463,7 +494,7 @@ export class EntryWizardComponent implements OnInit, OnDestroy, AfterViewInit {
             reference: e.reference,
             fund: e.fund,
         };
-        this.store.updateJournalDetail(journalDetail);
+        //this.store.updateJournalDetail(journalDetail);
     }
 
 
@@ -591,29 +622,16 @@ export class EntryWizardComponent implements OnInit, OnDestroy, AfterViewInit {
         throw new Error('Method not implemented.');
     }
 
-    public onChanges(): void {
-        this.journalEntryForm.valueChanges.subscribe((dirty) => {
-            if (this.journalEntryForm.dirty) {
-                this.bHeaderDirty = true;
-            }
-        });
-
-        this.templateCtrl.valueChanges.subscribe((value) => {
-            this.bDirty = true;
-            this.createJournalDetailsFromTemplate(value);
-        });
-
-    }
 
 
     public createJournalDetailsFromTemplate(value: IJournalTemplate) {
         console.log('Template : ', value);
         this.transactionType = value.journal_type;
-        this.store.loadTemplateDetails(value.journal_no.toString());
+        //this.store.loadTemplateDetails(value.journal_no.toString());
     }
 
     refresh() {
-        this.store.loadTemplateDetails(this.templateCtrl.value.journal_no.toString());
+        //this.store.loadTemplateDetails(this.templateCtrl.value.journal_no.toString());
     }
 
 
@@ -651,25 +669,25 @@ export class EntryWizardComponent implements OnInit, OnDestroy, AfterViewInit {
 
         this.journalHeader = journalHeader;
 
-        this.store.templateDetails().forEach((templateDetail) => {
-            let journalDetail: IJournalDetail = {
-                journal_id: this.journal_id,
-                journal_subid: count,
-                account: Number(templateDetail.account),
-                child: Number(templateDetail.child),
-                child_desc: 'Description',
-                description: templateDetail.description,
-                create_date: updateDate,
-                create_user: email,
-                sub_type: templateDetail.sub_type,
-                debit: templateDetail.debit * journalHeader.amount,
-                credit: templateDetail.credit * journalHeader.amount,
-                reference: inputs.step1.reference,
-                fund: templateDetail.fund,
-            }
-            this.journalDetails.push(journalDetail);
-            count = count + 1;
-        });
+        // this.store.templateDetails().forEach((templateDetail) => {
+        //     let journalDetail: IJournalDetail = {
+        //         journal_id: this.journal_id,
+        //         journal_subid: count,
+        //         account: Number(templateDetail.account),
+        //         child: Number(templateDetail.child),
+        //         child_desc: 'Description',
+        //         description: templateDetail.description,
+        //         create_date: updateDate,
+        //         create_user: email,
+        //         sub_type: templateDetail.sub_type,
+        //         debit: templateDetail.debit * journalHeader.amount,
+        //         credit: templateDetail.credit * journalHeader.amount,
+        //         reference: inputs.step1.reference,
+        //         fund: templateDetail.fund,
+        //     }
+        //     this.journalDetails.push(journalDetail);
+        //     count = count + 1;
+        // });
         this.journalDetailSignal.set(this.journalDetails);
 
         this.journalDetailSignal().forEach((journalDetail) => {
@@ -720,18 +738,6 @@ export class EntryWizardComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     ngOnDestroy(): void {
-
-        if (this.accountsListSubject) {
-            this.accountsListSubject.unsubscribe();
-        }
-
-        if (this.subAccountDebit) {
-            this.subAccountDebit.unsubscribe();
-        }
-
-        if (this.subAccountCredit) {
-            this.subAccountCredit.unsubscribe();
-        }
 
         if (this._onDestroyDebitAccountFilter) {
             this._onDestroyDebitAccountFilter.unsubscribe();

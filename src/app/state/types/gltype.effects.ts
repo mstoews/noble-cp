@@ -4,23 +4,23 @@ import { catchError, map, concatMap } from 'rxjs/operators';
 import { of } from 'rxjs';
 
 import { TypeService } from 'app/services/type.service';
-import { typePageActions } from './actions/type-page.actions';
-import { typeAPIActions } from './actions/type.actions';
+import { gltypePageActions } from './actions/gltype.page.actions';
+import { gltypeAPIActions } from './actions/gltype.actions';
 
 
 
 export const loadType = createEffect((
   actions$ = inject(Actions),
-  typeService = inject(TypeService)) => {
+  gltypeService = inject(TypeService)) => {
   return actions$.pipe(
-    ofType(typePageActions.load),
+    ofType(gltypePageActions.load),
     concatMap(() =>
-      typeService.read().pipe(
-        map((transaction) =>
-          typeAPIActions.loadTypeSuccess({ transaction_type : transaction })
+      gltypeService.read().pipe(
+        map((gltype) =>
+          gltypeAPIActions.loadGLTypeSuccess({ gltype })
         ),
         catchError((error) =>
-          of(typeAPIActions.loadTypeFailure({ error }))
+          of(gltypeAPIActions.loadGLTypeFailure({ error }))
         )
       )));
 },

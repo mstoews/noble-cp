@@ -1,6 +1,5 @@
 import { createReducer, on } from '@ngrx/store';
-import { IAccounts } from 'app/models/journals';
-import { addAccountsSuccess, deleteAccountsSuccess, getAccount, getAccountsSuccess, loadAccountsFailure, loadAccountsSuccess, updateAccountsSuccess } from './Accounts.Action';
+import { addAccountsSuccess, deleteAccountsSuccess, getAccount, getAccountsSuccess, loadAccountsDropdownFailure, loadAccountsDropdownSuccess, loadAccountsFailure, loadAccountsSuccess, updateAccountsSuccess } from './Accounts.Action';
 import { accountState } from './Accounts.State';
 
 
@@ -10,14 +9,29 @@ const accountsReducer = createReducer(
     on(loadAccountsSuccess, (state, action) => {
         return {
             ...state,
-            list: action.accounts,
+            accounts: action.accounts,
             error: null,
         }
     }),
     on(loadAccountsFailure, (state, action) => {
         return {
             ...state,
-            list: [],
+            accounts: [],
+            error: action.error,
+        }
+    }
+    ),
+    on(loadAccountsDropdownSuccess, (state, action) => {
+        return {
+            ...state,
+            accountsDropdown: action.accountsDropdown,
+            error: null,
+        }
+    }),
+    on(loadAccountsDropdownFailure, (state, action) => {
+        return {
+            ...state,
+            accountsDropdown: [],
             error: action.error,
         }
     }
@@ -25,21 +39,21 @@ const accountsReducer = createReducer(
     on(deleteAccountsSuccess, (state, action) => {
         return {
             ...state,
-            list: state.accounts.filter(x => x.child !== action.id),
+            accounts: state.accounts.filter(x => x.child !== action.id),
             error: null,
         }
     }),
     on(addAccountsSuccess, (state, action) => {
         return {
             ...state,
-            list: [...state.accounts, action.account],
+            accounts: [...state.accounts, action.account],
             error: null,
         }
     }),
     on(updateAccountsSuccess, (state, action) => {
         return {
             ...state,
-            list: state.accounts.map(x => x.child === action.account.child ? action.account : x),
+            accounts: state.accounts.map(x => x.child === action.account.child ? action.account : x),
             error: null,
         }
     }),
@@ -56,7 +70,5 @@ const accountsReducer = createReducer(
 export function AccountsReducer(state: any, action: any) {
     return accountsReducer(state, action);
 }
-
-
 
 

@@ -13,3 +13,13 @@ export interface IType {
   update_date: Date,
   update_user: string
 }
+
+
+export interface IGLType {
+  gltype: string,
+  description: string,
+  create_date: string,
+  create_user: string,
+  update_date: string,
+  update_user: string
+}

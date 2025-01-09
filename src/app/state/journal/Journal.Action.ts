@@ -2,6 +2,7 @@ import { createAction, props } from "@ngrx/store";
 import { IJournalDetail, IJournalHeader }  from "app/models/journals";
 import { IPeriodParam } from "app/models/period";
 
+
 export const LOAD_JOURNAL_HEADER = '[JRN_HEADER] getall';
 export const LOAD_JOURNAL_HEADER_SUCCESS = '[JRN_HEADER] getall success';
 export const LOAD_JOURNAL_HEADER_FAILURE = '[JRN_HEADER] getall failure'; 
@@ -30,16 +31,6 @@ export const UPDATE_JOURNAL_HEADER_SUCCESS = '[JRN_HEADER] update success'
 export const GET_JOURNAL_HEADER = '[JRN_HEADER] get jrn_header'
 export const GET_JOURNAL_HEADER_SUCCESS = '[JRN_HEADER] get journal_header success'
 export const GET_JOURNAL_HEADER_FAILURE = '[JRN_HEADER] get journal_header failure'
-
-export const GET_CURRENT_USER = '[CURRENT_USER] get current_user'
-export const GET_CURRENT_USER_SUCCESS = '[CURRENT_USER] get current_user success'
-export const GET_CURRENT_USER_FAILURE = '[CURRENT_USER] get current_user failure'
-
-
-export const get_current_user = createAction(GET_CURRENT_USER);
-export const get_current_user_success = createAction(GET_CURRENT_USER_SUCCESS, props<{ currentUser: string }>());
-export const get_current_user_failure = createAction(GET_CURRENT_USER_FAILURE, props<{ error: string }>());
-
 
 export const loadJournalHeader = createAction(LOAD_JOURNAL_HEADER);
 export const loadJournalHeaderSuccess = createAction(LOAD_JOURNAL_HEADER_SUCCESS, props<{ journals: IJournalHeader[] }>());
