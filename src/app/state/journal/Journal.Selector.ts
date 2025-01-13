@@ -1,9 +1,9 @@
-import { createFeatureSelector, createSelector } from "@ngrx/store"; 
+import { createFeatureSelector, createSelector } from "@ngrx/store";
 import { JournalState } from "./Journal.Model";
 
-const getJournalState = createFeatureSelector<JournalState>('jnl');
+const getJournalState = createFeatureSelector<JournalState>('journals');
 
-export const getJournals = createSelector(
+export const selectJournals = createSelector(
     getJournalState, (state) => {
         return state.journals;
     }
@@ -14,9 +14,17 @@ export const selectPanelCode = createSelector(
     ({ journalLedgerPanel }) => journalLedgerPanel
 );
 
-  
+
 export const selectError = createSelector(
     getJournalState,
     ({ error }) => error
 );
+
+
+export const selectJournalById = (journal_id: number) =>
+    createSelector(
+        selectJournals,
+        (journals) =>
+            journals.find(j => j.journal_id === journal_id)
+    );
 

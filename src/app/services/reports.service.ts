@@ -23,7 +23,7 @@ export class ReportService implements OnDestroy {
 
   readTbByPeriod(value: ITBParams) {
     var url = this.baseUrl + '/v1/read_tb_by_period';
-    return this.httpClient.post<ITrialBalance[]>(url, value).pipe(shareReplay(), retry(2));
+    return this.httpClient.post<ITrialBalance[]>(url, value).pipe(shareReplay({ bufferSize: 1, refCount: true }), retry(2));
   }
 
   ngOnDestroy(): void {

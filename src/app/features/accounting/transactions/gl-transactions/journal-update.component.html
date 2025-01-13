@@ -15,8 +15,6 @@
         (showBack)="false" >
       </grid-menubar>  
     </div>
-
-    @defer (on viewport; on timer(1s)) {    
     <mat-drawer-container id="target"
                           class=" control-section default-splitter flex flex-col overflow-auto h-[calc(100vh-14rem)] ml-5 mr-5"
                           [hasBackdrop]="'false'">        
@@ -141,7 +139,7 @@
                                 </section>
                             </form>
                             <div mat-dialog-actions class="gap-2 mb-3 mt-5">
-                                @if (bDirty === true) {
+                                @if (bHeaderDirty === true) {
                                     <button mat-icon-button
                                             class="bg-gray-400 text-white fill-slate-100 hover:bg-slate-400 ml-1"
                                             (click)="onUpdateJournalDetail()" matTooltip="Update Line Item"
@@ -181,7 +179,7 @@
                                 </ul>
                             }
                             <div mat-dialog-actions class="gap-2 mb-3 mt-5">
-                                @if (bDirty === true) {
+                                @if (bHeaderDirty === true) {
                                     <button mat-icon-button color="warm"
                                             class="bg-gray-200 fill-slate-100 text-white hover:bg-slate-400 ml-1"
                                             (click)="onUpdateJournalDetail()" matTooltip="Update Transaction"
@@ -252,8 +250,8 @@
                                     <div class="text-3xl gap-2 m-1 text-gray-100 p-2 bg-slate-600 rounded-md">
                                         Transaction List
                                     </div>
-                                    @if(journalHeader$ | async; as headers) {
-                                        <ejs-grid id="grid-journal-list" [dataSource]='headers' [rowHeight]='30'
+                                    @if(store.isLoading() == false) {
+                                        <ejs-grid id="grid-journal-list" [dataSource]='store.details()' [rowHeight]='30'
                                                   [selectionSettings]="selectionOptions" [editSettings]='editSettings'
                                                   [searchSetting]="searchOptions" [allowFiltering]='true'
                                                   [enableStickyHeader]=true [toolbar]='toolbarOptions' allowSorting='true'
@@ -303,7 +301,7 @@
                                         @defer () {
                                         <form [formGroup]="journalForm">
                                             <section class="flex flex-col md:flex-row">
-                                                @if (tmpLst$ | async; as List) {  
+                                                @if (store.isLoading() == false) {  
                                                 <div class="flex flex-col w-[300px]">
                                                 <mat-form-field class="mt-1 ml-1 mr-1 flex-start">            
                                                     <mat-select [formControl]="templateCtrl" [placeholder]="'Journal Template'" #singleTemplateSelect required>
@@ -312,7 +310,7 @@
                                                                                    [noEntriesFoundLabel]="'No entries found'" [placeholderLabel]="'Search'">
                                                             </ngx-mat-select-search>
                                                         </mat-option>
-                                                        @for (template of List; track template) {
+                                                        @for (template of store.templates(); track template) {
                                                             <mat-option [value]="template">{{template.description}}</mat-option>
                                                         }
                                                     </mat-select>
@@ -395,6 +393,12 @@
                                                     matTooltip="New" aria-label="hovered over">
                                                 
                                                 <span class="e-icons e-circle-add"></span>
+                                            </button>
+
+                                            <button mat-icon-button color="primary"
+                                                    class="bg-slate-200 hover:bg-slate-400 ml-1" (click)="onNewLineItem($event)"
+                                                    matTooltip="Add Line Item" aria-label="hovered over">                                                
+                                                <span class="e-icons e-table-insert-row"></span>
                                             </button>
             
             
@@ -562,10 +566,5 @@
             </ejs-splitter>
         </section>        
     </mat-drawer-container>,
-    }
-    @placeholder(minimum 200ms) {
-        <div class="flex justify-center items-center">
-            <mat-spinner></mat-spinner>
-        </div>
-    }
+    
 </div>

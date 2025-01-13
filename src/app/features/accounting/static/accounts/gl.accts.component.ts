@@ -252,6 +252,7 @@ export class GlAccountsComponent implements OnInit {
   accountService = inject(AccountsService);
   subtypeService = inject(SubTypeService);
   typeStore = inject(TypeStore);
+  
 
   public sTitle = "Settings/Account Maintenance";
   public title = "General Ledger Accounts";

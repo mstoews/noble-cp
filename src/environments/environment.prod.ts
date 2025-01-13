@@ -10,10 +10,9 @@ export const environment = {
     measurementId: "G-5BFE1ESWF1"
   },
   production: true,
-  useEmulators: false,
-  // baseUrl: "https://noble-server-omq5x5dxza-ue.a.run.app",
-  baseUrl: "https://noble-server-1023314501312.us-east1.run.app/",
-  //baseUrl: "http://localhost:8080",
+  useEmulators: false,  
+  // baseUrl: "https://noble-server-1023314501312.us-east1.run.app/",
+  baseUrl: "http://localhost:8080",
   apiRetryCount: 2
   
 };

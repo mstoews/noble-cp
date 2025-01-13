@@ -5,9 +5,9 @@ export interface IPeriod {
   start_date: Date, 
   end_date:  Date,
   description: string,
-  create_date: Date,
+  create_date: string,
   create_user: string,
-  update_date: Date,
+  update_date: string,
   update_user: string
 }
 

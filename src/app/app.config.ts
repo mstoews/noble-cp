@@ -21,7 +21,7 @@ import * as fromPriority from 'app/state/kanban-state/priority/priority.state';
 import * as fromKanban from 'app/state/kanban-state/kanban/kanban.reducer';
 import * as fromPeriods from 'app/state/periods/periods.state';
 import * as fromSubtype from 'app/state/subtype/sub-type.state';
-import * as periodEffects from 'app/state/periods/periods.effects';
+import * as fromParty from 'app/state/party/party.state';
 import * as subtypeEffects from 'app/state/subtype/sub-type.effects';
 
 import {
@@ -55,6 +55,8 @@ import { KanbanEffects } from './state/kanban-state/kanban/kanban.effects';
 import { FundsReducer } from './state/funds/Funds.Reducer';
 import { fundsEffects } from './state/funds/Funds.Effects';
 import { UserService } from './services/user.service';
+import { accountEffects } from './state/accounts/Accounts.Effects';
+import { periodEffects } from './state/periods/periods.effects';
 
 
 const app = initializeApp(environment.firebase);
@@ -105,8 +107,7 @@ const CoreProviders = [
 
 
 export const appConfig: ApplicationConfig = {
-  providers: [
-    UserService,
+  providers: [    
     provideAnimations(),
     provideAppInitializer(() => {
       console.log('App initialized');
@@ -137,16 +138,25 @@ export const appConfig: ApplicationConfig = {
     /// NGRX Store and Effects
     provideStore({
       'tpl': TemplateReducer,
-      'act': AccountsReducer,
-      'jnl': JournalReducer,
-      'fnd': FundsReducer,
-      'usr': UsersReducer
+      'accounts': AccountsReducer,
+      'journals': JournalReducer,
+      'fnd': FundsReducer      
     }),
     provideState(fromKanban.kanbanFeature),
     provideState(fromPriority.priorityFeature),
     provideState(fromPeriods.periodsFeature),
     provideState(fromSubtype.subtypeFeature),
-    provideEffects([userEffects, templateEffects, journalHeaderEffects, KanbanEffects, periodEffects, fundsEffects, subtypeEffects]),
+    provideState(fromParty.partyFeature),
+    provideEffects(
+      [ accountEffects, 
+        
+        templateEffects, 
+        journalHeaderEffects, 
+        KanbanEffects, 
+        periodEffects, 
+        fundsEffects, 
+        subtypeEffects 
+      ]),
     provideRouterStore(),
     provideStoreDevtools({ maxAge: 25 }),
 

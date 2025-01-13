@@ -1,6 +1,6 @@
 import { Injectable, computed, inject, signal } from '@angular/core';
 import { Subject, catchError, exhaustMap, of, pipe, shareReplay, take, tap, throwError } from 'rxjs';
-import { signalState, patchState} from '@ngrx/signals'
+import { signalState, patchState } from '@ngrx/signals'
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { tapResponse } from '@ngrx/operators';
 
@@ -27,8 +27,8 @@ export class RoleService {
 
   // Read  
   read() {
-      var url = this.baseUrl + '/v1/read_roles';
-      return this.httpClient.get<IRole[]>(url).pipe(shareReplay()) 
+    var url = this.baseUrl + '/v1/read_roles';
+    return this.httpClient.get<IRole[]>(url).pipe(shareReplay({ bufferSize: 1, refCount: true }))
   }
 
   // Create
@@ -44,7 +44,7 @@ export class RoleService {
       update_date: dDate,
       update_user: email,
     }
-      return this.httpClient.post<IRole>(url, data).pipe(shareReplay()) 
+    return this.httpClient.post<IRole>(url, data).pipe(shareReplay({ bufferSize: 1, refCount: true }))
   }
 
   // Update
@@ -58,13 +58,13 @@ export class RoleService {
       update_date: t.update_date,
       update_user: t.update_user
     }
-    return this.httpClient.post<IRole[]>(url, t).pipe(shareReplay());    
+    return this.httpClient.post<IRole[]>(url, t).pipe(shareReplay({ bufferSize: 1, refCount: true }));
   }
 
   // Delete
   delete(id: string) {
     var url = this.baseUrl + '/v1/delete_role/' + id;
-    return this.httpClient.delete<IRole>(url).pipe(shareReplay());
+    return this.httpClient.delete<IRole>(url).pipe(shareReplay({ bufferSize: 1, refCount: true }));
   }
 
 }

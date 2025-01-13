@@ -40,14 +40,14 @@ export class TypeService {
     t.update_date = new Date().toISOString().split('T')[0];
     t.create_user = '@' + this.authService.currentUser.email.split('@')[0];
     t.update_user = '@' + this.authService.currentUser.email.split('@')[0];
-  
-    return this.httpClient.post<IGLType>(url, t).pipe( shareReplay())
+
+    return this.httpClient.post<IGLType>(url, t).pipe(shareReplay({ bufferSize: 1, refCount: true }))
   }
 
   // Read
   read() {
-      var url = this.baseUrl + '/v1/type_list';
-      return this.httpClient.get<IGLType[]>(url).pipe(shareReplay());
+    var url = this.baseUrl + '/v1/type_list';
+    return this.httpClient.get<IGLType[]>(url).pipe(shareReplay({ bufferSize: 1, refCount: true }));
   }
 
 
@@ -56,7 +56,7 @@ export class TypeService {
     var url = this.baseUrl + '/v1/type_create';
 
     var data: IGLType = {
-      gltype: t.gltype,      
+      gltype: t.gltype,
       description: t.description,
       create_date: t.create_date,
       create_user: t.create_user,
@@ -65,7 +65,7 @@ export class TypeService {
     }
 
     return this.httpClient.post<IGLType>(url, data).pipe(
-      shareReplay())
+      shareReplay({ bufferSize: 1, refCount: true }))
   }
 
   // Delete
@@ -75,7 +75,7 @@ export class TypeService {
     }
     var url = this.baseUrl + '/v1/type_list';
     return this.httpClient.post<IGLType[]>(url, data).pipe(
-      shareReplay())
+      shareReplay({ bufferSize: 1, refCount: true }))
   }
 
 }
@@ -92,7 +92,7 @@ export const TypeStore = signalStore(
     error: null,
     isLoading: false,
   }),
-  withMethods((state, typeService = inject(TypeService)) => ({       
+  withMethods((state, typeService = inject(TypeService)) => ({
     loadType: rxMethod<void>(
       pipe(
         tap(() => patchState(state, { isLoading: true })),

@@ -1,17 +1,31 @@
-import { createFeatureSelector, createSelector } from "@ngrx/store"; 
-import { AccountState } from "./Accounts.Model";
+import { createFeatureSelector, createSelector } from "@ngrx/store";
+import * as fromAccounts from './Accounts.Reducer';
 
-const getAccountsState = createFeatureSelector<AccountState>('acct');
+export const selectAccountState = createFeatureSelector<fromAccounts.AccountState>('accounts');
 
-export const getAccounts = createSelector(
-    getAccountsState, (state) => {
-        return state.accounts
-    }
+export const selectAccounts = createSelector(
+    selectAccountState, 
+    fromAccounts.selectAll    
 );
 
-export const getAccountsDropdown = createSelector(
-    getAccountsState, (state) => {
-        return state.accountsDropdown
-    }
+// export const selectAccountsDropdown = createSelector(
+//     selectAccountState, (state) => {
+//         return state.accountsDropdown
+//     }
+// );
+
+export const selectJournalById = (child: number) => createSelector(
+    selectAccounts,
+    (accounts) => accounts.find(j => j.child === child)
+);
+
+export const deleteAccount = (child: number) => createSelector(
+    selectAccounts,
+    (accounts) => accounts.filter(j => j.child !== child)
+);
+
+export const updateAccounts = (child: number) => createSelector(
+    selectAccounts,
+    (accounts) => accounts.map(j => j.child === child ? j : j)
 );
 

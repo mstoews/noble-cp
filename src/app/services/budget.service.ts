@@ -25,22 +25,23 @@ export class BudgetService {
     const budget = {
       ...t,
       transaction_date: dDate,
-      create_user: name      
+      create_user: name
     }
 
-    return this.httpClient.post<IBudget>(url, budget).pipe(shareReplay());
+    return this.httpClient.post<IBudget>(url, budget)
+    .pipe(shareReplay({ bufferSize: 1, refCount: true }));
   }
 
   // Read
   read() {
     var url = this.baseUrl + '/v1/read_budget_amt';
-    return this.httpClient.get<IBudget[]>(url).pipe(shareReplay());
+    return this.httpClient.get<IBudget[]>(url).pipe(shareReplay({ bufferSize: 1, refCount: true }));
   }
 
   // Update
   update(t: IBudget) {
     var url = this.baseUrl + '/v1/update_budget_amt';
-    return this.httpClient.post<IBudget>(url, t).pipe(shareReplay());
+    return this.httpClient.post<IBudget>(url, t).pipe(shareReplay({ bufferSize: 1, refCount: true }));
   }
 
   // Delete
@@ -49,7 +50,7 @@ export class BudgetService {
     const param = {
       child: child
     }
-    return this.httpClient.post<IBudget[]>(url, param).pipe(shareReplay());;
+    return this.httpClient.post<IBudget>(url, param).pipe(shareReplay({ bufferSize: 1, refCount: true }));
   }
 
 }

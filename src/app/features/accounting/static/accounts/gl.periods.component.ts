@@ -90,7 +90,7 @@ const imports = [
                         </div>
                         <div mat-dialog-actions class="gap-2 mb-3">
                   @if (bDirty === true) {
-                    <button mat-icon-button color="primary" class="bg-slate-200 hover:bg-slate-400 ml-1" (click)="onUpdateJournalEntry()"
+                    <button mat-icon-button color="primary" class="bg-slate-200 hover:bg-slate-400 ml-1" (click)="onUpdate($event)"
                       matTooltip="Save" aria-label="hovered over">
                       <span class="e-icons e-save"></span>
                     </button>
@@ -118,10 +118,8 @@ const imports = [
             <mat-drawer-container class="flex-col">
                 
                  <ng-container>
-                    <grid-menubar 
-                    (notifyParentRefresh)="onRefresh()" 
-                    (notifyParentAdd)="onAdd()"
-                    (notifyParentDelete)="onDeleteSelection()">
+                    <grid-menubar [inTitle]="sTitle" (onCreate)="onCreate($event)">                                        
+                    
                      </grid-menubar>                         
                      
                      @if ((isLoading$ | async) === false) 
@@ -157,28 +155,36 @@ export class PeriodsComponent implements OnInit {
     periodsForm!: FormGroup;
     bDirty: any;
     
-    Store = inject(Store);
-    periods$= this.Store.select(periodsFeature.selectPeriods);    
-    selectedPeriods$ = this.Store.select(periodsFeature.selectSelectedPeriod);    
-    isLoading$ = this.Store.select(periodsFeature.selectIsLoading);
+    store = inject(Store);
+    periods$= this.store.select(periodsFeature.selectPeriods);    
+    selectedPeriods$ = this.store.select(periodsFeature.selectSelectedPeriod);    
+    isLoading$ = this.store.select(periodsFeature.selectIsLoading);
 
     selectPeriod(period: any) {
         var pd = {
             ...period,
-            //start_date: new Date(period.start_date),
-            //end_date: new Date(period.end_date),
             id: period.period_id
         }
-        this.Store.dispatch(periodsPageActions.select(pd));    
+        this.store.dispatch(periodsPageActions.select(pd));    
     }
 
     ngOnInit() {
         this.createEmptyForm();        
-        this.Store.dispatch(periodsPageActions.load());     
+        this.store.dispatch(periodsPageActions.load());     
+        this.onChanges();
+        this.periods$.subscribe((periods) => {
+            console.log(JSON.stringify(periods));
+        })
     }
 
     onClose() {
         this.closeDrawer();
+    }
+
+    onChanges() {
+        this.periodsForm.valueChanges.subscribe((value) => {
+            this.bDirty = true;
+        });
     }
 
     columns = [
@@ -211,42 +217,25 @@ export class PeriodsComponent implements OnInit {
         this.closeDrawer();
     }
             
-        
-   
-
-    public selectingEvent(e: any): void {
-        console.debug('the row was selected ... ', e);
-    }
-
-    onRefresh() {
-        throw new Error('Method not implemented.');
-    }
-
     onAdd() {
-        throw new Error('Method not implemented.');
+        const dDate = new Date();
+        const createDate = dDate.toISOString().split('T')[0];
+        const periods = { ...this.periodsForm.value } as IPeriod;
+        const rawData = {
+            id: periods.id,
+            period: periods.period,
+            period_year: periods.period_year,
+            start_date: periods.start_date,
+            end_date: periods.end_date,
+            description: periods.description,
+            create_date: periods.create_date,
+            create_user: periods.create_user,
+            update_date: createDate,
+            update_user: '@admin'
+        };
+        this.store.dispatch(periodsPageActions.updatePeriod({ period: rawData }));
     }
 
-    onDeleteSelection() {
-        throw new Error('Method not implemented.');
-    }
-
-    
-    onNew($event: any) {
-        throw new Error('Method not implemented.');
-    }
-    onClone($event: any) {
-        throw new Error('Method not implemented.');
-    }
-    onAddEvidence() {
-        throw new Error('Method not implemented.');
-    }
-    onCloseTransaction() {
-        throw new Error('Method not implemented.');
-    }
-    onCreateTemplate() {
-        throw new Error('Method not implemented.');
-    }
-        
 
     onDelete(e: any) {
         console.debug(`onDelete ${JSON.stringify(e)}`);
@@ -260,12 +249,9 @@ export class PeriodsComponent implements OnInit {
             },
         });
 
-        // Subscribe to the confirmation dialog closed action
         confirmation.afterClosed().subscribe((result) => {
-            // If the confirm button pressed...
             if (result === 'confirmed') {
-                // Delete the list
-                // this.typeApiService.delete(this.typeId);
+                this.store.dispatch(periodsPageActions.deletePeriod({ id: e.id }));
             }
         });
         this.closeDrawer();
@@ -273,7 +259,8 @@ export class PeriodsComponent implements OnInit {
 
     createEmptyForm() {
         this.periodsForm = this.fb.group({
-            period_id: [''],
+            id: [''],
+            period: [''],
             period_year: [''],
             start_date: [''],
             end_date: [''],
@@ -308,16 +295,19 @@ export class PeriodsComponent implements OnInit {
         const updateDate = dDate.toISOString().split('T')[0];
         const periods = { ...this.periodsForm.value } as IPeriod;
         const rawData = {
-            period_id: e.data.periods,
-            period_year: [''],
-            start_date: [''],
-            end_date: [''],
-            description: [''],
-            create_date: [''],
-            create_user: [''],
-            update_date: [''],
-            update_user: [''],
+            id: periods.id,
+            period: periods.period,
+            period_year: periods.period_year,
+            start_date: periods.start_date,
+            end_date:   periods.end_date,
+            description: periods.description,
+            create_date: periods.create_date,
+            create_user: periods.create_user,   
+            update_date: updateDate,
+            update_user: '@admin'
         };
+
+        this.store.dispatch(periodsPageActions.updatePeriod({ period: rawData }));
 
         this.closeDrawer();
     }

@@ -88,7 +88,7 @@ export class journalHeaderEffects {
     this.actions.pipe(
       ofType(addJournalHeader),
       exhaustMap((action) => {
-        return this.journalService.createJournalHeader( action.journals ).pipe(
+        return this.journalService.createJournalFullHeader( action.journals ).pipe(
           map(() => addJournalHeaderSuccess({ journals: action.journals })),
           catchError((error) => of(loadJournalHeaderFailure({ error })))
         );
@@ -114,7 +114,7 @@ export class journalHeaderEffects {
     } else {
       this.toastr.error(message);
     }
-    return emptyAction();
+    return;
   }
 }
 

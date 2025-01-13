@@ -51,7 +51,7 @@
                         }
 
                         <!-- Funds-->
-
+                        
                         @if (funds$ | async; as funds) {
                             <mat-form-field class="flex-col ml-2 mr-2 mt-1 grow ">
                                 <mat-label class="text-md ml-2">Funds</mat-label>
@@ -66,6 +66,7 @@
                                           [svgIcon]="'heroicons_solid:briefcase'"></mat-icon>
                             </mat-form-field>
                         }
+                        
 
                         <!-- Description  -->
 
@@ -178,12 +179,11 @@
 <mat-drawer-container id="target"
         class=" control-section default-splitter flex flex-col overflow-auto h-[calc(100vh-14rem)] ml-5 mr-5"
         [hasBackdrop]="'false'">
-<div class="flex flex-col flex-auto min-w-0">
-    @defer (on viewport; on timer(5s)) {    
-        <div class="md:max-w-7xl max-w-4xl">
-            <form class="p-4 bg-card shadow rounded overflow-hidden" [formGroup]="journalEntryForm">
-                
-                <mat-vertical-stepper [linear]="true" #verticalStepper>
+    <div class="flex flex-col flex-auto min-w-0">
+        @defer (on viewport; on timer(5s)) {    
+            <div class="md:max-w-7xl max-w-4xl">
+                <form class="p-4 bg-card shadow rounded overflow-hidden" [formGroup]="journalEntryForm">                
+                    <mat-vertical-stepper [linear]="true" #verticalStepper>
                     <mat-step [formGroupName]="'step1'" [stepControl]="journalEntryForm.get('step1')" #verticalStepperStep1>
                         <ng-template matStepLabel>Transaction Template</ng-template>
                         <section class="flex flex-col md:flex-col w-[400px] ">
@@ -206,8 +206,14 @@
                                             [svgIcon]="'heroicons_solid:document-chart-bar'"></mat-icon>
                                     </mat-form-field>
                                 }       
-                            
-                            
+
+                                <mat-form-field class="flex">
+                                    <mat-label class="text-md ml-2">Invoice/Reference</mat-label>
+                                    <input type="text" class="text-right" matInput [placeholder]="'Reference/Invoice'"
+                                        formControlName="invoice_no" />
+                                    <mat-icon class="icon-size-5" matPrefix
+                                        [svgIcon]="'heroicons_solid:document-chart-bar'"></mat-icon>
+                                </mat-form-field>    
 
                             <div class="flex flex-col">
                                 @if (transactionType != 'GL') {
@@ -228,14 +234,7 @@
                                         [svgIcon]="'heroicons_solid:currency-dollar'"></mat-icon>
                                 </mat-form-field>
                                 }
-
-                                <mat-form-field class="flex-auto  grow">
-                                    <mat-label class="text-md ml-2">Reference Number</mat-label>
-                                    <input type="text" class="text-right" matInput placeholder="Invoice No"
-                                        formControlName="invoice_no" />
-                                    <mat-icon class="icon-size-5" matPrefix
-                                        [svgIcon]="'heroicons_solid:currency-dollar'"></mat-icon>
-                                </mat-form-field>
+                                
                                 }
                             </div>
 
@@ -265,9 +264,9 @@
                         </section>
 
                         <div class="flex justify-end">
-                            <button mat-icon-button color="primary" class="bg-gray-200  hover:bg-slate-400 ml-1" (click)="onUpdate()"
+                            <button mat-icon-button color="primary" class="bg-gray-200  hover:bg-slate-400 ml-1" (click)="updateHeaderData()"
                                 [disabled]="verticalStepperStep1.stepControl.pristine || verticalStepperStep1.stepControl.invalid"
-                                type="button" matTooltip="Next" matStepperNext>
+                                type="button" matTooltip="Create Journal" matStepperNext>
                                 <mat-icon [svgIcon]="'feather:arrow-right'"></mat-icon>
                             </button>
                         </div>
@@ -288,11 +287,9 @@
                                     [dataSource]="journalDetailSignal()" 
                                     [allowFiltering]="false" 
                                     [gridLines]="'Both'"
-                                    [editSettings]='editSettings' 
-                                    [rowHeight]='30'
-                                    allowPaging=true 
+                                    [editSettings]='editSettings'                                                                         
                                     [allowRowDragAndDrop]='true'
-                                    showColumnMenu='true'
+                                    showColumnMenu='false'
                                     (actionBegin)="actionBegin($event)"
                                     allowSorting=true>
 
@@ -322,10 +319,6 @@
                             </ejs-grid>
 
 
-                            <button mat-icon-button color="primary" class="bg-gray-200 hover:bg-slate-400 ml-1"
-                                    (click)="onAddEvidence()" matTooltip="Save Transaction" aria-label="Evidence">
-                                <span class="e-icons e-save"></span>
-                            </button>
 
 
                             <button mat-icon-button color="primary" class="bg-gray-200 hover:bg-slate-400 ml-1"
@@ -340,9 +333,8 @@
                                 <mat-icon [svgIcon]="'feather:arrow-left'"></mat-icon>
                             </button>
 
-                            <button mat-icon-button color="primary" class="bg-gray-200  hover:bg-slate-400 ml-1"
-                                type="button" matTooltip="Post Transaction" aria-label="Template" matStepperNext
-                                [disabled]="verticalStepperStep2.stepControl.pristine || verticalStepperStep2.stepControl.invalid">
+                            <button mat-icon-button color="primary" class="bg-gray-200  hover:bg-slate-400 ml-1" (click)="onUpdate()"
+                                type="button" matTooltip="Post Transaction" aria-label="Template" matStepperNext>
                                 <mat-icon [svgIcon]="'feather:arrow-right'"></mat-icon>
                             </button>
 
@@ -378,6 +370,10 @@
 
                         }
                         <div class="flex justify-end mt-8">
+                            <button class="px-8 mr-2" mat-flat-button [color]="'accent'" type="button"
+                            (click)="EditTransaction()">
+                                Edit Transaction
+                            </button>
                             <button class="px-8 mr-2" mat-flat-button [color]="'accent'" type="button"
                                 (click)="onAddArtifact()">
                                 Add an Artifact

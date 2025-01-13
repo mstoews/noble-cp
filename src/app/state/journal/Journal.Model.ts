@@ -1,6 +1,5 @@
-import { IJournalHeader, IJournalDetailDelete, IJournalDetail, IJournalHeaderUpdate } from "app/models/journals";
+import { IJournalHeader, IJournalDetail,} from "app/models/journals";
 import { IPeriodParam } from "app/models/period";
-
 
 export interface JournalState {
     journals: IJournalHeader[];

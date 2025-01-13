@@ -34,7 +34,7 @@ import {
 } from "@syncfusion/ej2-angular-grids";
 
 import { DataManager, Query } from "@syncfusion/ej2-data";
-import { IJournalDetail, IJournalDetailDelete, IJournalHeader, IJournalHeaderUpdate } from "app/models/journals";
+import { IJournalDetail, IJournalDetailDelete, IJournalHeader } from "app/models/journals";
 import { ActivatedRoute } from "@angular/router";
 import { Location } from '@angular/common';
 import { MatDrawer } from "@angular/material/sidenav";
@@ -768,8 +768,12 @@ export class APUpdateComponent
       journal_subid++;
     });
 
-    const journalHeaderUpdate: IJournalHeaderUpdate = {
+    const journalHeaderUpdate: IJournalHeader= {
       journal_id: this.journal_id,
+      booked: false,
+      booked_user: email,
+      period: header.period,
+      period_year: header.period_year,
       description: header.description,
       transaction_date: header.transaction_date,
       amount: Number(header.header_amount),

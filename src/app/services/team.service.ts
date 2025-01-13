@@ -12,7 +12,7 @@ export class TeamService {
   httpClient = inject(HttpClient);
   private baseUrl = environment.baseUrl;
 
-  constructor() {}
+  constructor() { }
 
   createEvidence(team: ITeam) {
     var url = this.baseUrl + "/v1/team_create";
@@ -30,32 +30,32 @@ export class TeamService {
       uid: team.uid,
     };
 
-    return this.httpClient.post<ITeam>(url, data).pipe(shareReplay(), retry(2));
+    return this.httpClient.post<ITeam>(url, data).pipe(shareReplay({ bufferSize: 1, refCount: true }), retry(2));
   }
 
   read() {
     var url = this.baseUrl + "/v1/team_read";
-    return this.httpClient.get<ITeam[]>(url).pipe(shareReplay(), retry(2));
+    return this.httpClient.get<ITeam[]>(url).pipe(shareReplay({ bufferSize: 1, refCount: true }), retry(2));
   }
 
   delete(memberId: string) {
     var url = this.baseUrl + "/v1/team_delete";
     return this.httpClient
       .post<ITeam[]>(url, { memberId: memberId })
-      .pipe(shareReplay(), retry(2));
+      .pipe(shareReplay({ bufferSize: 1, refCount: true }), retry(2));
   }
 
   create(team: ITeam) {
     var url = this.baseUrl + "/v1/team_create";
     return this.httpClient
       .post<ITeam>(url, { team: team })
-      .pipe(shareReplay(), retry(2));
+      .pipe(shareReplay({ bufferSize: 1, refCount: true }), retry(2));
   }
 
   update(team: ITeam) {
     var url = this.baseUrl + "/v1/team_update";
     return this.httpClient
       .post<ITeam[]>(url, { team: team })
-      .pipe(shareReplay(), retry(2));
+      .pipe(shareReplay({ bufferSize: 1, refCount: true }), retry(2));
   }
 }

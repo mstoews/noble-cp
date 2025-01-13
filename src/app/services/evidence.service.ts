@@ -15,18 +15,18 @@ export class EvidenceService {
 
   createEvidence(evidence: IArtifacts) {
     var url = this.baseUrl + '/v1/create_evidence';
-    return this.httpClient.post<IArtifacts>(url, evidence).pipe(shareReplay());
+    return this.httpClient.post<IArtifacts>(url, evidence).pipe(shareReplay({ bufferSize: 1, refCount: true }));
   }
 
   readEvidence() {
     var url = this.baseUrl + '/v1/read_evidence';
-    return this.httpClient.get<IArtifacts[]>(url).pipe(shareReplay());
+    return this.httpClient.get<IArtifacts[]>(url).pipe(shareReplay({ bufferSize: 1, refCount: true }));
   }
 
   readEvidenceByJournalId(journalId: number, confirmed: boolean) {
     var evidence = { journal_id: journalId, confirmed: false };
     var url = this.baseUrl + '/v1/read_evidence_by_jrn';
-    return this.httpClient.post<IArtifacts[]>(url, evidence).pipe(shareReplay());
+    return this.httpClient.post<IArtifacts[]>(url, evidence).pipe(shareReplay({ bufferSize: 1, refCount: true }));
   }
 
 }

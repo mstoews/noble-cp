@@ -1,5 +1,5 @@
 import { Injectable, inject, signal } from '@angular/core';
-import { catchError, exhaustMap,  pipe, shareReplay, take, tap, throwError } from 'rxjs';
+import { catchError, exhaustMap, pipe, shareReplay, take, tap, throwError } from 'rxjs';
 import { signalState, patchState } from '@ngrx/signals'
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { tapResponse } from '@ngrx/operators';
@@ -9,9 +9,9 @@ import { IDropDownAccounts } from '../models';
 import { environment } from 'environments/environment.prod';
 import { IAccounts } from 'app/models/journals';
 
-type AccountState = { 
-    account: IAccounts[], 
-    isLoading: boolean 
+type AccountState = {
+    account: IAccounts[],
+    isLoading: boolean
 }
 
 const initialState: AccountState = {
@@ -24,8 +24,8 @@ const initialState: AccountState = {
 })
 export class AccountsService {
 
-    public httpClient = inject(HttpClient)    
-    
+    public httpClient = inject(HttpClient)
+
     private parentAccounts = signal<IAccounts[]>([])
     private dropDownList = signal<IDropDownAccounts[]>([])
     private childrenOfParents = signal<IAccounts[]>([])
@@ -33,38 +33,38 @@ export class AccountsService {
     public accountList = signal<IAccounts[]>([])
     private accountState = signalState(initialState);
 
-    
+
     private baseUrl = environment.baseUrl;
-    public readUrl = this.baseUrl + '/v1/account_list';    
-        
+    public readUrl = this.baseUrl + '/v1/account_list';
+
     // readonly accountList = this.accountState.account;
     readonly isLoading = this.accountState.isLoading;
 
     readAccounts() {
-        return this.httpClient.get<IAccounts[]>(this.readUrl).pipe(shareReplay());
+        return this.httpClient.get<IAccounts[]>(this.readUrl).pipe(shareReplay({ bufferSize: 1, refCount: true }));
     }
 
     readAccountDropdown() {
         var url = this.baseUrl + '/v1/read_child_accounts';
-        return this.httpClient.get<IDropDownAccounts[]>(url).pipe(shareReplay());
+        return this.httpClient.get<IDropDownAccounts[]>(url).pipe(shareReplay({ bufferSize: 1, refCount: true }));
     }
 
     readParents() {
         var url = this.baseUrl + '/v1/account_parent_list';
-        return this.httpClient.get<IAccounts[]>(url).pipe(shareReplay());
+        return this.httpClient.get<IAccounts[]>(url).pipe(shareReplay({ bufferSize: 1, refCount: true }));
     }
 
     delete(id: string) {
         var url = this.baseUrl + '/v1/account_delete/:' + id;
-        return this.httpClient.delete<IAccounts[]>(url).pipe(shareReplay())
+        return this.httpClient.delete<IAccounts[]>(url).pipe(shareReplay({ bufferSize: 1, refCount: true }));
     }
 
-        
+
     readonly read = rxMethod<void>(
         pipe(
             tap(() => patchState(this.accountState, { isLoading: true })),
             exhaustMap(() => {
-                return this.readAccounts().pipe(                
+                return this.readAccounts().pipe(
                     tapResponse({
                         // next: (account) => patchState(this.accountState, { account }),
                         next: (account) => this.accountList.set(account),
@@ -89,14 +89,14 @@ export class AccountsService {
                     console.debug(message, err);
                     return throwError(() => new Error(`${JSON.stringify(err)}`));
                 }),
-                shareReplay()
+                shareReplay({ bufferSize: 1, refCount: true })
             ).subscribe();
         }
         return this.dropDownList;
     }
 
     // only child account and no parents
-    public readChildren() {        
+    public readChildren() {
         return this.readAccountDropdown().pipe(
             tap(data => this.dropDownList.set(data)),
             take(1),
@@ -105,14 +105,14 @@ export class AccountsService {
                 console.debug(message, err);
                 return throwError(() => new Error(`${JSON.stringify(err)}`));
             }),
-            shareReplay()
+            shareReplay({ bufferSize: 1, refCount: true })
         )
     }
 
 
 
     // only parent accounts
-    public getParents() {        
+    public getParents() {
         if (this.parentAccounts().length === 0) {
             this.readParents().pipe(
                 tap(data => this.parentAccounts.set(data)),
@@ -122,7 +122,7 @@ export class AccountsService {
                     console.debug(message, err);
                     return throwError(() => new Error(`${JSON.stringify(err)}`));
                 }),
-                shareReplay()
+                shareReplay({ bufferSize: 1, refCount: true })
             ).subscribe();
         }
         return this.parentAccounts;
@@ -140,7 +140,7 @@ export class AccountsService {
                     console.debug(message, err);
                     return throwError(() => new Error(`${JSON.stringify(err)}`));
                 }),
-                shareReplay()
+                shareReplay({ bufferSize: 1, refCount: true })
             ).subscribe();
         }
         return this.childrenOfParents;
@@ -165,7 +165,7 @@ export class AccountsService {
             update_user: accounts.update_user,
         }
         var url = this.baseUrl + '/v1/account_create';
-        return this.httpClient.post(url, data).pipe( shareReplay())
+        return this.httpClient.post(url, data).pipe(shareReplay({ bufferSize: 1, refCount: true }))
     }
 
     // Update
@@ -195,10 +195,10 @@ export class AccountsService {
                 const message = "Could not save journal header ...";
                 console.debug(message, err);
                 return throwError(() => new Error(`Invalid time ${err}`));
-            }), shareReplay()
+            }), shareReplay({ bufferSize: 1, refCount: true })
         );
     }
-        // Delete
+    // Delete
 
     // update account signal array
     updateAccountList(data: any) {

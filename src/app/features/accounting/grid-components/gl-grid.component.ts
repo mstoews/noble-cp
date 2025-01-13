@@ -49,6 +49,7 @@ const keyExpr = ["account", "child"];
                 [columns]="columns"
                 allowSorting='true'
                 showColumnMenu='true' 
+                [enableStickyHeader]="true"
                 allowEditing='true' 
                 [gridLines]="lines"
                 [allowFiltering]='true'                 
@@ -206,7 +207,7 @@ export class GLGridComponent implements OnInit {
     }
 
     public onAdd() { 
-        
+
     }
 
     public readAllSettings(): Observable<IGridSettingsModel[]> {

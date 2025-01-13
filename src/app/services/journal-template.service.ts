@@ -16,27 +16,27 @@ export class JournalTemplateService {
 
   read() {
     var url = this.baseUrl + "/v1/read_journal_template";
-    return this.httpClient.get<IJournalTemplate[]>(url).pipe(shareReplay());
+    return this.httpClient.get<IJournalTemplate[]>(url).pipe(shareReplay({ bufferSize: 1, refCount: true }));
   }
 
   getTemplateDetails(reference: string)  {
     var url = this.baseUrl + "/v1/read_template_details:/" + reference;
-    return this.httpClient.get<IJournalDetailTemplate[]>(url).pipe(shareReplay());  
+    return this.httpClient.get<IJournalDetailTemplate[]>(url).pipe(shareReplay({ bufferSize: 1, refCount: true }));  
   }
 
   readAccounts() {
     var url = this.baseUrl + "/v1/account_list";
-    return this.httpClient.get<IAccounts[]>(url).pipe(shareReplay());
+    return this.httpClient.get<IAccounts[]>(url).pipe(shareReplay({ bufferSize: 1, refCount: true }));
   }
 
   readAccountType() {
     var url = this.baseUrl + "/v1/account_type";
-    return this.httpClient.get<IType[]>(url).pipe(shareReplay());
+    return this.httpClient.get<IType[]>(url).pipe(shareReplay({ bufferSize: 1, refCount: true }));
   }
 
   readParty() {
     var url = this.baseUrl + "/v1/party_list";
-    return this.httpClient.get<IParty[]>(url).pipe(shareReplay());
+    return this.httpClient.get<IParty[]>(url).pipe(shareReplay({ bufferSize: 1, refCount: true }));
   }
 
   

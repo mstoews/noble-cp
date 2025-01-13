@@ -91,7 +91,6 @@
     "syncfusion-javascript": "^20.4.38",
     "ts-enum-util": "^4.0.2",
     "tslib": "2.4.1",
-    "tw-elements": "^2.0.0",
     "xlsx": "^0.18.5",
     "zone.js": "0.15.0"
   },

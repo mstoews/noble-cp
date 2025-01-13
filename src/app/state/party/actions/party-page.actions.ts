@@ -6,5 +6,8 @@ export const partyPageActions = createActionGroup({
   events: {
     load: emptyProps(),
     select: props<IParty>(),
+    'Delete Party': props<{ id: number }>(),
+    'Add Party': props<{ period: IParty }>(),
+    'Update Party': props<{ period: IParty }>(),
   },
 });

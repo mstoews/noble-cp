@@ -6,5 +6,8 @@ export const periodsPageActions = createActionGroup({
   events: {
     load: emptyProps(),
     select: props<IPeriod>(),
+    'Delete Period': props<{ id: number }>(),
+    'Add Period': props<{ period: IPeriod }>(),
+    'Update Period': props<{ period: IPeriod }>(),
   },
 });

@@ -18,7 +18,6 @@ import {
     IJournalDetailDelete,
     IJournalDetailTemplate,
     IJournalHeader,
-    IJournalHeaderUpdate,
     IJournalTemplate,
     
 } from 'app/models/journals';
@@ -46,8 +45,8 @@ export interface JournalStateInterface {
   sub_type: ISubType[];
   funds: IFunds[];
   artifacts: IArtifacts[];
-  currentPeriod: string;
-  currentYear: string;
+  currentPeriod: number;
+  currentYear: number;
   isLoading: boolean;
   error: string | null;
 }
@@ -71,8 +70,8 @@ export const JournalStore = signalStore(
     artifacts: [],
     error: null,
     isLoading: false,
-    currentPeriod: '',
-    currentYear: '',
+    currentPeriod: 1,
+    currentYear: 2024,
   }),
   withComputed((state) => ({
   })),
@@ -97,7 +96,7 @@ export const JournalStore = signalStore(
       pipe(
         switchMap((value) => {
           patchState(state, { isLoading: true });
-          return journalService.createJournalHeader(value).pipe(
+          return journalService.createJournalFullHeader(value).pipe(
             tapResponse({
               next: (journal) => {
                 patchState(state, { gl: [...state.gl(), journal] });
@@ -109,7 +108,7 @@ export const JournalStore = signalStore(
         })
       )
     ),
-    updateJournalHeader: rxMethod<IJournalHeaderUpdate>(
+    updateJournalHeader: rxMethod<IJournalHeader>(
       pipe(
         switchMap((value) => {
           return journalService.updateJournalHeader(value).pipe(
@@ -327,10 +326,10 @@ export const JournalStore = signalStore(
     loadPeriod: rxMethod(
       pipe(
         tap(() => patchState(state, { isLoading: true })),
-        switchMap((value) => {
+        exhaustMap(() => {
           return journalService.getSettings('Period').pipe(
             tapResponse({
-              next: (period) => patchState(state, { currentPeriod: period }),
+              next: (period) => patchState(state, { currentPeriod: Number(period) }),
               error: console.error,
               finalize: () => patchState(state, { isLoading: false }),
             })
@@ -341,10 +340,10 @@ export const JournalStore = signalStore(
     loadYear: rxMethod(
       pipe(
         tap(() => patchState(state, { isLoading: true })),
-        switchMap((value) => {
+        exhaustMap(() => {
           return journalService.getSettings('Year').pipe(
             tapResponse({
-              next: (year) => patchState(state, { currentYear: year }),
+              next: (year) => patchState(state, { currentYear: Number(year) }),
               error: console.error,
               finalize: () => patchState(state, { isLoading: false }),
             })

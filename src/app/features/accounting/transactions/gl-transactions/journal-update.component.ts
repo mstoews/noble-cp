@@ -69,11 +69,13 @@ import {
     RowSelectEventArgs,
 } from "@syncfusion/ej2-angular-grids";
 
-import {
-    IAccounts,
-    IJournalDetail, IJournalDetailTemplate,
-    IJournalHeader, IJournalHeaderUpdate, IJournalTemplate,
+import { 
+    IJournalDetail, 
+    IJournalDetailTemplate,
+    IJournalHeader, 
+    IJournalTemplate,
 } from "app/models/journals";
+
 import { Router, ActivatedRoute, NavigationStart } from "@angular/router";
 import { Location } from "@angular/common";
 import { MatDrawer } from "@angular/material/sidenav";
@@ -85,13 +87,13 @@ import { EvidenceCardComponent } from "app/features/file-manager/file-manager-ca
 import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from "@angular/material/form-field";
 import { IParty } from "../../../../models/party";
 import { PartyService } from "../../../../services/party.service";
-import { Store } from "@ngrx/store";
-import { getTemplates } from 'app/state/template/Template.Selector';
-import { loadTemplates } from 'app/state/template/Template.Action';
-import { loadAccounts } from "app/state/accounts/Accounts.Action";
-import { getAccounts } from "app/state/accounts/Accounts.Selector";
-import { loadJournalHeader } from "app/state/journal/Journal.Action";
-import { getJournals } from "app/state/journal/Journal.Selector";
+// import { Store } from "@ngrx/store";
+// import { getTemplates } from 'app/state/template/Template.Selector';
+// import { loadTemplates } from 'app/state/template/Template.Action';
+// import { loadAccounts } from "app/state/accounts/Accounts.Action";
+// import { selectAccounts } from "app/state/accounts/Accounts.Selector";
+// import { loadJournalHeader } from "app/state/journal/Journal.Action";
+// import { selectJournals } from "app/state/journal/Journal.Selector";
 import { ISubType } from "app/models/subtypes";
 
 
@@ -172,16 +174,17 @@ export class JournalUpdateComponent
     private activatedRoute = inject(ActivatedRoute);
     private partyService = inject(PartyService);
 
-    private Store = inject(Store);
+    // private Store = inject(Store);
 
-    public tmpLst$: Observable<IJournalTemplate[]>;
-    public accountList$: Observable<IAccounts[]>;
-    public journalHeader$: Observable<IJournalHeader[]>;
+    // public tmpLst$: Observable<IJournalTemplate[]>;
+    // public accountList$: Observable<IAccounts[]>;
+    // public journalHeader$: Observable<IJournalHeader[]>;
 
     public matDialog = inject(MatDialog);
 
     // Store
-    public store = inject(JournalStore);
+    
+    
 
     public journalForm!: FormGroup;
     public detailForm!: FormGroup;
@@ -194,6 +197,8 @@ export class JournalUpdateComponent
 
     private _location = inject(Location);
     private router = inject(Router);
+
+    public store = inject(JournalStore);
 
     public contextmenu: ContextMenuComponent;
     public value = 0;
@@ -208,7 +213,6 @@ export class JournalUpdateComponent
     // Internal control variables
     public currentRowData: any;
     public journal_subid: any;
-    public bDirty = false;
     public bHeaderDirty = false;
 
     // Datagrid variables
@@ -272,14 +276,10 @@ export class JournalUpdateComponent
     @ViewChild("singleTemplateSelect", { static: true }) singleTemplateSelect!: MatSelect;
     @ViewChild("singlePartySelect", { static: true }) singlePartySelect!: MatSelect;
     @ViewChild('splitterInstance') splitterObj?: SplitterComponent;
+    
+    
 
     singleDebitSelection = viewChild<MatSelect>("singleDebitSelection");
-
-    constructor() {
-        this.Store.dispatch(loadTemplates());
-        this.Store.dispatch(loadAccounts());
-        this.Store.dispatch(loadJournalHeader());
-    }
 
     public onCreated() {
         let splitterObj1 = new Splitter({
@@ -299,12 +299,7 @@ export class JournalUpdateComponent
         this.createEmptyForm();
         this.createEmptyDetailForm();
         this.initialDatagrid();
-
-        this.tmpLst$ = this.Store.select(getTemplates);
-        this.accountList$ = this.Store.select(getAccounts);
-        this.journalHeader$ = this.Store.select(getJournals);
-
-
+        
         this.accountsListSubject = this.dropDownChildren$.subscribe((accounts) => {
             accounts.forEach((acct) => {
                 let list = {
@@ -364,7 +359,6 @@ export class JournalUpdateComponent
                 );
             }
         });
-
     }
 
     public createJournalDetailsFromTemplate(value: IJournalTemplate) {
@@ -373,7 +367,7 @@ export class JournalUpdateComponent
             return;
         }
         this.transactionType = value.journal_type;
-        // this.store.loadTemplateDetails(value.journal_no.toString());
+        this.store.loadTemplateDetails(value.journal_no.toString());
     }
 
     protected filterParty() {
@@ -458,12 +452,12 @@ export class JournalUpdateComponent
 
 
     public openDrawer() {
-        this.bDirty = false;
+        this.bHeaderDirty = false;
         this.drawer().open();
     }
 
     public closeDrawer() {
-        this.bDirty = false;
+        this.bHeaderDirty = false;
         this.drawer().close();
     }
 
@@ -597,20 +591,20 @@ export class JournalUpdateComponent
 
         this.detailForm.valueChanges.subscribe((dirty) => {
             if (this.detailForm.dirty) {
-                this.bDirty = true;
+                this.bHeaderDirty = true;
             }
         });
         this.debitCtrl.valueChanges.subscribe((value) => {
-            this.bDirty = true;
+            this.bHeaderDirty = true;
         });
 
         this.templateCtrl.valueChanges.subscribe((value) => {
             this.createJournalDetailsFromTemplate(value);
-            this.bDirty = true;
+            this.bHeaderDirty = true;
         });
 
         this.partyCtrl.valueChanges.subscribe((value) => {
-            this.bDirty = true;
+            this.bHeaderDirty = true;
         });
     }
 
@@ -677,9 +671,9 @@ export class JournalUpdateComponent
     }
 
     public saveArtifacts(e: any) {
-        this.bDirty = true;
+        this.bHeaderDirty = true;
         this.store.updateArtifacts(e);
-        this.bDirty = false;
+        this.bHeaderDirty = false;
 
     }
 
@@ -840,7 +834,7 @@ export class JournalUpdateComponent
 
 
     public exitWindow() {
-        if (this.bDirty === false) {
+        if (this.bHeaderDirty === false) {
             this.journalForm.reset();
             this.router.navigate(["journals"]);
 
@@ -893,7 +887,7 @@ export class JournalUpdateComponent
                 this.store.deleteJournalDetail(journalDetail);
                 this.store.loadDetails(this.journal_id);
                 this.store.loadArtifactsByJournalId(this.journal_id);
-                this.bDirty = false;
+                this.bHeaderDirty = false;
                 this.closeDrawer();
             }
         });
@@ -924,14 +918,14 @@ export class JournalUpdateComponent
             if (result === "confirmed") {
                 // Delete the list
                 this.store.deleteJournalDetail(journalDetail);
-                this.bDirty = false;
+                this.bHeaderDirty = false;
             }
         });
     }
 
 
     // add a new line entry
-    public onAddLineJournalDetail() {
+    public onNewLineItem() {
         const updateDate = new Date().toISOString().split("T")[0];
         const email = this.auth.currentUser?.email;
         var max = 0;
@@ -962,7 +956,7 @@ export class JournalUpdateComponent
                 reference: journalCopy[0].reference,
                 fund: journalCopy[0].fund,
             }
-            this.store.createJournalDetail(journalDetail);
+            this.store.createJournalDetail(journalDetail);            
         } else {
             const journalDetail = {
                 journal_id: this.journal_id,
@@ -979,9 +973,9 @@ export class JournalUpdateComponent
                 fund: "",
             };
             this.store.createJournalDetail(journalDetail);
-
+            
+            this.bHeaderDirty = true;
         }
-        this.bDirty = true;
     }
 
     journalEntryCleanUp() {
@@ -1011,15 +1005,19 @@ export class JournalUpdateComponent
             partyID.party_id = ''
         }
 
-        const journalHeaderUpdate: IJournalHeaderUpdate = {
+        const journalHeaderUpdate: IJournalHeader = {
             journal_id: this.journal_id,
             type: this.journalData.type,
+            booked: this.journalData.booked,
+            period: this.journalData.period,
+            period_year: this.journalData.period_year,
+            booked_user: this.journalData.booked_user,
             description: header.description,
             transaction_date: header.transaction_date,
             amount: Number(header.amount),
             template_name: template.template_name,
             party_id: partyID.party_id,
-            invoice_no: header.invoice_no
+            invoice_no: header.invoice_no            
         };
 
         console.log('Journal Header Update : ', JSON.stringify(journalHeaderUpdate));
@@ -1150,7 +1148,7 @@ export class JournalUpdateComponent
             duration: 2000,
         });
 
-        this.bDirty = false;
+        this.bHeaderDirty = false;
     }
 
     ngOnDestroy(): void {

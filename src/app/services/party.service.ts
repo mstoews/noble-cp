@@ -8,42 +8,42 @@ import { shareReplay } from 'rxjs';
   providedIn: 'root'
 })
 export class PartyService {
- 
-    httpClient = inject(HttpClient)
-    private baseUrl = environment.baseUrl;
-  
-    create(party: IParty) {
-      var url = this.baseUrl + '/v1/create_party';
-      return this.httpClient.post<IParty>(url, party).pipe(shareReplay()) 
-    }
 
-    read() {
-      var url = this.baseUrl + '/v1/read_parties';
-      return this.httpClient.get<IParty[]>(url).pipe(shareReplay()) 
-    }
+  httpClient = inject(HttpClient)
+  private baseUrl = environment.baseUrl;
 
-    vendors() {
-      var url = this.baseUrl + '/v1/read_vendors';
-      return this.httpClient.get<IParty[]>(url).pipe(shareReplay()) 
-    }
+  create(party: IParty) {
+    var url = this.baseUrl + '/v1/create_party';
+    return this.httpClient.post<IParty>(url, party).pipe(shareReplay({ bufferSize: 1, refCount: true }))
+  }
 
-    customers() {
-      var url = this.baseUrl + '/v1/read_customers';
-      return this.httpClient.get<IParty[]>(url).pipe(shareReplay()) 
-    }
-  
-    update(party: IParty){
-      var url = this.baseUrl + '/v1/update_party';
-      return this.httpClient.post<IParty[]>(url, party).pipe(shareReplay()) 
-    }
+  read() {
+    var url = this.baseUrl + '/v1/read_parties';
+    return this.httpClient.get<IParty[]>(url).pipe(shareReplay({ bufferSize: 1, refCount: true }))
+  }
 
-    delete(party_id: string){
-      const update = {
-        party_id: party_id
-      }
-      var url = this.baseUrl + '/v1/delete_party';
-      return this.httpClient.post<IParty[]>(url, update).pipe(shareReplay()) 
+  vendors() {
+    var url = this.baseUrl + '/v1/read_vendors';
+    return this.httpClient.get<IParty[]>(url).pipe(shareReplay({ bufferSize: 1, refCount: true }))
+  }
+
+  customers() {
+    var url = this.baseUrl + '/v1/read_customers';
+    return this.httpClient.get<IParty[]>(url).pipe(shareReplay({ bufferSize: 1, refCount: true }))
+  }
+
+  update(party: IParty) {
+    var url = this.baseUrl + '/v1/update_party';
+    return this.httpClient.post<IParty[]>(url, party).pipe(shareReplay({ bufferSize: 1, refCount: true }))
+  }
+
+  delete(party_id: string) {
+    const update = {
+      party_id: party_id
     }
+    var url = this.baseUrl + '/v1/delete_party';
+    return this.httpClient.post<IParty[]>(url, update).pipe(shareReplay({ bufferSize: 1, refCount: true }))
+  }
 
 
 }

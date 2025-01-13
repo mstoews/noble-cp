@@ -1,7 +1,6 @@
-import { Component, OnInit, ViewChild, inject, viewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, inject, viewChild, input, output } from '@angular/core';
 import {
-    FormBuilder,
-    FormControl,
+    FormControl,    
     FormGroup,
     FormsModule,
     ReactiveFormsModule,
@@ -19,7 +18,7 @@ import { IFunds } from 'app/models';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { addFunds, deleteFunds, loadFunds, updateFunds } from 'app/state/funds/Funds.Action';
-import { getFunds } from 'app/state/funds/Funds.Selector';
+import { selectFunds } from 'app/state/funds/Funds.Selector';
 
 
 const imports = [
@@ -92,15 +91,13 @@ const imports = [
 
         <mat-drawer-container class="flex-col h-full">    
         <ng-container>
-            @if (funds$ | async; as funds )
-            {
-                <grid-menubar [inTitle]="sTitle" [showNew]=true [showSettings]=false (newRecord)="onAddNew()"></grid-menubar>        
-                <gl-grid 
-                    (onUpdateSelection)="onUpdateSelection($event)"
-                    [data]="funds" 
-                    [columns]="columns">
-                </gl-grid>
-            
+            @if (funds$ | async; as funds ) {
+            <grid-menubar [inTitle]="sTitle" [showNew]=true [showSettings]=false (newRecord)="onAdd()"></grid-menubar>        
+            <gl-grid 
+               (onUpdateSelection)="onUpdateSelection($event)"
+               [data]="funds" 
+               [columns]="columns">
+            </gl-grid>            
             }
         </ng-container>
         </mat-drawer-container>
@@ -110,17 +107,16 @@ const imports = [
 export class FundsComponent implements OnInit {
 
     private confirmation = inject(FuseConfirmationService);
-    private Store = inject(Store);
-    public funds$: Observable<IFunds[]>;
-    bDirty: boolean = false;
-    
-    drawer = viewChild<MatDrawer>('drawer');
-
     public sTitle = 'Reserve Funds';
     public fundsForm!: FormGroup;
     public formdata: any = {};
 
-    // definition of the columns if you want to change the default
+    store = inject(Store);    
+    notifyFundUpdate = output();    
+    bDirty: boolean = false;
+
+    funds$ = this.store.select(selectFunds);
+    drawer = viewChild<MatDrawer>('drawer');
 
     public columns = [
         { field: 'fund', headerText: 'Fund', width: 80, textAlign: 'Left' },
@@ -131,9 +127,8 @@ export class FundsComponent implements OnInit {
 
     ngOnInit() {
         this.createEmptyForm();
-        this.onChanges();
-        this.Store.dispatch(loadFunds());  
-        this.funds$ = this.Store.select(getFunds);
+        this.onChanges(); 
+        this.store.dispatch(loadFunds());                
     }
 
     public onChanges(): void {
@@ -146,8 +141,6 @@ export class FundsComponent implements OnInit {
             }
         });
     }
-
-
 
     public createEmptyForm() {
         this.fundsForm = new FormGroup({
@@ -167,22 +160,22 @@ export class FundsComponent implements OnInit {
             create_date: updateDate,
             create_user: '@admin',
         } as IFunds;
-        // this.store.addFund(rawData);
-        this.Store.dispatch(addFunds({ funds: rawData }));
+        
+        this.store.dispatch(addFunds({ funds: rawData }));        
         this.bDirty = false;
         this.closeDrawer();
     }
 
-    public onAddNew(e: string ) {        
+    public onAddNew(e: string) {
         this.createEmptyForm();
-        this.openDrawer();        
+        this.openDrawer();
     }
 
     public onCancel() {
         this.closeDrawer();
     }
 
-    public public () {
+    public public() {
         if (this.bDirty === true) {
             const confirm = this.confirmation.open({
                 title: 'Fund Modified',
@@ -208,8 +201,7 @@ export class FundsComponent implements OnInit {
         }
     }
 
-
-    onDelete(e: any) {
+    public onDelete(e: any) {
         var data = this.fundsForm.value;
         const confirmation = this.confirmation.open({
             title: 'Delete Fund?',
@@ -225,14 +217,14 @@ export class FundsComponent implements OnInit {
         confirmation.afterClosed().subscribe((result) => {
             // If the confirm button pressed...            
             if (result === 'confirmed') {
-                this.Store.dispatch(deleteFunds({ id: data.fund[0] }));                         
+                this.store.dispatch(deleteFunds({ id: data.fund[0] }));
             }
         });
         this.closeDrawer();
     }
 
 
-    onUpdateSelection(data: IFunds) {
+    public onUpdateSelection(data: IFunds) {
         // this.store.updateFund(this.fundsForm.value);
         this.bDirty = false;
         this.fundsForm.patchValue({
@@ -240,11 +232,11 @@ export class FundsComponent implements OnInit {
             fund: [data.fund],
             description: [data.description]
         });
-        
+
         this.openDrawer();
     }
 
-    openDrawer() {
+    public openDrawer() {
         const opened = this.drawer().opened;
         if (opened !== true) {
             this.drawer().toggle();
@@ -253,7 +245,7 @@ export class FundsComponent implements OnInit {
         }
     }
 
-    closeDrawer() {
+    public closeDrawer() {
         const opened = this.drawer().opened;
         if (opened === true) {
             this.drawer().toggle();
@@ -262,7 +254,7 @@ export class FundsComponent implements OnInit {
         }
     }
 
-    onUpdate() {
+    public onUpdate() {
         const updateDate = new Date().toISOString().split('T')[0];
         const fund = this.fundsForm.value;
         this.formdata = this.fundsForm.value;
@@ -274,7 +266,7 @@ export class FundsComponent implements OnInit {
             create_date: updateDate,
             create_user: '@admin'
         } as IFunds;
-        this.Store.dispatch(updateFunds({ funds: rawData }));         
+        this.store.dispatch(updateFunds({ funds: rawData }));
         this.bDirty = false;
         this.closeDrawer();
     }

@@ -1,9 +1,12 @@
 <mat-drawer class="lg:w-[450px] md:w-full bg-white-100" #drawer [opened]="false" mode="over" [position]="'end'"
+
         [disableClose]="false">
+        
         <div class="flex flex-col w-full text-gray-700 filter-article filter-interactive">
             <div class="h-11 m-2 p-2 text-2xl text-justify text-white bg-slate-700" mat-dialog-title>
                 {{ 'Report Table Save Settings' }}
-            </div>
+            </div>            
+
             <div mat-dialog-content>
                 <form [formGroup]="periodForm">
 
@@ -40,36 +43,38 @@
                 </button>
             </div>            
         </div>         
-    </mat-drawer> 
-<mat-drawer-container id="settings" class=" control-section default-splitter flex flex-col overflow-auto h-[calc(100vh-14rem)] ml-5 mr-5" [hasBackdrop]="'false'">            
-    <div class="flex flex-col min-w-0 overflow-y-auto -px-10">
-
+</mat-drawer> 
+<div id="settings" class=" control-section default-splitter flex flex-col overflow-auto">            
+    <grid-menubar [inTitle]="toolbarTitle"  
+                  (openSettings)="openDrawer()" 
+                  (onPrint)="onPrint()"                          
+                  (exportXL)="exportLX()"
+                  (exportPRD)="exportPDF()"
+                  (exportCSV)="exportCSV()"
+                  (showPrint)="true"
+                  (showExportXL)="true"
+                  (showExportPDF)="true"
+                  (showExportCSV)="true"
+                  (showSettings)="true"
+                  (showBack)="false" >
+                </grid-menubar>  
+</div>                
+    
+<mat-drawer-container class="flex flex-col min-w-0 overflow-y-auto -px-10 h-[calc(100vh-14rem)]">
     <div class="flex-auto">
         <div class="h-full border-gray-300">
-  
+                        
             <div class="flex-col">
                 @defer (on viewport; on timer(1s)) {
-                    @if(journalHeader$ | async; as headers) {                                           
-                    <ng-container>
-                        <grid-menubar [inTitle]="toolbarTitle"  
-                          (openSettings)="openDrawer()" 
-                          (onPrint)="onPrint()"                          
-                          (exportXL)="exportLX()"
-                          (exportPRD)="exportPDF()"
-                          (exportCSV)="exportCSV()"
-                          (showPrint)="true"
-                          (showExportXL)="true"
-                          (showExportPDF)="true"
-                          (showExportCSV)="true"
-                          (showSettings)="true"
-                          (showBack)="false" >
-                        </grid-menubar>  
-                        @if(user$ | async; as user ) {
-                            <div>USER : {{user}}</div>
-                        }                          
-                        <gl-grid  (onUpdateSelection)="selectedRow($event)" [data]="headers"  [columns]="columns">                                                                
+                    @if(journalHeader$ | async; as journals) {                                           
+                        <ng-container>                        
+                        <gl-grid  
+                             (onUpdateSelection)="selectedRow($event)" 
+                             [data]="journals" 
+                             [enableStickyHeader]="true"  
+                             [columns]="journalColumns">                                                                
                         </gl-grid>                        
-                    </ng-container> 
+                        </ng-container> 
                          
                          <!-- @if (store.isLoading() === false) 
                         {                            
@@ -95,8 +100,6 @@
                 }
             </div>
         </div>
-    </div>
-    
-</div>
+    </div>    
 </mat-drawer-container>
 

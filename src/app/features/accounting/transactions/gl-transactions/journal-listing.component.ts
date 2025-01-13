@@ -13,7 +13,7 @@ import { Store } from '@ngrx/store';
 import { loadJournalHeader, loadJournalHeaderByPeriod } from 'app/state/journal/Journal.Action';
 import { Observable } from 'rxjs';
 import { IJournalHeader } from 'app/models/journals';
-import { getJournals } from 'app/state/journal/Journal.Selector';
+import { selectJournals } from 'app/state/journal/Journal.Selector';
 import { IPeriod, IPeriodParam } from 'app/models/period';
 import { MatDrawer } from '@angular/material/sidenav';
 
@@ -34,6 +34,8 @@ const imports = [
     providers: []
 })
 export class JournalEntryComponent implements OnInit, OnDestroy {
+    
+    
     drawer = viewChild<MatDrawer>("drawer");
     public param!: IPeriodParam;
     public route = inject(Router);
@@ -52,7 +54,7 @@ export class JournalEntryComponent implements OnInit, OnDestroy {
     collapsed = false;
     public sGridTitle = 'Journal Entry';
 
-    columns = [
+    journalColumns = [
         { field: 'journal_id', headerText: 'Journal ID', isPrimaryKey: true, isIdentity: true, visible: true, width: 80 },
         { field: 'type', headerText: 'Type', width: 60 },
         { field: 'status', headerText: 'Status', width: 80, type: Boolean, displayAsCheckbox: true },
@@ -66,16 +68,16 @@ export class JournalEntryComponent implements OnInit, OnDestroy {
         { field: 'party_id', headerText: 'Party', width: 100, visible: false }
     ];
 
-    ngOnInit() {        
+    ngOnInit() {
         this.param = { period: 1, period_year: 2024 };
-        this.Store.dispatch(loadJournalHeaderByPeriod({ period: this.param }));           
-        this.journalHeader$ = this.Store.select(getJournals);
-        
-        
+        this.Store.dispatch(loadJournalHeaderByPeriod({ period: this.param }));
+        this.journalHeader$ = this.Store.select(selectJournals);
+
+
         this.toolbarTitle = "Journal Transactions : " + this.param.period + " - " + this.param.period_year;
         this.periodForm = this.fb.group({
             period: ['', Validators.required],
-            period_year: ['',Validators.required],
+            period_year: ['', Validators.required],
         });
     }
 
@@ -90,9 +92,22 @@ export class JournalEntryComponent implements OnInit, OnDestroy {
 
     closeDrawer() {
         this.drawer().close();
-        
-     }
-     
+
+    }
+
+    exportLX() {
+        throw new Error('Method not implemented.');
+    }
+    exportPDF() {
+        throw new Error('Method not implemented.');
+    }
+    exportCSV() {
+        throw new Error('Method not implemented.');
+    }
+    onPrint() {
+        throw new Error('Method not implemented.');
+    }
+
     public dateValidator() {
         return (control: FormControl): null | Object => {
             return control.value && control.value.getFullYear &&
@@ -122,10 +137,10 @@ export class JournalEntryComponent implements OnInit, OnDestroy {
     }
 
     public onUpdate($event: any) {
-        var period = this.periodForm.getRawValue()        
-        this.param = { period: Number(period.period) , period_year: Number(period.period_year) };
+        var period = this.periodForm.getRawValue()
+        this.param = { period: Number(period.period), period_year: Number(period.period_year) };
         this.toolbarTitle = "Journal Transactions : " + this.param.period + " - " + this.param.period_year;
-        this.Store.dispatch(loadJournalHeaderByPeriod({ period: this.param }));              
+        this.Store.dispatch(loadJournalHeaderByPeriod({ period: this.param }));
     }
 
     public onBooked(booked: boolean) {

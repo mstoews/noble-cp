@@ -6,31 +6,20 @@ export interface IJournalDetailDelete {
 
 }
 
-export interface  IJournalHeaderUpdate {
-    journal_id: number,
-    description: string,
-    transaction_date: string,
-    amount: number,
-    type: string,
-    party_id: string,
-    template_name: string,
-    invoice_no: string
-}
-
 export interface IJournalHeader {
-  journal_id: number,         
+  journal_id?: number,         
   description: string,
   booked: boolean,
-  booked_date: string,
+  booked_date?: string,
   booked_user: string,
-  create_date: string,
-  create_user: string,
+  create_date?: string,
+  create_user?: string,
   period: number,
   period_year: number,
   transaction_date: string,
-  status: string,
+  status?: string,
   type: string,
-  sub_type: string,
+  sub_type?: string,
   amount: number,    
   party_id: string,
   invoice_no: string,
@@ -64,6 +53,22 @@ export interface IJournalDetail {
   period_year?  : number, 
   template_name?: string 
 }
+
+export interface IJournalDetailUpdate {
+  journal_id    : number,
+  journal_subid : number,
+  account       : number,
+  child         : number,
+  fund          : string,
+  sub_type      : string,
+  description   : string,
+  reference     : string,
+  debit         : number,
+  credit        : number,
+  create_date   : string,
+  create_user   : string
+}
+
 
 
 export interface IAccounts {

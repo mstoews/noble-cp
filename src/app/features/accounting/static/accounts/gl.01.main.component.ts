@@ -13,6 +13,7 @@ import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
+    inject,
     ViewChild,
     ViewEncapsulation,
 } from '@angular/core';
@@ -26,6 +27,9 @@ import { RouterLink } from '@angular/router';
 import { MatDrawer } from '@angular/material/sidenav';
 import { FundsComponent } from './gl.funds.component';
 import { GLGridComponent } from '../../grid-components/gl-grid.component';
+import { Store } from '@ngrx/store';
+import { loadFunds } from 'app/state/funds/Funds.Action';
+import { selectFunds } from 'app/state/funds/Funds.Selector';
 
 @Component({
     template: `
@@ -105,8 +109,8 @@ import { GLGridComponent } from '../../grid-components/gl-grid.component';
                     @switch (selectedPanel) {
                     @case ('accounts'){ <glaccounts></glaccounts> }
                     @case ('types') { <gl-types></gl-types> }
-                    @case ('subtypes'){ <subtypes></subtypes> } 
-                    @case ('funds') { <funds></funds> }
+                    @case ('subtypes'){ <subtypes></subtypes> }                     
+                    @case ('funds') { <funds> </funds> }
                     @case ('periods') { <periods></periods> }
                     @case ('team') { <team></team> }
                     @case ('roles') { <roles></roles> }
@@ -135,29 +139,25 @@ import { GLGridComponent } from '../../grid-components/gl-grid.component';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class GlMainComponent {
+    
     @ViewChild('drawer') drawer: MatDrawer;
     drawerMode: 'over' | 'side' = 'side';
     drawerOpened: boolean = true;
     panels: any[] = [];
     selectedPanel: string = 'accounts';
+    
+
+    
+    
     private _unsubscribeAll: Subject<any> = new Subject<any>();
 
-    /**
-     * Constructor
-     */
     constructor(
         private _changeDetectorRef: ChangeDetectorRef,
         private _fuseMediaWatcherService: FuseMediaWatcherService,
-    ) {
+    ) 
+    {                 
     }
 
-    // -----------------------------------------------------------------------------------------------------
-    // @ Lifecycle hooks
-    // -----------------------------------------------------------------------------------------------------
-
-    /**
-     * On init
-     */
     ngOnInit(): void {
         // Setup available panels
         this.panels = [

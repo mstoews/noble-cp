@@ -271,12 +271,6 @@ export class BudgetWizardComponent implements OnInit, OnDestroy, AfterViewInit {
       end_date: transactionDate
     }
 
-    // this.journalService.readPeriodFromTransactionDate(transaction_period).subscribe(period =>{
-    //     journalHeader.period = period.period_id,
-    //     journalHeader.period_year = period.period_year
-    // })
-
-
   }
 
   onDelete() {
@@ -322,7 +316,6 @@ export class BudgetWizardComponent implements OnInit, OnDestroy, AfterViewInit {
 
     this.journalHeader = journalHeader;
 
-    console.debug(JSON.stringify(this.journalHeader));
 
     this.journalDetails = [];
 
@@ -401,7 +394,7 @@ export class BudgetWizardComponent implements OnInit, OnDestroy, AfterViewInit {
 
   postTransaction() {
     var details: any;
-    this.journalService.createJournalHeader(this.journalHeader).subscribe(journal => {
+    this.journalService.createJournalFullHeader(this.journalHeader).subscribe(journal => {
       console.debug(JSON.stringify(journal));
       // this.journalDetails.forEach(journalDetail => {
       //   journalDetail.journal_id = journal.journal_id
