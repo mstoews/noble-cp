@@ -299,6 +299,7 @@ export class JournalService implements OnDestroy {
 	      "period_year" : header.period_year,
 	      "type" : header.type,
 	      "amount" : header.amount,
+        "transaction_date" : header.transaction_date,
 	      "party_id" : header.party_id,
 	      "template_name" : header.template_name,
 	      "invoice_no" : header.invoice_no,

@@ -45,7 +45,7 @@ export class AccountsService {
     }
 
     readAccountDropdown() {
-        var url = this.baseUrl + '/v1/read_child_accounts';
+        var url = this.baseUrl + '/v1/read_dropdown_accounts';
         return this.httpClient.get<IDropDownAccounts[]>(url).pipe(shareReplay({ bufferSize: 1, refCount: true }));
     }
 

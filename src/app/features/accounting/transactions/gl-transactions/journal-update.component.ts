@@ -20,9 +20,6 @@ import {
 } from "@angular/forms";
 
 import {
-    debounceTime,
-    Observable,
-    of,
     ReplaySubject,
     Subject,
     Subscription,
@@ -56,7 +53,6 @@ import {
     AggregateService,
     EditService,
     FilterService,
-    FilterSettingsModel,
     GridModule,
     RowDDService,
     SaveEventArgs,
@@ -67,6 +63,7 @@ import {
     DialogEditEventArgs,
     SearchService,
     RowSelectEventArgs,
+    GroupService,
 } from "@syncfusion/ej2-angular-grids";
 
 import { 
@@ -95,6 +92,7 @@ import { PartyService } from "../../../../services/party.service";
 // import { loadJournalHeader } from "app/state/journal/Journal.Action";
 // import { selectJournals } from "app/state/journal/Journal.Selector";
 import { ISubType } from "app/models/subtypes";
+import { TemplateService } from "app/services/template.service";
 
 
 const imports = [
@@ -127,6 +125,7 @@ const imports = [
         EditService,
         SearchService,
         AggregateService,
+        GroupService,
         RowDDService,
         JournalStore,
     ],
@@ -173,6 +172,7 @@ export class JournalUpdateComponent
     private auth = inject(AUTH);
     private activatedRoute = inject(ActivatedRoute);
     private partyService = inject(PartyService);
+    private templateService = inject(TemplateService);  
 
     // private Store = inject(Store);
 
@@ -276,6 +276,28 @@ export class JournalUpdateComponent
     @ViewChild("singleTemplateSelect", { static: true }) singleTemplateSelect!: MatSelect;
     @ViewChild("singlePartySelect", { static: true }) singlePartySelect!: MatSelect;
     @ViewChild('splitterInstance') splitterObj?: SplitterComponent;
+
+
+    public aggregates = [
+        {
+          columns: [
+            {
+              type: ['Sum'],
+              field: 'debit',
+              columnName: 'Debit',
+              format: 'N2',
+              footerTemplate: 'Sum: ${Sum}',
+            },
+            {
+                type: ['Sum'],
+                field: 'credit',
+                columnName: 'Credit',
+                format: 'N2',
+                footerTemplate: 'Sum: ${Sum}',
+              },
+          ],
+        },
+    ];
     
     
 
@@ -295,11 +317,21 @@ export class JournalUpdateComponent
     }
 
     ngOnInit(): void {
-
         this.createEmptyForm();
         this.createEmptyDetailForm();
         this.initialDatagrid();
-        
+
+        this.activatedRoute.data.subscribe((data) => {
+            this.journal_id = data.journal.journal_id;
+            this.store.loadDetails(this.journal_id);
+            this.store.loadArtifactsByJournalId(this.journal_id);                        
+            this.journalData = data.journal;
+            this.refreshHeader(this.journalData);
+            this.onChanges();
+            this.router.navigate(["journals/gl", this.journal_id]);                        
+        });
+
+
         this.accountsListSubject = this.dropDownChildren$.subscribe((accounts) => {
             accounts.forEach((acct) => {
                 let list = {
@@ -309,7 +341,7 @@ export class JournalUpdateComponent
                 this.accountsGrid.push(list);
             });
 
-            this.fundListSubject = this.funds$.subscribe((funds) => {
+        this.fundListSubject = this.funds$.subscribe((funds) => {
                 funds.forEach((fund) => {
                     var list = {
                         fund: fund.fund,
@@ -320,27 +352,17 @@ export class JournalUpdateComponent
             });
         });
 
-        this.templateFilterCtrl.valueChanges.pipe(takeUntil(this._onDestroyTemplateFilter)).subscribe(() => {
-            this.filterTemplate();
+        this.partyService.read().pipe(takeUntil(this._onDestroy)).subscribe((party) => {
+            this.partyList = party;            
+            this.partyFilter.next(this.partyList.slice());
+            if (this.journalData.template_name != null) {
+                this.partyCtrl.setValue(
+                    this.partyList.find((x) => x.party_id === this.journalData.party_id)
+                );
+            }
         });
 
-        this.partyFilterCtrl.valueChanges.pipe(takeUntil(this._onDestroyTemplateFilter))
-            .subscribe(() => {
-                this.filterParty();
-            });
-
-        this.activatedRoute.data.subscribe((data) => {
-            this.journal_id = data.journal.journal_id;
-            this.store.loadDetails(this.journal_id);
-            this.store.loadArtifactsByJournalId(this.journal_id);
-            this.journalData = data.journal;
-            this.refreshHeader(this.journalData);
-
-            this.onChanges();
-            this.router.navigate(["journals/gl", this.journal_id]);
-        });
-
-        this.tmpLst$.subscribe((templates) => {
+        this.templateService.read().pipe(takeUntil(this._onDestroy)).subscribe((templates) => {
             this.templateList = templates;
             this.templateFilter.next(this.templateList.slice());
             if (this.journalData.template_name != null) {
@@ -350,16 +372,11 @@ export class JournalUpdateComponent
             }
         });
 
-        this.partyService.read().pipe(takeUntil(this._onDestroy)).subscribe((party) => {
-            this.partyList = party;
-            this.partyFilter.next(this.partyList.slice());
-            if (this.journalData.template_name != null) {
-                this.partyCtrl.setValue(
-                    this.partyList.find((x) => x.party_id === this.journalData.party_id)
-                );
-            }
-        });
+        this.initialDatagrid();
+
     }
+
+    
 
     public createJournalDetailsFromTemplate(value: IJournalTemplate) {
         console.log('Template : ', value);
@@ -410,7 +427,7 @@ export class JournalUpdateComponent
 
 
     public ngAfterViewInit() {
-
+        
         this.accountService
             .readChildren()
             .pipe(takeUntil(this._onDestroy))
@@ -447,7 +464,6 @@ export class JournalUpdateComponent
         this.templateCtrl.setValue(
             this.templateList.find((x) => x.template_name === this.journalData.template_name)
         );
-
     }
 
 
@@ -464,12 +480,13 @@ export class JournalUpdateComponent
     public onRowSelected(args: RowSelectEventArgs): void {
         const queryData: any = args.data;
         this.key = queryData.journal_id;
-        this.refreshHeader(queryData);
-        this.store.loadDetails(queryData.journal_id);
-        this.store.loadArtifactsByJournalId(queryData.journal_id);
-        this.router.navigate(["journals/gl", queryData.journal_id]);
+        this.refreshHeader(queryData);        
+        this.store.loadDetails(this.key);
+        this.store.loadArtifactsByJournalId(this.key);
+        this.router.navigate(["journals/gl", this.key]);
         this.closeDrawer();
     }
+
 
     initialDatagrid() {
         this.formatoptions = { type: "dateTime", format: "M/dd/yyyy" };
@@ -622,7 +639,7 @@ export class JournalUpdateComponent
         //this.openDrawer();
     }
 
-    public actionBegin(args: SaveEventArgs): void {
+    public detailRowDoubleClick(args: SaveEventArgs): void {
         if (args.requestType === "beginEdit" || args.requestType === "add") {
             args.cancel = true;
             this.OnCardClick(args.rowData);
@@ -815,8 +832,8 @@ export class JournalUpdateComponent
             description: ["", Validators.required],
             amount: ["", Validators.required],
             transaction_date: ["", Validators.required],
-            templateFilterCtrl: ["", Validators.required],
-            partyFilterCtrl: ["", Validators.required],
+            templateFilterCtrl: [""],
+            partyFilterCtrl: [""],
             invoice_no: ["", Validators.required]
         });
 
@@ -923,11 +940,15 @@ export class JournalUpdateComponent
         });
     }
 
+    public onOpenEmptyDrawer() {
+        this.createEmptyDetailForm();
+        this.openDrawer();
+    }
 
     // add a new line entry
     public onNewLineItem() {
         const updateDate = new Date().toISOString().split("T")[0];
-        const email = this.auth.currentUser?.email;
+        const name = '@' + this.auth.currentUser?.email.split("@")[0];
         var max = 0;
 
         this.store.details().forEach((details) => {
@@ -949,7 +970,7 @@ export class JournalUpdateComponent
                 child: journalCopy[0].child,
                 description: journalCopy[0].description,
                 create_date: updateDate,
-                create_user: email,
+                create_user: name,
                 sub_type: journalCopy[0].sub_type,
                 debit: 0,
                 credit: 0,
@@ -961,16 +982,17 @@ export class JournalUpdateComponent
             const journalDetail = {
                 journal_id: this.journal_id,
                 journal_subid: 1,
-                account: 0,
-                child: 0,
-                description: "",
+                account: 1000,
+                child: 1001,                
+                description: "Initial Entry",
                 create_date: updateDate,
-                create_user: email,
-                sub_type: "",
-                debit: 0,
+                create_user: name,
+                sub_type: "Ops",
+                debit: 1000,
                 credit: 0,
-                reference: "",
-                fund: "",
+                reference: "Reference",
+                fund: "Fund"
+
             };
             this.store.createJournalDetail(journalDetail);
             
@@ -1149,6 +1171,7 @@ export class JournalUpdateComponent
         });
 
         this.bHeaderDirty = false;
+        this.closeDrawer();
     }
 
     ngOnDestroy(): void {

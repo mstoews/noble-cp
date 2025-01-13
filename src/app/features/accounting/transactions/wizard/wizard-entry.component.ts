@@ -189,7 +189,7 @@ export class EntryWizardComponent implements OnInit, OnDestroy, AfterViewInit {
     // Grid Options
     public selectionOptions: Object;
     public journalDetails: IJournalDetail[] = [];
-
+    
     public accountsListSubject: Subscription;
     public gridControl = viewChild<GridComponent>('grid');
     public currentRowData: any;
@@ -275,8 +275,6 @@ export class EntryWizardComponent implements OnInit, OnDestroy, AfterViewInit {
 
     public createEmptyForms() {
         let currentDate = new Date().toISOString().split("T")[0];
-
-        
 
         this.detailForm = this.formBuilder.group({
             debitAccountFilterCtrl: ["", Validators.required],
@@ -470,7 +468,7 @@ export class EntryWizardComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     onSavedDetails(e: IJournalDetail) {                
-        this.store.createJournalDetail(e);            
+        this.store.createJournalDetail(e);
     }
 
     protected setInitialValue() {
@@ -601,6 +599,8 @@ export class EntryWizardComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     public updateHeaderData() {
+
+
         const updateDate = new Date().toISOString().split('T')[0];
         const inputs = { ...this.journalEntryForm.value }
         const momentDate = new Date(inputs.step1.transaction_date).toISOString().split('T')[0];
@@ -645,6 +645,7 @@ export class EntryWizardComponent implements OnInit, OnDestroy, AfterViewInit {
             template_name: template_name,
             invoice_no: inputs.step1.invoice_no,
         }
+
         
         this.journalDetails = [];
         
@@ -681,10 +682,31 @@ export class EntryWizardComponent implements OnInit, OnDestroy, AfterViewInit {
             return;
         }
 
+        const updateDate = new Date().toISOString().split('T')[0];
+        const email = '@' + this.auth.currentUser?.email.split('@')[0];
+        this.journalHeader.transaction_date = inputs.step1.transaction_date;
+        
         this.store.createJournalHeader(this.journalHeader);
         
         this.journalDetailSignal().forEach((detail) => {
-            this.onSavedDetails(detail);            
+            
+            const journalDetail: IJournalDetail = {
+                journal_id: detail.journal_id-1,
+                journal_subid: detail.journal_subid,
+                account: detail.account,
+                child: detail.child,
+                description: detail.description,
+                create_date: detail.create_date,
+                create_user: detail.create_user,
+                sub_type: detail.sub_type,
+                debit: detail.debit,
+                credit: detail.credit,
+                reference: detail.reference,
+                fund: detail.fund,
+            }
+            
+            this.store.createJournalDetail(journalDetail);
+                        
         });
 
         this.toastr.success('Journal Entry Created');
@@ -696,11 +718,6 @@ export class EntryWizardComponent implements OnInit, OnDestroy, AfterViewInit {
         
         
     }
-
-
-
-
-
 
     onAddArtifact() {
         const dialogRef = this.matDialog.open(DndComponent, {
