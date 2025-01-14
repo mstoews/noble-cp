@@ -1,5 +1,14 @@
 import { NgClass, NgSwitch, NgSwitchCase } from '@angular/common';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import {
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
+    Component, inject,
+    OnDestroy,
+    OnInit,
+    signal, viewChild,
+    ViewChild,
+    ViewEncapsulation
+} from '@angular/core';
 import { MatDrawer } from '@angular/material/sidenav';
 import { FuseMediaWatcherService } from '@fuse/services/media-watcher';
 import { MaterialModule } from 'app/services/material.module';
@@ -13,6 +22,7 @@ import { ARTransactionComponent } from './ar-transactions/ar-listing.component';
 import { APTransactionComponent } from './ap-transactions/ap-listing.component';
 import { FundsService } from 'app/services/funds.service';
 import { AccountsService } from 'app/services/accounts.service';
+import {PanelStateService} from "../../../services/panel.state.service";
 
 
 const imports = [
@@ -36,12 +46,15 @@ const imports = [
 })
 export class TransactionMainComponent {
 
-    @ViewChild('drawer') drawer: MatDrawer;
+    drawer = viewChild<MatDrawer>("drawer");
     drawerMode: 'over' | 'side' = 'side';
     drawerOpened: boolean = true;
     panels: any[] = [];
-    selectedPanel: string = 'entry';
+    defaultPanel = "entry";
     private _unsubscribeAll: Subject<any> = new Subject<any>();
+    public lastPanelOpened = signal<string>("");
+    panelService = inject(PanelStateService);
+    public selectedPanel: string = this.panelService.lastPanelOpened();
 
     /**
      * Constructor
@@ -49,7 +62,10 @@ export class TransactionMainComponent {
     constructor(
         private _changeDetectorRef: ChangeDetectorRef,
         private _fuseMediaWatcherService: FuseMediaWatcherService,
-    ) {
+    )
+    {
+        this.selectedPanel = this.panelService.lastPanelOpened();
+        console.log("selectedPanel", this.selectedPanel);
     }
 
     // -----------------------------------------------------------------------------------------------------
@@ -61,6 +77,10 @@ export class TransactionMainComponent {
      */
     ngOnInit(): void {
         // Setup available panels
+        if (this.selectedPanel === "") {
+            this.panelService.setLastPanel(this.defaultPanel);
+            this.selectedPanel = this.defaultPanel;
+        }
         this.panels = [
             {
                 id: 'entry',
@@ -83,7 +103,7 @@ export class TransactionMainComponent {
             {
                 id: 'ap',
                 icon: 'mat_outline:shop',
-                title: 'Payments and Payables',
+                title: 'Payments',
                 description: 'Pay your bills and manage your accounts payable',
             },
             {
@@ -150,11 +170,10 @@ export class TransactionMainComponent {
      * @param panel
      */
     goToPanel(panel: string): void {
+        this.panelService.setLastPanel(panel);
         this.selectedPanel = panel;
-
-        // Close the drawer on 'over' mode
         if (this.drawerMode === 'over') {
-            this.drawer.close();
+            this.drawer().close();
         }
     }
 

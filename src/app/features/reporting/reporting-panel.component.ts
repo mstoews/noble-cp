@@ -1,5 +1,14 @@
 import { NgClass } from '@angular/common';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import {
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
+    Component,
+    inject,
+    OnDestroy,
+    OnInit,
+    ViewChild,
+    ViewEncapsulation
+} from '@angular/core';
 import { MatDrawer } from '@angular/material/sidenav';
 import { FuseMediaWatcherService } from '@fuse/services/media-watcher';
 import { MaterialModule } from 'app/services/material.module';
@@ -10,6 +19,7 @@ import { IncomeStatementRptComponent } from './financial-statement/income-statem
 import { IncomeStatementComparisonRptComponent } from './financial-statement/income-statement-comparison.component';
 import { DistributedTbComponent } from './distributed-tb.component';
 import { TbGridComponent } from './tb-grid/tb-grid.component';
+import {PanelStateService} from "../../services/panel.state.service";
 
 
 const mods = [
@@ -38,8 +48,10 @@ export class ReportingPanelComponent {
     drawerMode: 'over' | 'side' = 'side';
     drawerOpened: boolean = true;
     panels: any[] = [];
-    selectedPanel: string = 'distributed-tb';
+    defaultPanel = "distributed-tb"
+
     private _unsubscribeAll: Subject<any> = new Subject<any>();
+    public panelService = inject(PanelStateService);
 
     /**
      * Constructor
@@ -48,7 +60,10 @@ export class ReportingPanelComponent {
         private _changeDetectorRef: ChangeDetectorRef,
         private _fuseMediaWatcherService: FuseMediaWatcherService,
     ) {
+
     }
+
+    public selectedPanel: string = this.panelService.lastReportingPanel();
 
     // -----------------------------------------------------------------------------------------------------
     // @ Lifecycle hooks
@@ -59,6 +74,10 @@ export class ReportingPanelComponent {
      */
     ngOnInit(): void {
         // Setup available panels
+        if (this.panelService.lastReportingPanel() == "") {
+            this.panelService.setLastReportingPanel(this.defaultPanel);
+            this.selectedPanel = this.defaultPanel;
+        }
         this.panels = [
             {
                 id: 'distributed-tb',
@@ -176,7 +195,7 @@ export class ReportingPanelComponent {
      */
     goToPanel(panel: string): void {
         this.selectedPanel = panel;
-
+        this.panelService.setLastPanel(panel);
         // Close the drawer on 'over' mode
         if (this.drawerMode === 'over') {
             this.drawer.close();

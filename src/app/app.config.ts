@@ -57,6 +57,7 @@ import { fundsEffects } from './state/funds/Funds.Effects';
 import { UserService } from './services/user.service';
 import { accountEffects } from './state/accounts/Accounts.Effects';
 import { periodEffects } from './state/periods/periods.effects';
+import {PanelStateService} from "./services/panel.state.service";
 
 
 const app = initializeApp(environment.firebase);
@@ -107,7 +108,8 @@ const CoreProviders = [
 
 
 export const appConfig: ApplicationConfig = {
-  providers: [    
+  providers: [
+    PanelStateService,
     provideAnimations(),
     provideAppInitializer(() => {
       console.log('App initialized');

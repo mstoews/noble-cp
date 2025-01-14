@@ -19,7 +19,7 @@ functions:
 ## up_build: stops docker-compose (if running), builds all projects and starts docker compose
 start:
 	@echo "start web app"
-	ng serve 
+	ng serve --watch=false
 
 ## up_build: stops docker-compose (if running), builds all projects and starts docker compose
 open:
