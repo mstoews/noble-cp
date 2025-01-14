@@ -9,12 +9,13 @@ import { IGridSettingsModel } from 'app/services/grid.settings.service';
 import { MaterialModule } from 'app/services/material.module';
 import { MatDrawer } from '@angular/material/sidenav';
 import { FormBuilder, FormControl } from '@angular/forms';
-import { AggregateService, ColumnMenuService, ContextMenuItem, ContextMenuService, EditService, EditSettingsModel, ExcelExportService, FilterService, FilterSettingsModel, GridComponent, GridModule, PageService, ResizeService, SearchSettingsModel, SelectionSettingsModel, SortService, ToolbarItems, ToolbarService } from '@syncfusion/ej2-angular-grids';
+import { AggregateService, ColumnMenuService, ContextMenuItem, ContextMenuService, EditService, EditSettingsModel, ExcelExportService, FilterService, FilterSettingsModel, GridComponent, GridModule, PageService, ResizeService, SaveEventArgs, SearchSettingsModel, SelectionSettingsModel, SortService, ToolbarItems, ToolbarService } from '@syncfusion/ej2-angular-grids';
 import { DropDownListComponent } from '@syncfusion/ej2-angular-dropdowns';
 import { IPeriod } from 'app/models/period';
 import { ReplaySubject, Subject, take, takeUntil } from 'rxjs';
 import { MatSelect } from '@angular/material/select';
 import { PeriodsService } from 'app/services/periods.service';
+import { Router } from '@angular/router';
 
 
 
@@ -178,6 +179,7 @@ export class DistributedTbComponent implements OnInit, OnDestroy {
   public periodsService = inject(PeriodsService);
   public grid = viewChild<GridComponent>('grid')
   public drawer = viewChild<MatDrawer>('drawer')
+  private router = inject(Router);
 
   public openTradeId = output<Object>();
   public onFocusChanged = output<Object>();
@@ -256,6 +258,16 @@ export class DistributedTbComponent implements OnInit, OnDestroy {
       this.periodList.filter(period => period.period.toString().toLowerCase().indexOf(search) > -1)
     );
   }
+
+  actionBegin(args: SaveEventArgs): void {
+      console.debug('args : ', args.requestType);
+      
+      if (args.requestType === 'beginEdit' || args.requestType === 'add') {        
+        args.cancel = true;
+        // this.router.navigate(['journals/gl', args.rowData]);
+      }
+    }
+  
 
 
   ngOnInit() {

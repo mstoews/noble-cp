@@ -8,7 +8,7 @@ import {
 } from '@ngrx/signals';
 
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
-import { exhaustMap, pipe, switchMap, tap } from 'rxjs';
+import { debounceTime, exhaustMap, pipe, switchMap, tap } from 'rxjs';
 import { inject } from '@angular/core';
 import { tapResponse } from '@ngrx/operators';
 import {
@@ -147,7 +147,7 @@ export const JournalStore = signalStore(
       pipe(
         tap(() => patchState(state, { isLoading: true })),
         switchMap((value) => {
-          return journalService.createHttpJournalDetail(value).pipe(
+          return journalService.createHttpJournalDetail(value).pipe(            
             tapResponse({
               next: (journal) => {
                 patchState(state, { details: [...state.details(), journal] });

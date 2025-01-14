@@ -37,7 +37,7 @@ import { TypeService } from "app/services/type.service";
 import { MatDialog } from "@angular/material/dialog";
 import { NgxMaskDirective, provideNgxMask } from "ngx-mask";
 import { FuseConfirmationService } from "@fuse/services/confirmation";
-import { MatSnackBar } from "@angular/material/snack-bar";
+
 import { DropDownListAllModule } from "@syncfusion/ej2-angular-dropdowns";
 import { AUTH } from "app/app.config";
 import { MatSelect } from "@angular/material/select";
@@ -93,6 +93,7 @@ import { PartyService } from "../../../../services/party.service";
 // import { selectJournals } from "app/state/journal/Journal.Selector";
 import { ISubType } from "app/models/subtypes";
 import { TemplateService } from "app/services/template.service";
+import { ToastrService } from "ngx-toastr";
 
 
 const imports = [
@@ -168,23 +169,12 @@ export class JournalUpdateComponent
     private subtypeService = inject(SubTypeService);
     private fundService = inject(FundsService);
     private accountService = inject(AccountsService);
-    private snackBar = inject(MatSnackBar);
     private auth = inject(AUTH);
     private activatedRoute = inject(ActivatedRoute);
     private partyService = inject(PartyService);
     private templateService = inject(TemplateService);  
-
-    // private Store = inject(Store);
-
-    // public tmpLst$: Observable<IJournalTemplate[]>;
-    // public accountList$: Observable<IAccounts[]>;
-    // public journalHeader$: Observable<IJournalHeader[]>;
-
+    private toastr = inject(ToastrService);
     public matDialog = inject(MatDialog);
-
-    // Store
-    
-    
 
     public journalForm!: FormGroup;
     public detailForm!: FormGroup;
@@ -1010,11 +1000,7 @@ export class JournalUpdateComponent
     onUpdateJournalEntry() {
 
         if (this.bHeaderDirty === false) {
-            this.snackBar.open("Journal details have nothing to update ... ", "OK", {
-                verticalPosition: "top",
-                horizontalPosition: "right",
-                duration: 2000,
-            });
+            this.toastr.show('Journal Entry Created', 'Failed');
             return;
         }
 
@@ -1042,9 +1028,8 @@ export class JournalUpdateComponent
             invoice_no: header.invoice_no            
         };
 
-        console.log('Journal Header Update : ', JSON.stringify(journalHeaderUpdate));
-
         this.store.updateJournalHeader(journalHeaderUpdate);
+        this.toastr.success('Journal Updated ');
 
         this.bHeaderDirty = false;
     }
@@ -1061,11 +1046,8 @@ export class JournalUpdateComponent
             detail.detail_description === undefined ||
             detail.detail_description === null
         ) {
-            this.snackBar.open("Please select a row to edit", "OK", {
-                verticalPosition: "top",
-                horizontalPosition: "right",
-                duration: 2000,
-            });
+            
+            this.toastr.show('Please select a row to edit', 'Failed');
             return;
         }
         0
@@ -1073,15 +1055,7 @@ export class JournalUpdateComponent
         var credit = Number(detail.credit);
 
         if (debit > 0 && credit > 0) {
-            this.snackBar.open(
-                "Only one of the debit field and credit field may be greater than zero!",
-                "OK",
-                {
-                    verticalPosition: "top",
-                    horizontalPosition: "right",
-                    duration: 2000,
-                }
-            );
+            this.toastr.show('Only one of the debit field and credit field may be greater than zero!', 'Failed');            
             return;
         }
 
@@ -1108,16 +1082,18 @@ export class JournalUpdateComponent
 
         this.store.updateJournalDetail(journalDetail);
 
-        this.snackBar.open(
-            "Journal details updated",
-            "",
-            {
-                verticalPosition: "top",
-                horizontalPosition: "right",
-                duration: 2000,
-            }
-        );
+        const currentPeriod = this.store.currentPeriod();
+        const currentYear = this.store.currentYear();
 
+        this.journalService.updateDistributionLedger(currentPeriod, currentYear )
+        .pipe(takeUntil(this._onDestroy))
+        .subscribe((response) => {
+            this.ShowAlert(response, "pass");
+        });
+        
+        this.toastr.success('Journal details updated');
+
+        this.bHeaderDirty = false;
         this.debitCtrl.reset();
     }
 
@@ -1134,15 +1110,7 @@ export class JournalUpdateComponent
 
 
         if (debit > 0 && credit > 0) {
-            this.snackBar.open(
-                "Only one of the debit field and credit field may be greater than zero!",
-                "OK",
-                {
-                    verticalPosition: "top",
-                    horizontalPosition: "right",
-                    duration: 2000,
-                }
-            );
+            this.toastr.show('Only one of the debit field and credit field may be greater than zero!', 'Failed');            
             return;
         }
 
@@ -1164,12 +1132,15 @@ export class JournalUpdateComponent
 
         this.store.updateJournalDetail(journalDetail);
 
-        this.snackBar.open("Journal Entry Updated", "OK", {
-            verticalPosition: "top",
-            horizontalPosition: "right",
-            duration: 2000,
-        });
+        const currentPeriod = this.store.currentPeriod();
+        const currentYear = this.store.currentYear();
 
+        this.journalService.updateDistributionLedger(currentPeriod, currentYear )
+        .pipe(takeUntil(this._onDestroy))
+        .subscribe((response) => {
+            this.toastr.success('Journal details updated');    
+        });
+        
         this.bHeaderDirty = false;
         this.closeDrawer();
     }

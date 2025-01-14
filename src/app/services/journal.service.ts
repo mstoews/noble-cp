@@ -323,8 +323,8 @@ export class JournalService implements OnDestroy {
 
   createHttpJournalDetail(detail: IJournalDetail) {
     let url = this.baseUrl + '/v1/create_journal_detail';
-    return this.httpClient.post<IJournalDetail>(url, detail).pipe(
-      shareReplay({ bufferSize: 1, refCount: true }));;
+    return this.httpClient.post<IJournalDetail>(url, detail).pipe(      
+      shareReplay({ bufferSize: 1, refCount: true }));
   }
 
 

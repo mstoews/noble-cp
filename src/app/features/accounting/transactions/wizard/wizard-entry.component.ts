@@ -702,17 +702,21 @@ export class EntryWizardComponent implements OnInit, OnDestroy, AfterViewInit {
                 credit: detail.credit,
                 reference: detail.reference,
                 fund: detail.fund,
-            }
-            
-            this.store.createJournalDetail(journalDetail);
-                        
+            }            
+            this.journalService.createHttpJournalDetail(journalDetail)
+            .pipe(takeUntil(this._onDestroy))
+            .subscribe((response) => {
+                this.ShowAlert(`Journal detail updated : ${response.journal_subid} `, "pass");
+            });
         });
 
         this.toastr.success('Journal Entry Created');
         const currentPeriod = this.store.currentPeriod();
         const currentYear = this.store.currentYear();   
 
-        this.journalService.updateDistributionLedger(currentPeriod, currentYear ).subscribe((response) => {
+        this.journalService.updateDistributionLedger(currentPeriod, currentYear )
+        .pipe(takeUntil(this._onDestroy))
+        .subscribe((response) => {
             this.ShowAlert(response, "pass");
         });
         this.bDirty = false;
