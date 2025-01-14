@@ -290,6 +290,17 @@ export class JournalService implements OnDestroy {
   }
 
 
+  updateDistributionLedger(period: number, period_year: number) {
+    let url = this.baseUrl + '/v1/update_distribution_ledger';
+    const periodYear = {
+      period: period,
+      year: period_year
+    }
+
+    return this.httpClient.post<string>(url, { periodYear},).pipe(shareReplay({ bufferSize: 1, refCount: true }));
+  }
+
+
   createJournalFullHeader(header: IJournalHeader) {
     let url = this.baseUrl + '/v1/create_full_journal_header';
     let journalHeader: any = {

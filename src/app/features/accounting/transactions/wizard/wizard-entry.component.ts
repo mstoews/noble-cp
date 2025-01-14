@@ -246,8 +246,7 @@ export class EntryWizardComponent implements OnInit, OnDestroy, AfterViewInit {
 
         this.selectedOption = this.types[0].value;
 
-        this.store.currentPeriod()
-
+    
         this.currentPeriod = this.store.currentPeriod();
         this.currentYear = this.store.currentYear();
 
@@ -710,13 +709,17 @@ export class EntryWizardComponent implements OnInit, OnDestroy, AfterViewInit {
         });
 
         this.toastr.success('Journal Entry Created');
+        const currentPeriod = this.store.currentPeriod();
+        const currentYear = this.store.currentYear();   
+
+        this.journalService.updateDistributionLedger(currentPeriod, currentYear ).subscribe((response) => {
+            this.ShowAlert(response, "pass");
+        });
         this.bDirty = false;
     }
 
-
-    onUpdateJournalDetail(detail: IJournalDetail) {                                
-        
-        
+       onUpdateJournalDetail(detail: IJournalDetail) {                                
+                
     }
 
     onAddArtifact() {
