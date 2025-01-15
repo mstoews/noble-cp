@@ -30,7 +30,7 @@ export class KanbanService {
   isLoading = signal<boolean>(false);
   
   teamUrl = this.baseUrl + `/v1/team_read`; 
-  taskUrl = this.baseUrl + '/v1/tasks_list';
+  
   updateTaskUrl = this.baseUrl + 'v1/task_update'
   priorityUrl = this.baseUrl + '/v1/task_priority_list';
   statusUrl = this.baseUrl + '/v1/task_status_list';
@@ -77,8 +77,9 @@ export class KanbanService {
     return this.httpClient.get<ITeam[]>(this.teamUrl);
   }
 
+  
   getTasks() {
-    return this.httpClient.get<IKanban[]>(this.taskUrl).pipe(
+    return this.httpReadTasks().pipe(
       tapResponse({            
         next: (kanban) => this.taskList.set(kanban),
         error: console.error,
@@ -131,7 +132,7 @@ export class KanbanService {
     pipe(
       tap(() => this.isLoading.set(true)),
       exhaustMap(() => {
-        return this.httpClient.get<IKanban[]>(this.taskUrl).pipe(
+        return this.httpReadTasks().pipe(
           tapResponse({            
             next: (kanban) => this.taskList.set(kanban),
             error: console.error,
@@ -224,13 +225,15 @@ export class KanbanService {
 
   getTeamMember(member: string) {
     var url = this.baseUrl + '/v1/read_team_member?memberId' + member;
-    return this.httpClient.get<IKanban[]>(url)
+    return this.httpClient.get<ITeam[]>(url)
   }
 
-  readTasks() {
-    var url = this.baseUrl + '/v1/tasks_list';
-    return this.httpClient.get<IKanban[]>(url);
+
+  httpReadTasks() {
+    const taskUrl = this.baseUrl + '/v1/tasks_list';
+    return this.httpClient.get<IKanban[]>(taskUrl);
   }
+
 
 
   createTeamMember(t: ITeam) {

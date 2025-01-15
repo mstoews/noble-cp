@@ -158,7 +158,6 @@ export class EntryWizardComponent implements OnInit, OnDestroy, AfterViewInit {
     public currentYear: number;
 
     public templateList: IJournalTemplate[] = [];
-    public templateDetailList: IJournalDetailTemplate[] = [];
     public templateCtrl: FormControl<IJournalTemplate> = new FormControl<IJournalTemplate>(null);
     public templateFilterCtrl: FormControl<string> = new FormControl<string>(null);
     public templateFilter: ReplaySubject<IJournalTemplate[]> = new ReplaySubject<IJournalTemplate[]>(1);

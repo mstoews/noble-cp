@@ -150,8 +150,7 @@ export const appConfig: ApplicationConfig = {
     provideState(fromSubtype.subtypeFeature),
     provideState(fromParty.partyFeature),
     provideEffects(
-      [ accountEffects, 
-        
+      [ accountEffects,         
         templateEffects, 
         journalHeaderEffects, 
         KanbanEffects, 

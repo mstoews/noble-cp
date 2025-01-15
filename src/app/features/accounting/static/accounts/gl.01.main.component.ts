@@ -175,9 +175,9 @@ export class GlMainComponent {
             },
             {
                 id: 'subtypes',
-                icon: 'heroicons_outline:banknotes',
-                title: 'Transaction Mapping Types',
-                description: 'Mapping individual transaction types for financial statements',
+                icon: 'heroicons_outline:document-text',
+                title: 'Transaction Sub Types',
+                description: 'Mapping transaction sub types',
             },
             {
                 id: 'funds',

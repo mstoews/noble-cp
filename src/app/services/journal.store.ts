@@ -28,6 +28,7 @@ import { IFunds, IJournalParams, ITrialBalance } from 'app/models';
 import { IType } from 'app/models/types';
 import { IPeriod } from 'app/models/period';
 import { ISubType } from 'app/models/subtypes';
+import {FundsService} from "./funds.service";
 
 
 export interface JournalStateInterface {
@@ -75,7 +76,9 @@ export const JournalStore = signalStore(
   }),
   withComputed((state) => ({
   })),
-  withMethods((state, journalService = inject(JournalService)) => ({
+  withMethods((state,
+               fundsService = inject(FundsService),
+               journalService = inject(JournalService)) => ({
     removeJournalHeader: rxMethod<IJournalHeader>(
       pipe(
         switchMap((value) => {
@@ -206,6 +209,20 @@ export const JournalStore = signalStore(
         })
       )
     ),
+    loadFunds: rxMethod <void>(
+          pipe(
+              tap(() => patchState(state, { isLoading: true })),
+              exhaustMap(() => {
+                  return fundsService.read().pipe(
+                      tapResponse({
+                          next: (funds) => patchState(state, { funds }),
+                          error: console.error,
+                          finalize: () => patchState(state, { isLoading: false }),
+                      })
+                  );
+              })
+          )
+      ),
     loadTemplates: rxMethod <void>(
       pipe(
         tap(() => patchState(state, { isLoading: true })),
@@ -371,7 +388,8 @@ export const JournalStore = signalStore(
     onInit(store) {
       store.loadTemplates();
       store.loadJournals();
-      store.loadAccounts();      
+      store.loadAccounts();
+      store.loadFunds();
       store.loadPeriod('Period');
       store.loadYear('Year');
     },

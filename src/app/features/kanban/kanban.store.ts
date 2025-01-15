@@ -153,7 +153,7 @@ export const KanbanStore = signalStore(
       pipe(
         tap(() => patchState(state, { isLoading: true })),
         exhaustMap(() => {
-          return kanbanService.getTasks().pipe(
+          return kanbanService.httpReadTasks().pipe(
             tapResponse({
               next: (tasks) => patchState(state, { tasks: tasks }),
               error: console.error,
@@ -166,9 +166,7 @@ export const KanbanStore = signalStore(
   })),
   withHooks({
     onInit(store) {
-      store.loadTasks();
-      store.loadPriority();
-      store.loadAssignee();
+      
     },
   })
 );

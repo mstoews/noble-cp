@@ -53,6 +53,7 @@ import { IJournalHeader } from "app/models/journals";
 import { JournalStore } from "app/services/journal.store";
 import { Router } from "@angular/router";
 import { GridMenubarStandaloneComponent } from "../../grid-components/grid-menubar.component";
+import {SummaryCardComponent} from "../../../admin/dashboard/summary-card.component";
 
 const imports = [
   CommonModule,
@@ -66,7 +67,7 @@ const imports = [
 
 @Component({
   selector: "ap-transactions",
-  imports: [imports],
+    imports: [imports, SummaryCardComponent],
   templateUrl: "./ap-listing.component.html",
   providers: [
     JournalStore,
@@ -154,6 +155,10 @@ export class APTransactionComponent implements OnInit, OnDestroy {
     this.store.accountsPayable();
     console.debug("AP :", this.store.ap().length);
     this.initialDatagrid();
+  }
+
+  onReceipts() {
+    alert("Receipts");
   }
 
   actionBegin(args: SaveEventArgs): void {

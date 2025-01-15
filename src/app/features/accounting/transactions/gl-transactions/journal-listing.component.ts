@@ -16,6 +16,7 @@ import { IJournalHeader } from 'app/models/journals';
 import { selectJournals } from 'app/state/journal/Journal.Selector';
 import { IPeriod, IPeriodParam } from 'app/models/period';
 import { MatDrawer } from '@angular/material/sidenav';
+import { display } from 'html2canvas/dist/types/css/property-descriptors/display';
 
 const imports = [
     CommonModule,
@@ -57,10 +58,11 @@ export class JournalEntryComponent implements OnInit, OnDestroy {
     journalColumns = [
         { field: 'journal_id', headerText: 'Journal ID', isPrimaryKey: true, isIdentity: true, visible: true, width: 80 },
         { field: 'type', headerText: 'Type', width: 60 },
-        { field: 'status', headerText: 'Status', width: 80, type: Boolean, displayAsCheckbox: true },
-        { field: 'transaction_date', headerText: 'Date', width: 100, format: 'M/dd/yyyy' },
-        { field: 'description', headerText: 'Description', width: 200 },
-        { field: 'period', headerText: 'Prd', width: 50, visible: true },
+        { field: 'booked', headerText: 'Booked', width: 60, type: 'boolean', displayAsCheckbox: true },
+        { field: 'status', headerText: 'Status', width: 80 },
+        { field: 'transaction_date', headerText: 'Date', width: 80, format: 'M/dd/yyyy' },
+        { field: 'description', headerText: 'Description', width: 170 },
+        { field: 'period', headerText: 'Prd', width: 50, visible: false },
         { field: 'amount', headerText: 'Amount', width: 80, format: 'N2', textAlign: 'Right' },
         { field: 'period_year', headerText: 'Yr', width: 100, visible: false },
         { field: 'create_date', headerText: 'Created', width: 100, format: 'M/dd/yyyy', visible: false },

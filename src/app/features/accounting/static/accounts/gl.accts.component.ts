@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, inject } from "@angular/core";
+import { Component, OnInit, ViewChild, inject, viewChild } from "@angular/core";
 import {
   FormBuilder,
   FormGroup,
@@ -27,6 +27,7 @@ import {
   ExcelExportService,
   FilterService,
   FilterSettingsModel,
+  GridComponent,
   GridModule,
   GroupService,
   PageService,
@@ -191,13 +192,13 @@ const keyExpr = ["account", "child"];
               (notifyParentRefresh)="onRefresh()"
               (notifyParentAdd)="onAdd()"
               (notifyParentDelete)="onDeleteSelection()"
-              (notifyParentUpdate)="onUpdateSelection()"
+              (notifyParentUpdate)="onSelection()"
               [inTitle]="'Account Maintenance'"
             >
             </grid-menubar>
             @if (accountService.isLoading() === false) {
 
-            <gl-grid
+            <gl-grid #gl_grid
               (onUpdateSelection)="selectedRow($event)"
               [data]="this.accountService.accountList()"
               [columns]="columns"
@@ -240,14 +241,14 @@ const keyExpr = ["account", "child"];
     `,
   ],
 })
-export class GlAccountsComponent implements OnInit {
+export class GlAccountsComponent  extends GLGridComponent {
   
-  @ViewChild("drawer") drawer!: MatDrawer;
+  public drawer = viewChild<MatDrawer>("drawer"); 
   accountsForm!: FormGroup;
 
   private _fuseConfirmationService = inject(FuseConfirmationService);
 
-  private fb = inject(FormBuilder);
+  private formBuilder = inject(FormBuilder);
   private auth = inject(AuthService);
   accountService = inject(AccountsService);
   subtypeService = inject(SubTypeService);
@@ -260,25 +261,18 @@ export class GlAccountsComponent implements OnInit {
   public bDirty: boolean = false;
   private currentRow: Object;
 
+  onSelection() {    
+    this.openDrawer();
+  }
+
   public columns = [
-    { field: "account", headerText: "Group", width: 80, textAlign: "Left" },
-    {
-      field: "child",
-      headerText: "Account",
-      width: 80,
-      textAlign: "Left",
-      isPrimaryKey: true,
-    },
-    { field: "type", headerText: "Type", width: 80, textAlign: "Left" },
-    {
-      field: "description",
-      headerText: "Description",
-      width: 200,
-      textAlign: "Left",
-    },
-    { field: "update_date", headerText: "Date", width: 80, textAlign: "Left" },
-    { field: "update_user", headerText: "User", width: 80, textAlign: "Left" },
-    { field: "comments", headerText: "Comment", width: 80, textAlign: "Left" },
+    { field: "account",     headerText: "Group",        width: 80, textAlign: "Left" },
+    { field: "child",       headerText: "Account",      width: 80, textAlign: "Left", isPrimaryKey: true,    },
+    { field: "type",        headerText: "Type",         width: 80, textAlign: "Left" },
+    { field: "description", headerText: "Description",  width: 200,textAlign: "Left" },
+    { field: "update_date", headerText: "Date",         width: 80, textAlign: "Left" },
+    { field: "update_user", headerText: "User",         width: 80, textAlign: "Left" },
+    { field: "comments",    headerText: "Comment",      width: 80, textAlign: "Left" },
   ];
 
   readonly displayModes = [
@@ -294,6 +288,7 @@ export class GlAccountsComponent implements OnInit {
   ngOnInit() {
     this.accountService.read();
     this.createEmptyForm();
+    this.setRowHeight(60);
   }
 
   selectedRow($event) {
@@ -317,10 +312,7 @@ export class GlAccountsComponent implements OnInit {
     this.closeDrawer();
   }
 
-  onUpdateSelection() {
-    this.openDrawer();
-  }
-
+  
   onDoubleClicked(args: any) {
     const type = args.type;
     var parent: boolean;
@@ -344,7 +336,7 @@ export class GlAccountsComponent implements OnInit {
   }
   
   onCancel() {
-      this.drawer.toggle();
+      this.drawer().toggle();
   }
 
   onUpdate(e: any) {
@@ -419,7 +411,7 @@ export class GlAccountsComponent implements OnInit {
   }
 
   createEmptyForm() {
-    this.accountsForm = this.fb.group({
+    this.accountsForm = this.formBuilder.group({
       account: ["", Validators.required],
       child: ["", Validators.required],
       parent_account: [false, Validators.required],
@@ -432,7 +424,7 @@ export class GlAccountsComponent implements OnInit {
   createForm(e: any) {
     var parent: boolean;
     parent = e.parent_account;
-    this.accountsForm = this.fb.group({
+    this.accountsForm = this.formBuilder.group({
       account: [e.account, Validators.required],
       child: [e.child, Validators.required],
       parent_account: parent,
@@ -447,18 +439,18 @@ export class GlAccountsComponent implements OnInit {
   }
 
   openDrawer() {
-    const opened = this.drawer.opened;
+    const opened = this.drawer().opened;
     if (opened !== true) {
-      this.drawer.toggle();
+      this.drawer().toggle();
     } else {
       return;
     }
   }
 
   closeDrawer() {
-    const opened = this.drawer.opened;
+    const opened = this.drawer().opened;
     if (opened === true) {
-      this.drawer.toggle();
+      this.drawer().toggle();
     } else {
       return;
     }

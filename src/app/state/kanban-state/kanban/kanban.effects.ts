@@ -24,19 +24,17 @@ export class KanbanEffects {
   readonly actions$ = inject(Actions);
   readonly router = inject(Router);
 
-
   loadKanban$ = createEffect(() =>
     this.actions$.pipe(
       ofType(KanbanAPIActions.loadKanbans),
-      exhaustMap(() => this.kanbanService.getTasks().pipe(
-        map((tasks) =>
-          KanbanAPIActions.kanbansLoadedSuccess({ tasks })
-        ),
-        catchError((error) =>
-          of(KanbanAPIActions.kanbansLoadedFail({ message: error }))
-        ))
-      ))
+      exhaustMap(() => {
+        return this.kanbanService.httpReadTasks().pipe(
+          map((tasks) => KanbanAPIActions.kanbansLoadedSuccess({ tasks })),
+          catchError((error) => of(KanbanAPIActions.kanbansLoadedFail({ message: error })))
+        );        
+      }))
   );
+
 
   /*
           tapResponse({

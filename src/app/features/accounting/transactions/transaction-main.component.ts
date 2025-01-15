@@ -12,7 +12,7 @@ import {
 import { MatDrawer } from '@angular/material/sidenav';
 import { FuseMediaWatcherService } from '@fuse/services/media-watcher';
 import { MaterialModule } from 'app/services/material.module';
-import { Subject, takeUntil } from 'rxjs';
+import { pipe, Subject, takeUntil } from 'rxjs';
 import { JournalEntryComponent } from './gl-transactions/journal-listing.component';
 import { JournalUpdateComponent } from './gl-transactions/journal-update.component';
 import { FileManagerComponent } from 'app/features/file-manager/file-manager.component';
@@ -23,6 +23,8 @@ import { APTransactionComponent } from './ap-transactions/ap-listing.component';
 import { FundsService } from 'app/services/funds.service';
 import { AccountsService } from 'app/services/accounts.service';
 import {PanelStateService} from "../../../services/panel.state.service";
+import { map } from 'lodash';
+import { tapResponse } from '@ngrx/operators';
 
 
 const imports = [
@@ -41,20 +43,106 @@ const imports = [
     imports: [imports],
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    templateUrl: './transaction-main.component.html',
+    template: `
+        <div class="flex flex-col w-full min-w-0 sm:absolute sm:inset-0 sm:overflow-hidden">
+            <mat-drawer-container class="flex-auto sm:h-full">
+                <!-- Drawer -->
+                <mat-drawer class="sm:w-72 dark:bg-gray-900" [autoFocus]="false" [mode]="drawerMode" [opened]="drawerOpened"
+                            #drawer>
+                    <!-- Header -->
+                    <div class="flex items-center justify-between m-8 mr-6 sm:my-10">
+                        <!-- Title -->
+                        <div class="text-4xl font-extrabold tracking-tight leading-none">
+                            Transactions
+                        </div>
+                        <!-- Close button -->
+                        <div class="lg:hidden">
+                            <button mat-icon-button (click)="drawer.close()">
+                                <mat-icon [svgIcon]="'heroicons_outline:academic-cap'"></mat-icon>
+                            </button>
+                        </div>
+                    </div>
+                    <!-- Panel links -->
+                    <div class="flex flex-col divide-y border-t border-b">
+                        @for (panel of panels; track trackByFn($index, panel)) {
+
+                            <div class="flex px-8 py-5 cursor-pointer" [ngClass]="{
+                            'hover:bg-gray-100 dark:hover:bg-hover':
+                                !selectedPanel || selectedPanel !== panel.id,
+                            'bg-primary-50 dark:bg-hover':
+                                selectedPanel && selectedPanel === panel.id
+                        }" (click)="goToPanel(panel.id)">
+                                <mat-icon [ngClass]="{
+                                'text-hint':
+                                    !selectedPanel ||
+                                    selectedPanel !== panel.id,
+                                'text-primary dark:text-primary-500':
+                                    selectedPanel && selectedPanel === panel.id
+                            }" [svgIcon]="panel.icon"></mat-icon>
+                                <div class="ml-3">
+                                    <div class="font-medium leading-6" [ngClass]="{
+                                    'text-primary dark:text-primary-500':
+                                        selectedPanel &&
+                                        selectedPanel === panel.id
+                                }">
+                                        {{ panel.title }}
+                                    </div>
+                                    <div class="mt-0.5 text-secondary">
+                                        {{ panel.description }}
+                                    </div>
+                                </div>
+                            </div>
+
+                        }
+                    </div>
+                </mat-drawer>
+
+                <!-- Drawer content -->
+                <mat-drawer-content class="flex flex-col">
+                    <!-- Main -->
+                    <div class="flex-auto px-6 pt-9 pb-12 md:p-8 md:pb-12 lg:p-12">
+                        <!-- Panel header -->
+                        <div class="flex items-center">
+                            <!-- Drawer toggle -->
+                            <button class="lg:hidden -ml-2" mat-icon-button (click)="drawer.toggle()">
+                                <mat-icon [svgIcon]="'heroicons_outline:bars-3'"></mat-icon>
+                            </button>
+
+                            <!-- Panel title -->
+                            <div class="ml-2 lg:ml-0 text-3xl font-bold tracking-tight leading-none">
+                                {{ getPanelInfo(selectedPanel).title }}
+                            </div>
+                        </div>
+                        <!-- Load settings panel -->
+                        <div class="mt-8">
+                            @switch (selectedPanel) {
+                                @case ('entry') { <entry-wizard></entry-wizard>  }
+                                @case ('listing') {  <transactions></transactions>  }
+                                @case ('ap')    { <ap-transactions></ap-transactions>}
+                                @case ('ar')    { <ar-transactions></ar-transactions>}
+                                @case ('template') { <journal-template></journal-template>  }
+                                @case ('artifact') { <app-file-manager></app-file-manager>}
+                            }
+                        </div>
+                    </div>
+                </mat-drawer-content>
+            </mat-drawer-container>
+        </div>
+    `,
     styles: ``
 })
-export class TransactionMainComponent {
+export class TransactionMainComponent implements OnInit , OnDestroy {
 
     drawer = viewChild<MatDrawer>("drawer");
     drawerMode: 'over' | 'side' = 'side';
     drawerOpened: boolean = true;
     panels: any[] = [];
-    defaultPanel = "entry";
+    defaultPanel = "listing";
     private _unsubscribeAll: Subject<any> = new Subject<any>();
     public lastPanelOpened = signal<string>("");
-    panelService = inject(PanelStateService);
-    public selectedPanel: string = this.panelService.lastPanelOpened();
+    public panelService = inject(PanelStateService);
+    public selectedPanel: string;
+    public storedPanel: string;
 
     /**
      * Constructor
@@ -65,7 +153,14 @@ export class TransactionMainComponent {
     )
     {
         this.selectedPanel = this.panelService.lastPanelOpened();
-        console.log("selectedPanel", this.selectedPanel);
+        if (this.selectedPanel === '') {
+            this.selectedPanel = localStorage.getItem("transactionsPanel");
+        }
+        if (this.selectedPanel === null ) {
+            this.selectedPanel = this.defaultPanel;
+        }
+
+        
     }
 
     // -----------------------------------------------------------------------------------------------------
@@ -77,10 +172,12 @@ export class TransactionMainComponent {
      */
     ngOnInit(): void {
         // Setup available panels
-        if (this.selectedPanel === "") {
-            this.panelService.setLastPanel(this.defaultPanel);
+        
+
+        if (this.selectedPanel === '' && this.storedPanel === null) {
             this.selectedPanel = this.defaultPanel;
         }
+
         this.panels = [
             {
                 id: 'entry',
@@ -151,24 +248,8 @@ export class TransactionMainComponent {
             });
     }
 
-    /**
-     * On destroy
-     */
-    ngOnDestroy(): void {
-        // Unsubscribe from all subscriptions
-        this._unsubscribeAll.next(null);
-        this._unsubscribeAll.complete();
-    }
 
-    // -----------------------------------------------------------------------------------------------------
-    // @ Public methods
-    // -----------------------------------------------------------------------------------------------------
-
-    /**
-     * Navigate to the panel
-     *
-     * @param panel
-     */
+    
     goToPanel(panel: string): void {
         this.panelService.setLastPanel(panel);
         this.selectedPanel = panel;
@@ -177,11 +258,6 @@ export class TransactionMainComponent {
         }
     }
 
-    /**
-     * Get the details of the panel
-     *
-     * @param id
-     */
     getPanelInfo(id: string): any {
         return this.panels.find(panel => panel.id === id);
     }
@@ -195,4 +271,27 @@ export class TransactionMainComponent {
     trackByFn(index: number, item: any): any {
         return item.id || index;
     }
+
+    ngOnDestroy(): void {
+
+        const panelState = {
+            id: this.selectedPanel,            
+            panelName: 'transactionsPanel',
+            lastPanelOpened: this.selectedPanel
+        }
+
+        
+        var user: string;
+        const userId = this.panelService.getUserId()
+            .subscribe((uid) => {
+                user = uid;
+                this.panelService.addPanel(user, panelState);
+        });
+        
+        var transactionPanel : any   
+        
+        this._unsubscribeAll.next(null);
+        this._unsubscribeAll.complete();
+    }
+
 }

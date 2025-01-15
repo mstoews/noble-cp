@@ -195,7 +195,8 @@ export class JournalUpdateComponent
     public loading = false;
     public height: string = "250px";
 
-    public funds$ = this.fundService.read();
+    // public funds$ = this.fundService.read();
+    public funds = this.store.funds()
     public subtype$ = this.subtypeService.read();
     public dropDownChildren$ = this.accountService.readChildren();
     public fuseConfirmationService = inject(FuseConfirmationService);
@@ -267,6 +268,8 @@ export class JournalUpdateComponent
     @ViewChild("singlePartySelect", { static: true }) singlePartySelect!: MatSelect;
     @ViewChild('splitterInstance') splitterObj?: SplitterComponent;
 
+    singleDebitSelection = viewChild<MatSelect>("singleDebitSelection");
+
 
     public aggregates = [
         {
@@ -291,7 +294,7 @@ export class JournalUpdateComponent
     
     
 
-    singleDebitSelection = viewChild<MatSelect>("singleDebitSelection");
+
 
     public onCreated() {
         let splitterObj1 = new Splitter({
@@ -331,14 +334,24 @@ export class JournalUpdateComponent
                 this.accountsGrid.push(list);
             });
 
-        this.fundListSubject = this.funds$.subscribe((funds) => {
-                funds.forEach((fund) => {
-                    var list = {
-                        fund: fund.fund,
-                        description: fund.description,
-                    };
-                    this.fundList.push(list);
-                });
+            // this.fundListSubject = this.funds$.subscribe((funds) => {
+            //         funds.forEach((fund) => {
+            //             var list = {
+            //                 fund: fund.fund,
+            //                 description: fund.description,
+            //             };
+            //             this.fundList.push(list);
+            //         });
+            //     });
+            // });
+            //
+            //
+        this.funds.forEach((fund) => {
+                var list = {
+                    fund: fund.fund,
+                    description: fund.description,
+                };
+                this.fundList.push(list);
             });
         });
 

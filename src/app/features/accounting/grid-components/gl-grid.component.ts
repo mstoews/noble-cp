@@ -9,7 +9,6 @@ import { ReactiveFormsModule, FormsModule, FormBuilder } from '@angular/forms';
 import { MaterialModule } from 'app/services/material.module';
 import { MatDrawer } from '@angular/material/sidenav';
 
-
 const mods = [
     CommonModule,
     MaterialModule,
@@ -43,29 +42,25 @@ const keyExpr = ["account", "child"];
     template: `    
     <mat-drawer-container class="flex-col">        
     <ng-container >
-        <ejs-grid  #grid id="grid-parent"  class="e-grid mt-3 h-[calc(100vh)-100px]"         
+        <ejs-grid  #grid_parent id="grid_parent"  class="e-grid mt-3 h-[calc(100vh)-100px]"         
                 [rowHeight]='30'               
                 [dataSource]="data" 
                 [columns]="columns"
-                allowSorting='true'
-                showColumnMenu='true' 
-                [enableStickyHeader]="true"
-                allowEditing='true' 
+                [allowSorting]='true'
+                [showColumnMenu]='true'                
                 [gridLines]="lines"
                 [allowFiltering]='true'                 
                 [toolbar]='toolbarOptions'                 
                 [filterSettings]='filterSettings'
-                [editSettings]='editSettings' 
-                [pageSettings]='pageSettings'                 
-                [enableStickyHeader]='true' 
+                [editSettings]='editSettings'
                 [enablePersistence]='false'
-                [enableStickyHeader]=true
+                [enableStickyHeader]='true'
                 [allowGrouping]="false"
                 [allowResizing]='true' 
                 [allowReordering]='true' 
                 [allowExcelExport]='true' 
                 [allowPdfExport]='true' 
-                [contextMenuItems]="contextMenuItems" 
+                [contextMenuItems]="contextMenuItems"
                 (actionBegin)='actionBegin($event)' 
                 (actionComplete)='actionComplete($event)'>
         </ejs-grid>
@@ -84,6 +79,7 @@ const keyExpr = ["account", "child"];
 })
 export class GLGridComponent implements OnInit {
     gridForm: any;
+    public context: any;
 
     public selectedItemKeys: any[] = [];
     public bDirty: boolean = false;
@@ -95,7 +91,6 @@ export class GLGridComponent implements OnInit {
     private authService = inject(AuthService);
     private gridSettingsService = inject(GridSettingsService);
 
-
     @Input() data: Object[];
     @Input() columns: Object[];
 
@@ -103,12 +98,10 @@ export class GLGridComponent implements OnInit {
     public onFocusChanged = output<Object>();
     public contextMenuItems: ContextMenuItem[];
     public editing: EditSettingsModel;
-    public drawer = viewChild<MatDrawer>('drawer');
 
     public formatoptions: Object;
     public initialSort: Object;
-    public pageSettings: Object;
-    public editSettings: Object;
+    public editSettings: EditSettingsModel;
     public dropDown: DropDownListComponent;
     public submitClicked: boolean = false;
     public selectionOptions?: SelectionSettingsModel;
@@ -116,40 +109,27 @@ export class GLGridComponent implements OnInit {
     public searchOptions?: SearchSettingsModel;
     public filterSettings: FilterSettingsModel;
 
-    public grid = viewChild<GridComponent>('grid');
+    public grid = viewChild<GridComponent>('parent_grid');
+    public drawer = viewChild<MatDrawer>('drawer');
     private fb = inject(FormBuilder);
     public state?: GridComponent;
     public message?: string;
     public userId: string;
     sTitle: any;
 
-
     openTrade($event) {
         console.log('openTrade : ', $event);
     }
 
     ngOnInit() {
+        this.context = { enableContextMenu: true, contextMenuItems: [], customContextMenuItems: [{ id: 'clear', text: "Clear Selection" }] };
         this.initialDatagrid();
         this.lines = 'Both';
-        this.contextMenuItems = [
-            'AutoFit',
-            'AutoFitAll',
-            'SortAscending',
-            'SortDescending',
-            'Copy',
-            'Save',
-            'Cancel',
-            'PdfExport',
-            'ExcelExport',
-            'CsvExport',
-            'FirstPage',
-            'PrevPage',
-            'LastPage',
-            'NextPage',
-            'Group',
-            'Ungroup'
-        ]
-        this.editing = { allowDeleting: true, allowEditing: true };
+        this.contextMenuItems = ['AutoFit', 'AutoFitAll', 'SortAscending', 'SortDescending',
+            'Copy', 'Edit', 'Delete', 'Save', 'Cancel',
+            'PdfExport', 'ExcelExport', 'CsvExport', 'FirstPage', 'PrevPage',
+            'LastPage', 'NextPage'];
+        this.editing = { allowDeleting: true, allowEditing: true, allowEditOnDblClick: false, allowAdding: true };
         this.userId = this.authService.user()?.uid
         this.createEmptyForm();
 
@@ -224,21 +204,17 @@ export class GLGridComponent implements OnInit {
     }
 
 
-
-    
-
     onFocusedRowChanged(e: any) {
         this.onFocusChanged.emit(e);
     }
 
     initialDatagrid() {
         this.formatoptions = { type: 'dateTime', format: 'M/dd/yyyy' }
-        this.pageSettings = { pageSizes: true, pageCount: 10 };
         this.selectionOptions = { mode: 'Row' };
         this.editSettings = { allowEditing: true, allowAdding: false, allowDeleting: false };
         this.searchOptions = { operator: 'contains', ignoreCase: true, ignoreAccent: true };
         this.toolbarOptions = ['Search'];
-        this.filterSettings = { type: 'Menu' };
+        this.filterSettings = { type: 'Excel' };
     }
 
     actionBegin(args: SaveEventArgs): void {
@@ -248,9 +224,18 @@ export class GLGridComponent implements OnInit {
             args.cancel = true;
             this.onUpdateSelection.emit(data);
         }
+
+        if (args.requestType === 'delete') {
+            args.cancel = true;
+            this.onUpdateSelection.emit(data);
+        }
         if (args.requestType === 'save') {
             args.cancel = true;
         }
+    }
+
+    public setRowHeight(height: number): void {
+        this.grid().rowHeight = height;
     }
 
     actionComplete(args: DialogEditEventArgs): void {
