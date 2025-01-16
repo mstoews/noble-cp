@@ -206,7 +206,7 @@
 
                                     <ejs-grid id="grid-journal-list" [dataSource]='store.gl()'
                                         [selectionSettings]="selectionOptions" [editSettings]='editSettings'
-                                        [searchSetting]="searchOptions" [allowFiltering]='false'
+                                        [searchSetting]="searchOptions" [allowFiltering]='false' [rowHeight]="30"
                                         [enableStickyHeader]=true [toolbar]='toolbarOptions' allowSorting='true'
                                         showColumnMenu='true' (rowSelected)="onRowSelected($event)"
                                         (actionBegin)="actionBegin($event)" [gridLines]="'Both'">
@@ -485,7 +485,7 @@
                                         </div>
                                         <div class="flex flex-col h-full ml-1 mr-1 text-gray-800">
 
-                                            <ejs-grid id="grid" #grid [dataSource]="store.artifacts()"
+                                            <ejs-grid id="grid" #grid [dataSource]="store.artifacts()" [rowHeight]="30"
                                                 allowEditing='false' [editSettings]='editArtifactSettings'
                                                 [allowFiltering]='false' [allowRowDragAndDrop]='false'
                                                 [gridLines]="'Both'" (actionBegin)="actionSelectJournal($event)"

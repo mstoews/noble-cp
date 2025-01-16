@@ -1,6 +1,7 @@
 {
     "cmake.sourceDirectory": "/home/mst/Projects/nobleledger/apps/nobleledger-web/node_modules/nan",
     "cSpell.words": [
+        "altrow",
         "Apexcharts",
         "cdate",
         "csvexport",
