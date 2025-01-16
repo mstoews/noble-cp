@@ -52,6 +52,10 @@ export class CenteredLayoutComponent implements OnInit, OnDestroy {
         return new Date().getFullYear();
     }
 
+    get version(): string {
+        return 'v1.0.1';
+    }
+
     // -----------------------------------------------------------------------------------------------------
     // @ Lifecycle hooks
     // -----------------------------------------------------------------------------------------------------

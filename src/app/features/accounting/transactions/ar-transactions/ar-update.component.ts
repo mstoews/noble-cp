@@ -9,7 +9,7 @@ import { AccountsService } from "app/services/accounts.service";
 import { MaterialModule } from "app/services/material.module";
 import {  SubTypeService } from "app/services/subtype.service";
 import { TypeService } from "app/services/type.service";
-import { JournalEditComponent } from "../journal-update/journal-edit.component";
+
 import { MatDialog, MatDialogConfig } from "@angular/material/dialog";
 import { NgxMaskDirective, NgxMaskPipe, provideNgxMask } from "ngx-mask";
 import { FuseConfirmationService } from "@fuse/services/confirmation";
@@ -774,12 +774,21 @@ export class ARUpdateComponent
     const journalHeaderUpdate: IJournalHeader = {
       journal_id: this.journal_id,
       description: header.description,
+      booked: header.booked,      
+      booked_user: header.booked_user,
       transaction_date: header.transaction_date,
       amount: Number(header.header_amount),
       type: header.type,
       template_name: header.template_name,
       party_id: header.party_id,
       invoice_no: header.invoice_no,
+      period: header.period,
+      period_year: header.period_year,
+      status: header.status,
+      sub_type: header.sub_type,
+      create_user: email,
+      create_date: updateDate
+
     };
 
     this.journalForm = this.fb.group({
@@ -875,17 +884,7 @@ export class ARUpdateComponent
     dialogConfig.data = e.data;
     dialogConfig.width = "450px";
 
-    const dialogRef = this.dialog.open(JournalEditComponent, dialogConfig);
-
-    dialogRef.afterClosed().subscribe((val) => {
-      this.refresh(
-        this.journal_id,
-        this.description,
-        this.transaction_date,
-        this.amount,
-        this.journalType
-      );
-    });
+    
   }
 
   ngOnDestroy(): void {

@@ -6,11 +6,10 @@ import { CommonModule } from "@angular/common";
 import { DndComponent } from "app/features/drag-n-drop/loaddnd/dnd.component";
 import { FundsService } from "app/services/funds.service";
 import { AccountsService } from "app/services/accounts.service";
-import { GridMenubarStandaloneComponent } from "../../grid-menubar/grid-menubar.component";
+import { GridMenubarStandaloneComponent } from "app/features/accounting/grid-components/grid-menubar.component";
 import { MaterialModule } from "app/services/material.module";
-import { ISubType, SubTypeService } from "app/services/subtype.service";
+import { SubTypeService } from "app/services/subtype.service";
 import { TypeService } from "app/services/type.service";
-import { JournalEditComponent } from "../journal-update/journal-edit.component";
 import { MatDialog, MatDialogConfig } from "@angular/material/dialog";
 import { NgxMaskDirective, NgxMaskPipe, provideNgxMask } from "ngx-mask";
 import { FuseConfirmationService } from "@fuse/services/confirmation";
@@ -39,6 +38,7 @@ import { ActivatedRoute } from "@angular/router";
 import { Location } from '@angular/common';
 import { MatDrawer } from "@angular/material/sidenav";
 import { JournalStore } from "app/services/journal.store";
+import { ISubType } from "app/models/subtypes";
 
 const imports = [
   CommonModule,

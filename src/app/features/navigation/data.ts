@@ -17,13 +17,13 @@ export const defaultNavigation: FuseNavigationItem[] = [
                 icon: 'mat_outline:insights',
                 link: '/projects',
             },
-            {
-                id: 'finance',
-                title: 'Finance',
-                type: 'basic',
-                icon: 'heroicons_outline:currency-dollar',
-                link: '/finance',
-            },        
+            // {
+            //     id: 'finance',
+            //     title: 'Finance',
+            //     type: 'basic',
+            //     icon: 'heroicons_outline:currency-dollar',
+            //     link: '/finance',
+            // },        
             {
                 id: 'accounts.journals',
                 title: 'Transactions',

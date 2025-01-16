@@ -23,7 +23,7 @@ export class FundsService {
   // Read
   read() {
     var url = this.baseUrl + '/v1/funds_list';
-    return this.httpClient.get<IFunds[]>(url).pipe(shareReplay({ bufferSize: 1, refCount: true }));
+    return this.httpClient.get<IFunds[]>(url).pipe(shareReplay());
   }
 
   // Update

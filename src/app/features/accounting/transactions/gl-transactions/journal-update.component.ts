@@ -195,8 +195,7 @@ export class JournalUpdateComponent
     public loading = false;
     public height: string = "250px";
 
-    // public funds$ = this.fundService.read();
-    public funds = this.store.funds()
+    public funds$ = this.fundService.read();
     public subtype$ = this.subtypeService.read();
     public dropDownChildren$ = this.accountService.readChildren();
     public fuseConfirmationService = inject(FuseConfirmationService);
@@ -270,6 +269,10 @@ export class JournalUpdateComponent
 
     singleDebitSelection = viewChild<MatSelect>("singleDebitSelection");
 
+    onBack() {
+        this.router.navigate(["/journals"]);
+    }
+
 
     public aggregates = [
         {
@@ -292,10 +295,6 @@ export class JournalUpdateComponent
         },
     ];
     
-    
-
-
-
     public onCreated() {
         let splitterObj1 = new Splitter({
             height: '100%',
@@ -334,27 +333,17 @@ export class JournalUpdateComponent
                 this.accountsGrid.push(list);
             });
 
-            // this.fundListSubject = this.funds$.subscribe((funds) => {
-            //         funds.forEach((fund) => {
-            //             var list = {
-            //                 fund: fund.fund,
-            //                 description: fund.description,
-            //             };
-            //             this.fundList.push(list);
-            //         });
-            //     });
-            // });
-            //
-            //
-        this.funds.forEach((fund) => {
-                var list = {
-                    fund: fund.fund,
-                    description: fund.description,
-                };
-                this.fundList.push(list);
+            this.fundListSubject = this.funds$.subscribe((funds) => {
+                    funds.forEach((fund) => {
+                        var list = {
+                            fund: fund.fund,
+                            description: fund.description,
+                        };
+                        this.fundList.push(list);
+                    });
+                });
             });
-        });
-
+            
         this.partyService.read().pipe(takeUntil(this._onDestroy)).subscribe((party) => {
             this.partyList = party;            
             this.partyFilter.next(this.partyList.slice());
@@ -1000,6 +989,7 @@ export class JournalUpdateComponent
             this.store.createJournalDetail(journalDetail);
             
             this.bHeaderDirty = true;
+            this.toastr.success('Journal details added');
         }
     }
 
@@ -1010,7 +1000,7 @@ export class JournalUpdateComponent
     }
 
     // Update journal header
-    onUpdateJournalEntry() {
+    onUpdateJournalHeader() {
 
         if (this.bHeaderDirty === false) {
             this.toastr.show('Journal Entry Created', 'Failed');
@@ -1148,14 +1138,17 @@ export class JournalUpdateComponent
         const currentPeriod = this.store.currentPeriod();
         const currentYear = this.store.currentYear();
 
+        this.bHeaderDirty = false;
+        this.toastr.success('Journal details updated');
+        this.closeDrawer();
+
         this.journalService.updateDistributionLedger(currentPeriod, currentYear )
         .pipe(takeUntil(this._onDestroy))
         .subscribe((response) => {
             this.toastr.success('Journal details updated');    
         });
         
-        this.bHeaderDirty = false;
-        this.closeDrawer();
+        
     }
 
     ngOnDestroy(): void {
