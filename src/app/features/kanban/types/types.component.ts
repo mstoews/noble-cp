@@ -11,6 +11,7 @@ import { Subject, map, takeUntil } from 'rxjs';
 import { KanbanService } from '../kanban.service';
 import { GridModule } from '@syncfusion/ej2-angular-grids';
 import { IType } from 'app/models/types';
+import { KanbanStore } from '../kanban.store';
 
 const imports = [
     CommonModule,
@@ -32,6 +33,7 @@ export class KanbanTypesComponent implements OnInit, OnDestroy {
     private _fuseConfirmationService = inject(FuseConfirmationService);
     private fb = inject(FormBuilder);
     private kanbanService = inject(KanbanService)
+    store = inject(KanbanStore);
     @ViewChild('drawer') drawer!: MatDrawer;
 
     public sTitle = 'Kanban Types';
@@ -39,7 +41,7 @@ export class KanbanTypesComponent implements OnInit, OnDestroy {
     public selectedItemKeys: string[] = [];
     private _unsubscribeAll: Subject<any> = new Subject<any>();
 
-    typesList = this.kanbanService.readTypes()
+   // typesList$ = this.store.types()
 
     ngOnInit() {
         this.createEmptyForm();
@@ -57,7 +59,7 @@ export class KanbanTypesComponent implements OnInit, OnDestroy {
 
     deleteRecords() {
         this.selectedItemKeys.forEach((key) => { });
-        this.kanbanService.readTypes();
+        // this.kanbanService.readTypes();
     }
 
     onDelete(e: any) {

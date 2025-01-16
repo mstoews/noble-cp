@@ -18,6 +18,7 @@ export interface KanbanStateInterface {
   tasks: IKanban[];
   priority: IPriority[],
   team: ITeam[],
+  types: [],
   isLoading: boolean;
   error: string | null;
 }
@@ -26,6 +27,7 @@ export const KanbanStore = signalStore(
   { protectedState: false }, 
     withState<KanbanStateInterface>({
     tasks: [],
+    types: [],
     priority: [],
     team: [],
     error: null,
@@ -166,7 +168,9 @@ export const KanbanStore = signalStore(
   })),
   withHooks({
     onInit(store) {
-      
+      store.loadTasks();
+      store.loadPriority();
+      store.loadAssignee();
     },
   })
 );

@@ -5,28 +5,13 @@ import {
   ReactiveFormsModule,
   Validators,
 } from "@angular/forms";
-import { Component, OnInit, ViewChild, inject } from "@angular/core";
+import { Component, OnInit, ViewChild, inject, viewChild } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { FuseConfirmationService } from "@fuse/services/confirmation";
 import { MatDrawer } from "@angular/material/sidenav";
 import { MaterialModule } from "app/services/material.module";
 import { KanbanMenubarComponent } from "../kanban/kanban-menubar/grid-menubar.component";
-import {
-  GridModule,
-  EditService,
-  ToolbarService,
-  PageService,
-  SortService,
-  FilterService,
-  AggregateService,
-  ColumnMenuService,
-  DialogEditEventArgs,
-  SaveEventArgs,
-  ResizeService,
-  FilterSettingsModel,
-  SearchSettingsModel,
-  SelectionSettingsModel,
-  ToolbarItems,
+import {DialogEditEventArgs, GridModule, SaveEventArgs 
 } from "@syncfusion/ej2-angular-grids";
 import { DropDownListComponent, DropDownListModule } from "@syncfusion/ej2-angular-dropdowns";
 
@@ -34,17 +19,12 @@ import { AUTH } from "app/app.config";
 import { IKanban } from "app/models/kanban";
 import { KanbanStore } from "../kanban.store";
 
-
 import { Store } from '@ngrx/store';
 
-import {
-  selectKanban,
-  selectKanbanErrorMessage,
-  selectKanbanLoading,
-  selectKanbanTotal,
-} from 'app/state/kanban-state/kanban/kanban.selectors';
-import { toSignal } from "@angular/core/rxjs-interop";
-import { KanbanAPIActions } from "app/state/kanban-state/kanban/kanban.actions";
+import { KanbanPageActions } from "app/state/kanban-state/kanban/actions/kanban-page.actions";
+import { kanbanFeature } from "app/state/kanban-state/kanban/kanban.state";
+import { GLGridComponent } from "app/features/accounting/grid-components/gl-grid.component";
+import { GridMenubarStandaloneComponent } from "app/features/accounting/grid-components/grid-menubar.component";
 
 interface IValue {
   value: string;
@@ -56,25 +36,43 @@ const imports = [
   MaterialModule,
   ReactiveFormsModule,
   FormsModule,
-  KanbanMenubarComponent,
+  GridMenubarStandaloneComponent,
   GridModule
 ];
 
 @Component({
   selector: "kanban-list",
   imports: [imports],
-  templateUrl: "./kanban-list.component.html",
+  template: `
+   
+  <ng-container>
+     <grid-menubar [inTitle]="sTitle" (onCreate)="onCreate($event)"> </grid-menubar>                         
+      
+      @if (ngrxStore.isLoading() === false) 
+     {
+         
+             <gl-grid                             
+                 (onUpdateSelection)="onSelection($event)"
+                 [data]="ngrxStore.tasks()" 
+                 [columns]="columns">
+             </gl-grid>                        
+         
+     }
+        @else
+     {
+         <div class="fixed z-[1050] -translate-x-2/4 -translate-y-2/4 left-2/4 top-2/4">
+             <mat-spinner></mat-spinner>
+         </div>
+     }
+ </ng-container> 
+
+
+`,
   styleUrls: ["./kanban-list.scss"],
   providers: [
     KanbanStore,
-    SortService,
-    PageService,
-    FilterService,
-    ToolbarService,
-    EditService,
-    AggregateService,
-    ColumnMenuService,
-    ResizeService
+    GLGridComponent,
+    GridMenubarStandaloneComponent,
   ]
 })
 export class KanbanListComponent implements OnInit {
@@ -82,22 +80,38 @@ export class KanbanListComponent implements OnInit {
   private Store = inject(Store);
   private fuseConfirmationService = inject(FuseConfirmationService);
   private fb = inject(FormBuilder);
+  public auth = inject(AUTH);
 
-  kanban = toSignal(this.Store.select(selectKanban));
-  total$ = this.Store.select(selectKanbanTotal);
-  loading$ = this.Store.select(selectKanbanLoading);
-  errorMessage$ = this.Store.select(selectKanbanErrorMessage);
+  store = inject(Store);
+  kanban$ = this.store.select(kanbanFeature.selectTasks);
+  selectedKanban$ = this.store.select(kanbanFeature.selectKanbanState);
+  isLoading$ = this.store.select(kanbanFeature.selectLoading);
+
+  ngrxStore = inject(KanbanStore);
+  drawer = viewChild<MatDrawer>('drawer');
 
   ngOnInit() {
     this.createEmptyForm();
-    this.initialDatagrid();
-    this.Store.dispatch(KanbanAPIActions.loadKanbans());
-
+    this.Store.dispatch(KanbanPageActions.load());
   }
 
+  columns = [
+  { field : "id"          , headerText: "ID"      , visible: false, width:"100", sortOrder:"asc", isPrimaryKey:"true" },
+  { field : "title"       , headerText: "Title"   , visible: true   },
+  { field : "status"      , headerText: "Status"  , visible: true , width:"120"},
+  { field : "summary"     , headerText: "Summary" , visible: true , width:"200"},
+  { field : "kanban_type" , headerText: "Type"    , visible: true , width:"100"},
+  { field : "priority"    , headerText: "Priority", visible: true , width:"120"},
+  { field : "tags"        , headerText: "Tag"     , visible: true , width:"120"},
+  { field : "estimate"    , headerText: "Estimate", visible: true , width:"130"},
+  { field : "assignee"    , headerText: "Assignee", visible: true , width:"130"},
+  { field : "rankid "     , headerText: "Rank ID" , visible: true , width:"70"},
+  { field : "color"       , headerText: "Color"   , visible: true , width:"70"},
+  ];
 
+    
   types: IValue[] = [
-    { value: "Add", viewValue: "Add" },
+    { value: "Add"   , viewValue: "Add" },
     { value: "Update", viewValue: "Update" },
     { value: "Delete", viewValue: "Delete" },
     { value: "Verify", viewValue: "Verify" },
@@ -126,11 +140,7 @@ export class KanbanListComponent implements OnInit {
   drawOpen: "open" | "close" = "open";
 
 
-  public auth = inject(AUTH);
-  public store = inject(KanbanStore);
-
-  @ViewChild("drawer") drawer!: MatDrawer;
-
+  
   public sTitle = "Kanban List";
   public taskGroup!: FormGroup;
   public data$: any;
@@ -155,7 +165,7 @@ export class KanbanListComponent implements OnInit {
       title: data.title,
       status: data.status,
       summary: data.summary,
-      type: data.type,
+      kanban_type: data.type,
       priority: data.priority,
       tags: data.tags,
       estimate: data.estimate,
@@ -173,19 +183,19 @@ export class KanbanListComponent implements OnInit {
   }
 
   toggleDrawer() {
-    const opened = this.drawer.opened;
+    const opened = this.drawer().opened;
     if (opened !== true) {
-      this.drawer.toggle();
+      this.drawer().toggle();
     } else {
       if (this.drawOpen === "close") {
-        this.drawer.toggle();
+        this.drawer().toggle();
       }
     }
   }
 
   private assignType(task: IKanban): string {
-    if (task.type !== null && task.type !== undefined) {
-      const type = this.types.find((x) => x.value === task.type.toString());
+    if (task.kanban_type !== null && task.kanban_type !== undefined) {
+      const type = this.types.find((x) => x.value === task.kanban_type.toString());
       if (type === undefined) {
         this.cType = "Add";
       } else {
@@ -259,7 +269,7 @@ export class KanbanListComponent implements OnInit {
       title: [task.title, Validators.required],
       status: [task.status],
       summary: [task.summary, Validators.required],
-      type: [task.type],
+      kanban_type: [task.kanban_type],
       priority: [task.priority, Validators.required],
       tags: [task.tags, Validators.required],
       estimate: [task.estimate, Validators.required],
@@ -277,26 +287,11 @@ export class KanbanListComponent implements OnInit {
   public pageSettings: Object;
   public formatoptions: Object;
   public initialSort: Object;
-  public filterOptions: FilterSettingsModel;
+  
   public editSettings: Object;
   public dropDown: DropDownListComponent;
   public submitClicked: boolean = false;
-  public selectionOptions?: SelectionSettingsModel;
-  public toolbarOptions?: ToolbarItems[];
-  public searchOptions?: SearchSettingsModel;
-  public filterSettings: FilterSettingsModel;
-
-
-  initialDatagrid() {
-    // this.pageSettings = { pageCount: 10 };        
-    this.formatoptions = { type: 'dateTime', format: 'M/dd/yyyy' }
-    this.pageSettings = { pageSizes: true, pageCount: 10 };
-    this.selectionOptions = { mode: 'Cell' };
-    this.editSettings = { allowEditing: true, allowAdding: false, allowDeleting: false };
-    this.searchOptions = { operator: 'contains', ignoreCase: true, ignoreAccent: true };
-    this.toolbarOptions = ['Search'];
-    this.filterSettings = { type: 'Excel' };
-  }
+  
 
   onCreate(e: any) {
     this.createEmptyForm();
@@ -320,7 +315,7 @@ export class KanbanListComponent implements OnInit {
         title: data.title,
         status: data.status,
         summary: data.summary,
-        type: data.type,
+        kanban_type: data.kanban_type,
         priority: data.priority,
         tags: data.tags,
         estimate: data.estimate,
@@ -379,7 +374,7 @@ export class KanbanListComponent implements OnInit {
           title: task.title,
           status: task.status,
           summary: task.summary,
-          type: task.type,
+          kanban_type: task.type,
           priority: task.priority,
           tags: task.tags,
           estimate: task.estimate,
@@ -392,7 +387,7 @@ export class KanbanListComponent implements OnInit {
           estimatedate: task.estimatedate,
         } as IKanban;
 
-        this.store.removeTask(data);
+        this.ngrxStore.removeTask(data);
       }
     });
     this.closeDrawer();
@@ -424,18 +419,18 @@ export class KanbanListComponent implements OnInit {
   }
 
   openDrawer() {
-    const opened = this.drawer.opened;
+    const opened = this.drawer().opened;
     if (opened !== true) {
-      this.drawer.toggle();
+      this.drawer().toggle();
     } else {
       return;
     }
   }
 
   closeDrawer() {
-    const opened = this.drawer.opened;
+    const opened = this.drawer().opened;
     if (opened === true) {
-      this.drawer.toggle();
+      this.drawer().toggle();
     } else {
       return;
     }
@@ -452,7 +447,7 @@ export class KanbanListComponent implements OnInit {
       title: task.title,
       status: task.status,
       summary: task.summary,
-      type: task.type,
+      kanban_type: task.type,
       priority: task.priority,
       tags: task.tags,
       estimate: task.estimate,
@@ -465,7 +460,7 @@ export class KanbanListComponent implements OnInit {
       estimatedate: task.estimatedate,
     } as IKanban;
 
-    this.store.updateTask(data); /// the last time
+    this.ngrxStore.updateTask(data); /// the last time
     this.closeDrawer();
   }
 

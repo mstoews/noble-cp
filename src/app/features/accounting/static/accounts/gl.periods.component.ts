@@ -125,11 +125,11 @@ const imports = [
                      @if ((isLoading$ | async) === false) 
                     {
                         @if(periods$ | async; as periods) {                          
-                        <gl-grid                             
-                            (onUpdateSelection)="onSelection($event)"
-                            [data]="periods" 
-                            [columns]="columns">
-                        </gl-grid>                        
+                            <gl-grid                             
+                                (onUpdateSelection)="onSelection($event)"
+                                [data]="periods" 
+                                [columns]="columns">
+                            </gl-grid>                        
                     }
                        @else
                     {
@@ -172,9 +172,6 @@ export class PeriodsComponent implements OnInit {
         this.createEmptyForm();        
         this.store.dispatch(periodsPageActions.load());     
         this.onChanges();
-        this.periods$.subscribe((periods) => {
-            console.log(JSON.stringify(periods));
-        })
     }
 
     onClose() {

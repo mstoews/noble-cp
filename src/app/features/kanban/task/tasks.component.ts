@@ -67,7 +67,7 @@ export class TasksComponent implements OnInit {
   store = inject(KanbanStore);
   user = this.auth.currentUser;
 
-  async ngOnInit() {
+  ngOnInit() {
     this.bAdding = true;
     this.createEmptyForm();
   }
@@ -121,7 +121,7 @@ export class TasksComponent implements OnInit {
       title: args.data.title,
       status: args.data.status,
       summary: args.data.summary,
-      type: args.data.type,
+      kanban_type: args.data.type,
       priority: args.data.priority,
       tags: args.data.tags,
       estimate: args.data.estimate,
@@ -198,8 +198,8 @@ export class TasksComponent implements OnInit {
   }
 
   private assignType(task: IKanban): string {
-    if (task.type !== null && task.type !== undefined) {
-      const type = this.types.find((x) => x.value === task.type.toString());
+    if (task.kanban_type !== null && task.kanban_type !== undefined) {
+      const type = this.types.find((x) => x.value === task.kanban_type.toString());
       if (type === undefined) {
         this.cType = 'Add';
       } else {
@@ -383,7 +383,7 @@ export class TasksComponent implements OnInit {
       title: data.title,
       status: "Open",
       summary: data.summary,
-      type: data.type,
+      kanban_type: data.type,
       priority: data.priority,
       tags: data.tags,
       assignee: data.assignee,

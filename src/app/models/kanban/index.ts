@@ -69,7 +69,7 @@ export interface IKanban {
   title: string,
   status: string,
   summary: string,
-  type: string,
+  kanban_type: string,
   priority: string,
   tags: string,
   estimate: number,

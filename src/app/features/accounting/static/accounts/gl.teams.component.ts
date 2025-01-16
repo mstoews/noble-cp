@@ -3,6 +3,7 @@ import {
     FormGroup,
     FormsModule,
     ReactiveFormsModule,
+    Validators,
 } from '@angular/forms';
 import { Component, OnInit, ViewChild, inject } from '@angular/core';
 
@@ -20,6 +21,7 @@ import { TeamStore } from 'app/services/teams.store';
 import { ITeam } from 'app/models/team';
 import { TeamService } from 'app/services/team.service';
 import { GLGridComponent } from '../../grid-components/gl-grid.component';
+import { Validation } from '@syncfusion/ej2-angular-spreadsheet';
 
 
 
@@ -45,8 +47,8 @@ interface IValue {
     
     <mat-drawer class="w-[450px]" #drawer [opened]="false" mode="over" [position]="'end'" [disableClose]="false">
         <mat-card class="m-2">
-            <div class="flex flex-col w-full filter-article filter-interactive text-gray-700">
-                <div class="bg-slate-600 text-justify m-2 p-2 text-white h-10 text-2xl border-l-4 border-gray-400"
+            <div class="flex flex-row w-full filter-article filter-interactive text-gray-700">
+                <div class="bg-slate-600 text-justify m-2 p-2 text-white h-10 text-2xl border-l-4 border-gray-400 grow w-full"
                     mat-dialog-title>
                     {{ title }}
                 </div>
@@ -54,32 +56,83 @@ interface IValue {
 
             <form [formGroup]="teamForm" class="form">
                 <div class="div flex flex-col grow">
-                    <section class="flex flex-col md:flex-row m-1">
-                        
-                        <div class="flex flex-col grow">
-                            <mat-form-field class="m-1 flex-start">                                        
-                                <input #myInput matInput placeholder="Account" formControlName="team_member" />
-                                <mat-icon class="icon-size-5 text-teal-800" matPrefix [svgIcon]="'heroicons_outline:document'"></mat-icon>
-                            </mat-form-field>
-                        </div>
+                    <section class="flex flex-col md:flex-col m-1">
 
+                         <!-- 
+                          "team_member": "@admin", 
+                          "first_name": "Admin", 
+                          "last_name": "Admin", 
+                          "location": "Office", 
+                          "title": "Initial account", 
+                          "updatedte": "2023-12-13T22:41:07.925Z", 
+                          "updateusr": "admin", 
+                          "email": "mstoews@hotmail.com", 
+                          "image": "''", 
+                          "uid": "''", 
+                          "role": "admin"  -->
+                        
+                        <!-- title -->
                         <div class="flex flex-col grow">
                             <mat-form-field class="m-1 flex-start">                                
-                                <input #myInput matInput placeholder="Child Account" formControlName="last_name" />
-                                    <mat-icon class="icon-size-5 text-teal-800" matPrefix [svgIcon]="'heroicons_outline:clipboard-document'"></mat-icon>
+                                <input #myInput matInput placeholder="Title" formControlName="title" />
+                                    <mat-icon class="icon-size-5 text-teal-800" matPrefix [svgIcon]="'mat_outline:title'"></mat-icon>
+                            </mat-form-field>
+                        </div>
+  
+                        <!-- Member -->
+                        <div class="flex flex-col grow">
+                            <mat-form-field class="m-1 flex-start">                                        
+                                <input matInput placeholder="Member" formControlName="team_member" />
+                                <mat-icon class="icon-size-5 text-teal-800" matPrefix [svgIcon]="'heroicons_outline:user-circle'"></mat-icon>
+                            </mat-form-field>
+                        </div>
+                        
+                        <!-- First Name -->
+                        <div class="flex flex-col grow">
+                            <mat-form-field class="m-1 flex-start">                                    
+                                <input matInput placeholder="First Name" formControlName="first_name"> 
+                                <mat-icon class="icon-size-5 text-teal-800" matPrefix [svgIcon]="'heroicons_outline:user-plus'"></mat-icon>
                             </mat-form-field>
                         </div>
 
-                    <div class="flex flex-col grow">
-                        <mat-form-field class="m-1 flex-start">                                    
-                            <input #myInput matInput placeholder="Comments" formControlName="first_name"> 
-                            <mat-icon class="icon-size-5 text-teal-800" matPrefix [svgIcon]="'heroicons_outline:clipboard-document'"></mat-icon>
-                        </mat-form-field>
-                    </div>
+                        <!-- Last Name -->
+                        <div class="flex flex-col grow">
+                            <mat-form-field class="m-1 flex-start">                                
+                                <input #myInput matInput placeholder="Last Name" formControlName="last_name" />
+                                    <mat-icon class="icon-size-5 text-teal-800" matPrefix [svgIcon]="'heroicons_outline:user-plus'"></mat-icon>
+                            </mat-form-field>
+                        </div>
+                         
+                        <!-- location -->
+                        <div class="flex flex-col grow">
+                            <mat-form-field class="m-1 flex-start">                                
+                                <input #myInput matInput placeholder="Location" formControlName="location" />
+                                    <mat-icon class="icon-size-5 text-teal-800" matPrefix [svgIcon]="'mat_outline:my_location'"></mat-icon>
+                            </mat-form-field>
+                        </div>
+                      
+                        <!-- email -->
+                        <div class="flex flex-col grow">
+                            <mat-form-field class="m-1 flex-start">                                
+                                <input #myInput matInput placeholder="Mail" formControlName="email" type="email"/>
+                                    <mat-icon class="icon-size-5 text-teal-800" matPrefix [svgIcon]="'mat_outline:email'"></mat-icon>
+                            </mat-form-field>
+                        </div>
+
+                        <!-- role -->
+                        <div class="flex flex-col grow">
+                            <mat-form-field class="m-1 flex-start">                                
+                                <input #myInput matInput placeholder="Role" formControlName="role" type="role"/>
+                                    <mat-icon class="icon-size-5 text-teal-800" matPrefix [svgIcon]="'mat_outline:supervised_user_circle'"></mat-icon>
+                            </mat-form-field>
+                        </div>
+                    
                     </section>
                 </div>
             </form>
-            @if (bDirty === true) {
+            
+                <div class="flex flex-row w-full">
+                    @if (bDirty === true) {
                     <button mat-icon-button color="primary" class="bg-slate-200 hover:bg-slate-400 ml-1" (click)="onUpdateJournalEntry()"
                       matTooltip="Save" aria-label="hovered over">
                       <span class="e-icons e-save"></span>
@@ -101,15 +154,17 @@ interface IValue {
                             aria-label="hovered over">
                             <span class="e-icons e-circle-close"></span>
                     </button>   
+                </div>
             
             <section class="text-xl text-gray-700" [formGroup]="teamForm">                        
-                {{teamForm.value | json}}
+                {{store.team() | json}}  
             </section>
         </mat-card>
     </mat-drawer>
     <mat-drawer-container class="flex-col">        
         <ng-container>
             <grid-menubar 
+            [inTitle]="'Team Members'"
             (notifyParentRefresh)="onRefresh()" 
             (notifyParentAdd)="onAdd()"
             (notifyParentDelete)="onDeleteSelection()" 
@@ -201,8 +256,8 @@ export class TeamsComponent implements OnInit {
         this.closeDrawer();
     }
 
-    selectedRow(event: any) {
-        console.log(event);
+    selectedRow(team: ITeam) {
+        this.teamForm.patchValue(team);        
         this.openDrawer();
     }
 
@@ -248,16 +303,16 @@ export class TeamsComponent implements OnInit {
 
     createEmptyForm() {
         this.teamForm = this.fb.group({
-            team_member: [''],
-            first_name: [''],
-            last_name: [''],
-            location: [''],
-            title: [''],
-            updatedte: [''],
-            updateusr: [''],
-            email: [''],
-            image: [''],
-            uid: ['']
+            team_member: ['', Validators.required],
+            first_name: ['', Validators.required],
+            last_name: ['', Validators.required],
+            location: ['', Validators.required],
+            title: ['', Validators.required],
+            updatedte: ['', Validators.required],
+            updateusr: ['', Validators.required],
+            email: ['', Validators.required],
+            image: ['', Validators.required],
+            uid: ['', Validators.required]
         });
     }
 

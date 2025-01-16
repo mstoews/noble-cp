@@ -18,7 +18,7 @@ import { provideEffects } from '@ngrx/effects';
 import { provideStoreDevtools } from '@ngrx/store-devtools';
 
 import * as fromPriority from 'app/state/kanban-state/priority/priority.state';
-import * as fromKanban from 'app/state/kanban-state/kanban/kanban.reducer';
+import * as fromKanban from 'app/state/kanban-state/kanban/kanban.state';
 import * as fromPeriods from 'app/state/periods/periods.state';
 import * as fromSubtype from 'app/state/subtype/sub-type.state';
 import * as fromParty from 'app/state/party/party.state';
@@ -51,13 +51,15 @@ import { journalHeaderEffects } from './state/journal/Journal.Effects';
 import { templateEffects } from './state/template/Template.Effects';
 import { userEffects } from './state/users/Users.Effects';
 import { provideRouterStore } from '@ngrx/router-store';
-import { KanbanEffects } from './state/kanban-state/kanban/kanban.effects';
 import { FundsReducer } from './state/funds/Funds.Reducer';
 import { fundsEffects } from './state/funds/Funds.Effects';
 import { UserService } from './services/user.service';
 import { accountEffects } from './state/accounts/Accounts.Effects';
 import { periodEffects } from './state/periods/periods.effects';
-import {PanelStateService} from "./services/panel.state.service";
+
+
+import { PanelStateService } from "./services/panel.state.service";
+import { kanbanEffects } from './state/kanban-state/kanban/kanban.effects';
 
 
 const app = initializeApp(environment.firebase);
@@ -116,7 +118,7 @@ export const appConfig: ApplicationConfig = {
 
     },),
     ...CoreProviders,
-    provideRouter(appRoutes, withPreloading(PreloadAllModules), withInMemoryScrolling({ scrollPositionRestoration: 'enabled' }), ),
+    provideRouter(appRoutes, withPreloading(PreloadAllModules), withInMemoryScrolling({ scrollPositionRestoration: 'enabled' }),),
     {
       provide: DateAdapter,
       useClass: LuxonDateAdapter,
@@ -142,21 +144,23 @@ export const appConfig: ApplicationConfig = {
       'tpl': TemplateReducer,
       'accounts': AccountsReducer,
       'journals': JournalReducer,
-      'fnd': FundsReducer      
+      'fnd': FundsReducer
     }),
-    provideState(fromKanban.kanbanFeature),
+
     provideState(fromPriority.priorityFeature),
     provideState(fromPeriods.periodsFeature),
     provideState(fromSubtype.subtypeFeature),
     provideState(fromParty.partyFeature),
+    provideState(fromKanban.kanbanFeature),
     provideEffects(
-      [ accountEffects,         
-        templateEffects, 
-        journalHeaderEffects, 
-        KanbanEffects, 
-        periodEffects, 
-        fundsEffects, 
-        subtypeEffects 
+      [accountEffects,
+        periodEffects,
+        kanbanEffects,
+        templateEffects,
+        journalHeaderEffects,
+        periodEffects,
+        fundsEffects,
+        subtypeEffects,
       ]),
     provideRouterStore(),
     provideStoreDevtools({ maxAge: 25 }),

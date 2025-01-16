@@ -13,7 +13,6 @@ import { FuseConfirmationService } from "@fuse/services/confirmation";
 import { AccountsService } from "app/services/accounts.service";
 import { GridMenubarStandaloneComponent } from "../../grid-components/grid-menubar.component";
 
-import { IValue } from "app/features/kanban/kanban/kanban.component";
 import { MatDrawer } from "@angular/material/sidenav";
 import { MaterialModule } from "app/services/material.module";
 import {
@@ -367,7 +366,7 @@ export class GlAccountsComponent  extends GLGridComponent {
     console.debug("changeType ", JSON.stringify(e));
   }
 
-  sub_types: IValue[] = [
+  sub_types: any[] = [
     { value: "Add", viewValue: "Add" },
     { value: "Update", viewValue: "Update" },
     { value: "Delete", viewValue: "Delete" },
