@@ -1,21 +1,7 @@
 import { Actions, createEffect, ofType } from "@ngrx/effects";
 import { AccountsService } from "app/services/accounts.service";
 import { exhaustMap, map, catchError, of } from "rxjs";
-import {
-  loadAccounts,
-  loadAccountsFailure,
-  loadAccountsSuccess,
-  addAccounts,
-  addAccountsSuccess,
-  updateAccounts,
-  updateAccountsSuccess,
-  deleteAccountsSuccess,
-  deleteAccounts,
-  emptyAction,
-  loadAccountsDropdown,
-  loadAccountsDropdownSuccess,
-  loadAccountsDropdownFailure
-} from "./Accounts.Action";
+import * as  AccountActions  from  "./Accounts.Action";
 import { inject } from "@angular/core";
 import { ToastrService } from "ngx-toastr";
 
@@ -26,25 +12,11 @@ export class accountEffects {
 
   _loadAccounts = createEffect(() =>
     this.actions.pipe(
-      ofType(loadAccounts),
+      ofType(AccountActions.loadAccounts),
       exhaustMap(() => {
         return this.accountsService.readAccounts().pipe(
-          map((data) => loadAccountsSuccess({ accounts: data })),
-          catchError((error) => of(loadAccountsFailure({ error })))
-        );
-      })
-    )
-  );
-
-  // loadAccountsDropdown
-
-  _loadAccountsDropdown = createEffect(() =>
-    this.actions.pipe(
-      ofType(loadAccountsDropdown),
-      exhaustMap(() => {
-        return this.accountsService.readAccountDropdown().pipe(
-          map((data) => loadAccountsDropdownSuccess({ accountsDropdown: data })),
-          catchError((error) => of(loadAccountsDropdownFailure({ error })))
+          map((data) => AccountActions.loadAccountsSuccess({ accounts: data })),
+          catchError((error) => of(AccountActions.loadAccountsFailure({ error })))
         );
       })
     )
@@ -53,11 +25,11 @@ export class accountEffects {
 
   _deleteAccounts = createEffect(() =>
     this.actions.pipe(
-      ofType(deleteAccounts),
+      ofType(AccountActions.deleteAccount),
       exhaustMap((action) => {
         return this.accountsService.delete(action.id.toString()).pipe(
-          map(() => deleteAccountsSuccess({ id: action.id })),
-          catchError((error) => of(loadAccountsFailure({ error })))
+          map(() => AccountActions.deleteAccountsSuccess({ id: action.id })),
+          catchError((error) => of(AccountActions.loadAccountsFailure({ error })))
         );
       })
     )
@@ -65,11 +37,11 @@ export class accountEffects {
 
   _addAccounts = createEffect(() =>
     this.actions.pipe(
-      ofType(addAccounts),
+      ofType(AccountActions.addAccounts),
       exhaustMap((action) => {
         return this.accountsService.create(action.account).pipe(
-          map(() => addAccountsSuccess({ account: action.account })),
-          catchError((error) => of(loadAccountsFailure({ error })))
+          map(() => AccountActions.addAccountsSuccess({ account: action.account })),
+          catchError((error) => of(AccountActions.loadAccountsFailure({ error })))
         );
       })
     )
@@ -77,11 +49,11 @@ export class accountEffects {
 
   _updateAccounts = createEffect(() =>
     this.actions.pipe(
-      ofType(updateAccounts),
+      ofType(AccountActions.updateAccounts),
       exhaustMap((action) => {
         return this.accountsService.update(action.account).pipe(
-          map(() => updateAccountsSuccess({ account: action.account })),
-          catchError((error) => of(loadAccountsFailure({ error })))
+          map(() => AccountActions.updateAccountsSuccess({ account: action.account })),
+          catchError((error) => of(AccountActions.loadAccountsFailure({ error })))
         );
       })
     )
@@ -93,6 +65,6 @@ export class accountEffects {
     } else {
       this.toastr.error(message);
     }
-    return emptyAction();
+    return AccountActions.emptyAction();
   }
 }

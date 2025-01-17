@@ -65,7 +65,7 @@ export const defaultNavigation: FuseNavigationItem[] = [
         children: [
             {
                 id: 'accounting.general-ledger',
-                title: 'Accounting',
+                title: 'Reference Management',
                 type: 'basic',
                 icon: 'heroicons_outline:bookmark',
                 link: '/gl',
@@ -270,7 +270,7 @@ export const horizontalNavigation: FuseNavigationItem[] = [
             },
             {
                 id: 'accounts.tabs',
-                title: 'Transation Analysis',
+                title: 'Transaction Analysis',
                 type: 'basic',
                 icon: 'heroicons_outline:chart-pie',
                 link: '/analysis',

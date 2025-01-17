@@ -154,8 +154,9 @@
                     @else
                     {
                     <div class="flex flex-col items-center justify-center h-screen mat-spinner-color w-full bg-white">
-                        <mat-spinner class="text-gray-100 bg-white" [diameter]="80"></mat-spinner>
-                        <p class="text-gray-100 text-2xl">Loading...</p>
+                        <div class="flex justify-center items-center">
+                            <mat-spinner>Loading ...</mat-spinner>
+                        </div>
                     </div>
                     }                    
                 </mat-drawer-content>

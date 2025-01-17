@@ -51,7 +51,7 @@ const keyExpr = ["account", "child"];
                 [gridLines]="lines"
                 [allowFiltering]='true'                 
                 [toolbar]='toolbarOptions'                 
-                [filterSettings]='filterSettings'
+                [filterSettings]='filterOptions'
                 [editSettings]='editSettings'
                 [enablePersistence]='false'
                 [enableStickyHeader]='true'
@@ -73,6 +73,10 @@ const keyExpr = ["account", "child"];
              font-family: cursive;
              border: 1px solid #f0f0f0;
              
+        }
+        .custom-css {             
+             font-style: italic;
+             color: #007F00
         }
         `
     ]
@@ -116,6 +120,8 @@ export class GLGridComponent implements OnInit {
     public message?: string;
     public userId: string;
     sTitle: any;
+
+    public filterOptions: Object = { type: 'Excel' };
 
     openTrade($event) {
         console.log('openTrade : ', $event);

@@ -33,7 +33,7 @@ export const getFundsById = createAction(GET_FUNDS, props<{ id: number }>());
 export const getFundsSuccess = createAction(UPDATE_FUNDS_SUCCESS, props<{ funds: IFunds }>());
 export const getFundsFailure = createAction(LOAD_FUNDS_FAILURE, props<{ error: string }>());
 
-export const TemplateActions = {
+export const FundsActions = {
     loadFunds,
     loadFundsSuccess,
     loadFundsFailure,

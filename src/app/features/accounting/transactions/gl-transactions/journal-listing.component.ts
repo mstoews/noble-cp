@@ -32,6 +32,13 @@ const imports = [
     imports: [imports],
     encapsulation: ViewEncapsulation.None,
     templateUrl: './journal-listing.component.html',
+    styles: `
+     .custom-css {  
+        background: #093d16;
+        font-style: sans-serif;        
+        color: white;
+    }
+    `,
     providers: []
 })
 export class JournalEntryComponent implements OnInit, OnDestroy {
@@ -59,7 +66,7 @@ export class JournalEntryComponent implements OnInit, OnDestroy {
         { field: 'journal_id', headerText: 'Journal ID', isPrimaryKey: true, isIdentity: true, visible: true, width: 80 },
         { field: 'type', headerText: 'Type', width: 60 },
         { field: 'booked', headerText: 'Booked', width: 60, type: 'boolean', displayAsCheckbox: true },
-        { field: 'status', headerText: 'Status', width: 80 },
+        { field: 'status', headerText: 'Status', width: 80  },
         { field: 'transaction_date', headerText: 'Date', width: 80, format: 'M/dd/yyyy' },
         { field: 'description', headerText: 'Description', width: 170 },
         { field: 'period', headerText: 'Prd', width: 50, visible: false },

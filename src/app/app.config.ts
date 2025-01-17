@@ -15,6 +15,7 @@ import { authTokenInterceptor } from './auth.token.interceptor';
 import { provideState, provideStore } from '@ngrx/store';
 import { provideToastr } from 'ngx-toastr';
 import { provideEffects } from '@ngrx/effects';
+import * as subtypeEffects from 'app/state/subtype/sub-type.effects';
 import { provideStoreDevtools } from '@ngrx/store-devtools';
 
 import * as fromPriority from 'app/state/kanban-state/priority/priority.state';
@@ -22,7 +23,7 @@ import * as fromKanban from 'app/state/kanban-state/kanban/kanban.state';
 import * as fromPeriods from 'app/state/periods/periods.state';
 import * as fromSubtype from 'app/state/subtype/sub-type.state';
 import * as fromParty from 'app/state/party/party.state';
-import * as subtypeEffects from 'app/state/subtype/sub-type.effects';
+
 
 import {
   Firestore,
@@ -60,6 +61,7 @@ import { periodEffects } from './state/periods/periods.effects';
 
 import { PanelStateService } from "./services/panel.state.service";
 import { kanbanEffects } from './state/kanban-state/kanban/kanban.effects';
+import { partyEffects } from './state/party/party.effects';
 
 
 const app = initializeApp(environment.firebase);
@@ -153,14 +155,14 @@ export const appConfig: ApplicationConfig = {
     provideState(fromParty.partyFeature),
     provideState(fromKanban.kanbanFeature),
     provideEffects(
-      [accountEffects,
+      [ accountEffects,
         periodEffects,
         kanbanEffects,
         templateEffects,
+        partyEffects,
         journalHeaderEffects,
         periodEffects,
         fundsEffects,
-        subtypeEffects,
       ]),
     provideRouterStore(),
     provideStoreDevtools({ maxAge: 25 }),

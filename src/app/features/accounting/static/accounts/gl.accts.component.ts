@@ -43,6 +43,8 @@ import { DropDownListComponent } from "@syncfusion/ej2-angular-dropdowns";
 import { IAccounts } from "app/models/journals";
 import { AuthService } from "app/features/auth/auth.service";
 import { GLGridComponent } from "../../grid-components/gl-grid.component";
+import { Store } from "@ngrx/store";
+import * as accountSelectors from "app/state/accounts/Accounts.Selector";
 
 const imports = [
   CommonModule,
@@ -195,6 +197,16 @@ const keyExpr = ["account", "child"];
               [inTitle]="'Account Maintenance'"
             >
             </grid-menubar>
+
+            <!-- @if(accounts$ | async; as accounts) {
+              <gl-grid #gl_grid
+              (onUpdateSelection)="selectedRow($event)"
+              [data]="accounts"
+              [columns]="columns" >
+            </gl-grid> -->
+
+            
+
             @if (accountService.isLoading() === false) {
 
             <gl-grid #gl_grid
@@ -252,7 +264,10 @@ export class GlAccountsComponent  extends GLGridComponent {
   accountService = inject(AccountsService);
   subtypeService = inject(SubTypeService);
   typeStore = inject(TypeStore);
+
+  private store = inject(Store);
   
+  accounts$ = this.store.select(accountSelectors.selectAccounts);
 
   public sTitle = "Settings/Account Maintenance";
   public title = "General Ledger Accounts";

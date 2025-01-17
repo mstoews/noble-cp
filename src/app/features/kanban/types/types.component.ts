@@ -32,7 +32,6 @@ export class KanbanTypesComponent implements OnInit, OnDestroy {
 
     private _fuseConfirmationService = inject(FuseConfirmationService);
     private fb = inject(FormBuilder);
-    private kanbanService = inject(KanbanService)
     store = inject(KanbanStore);
     @ViewChild('drawer') drawer!: MatDrawer;
 

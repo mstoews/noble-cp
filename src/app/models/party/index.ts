@@ -3,7 +3,6 @@ export interface IParty {
     name: string;
     party_type: string;
     address_id: number;
-    description: string,
     create_date: Date,
     create_user: string,
     update_date: Date,

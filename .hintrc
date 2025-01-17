@@ -22,6 +22,15 @@
       {
         "image-alt": "off"
       }
+    ],
+    "typescript-config/consistent-casing": "off",
+    "compat-api/html": [
+      "default",
+      {
+        "ignore": [
+          "search"
+        ]
+      }
     ]
   }
 }

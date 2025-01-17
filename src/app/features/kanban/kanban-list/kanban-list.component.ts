@@ -364,7 +364,7 @@ export class KanbanListComponent implements OnInit {
     confirmation.afterClosed().subscribe((result) => {
       // If the confirm button pressed...
       if (result === "confirmed") {
-        // Delete the listconst dDate = new Date();
+        // Delete the list const dDate = new Date();
         const task = this.taskGroup.getRawValue();
         const user = this.auth.currentUser;
         var currentDate = new Date().toISOString().split("T")[0];

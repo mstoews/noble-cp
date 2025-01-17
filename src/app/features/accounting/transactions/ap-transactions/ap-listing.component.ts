@@ -150,10 +150,12 @@ export class APTransactionComponent implements OnInit, OnDestroy {
   journalForm!: FormGroup;
   keyField: any;
   protected _onDestroy = new Subject<void>();
+  ap : IJournalHeader[] = [];
 
   ngOnInit() {
+
     this.store.accountsPayable();
-    console.debug("AP :", this.store.ap().length);
+    
     this.initialDatagrid();
   }
 

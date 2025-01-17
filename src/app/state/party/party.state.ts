@@ -18,26 +18,16 @@ export const initialState: State = {
 const reducer = createReducer(
   initialState,
   on(partyPageActions.load, (state) => ({ ...state, isLoading: true })),
-  on(partyPageActions.select, (state, { party_id }) => ({
-    ...state,
-    selectedId: party_id,
-  })),
-  on(partyAPIActions.loadPartySuccess, (state, { party }) => ({
-    ...state,
-    party,
-    isLoading: false,
-  })),
-  on(partyAPIActions.loadPartyFailure, (state) => ({
-    ...state,
-    isLoading: false,
-  }))
+  on(partyPageActions.select, (state, { party_id }) => ({ ...state, selectedId: party_id,})),
+  on(partyAPIActions.loadPartySuccess, (state, { party }) => ({ ...state, party, isLoading: false,  })),
+  on(partyAPIActions.loadPartyFailure, (state) => ({ ...state, isLoading: false, }))
 );
 
 export const partyFeature = createFeature({
   name: 'partyFeature',
   reducer,
   extraSelectors: ({ selectSelectedId, selectParty }) => ({
-    selectSelectedPeriod: createSelector(
+    selectSelectedParty: createSelector(
       selectSelectedId,
       selectParty,
       (selectedId, party) => party.find((s) => s.party_id === selectedId)

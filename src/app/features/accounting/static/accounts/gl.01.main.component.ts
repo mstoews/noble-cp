@@ -30,6 +30,7 @@ import { GLGridComponent } from '../../grid-components/gl-grid.component';
 import { Store } from '@ngrx/store';
 import { loadFunds } from 'app/state/funds/Funds.Action';
 import { selectFunds } from 'app/state/funds/Funds.Selector';
+import { PartyComponent } from './gl.party.component';
 
 @Component({
     template: `
@@ -108,6 +109,7 @@ import { selectFunds } from 'app/state/funds/Funds.Selector';
 
                     @switch (selectedPanel) {
                     @case ('accounts'){ <glaccounts></glaccounts> }
+                    @case ('party'){ <party></party> }
                     @case ('types') { <gl-types></gl-types> }
                     @case ('subtypes'){ <subtypes></subtypes> }                     
                     @case ('funds') { <funds> </funds> }
@@ -131,6 +133,7 @@ import { selectFunds } from 'app/state/funds/Funds.Selector';
         GlTypeComponent,
         PeriodsComponent,
         RolesComponent,
+        PartyComponent,
         GlSubTypeComponent,
         NgClass,
         TeamsComponent,
@@ -178,6 +181,12 @@ export class GlMainComponent {
                 icon: 'heroicons_outline:document-text',
                 title: 'Transaction Sub Types',
                 description: 'Mapping transaction sub types',
+            },
+            {
+                id: 'party',
+                icon: 'heroicons_outline:document-text',
+                title: 'Customer and Vendor Party',
+                description: 'Customer and vendor party definitions',
             },
             {
                 id: 'funds',
