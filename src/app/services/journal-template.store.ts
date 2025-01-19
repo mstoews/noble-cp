@@ -11,7 +11,7 @@ import {
   import { exhaustMap, pipe, switchMap, tap } from 'rxjs';
   import { inject } from '@angular/core';
   import { tapResponse } from '@ngrx/operators';
-  import { IAccounts } from 'app/models/journals';
+  import { IAccounts } from 'app/models';
   import { IJournalDetailTemplate, IJournalTemplate } from 'app/models/journals';
   import { IType } from 'app/models/kanban';
   import { IParty } from 'app/models/party';

@@ -1,6 +1,8 @@
 import { trigger, transition, query, style, group, animate } from '@angular/animations';
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
+import { ApplicationService } from './services/application.service';
+import { AuthService } from './features/auth/auth.service';
 
 @Component({
     selector: 'app-root',
@@ -33,9 +35,15 @@ import { RouterOutlet } from '@angular/router';
     ]
 })
 export class AppComponent {
+    authService = inject(AuthService);
     getState(outlet: any) {
         return outlet.activatedRouteData.state;
     }
+
+    constructor() {
+        this.authService.updateDisplayname('Murray Toews');
+    }
+    
 }
     
 

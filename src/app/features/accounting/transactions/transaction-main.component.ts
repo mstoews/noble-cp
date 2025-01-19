@@ -1,4 +1,4 @@
-import { NgClass, NgSwitch, NgSwitchCase } from '@angular/common';
+import { NgClass } from '@angular/common';
 import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
@@ -6,36 +6,30 @@ import {
     OnDestroy,
     OnInit,
     signal, viewChild,
-    ViewChild,
     ViewEncapsulation
 } from '@angular/core';
 import { MatDrawer } from '@angular/material/sidenav';
 import { FuseMediaWatcherService } from '@fuse/services/media-watcher';
 import { MaterialModule } from 'app/services/material.module';
-import { pipe, Subject, takeUntil } from 'rxjs';
-import { JournalEntryComponent } from './gl-transactions/journal-listing.component';
-import { JournalUpdateComponent } from './gl-transactions/journal-update.component';
+import { Subject, takeUntil } from 'rxjs';
 import { FileManagerComponent } from 'app/features/file-manager/file-manager.component';
 import { EntryWizardComponent } from './wizard/wizard-entry.component';
-import { JournalTemplateComponent } from './template/journal-template.component';
-import { ARTransactionComponent } from './ar-transactions/ar-listing.component';
-import { APTransactionComponent } from './ap-transactions/ap-listing.component';
-import { FundsService } from 'app/services/funds.service';
-import { AccountsService } from 'app/services/accounts.service';
-import {PanelStateService} from "../../../services/panel.state.service";
-import { map } from 'lodash';
-import { tapResponse } from '@ngrx/operators';
+import { JournalTemplateComponent } from './journal-template.component';
+import { ARTransactionComponent } from './ar-listing.component';
+import { APTransactionComponent } from './ap-listing.component';
+import { PanelStateService } from "../../../services/panel.state.service";
+import { GLTransactionListComponent } from './gl-listing.component';
 
 
 const imports = [
     MaterialModule,
     NgClass,
-    JournalEntryComponent,
     FileManagerComponent,
     EntryWizardComponent,
     JournalTemplateComponent,
     ARTransactionComponent,
-    APTransactionComponent
+    APTransactionComponent,
+    GLTransactionListComponent
 ]
 
 @Component({
@@ -117,7 +111,7 @@ const imports = [
                         <div class="mt-8">
                             @switch (selectedPanel) {
                                 @case ('entry') { <entry-wizard></entry-wizard>  }
-                                @case ('listing') {  <transactions></transactions>  }
+                                @case ('listing') {  <gl-transactions-list></gl-transactions-list>  }
                                 @case ('ap')    { <ap-transactions></ap-transactions>}
                                 @case ('ar')    { <ar-transactions></ar-transactions>}
                                 @case ('template') { <journal-template></journal-template>  }
@@ -131,7 +125,7 @@ const imports = [
     `,
     styles: ``
 })
-export class TransactionMainComponent implements OnInit , OnDestroy {
+export class TransactionMainComponent implements OnInit, OnDestroy {
 
     drawer = viewChild<MatDrawer>("drawer");
     drawerMode: 'over' | 'side' = 'side';
@@ -150,17 +144,16 @@ export class TransactionMainComponent implements OnInit , OnDestroy {
     constructor(
         private _changeDetectorRef: ChangeDetectorRef,
         private _fuseMediaWatcherService: FuseMediaWatcherService,
-    )
-    {
+    ) {
         this.selectedPanel = this.panelService.lastPanelOpened();
         if (this.selectedPanel === '') {
             this.selectedPanel = localStorage.getItem("transactionsPanel");
         }
-        if (this.selectedPanel === null ) {
+        if (this.selectedPanel === null) {
             this.selectedPanel = this.defaultPanel;
         }
 
-        
+
     }
 
     // -----------------------------------------------------------------------------------------------------
@@ -172,7 +165,7 @@ export class TransactionMainComponent implements OnInit , OnDestroy {
      */
     ngOnInit(): void {
         // Setup available panels
-        
+
 
         if (this.selectedPanel === '' && this.storedPanel === null) {
             this.selectedPanel = this.defaultPanel;
@@ -249,7 +242,7 @@ export class TransactionMainComponent implements OnInit , OnDestroy {
     }
 
 
-    
+
     goToPanel(panel: string): void {
         this.panelService.setLastPanel(panel);
         this.selectedPanel = panel;
@@ -275,21 +268,21 @@ export class TransactionMainComponent implements OnInit , OnDestroy {
     ngOnDestroy(): void {
 
         const panelState = {
-            id: this.selectedPanel,            
+            id: this.selectedPanel,
             panelName: 'transactionsPanel',
             lastPanelOpened: this.selectedPanel
         }
 
-        
+
         var user: string;
         const userId = this.panelService.getUserId()
             .subscribe((uid) => {
                 user = uid;
                 this.panelService.addPanel(user, panelState);
-        });
-        
-        var transactionPanel : any   
-        
+            });
+
+        var transactionPanel: any
+
         this._unsubscribeAll.next(null);
         this._unsubscribeAll.complete();
     }

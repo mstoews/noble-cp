@@ -23,7 +23,7 @@ let modules = [MatToolbarModule, MatIconModule, MatButtonModule, CommonModule];
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [modules],
     template: `
-    <mat-toolbar class="text-white font-sans bg-gray-500 text-2xl rounded-lg">   {{ inTitle() }}
+    <mat-toolbar class="text-white font-sans bg-gray-500 text-2xl rounded-lg">   {{ inTitle() }} {{ prd() }} - {{prd_year()}}
 
     <span class="flex-1"></span>
 
@@ -85,6 +85,8 @@ export class GridMenubarStandaloneComponent {
   public newRecord = output<string>();
 
   public inTitle = input<string>("General Ledger Transactions");
+  public prd = input<string>();
+  public prd_year = input<string>();
 
   public showBack = input<boolean>(false);
   public showExportXL = input<boolean>(true);

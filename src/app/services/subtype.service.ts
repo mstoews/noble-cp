@@ -78,9 +78,9 @@ export class SubTypeService {
   }
 
   // Delete
-  delete(id: string) {
+  delete(id: number) {
     var data = {
-      type: id
+      id: id
     }
     var url = this.baseUrl + '/v1/subtype_list';
     return this.httpClient.post<ISubType[]>(url, data).pipe(

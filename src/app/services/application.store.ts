@@ -11,11 +11,12 @@ import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { exhaustMap, pipe, switchMap, tap } from 'rxjs';
 import { inject } from '@angular/core';
 import { tapResponse } from '@ngrx/operators';
-import { IAccounts, IJournalTemplate } from 'app/models/journals';
+import {  IJournalTemplate } from 'app/models/journals';
 import { JournalService } from '../services/journal.service';
 import { IParty } from 'app/models/party';
-import { IPeriod } from '../services/periods.service';
 import { PartyService } from './party.service';
+import { IAccounts } from 'app/models';
+import { IPeriod } from 'app/models/period';
 
 
 export interface ApplicationStateInterface {

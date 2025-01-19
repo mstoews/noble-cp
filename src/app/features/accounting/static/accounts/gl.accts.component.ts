@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, inject, viewChild } from "@angular/core";
+import { Component, inject, viewChild } from "@angular/core";
 import {
   FormBuilder,
   FormGroup,
@@ -8,9 +8,8 @@ import {
 } from "@angular/forms";
 import { SubTypeService } from "app/services/subtype.service";
 import { TypeStore } from "app/services/type.service";
-import { CommonModule, JsonPipe } from "@angular/common";
+import { CommonModule } from "@angular/common";
 import { FuseConfirmationService } from "@fuse/services/confirmation";
-import { AccountsService } from "app/services/accounts.service";
 import { GridMenubarStandaloneComponent } from "../../grid-components/grid-menubar.component";
 
 import { MatDrawer } from "@angular/material/sidenav";
@@ -18,33 +17,23 @@ import { MaterialModule } from "app/services/material.module";
 import {
   AggregateService,
   ColumnMenuService,
-  ContextMenuItem,
   ContextMenuService,
-  DialogEditEventArgs,
   EditService,
-  EditSettingsModel,
   ExcelExportService,
   FilterService,
-  FilterSettingsModel,
-  GridComponent,
-  GridModule,
   GroupService,
   PageService,
   ReorderService,
   ResizeService,
-  SaveEventArgs,
-  SearchSettingsModel,
-  SelectionSettingsModel,
   SortService,
-  ToolbarItems,
   ToolbarService,
 } from "@syncfusion/ej2-angular-grids";
-import { DropDownListComponent } from "@syncfusion/ej2-angular-dropdowns";
-import { IAccounts } from "app/models/journals";
+import { IAccounts } from "app/models";
 import { AuthService } from "app/features/auth/auth.service";
 import { GLGridComponent } from "../../grid-components/gl-grid.component";
 import { Store } from "@ngrx/store";
-import * as accountSelectors from "app/state/accounts/Accounts.Selector";
+import { accountsFeature } from "app/state/accts/accts.state";
+import { accountPageActions } from "app/state/accts/actions/accts-page.actions";
 
 const imports = [
   CommonModule,
@@ -59,7 +48,7 @@ const keyExpr = ["account", "child"];
 
 @Component({
   selector: "glaccounts",
-  imports: [imports],
+  imports: [imports, ],
   template: `
     <div class="h-[calc(100vh)-100px] ">
       <mat-drawer
@@ -71,17 +60,8 @@ const keyExpr = ["account", "child"];
         [disableClose]="false"
       >
         <mat-card class="m-2">
-          <div
-            class="flex flex-col w-full filter-article filter-interactive text-gray-700"
-          >
-            <div
-              class="bg-slate-600 text-justify m-2 p-2 text-white h-10 text-2xl border-l-4 border-gray-400"
-              mat-dialog-title
-            >
-              {{ sTitle }}
-            </div>
-          </div>
-
+        <div class="flex flex-col w-full text-gray-700 max-w-140 filter-article filter-interactive">
+          <div class="h-12 m-2 rounded-lg p-2 text-2xl text-justify text-gray-200 bg-slate-600" mat-dialog-title> {{ sTitle }} </div>
           <form [formGroup]="accountsForm" class="form">
             <div class="div flex flex-col grow">
               <section class="flex flex-col md:flex-row m-1">
@@ -141,7 +121,7 @@ const keyExpr = ["account", "child"];
               <section class="flex flex-col md:flex-row">
                 <mat-form-field class="m-1 grow">
                   <mat-label class="text-md ml-2">Type</mat-label>
-                  <mat-select placeholder="Type" formControlName="type"  (selectionChange)="changeType($event)">
+                  <mat-select placeholder="Type" formControlName="acct_type"  (selectionChange)="changeType($event)">
                     @for (item of typeStore.type(); track item) {
                       <mat-option [value]="item.type"> {{ item.type }}  </mat-option>
                     }
@@ -184,6 +164,7 @@ const keyExpr = ["account", "child"];
                             <span class="e-icons e-circle-close"></span>
                     </button>                    
             </div>
+            </div>
         </mat-card>
       </mat-drawer>
       <mat-drawer-container class="flex-col">
@@ -198,28 +179,18 @@ const keyExpr = ["account", "child"];
             >
             </grid-menubar>
 
-            <!-- @if(accounts$ | async; as accounts) {
+            
+            @if ((isLoading$ | async) === false) {
+            @if(accounts$ | async; as accounts) {
               <gl-grid #gl_grid
               (onUpdateSelection)="selectedRow($event)"
               [data]="accounts"
               [columns]="columns" >
-            </gl-grid> -->
-
-            
-
-            @if (accountService.isLoading() === false) {
-
-            <gl-grid #gl_grid
-              (onUpdateSelection)="selectedRow($event)"
-              [data]="this.accountService.accountList()"
-              [columns]="columns"
-            >
-            </gl-grid>
+            </gl-grid> 
+            }
 
             } @else {
-            <div
-              class="fixed z-[1050] -translate-x-2/4 -translate-y-2/4 left-2/4 top-2/4"
-            >
+            <div class="fixed z-[1050] -translate-x-2/4 -translate-y-2/4 left-2/4 top-2/4" >
               <mat-spinner></mat-spinner>
             </div>
             }
@@ -261,13 +232,14 @@ export class GlAccountsComponent  extends GLGridComponent {
 
   private formBuilder = inject(FormBuilder);
   private auth = inject(AuthService);
-  accountService = inject(AccountsService);
+  // accountService = inject(AccountsService);
   subtypeService = inject(SubTypeService);
   typeStore = inject(TypeStore);
 
-  private store = inject(Store);
-  
-  accounts$ = this.store.select(accountSelectors.selectAccounts);
+  Store = inject(Store);
+  accounts$ = this.Store.select(accountsFeature.selectAccounts);
+  selectedAccounts$ = this.Store.select(accountsFeature.selectSelectedAccount);
+  isLoading$ = this.Store.select(accountsFeature.selectIsLoading);
 
   public sTitle = "Settings/Account Maintenance";
   public title = "General Ledger Accounts";
@@ -282,7 +254,7 @@ export class GlAccountsComponent  extends GLGridComponent {
   public columns = [
     { field: "account",     headerText: "Group",        width: 80, textAlign: "Left" },
     { field: "child",       headerText: "Account",      width: 80, textAlign: "Left", isPrimaryKey: true,    },
-    { field: "type",        headerText: "Type",         width: 80, textAlign: "Left" },
+    { field: "acct_type",   headerText: "Type",         width: 80, textAlign: "Left" },
     { field: "description", headerText: "Description",  width: 200,textAlign: "Left" },
     { field: "update_date", headerText: "Date",         width: 80, textAlign: "Left" },
     { field: "update_user", headerText: "User",         width: 80, textAlign: "Left" },
@@ -300,9 +272,15 @@ export class GlAccountsComponent  extends GLGridComponent {
   bHeaderDirty: any;
 
   ngOnInit() {
-    this.accountService.read();
+    // this.accountService.read();
+    this.Store.dispatch(accountPageActions.load());
+
+    this.accounts$.subscribe((data) => {
+      this.data = data;
+    });
+
     this.createEmptyForm();
-    this.setRowHeight(60);
+    
   }
 
   selectedRow($event) {
@@ -317,18 +295,18 @@ export class GlAccountsComponent  extends GLGridComponent {
       child: account.child,
       parent_account: account.parent_account,
       description: account.description,
-      type: account.type,
+      acct_type: account.acct_type,
       sub_type: account.sub_type,
       balance: account.balance,
       comments: account.comments,
     };
-    this.accountService.create(rawData);
+    // this.accountService.create(rawData);
     this.closeDrawer();
   }
 
   
   onDoubleClicked(args: any) {
-    const type = args.type;
+    const type = args.acct_type;
     var parent: boolean;
     parent = args.parent_account;
     this.accountsForm.setValue({
@@ -336,7 +314,7 @@ export class GlAccountsComponent  extends GLGridComponent {
       child: [args.child],
       parent_account: parent,
       description: [args.description],
-      type: type,
+      acct_type: type,
       comments: [args.comments],
     });
 
@@ -353,10 +331,24 @@ export class GlAccountsComponent  extends GLGridComponent {
       this.drawer().toggle();
   }
 
+
+  addAccount(account: IAccounts) {
+    this.Store.dispatch(accountPageActions.addAccount({ account }));
+  }
+
+  updateAccount(account: IAccounts) {
+    this.Store.dispatch(accountPageActions.updateAccount({ account }));
+  }
+
+  deleteAccount(child: number) {
+    this.Store.dispatch(accountPageActions.deleteAccount({ child }));
+  }
+
+
   onUpdate(e: any) {
     const dDate = new Date();
     const updateDate = dDate.toISOString().split("T")[0];
-    const user = this.auth.user().email.split("T")[0];
+    const user = '@'+this.auth.user().email.split("T")[0];
 
     const account = this.accountsForm.getRawValue();
     const rawData = {
@@ -365,28 +357,21 @@ export class GlAccountsComponent  extends GLGridComponent {
       parent_account: account.parent_account,
       description: account.description,
       sub_type: "",
-      type: account.type,
+      acct_type: account.type,
       comments: account.comments,
       balance: 0,
       create_date: updateDate,
       create_user: user,
       update_date: updateDate,
       update_user: user,
-      status: "open",
+      status: "OPEN",
     };
-    this.accountService.update(rawData);
+    this.updateAccount(rawData);
   }
 
   changeType(e) {
     console.debug("changeType ", JSON.stringify(e));
   }
-
-  sub_types: any[] = [
-    { value: "Add", viewValue: "Add" },
-    { value: "Update", viewValue: "Update" },
-    { value: "Delete", viewValue: "Delete" },
-    { value: "Verify", viewValue: "Verify" },
-  ];
 
   onDeleteSelection() {
     this.onDelete(this.currentRow);
@@ -409,7 +394,7 @@ export class GlAccountsComponent  extends GLGridComponent {
       // If the confirm button pressed...
       if (result === "confirmed") {
         // Delete the list
-        this.accountService.delete(e.account);
+        // this.accountService.delete(e.account);
       }
     });
     this.closeDrawer();
@@ -430,7 +415,7 @@ export class GlAccountsComponent  extends GLGridComponent {
       child: ["", Validators.required],
       parent_account: [false, Validators.required],
       description: ["", Validators.required],
-      type: ["", Validators.required],
+      acct_type: ["", Validators.required],
       comments: ["", Validators.required],
     });
   }
@@ -443,7 +428,7 @@ export class GlAccountsComponent  extends GLGridComponent {
       child: [e.child, Validators.required],
       parent_account: parent,
       description: [e.description, Validators.required],
-      type: [e.type, Validators.required],
+      acct_type: [e.acct_type, Validators.required],
       comments: [e.comments, Validators.required],
     });
   }

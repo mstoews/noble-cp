@@ -13,7 +13,7 @@ import { MatDrawer } from '@angular/material/sidenav';
 import { MaterialModule } from 'app/services/material.module';
 import { TypeService, TypeStore } from 'app/services/type.service';
 import { AggregateService, ColumnMenuService, DialogEditEventArgs, EditService, ExcelExportService, FilterService, GridModule, GroupService, PageService, ResizeService, SaveEventArgs, SortService, ToolbarService } from '@syncfusion/ej2-angular-grids';
-import { IAccounts } from 'app/models/journals';
+import { IAccounts } from 'app/models';
 import { GLGridComponent } from '../../grid-components/gl-grid.component';
 
 const imports = [

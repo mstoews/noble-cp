@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { environment } from 'environments/environment.prod';
 import { Timestamp } from 'firebase/firestore';
 import { AUTH } from 'app/app.config';
-import { IAccounts } from 'app/models/journals';
+import { IAccounts } from 'app/models';
 import { IBudget } from 'app/models';
 import { shareReplay } from 'rxjs';
 

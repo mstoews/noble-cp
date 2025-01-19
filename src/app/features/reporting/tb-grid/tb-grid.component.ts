@@ -6,11 +6,12 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { MatTableModule } from '@angular/material/table';
 import { GridMenubarStandaloneComponent } from 'app/features/accounting/grid-components/grid-menubar.component';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { CurrencyPipe } from '@angular/common';
 
 @Component({
   selector: 'tb-grid',
   providers: [ReportStore],
-  imports: [MatTableModule, GridMenubarStandaloneComponent, MatProgressSpinnerModule],
+  imports: [MatTableModule, GridMenubarStandaloneComponent, MatProgressSpinnerModule, CurrencyPipe],
   template: `
 
 <div class="flex flex-col min-w-0 overflow-y-auto -px-10">
@@ -45,12 +46,12 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
                             <ng-container matColumnDef="debit_amount">
                               <th mat-header-cell *matHeaderCellDef> Debit </th>
-                              <td mat-cell *matCellDef="let element"> {{element.debit_amount}} </td>
+                              <td mat-cell *matCellDef="let element"> {{element.debit_amount | currency}} </td>
                             </ng-container>
 
                             <ng-container matColumnDef="credit_amount">
                               <th mat-header-cell *matHeaderCellDef> Credit </th>
-                              <td mat-cell *matCellDef="let element"> {{element.credit_amount}} </td>
+                              <td mat-cell *matCellDef="let element"> {{element.credit_amount | currency}} </td>
                             </ng-container>
 
                             <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>

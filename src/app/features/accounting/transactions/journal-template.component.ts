@@ -1,25 +1,22 @@
-import { AfterViewInit, Component, inject, OnInit, viewChild } from '@angular/core';
+import { Component, inject, OnInit, viewChild } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { AccountsService } from 'app/services/accounts.service';
-import { GridMenubarStandaloneComponent } from '../../grid-components/grid-menubar.component';
+import { GridMenubarStandaloneComponent } from '../grid-components/grid-menubar.component';
 import { MaterialModule } from 'app/services/material.module';
-import { TemplateStore } from 'app/services/journal-template.store';
-import { ExcelExportService, GridModule, PdfExportService } from '@syncfusion/ej2-angular-grids';
-import { Store } from '@ngrx/store';
+import { ExcelExportService, PdfExportService } from '@syncfusion/ej2-angular-grids';
 import { getTemplates } from 'app/state/template/Template.Selector';
 import { loadTemplates } from 'app/state/template/Template.Action';
-import { IJournalTemplate } from 'app/models/journals';
-import { Observable, of } from 'rxjs';
-import { GLGridComponent } from '../../grid-components/gl-grid.component';
-import { isVisible } from '@syncfusion/ej2-base';
+import { GLGridComponent } from '../grid-components/gl-grid.component';
 import { MatDrawer } from '@angular/material/sidenav';
+import { Store } from '@ngrx/store';
+
 
 const imports = [
     CommonModule,
     ReactiveFormsModule,
     MaterialModule,
-    FormsModule,    
+    FormsModule,
     GridMenubarStandaloneComponent,
     GLGridComponent
 ];
@@ -59,7 +56,6 @@ const imports = [
                                 <input matInput placeholder="Journal Type" formControlName="journal_type" />
                             </mat-form-field>
                         </div>
-
 
                     </div>
                 </form>
@@ -124,11 +120,9 @@ const imports = [
 })
 
 export class JournalTemplateComponent implements OnInit {
+    
     private accountService = inject(AccountsService);
-    public currentDate: string;
-    public journal_details: any[];
-    public bOpenDetail: boolean = false;
-
+    
     drawer = viewChild<MatDrawer>('drawer');
 
     // templateStore = inject(TemplateStore);
@@ -136,9 +130,11 @@ export class JournalTemplateComponent implements OnInit {
     fb = inject(FormBuilder);
     // templateStore = inject(TemplateStore);
     accounts$ = this.accountService.readChildren(); // retrieves only the child accounts which can be used for booking
-    templateForm!: FormGroup;  
+    templateForm!: FormGroup;
     selectedItemKeys: any[] = [];
-
+    public currentDate: string;
+    public journal_details: any[];
+    public bOpenDetail: boolean = false;
     readonly allowedPageSizes = [10, 20, 'all'];
     currentRowData: any;
 
@@ -158,16 +154,16 @@ export class JournalTemplateComponent implements OnInit {
     detailsList: any
 
     columns = [
-        { field: 'template_ref', headerText: 'Ref', width: 100, visible: false,  textAlign:   'Left', isPrimaryKey: true },
-        { field: 'journal_no', headerText:   'Original Journal', visible: false, width: 100, textAlign:   'Left' },
-        { field: 'template_name', headerText:'Name', width: 100, textAlign: 'Left' },        
-        { field: 'description', headerText:  'Description', width: 100, textAlign:  'Left' },
+        { field: 'template_ref', headerText: 'Ref', width: 100, visible: false, textAlign: 'Left', isPrimaryKey: true },
+        { field: 'journal_no', headerText: 'Original Journal', visible: false, width: 100, textAlign: 'Left' },
+        { field: 'template_name', headerText: 'Name', width: 100, textAlign: 'Left' },
+        { field: 'description', headerText: 'Description', width: 100, textAlign: 'Left' },
         { field: 'journal_type', headerText: 'Journal Type', width: 100, textAlign: 'Left' },
-        { field: 'create_date', headerText:  'Date', width: 100, textAlign:  'Left' },
-        { field: 'create_user', headerText:  'User', width: 100, textAlign:  'Left' },
-        
+        { field: 'create_date', headerText: 'Date', width: 100, textAlign: 'Left' },
+        { field: 'create_user', headerText: 'User', width: 100, textAlign: 'Left' },
+
     ];
-    
+
     bDirty: boolean = false;
 
     ngOnInit() {
@@ -225,7 +221,7 @@ export class JournalTemplateComponent implements OnInit {
     onCancel() {
         this.drawer().toggle();
     }
-        
+
     onDeleteSelection() {
         console.debug('Delete Selection')
     }

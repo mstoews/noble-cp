@@ -225,13 +225,24 @@ export class FundsComponent implements OnInit {
 
 
     public onUpdateSelection(data: IFunds) {
-        // this.store.updateFund(this.fundsForm.value);
+        // 
+        const dDate = new Date();
+        const updateDate = dDate.toISOString().split('T')[0];
         this.bDirty = false;
         this.fundsForm.patchValue({
             id: [data.id],
             fund: [data.fund],
             description: [data.description]
         });
+
+        const rawData = {
+            fund: data.fund,
+            description: data.description,
+            create_date: updateDate,
+            create_user: '@admin',
+        } as IFunds;
+
+        this.store.dispatch(updateFunds({ funds: rawData }));
 
         this.openDrawer();
     }

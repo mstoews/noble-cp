@@ -69,26 +69,6 @@ export interface IJournalDetailUpdate {
   create_user   : string
 }
 
-
-
-export interface IAccounts {
-  account         : number,
-  child           : number,
-  parent_account  : string,
-  type            : string,
-  sub_type        : string,
-  description     : string,
-  balance         : number,
-  comments        : string,
-  create_date     : string,
-  create_user     : string,
-  update_date     : string,
-  update_user     : string,
-  period?         : number,
-  period_year?    : number,
-  status?         : string
-}
-
 export interface ITransactionDate {
   start_date: string,
   end_date: string

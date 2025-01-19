@@ -6,6 +6,8 @@ import {
   signInWithEmailAndPassword,
   confirmPasswordReset,
   signOut,
+  updateProfile,
+  sendEmailVerification,
 } from 'firebase/auth';
 import { authState , idToken} from 'rxfire/auth';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -15,7 +17,9 @@ import { Store } from '@ngrx/store';
 import { getUser, loadUsers } from 'app/state/users/Users.Action';
 import { getUserById, selectUsers } from 'app/state/users/Users.Selector';
 import { IUser } from 'app/models/user';
-// import { CacheService } from './cache.service';
+import { ToastrService } from 'ngx-toastr';
+
+
 
 export type AuthUser = User | null | undefined;
 
@@ -30,13 +34,17 @@ interface AuthState {
 export class AuthService {
   private auth = inject(AUTH);
   private token: BehaviorSubject<string> = new BehaviorSubject(null);
-  token$: Observable<string> = this.token.asObservable();
+  public token$: Observable<string> = this.token.asObservable();
+  
+  public authState: any;
+  public tokenSubject: Subject<string>;
 
   Store = inject(Store);
   public User$: Observable<IUser[]>;
 
   // sources
   private user$ = authState(this.auth);
+  private toastService = inject(ToastrService);
 
   // state
   private state = signal<AuthState>({
@@ -44,15 +52,14 @@ export class AuthService {
     token: undefined
   });
 
+  public user = computed(() => this.state().user);
+
   check() {    
       return of(true);     
   }
 
   // selectors
-  public user = computed(() => this.state().user);
-  authState: any;
-  tokenSubject: Subject<string>;
-
+  
   constructor() {
     this.Store.dispatch(loadUsers());           
     this.user$.pipe(takeUntilDestroyed()).subscribe((user) =>
@@ -68,6 +75,22 @@ export class AuthService {
     });    
   }
 
+  public updateDisplayname(displayName: string) {
+      this.user$.pipe(takeUntilDestroyed()).subscribe((user) => {
+      updateProfile(user, { displayName })
+        .then(() => {
+          sendEmailVerification(user)
+            .then(() => {
+                this.toastService.success(`Profile address has been updated to your profile ...`)
+            }).catch((error) => {
+              this.toastService.error(`Error ... ${error}`);
+            });
+        }).catch((error) => {
+          this.toastService.error(`Error ... ${error}`);
+        });
+    });
+  }
+  
   getCurrentUser() {
     var uid: string;
     var rc: any

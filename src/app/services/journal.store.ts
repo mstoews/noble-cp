@@ -12,7 +12,7 @@ import { debounceTime, exhaustMap, pipe, switchMap, tap } from 'rxjs';
 import { inject } from '@angular/core';
 import { tapResponse } from '@ngrx/operators';
 import {
-    IAccounts,
+   
     IArtifacts,
     IJournalDetail,
     IJournalDetailDelete,
@@ -24,7 +24,7 @@ import {
 import { JournalService } from '../services/journal.service';
 import { IParty } from 'app/models/party';
 
-import { IFunds, IJournalParams, ITrialBalance } from 'app/models';
+import { IAccounts, IFunds, IJournalParams, ITrialBalance } from 'app/models';
 import { IType } from 'app/models/types';
 import { IPeriod } from 'app/models/period';
 import { ISubType } from 'app/models/subtypes';

@@ -4,27 +4,72 @@ import { catchError, map, concatMap } from 'rxjs/operators';
 import { of } from 'rxjs';
 
 import { SubTypeService } from 'app/services/subtype.service';
-import { subtypePageActions } from './actions/sub-type.page.actions';
-import { subtypeAPIActions } from './actions/sub-type.actions';
+import { subTypePageActions } from './actions/sub-type-page.actions';
+import { subTypeAPIActions } from './actions/sub-type.actions';
 
 
 
-export const loadSubType = createEffect((
-  actions$ = inject(Actions),
-  subtypeService = inject(SubTypeService)) => {
-  return actions$.pipe(
-    ofType(subtypePageActions.load),
-    concatMap(() =>
-      subtypeService.read().pipe(
-        map((subtype) =>
-          subtypeAPIActions.loadSubTypeSuccess({ subtype })
-        ),
-        catchError((error) =>
-          of(subtypeAPIActions.loadSubTypeFailure({ error }))
+export class subTypeEffects {
+  actions$ = inject(Actions);
+  subTypeService = inject(SubTypeService);
+
+  loadSubType$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(subTypePageActions.load),
+      concatMap(() =>
+        this.subTypeService.read().pipe(
+          map((subtype) =>
+            subTypeAPIActions.subTypeLoadSuccess({ subtype })
+          ),
+          catchError((error) =>
+            of(subTypeAPIActions.subTypeLoadFailure ({ error }))
+          )
         )
-      )));
-},
-  {
-    functional: true,
-  }
-);
+      )
+    )
+  );
+
+  addSubType$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(subTypePageActions.addSubtype),
+      concatMap(({ subtype }) =>
+        this.subTypeService.create(subtype).pipe(
+          map((subType) =>
+            subTypeAPIActions.subTypeAddedSuccess({ subtype })
+          ),
+          catchError((error) =>
+            of(subTypeAPIActions.subTypeAddedFail({ message: error }))
+          )
+        )
+      )
+    )
+  );
+
+  updateType$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(subTypePageActions.updateSubtype),
+      concatMap(({ subtype }) =>
+        this.subTypeService.update(subtype).pipe(
+          map(() => subTypeAPIActions.subTypeUpdatedSuccess({ subtype })),
+          catchError((error) =>
+            of(subTypeAPIActions.subTypeUpdatedFail({ message: error }))
+          )
+        )
+      )
+    )
+  );
+
+  deleteType$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(subTypePageActions.deleteSubtype),
+      concatMap(({ id }) =>
+        this.subTypeService.delete(id)
+          .pipe(map(() => subTypeAPIActions.subTypeDeletedSuccess({ id })))
+      ),
+      catchError((error) =>
+        of(subTypeAPIActions.subTypeDeletedFail({ message: error }))
+      )
+    )
+  );
+
+}

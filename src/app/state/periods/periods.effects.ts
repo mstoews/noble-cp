@@ -7,31 +7,6 @@ import { PeriodsService } from 'app/services/periods.service';
 import { periodsPageActions } from './actions/periods-page.actions';
 import { periodsAPIActions } from './actions/periods.actions';
 
-
-
-// export const loadPeriods = createEffect((
-//     actions$ = inject(Actions),
-//     periodsService = inject(PeriodsService)) => {
-//     return actions$.pipe(
-//       ofType(periodsPageActions.load),
-//       concatMap(() =>
-//         periodsService.read().pipe(
-//           map((periods) =>
-//             periodsAPIActions.loadPeriodsSuccess({ periods })
-//           ),
-//           catchError((error) =>
-//             of(periodsAPIActions.loadPeriodsFailure({ error }))
-//           )
-//         )));
-//     },
-    
-//     {
-//       functional: true,
-//     }    
-// );
-
-  
-
 export class periodEffects {
   actions$ = inject(Actions);
   periodService = inject(PeriodsService);

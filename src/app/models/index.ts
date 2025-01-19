@@ -238,13 +238,15 @@ export interface ITrialBalance {
   pd: number;
   prd_year: number;
 }
-export interface IAccount {
+export interface IAccounts {
+  id?: number;
   account: number;
   child: number;
   parent_account: number;
-  type: string;
+  acct_type: string;
   sub_type: string;
   description: string;
+  status?: string;
   balance: number;
   comments: string;
   create_date: string;
@@ -252,7 +254,6 @@ export interface IAccount {
   update_date: string;
   update_user: string;
 }
-
 
 
 export interface imageItem {

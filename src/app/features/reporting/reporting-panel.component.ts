@@ -20,6 +20,7 @@ import { IncomeStatementComparisonRptComponent } from './financial-statement/inc
 import { DistributedTbComponent } from './distributed-tb.component';
 import { TbGridComponent } from './tb-grid/tb-grid.component';
 import {PanelStateService} from "../../services/panel.state.service";
+import { GridTemplateComponent } from './grid-template/grid-template.component';
 
 
 const mods = [
@@ -30,7 +31,8 @@ const mods = [
     IncomeStatementRptComponent,
     IncomeStatementComparisonRptComponent,    
     DistributedTbComponent,
-    TbGridComponent
+    TbGridComponent,
+    GridTemplateComponent
 ]
 
 @Component({
@@ -153,7 +155,13 @@ export class ReportingPanelComponent {
                 icon: 'feather:image',
                 title: 'Reconciliation Reporting',
                 description: 'Bank, expense and financial reconciliation reporting',
-            }          
+            },
+            {
+                id: 'grid-template',
+                icon: 'feather:image',
+                title: 'Grid Template ',
+                description: 'Example of using a html in grid',
+            }     
         ];
 
         // Subscribe to media changes

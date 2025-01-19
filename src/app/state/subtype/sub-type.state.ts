@@ -1,6 +1,6 @@
 import { createFeature, createReducer, createSelector, on } from '@ngrx/store';
-import { subtypeAPIActions } from './actions/sub-type.actions';
-import { subtypePageActions } from './actions/sub-type.page.actions';
+import { subTypeAPIActions } from './actions/sub-type.actions';
+import { subTypePageActions } from './actions/sub-type-page.actions';
 import { ISubType } from 'app/models/subtypes';
 
 
@@ -18,17 +18,17 @@ export const initialState: State = {
 
 const reducer = createReducer(
   initialState,
-  on(subtypePageActions.load, (state) => ({ ...state, isLoading: true })),
-  on(subtypePageActions.select, (state, { id }) => ({
+  on(subTypePageActions.load, (state) => ({ ...state, isLoading: true })),
+  on(subTypePageActions.select, (state, { id }) => ({
     ...state,
     selectedId: id,
   })),
-  on(subtypeAPIActions.loadSubTypeSuccess , (state, { subtype }) => ({
+  on(subTypeAPIActions.subTypeLoadSuccess, (state, { subtype }) => ({
     ...state,
     subtype,
     isLoading: false,
   })),
-  on(subtypeAPIActions.loadSubTypeFailure , (state) => ({
+  on(subTypeAPIActions.subTypeLoadFailure, (state) => ({
     ...state,
     isLoading: false,
   }))

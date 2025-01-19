@@ -7,7 +7,7 @@ import { tapResponse } from '@ngrx/operators';
 import { HttpClient } from '@angular/common/http';
 import { IDropDownAccounts } from '../models';
 import { environment } from 'environments/environment.prod';
-import { IAccounts } from 'app/models/journals';
+import { IAccounts} from 'app/models'
 
 type AccountState = {
     account: IAccounts[],
@@ -35,13 +35,14 @@ export class AccountsService {
 
 
     private baseUrl = environment.baseUrl;
-    public readUrl = this.baseUrl + '/v1/account_list';
+    
 
     // readonly accountList = this.accountState.account;
     readonly isLoading = this.accountState.isLoading;
 
     readAccounts() {
-        return this.httpClient.get<IAccounts[]>(this.readUrl).pipe(shareReplay({ bufferSize: 1, refCount: true }));
+        const readUrl = this.baseUrl + '/v1/account_list';
+        return this.httpClient.get<IAccounts[]>(readUrl).pipe(shareReplay({ bufferSize: 1, refCount: true }));
     }
 
     readAccountDropdown() {
@@ -147,13 +148,13 @@ export class AccountsService {
     }
 
     // Add
-    public create(accounts: Partial<IAccounts>) {
+    public create(accounts: IAccounts) {
 
         var data: IAccounts = {
             account: accounts.account,
             child: accounts.child,
             parent_account: accounts.parent_account,
-            type: accounts.type,
+            acct_type: accounts.acct_type,
             sub_type: accounts.sub_type,
             balance: 0.0,
             description: accounts.description,
@@ -165,7 +166,7 @@ export class AccountsService {
             update_user: accounts.update_user,
         }
         var url = this.baseUrl + '/v1/account_create';
-        return this.httpClient.post(url, data).pipe(shareReplay({ bufferSize: 1, refCount: true }))
+        return this.httpClient.post<IAccounts>(url, data).pipe(shareReplay({ bufferSize: 1, refCount: true }))
     }
 
     // Update
@@ -177,7 +178,7 @@ export class AccountsService {
             account: Number(accounts.account),
             child: Number(accounts.child),
             parent_account: accounts.parent_account,
-            type: accounts.type,
+            acct_type: accounts.acct_type,
             sub_type: accounts.sub_type,
             balance: 0.0,
             description: accounts.description,
@@ -206,12 +207,12 @@ export class AccountsService {
             account: data.account,
             child: data.child,
             parent_account: data.parent_account,
-            type: data.type,
+            acct_type: data.acct_type,
             sub_type: data.sub_type,
             balance: data.balance,
+            status: data.status,    
             description: data.description,
-            comments: data.comments,
-            status: data.status,
+            comments: data.comments,            
             create_date: data.create_date,
             create_user: data.create_user,
             update_date: data.update_date,

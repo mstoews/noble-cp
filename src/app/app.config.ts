@@ -15,7 +15,6 @@ import { authTokenInterceptor } from './auth.token.interceptor';
 import { provideState, provideStore } from '@ngrx/store';
 import { provideToastr } from 'ngx-toastr';
 import { provideEffects } from '@ngrx/effects';
-import * as subtypeEffects from 'app/state/subtype/sub-type.effects';
 import { provideStoreDevtools } from '@ngrx/store-devtools';
 
 import * as fromPriority from 'app/state/kanban-state/priority/priority.state';
@@ -23,6 +22,7 @@ import * as fromKanban from 'app/state/kanban-state/kanban/kanban.state';
 import * as fromPeriods from 'app/state/periods/periods.state';
 import * as fromSubtype from 'app/state/subtype/sub-type.state';
 import * as fromParty from 'app/state/party/party.state';
+import * as fromAccounts from 'app/state/accts/accts.state'
 
 
 import {
@@ -43,7 +43,6 @@ import { loggingInterceptor } from "./logging-interceptor";
 import { retryInterceptor } from "./retry-interceptor";
 import { TemplateReducer } from './state/template/Template.Reducer';
 
-import { AccountsReducer } from './state/accounts/Accounts.Reducer';
 import { JournalReducer } from './state/journal/Journal.Reducer';
 import { UsersReducer } from './state/users/Users.Reducer';
 // Effects 
@@ -55,13 +54,15 @@ import { provideRouterStore } from '@ngrx/router-store';
 import { FundsReducer } from './state/funds/Funds.Reducer';
 import { fundsEffects } from './state/funds/Funds.Effects';
 import { UserService } from './services/user.service';
-import { accountEffects } from './state/accounts/Accounts.Effects';
+
 import { periodEffects } from './state/periods/periods.effects';
+import { subTypeEffects } from './state/subtype/sub-type.effects';
 
 
 import { PanelStateService } from "./services/panel.state.service";
 import { kanbanEffects } from './state/kanban-state/kanban/kanban.effects';
 import { partyEffects } from './state/party/party.effects';
+import { accountEffects } from './state/accts/accts.effects';
 
 
 const app = initializeApp(environment.firebase);
@@ -144,7 +145,6 @@ export const appConfig: ApplicationConfig = {
     /// NGRX Store and Effects
     provideStore({
       'tpl': TemplateReducer,
-      'accounts': AccountsReducer,
       'journals': JournalReducer,
       'fnd': FundsReducer
     }),
@@ -154,15 +154,18 @@ export const appConfig: ApplicationConfig = {
     provideState(fromSubtype.subtypeFeature),
     provideState(fromParty.partyFeature),
     provideState(fromKanban.kanbanFeature),
+    provideState(fromAccounts.accountsFeature),
     provideEffects(
-      [ accountEffects,
-        periodEffects,
+      [ 
+        accountEffects,
+        periodEffects,        
         kanbanEffects,
         templateEffects,
         partyEffects,
         journalHeaderEffects,
         periodEffects,
         fundsEffects,
+        subTypeEffects
       ]),
     provideRouterStore(),
     provideStoreDevtools({ maxAge: 25 }),

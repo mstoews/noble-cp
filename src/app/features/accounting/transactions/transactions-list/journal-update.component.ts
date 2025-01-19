@@ -1,31 +1,6 @@
-import {
-    AfterViewInit,
-    ChangeDetectionStrategy,
-    Component,
-    EventEmitter,
-    OnDestroy,
-    OnInit,
-    Output,
-    ViewChild,
-    inject,
-    viewChild,
-} from "@angular/core";
-import {
-    FormBuilder,
-    FormControl,
-    FormGroup,
-    FormsModule,
-    ReactiveFormsModule,
-    Validators,
-} from "@angular/forms";
-
-import {
-    ReplaySubject,
-    Subject,
-    Subscription,
-    take,
-    takeUntil,
-} from "rxjs";
+import {AfterViewInit, ChangeDetectionStrategy, Component, EventEmitter, OnDestroy, OnInit, Output, ViewChild, inject, viewChild } from "@angular/core";
+import {FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from "@angular/forms";
+import { ReplaySubject, Subject, Subscription, take, takeUntil } from "rxjs";
 import { CommonModule } from "@angular/common";
 import { DndComponent } from "app/features/drag-n-drop/loaddnd/dnd.component";
 import { FundsService } from "app/services/funds.service";
@@ -33,7 +8,6 @@ import { AccountsService } from "app/services/accounts.service";
 import { GridMenubarStandaloneComponent } from "../../grid-components/grid-menubar.component";
 import { MaterialModule } from "app/services/material.module";
 import { SubTypeService } from "app/services/subtype.service";
-import { TypeService } from "app/services/type.service";
 import { MatDialog } from "@angular/material/dialog";
 import { NgxMaskDirective, provideNgxMask } from "ngx-mask";
 import { FuseConfirmationService } from "@fuse/services/confirmation";
@@ -84,13 +58,6 @@ import { EvidenceCardComponent } from "app/features/file-manager/file-manager-ca
 import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from "@angular/material/form-field";
 import { IParty } from "../../../../models/party";
 import { PartyService } from "../../../../services/party.service";
-// import { Store } from "@ngrx/store";
-// import { getTemplates } from 'app/state/template/Template.Selector';
-// import { loadTemplates } from 'app/state/template/Template.Action';
-// import { loadAccounts } from "app/state/accounts/Accounts.Action";
-// import { selectAccounts } from "app/state/accounts/Accounts.Selector";
-// import { loadJournalHeader } from "app/state/journal/Journal.Action";
-// import { selectJournals } from "app/state/journal/Journal.Selector";
 import { ISubType } from "app/models/subtypes";
 import { TemplateService } from "app/services/template.service";
 import { ToastrService } from "ngx-toastr";
@@ -174,8 +141,8 @@ export class JournalUpdateComponent
     private partyService = inject(PartyService);
     private templateService = inject(TemplateService);  
     private toastr = inject(ToastrService);
+    
     public matDialog = inject(MatDialog);
-
     public journalForm!: FormGroup;
     public detailForm!: FormGroup;
     public toolbarTitle: string = "General Ledger Transactions Update";
@@ -262,12 +229,16 @@ export class JournalUpdateComponent
     columnsToDisplay: string[] = ["journal_id", "description"];
     toolbarOptions = ['Search']
 
+
     @ViewChild("singleDebitSelect", { static: true }) singleDebitSelect: MatSelect;
     @ViewChild("singleTemplateSelect", { static: true }) singleTemplateSelect!: MatSelect;
     @ViewChild("singlePartySelect", { static: true }) singlePartySelect!: MatSelect;
     @ViewChild('splitterInstance') splitterObj?: SplitterComponent;
 
     singleDebitSelection = viewChild<MatSelect>("singleDebitSelection");
+    singleTemplateSelection = viewChild<MatSelect>("singleTemplateSelect");
+    singlePartySelection = viewChild<MatSelect>("singlePartySelect");
+    splitterInstance = viewChild<SplitterComponent>("splitterInstance");
 
     onBack() {
         this.router.navigate(["/journals"]);

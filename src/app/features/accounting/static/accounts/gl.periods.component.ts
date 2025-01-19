@@ -70,8 +70,8 @@ const imports = [
                                     <mat-form-field class="grow">
                                         <mat-label class="ml-2 text-base dark:text-gray-200">Period Start and End Dates</mat-label>
                                         <mat-date-range-input [rangePicker]="picker">
-                                            <input matStartDate formControlName="startdate" placeholder="Start date">
-                                            <input matEndDate formControlName="estimatedate" placeholder="End date">
+                                            <input matStartDate formControlName="start_date" placeholder="Start date">
+                                            <input matEndDate formControlName="end_date" placeholder="End date">
                                         </mat-date-range-input>
                                         <mat-datepicker-toggle matIconPrefix [for]="picker"></mat-datepicker-toggle>
                                         <mat-date-range-picker #picker></mat-date-range-picker>
