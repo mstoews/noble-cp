@@ -131,6 +131,7 @@ export const JournalStore = signalStore(
     updateJournalDetail: rxMethod<IJournalDetail>(
       pipe(
         tap(() => patchState(state, { isLoading: true })),
+        debounceTime(1000),
         switchMap((value) => {
           return journalService.updateHttpJournalDetail(value).pipe(
             tapResponse({
