@@ -79,7 +79,7 @@ export const JournalStore = signalStore(
   withMethods((state,
                fundsService = inject(FundsService),
                journalService = inject(JournalService)) => ({
-    removeJournalHeader: rxMethod<IJournalHeader>(
+              removeJournalHeader: rxMethod<IJournalHeader>(
       pipe(
         switchMap((value) => {
           patchState(state, { isLoading: true });
@@ -258,7 +258,7 @@ export const JournalStore = signalStore(
         exhaustMap(() => {
           return journalService.readHttpJournalHeader().pipe(
             tapResponse({
-              next: (journal) => patchState(state, { gl: journal }),              
+              next: (journal) => patchState(state, { gl: journal }), 
               error: console.error,
               finalize: () => patchState(state, { isLoading: false }),
             })
@@ -367,8 +367,7 @@ export const JournalStore = signalStore(
           );
         })
       )
-    ),
-    
+    ),    
     renumberJournalDetail: rxMethod<number>(
       pipe(
         tap(() => patchState(state, { isLoading: true })),

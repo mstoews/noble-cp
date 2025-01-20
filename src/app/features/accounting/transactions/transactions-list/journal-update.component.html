@@ -18,16 +18,14 @@
                     <mat-tab label="Details">
                         <mat-card class="">
                             <form [formGroup]="detailForm">
-                                <div
+                                <div 
                                     class="flex flex-col w-full filter-article filter-interactive text-gray-700 rounded-lg">
-                                    <div class="text-3xl gap-2 m-1 text-gray-100 p-2 bg-slate-600 rounded-md"
-                                        mat-dialog-title>
+                                    <div class="text-3xl gap-2 m-1 text-gray-100 p-2 bg-slate-600 rounded-md" mat-dialog-title>
                                         {{ "Journal Update" }}
                                     </div>
                                 </div>
                                 <section class="flex flex-col gap-1">
                                     <!-- Account  -->
-
                                     @if (filteredDebitAccounts | async; as accounts) {
                                     <mat-form-field class="flex flex-col grow ml-2 mr-2 mt-1 ">
                                         <mat-label class="text-md ml-2">Account</mat-label>
@@ -132,7 +130,7 @@
                                 </section>
                             </form>
                             <div mat-dialog-actions class="gap-2 mb-3 mt-5">
-                                @if (bHeaderDirty === true) {
+                                @if (bDirty === true) {
                                 <button mat-icon-button class="bg-gray-200 fill-slate-100 hover:bg-slate-400 ml-1"
                                     (click)="onUpdateJournalDetail()" matTooltip="Update Line Item"
                                     aria-label="hover over">
@@ -211,22 +209,14 @@
                                         showColumnMenu='true' (rowSelected)="onRowSelected($event)"
                                         (actionBegin)="actionBegin($event)" [gridLines]="'Both'">
                                         <e-columns>
-                                            <e-column field='journal_id' headerText='ID' [visible]='true'
-                                                isPrimaryKey='true' width='100'></e-column>
-                                            <e-column field='description' headerText='Journal Description'
-                                                [visible]='true'></e-column>
-                                            <e-column field='amount' headerText='Amount' [visible]='false'
-                                                textAlign='Right' width='150' format="N2"></e-column>
-                                            <e-column field="type" headerText="Type" [visible]='false' width="100"
-                                                dataType="text" textAlign="left"></e-column>
-                                            <e-column field="booked" headerText="Booked" [visible]='false' width="100"
-                                                [displayAsCheckBox]='true' type="boolean"></e-column>
-                                            <e-column field="amount" headerText="Amount" [visible]='false' width="150"
-                                                format='N2' textAlign="Right"></e-column>
-                                            <e-column field="period" headerText="Prd" [visible]='false'
-                                                width="100"></e-column>
-                                            <e-column field="period_year" headerText="Yr" [visible]='false'
-                                                width="100"></e-column>
+                                            <e-column field='journal_id' headerText='ID'                   [visible]='true' isPrimaryKey='true' width='100'></e-column>
+                                            <e-column field='description' headerText='Journal Description' [visible]='true'></e-column>
+                                            <e-column field='amount' headerText='Amount'                   [visible]='false' textAlign='Right' width='150' format="N2"></e-column>
+                                            <e-column field="type" headerText="Type"                       [visible]='false' width="100" dataType="text" textAlign="left"></e-column>
+                                            <e-column field="booked" headerText="Booked"                   [visible]='false' width="100" [displayAsCheckBox]='true' type="boolean"></e-column>
+                                            <e-column field="amount" headerText="Amount"                   [visible]='false' width="150" format='N2' textAlign="Right"></e-column>
+                                            <e-column field="period" headerText="Prd"                      [visible]='false' width="100"></e-column>
+                                            <e-column field="period_year" headerText="Yr"                  [visible]='false' width="100"></e-column>
                                         </e-columns>
                                     </ejs-grid>
                                 </mat-card>
@@ -344,12 +334,11 @@
                                             </section>
                                         </form>
                                         <div mat-dialog-actions class="gap-2 mb-3">
-                                            @if (bHeaderDirty === true) {
+                                            @if (bHeaderDirty === false) {
                                             <button mat-icon-button color="primary"
                                                 class="bg-slate-200 hover:bg-slate-400 ml-1"
                                                 (click)="onUpdateJournalHeader()" matTooltip="Save Transaction"
                                                 aria-label="hovered over">
-
                                                 <span class="e-icons e-save"></span>
                                             </button>
                                             }

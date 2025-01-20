@@ -4,12 +4,11 @@
     <div class="flex flex-col items-center p-6 sm:p-10">
         <div class="flex flex-col w-full max-w-4xl">
             <div class="-ml-4 sm:mt-8">
-                <a
-                    mat-button
-                    [routerLink]="['../']"
-                    [color]="'primary'">
-                    <mat-icon [svgIcon]="'heroicons_outline:arrow-long-left'"></mat-icon>
-                    <span class="ml-2">Back to Help Center</span>
+                <a mat-button
+                   [routerLink]="['../']"
+                   [color]="'primary'">
+                   <mat-icon [svgIcon]="'heroicons_outline:arrow-long-left'"></mat-icon>
+                   <span class="ml-2">Back to Help Center</span>
                 </a>
             </div>
             <div class="mt-2 text-4xl sm:text-7xl font-extrabold tracking-tight leading-tight">
@@ -28,10 +27,9 @@
                             {{faq.answer}}
                         </mat-expansion-panel>
                     
-}
-                </mat-accordion>
-            
-}
+                }
+                </mat-accordion>            
+            }
         </div>
     </div>
 

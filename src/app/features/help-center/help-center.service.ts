@@ -14,34 +14,17 @@ export class HelpCenterService {
     isLoading: boolean;
     public baseUrl = environment.baseUrl;
 
-    /**
-     * Getter for FAQs
-     */
     get faqs$(): Observable<FaqCategory[]> {
         return this._faqs.asObservable();
     }
 
-    /**
-     * Getter for guides
-     */
     get guides$(): Observable<GuideCategory[]> {
         return this._guides.asObservable();
     }
 
-    /**
-     * Getter for guide
-     */
     get guide$(): Observable<GuideCategory> {
         return this._guide.asObservable();
     }
-
-    // -----------------------------------------------------------------------------------------------------
-    // @ Public methods
-    // -----------------------------------------------------------------------------------------------------
-
-    /**
-     * Get all FAQs
-     */
 
     getAllFaqs(): Observable<Faq[]> {
 
@@ -53,13 +36,8 @@ export class HelpCenterService {
         );
     }
 
-    /**
-     * Get FAQs by category using category slug
-     *
-     * @param slug
-     */
-
     getFaqsByCategory(slug: string): Observable<FaqCategory[]> {
+
         var faqUrl = this.baseUrl + '/v1/read_faq_categories';
         return this._httpClient.get<FaqCategory[]>(faqUrl).pipe(
             tap((response: any) => {
@@ -68,11 +46,6 @@ export class HelpCenterService {
         );
     }
 
-    /**
-     * Get all guides limited per category by the given number
-     *
-     * @param limit
-     */
     getAllGuides(limit = '4'): Observable<GuideCategory[]> {
         var url = this.baseUrl + '/v1/read_guide_categories';
         return this._httpClient.get<GuideCategory[]>(url).pipe(
@@ -82,11 +55,6 @@ export class HelpCenterService {
         );
     }
 
-    /**
-     * Get guides by category using category slug
-     *
-     * @param slug
-     */
     getGuidesByCategory(slug: string): Observable<GuideCategory[]> {
         var url = this.baseUrl + '/v1/read_guide_categories';
         return this._httpClient.get<GuideCategory[]>(url, {
@@ -97,13 +65,6 @@ export class HelpCenterService {
             }),
         );
     }
-
-    /**
-     * Get guide by category and guide slug
-     *
-     * @param categorySlug
-     * @param guideSlug
-     */
 
     getGuide(categorySlug: string, guideSlug: string): Observable<GuideCategory> {
         var url = this.baseUrl + '/v1/read_guide_categories';

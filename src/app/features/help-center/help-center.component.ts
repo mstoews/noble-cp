@@ -1,5 +1,5 @@
 import { } from '@angular/common';
-import { Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
@@ -7,6 +7,7 @@ import { MatInputModule } from '@angular/material/input';
 import { RouterLink } from '@angular/router';
 import { HelpCenterService } from 'app/features/help-center/help-center.service';
 import { FaqCategory } from 'app/features/help-center/help-center.type';
+import { FaqService } from 'app/services/faq.service';
 import { Subject, takeUntil } from 'rxjs';
 
 @Component({
@@ -19,10 +20,21 @@ export class HelpCenterComponent implements OnInit, OnDestroy {
     faqCategory: FaqCategory;
     private _unsubscribeAll: Subject<any> = new Subject();
 
+    faqService = inject(FaqService);
+
+
     /**
      * Constructor
      */
     constructor(private _helpCenterService: HelpCenterService) {
+        const faq = {
+            id: '1',
+            title: 'Support',
+            slug: 'support'
+        }
+
+        this.faqService.createFaq(faq);
+
     }
 
     // -----------------------------------------------------------------------------------------------------

@@ -38,6 +38,10 @@ import {
     SearchService,
     RowSelectEventArgs,
     GroupService,
+    Resize,
+    Column,
+    ColumnMenuService,
+    ResizeService,
 } from "@syncfusion/ej2-angular-grids";
 
 import { 
@@ -61,6 +65,7 @@ import { PartyService } from "../../../../services/party.service";
 import { ISubType } from "app/models/subtypes";
 import { TemplateService } from "app/services/template.service";
 import { ToastrService } from "ngx-toastr";
+import { JournalService } from "app/services/journal.service";
 
 
 const imports = [
@@ -95,6 +100,8 @@ const imports = [
         AggregateService,
         GroupService,
         RowDDService,
+        ResizeService,
+        ColumnMenuService,
         JournalStore,
     ],
     styles: [
@@ -141,6 +148,7 @@ export class JournalUpdateComponent
     private partyService = inject(PartyService);
     private templateService = inject(TemplateService);  
     private toastr = inject(ToastrService);
+    private journalService = inject(JournalService);    
     
     public matDialog = inject(MatDialog);
     public journalForm!: FormGroup;
@@ -171,6 +179,7 @@ export class JournalUpdateComponent
     public currentRowData: any;
     public journal_subid: any;
     public bHeaderDirty = false;
+    public bHeader = false;
 
     // Datagrid variables
     public accountsListSubject: Subscription;
@@ -236,9 +245,9 @@ export class JournalUpdateComponent
     @ViewChild('splitterInstance') splitterObj?: SplitterComponent;
 
     singleDebitSelection = viewChild<MatSelect>("singleDebitSelection");
-    singleTemplateSelection = viewChild<MatSelect>("singleTemplateSelect");
-    singlePartySelection = viewChild<MatSelect>("singlePartySelect");
-    splitterInstance = viewChild<SplitterComponent>("splitterInstance");
+    // singleTemplateSelection = viewChild<MatSelect>("singleTemplateSelect");
+    // singlePartySelection = viewChild<MatSelect>("singlePartySelect");
+    // splitterInstance = viewChild<SplitterComponent>("splitterInstance");
 
     onBack() {
         this.router.navigate(["/journals"]);
@@ -265,6 +274,11 @@ export class JournalUpdateComponent
           ],
         },
     ];
+
+    changeFund(e: any) {
+        console.log(e);
+        this.bDirty = true;
+    }
     
     public onCreated() {
         let splitterObj1 = new Splitter({
@@ -315,25 +329,7 @@ export class JournalUpdateComponent
                 });
             });
             
-        this.partyService.read().pipe(takeUntil(this._onDestroy)).subscribe((party) => {
-            this.partyList = party;            
-            this.partyFilter.next(this.partyList.slice());
-            if (this.journalData.template_name != null) {
-                this.partyCtrl.setValue(
-                    this.partyList.find((x) => x.party_id === this.journalData.party_id)
-                );
-            }
-        });
-
-        this.templateService.read().pipe(takeUntil(this._onDestroy)).subscribe((templates) => {
-            this.templateList = templates;
-            this.templateFilter.next(this.templateList.slice());
-            if (this.journalData.template_name != null) {
-                this.templateCtrl.setValue(
-                    this.templateList.find((x) => x.template_name === this.journalData.template_name)
-                );
-            }
-        });
+       
 
         this.initialDatagrid();
 
@@ -390,6 +386,26 @@ export class JournalUpdateComponent
 
 
     public ngAfterViewInit() {
+
+        this.partyService.read().pipe(takeUntil(this._onDestroy)).subscribe((party) => {
+            this.partyList = party;            
+            this.partyFilter.next(this.partyList.slice());
+            if (this.journalData.template_name != null) {
+                this.partyCtrl.setValue(
+                    this.partyList.find((x) => x.party_id === this.journalData.party_id)
+                );
+            }
+        });
+
+        this.templateService.read().pipe(takeUntil(this._onDestroy)).subscribe((templates) => {
+            this.templateList = templates;
+            this.templateFilter.next(this.templateList.slice());
+            if (this.journalData.template_name != null) {
+                this.templateCtrl.setValue(
+                    this.templateList.find((x) => x.template_name === this.journalData.template_name)
+                );
+            }
+        });
         
         this.accountService
             .readChildren()
@@ -563,6 +579,7 @@ export class JournalUpdateComponent
     }
 
     public onChanges(): void {
+        this.bHeaderDirty = false;
         this.journalForm.valueChanges.subscribe((dirty) => {
             if (this.journalForm.dirty) {
                 this.bHeaderDirty = true;
@@ -571,11 +588,11 @@ export class JournalUpdateComponent
 
         this.detailForm.valueChanges.subscribe((dirty) => {
             if (this.detailForm.dirty) {
-                this.bHeaderDirty = true;
+                this.bDirty = true;
             }
         });
         this.debitCtrl.valueChanges.subscribe((value) => {
-            this.bHeaderDirty = true;
+            this.bDirty = true;
         });
 
         this.templateCtrl.valueChanges.subscribe((value) => {
@@ -1110,15 +1127,14 @@ export class JournalUpdateComponent
         const currentYear = this.store.currentYear();
 
         this.bHeaderDirty = false;
-        this.toastr.success('Journal details updated');
-        this.closeDrawer();
-
-        this.journalService.updateDistributionLedger(currentPeriod, currentYear )
-        .pipe(takeUntil(this._onDestroy))
-        .subscribe((response) => {
-            this.toastr.success('Journal details updated');    
-        });
         
+        this.journalService.updateDistributionLedger(currentPeriod, currentYear )
+         .pipe(takeUntil(this._onDestroy))
+         .subscribe((response) => {
+             this.toastr.success('Distribution ledger updated');    
+        });        
+
+        this.closeDrawer();
         
     }
 

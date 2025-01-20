@@ -21,7 +21,8 @@ import {
 } from '@syncfusion/ej2-angular-grids';
 import { DropDownListComponent } from '@syncfusion/ej2-angular-dropdowns';
 import { IJournalSummary } from 'app/models';
-import { ReportingToolbarComponent } from '../grid-reporting/grid-menubar.component';
+import { GridMenubarStandaloneComponent } from 'app/features/accounting/grid-components/grid-menubar.component';
+
 
 
 const imports = [
@@ -30,7 +31,8 @@ const imports = [
     FormsModule,
     MaterialModule,
     GridModule,
-    ReportingToolbarComponent
+    GridMenubarStandaloneComponent
+
 ];
 
 const declarations = [
@@ -52,12 +54,85 @@ const declarations = [
 @Component({
     selector: 'trial-balance',
     imports: [imports],
-    templateUrl: './trial-balance.component.html',
+    template: `
+        <div class="flex flex-col min-w-0 overflow-y-auto overflow-x-auto" cdkScrollable>
+            <!-- Main -->
+            <div class="flex-auto p-2 sm:p-10">
+                <div class="h-max border-gray-300 rounded-2xl">                
+                
+                <grid-menubar class="pl-5 pr-5" 
+                    [inTitle]="'Journal Booking Rules'" 
+                    (notifyParentRefresh)="onRefresh()">        
+                </grid-menubar>
+                
+                @if (store.isLoading() === false) {        
+                    <ejs-grid #grid id="grid" 
+                        [rowHeight]='30'
+                        (click)="onClickGrid($event)"                        
+                        [dataSource]="store.header()" 
+                        [childGrid]="childDataGrid"
+                        allowPaging='true' allowSorting='true'  
+                        showColumnMenu='true' allowEditing='false' [allowFiltering]='true' 
+                        [toolbar]='toolbarOptions' [selectionOptions]='selectionOptions' [filterSettings]='filterSettings'
+                        [editSettings]='editSettings' 
+                        [pageSettings]='pageSettings' 
+                        [searchSetting]='searchOptions'
+                        (rowSelected)="onRowSelected($event)"
+                        (actionBegin)="actionBegin($event)" 
+                        [enablePersistence]='true'
+                        [allowGrouping]='true'
+                        [allowExcelExport]='true'
+                        [allowPdfExport]='true'
+                        (load)='onLoad()'
+                        >
+        
+                        <e-columns>                            
+                            <e-column headerText="Group" field="account" width="100"></e-column>
+                            <e-column headerText="Account" field="child" isPrimaryKey='true'  width="100" ></e-column>                            
+                            <e-column headerText="Prd" field="period" width="100" ></e-column>
+                            <e-column headerText="Year" field="period_year" width="100" ></e-column>
+                            <e-column headerText="Description" field="description" width="200" ></e-column>
+                            <e-column textAlign="Right" headerText="Open" format="N2" field="opening_balance" width="100" ></e-column>
+                            <e-column textAlign="Right" headerText="Debit" format="N2" field="debit_balance" width="100" ></e-column>
+                            <e-column textAlign="Right" headerText="Credit" format="N2" field="credit_balance" width="100" ></e-column>
+                            <e-column textAlign="Right" headerText="Closing" format="N2" field="closing_balance" width="100" ></e-column>
+                            <e-aggregates>
+                                <e-aggregate>
+                                    <e-columns>
+                                        <e-column type="Sum" field="opening_balance" format="N2">
+                                            <ng-template #footerTemplate let-data>{{data.Sum}}</ng-template>
+                                        </e-column>
+                                        <e-column type="Sum" field="debit_balance" format="N2">
+                                            <ng-template #footerTemplate let-data>{{data.Sum}}</ng-template>
+                                        </e-column>
+                                        <e-column type="Sum" field="credit_balance" format="N2">
+                                            <ng-template #footerTemplate let-data>{{data.Sum}}</ng-template>
+                                        </e-column>
+                                        <e-column type="Sum" field="closing_balance" format="N2">
+                                            <ng-template #footerTemplate let-data>{{data.Sum}}</ng-template>
+                                        </e-column>
+                                    </e-columns>
+                                </e-aggregate>                            
+                            </e-aggregates>
+                        </e-columns>
+                    </ejs-grid>
+        
+                    }
+                    @else
+                    {
+                        <div class="flex justify-center items-center">
+                            <mat-spinner></mat-spinner>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    `,
     changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [declarations],
     styles: [` .e-detailcell .e-grid td.e-cellselectionbackground { background-color: #00b7ea; }`]
 })
-export class TrialBalanceComponent implements OnInit, AfterViewInit {
+export class ArticleListingComponent implements OnInit, AfterViewInit {
 
     store = inject(TrialBalanceStore);
     public grid = viewChild<GridComponent>('grid')
@@ -86,11 +161,11 @@ export class TrialBalanceComponent implements OnInit, AfterViewInit {
             { field: 'fund', headerText: 'Fund', textAlign: 'left', width: 100 },
             { field: 'debit', headerText: 'Debit', textAlign: 'Right', format: 'N2', width: 80 },
             { field: 'credit', headerText: 'Credit', textAlign: 'Right', format: 'N2', width: 70 },
-            { field: '', headerText: '', textAlign: 'Right', format: 'N2', width: 65 },
+            { field: 'total', headerText: 'Total', textAlign: 'Right', format: 'N2', width: 65 },
         ],
         aggregates: [
             {
-                columns: [
+                columns: [                    
                     {
                         type: 'Sum',
                         field: 'debit',
