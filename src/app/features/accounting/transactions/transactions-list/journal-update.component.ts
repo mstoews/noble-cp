@@ -1,4 +1,4 @@
-import {AfterViewInit, ChangeDetectionStrategy, Component, EventEmitter, HostListener, OnChanges, OnDestroy, OnInit, Output, SimpleChanges, ViewChild, inject, viewChild } from "@angular/core";
+import {AfterViewInit, ChangeDetectionStrategy, Component, EventEmitter, HostListener, OnDestroy, OnInit, Output, SimpleChanges, ViewChild, inject, viewChild } from "@angular/core";
 import {FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from "@angular/forms";
 import { ReplaySubject, Subject, Subscription, take, takeUntil } from "rxjs";
 import { CommonModule } from "@angular/common";
@@ -64,7 +64,6 @@ import { ISubType } from "app/models/subtypes";
 import { TemplateService } from "app/services/template.service";
 import { ToastrService } from "ngx-toastr";
 import { JournalService } from "app/services/journal.service";
-import { MatDatepickerInputEvent } from "@angular/material/datepicker";
 import { FilterTypePipe } from "app/filter-type.pipe";
 
 
@@ -1172,9 +1171,7 @@ export class JournalUpdateComponent
 
         if (this.bHeaderDirty === false) {
 
-            this.store.updateDistributionListing(prd);
-            this.journalForm.reset();
-            this.router.navigate(["journals"]);
+            this.store.updateDistributionListing(prd);            
 
         } else {
             const confirmation = this.fuseConfirmationService.open({
@@ -1196,10 +1193,7 @@ export class JournalUpdateComponent
                 }
             });
             
-        }
-
-        
-        
+        } 
     }
 
 }

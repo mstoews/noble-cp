@@ -3,7 +3,11 @@
         <grid-menubar 
         [showBack]="true"
         (back)="onBack()"
-        class="pl-5 pr-5" [inTitle]="'General Ledger Transactions Update'">
+        class="pl-5 pr-5" 
+        [inTitle]="'General Ledger Transactions Update'"
+        [prd]="store.currentPeriod()"
+        [prd_year]="store.currentYear()"
+        >
         </grid-menubar>
     </div>
 
