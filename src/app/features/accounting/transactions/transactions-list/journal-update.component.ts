@@ -1,4 +1,4 @@
-import {AfterViewInit, ChangeDetectionStrategy, Component, EventEmitter, OnDestroy, OnInit, Output, ViewChild, inject, viewChild } from "@angular/core";
+import {AfterViewInit, ChangeDetectionStrategy, Component, EventEmitter, HostListener, OnChanges, OnDestroy, OnInit, Output, SimpleChanges, ViewChild, inject, viewChild } from "@angular/core";
 import {FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from "@angular/forms";
 import { ReplaySubject, Subject, Subscription, take, takeUntil } from "rxjs";
 import { CommonModule } from "@angular/common";
@@ -37,9 +37,7 @@ import {
     DialogEditEventArgs,
     SearchService,
     RowSelectEventArgs,
-    GroupService,
-    Resize,
-    Column,
+    GroupService,    
     ColumnMenuService,
     ResizeService,
 } from "@syncfusion/ej2-angular-grids";
@@ -66,6 +64,8 @@ import { ISubType } from "app/models/subtypes";
 import { TemplateService } from "app/services/template.service";
 import { ToastrService } from "ngx-toastr";
 import { JournalService } from "app/services/journal.service";
+import { MatDatepickerInputEvent } from "@angular/material/datepicker";
+import { FilterTypePipe } from "app/filter-type.pipe";
 
 
 const imports = [
@@ -82,7 +82,8 @@ const imports = [
     MatTableModule,
     MatSortModule,
     SplitterModule,
-    EvidenceCardComponent
+    EvidenceCardComponent,
+    FilterTypePipe
 ];
 
 @Component({
@@ -133,7 +134,8 @@ const imports = [
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class JournalUpdateComponent
-    implements OnInit, OnDestroy, AfterViewInit, AfterViewInit {
+    implements OnInit, OnDestroy, AfterViewInit {
+    
     [x: string]: any;
 
     @Output() notifyDrawerClose: EventEmitter<any> = new EventEmitter();
@@ -154,7 +156,11 @@ export class JournalUpdateComponent
     public journalForm!: FormGroup;
     public detailForm!: FormGroup;
     public toolbarTitle: string = "General Ledger Transactions Update";
-
+    public bDetailDirty = false;
+    public transaction!: string;
+    
+    // create template details only one
+    bTemplateDetails = false;
 
     drawer = viewChild<MatDrawer>("drawer");
 
@@ -179,7 +185,7 @@ export class JournalUpdateComponent
     public currentRowData: any;
     public journal_subid: any;
     public bHeaderDirty = false;
-    public bHeader = false;
+    
 
     // Datagrid variables
     public accountsListSubject: Subscription;
@@ -237,18 +243,13 @@ export class JournalUpdateComponent
 
     columnsToDisplay: string[] = ["journal_id", "description"];
     toolbarOptions = ['Search']
-
-
-    @ViewChild("singleDebitSelect", { static: true }) singleDebitSelect: MatSelect;
-    @ViewChild("singleTemplateSelect", { static: true }) singleTemplateSelect!: MatSelect;
-    @ViewChild("singlePartySelect", { static: true }) singlePartySelect!: MatSelect;
+    
     @ViewChild('splitterInstance') splitterObj?: SplitterComponent;
 
     singleDebitSelection = viewChild<MatSelect>("singleDebitSelection");
-    // singleTemplateSelection = viewChild<MatSelect>("singleTemplateSelect");
-    // singlePartySelection = viewChild<MatSelect>("singlePartySelect");
-    // splitterInstance = viewChild<SplitterComponent>("splitterInstance");
-
+    singleTemplateSelect = viewChild<MatSelect>("singleTemplateSelect");
+    singlePartySelect = viewChild<MatSelect>("singlePartySelect");
+    
     onBack() {
         this.router.navigate(["/journals"]);
     }
@@ -276,9 +277,16 @@ export class JournalUpdateComponent
     ];
 
     changeFund(e: any) {
-        console.log(e);
-        this.bDirty = true;
+        console.log('change fund: ' , e);
+        this.bDetailDirty = true;
     }
+
+    changeSubtype(e: any) {
+        console.log('change subtype: ', e);
+        this.bDetailDirty = true;
+    }
+
+    
     
     public onCreated() {
         let splitterObj1 = new Splitter({
@@ -304,18 +312,19 @@ export class JournalUpdateComponent
             this.store.loadArtifactsByJournalId(this.journal_id);                        
             this.journalData = data.journal;
             this.refreshHeader(this.journalData);
-            this.onChanges();
+            
             this.router.navigate(["journals/gl", this.journal_id]);                        
         });
 
 
-        this.accountsListSubject = this.dropDownChildren$.subscribe((accounts) => {
-            accounts.forEach((acct) => {
-                let list = {
-                    childName: Number(acct.child),
-                    descriptionName: acct.description,
-                };
-                this.accountsGrid.push(list);
+            this.accountsListSubject = this.dropDownChildren$.subscribe((accounts) => {
+                accounts.forEach((acct) => {
+                    let list = {
+                        childName: Number(acct.child),
+                        descriptionName: acct.description,
+                    };
+                    this.accountsGrid.push(list);
+                });
             });
 
             this.fundListSubject = this.funds$.subscribe((funds) => {
@@ -326,16 +335,11 @@ export class JournalUpdateComponent
                         };
                         this.fundList.push(list);
                     });
-                });
             });
-            
-       
-
+        
         this.initialDatagrid();
-
     }
 
-    
 
     public createJournalDetailsFromTemplate(value: IJournalTemplate) {
         console.log('Template : ', value);
@@ -343,7 +347,8 @@ export class JournalUpdateComponent
             return;
         }
         this.transactionType = value.journal_type;
-        this.store.loadTemplateDetails(value.journal_no.toString());
+        this.store.loadTemplateDetails(value.journal_no.toString());        
+        this.bHeaderDirty = false;
     }
 
     protected filterParty() {
@@ -387,6 +392,17 @@ export class JournalUpdateComponent
 
     public ngAfterViewInit() {
 
+        this.templateService.read().pipe(takeUntil(this._onDestroy)).subscribe((templates) => {
+            this.templateList = templates;
+            this.templateFilter.next(this.templateList.slice());
+            if (this.journalData.template_name != null) {
+                this.templateCtrl.setValue(
+                    this.templateList.find((x) => x.template_name === this.journalData.template_name)
+                );
+            }
+        });
+
+
         this.partyService.read().pipe(takeUntil(this._onDestroy)).subscribe((party) => {
             this.partyList = party;            
             this.partyFilter.next(this.partyList.slice());
@@ -397,15 +413,23 @@ export class JournalUpdateComponent
             }
         });
 
-        this.templateService.read().pipe(takeUntil(this._onDestroy)).subscribe((templates) => {
-            this.templateList = templates;
-            this.templateFilter.next(this.templateList.slice());
-            if (this.journalData.template_name != null) {
-                this.templateCtrl.setValue(
-                    this.templateList.find((x) => x.template_name === this.journalData.template_name)
-                );
-            }
+        if (this.templateFilter && this.singleTemplateSelect() != null)
+                this.templateFilter
+                    .pipe(take(1), takeUntil(this._onTemplateDestroy))
+                    .subscribe(() => {
+                        if (this.singleTemplateSelect() != null || this.singleTemplateSelect() != undefined)
+                            this.singleTemplateSelect().compareWith = (a: IJournalTemplate, b: IJournalTemplate) => a && b && a.template_ref === b.template_ref;
         });
+    
+        if (this.partyFilter && this.singlePartySelect() != null)
+                this.partyFilter
+                    .pipe(take(1), takeUntil(this._onTemplateDestroy))
+                    .subscribe(() => {
+                       if (this.singlePartySelect() != null || this.singlePartySelect() != undefined)
+                       this.singlePartySelect().compareWith = (a: IParty, b: IParty) => a && b && a.party_id === b.party_id;
+        });
+
+        
         
         this.accountService
             .readChildren()
@@ -443,16 +467,38 @@ export class JournalUpdateComponent
         this.templateCtrl.setValue(
             this.templateList.find((x) => x.template_name === this.journalData.template_name)
         );
+
+        if (this.journalData.template_name != null) {
+            this.templateCtrl.setValue(
+                this.templateList.find((x) => x.template_name === this.journalData.template_name)
+            );
+        }
+        this.onChanges();
+        this.bHeaderDirty = false;
+
+        this.partyCtrl.valueChanges.subscribe((value) => {                        
+            this.bHeaderDirty = true;
+            console.log('Header is true 2 from party change');                
+        });        
+
+        this.templateCtrl.valueChanges.subscribe((value) => {
+            this.beHeaderDirty = true;
+            this.createJournalDetailsFromTemplate(value);
+            console.log('Header is true 2 from party change');                                                    
+        });
+
+        console.log('NG After View Init completed');
+
     }
 
 
     public openDrawer() {
-        this.bHeaderDirty = false;
+        this.bDetailDirty = false;
         this.drawer().open();
     }
 
     public closeDrawer() {
-        this.bHeaderDirty = false;
+        this.bDetailDirty = false;
         this.drawer().close();
     }
 
@@ -481,23 +527,6 @@ export class JournalUpdateComponent
             allowDeleting: false,
         };
         this.filterSettings = { type: "CheckBox" };
-
-        if (this.templateFilter)
-            this.templateFilter
-                .pipe(take(1), takeUntil(this._onTemplateDestroy))
-                .subscribe(() => {
-                    if (this.singleTemplateSelect != null || this.singleTemplateSelect != undefined)
-                        this.singleTemplateSelect.compareWith = (a: IJournalTemplate, b: IJournalTemplate) => a && b && a.template_ref === b.template_ref;
-                });
-
-        if (this.partyFilter)
-            this.partyFilter
-                .pipe(take(1), takeUntil(this._onTemplateDestroy))
-                .subscribe(() => {
-                    if (this.singlePartySelect != null || this.singlePartySelect != undefined)
-                        this.singlePartySelect.compareWith = (a: IParty, b: IParty) => a && b && a.party_id === b.party_id;
-                });
-
 
     }
 
@@ -555,55 +584,47 @@ export class JournalUpdateComponent
         } as IJournalDetail;
 
         this.createDetailForm(JournalDetail);
-        this.onChanges();
+        
     }
 
     private createDetailForm(journalDetail: IJournalDetail) {
         const accountString = journalDetail.child.toString();
 
         this.debitCtrl.setValue(
-            this.debitAccounts.find((x) => x.child === accountString)
+            this.debitAccounts.find((account) => account.child === accountString)
         );
 
-        this.detailForm = this.fb.group({
-            debitAccountFilterCtrl: [journalDetail.child.toString(), Validators.required],
-            description: [journalDetail.description, Validators.required],
-            sub_type: [journalDetail.sub_type, Validators.required],
-            debit: [journalDetail.debit, Validators.required],
-            credit: [journalDetail.credit, Validators.required],
-            reference: [journalDetail.reference, Validators.required],
-            fund: [journalDetail.fund, Validators.required],
+        this.detailForm.patchValue({
+            debitAccountFilterCtrl: journalDetail.child.toString(),
+            description: journalDetail.description, 
+            sub_type: journalDetail.sub_type,
+            debit: journalDetail.debit, 
+            credit: journalDetail.credit, 
+            reference: journalDetail.reference, 
+            fund: journalDetail.fund 
         });
-
+        this.bHeaderDirty = false;
         this.openDrawer();
     }
 
     public onChanges(): void {
-        this.bHeaderDirty = false;
-        this.journalForm.valueChanges.subscribe((dirty) => {
-            if (this.journalForm.dirty) {
-                this.bHeaderDirty = true;
-            }
+                
+        this.journalForm.controls['description'].valueChanges.subscribe((value) => {            
+                this.bHeaderDirty = true;                             
+        });
+        
+        this.detailForm.valueChanges.subscribe((value) => {            
+                this.bDetailDirty = true;            
         });
 
-        this.detailForm.valueChanges.subscribe((dirty) => {
-            if (this.detailForm.dirty) {
-                this.bDirty = true;
-            }
-        });
         this.debitCtrl.valueChanges.subscribe((value) => {
-            this.bDirty = true;
-        });
-
-        this.templateCtrl.valueChanges.subscribe((value) => {
-            this.createJournalDetailsFromTemplate(value);
-            this.bHeaderDirty = true;
-        });
-
-        this.partyCtrl.valueChanges.subscribe((value) => {
-            this.bHeaderDirty = true;
+            this.bDetailDirty = true;
         });
     }
+
+    
+    
+    
 
     public createEmptyDetailForm() {
         this.detailForm = this.fb.group({
@@ -668,7 +689,8 @@ export class JournalUpdateComponent
     }
 
     public saveArtifacts(e: any) {
-        this.bHeaderDirty = true;
+        this.bHeaderDirty = true; 
+        console.log('Header is true 3'); 
         this.store.updateArtifacts(e);
         this.bHeaderDirty = false;
 
@@ -695,7 +717,8 @@ export class JournalUpdateComponent
         this.partyCtrl.setValue(
             this.partyList.find((x) => x.party_id === header.party_id)
         );
-        this.onChanges()
+        
+        this.bHeaderDirty = false;
     }
 
     public onNew(e: any) {
@@ -826,38 +849,11 @@ export class JournalUpdateComponent
             reference: [""],
             amount: ["", Validators.required],
         });
-        this.onChanges()
+        
+        this.bHeaderDirty = false;
     }
 
-
-    public exitWindow() {
-        if (this.bHeaderDirty === false) {
-            this.journalForm.reset();
-            this.router.navigate(["journals"]);
-
-        } else {
-            const confirmation = this.fuseConfirmationService.open({
-                title: "Unsaved Changes",
-                message:
-                    "Would you like to save the changes before the edit window is closed and the changes lost?  ",
-                actions: {
-                    confirm: {
-                        label: "Close Without Saving",
-                    },
-                },
-            });
-            // Subscribe to the confirmation dialog closed action
-            confirmation.afterClosed().subscribe((result) => {
-                if (result === "confirmed") {
-                    this.detailForm.reset();
-                    this.journalForm.reset();
-                    this._location.back();
-                }
-            });
-            this.onChanges()
-        }
-    }
-
+    
 
     // On delete journal detail
     public onDeleteDetail() {
@@ -884,7 +880,7 @@ export class JournalUpdateComponent
                 this.store.deleteJournalDetail(journalDetail);
                 this.store.loadDetails(this.journal_id);
                 this.store.loadArtifactsByJournalId(this.journal_id);
-                this.bHeaderDirty = false;
+                this.bDetailDirty = false;
                 this.closeDrawer();
             }
         });
@@ -915,7 +911,7 @@ export class JournalUpdateComponent
             if (result === "confirmed") {
                 // Delete the list
                 this.store.deleteJournalDetail(journalDetail);
-                this.bHeaderDirty = false;
+                this.bDetailDirty = false;
             }
         });
     }
@@ -976,7 +972,7 @@ export class JournalUpdateComponent
             };
             this.store.createJournalDetail(journalDetail);
             
-            this.bHeaderDirty = true;
+            this.bDetailDirty = true;
             this.toastr.success('Journal details added');
         }
     }
@@ -987,6 +983,13 @@ export class JournalUpdateComponent
         this.store.renumberJournalDetail(this.journal_id);
     }
 
+    public onHeaderDateChanged(event: any): void {
+        this.transactionDate = event.value;
+        this.bHeaderDirty = true; 
+        console.log('Header is true 4'); 
+    }
+
+
     // Update journal header
     onUpdateJournalHeader() {
 
@@ -995,13 +998,23 @@ export class JournalUpdateComponent
             return;
         }
 
+        var partyId= '';
+
         let header = this.journalForm.getRawValue();
         const dDate = new Date().toISOString().split("T")[0];
         let template = this.templateCtrl.value;
-        const partyID = this.partyCtrl.value;
+        
+        if (template.journal_type !== 'GL') {
+            if(this.partyCtrl !== null || this.partyCtrl !== undefined) {
+                 this.partyId = this.partyCtrl.value.party_id;                 
+            }            
+        }
+        else {
+            this.partyId = '';
+        }
 
-        if (template.journal_type === 'GL') {
-            partyID.party_id = ''
+        if(this.transactionDate !== undefined) {
+            header.transaction_date = this.transactionDate.toISOString().split("T")[0];
         }
 
         const journalHeaderUpdate: IJournalHeader = {
@@ -1015,7 +1028,7 @@ export class JournalUpdateComponent
             transaction_date: header.transaction_date,
             amount: Number(header.amount),
             template_name: template.template_name,
-            party_id: partyID.party_id,
+            party_id: this.partyId,
             invoice_no: header.invoice_no            
         };
 
@@ -1071,16 +1084,14 @@ export class JournalUpdateComponent
             amount: header.amount,
         };
 
-        this.store.updateJournalDetail(journalDetail);
+        // this.store.updateJournalDetail(journalDetail);
 
-        const currentPeriod = this.store.currentPeriod();
-        const currentYear = this.store.currentYear();
+        // const prd = {
+        //     period: this.currentPeriod,
+        //     period_year: this.currentYear
+        // }
 
-        this.journalService.updateDistributionLedger(currentPeriod, currentYear )
-        .pipe(takeUntil(this._onDestroy))
-        .subscribe((response) => {
-            this.ShowAlert(response, "pass");
-        });
+        // this.store.updateDistributionListing(prd)
         
         this.toastr.success('Journal details updated');
 
@@ -1123,22 +1134,23 @@ export class JournalUpdateComponent
 
         this.store.updateJournalDetail(journalDetail);
 
-        const currentPeriod = this.store.currentPeriod();
-        const currentYear = this.store.currentYear();
-
-        this.bHeaderDirty = false;
-        
-        this.journalService.updateDistributionLedger(currentPeriod, currentYear )
-         .pipe(takeUntil(this._onDestroy))
-         .subscribe((response) => {
-             this.toastr.success('Distribution ledger updated');    
-        });        
-
+        // const currentPeriod = this.store.currentPeriod();
+        // const currentYear = this.store.currentYear();
+        // const prd = {
+        //     period: currentPeriod,
+        //     period_year: currentYear
+        // }
+        // this.store.updateDistributionListing(prd )
+        this.toastr.success(`Journal details updated:  ${journalDetail.journal_id} - ${journalDetail.journal_subid} `);            
+                
         this.closeDrawer();
         
     }
 
     ngOnDestroy(): void {
+        
+        this.exitWindow();                    
+
         if (this.accountsListSubject) {
             this.accountsListSubject.unsubscribe();
         }
@@ -1149,4 +1161,45 @@ export class JournalUpdateComponent
         this._onDestroy.next();
         this._onDestroy.complete();
     }
+
+    @HostListener("window:exit")
+    public exitWindow() {
+
+        const prd = {
+            period: this.journalData.period,
+            period_year: this.journalData.period_year,
+        }
+
+        if (this.bHeaderDirty === false) {
+
+            this.store.updateDistributionListing(prd);
+            this.journalForm.reset();
+            this.router.navigate(["journals"]);
+
+        } else {
+            const confirmation = this.fuseConfirmationService.open({
+                title: "Unsaved Changes",
+                message:
+                    "Would you like to save the changes before the edit window is closed and the changes lost?  ",
+                actions: {
+                    confirm: {
+                        label: "Close Without Saving",
+                    },
+                },
+            });
+            // Subscribe to the confirmation dialog closed action
+            confirmation.afterClosed().subscribe((result) => {
+                if (result === "confirmed") {
+                    this.detailForm.reset();
+                    this.journalForm.reset();
+                    this._location.back();
+                }
+            });
+            
+        }
+
+        
+        
+    }
+
 }

@@ -229,7 +229,7 @@ export class EntryWizardComponent implements OnInit, OnDestroy, AfterViewInit {
         
         this.Store.select(getTemplates).subscribe((templates) => {
             this.templateList = templates;
-            this.templateFilter.next(templates.slice());
+            this.templateFilter.next(templates);
         });
 
       
@@ -711,11 +711,13 @@ export class EntryWizardComponent implements OnInit, OnDestroy, AfterViewInit {
         const currentPeriod = this.store.currentPeriod();
         const currentYear = this.store.currentYear();   
 
-        this.journalService.updateDistributionLedger(currentPeriod, currentYear )
-        .pipe(takeUntil(this._onDestroy))
-        .subscribe((response) => {
-            this.ShowAlert(response, "pass");
-        });
+        const prd = {
+            period: this.currentPeriod,
+            period_year: this.currentYear
+        }
+
+        this.store.updateDistributionListing(prd)
+
         this.bDirty = false;
     }
 

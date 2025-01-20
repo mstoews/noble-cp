@@ -290,13 +290,12 @@ export class JournalService implements OnDestroy {
   }
 
 
-  updateDistributionLedger(period: number, period_year: number) {
+  updateDistributionLedger(prd: IPeriodParam) {
     let url = this.baseUrl + '/v1/update_distribution_ledger';
     const periodYear = {
-      period: period,
-      year: period_year
+      period: prd.period,
+      year: prd.period_year
     }
-
     return this.httpClient.post<string>(url, { periodYear},).pipe(shareReplay({ bufferSize: 1, refCount: true }));
   }
 

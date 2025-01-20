@@ -72,8 +72,7 @@
                                         <mat-select class="text-gray-800" placeholder="Fund" formControlName="fund"
                                             (selectionChange)="changeFund($event)">
                                             @for (item of store.funds(); track item) {
-                                            <mat-option [value]="item.fund"> {{ item.fund }}
-                                                - {{ item.description }}
+                                            <mat-option [value]="item.fund"> {{ item.fund }} - {{ item.description }}
                                             </mat-option>
                                             }
                                         </mat-select>
@@ -87,8 +86,7 @@
 
                                     <mat-form-field class="flex-col ml-2 mr-2 mt-1 grow">
                                         <mat-label class="text-md ml-2">Description</mat-label>
-                                        <input matInput placeholder="Description" formControlName="description"
-                                            [placeholder]="'Description'" />
+                                        <input matInput placeholder="Description" formControlName="description" [placeholder]="'Description'" />
                                         <mat-icon class="icon-size-5 text-lime-700" matSuffix
                                             [svgIcon]="'heroicons_solid:calculator'"></mat-icon>
                                     </mat-form-field>
@@ -99,8 +97,7 @@
 
                                     <mat-form-field class="flex-col grow mr-2 ml-2 mt-1">
                                         <mat-label class="text-md ml-2">Reference</mat-label>
-                                        <input matInput placeholder="Reference" formControlName="reference"
-                                            [placeholder]="'Reference'" />
+                                        <input matInput  (change)="changeFund($event)" placeholder="Reference" formControlName="reference"   [placeholder]="'Reference'" />
                                         <mat-icon class="icon-size-5 text-lime-700" matSuffix
                                             [svgIcon]="'heroicons_solid:document'"></mat-icon>
                                     </mat-form-field>
@@ -111,26 +108,26 @@
                                     <!-- Debit  -->
                                     <mat-form-field class="ml-2 mt-1 grow">
                                         <mat-label class="text-md ml-2">Debits</mat-label>
-                                        <input type="text" mask="separator.2" [leadZero]="true" thousandSeparator=","
+                                        <input type="text"  (change)="changeFund($event)"  mask="separator.2" [leadZero]="true" thousandSeparator=","
                                             class="text-right" matInput [placeholder]="'Debit'"
                                             formControlName="debit" />
-                                        <mat-icon class="icon-size-5 text-lime-700" matSuffix
+                                        <mat-icon class="icon-size-5 text-lime-700" matPrefix
                                             [svgIcon]="'heroicons_solid:currency-dollar'"></mat-icon>
                                     </mat-form-field>
 
                                     <!-- Credit  -->
                                     <mat-form-field class="grow mr-2 mt-1">
                                         <mat-label class="text-md ml-2">Credits</mat-label>
-                                        <input type="text" mask="separator.2" [leadZero]="true" thousandSeparator=","
+                                        <input type="text"  (change)="changeFund($event)" mask="separator.2" [leadZero]="true" thousandSeparator=","
                                             class="text-right" matInput [placeholder]="'Credit'"
                                             formControlName="credit" />
-                                        <mat-icon class="icon-size-5 text-lime-700" matSuffix
+                                        <mat-icon class="icon-size-5 text-lime-700" matPrefix
                                             [svgIcon]="'heroicons_solid:currency-dollar'"></mat-icon>
                                     </mat-form-field>
                                 </section>
                             </form>
                             <div mat-dialog-actions class="gap-2 mb-3 mt-5">
-                                @if (bDirty === true) {
+                                @if (bDetailDirty === true) {
                                 <button mat-icon-button class="bg-gray-200 fill-slate-100 hover:bg-slate-400 ml-1"
                                     (click)="onUpdateJournalDetail()" matTooltip="Update Line Item"
                                     aria-label="hover over">
@@ -202,12 +199,12 @@
                                         Transaction List
                                     </div>
 
-                                    <ejs-grid id="grid-journal-list" [dataSource]='store.gl()'
+                                    <ejs-grid id="grid-journal-list" [dataSource]='store.gl() |filterType: "GL"'
                                         [selectionSettings]="selectionOptions" [editSettings]='editSettings'
                                         [searchSetting]="searchOptions" [allowFiltering]='false' [rowHeight]="30"
                                         [enableStickyHeader]=true [toolbar]='toolbarOptions' allowSorting='true'
                                         showColumnMenu='true' (rowSelected)="onRowSelected($event)"
-                                        (actionBegin)="actionBegin($event)" [gridLines]="'Both'">
+                                        [gridLines]="'Both'">
                                         <e-columns>
                                             <e-column field='journal_id' headerText='ID'                   [visible]='true' isPrimaryKey='true' width='100'></e-column>
                                             <e-column field='description' headerText='Journal Description' [visible]='true'></e-column>
@@ -292,7 +289,7 @@
                                                 </div>
                                                 <div class="flex flex-col w-[150px]">
                                                     <mat-form-field class="mt-1 flex-start mr-1">
-                                                        <input matInput formControlName="transaction_date"
+                                                        <input matInput (dateChange)="onHeaderDateChanged($event)" formControlName="transaction_date"
                                                             [matDatepicker]="picker" />
                                                         <mat-datepicker-toggle matIconPrefix
                                                             [for]="picker"></mat-datepicker-toggle>
@@ -334,7 +331,7 @@
                                             </section>
                                         </form>
                                         <div mat-dialog-actions class="gap-2 mb-3">
-                                            @if (bHeaderDirty === false) {
+                                            @if (bHeaderDirty === true) {
                                             <button mat-icon-button color="primary"
                                                 class="bg-slate-200 hover:bg-slate-400 ml-1"
                                                 (click)="onUpdateJournalHeader()" matTooltip="Save Transaction"

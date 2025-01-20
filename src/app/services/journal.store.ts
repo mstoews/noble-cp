@@ -26,7 +26,7 @@ import { IParty } from 'app/models/party';
 
 import { IAccounts, IFunds, IJournalParams, ITrialBalance } from 'app/models';
 import { IType } from 'app/models/types';
-import { IPeriod } from 'app/models/period';
+import { IPeriod, IPeriodParam } from 'app/models/period';
 import { ISubType } from 'app/models/subtypes';
 import {FundsService} from "./funds.service";
 
@@ -383,6 +383,20 @@ export const JournalStore = signalStore(
       })
     )
   ),
+  updateDistributionListing: rxMethod<IPeriodParam>(
+    pipe(
+      tap(() => patchState(state, { isLoading: true })),
+      switchMap((params) => {
+        return journalService.updateDistributionLedger(params).pipe(
+        tapResponse({
+          next: console.log,
+          error: console.error,
+          finalize: () => patchState(state, { isLoading: false }),
+        })
+      );
+    })
+  )
+),
   })),  
   withHooks({
     onInit(store) {
