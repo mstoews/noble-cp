@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output, inject } from '@angular/core';
+import { Component, EventEmitter, Output, inject, input } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -57,13 +57,13 @@ import { RegisterStatus } from '../data-access/register.service';
         }
       </mat-form-field>
 
-      @if (status === 'error'){
+      @if (status() === 'error'){
       <mat-error>Could not create account with those details.</mat-error>
-      } @else if(status === 'creating'){
+      } @else if(status() === 'creating'){
       <mat-spinner diameter="50"></mat-spinner>
       }
 
-      <button mat-raised-button color="accent" type="submit" [disabled]="status === 'creating'"> 
+      <button mat-raised-button color="accent" type="submit" [disabled]="status() === 'creating'"> 
         Submit
       </button>
     </form>
@@ -99,7 +99,7 @@ import { RegisterStatus } from '../data-access/register.service';
     ]
 })
 export class RegisterFormComponent {
-  @Input({ required: true }) status!: RegisterStatus;
+  readonly status = input.required<RegisterStatus>();
   @Output() register = new EventEmitter<Credentials>();
 
   private fb = inject(FormBuilder);

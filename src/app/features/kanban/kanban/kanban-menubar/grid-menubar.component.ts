@@ -1,4 +1,4 @@
-import { Component, Output, EventEmitter, OnInit, Input, ChangeDetectionStrategy, output } from '@angular/core';
+import { Component, Output, EventEmitter, OnInit, ChangeDetectionStrategy, output, input } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -30,12 +30,12 @@ export class KanbanMenubarComponent implements OnInit {
   notifyParentClone = output();
   notifyMenuItemChanged = output();
 
-  @Input() public inTitle: string;
-  @Input() public selected: string;
+  public readonly inTitle = input<string>(undefined);
+  public readonly selected = input<string>(undefined);
   public menuItems: IValue[];
 
   constructor() {
-    this.inTitle = 'Account Maintenance';
+    //this.inTitle = 'Account Maintenance';
   }
 
   ngOnInit(): void {}

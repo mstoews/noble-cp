@@ -41,7 +41,7 @@ export class AppComponent {
     }
 
     constructor() {
-        this.authService.updateDisplayname('Murray Toews');
+        // this.authService.updateDisplayname('Murray Toews');
     }
     
 }

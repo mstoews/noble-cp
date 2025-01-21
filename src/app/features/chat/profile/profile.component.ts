@@ -1,5 +1,5 @@
 import { NgIf } from '@angular/common';
-import { ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, ViewEncapsulation, input } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -18,7 +18,7 @@ import { Subject, takeUntil } from 'rxjs';
     imports: [MatButtonModule, MatIconModule, MatFormFieldModule, MatInputModule, FormsModule]
 })
 export class ProfileComponent implements OnInit, OnDestroy {
-    @Input() drawer: MatDrawer;
+    readonly drawer = input<MatDrawer>(undefined);
     profile: Profile;
     private _unsubscribeAll: Subject<any> = new Subject<any>();
 

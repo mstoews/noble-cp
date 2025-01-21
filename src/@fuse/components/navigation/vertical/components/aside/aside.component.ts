@@ -1,6 +1,6 @@
 import { BooleanInput } from '@angular/cdk/coercion';
 import { NgClass, NgIf } from '@angular/common';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnChanges, OnDestroy, OnInit, SimpleChanges, input } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { NavigationEnd, Router } from '@angular/router';
@@ -26,11 +26,11 @@ export class FuseVerticalNavigationAsideItemComponent implements OnChanges, OnIn
     static ngAcceptInputType_skipChildren: BooleanInput;
     /* eslint-enable @typescript-eslint/naming-convention */
 
-    @Input() activeItemId: string;
-    @Input() autoCollapse: boolean;
-    @Input() item: FuseNavigationItem;
-    @Input() name: string;
-    @Input() skipChildren: boolean;
+    readonly activeItemId = input<string>(undefined);
+    readonly autoCollapse = input<boolean>(undefined);
+    readonly item = input<FuseNavigationItem>(undefined);
+    readonly name = input<string>(undefined);
+    readonly skipChildren = input<boolean>(undefined);
 
     active: boolean = false;
     private _fuseVerticalNavigationComponent: FuseVerticalNavigationComponent;
@@ -82,7 +82,7 @@ export class FuseVerticalNavigationAsideItemComponent implements OnChanges, OnIn
             });
 
         // Get the parent navigation component
-        this._fuseVerticalNavigationComponent = this._fuseNavigationService.getComponent(this.name);
+        this._fuseVerticalNavigationComponent = this._fuseNavigationService.getComponent(this.name());
 
         // Subscribe to onRefreshed on the navigation component
         this._fuseVerticalNavigationComponent.onRefreshed.pipe(
@@ -163,11 +163,11 @@ export class FuseVerticalNavigationAsideItemComponent implements OnChanges, OnIn
      */
     private _markIfActive(currentUrl: string): void {
         // Check if the activeItemId is equals to this item id
-        this.active = this.activeItemId === this.item.id;
+        this.active = this.activeItemId() === this.item().id;
 
         // If the aside has a children that is active,
         // always mark it as active
-        if (this._hasActiveChild(this.item, currentUrl)) {
+        if (this._hasActiveChild(this.item(), currentUrl)) {
             this.active = true;
         }
 

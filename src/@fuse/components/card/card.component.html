@@ -1,5 +1,5 @@
 <!-- Flippable card -->
-@if (flippable) {
+@if (flippable()) {
 
 
     <!-- Front -->
@@ -16,14 +16,14 @@
 }
 
 <!-- Normal card -->
-@if (!flippable) {
+@if (!flippable()) {
 
 
     <!-- Content -->
     <ng-content></ng-content>
 
     <!-- Expansion -->
-    @if (expanded) {
+    @if (expanded()) {
 <div
         class="fuse-card-expansion"
        

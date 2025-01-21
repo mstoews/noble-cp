@@ -1,6 +1,6 @@
 import { BooleanInput, coerceBooleanProperty } from '@angular/cdk/coercion';
 import { NgIf } from '@angular/common';
-import { Component, HostBinding, Input, OnChanges, SimpleChanges, ViewEncapsulation } from '@angular/core';
+import { Component, HostBinding, OnChanges, SimpleChanges, ViewEncapsulation, input } from '@angular/core';
 import { fuseAnimations } from '@fuse/animations';
 import { FuseCardFace } from '@fuse/components/card/card.types';
 
@@ -20,9 +20,9 @@ export class FuseCardComponent implements OnChanges
     static ngAcceptInputType_flippable: BooleanInput;
     /* eslint-enable @typescript-eslint/naming-convention */
 
-    @Input() expanded: boolean = false;
-    @Input() face: FuseCardFace = 'front';
-    @Input() flippable: boolean = false;
+    readonly expanded = input<boolean>(false);
+    readonly face = input<FuseCardFace>('front');
+    readonly flippable = input<boolean>(false);
 
     /**
      * Constructor
@@ -42,10 +42,10 @@ export class FuseCardComponent implements OnChanges
     {
         /* eslint-disable @typescript-eslint/naming-convention */
         return {
-            'fuse-card-expanded'  : this.expanded,
-            'fuse-card-face-back' : this.flippable && this.face === 'back',
-            'fuse-card-face-front': this.flippable && this.face === 'front',
-            'fuse-card-flippable' : this.flippable,
+            'fuse-card-expanded'  : this.expanded(),
+            'fuse-card-face-back' : this.flippable() && this.face() === 'back',
+            'fuse-card-face-front': this.flippable() && this.face() === 'front',
+            'fuse-card-flippable' : this.flippable(),
         };
         /* eslint-enable @typescript-eslint/naming-convention */
     }
@@ -65,14 +65,14 @@ export class FuseCardComponent implements OnChanges
         if ( 'expanded' in changes )
         {
             // Coerce the value to a boolean
-            this.expanded = coerceBooleanProperty(changes.expanded.currentValue);
+            //this.expanded = coerceBooleanProperty(changes.expanded.currentValue);
         }
 
         // Flippable
         if ( 'flippable' in changes )
         {
             // Coerce the value to a boolean
-            this.flippable = coerceBooleanProperty(changes.flippable.currentValue);
+           // this.flippable = coerceBooleanProperty(changes.flippable.currentValue);
         }
     }
 }

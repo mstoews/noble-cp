@@ -1,6 +1,6 @@
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { NgIf } from '@angular/common';
-import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewEncapsulation } from '@angular/core';
+import { Component, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewEncapsulation, input } from '@angular/core';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { FuseLoadingService } from '@fuse/services/loading';
 import { Subject, takeUntil } from 'rxjs';
@@ -14,7 +14,7 @@ import { Subject, takeUntil } from 'rxjs';
     imports: [MatProgressBarModule]
 })
 export class FuseLoadingBarComponent implements OnChanges, OnInit, OnDestroy {
-    @Input() autoMode: boolean = true;
+    readonly autoMode = input<boolean>(true);
     mode: 'determinate' | 'indeterminate';
     progress: number = 0;
     show: boolean = false;

@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output, inject } from "@angular/core";
+import { Component, EventEmitter, Output, inject, input } from "@angular/core";
 import { FormBuilder, ReactiveFormsModule } from "@angular/forms";
 import { MatButtonModule } from "@angular/material/button";
 import { MatIconModule } from "@angular/material/icon";
@@ -29,13 +29,13 @@ import { LoginStatus } from "../data-access/login.service";
         <mat-icon matPrefix>lock</mat-icon>
       </mat-form-field>
 
-      @if (loginStatus === 'error'){
+      @if (loginStatus() === 'error'){
       <mat-error>Could not log you in with those details.</mat-error>
-        } @if(loginStatus === 'authenticating'){
+        } @if(loginStatus() === 'authenticating'){
         <mat-spinner diameter="50"></mat-spinner>
         }
 
-      <button mat-raised-button color="accent" type="submit" [disabled]="loginStatus === 'authenticating'" >
+      <button mat-raised-button color="accent" type="submit" [disabled]="loginStatus() === 'authenticating'" >
         Login
       </button>
       
@@ -72,7 +72,7 @@ import { LoginStatus } from "../data-access/login.service";
     ]
 })
 export class LoginFormComponent {
-    @Input({ required: true }) loginStatus!: LoginStatus;
+    readonly loginStatus = input.required<LoginStatus>();
     @Output() login = new EventEmitter<Credentials>();
 
     private fb = inject(FormBuilder);

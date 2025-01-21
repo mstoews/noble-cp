@@ -1,5 +1,5 @@
 <!-- Bar search -->
-@if (appearance === 'bar') {
+@if (appearance() === 'bar') {
 
     @if (!opened) {
 <button
@@ -84,7 +84,7 @@
 }
 
 <!-- Basic search -->
-@if (appearance === 'basic') {
+@if (appearance() === 'basic') {
 
     <div class="w-full sm:min-w-80">
         <mat-form-field

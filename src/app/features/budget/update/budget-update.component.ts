@@ -1,4 +1,4 @@
-import { AfterViewInit, ChangeDetectionStrategy, Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild, inject, viewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, EventEmitter, OnDestroy, OnInit, Output, ViewChild, inject, viewChild, input } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ReplaySubject, Subject, Subscription, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
@@ -81,7 +81,7 @@ export class BudgetUpdateComponent implements OnInit, OnDestroy, AfterViewInit {
 
 
   @Output() notifyDrawerClose: EventEmitter<any> = new EventEmitter();
-  @Input() public sTitle: string;
+  public readonly sTitle = input<string>(undefined);
 
 
 

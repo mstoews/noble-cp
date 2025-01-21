@@ -146,6 +146,13 @@
                                     <span class="e-icons e-circle-remove"></span>
                                 </button>
 
+                                <button mat-icon-button color="primary"
+                                    class="bg-slate-200 hover:bg-slate-400 ml-1"
+                                    (click)="onNewLineItem()" matTooltip="Add New Entry"
+                                    aria-label="hovered over">
+                                    <span class="e-icons e-table-insert-row"></span>
+                                </button>
+
 
                                 <button mat-icon-button color="primary"
                                     class="bg-gray-200 fill-slate-100  hover:bg-slate-400 ml-1" (click)="closeDrawer()"
@@ -275,10 +282,8 @@
                                                 </div>
                                                 @if (transactionType == 'GL') {
                                                 <mat-form-field class="mt-1 ml-1 mr-1 w-[250px]">
-                                                    <input type="text" class="text-left" matInput
-                                                        placeholder="Reference Number" formControlName="invoice_no" />
-                                                    <mat-icon class="icon-size-5" matPrefix
-                                                        [svgIcon]="'heroicons_solid:clipboard-document-check'"></mat-icon>
+                                                    <input type="text" class="text-left" matInput placeholder="Reference Number" formControlName="invoice_no" />
+                                                    <mat-icon class="icon-size-5" matPrefix [svgIcon]="'heroicons_solid:clipboard-document-check'"></mat-icon>
                                                 </mat-form-field>
                                                 }
                                                 <div class="flex flex-col w-[150px]">
@@ -359,13 +364,7 @@
                                                 <span class="e-icons e-copy"></span>
                                             </button>
 
-                                            <button mat-icon-button color="primary"
-                                                class="bg-slate-200 hover:bg-slate-400 ml-1"
-                                                (click)="onOpenEmptyDrawer()" matTooltip="Add Line Item"
-                                                aria-label="hovered over">
-                                                <span class="e-icons e-table-insert-row"></span>
-                                            </button>
-
+                            
 
                                             <button mat-icon-button color="primary"
                                                 class="bg-slate-200 text-gray-100 hover:bg-slate-400 ml-1"

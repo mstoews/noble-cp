@@ -1,6 +1,6 @@
 import { BooleanInput } from '@angular/cdk/coercion';
 import { NgClass, NgTemplateOutlet } from '@angular/common';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, forwardRef, Input, OnDestroy, OnInit, viewChild, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, forwardRef, OnDestroy, OnInit, viewChild, ViewChild, input } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenu, MatMenuModule } from '@angular/material/menu';
 import { MatTooltipModule } from '@angular/material/tooltip';
@@ -22,9 +22,9 @@ export class FuseHorizontalNavigationBranchItemComponent implements OnInit, OnDe
     static ngAcceptInputType_child: BooleanInput;
     /* eslint-enable @typescript-eslint/naming-convention */
 
-    @Input() child: boolean = false;
-    @Input() item: FuseNavigationItem;
-    @Input() name: string;
+    readonly child = input<boolean>(false);
+    readonly item = input<FuseNavigationItem>(undefined);
+    readonly name = input<string>(undefined);
     
     matMenu = viewChild<MatMenu>('matMenu');
 
@@ -49,7 +49,7 @@ export class FuseHorizontalNavigationBranchItemComponent implements OnInit, OnDe
      */
     ngOnInit(): void {
         // Get the parent navigation component
-        this._fuseHorizontalNavigationComponent = this._fuseNavigationService.getComponent(this.name);
+        this._fuseHorizontalNavigationComponent = this._fuseNavigationService.getComponent(this.name());
 
         // Subscribe to onRefreshed on the navigation component
         this._fuseHorizontalNavigationComponent.onRefreshed.pipe(

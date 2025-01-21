@@ -1,6 +1,6 @@
 import { BooleanInput, coerceBooleanProperty } from '@angular/cdk/coercion';
 import { Platform } from '@angular/cdk/platform';
-import { Directive, ElementRef, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
+import { Directive, ElementRef, OnChanges, OnDestroy, OnInit, SimpleChanges, input } from '@angular/core';
 import { Router } from '@angular/router';
 import { ScrollbarGeometry, ScrollbarPosition } from '@fuse/directives/scrollbar/scrollbar.types';
 import { merge } from 'lodash-es';
@@ -21,8 +21,8 @@ export class FuseScrollbarDirective implements OnChanges, OnInit, OnDestroy
     static ngAcceptInputType_fuseScrollbar: BooleanInput;
     /* eslint-enable @typescript-eslint/naming-convention */
 
-    @Input() fuseScrollbar: boolean = true;
-    @Input() fuseScrollbarOptions: PerfectScrollbar.Options;
+    readonly fuseScrollbar = input<boolean>(true);
+    readonly fuseScrollbarOptions = input<PerfectScrollbar.Options>(undefined);
 
     private _animation: number;
     private _options: PerfectScrollbar.Options;
@@ -75,10 +75,10 @@ export class FuseScrollbarDirective implements OnChanges, OnInit, OnDestroy
         if ( 'fuseScrollbar' in changes )
         {
             // Interpret empty string as 'true'
-            this.fuseScrollbar = coerceBooleanProperty(changes.fuseScrollbar.currentValue);
+            //this.fuseScrollbar = coerceBooleanProperty(changes.fuseScrollbar.currentValue);
 
             // If enabled, init the directive
-            if ( this.fuseScrollbar )
+            if ( this.fuseScrollbar() )
             {
                 this._init();
             }
@@ -153,7 +153,7 @@ export class FuseScrollbarDirective implements OnChanges, OnInit, OnDestroy
      */
     isEnabled(): boolean
     {
-        return this.fuseScrollbar;
+        return this.fuseScrollbar();
     }
 
     /**
@@ -440,7 +440,7 @@ export class FuseScrollbarDirective implements OnChanges, OnInit, OnDestroy
         // Return if on mobile or not on browser
         if ( this._platform.ANDROID || this._platform.IOS || !this._platform.isBrowser )
         {
-            this.fuseScrollbar = false;
+            //this.fuseScrollbar = false;
             return;
         }
 

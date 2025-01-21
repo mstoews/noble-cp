@@ -185,7 +185,7 @@ const keyExpr = ["account", "child"];
               <gl-grid #gl_grid
               (onUpdateSelection)="selectedRow($event)"
               [data]="accounts"
-              [columns]="columns" >
+              [columns]="cols" >
             </gl-grid> 
             }
 
@@ -251,7 +251,7 @@ export class GlAccountsComponent  extends GLGridComponent {
     this.openDrawer();
   }
 
-  public columns = [
+  public cols = [
     { field: "account",     headerText: "Group",        width: 80, textAlign: "Left" },
     { field: "child",       headerText: "Account",      width: 80, textAlign: "Left", isPrimaryKey: true,    },
     { field: "acct_type",   headerText: "Type",         width: 80, textAlign: "Left" },
@@ -270,6 +270,7 @@ export class GlAccountsComponent  extends GLGridComponent {
   showInfo = true;
   showNavButtons = true;
   bHeaderDirty: any;
+  data: any
 
   ngOnInit() {
     // this.accountService.read();

@@ -1,6 +1,6 @@
 <div class="fuse-horizontal-navigation-wrapper">
 
-    @for (item of navigation; track trackByFn($index, item)) {
+    @for (item of navigation(); track trackByFn($index, item)) {
   
 
         <!-- Skip the hidden items -->
@@ -13,7 +13,7 @@
                 <fuse-horizontal-navigation-basic-item
                     class="fuse-horizontal-navigation-menu-item"
                     [item]="item"
-                    [name]="name"></fuse-horizontal-navigation-basic-item>
+                    [name]="name()"></fuse-horizontal-navigation-basic-item>
             
 }
 
@@ -23,7 +23,7 @@
                 <fuse-horizontal-navigation-branch-item
                     class="fuse-horizontal-navigation-menu-item"
                     [item]="item"
-                    [name]="name"></fuse-horizontal-navigation-branch-item>
+                    [name]="name()"></fuse-horizontal-navigation-branch-item>
             
 }
 
@@ -33,7 +33,7 @@
                 <fuse-horizontal-navigation-spacer-item
                     class="fuse-horizontal-navigation-menu-item"
                     [item]="item"
-                    [name]="name"></fuse-horizontal-navigation-spacer-item>
+                    [name]="name()"></fuse-horizontal-navigation-spacer-item>
             
 }
 

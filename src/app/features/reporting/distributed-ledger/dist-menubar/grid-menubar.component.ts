@@ -1,4 +1,4 @@
-import { Component, Output, EventEmitter, OnInit, Input, ChangeDetectionStrategy, inject, output } from '@angular/core';
+import { Component, Output, EventEmitter, OnInit, ChangeDetectionStrategy, inject, output, input } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -34,15 +34,15 @@ export class DistMenuStandaloneComponent implements OnInit {
   notifyParentPeriod = output<string>();
   notifyParentYear = output<string>();
 
-  @Input() public inTitle: string;
-  @Input() public selected: string;
-  @Input() currentPeriod: number;
-  @Input() currentYear: number;
+  public readonly inTitle = input<string>(undefined);
+  public readonly selected = input<string>(undefined);
+  readonly currentPeriod = input<number>(undefined);
+  readonly currentYear = input<number>(undefined);
   public menuItems: IValue[];
   public periodService = inject(PeriodsService);
 
   constructor() {
-    this.inTitle = 'Account Maintenance';
+    // this.inTitle = 'Account Maintenance';
   }
 
   onPeriod(prd: number){

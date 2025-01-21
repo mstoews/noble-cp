@@ -1,7 +1,7 @@
 import { Overlay } from '@angular/cdk/overlay';
 import { NgClass, NgTemplateOutlet } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
-import { Component, ElementRef, EventEmitter, HostBinding, inject, Input, OnChanges, OnDestroy, OnInit, Output, Renderer2, SimpleChanges, ViewChild, ViewEncapsulation } from '@angular/core';
+import { Component, ElementRef, EventEmitter, HostBinding, inject, OnChanges, OnDestroy, OnInit, Output, Renderer2, SimpleChanges, ViewChild, ViewEncapsulation, input } from '@angular/core';
 import { FormsModule, ReactiveFormsModule, UntypedFormControl } from '@angular/forms';
 import { MAT_AUTOCOMPLETE_SCROLL_STRATEGY, MatAutocomplete, MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatButtonModule } from '@angular/material/button';
@@ -31,9 +31,9 @@ import { debounceTime, filter, map, Subject, takeUntil } from 'rxjs';
     ]
 })
 export class SearchComponent implements OnChanges, OnInit, OnDestroy {
-    @Input() appearance: 'basic' | 'bar' = 'basic';
-    @Input() debounce: number = 300;
-    @Input() minLength: number = 2;
+    readonly appearance = input<'basic' | 'bar'>('basic');
+    readonly debounce = input<number>(300);
+    readonly minLength = input<number>(2);
     @Output() search: EventEmitter<any> = new EventEmitter<any>();
 
     opened: boolean = false;
@@ -61,8 +61,8 @@ export class SearchComponent implements OnChanges, OnInit, OnDestroy {
      */
     @HostBinding('class') get classList(): any {
         return {
-            'search-appearance-bar': this.appearance === 'bar',
-            'search-appearance-basic': this.appearance === 'basic',
+            'search-appearance-bar': this.appearance() === 'bar',
+            'search-appearance-basic': this.appearance() === 'basic',
             'search-opened': this.opened,
         };
     }
@@ -120,13 +120,13 @@ export class SearchComponent implements OnChanges, OnInit, OnDestroy {
         // Subscribe to the search field value changes
         this.searchControl.valueChanges
             .pipe(
-                debounceTime(this.debounce),
+                debounceTime(this.debounce()),
                 takeUntil(this._unsubscribeAll),
                 map((value) => {
                     // Set the resultSets to null if there is no value or
                     // the length of the value is smaller than the minLength
                     // so the autocomplete panel can be closed
-                    if (!value || value.length < this.minLength) {
+                    if (!value || value.length < this.minLength()) {
                         this.resultSets = null;
                     }
 
@@ -135,7 +135,7 @@ export class SearchComponent implements OnChanges, OnInit, OnDestroy {
                 }),
                 // Filter out undefined/null/false statements and also
                 // filter out the values that are smaller than minLength
-                filter(value => value && value.length >= this.minLength),
+                filter(value => value && value.length >= this.minLength()),
             )
             .subscribe((value) => {
                 this._httpClient.post('api/common/search', { query: value })
@@ -171,7 +171,7 @@ export class SearchComponent implements OnChanges, OnInit, OnDestroy {
         // Escape
         if (event.code === 'Escape') {
             // If the appearance is 'bar' and the mat-autocomplete is not open, close the search
-            if (this.appearance === 'bar' && !this._matAutocomplete.isOpen) {
+            if (this.appearance() === 'bar' && !this._matAutocomplete.isOpen) {
                 this.close();
             }
         }

@@ -329,16 +329,9 @@ export class JournalService implements OnDestroy {
 
   updateJournalDetail(detail: IJournalDetail) {
     var url = this.baseUrl + '/v1/update_journal_detail';
-    return this.httpClient.post<IJournalDetail>(url, detail).pipe(
-      shareReplay({ bufferSize: 1, refCount: true }));;
+    return this.httpClient.post<IJournalDetail>(url, detail).pipe(shareReplay(1));
   }
 
-
-  updateHttpJournalDetail(detail: IJournalDetailUpdate) {
-    var url = this.baseUrl + '/v1/update_journal_detail';
-    return this.httpClient.post<IJournalDetailUpdate>(url, detail).pipe(
-      shareReplay({ bufferSize: 1, refCount: true }));;;
-  }
 
   deleteHttpJournalDetail(journal: IJournalDetailDelete) {
     var url = this.baseUrl + '/v1/delete_journal_details';

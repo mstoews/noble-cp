@@ -1,5 +1,5 @@
 import { NgIf } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject, Input, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, OnDestroy, OnInit, ViewEncapsulation, input } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDrawer } from '@angular/material/sidenav';
@@ -15,7 +15,7 @@ import { Subject, takeUntil } from 'rxjs';
     imports: [MatButtonModule, MatIconModule,]
 })
 export class NewChatComponent implements OnInit, OnDestroy {
-    @Input() drawer: MatDrawer;
+    readonly drawer = input<MatDrawer>(undefined);
     contacts: Contact[] = [];
     private _unsubscribeAll: Subject<any> = new Subject<any>();
 

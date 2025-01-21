@@ -133,7 +133,7 @@ export const JournalStore = signalStore(
         tap(() => patchState(state, { isLoading: true })),
         debounceTime(1000),
         switchMap((value) => {
-          return journalService.updateHttpJournalDetail(value).pipe(
+          return journalService.updateJournalDetail(value).pipe(
             tapResponse({
               next: () => {
                 const updatedDetail = state.details().filter((journal) => journal.journal_subid !== value.journal_subid);

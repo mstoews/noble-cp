@@ -4,7 +4,7 @@
     <div class="flex flex-0 items-center h-18 px-6 border-b bg-gray-50 dark:bg-transparent">
         <button
             mat-icon-button
-            (click)="drawer.close()">
+            (click)="drawer().close()">
             <mat-icon [svgIcon]="'heroicons_outline:arrow-long-left'"></mat-icon>
         </button>
         <div class="ml-2 text-2xl font-semibold">Profile</div>
@@ -66,7 +66,7 @@
             </mat-form-field>
             <div class="flex items-center justify-end mt-4">
                 <button
-                    (click)="drawer.close()"
+                    (click)="drawer().close()"
                     mat-button>Cancel
                 </button>
                 <button

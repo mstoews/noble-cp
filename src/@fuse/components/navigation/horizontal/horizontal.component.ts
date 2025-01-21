@@ -1,5 +1,5 @@
 import { NgIf } from '@angular/common';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewEncapsulation, input } from '@angular/core';
 import { fuseAnimations } from '@fuse/animations';
 import { FuseNavigationService } from '@fuse/components/navigation/navigation.service';
 import { FuseNavigationItem } from '@fuse/components/navigation/navigation.types';
@@ -20,8 +20,8 @@ import { FuseHorizontalNavigationSpacerItemComponent } from './components/spacer
     imports: [FuseHorizontalNavigationBasicItemComponent, FuseHorizontalNavigationBranchItemComponent, FuseHorizontalNavigationSpacerItemComponent]
 })
 export class FuseHorizontalNavigationComponent implements OnChanges, OnInit, OnDestroy {
-    @Input() name: string = this._fuseUtilsService.randomId();
-    @Input() navigation: FuseNavigationItem[];
+    readonly name = input<string>(this._fuseUtilsService.randomId());
+    readonly navigation = input<FuseNavigationItem[]>(undefined);
 
     onRefreshed: ReplaySubject<boolean> = new ReplaySubject<boolean>(1);
     private _unsubscribeAll: Subject<any> = new Subject<any>();
@@ -58,12 +58,13 @@ export class FuseHorizontalNavigationComponent implements OnChanges, OnInit, OnD
      */
     ngOnInit(): void {
         // Make sure the name input is not an empty string
-        if (this.name === '') {
-            this.name = this._fuseUtilsService.randomId();
+        const name = this.name();
+        if (name === '') {
+            // this.name = this._fuseUtilsService.randomId();
         }
 
         // Register the navigation component
-        this._fuseNavigationService.registerComponent(this.name, this);
+        this._fuseNavigationService.registerComponent(name, this);
     }
 
     /**
@@ -71,7 +72,7 @@ export class FuseHorizontalNavigationComponent implements OnChanges, OnInit, OnD
      */
     ngOnDestroy(): void {
         // Deregister the navigation component from the registry
-        this._fuseNavigationService.deregisterComponent(this.name);
+        this._fuseNavigationService.deregisterComponent(this.name());
 
         // Unsubscribe from all subscriptions
         this._unsubscribeAll.next(null);

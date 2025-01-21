@@ -1,13 +1,13 @@
-@if (!child) {
+@if (!child()) {
 
     <div
         [ngClass]="{'fuse-horizontal-navigation-menu-active': trigger.menuOpen,
-                 'fuse-horizontal-navigation-menu-active-forced': item.active}"
+                 'fuse-horizontal-navigation-menu-active-forced': item().active}"
         [matMenuTriggerFor]="matMenu"
         (onMenuOpen)="triggerChangeDetection()"
         (onMenuClose)="triggerChangeDetection()"
         #trigger="matMenuTrigger">
-        <ng-container *ngTemplateOutlet="itemTemplate; context: {$implicit: item}"></ng-container>
+        <ng-container *ngTemplateOutlet="itemTemplate; context: {$implicit: item()}"></ng-container>
     </div>
 
 }
@@ -17,7 +17,7 @@
     [overlapTrigger]="false"
     #matMenu="matMenu">
 
-    @for (item of item.children; track trackByFn($index, item)) {
+    @for (item of item().children; track trackByFn($index, item)) {
   
 
         <!-- Skip the hidden items -->
@@ -33,7 +33,7 @@
                     mat-menu-item>
                     <fuse-horizontal-navigation-basic-item
                         [item]="item"
-                        [name]="name"></fuse-horizontal-navigation-basic-item>
+                        [name]="name()"></fuse-horizontal-navigation-basic-item>
                 </div>
             
 }
@@ -50,7 +50,7 @@
                     <fuse-horizontal-navigation-branch-item
                         [child]="true"
                         [item]="item"
-                        [name]="name"
+                        [name]="name()"
                         #branch></fuse-horizontal-navigation-branch-item>
                 </div>
             
@@ -64,7 +64,7 @@
                     mat-menu-item>
                     <fuse-horizontal-navigation-divider-item
                         [item]="item"
-                        [name]="name"></fuse-horizontal-navigation-divider-item>
+                        [name]="name()"></fuse-horizontal-navigation-divider-item>
                 </div>
             
 }

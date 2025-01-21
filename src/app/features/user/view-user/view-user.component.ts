@@ -2,11 +2,11 @@ import { AsyncPipe, DatePipe } from '@angular/common'
 import {
   Component,
   inject,
-  Input,
   OnChanges,
   OnDestroy,
   OnInit,
   SimpleChanges,
+  input
 } from '@angular/core'
 import { MatButtonModule } from '@angular/material/button'
 import { MatCardModule } from '@angular/material/card'
@@ -75,11 +75,11 @@ export class ViewUserComponent implements OnInit, OnChanges, OnDestroy {
   private readonly router = inject(Router)
   private routerEventsSubscription?: Subscription
 
-  @Input() user!: IUser
+  readonly user = input.required<IUser>();
   currentUser = new User()
 
   get editMode() {
-    return !this.user
+    return !this.user()
   }
 
   ngOnInit() {

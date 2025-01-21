@@ -1,5 +1,5 @@
-import {AfterViewInit, ChangeDetectionStrategy, Component, EventEmitter, HostListener, OnDestroy, OnInit, Output, SimpleChanges, ViewChild, inject, viewChild } from "@angular/core";
-import {FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from "@angular/forms";
+import { AfterViewInit, ChangeDetectionStrategy, Component, EventEmitter, HostListener, OnDestroy, OnInit, Output, SimpleChanges, ViewChild, inject, viewChild } from "@angular/core";
+import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from "@angular/forms";
 import { ReplaySubject, Subject, Subscription, take, takeUntil } from "rxjs";
 import { CommonModule } from "@angular/common";
 import { DndComponent } from "app/features/drag-n-drop/loaddnd/dnd.component";
@@ -149,7 +149,6 @@ export class JournalUpdateComponent
     private partyService = inject(PartyService);
     private templateService = inject(TemplateService);  
     private toastr = inject(ToastrService);
-    private journalService = inject(JournalService);    
     
     public matDialog = inject(MatDialog);
     public journalForm!: FormGroup;
@@ -611,6 +610,21 @@ export class JournalUpdateComponent
         this.journalForm.controls['description'].valueChanges.subscribe((value) => {            
                 this.bHeaderDirty = true;                             
         });
+
+        this.journalForm.controls['invoice_no'].valueChanges.subscribe((value) => {            
+            this.bHeaderDirty = true;                             
+        });
+
+        this.journalForm.controls['debit'].valueChanges.subscribe((value) => {            
+            this.bHeaderDirty = true;                             
+        });
+
+        
+
+        this.journalForm.controls[''].valueChanges.subscribe((value) => {            
+            this.bHeaderDirty = true;                             
+        });
+    
         
         this.detailForm.valueChanges.subscribe((value) => {            
                 this.bDetailDirty = true;            
@@ -621,9 +635,6 @@ export class JournalUpdateComponent
         });
     }
 
-    
-    
-    
 
     public createEmptyDetailForm() {
         this.detailForm = this.fb.group({
@@ -834,9 +845,9 @@ export class JournalUpdateComponent
             description: ["", Validators.required],
             amount: ["", Validators.required],
             transaction_date: ["", Validators.required],
-            templateFilterCtrl: [""],
+            templateFilterCtrl: ["", Validators.required],
             partyFilterCtrl: [""],
-            invoice_no: ["", Validators.required]
+            invoice_no : ["",Validators.required],            
         });
 
         this.detailForm = this.fb.group({
@@ -845,7 +856,7 @@ export class JournalUpdateComponent
             child: ["", Validators.required],
             fund: ["", Validators.required],
             sub_type: ["", Validators.required],
-            reference: [""],
+            invoice_no: [""],
             amount: ["", Validators.required],
         });
         
@@ -922,8 +933,7 @@ export class JournalUpdateComponent
 
     // add a new line entry
     public onNewLineItem() {
-        const updateDate = new Date().toISOString().split("T")[0];
-        const name = '@' + this.auth.currentUser?.email.split("@")[0];
+        const updateDate = new Date().toISOString().split("T")[0];        
         var max = 0;
 
         this.store.details().forEach((details) => {
@@ -936,44 +946,50 @@ export class JournalUpdateComponent
             return;
         }
 
-        if (this.store.details().length > 0) {
-            const journalCopy = this.store.details().slice();
-            const journalDetail = {
-                journal_id: this.journal_id,
-                journal_subid: max + 1,
-                account: journalCopy[0].account,
-                child: journalCopy[0].child,
-                description: journalCopy[0].description,
-                create_date: updateDate,
-                create_user: name,
-                sub_type: journalCopy[0].sub_type,
-                debit: 0,
-                credit: 0,
-                reference: journalCopy[0].reference,
-                fund: journalCopy[0].fund,
-            }
-            this.store.createJournalDetail(journalDetail);            
-        } else {
-            const journalDetail = {
-                journal_id: this.journal_id,
-                journal_subid: 1,
-                account: 1000,
-                child: 1001,                
-                description: "Initial Entry",
-                create_date: updateDate,
-                create_user: name,
-                sub_type: "Ops",
-                debit: 1000,
-                credit: 0,
-                reference: "Reference",
-                fund: "Fund"
+        const name = this.auth.currentUser.email.split("@")[0];
+        const dDate = new Date();
+        let currentDate = dDate.toISOString().split("T")[0];
+        const detail = this.detailForm.getRawValue();
 
-            };
-            this.store.createJournalDetail(journalDetail);
-            
-            this.bDetailDirty = true;
-            this.toastr.success('Journal details added');
+        if (max === 0) {
+            max = 1;
         }
+        else {
+            max = max + 1;
+        }
+        
+        var debit = Number(detail.debit);
+        var credit = Number(detail.credit);
+        var childAccount = this.debitCtrl.getRawValue();
+        var sub_type = this.subtypeCtrl.value;
+        var fund = this.fundCtrl.value; 
+        var child_desc = this.store.accounts().find((x) => x.child === Number(childAccount.child)).description;
+
+
+        if (debit > 0 && credit > 0) {
+            this.toastr.show('Only one of the debit field and credit field may be greater than zero!', 'Failed');            
+            return;
+        }
+
+        const journalDetail = {
+            journal_id: this.currentRowData.journal_id,
+            journal_subid: this.currentRowData.journal_subid,
+            account: this.currentRowData.account,
+            child: Number(childAccount.child),
+            child_desc: child_desc,
+            description: detail.description,
+            create_date: updateDate,
+            create_user: name,
+            sub_type: sub_type,
+            debit: debit,
+            credit: credit,
+            reference: detail.reference,
+            fund: fund,
+        };
+                      
+        this.bDetailDirty = false;
+        this.toastr.success('Journal details added');
+        
     }
 
     journalEntryCleanUp() {
@@ -1032,8 +1048,6 @@ export class JournalUpdateComponent
         };
 
         this.store.updateJournalHeader(journalHeaderUpdate);
-        this.toastr.success('Journal Updated ');
-
         this.bHeaderDirty = false;
     }
     // Create or new journal entry
@@ -1053,7 +1067,7 @@ export class JournalUpdateComponent
             this.toastr.show('Please select a row to edit', 'Failed');
             return;
         }
-        0
+        
         var debit = Number(detail.debit);
         var credit = Number(detail.credit);
 
@@ -1098,12 +1112,16 @@ export class JournalUpdateComponent
         this.debitCtrl.reset();
     }
 
+    onAddLineItem() {
+        this.onNewLineItem();
+    }
+
     onUpdateJournalDetail() {
         var header = this.journalForm.getRawValue();
         var detail = this.detailForm.getRawValue();
         const dDate = new Date();
         const updateDate = dDate.toISOString().split("T")[0];
-        const email = this.auth.currentUser?.email;
+        const email = '@' + this.auth.currentUser?.email.split("@")[0];
         var debit = Number(detail.debit);
         var credit = Number(detail.credit);
         var childAccount = this.debitCtrl.getRawValue();

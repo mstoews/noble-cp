@@ -9,7 +9,7 @@
     <div
         class="fuse-vertical-navigation-content"
         fuseScrollbar
-        [fuseScrollbarOptions]="{wheelPropagation: inner, suppressScrollX: true}"
+        [fuseScrollbarOptions]="{wheelPropagation: inner(), suppressScrollX: true}"
         #navigationContent>
 
         <!-- Content header -->
@@ -18,7 +18,7 @@
         </div>
 
         <!-- Items -->
-        @for (item of navigation; track trackByFn($index, item)) {
+        @for (item of navigation(); track trackByFn($index, item)) {
   
 
             <!-- Skip the hidden items -->
@@ -30,9 +30,9 @@
 
                     <fuse-vertical-navigation-aside-item
                         [item]="item"
-                        [name]="name"
+                        [name]="name()"
                         [activeItemId]="activeAsideItemId"
-                        [autoCollapse]="autoCollapse"
+                        [autoCollapse]="autoCollapse()"
                         [skipChildren]="true"
                         (click)="toggleAside(item)"></fuse-vertical-navigation-aside-item>
                 
@@ -43,7 +43,7 @@
 
                     <fuse-vertical-navigation-basic-item
                         [item]="item"
-                        [name]="name"></fuse-vertical-navigation-basic-item>
+                        [name]="name()"></fuse-vertical-navigation-basic-item>
                 
 }
 
@@ -52,8 +52,8 @@
 
                     <fuse-vertical-navigation-collapsable-item
                         [item]="item"
-                        [name]="name"
-                        [autoCollapse]="autoCollapse"></fuse-vertical-navigation-collapsable-item>
+                        [name]="name()"
+                        [autoCollapse]="autoCollapse()"></fuse-vertical-navigation-collapsable-item>
                 
 }
 
@@ -62,7 +62,7 @@
 
                     <fuse-vertical-navigation-divider-item
                         [item]="item"
-                        [name]="name"></fuse-vertical-navigation-divider-item>
+                        [name]="name()"></fuse-vertical-navigation-divider-item>
                 
 }
 
@@ -71,8 +71,8 @@
 
                     <fuse-vertical-navigation-group-item
                         [item]="item"
-                        [name]="name"
-                        [autoCollapse]="autoCollapse"></fuse-vertical-navigation-group-item>
+                        [name]="name()"
+                        [autoCollapse]="autoCollapse()"></fuse-vertical-navigation-group-item>
                 
 }
 
@@ -81,7 +81,7 @@
 
                     <fuse-vertical-navigation-spacer-item
                         [item]="item"
-                        [name]="name"></fuse-vertical-navigation-spacer-item>
+                        [name]="name()"></fuse-vertical-navigation-spacer-item>
                 
 }
 
@@ -112,13 +112,13 @@
         class="fuse-vertical-navigation-aside-wrapper"
         fuseScrollbar
         [fuseScrollbarOptions]="{wheelPropagation: false, suppressScrollX: true}"
-        [@fadeInLeft]="position === 'left'"
-        [@fadeInRight]="position === 'right'"
-        [@fadeOutLeft]="position === 'left'"
-        [@fadeOutRight]="position === 'right'">
+        [@fadeInLeft]="position() === 'left'"
+        [@fadeInRight]="position() === 'right'"
+        [@fadeOutLeft]="position() === 'left'"
+        [@fadeOutRight]="position() === 'right'">
 
         <!-- Items -->
-        @for (item of navigation; track trackByFn($index, item)) {
+        @for (item of navigation(); track trackByFn($index, item)) {
   
 
             <!-- Skip the hidden items -->
@@ -130,8 +130,8 @@
 
                     <fuse-vertical-navigation-aside-item
                         [item]="item"
-                        [name]="name"
-                        [autoCollapse]="autoCollapse"></fuse-vertical-navigation-aside-item>
+                        [name]="name()"
+                        [autoCollapse]="autoCollapse()"></fuse-vertical-navigation-aside-item>
                 
 }
 

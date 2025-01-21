@@ -1,37 +1,37 @@
 <div
     class="fuse-vertical-navigation-item-wrapper"
-    [class.fuse-vertical-navigation-item-has-subtitle]="!!item.subtitle"
-    [ngClass]="item.classes?.wrapper">
+    [class.fuse-vertical-navigation-item-has-subtitle]="!!item().subtitle"
+    [ngClass]="item().classes?.wrapper">
 
     <div
         class="fuse-vertical-navigation-item"
         [ngClass]="{'fuse-vertical-navigation-item-active': active,
-                    'fuse-vertical-navigation-item-disabled': item.disabled,
-                    'fuse-vertical-navigation-item-active-forced': item.active}"
-        [matTooltip]="item.tooltip || ''">
+                    'fuse-vertical-navigation-item-disabled': item().disabled,
+                    'fuse-vertical-navigation-item-active-forced': item().active}"
+        [matTooltip]="item().tooltip || ''">
 
         <!-- Icon -->
-        @if (item.icon) {
+        @if (item().icon) {
 
             <mat-icon
                 class="fuse-vertical-navigation-item-icon"
-                [ngClass]="item.classes?.icon"
-                [svgIcon]="item.icon"></mat-icon>
+                [ngClass]="item().classes?.icon"
+                [svgIcon]="item().icon"></mat-icon>
         
 }
 
         <!-- Title & Subtitle -->
         <div class="fuse-vertical-navigation-item-title-wrapper">
             <div class="fuse-vertical-navigation-item-title">
-                <span [ngClass]="item.classes?.title">
-                    {{item.title}}
+                <span [ngClass]="item().classes?.title">
+                    {{item().title}}
                 </span>
             </div>
-            @if (item.subtitle) {
+            @if (item().subtitle) {
 
                 <div class="fuse-vertical-navigation-item-subtitle">
-                    <span [ngClass]="item.classes?.subtitle">
-                        {{item.subtitle}}
+                    <span [ngClass]="item().classes?.subtitle">
+                        {{item().subtitle}}
                     </span>
                 </div>
             
@@ -39,13 +39,13 @@
         </div>
 
         <!-- Badge -->
-        @if (item.badge) {
+        @if (item().badge) {
 
             <div class="fuse-vertical-navigation-item-badge">
                 <div
                     class="fuse-vertical-navigation-item-badge-content"
-                    [ngClass]="item.badge.classes">
-                    {{item.badge.title}}
+                    [ngClass]="item().badge.classes">
+                    {{item().badge.title}}
                 </div>
             </div>
         
@@ -55,12 +55,12 @@
 
 </div>
 
-@if (!skipChildren) {
+@if (!skipChildren()) {
 
 
     <div class="fuse-vertical-navigation-item-children">
 
-        @for (item of item.children; track trackByFn($index, item)) {
+        @for (item of item().children; track trackByFn($index, item)) {
   
 
             <!-- Skip the hidden items -->
@@ -72,7 +72,7 @@
 
                     <fuse-vertical-navigation-basic-item
                         [item]="item"
-                        [name]="name"></fuse-vertical-navigation-basic-item>
+                        [name]="name()"></fuse-vertical-navigation-basic-item>
                 
 }
 
@@ -81,8 +81,8 @@
 
                     <fuse-vertical-navigation-collapsable-item
                         [item]="item"
-                        [name]="name"
-                        [autoCollapse]="autoCollapse"></fuse-vertical-navigation-collapsable-item>
+                        [name]="name()"
+                        [autoCollapse]="autoCollapse()"></fuse-vertical-navigation-collapsable-item>
                 
 }
 
@@ -91,7 +91,7 @@
 
                     <fuse-vertical-navigation-divider-item
                         [item]="item"
-                        [name]="name"></fuse-vertical-navigation-divider-item>
+                        [name]="name()"></fuse-vertical-navigation-divider-item>
                 
 }
 
@@ -100,7 +100,7 @@
 
                     <fuse-vertical-navigation-group-item
                         [item]="item"
-                        [name]="name"></fuse-vertical-navigation-group-item>
+                        [name]="name()"></fuse-vertical-navigation-group-item>
                 
 }
 
@@ -109,7 +109,7 @@
 
                     <fuse-vertical-navigation-spacer-item
                         [item]="item"
-                        [name]="name"></fuse-vertical-navigation-spacer-item>
+                        [name]="name()"></fuse-vertical-navigation-spacer-item>
                 
 }
 

@@ -54,12 +54,12 @@ export class ApplicationService {
     const user = this.auth.currentUser;
     updateProfile(user, { displayName })
       .then(() => {
-        sendEmailVerification(user)
-          .then(() => {
-              this.toast.success(`Profile address has been updated to your profile ...`)
-          }).catch((error) => {
-            this.toast.error(`Error ... ${error}`);
-          });
+        //sendEmailVerification(user)
+          // .then(() => {
+          //     this.toast.success(`Profile address has been updated to your profile ...`)
+          // }).catch((error) => {
+          //   this.toast.error(`Error ... ${error}`);
+          // });
       }).catch((error) => {
         this.toast.error(`Error ... ${error}`);
       });

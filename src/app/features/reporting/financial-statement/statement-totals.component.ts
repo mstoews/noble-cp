@@ -1,5 +1,5 @@
 import { CommonModule, JsonPipe } from '@angular/common';
-import { Component, Input, OnInit} from '@angular/core';
+import { Component, OnInit, input } from '@angular/core';
 import { IDistributionLedger, IDistributionLedgerRpt } from 'app/models';
 
 
@@ -20,7 +20,7 @@ import { IDistributionLedger, IDistributionLedgerRpt } from 'app/models';
   `
 })
 export class StatementTotalComponent implements OnInit{
-  @Input({required: true}) item!: IDistributionLedger[]; 
+  readonly item = input.required<IDistributionLedger[]>(); 
   
   itemTotals!: IDistributionLedgerRpt;
   totals: IDistributionLedgerRpt;
@@ -35,7 +35,7 @@ export class StatementTotalComponent implements OnInit{
       closing_balance : 0
     }
     
-    this.item.forEach(item => {
+    this.item().forEach(item => {
       itemTotals.opening_balance = itemTotals.opening_balance + item.opening_balance;
       itemTotals.debit_balance   = itemTotals.debit_balance   + item.debit_balance;
       itemTotals.credit_balance  = itemTotals.credit_balance  + item.credit_balance;

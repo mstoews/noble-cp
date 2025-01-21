@@ -1,5 +1,5 @@
 import { NgIf } from '@angular/common';
-import { ChangeDetectionStrategy, Component, Input, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ViewEncapsulation, input } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDrawer } from '@angular/material/sidenav';
@@ -13,8 +13,8 @@ import { Chat } from '../chat.types';
     imports: [MatButtonModule, MatIconModule,]
 })
 export class ContactInfoComponent {
-    @Input() chat: Chat;
-    @Input() drawer: MatDrawer;
+    readonly chat = input<Chat>(undefined);
+    readonly drawer = input<MatDrawer>(undefined);
 
     /**
      * Constructor

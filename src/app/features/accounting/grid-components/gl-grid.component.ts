@@ -1,4 +1,4 @@
-import { Component, inject, Input, input, OnInit, output, viewChild } from '@angular/core';
+import { Component, inject, input, OnInit, output, viewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AggregateService, ColumnMenuService, ContextMenuItem, ContextMenuService, DialogEditEventArgs, EditService, EditSettingsModel, ExcelExportService, FilterService, FilterSettingsModel, GridComponent, GridLine, GridModule, GroupService, PageService, PdfExportService, ReorderService, ResizeService, SaveEventArgs, SearchService, SearchSettingsModel, SelectionSettingsModel, SortService, ToolbarItems, ToolbarService } from '@syncfusion/ej2-angular-grids';
 import { DropDownListComponent } from '@syncfusion/ej2-angular-dropdowns';
@@ -44,8 +44,8 @@ const keyExpr = ["account", "child"];
     <ng-container >
         <ejs-grid  #grid_parent id="grid_parent"  class="e-grid mt-3 h-[calc(100vh)-100px]"         
                 [rowHeight]='30'               
-                [dataSource]="data" 
-                [columns]="columns"
+                [dataSource]="data()" 
+                [columns]="columns()"
                 [allowSorting]='true'
                 [showColumnMenu]='true'                
                 [gridLines]="lines"
@@ -95,8 +95,8 @@ export class GLGridComponent implements OnInit {
     private authService = inject(AuthService);
     private gridSettingsService = inject(GridSettingsService);
 
-    @Input() data: Object[];
-    @Input() columns: Object[];
+    readonly data = input<Object[]>(undefined);
+    readonly columns = input<Object[]>(undefined);
 
     public onUpdateSelection = output<Object>();
     public onFocusChanged = output<Object>();

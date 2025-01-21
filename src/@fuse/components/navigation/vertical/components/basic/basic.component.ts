@@ -1,5 +1,5 @@
 import { NgClass, NgTemplateOutlet } from '@angular/common';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, input } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { IsActiveMatchOptions, RouterLink, RouterLinkActive } from '@angular/router';
@@ -16,8 +16,8 @@ import { Subject, takeUntil } from 'rxjs';
     imports: [NgClass, RouterLink, RouterLinkActive, MatTooltipModule, NgTemplateOutlet, MatIconModule]
 })
 export class FuseVerticalNavigationBasicItemComponent implements OnInit, OnDestroy {
-    @Input() item: FuseNavigationItem;
-    @Input() name: string;
+    readonly item = input<FuseNavigationItem>(undefined);
+    readonly name = input<string>(undefined);
 
     isActiveMatchOptions: IsActiveMatchOptions;
     private _fuseVerticalNavigationComponent: FuseVerticalNavigationComponent;
@@ -49,13 +49,14 @@ export class FuseVerticalNavigationBasicItemComponent implements OnInit, OnDestr
         // Set the "isActiveMatchOptions" either from item's
         // "isActiveMatchOptions" or the equivalent form of
         // item's "exactMatch" option
+        const item = this.item();
         this.isActiveMatchOptions =
-            this.item.isActiveMatchOptions ?? this.item.exactMatch
+            item.isActiveMatchOptions ?? item.exactMatch
                 ? this._fuseUtilsService.exactMatchOptions
                 : this._fuseUtilsService.subsetMatchOptions;
 
         // Get the parent navigation component
-        this._fuseVerticalNavigationComponent = this._fuseNavigationService.getComponent(this.name);
+        this._fuseVerticalNavigationComponent = this._fuseNavigationService.getComponent(this.name());
 
         // Mark for check
         this._changeDetectorRef.markForCheck();
