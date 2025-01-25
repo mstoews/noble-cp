@@ -1,13 +1,8 @@
 <div id="contextmenutarget" class="flex flex-col w-full filter-article filter-interactive text-gray-700">
     <div class="sm:hide md:visible ml-5 mr-5">
-        <grid-menubar 
-        [showBack]="true"
-        (back)="onBack()"
-        class="pl-5 pr-5" 
-        [inTitle]="'General Ledger Transactions Update'"
-        [prd]="store.currentPeriod()"
-        [prd_year]="store.currentYear()"
-        >
+        <grid-menubar [showBack]="true" (back)="onBack()" class="pl-5 pr-5"
+            [inTitle]="'General Ledger Transactions Update'" [prd]="store.currentPeriod()"
+            [prd_year]="store.currentYear()">
         </grid-menubar>
     </div>
 
@@ -22,9 +17,10 @@
                     <mat-tab label="Details">
                         <mat-card class="">
                             <form [formGroup]="detailForm">
-                                <div 
+                                <div
                                     class="flex flex-col w-full filter-article filter-interactive text-gray-700 rounded-lg">
-                                    <div class="text-3xl gap-2 m-1 text-gray-100 p-2 bg-slate-600 rounded-md" mat-dialog-title>
+                                    <div class="text-3xl gap-2 m-1 text-gray-100 p-2 bg-slate-600 rounded-md"
+                                        mat-dialog-title>
                                         {{ "Journal Update" }}
                                     </div>
                                 </div>
@@ -90,7 +86,8 @@
 
                                     <mat-form-field class="flex-col ml-2 mr-2 mt-1 grow">
                                         <mat-label class="text-md ml-2">Description</mat-label>
-                                        <input matInput placeholder="Description" formControlName="description" [placeholder]="'Description'" />
+                                        <input matInput placeholder="Description" formControlName="description"
+                                            [placeholder]="'Description'" />
                                         <mat-icon class="icon-size-5 text-lime-700" matSuffix
                                             [svgIcon]="'heroicons_solid:calculator'"></mat-icon>
                                     </mat-form-field>
@@ -101,7 +98,8 @@
 
                                     <mat-form-field class="flex-col grow mr-2 ml-2 mt-1">
                                         <mat-label class="text-md ml-2">Reference</mat-label>
-                                        <input matInput  (change)="changeFund($event)" placeholder="Reference" formControlName="reference"   [placeholder]="'Reference'" />
+                                        <input matInput (change)="changeFund($event)" placeholder="Reference"
+                                            formControlName="reference" [placeholder]="'Reference'" />
                                         <mat-icon class="icon-size-5 text-lime-700" matSuffix
                                             [svgIcon]="'heroicons_solid:document'"></mat-icon>
                                     </mat-form-field>
@@ -112,9 +110,9 @@
                                     <!-- Debit  -->
                                     <mat-form-field class="ml-2 mt-1 grow">
                                         <mat-label class="text-md ml-2">Debits</mat-label>
-                                        <input type="text"  (change)="changeFund($event)"  mask="separator.2" [leadZero]="true" thousandSeparator=","
-                                            class="text-right" matInput [placeholder]="'Debit'"
-                                            formControlName="debit" />
+                                        <input type="text" (change)="changeFund($event)" mask="separator.2"
+                                            [leadZero]="true" thousandSeparator="," class="text-right" matInput
+                                            [placeholder]="'Debit'" formControlName="debit" />
                                         <mat-icon class="icon-size-5 text-lime-700" matPrefix
                                             [svgIcon]="'heroicons_solid:currency-dollar'"></mat-icon>
                                     </mat-form-field>
@@ -122,9 +120,9 @@
                                     <!-- Credit  -->
                                     <mat-form-field class="grow mr-2 mt-1">
                                         <mat-label class="text-md ml-2">Credits</mat-label>
-                                        <input type="text"  (change)="changeFund($event)" mask="separator.2" [leadZero]="true" thousandSeparator=","
-                                            class="text-right" matInput [placeholder]="'Credit'"
-                                            formControlName="credit" />
+                                        <input type="text" (change)="changeFund($event)" mask="separator.2"
+                                            [leadZero]="true" thousandSeparator="," class="text-right" matInput
+                                            [placeholder]="'Credit'" formControlName="credit" />
                                         <mat-icon class="icon-size-5 text-lime-700" matPrefix
                                             [svgIcon]="'heroicons_solid:currency-dollar'"></mat-icon>
                                     </mat-form-field>
@@ -146,10 +144,8 @@
                                     <span class="e-icons e-circle-remove"></span>
                                 </button>
 
-                                <button mat-icon-button color="primary"
-                                    class="bg-slate-200 hover:bg-slate-400 ml-1"
-                                    (click)="onNewLineItem()" matTooltip="Add New Entry"
-                                    aria-label="hovered over">
+                                <button mat-icon-button color="primary" class="bg-slate-200 hover:bg-slate-400 ml-1"
+                                    (click)="onNewLineItem()" matTooltip="Add New Entry" aria-label="hovered over">
                                     <span class="e-icons e-table-insert-row"></span>
                                 </button>
 
@@ -212,19 +208,21 @@
 
                                     <ejs-grid id="grid-journal-list" [dataSource]='store.gl() |filterType: "GL"'
                                         [selectionSettings]="selectionOptions" [editSettings]='editSettings'
+                                        [allowSorting]='true'
+                                        [sortSettings]='initialSort'  
                                         [searchSetting]="searchOptions" [allowFiltering]='false' [rowHeight]="30"
                                         [enableStickyHeader]=true [toolbar]='toolbarOptions' allowSorting='true'
                                         showColumnMenu='true' (rowSelected)="onRowSelected($event)"
                                         [gridLines]="'Both'">
                                         <e-columns>
-                                            <e-column field='journal_id' headerText='ID'                   [visible]='true' isPrimaryKey='true' width='100'></e-column>
-                                            <e-column field='description' headerText='Journal Description' [visible]='true'></e-column>
-                                            <e-column field='amount' headerText='Amount'                   [visible]='false' textAlign='Right' width='150' format="N2"></e-column>
-                                            <e-column field="type" headerText="Type"                       [visible]='false' width="100" dataType="text" textAlign="left"></e-column>
-                                            <e-column field="booked" headerText="Booked"                   [visible]='false' width="100" [displayAsCheckBox]='true' type="boolean"></e-column>
-                                            <e-column field="amount" headerText="Amount"                   [visible]='false' width="150" format='N2' textAlign="Right"></e-column>
-                                            <e-column field="period" headerText="Prd"                      [visible]='false' width="100"></e-column>
-                                            <e-column field="period_year" headerText="Yr"                  [visible]='false' width="100"></e-column>
+                                            <e-column field='journal_id' headerText='ID' [visible]='true' isPrimaryKey='true' width='100'></e-column>
+                                            <e-column field='description' headerText='Journal Description'   [visible]='true'></e-column>
+                                            <e-column field='amount' headerText='Amount' [visible]='false'  textAlign='Right' width='150' format="N2"></e-column>
+                                            <e-column field="type" headerText="Type" [visible]='false' width="100" dataType="text" textAlign="left"></e-column>
+                                            <e-column field="booked" headerText="Booked" [visible]='false' width="100" [displayAsCheckBox]='true' type="boolean"></e-column>
+                                            <e-column field="amount" headerText="Amount" [visible]='false' width="150"  format='N2' textAlign="Right"></e-column>
+                                            <e-column field="period" headerText="Prd" [visible]='false' width="100"></e-column>
+                                            <e-column field="period_year" headerText="Yr" [visible]='false' width="100"></e-column>
                                         </e-columns>
                                     </ejs-grid>
                                 </mat-card>
@@ -282,8 +280,10 @@
                                                 </div>
                                                 @if (transactionType == 'GL') {
                                                 <mat-form-field class="mt-1 ml-1 mr-1 w-[250px]">
-                                                    <input type="text" class="text-left" matInput placeholder="Reference Number" formControlName="invoice_no" />
-                                                    <mat-icon class="icon-size-5" matPrefix [svgIcon]="'heroicons_solid:clipboard-document-check'"></mat-icon>
+                                                    <input type="text" class="text-left" matInput
+                                                        placeholder="Reference Number" formControlName="invoice_no" />
+                                                    <mat-icon class="icon-size-5" matPrefix
+                                                        [svgIcon]="'heroicons_solid:clipboard-document-check'"></mat-icon>
                                                 </mat-form-field>
                                                 }
                                                 <div class="flex flex-col w-[150px]">
@@ -298,7 +298,8 @@
                                                 </div>
                                                 <div class="flex flex-col w-[150px]">
                                                     <mat-form-field class="mt-1 flex-start mr-1">
-                                                        <input matInput (dateChange)="onHeaderDateChanged($event)" formControlName="transaction_date"
+                                                        <input matInput (dateChange)="onHeaderDateChanged($event)"
+                                                            formControlName="transaction_date"
                                                             [matDatepicker]="picker" />
                                                         <mat-datepicker-toggle matIconPrefix
                                                             [for]="picker"></mat-datepicker-toggle>
@@ -308,8 +309,8 @@
                                             </section>
 
                                             <section class="flex flex-col md:flex-row">
-                                             @if (transactionType != 'GL') {
-                                              @if (partyFilter | async; as parties ) {
+                                                @if (transactionType != 'GL') {
+                                                @if (partyFilter | async; as parties ) {
                                                 <div class="flex flex-col w-[300px]">
                                                     <mat-form-field class="mt-1 ml-1 mr-1 flex-start">
 
@@ -335,8 +336,8 @@
                                                     <mat-icon class="icon-size-5" matPrefix
                                                         [svgIcon]="'heroicons_solid:clipboard-document-check'"></mat-icon>
                                                 </mat-form-field>
-                                              }
-                                            }
+                                                }
+                                                }
                                             </section>
                                         </form>
                                         <div mat-dialog-actions class="gap-2 mb-3">
@@ -349,12 +350,7 @@
                                             </button>
                                             }
 
-                                            <button mat-icon-button color="primary"
-                                                class="bg-slate-200 hover:bg-slate-400 ml-1" (click)="onNew($event)"
-                                                matTooltip="New" aria-label="hovered over">
-
-                                                <span class="e-icons e-circle-add"></span>
-                                            </button>
+                                            
 
 
                                             <button mat-icon-button color="primary"
@@ -364,7 +360,7 @@
                                                 <span class="e-icons e-copy"></span>
                                             </button>
 
-                            
+
 
                                             <button mat-icon-button color="primary"
                                                 class="bg-slate-200 text-gray-100 hover:bg-slate-400 ml-1"
@@ -381,11 +377,6 @@
 
                                             </button>
 
-                                            <button mat-icon-button color="primary"
-                                                class="bg-gray-200 hover:bg-slate-400 ml-1" (click)="onCreateTemplate()"
-                                                matTooltip="Template" aria-label="Template">
-                                                <span class="e-icons e-table-overwrite-cells"></span>
-                                            </button>
 
                                             <button mat-icon-button color="primary"
                                                 class="bg-slate-200  hover:bg-slate-400 ml-1"
@@ -398,49 +389,37 @@
                                         @defer () {
 
                                         <div class="flex flex-col">
-                                            <div class="text-3xl m-1 text-gray-100 p-2 bg-slate-600 rounded-md">Details
-                                            </div>
+                                            <div class="text-3xl m-1 text-gray-100 p-2 bg-slate-600 rounded-md">Details</div>
                                             <div class="flex flex-col h-full ml-1 mr-1 text-gray-800">
-                                                <ejs-grid #grid [dataSource]='store.details()' [rowHeight]='30'
-                                                    [selectionSettings]="selectionOptions" [editSettings]='editSettings'
-                                                    [aggregates]="aggregates" [allowFiltering]='false'
-                                                    [allowRowDragAndDrop]='true'
-                                                    (actionBegin)="detailRowDoubleClick($event)" [gridLines]="'Both'"
-                                                    (rowDrop)="rowDrop($event)" (rowDrag)="rowDrag($event)">
-
+                                                <ejs-grid class="m-1" [dataSource]="store.details()" 
+                                                    [allowFiltering]="false" [gridLines]="'Both'"
+                                                    [editSettings]='editSettings' [allowRowDragAndDrop]='true'
+                                                    showColumnMenu='false' (actionBegin)="detailRowDoubleClick($event)"
+                                                    allowSorting=true>
                                                     <e-columns>
-                                                        <e-column field='journal_subid' headerText='ID'
-                                                            [visible]='false' isPrimaryKey='true'
-                                                            width='100'></e-column>
-                                                        <e-column field='child' headerText='Account'
-                                                            width='100'></e-column>
-                                                        <e-column field='child_desc' headerText='Account Description'
-                                                            width='200'></e-column>
-                                                        <e-column field='description' headerText='Journal Description'
-                                                            width='150'></e-column>
+                                                        <e-column field='journal_subid' headerText='ID' [visible]='false' isPrimaryKey='true'  width='100'></e-column> 
+                                                        <e-column field='child' headerText='Account'  width='100'></e-column>
                                                         <e-column field='fund' headerText='Fund' width='90'></e-column>
-                                                        <e-column field='sub_type' headerText='Sub Type'
-                                                            width='90'></e-column>
-                                                        <e-column field='reference' headerText='Reference'
-                                                            width=120></e-column>
-                                                        <e-column field='debit' headerText='Debit' textAlign='Right'
-                                                            width='100' format="N2"></e-column>
-                                                        <e-column field='credit' headerText='Credit' textAlign='Right'
-                                                            width='100' format="N2"></e-column>
+                                                        <e-column field='sub_type' headerText='Sub Type' [visible]='false' width='90'></e-column>
+                                                        <e-column field='description' headerText='Description' width='150'></e-column>
+                                                        <e-column field='reference' headerText='Reference' [visible]='false' width=120></e-column>
+                                                        <e-column field='debit' headerText='Debit' textAlign='Right' width='100' format="N2"></e-column>
+                                                        <e-column field='credit' headerText='Credit' textAlign='Right' width='100' format="N2"></e-column>
                                                     </e-columns>
-
-                                                    <!-- <e-aggregates>
+                                                    <e-aggregates>
                                                         <e-aggregate>
                                                             <e-columns>
-                                                                <e-column field="debit" type="sum" format="N2">
-                                                                    <ng-template #footerTemplate let-data>Sum: {{data.sum}}</ng-template>
+                                                                <e-column type="Sum" field="debit" format="N2">
+                                                                    <ng-template #footerTemplate
+                                                                        let-data>{{data.Sum}}</ng-template>
                                                                 </e-column>
-                                                                <e-column field="credit" type="sum" format="N2">
-                                                                    <ng-template #footerTemplate let-data>{{data.sum}}</ng-template>
+                                                                <e-column type="Sum" field="credit" format="N2">
+                                                                    <ng-template #footerTemplate
+                                                                        let-data>{{data.Sum}}</ng-template>
                                                                 </e-column>
                                                             </e-columns>
                                                         </e-aggregate>
-                                                    </e-aggregates> -->
+                                                    </e-aggregates>
                                                 </ejs-grid>
                                             </div>
                                         </div>

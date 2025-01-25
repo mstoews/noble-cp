@@ -43,32 +43,27 @@ const imports = [
 @Component({
   selector: "kanban-list",
   imports: [imports],
-  template: `
-   
+  template: `   
   <ng-container>
-     <grid-menubar [inTitle]="sTitle" (onCreate)="onCreate($event)"> </grid-menubar>                         
+    <grid-menubar [inTitle]="sTitle" (onCreate)="onCreate($event)"> </grid-menubar>                         
       
-      @if (ngrxStore.isLoading() === false) 
-     {
-         
-             <gl-grid                             
-                 (onUpdateSelection)="onSelection($event)"
-                 [data]="ngrxStore.tasks()" 
-                 [columns]="columns">
-             </gl-grid>                        
-         
+    @if (ngrxStore.isLoading() === false) 
+     {     
+        <gl-grid                             
+            (onUpdateSelection)="onSelection($event)"
+            [data]="ngrxStore.tasks()" 
+            [columns]="columns">
+        </gl-grid>                                 
      }
-        @else
+    @else
      {
-         <div class="fixed z-[1050] -translate-x-2/4 -translate-y-2/4 left-2/4 top-2/4">
-             <mat-spinner></mat-spinner>
-         </div>
+        <div class="fixed z-[1050] -translate-x-2/4 -translate-y-2/4 left-2/4 top-2/4">
+            <mat-spinner></mat-spinner>
+        </div>
      }
  </ng-container> 
-
-
 `,
-  styleUrls: ["./kanban-list.scss"],
+  styles: ``,
   providers: [
     KanbanStore,
     GLGridComponent,

@@ -66,8 +66,7 @@ const declarations = [
                 </grid-menubar>
                 
                 @if (store.isLoading() === false) {        
-                    <ejs-grid #grid id="grid" 
-                        [rowHeight]='30'
+                    <ejs-grid #grid id="grid"                         
                         (click)="onClickGrid($event)"                        
                         [dataSource]="store.header()" 
                         [childGrid]="childDataGrid"

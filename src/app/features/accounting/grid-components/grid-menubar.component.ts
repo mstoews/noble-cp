@@ -23,52 +23,65 @@ let modules = [MatToolbarModule, MatIconModule, MatButtonModule, CommonModule];
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [modules],
     template: `
-    <mat-toolbar class="text-white font-sans bg-gray-500 text-2xl rounded-lg">   {{ inTitle() }} {{ prd() }} - {{prd_year()}}
+    <mat-toolbar class="text-white font-sans bg-gray-500 text-2xl rounded-lg">  {{ inTitle() }} {{ prd() }}  {{prd_year()}}
 
-    <span class="flex-1"></span>
+      <span class="flex-1"></span>
 
-    @if (showNew()) {
-      <button mat-icon-button  (click)="onNew()" color="primary" class="m-1 bg-gray-200 md:visible" matTooltip="New"  aria-label="NEW" >
-        <span class="e-icons text-bold e-file-new"></span>
-      </button>
-    }  
+      @if (showClone()) {
+        <button mat-icon-button  (click)="onClone()" color="primary" class="m-1 bg-gray-200 md:visible" matTooltip="New"  aria-label="NEW" >        
+          <span class="e-icons e-circle-add"></span>
+        </button>
+      }  
 
-    @if (showPrint()) {
-      <button  (click)="onPrint()" color="primary" class="m-1 bg-gray-200 md:visible" mat-icon-button  matTooltip="Print"  aria-label="Print" >
-        <span class="e-icons e-print-2"></span>
-      </button>
-    }
-     
-    @if (showExportPDF()) {
-      <button  (click)="onPDF()" color="primary" class="m-1 bg-gray-200 md:visible" mat-icon-button  matTooltip="Export PDF"  aria-label="PDF" >
-        <span class="e-icons e-export-pdf"></span>
-      </button>
-    }
-     
-    @if (showExportXL()) {
-      <button  (click)="onXL()" color="primary" class="m-1 bg-gray-200 md:visible" mat-icon-button  matTooltip="Export XL"  aria-label="XL" >
-        <span class="e-icons e-export-excel"></span>
-      </button>
-    }
+      @if (showTemplate()) {
+        <button mat-icon-button  (click)="onCreateTemplate()" color="primary" class="m-1 bg-gray-200 md:visible" matTooltip="New"  aria-label="NEW" >        
+          <span class="e-icons e-table-overwrite-cells"></span>
+        </button>
+      }  
 
-    @if (showExportCSV()) {
-      <button  (click)="onCSV()" color="primary" class="m-1 bg-gray-200 md:visible" mat-icon-button  matTooltip="Export CSV"  aria-label="CSV" >
-        <span class="e-icons text-bold e-export-csv"></span>
-      </button>
-    }  
 
-    @if (showSettings()) {
-      <button mat-icon-button  (click)="onOpenSettings()" color="primary" class="m-1 bg-gray-200 md:visible" matTooltip="Export CSV"  aria-label="CSV" >
-        <span class="e-icons text-bold e-settings"></span>
-      </button>
-    }  
+      @if (showNew()) {
+        <button mat-icon-button  (click)="onNew()" color="primary" class="m-1 bg-gray-200 md:visible" matTooltip="New"  aria-label="NEW" >
+          <span class="e-icons text-bold e-file-new"></span>
+        </button>
+      }  
 
-    
-    @if (showBack()) {
-      <button (click)="onBack()" color="primary" class="m-1 bg-gray-200 md:visible"  mat-icon-button  matTooltip="Back"  aria-label="Back"  >
-        <span class="e-icons e-chevron-left"></span>
-      </button>
-    }
+      @if (showPrint()) {
+        <button  (click)="onPrint()" color="primary" class="m-1 bg-gray-200 md:visible" mat-icon-button  matTooltip="Print"  aria-label="Print" >
+          <span class="e-icons e-print-2"></span>
+        </button>
+      }
+      
+      @if (showExportPDF()) {
+        <button  (click)="onPDF()" color="primary" class="m-1 bg-gray-200 md:visible" mat-icon-button  matTooltip="Export PDF"  aria-label="PDF" >
+          <span class="e-icons e-export-pdf"></span>
+        </button>
+      }
+      
+      @if (showExportXL()) {
+        <button  (click)="onXL()" color="primary" class="m-1 bg-gray-200 md:visible" mat-icon-button  matTooltip="Export XL"  aria-label="XL" >
+          <span class="e-icons e-export-excel"></span>
+        </button>
+      }
+
+      @if (showExportCSV()) {
+        <button  (click)="onCSV()" color="primary" class="m-1 bg-gray-200 md:visible" mat-icon-button  matTooltip="Export CSV"  aria-label="CSV" >
+          <span class="e-icons text-bold e-export-csv"></span>
+        </button>
+      }  
+
+      @if (showSettings()) {
+        <button mat-icon-button  (click)="onOpenSettings()" color="primary" class="m-1 bg-gray-200 md:visible" matTooltip="Export CSV"  aria-label="CSV" >
+          <span class="e-icons text-bold e-settings"></span>
+        </button>
+      }  
+
+      
+      @if (showBack()) {
+        <button (click)="onBack()" color="primary" class="m-1 bg-gray-200 md:visible"  mat-icon-button  matTooltip="Back"  aria-label="Back"  >
+          <span class="e-icons e-chevron-left"></span>
+        </button>
+      }
     </mat-toolbar>
   `
 })
@@ -95,6 +108,8 @@ export class GridMenubarStandaloneComponent {
   public showPrint = input<boolean>(true);
   public showSettings = input<boolean>(true);
   public showNew = input<boolean>(false);
+  public showClone = input<boolean>(true);
+  public showTemplate = input<boolean>(true);
   public period = output<string>();
 
   public changePeriod() {
@@ -102,7 +117,15 @@ export class GridMenubarStandaloneComponent {
   }
 
   public onNew() {
-    this.newRecord.emit('Add');
+    this.newRecord.emit('add');
+  }
+
+  public onClone() {
+    this.newRecord.emit('clone');
+  }
+
+  public onTemplate() {
+    this.newRecord.emit('template');
   }
   
   public onBack() {

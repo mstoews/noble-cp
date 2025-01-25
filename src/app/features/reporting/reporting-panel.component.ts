@@ -19,8 +19,10 @@ import { IncomeStatementRptComponent } from './financial-statement/income-statem
 import { IncomeStatementComparisonRptComponent } from './financial-statement/income-statement-comparison.component';
 import { DistributedTbComponent } from './distributed-tb.component';
 import { TbGridComponent } from './tb-grid/tb-grid.component';
-import {PanelStateService} from "../../services/panel.state.service";
+import { AppStore, PanelService } from "../../services/panel.state.service";
 import { GridTemplateComponent } from './grid-template/grid-template.component';
+import { AuthService } from '../auth/auth.service';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 
 const mods = [
@@ -45,6 +47,7 @@ const mods = [
     standalone: true
 })
 export class ReportingPanelComponent {
+    
 
     @ViewChild('drawer') drawer: MatDrawer;
     drawerMode: 'over' | 'side' = 'side';
@@ -53,7 +56,11 @@ export class ReportingPanelComponent {
     defaultPanel = "distributed-tb"
 
     private _unsubscribeAll: Subject<any> = new Subject<any>();
-    public panelService = inject(PanelStateService);
+    
+    store = inject(AppStore);
+    panelService = inject(PanelService);
+    authService = inject(AuthService);
+    
 
     /**
      * Constructor
@@ -65,7 +72,7 @@ export class ReportingPanelComponent {
 
     }
 
-    public selectedPanel: string = this.panelService.lastReportingPanel();
+    public selectedPanel = this.panelService.lastReportingPanel();
 
     // -----------------------------------------------------------------------------------------------------
     // @ Lifecycle hooks
@@ -74,12 +81,13 @@ export class ReportingPanelComponent {
     /**
      * On init
      */
-    ngOnInit(): void {
-        // Setup available panels
-        if (this.panelService.lastReportingPanel() == "") {
-            this.panelService.setLastReportingPanel(this.defaultPanel);
-            this.selectedPanel = this.defaultPanel;
-        }
+    ngOnInit() {
+         
+        this.authService.user$.pipe(takeUntilDestroyed()).subscribe((user) => {                         
+             this.store.loadPanels(user.uid)
+        });
+
+            
         this.panels = [
             {
                 id: 'distributed-tb',
@@ -202,7 +210,7 @@ export class ReportingPanelComponent {
      * @param panel
      */
     goToPanel(panel: string): void {
-        this.selectedPanel = panel;
+        this.selectedPanel.lastPanelOpened = panel;
         this.panelService.setLastPanel(panel);
         // Close the drawer on 'over' mode
         if (this.drawerMode === 'over') {

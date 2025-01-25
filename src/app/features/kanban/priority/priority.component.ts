@@ -9,7 +9,7 @@ import { GridMenubarStandaloneComponent } from 'app/features/accounting/grid-com
 import { Subject } from 'rxjs';
 
 import { KanbanService } from '../kanban.service';
-import { EditService, ToolbarService, PageService, SortService, FilterService, NewRowPosition, GridModule, DialogEditEventArgs, SaveEventArgs } from '@syncfusion/ej2-angular-grids';
+import { EditService, ToolbarService, PageService, SortService, FilterService, NewRowPosition, GridModule, DialogEditEventArgs, SaveEventArgs, Resize, AggregateService, ColumnMenuService, ResizeService } from '@syncfusion/ej2-angular-grids';
 import { DropDownListComponent } from '@syncfusion/ej2-angular-dropdowns';
 import { Browser } from '@syncfusion/ej2-base';
 import { Dialog } from '@syncfusion/ej2-popups';
@@ -27,8 +27,98 @@ const imports = [
 @Component({
     selector: 'kanban-priority',
     imports: [imports],
-    templateUrl: 'priority.component.html',
-    providers: [SortService, PageService, FilterService, ToolbarService, EditService],
+    template: `
+    <mat-drawer-container class="flex-col h-full">
+    <mat-drawer class="lg:w-[400px] md:w-full bg-white-100" #drawer [opened]="false" mode="over" [position]="'end'"
+        [disableClose]="false">
+        <mat-card>
+            <div class="flex flex-col w-full text-gray-700 max-w-140 filter-article filter-interactive">
+                <div class="bg-slate-600 text-justify m-2 p-2 text-white h-10 text-2xl border-l-4 border-gray-400"
+                    mat-dialog-title>
+                    {{ sTitle }}
+                </div>
+                <div mat-dialog-content>
+                    <form [formGroup]="priorityForm">
+
+                        <div class="flex flex-col m-1">
+                            <section class="flex flex-col md:flex-row">
+                                <div class="flex flex-col grow">
+                                    <mat-label class="ml-2 text-base">Priority</mat-label>
+                                    <mat-form-field class="m-1 form-element grow" appearance="outline">
+                                        <input matInput placeholder="Priority" formControlName="priority" />
+                                    </mat-form-field>
+                                </div>
+
+                                <div class="flex flex-col grow">
+                                    <mat-label class="ml-2 text-base">Description</mat-label>
+                                    <mat-form-field class="m-1 form-element" appearance="outline">
+                                        <input matInput placeholder="Description" formControlName="description" />
+                                    </mat-form-field>
+                                </div>
+                            </section>
+                        </div>
+                    </form>
+                </div>
+                <div mat-dialog-actions>
+                    <button mat-icon-button color="primary" class="m-1" (click)="onUpdate($event)" matTooltip="Update"
+                        aria-label="Button that displays a tooltip when focused or hovered over">
+                        <mat-icon>update</mat-icon>
+                    </button>
+                    <button mat-raised-button color="primary" class="m-1" (click)="onCreate($event)" matTooltip="Add"
+                        aria-label="Button that displays a tooltip when focused or hovered over">
+                        Add
+                        <mat-icon>add</mat-icon>
+                    </button>
+                    <button mat-raised-button color="primary" class="m-1" (click)="onDelete($event)" matTooltip="Delete"
+                        aria-label="Button that displays a tooltip when focused or hovered over">
+                        Delete
+                        <mat-icon>delete</mat-icon>
+                    </button>
+                    <button mat-raised-button color="primary" class="m-1" (click)="closeDrawer()" matTooltip="Cancel"
+                        aria-label="Button that displays a tooltip when focused or hovered over">
+                        Cancel
+                        <mat-icon>close</mat-icon>
+                    </button>
+                </div>
+            </div>
+        </mat-card>
+    </mat-drawer>
+    <ng-container>
+        <grid-menubar [inTitle]="'Kanban Priority Maintenance'"></grid-menubar>
+        @if (kanbanService.isLoading() == false ) {
+        <div class="flex flex-col h-[600px]">
+            <!-- 
+            <dx-data-grid id="id" [wordWrapEnabled]="true" [columnHidingEnabled]="true" [columnHidingEnabled]="true"
+                [dataSource]="kanbanService.priorityList()" [showColumnLines]="true" [showRowLines]="true"
+                [showBorders]="true" [focusedRowEnabled]="true" [focusedRowIndex]="0" keyExpr="priority"
+                [repaintChangesOnly]="true">
+                <dxi-column dataField="priority" caption="Kanban Type" width="150"></dxi-column>
+                <dxi-column dataField="description"></dxi-column>
+            </dx-data-grid>  
+            -->
+
+            <ejs-grid #normalgrid id='Normalgrid' [dataSource]='kanbanService.priorityList()' allowPaging='true' [rowHeight]='30'
+                [allowSorting]='true' [allowFiltering]='true' [filterSettings]='filterSettings'
+                [editSettings]='editSettings' [toolbar]='toolbar' [sortSettings]='initialSort'
+                (actionBegin)='actionBegin($event)' (actionComplete)='actionComplete($event)'
+                [pageSettings]='pageSettings'>
+                <e-columns>
+                    <e-column field='priority' headerText="Priority" width='140' isPrimaryKey='true'></e-column>
+                    <e-column field='description' headerText="Description"></e-column>
+                </e-columns>
+            </ejs-grid>
+        </div>
+        } @else
+        {
+        <div class="flex flex-col items-center justify-center h-screen mat-spinner-color w-full bg-white">
+            <mat-spinner class="text-gray-100 bg-white" [diameter]="80"></mat-spinner>
+            <p class="text-gray-100 text-2xl">Loading...</p>
+        </div>
+        }
+    </ng-container>
+    </mat-drawer-container>
+    `,
+    providers: [SortService, PageService, FilterService, ToolbarService, EditService, ResizeService, AggregateService, ColumnMenuService],
     styles: `
         .e-grid .e-headercell {
         background-color: #333232; 
@@ -98,7 +188,7 @@ export class KanbanPriorityComponent implements OnInit {
                 args.dialog.height = window.innerHeight - 90 + 'px';
                 (<Dialog>args.dialog).dataBind();
             }
-            // Set initail Focus
+            // Set initial Focus
             if (args.requestType === 'beginEdit') {
                 // (args.form.elements.namedItem('CustomerName') as HTMLInputElement).focus();
             } else if (args.requestType === 'add') {
@@ -124,7 +214,7 @@ export class KanbanPriorityComponent implements OnInit {
             updateusr: ''
         }
         this.createEmptyForm(priority);
-        this.kanbanService.readPriority();
+        // this.kanbanService.readPriority();
         this.initialDatagrid();
     }
 

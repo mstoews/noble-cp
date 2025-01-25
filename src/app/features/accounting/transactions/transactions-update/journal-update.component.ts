@@ -197,6 +197,7 @@ export class JournalUpdateComponent
     public toolbar: string[];
     public selectionOptions: Object;
     public searchOptions: Object;
+    public initialSort: Object;
 
     // drop down searchable list
     public accountList: IDropDownAccounts[] = [];
@@ -525,6 +526,9 @@ export class JournalUpdateComponent
             allowDeleting: false,
         };
         this.filterSettings = { type: "CheckBox" };
+        this.initialSort = {
+            columns: [{ field: 'journal_id', direction: 'Descending' },]            
+        };
 
     }
 
@@ -607,25 +611,23 @@ export class JournalUpdateComponent
 
     public onChanges(): void {
                 
-        this.journalForm.controls['description'].valueChanges.subscribe((value) => {            
-                this.bHeaderDirty = true;                             
+        // this.journalForm.controls['description'].valueChanges.subscribe((value) => {            
+        //         this.bHeaderDirty = true;                             
+        // });
+
+        // this.journalForm.controls['invoice_no'].valueChanges.subscribe((value) => {            
+        //     this.bHeaderDirty = true;                             
+        // });
+
+        // this.journalForm.controls['debit'].valueChanges.subscribe((value) => {            
+        //     this.bHeaderDirty = true;                             
+        // });
+
+        this.journalForm.valueChanges.subscribe((value) => {
+            this.bHeaderDirty = true;            
         });
 
-        this.journalForm.controls['invoice_no'].valueChanges.subscribe((value) => {            
-            this.bHeaderDirty = true;                             
-        });
-
-        this.journalForm.controls['debit'].valueChanges.subscribe((value) => {            
-            this.bHeaderDirty = true;                             
-        });
-
-        
-
-        this.journalForm.controls[''].valueChanges.subscribe((value) => {            
-            this.bHeaderDirty = true;                             
-        });
-    
-        
+                
         this.detailForm.valueChanges.subscribe((value) => {            
                 this.bDetailDirty = true;            
         });

@@ -41,7 +41,7 @@ export class StatusComponent implements OnInit {
     private fb = inject(FormBuilder);
     public kanbanService = inject(KanbanService)
     public sTitle = 'Kanban Status Types';
-    public accountsForm!: FormGroup;
+    public statusForm!: FormGroup;
     public selectedItemKeys: string[] = [];
     public orderidrules: Object;
     public dropDown: DropDownListComponent;
@@ -50,15 +50,15 @@ export class StatusComponent implements OnInit {
     public filterSettings: Object;
     public toolbar: string[];
     public editSettings: Object;
-    public customeridrules: Object;
-    public freightrules: Object;
+    public customerIdRules: Object;
+    
     public editparams: Object;
     public submitClicked: boolean = false;
 
     @ViewChild('drawer') drawer!: MatDrawer;
 
     onCellDblClick(e: any) {
-        this.accountsForm = this.fb.group({
+        this.statusForm = this.fb.group({
             status: [e.data.status],
             description: [e.data.description],
         });
@@ -78,14 +78,14 @@ export class StatusComponent implements OnInit {
     actionBegin(args: SaveEventArgs): void {
         if (args.requestType === 'beginEdit' || args.requestType === 'add') {
             this.submitClicked = false;
-            this.accountsForm = this.createEmptyForm();
+            this.statusForm = this.createEmptyForm();
         }
         if (args.requestType === 'save') {
             console.log(JSON.stringify(args.data));
             var data = args.data as IStatus;
             this.submitClicked = true;
-            if (this.accountsForm.valid) {
-                args.data = this.accountsForm.value;
+            if (this.statusForm.valid) {
+                args.data = this.statusForm.value;
             } else {
                 args.cancel = true;
             }
@@ -143,7 +143,7 @@ export class StatusComponent implements OnInit {
     }
 
     createEmptyForm() {
-        return this.accountsForm = this.fb.group({
+        return this.statusForm = this.fb.group({
             status: [''],
             description: [''],
             updateusr: [''],
@@ -171,7 +171,7 @@ export class StatusComponent implements OnInit {
     }
 
     onUpdate(e: any) {
-        const status = { ...this.accountsForm.value } as IStatus;
+        const status = { ...this.statusForm.value } as IStatus;
         const rawData = {
             status: status.status,
             description: status.description,

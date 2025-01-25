@@ -57,9 +57,7 @@ export class Lightbox {
       });
 
       const containerElement = this.viewContainerRef.createComponent(this._documentRef);
-      // containerElement.
-      // containerElement. pendChild(overlayComponentRef.location.nativeElement);
-      // containerElement.appendChild(componentRef.location.nativeElement);
+    
     });
   }
 

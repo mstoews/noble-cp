@@ -7,13 +7,8 @@ import {
 } from "@angular/forms";
 import { NgxMatSelectSearchModule } from "ngx-mat-select-search";
 import { CommonModule } from "@angular/common";
-
 import { MaterialModule } from "app/services/material.module";
-
-
-import { SummaryCardComponent } from "../../admin/dashboard/summary-card.component";
 import { JournalEntryComponent } from "./journal-listing.component";
-import { Grid } from "@syncfusion/ej2-grids";
 import { GridMenubarStandaloneComponent } from "../grid-components/grid-menubar.component";
 
 const imports = [
@@ -31,7 +26,7 @@ const imports = [
   imports: [imports],
   template: `
   <div id="settings" class=" control-section default-splitter flex flex-col overflow-auto">            
-    <grid-menubar [inTitle]="toolbarTitle" 
+    <grid-menubar class="ml-1 mr-1" [inTitle]="toolbarTitle" 
                   [prd]="prd"  
                   [prd_year]="prd_year"                   
                   (openSettings)="openDrawer()" 
@@ -57,15 +52,16 @@ const imports = [
 
         <div class="flex-auto">
         <div class="h-full border-gray-300 rounded-2xl">
-            @defer {    
-                 <transactions [transactionType]="transType"></transactions>        
-            }
+            @defer {
+                 <mat-card class="m-1">    
+                   <transactions [transactionType]="transType"></transactions>        
+                 </mat-card>
+                }
                 @placeholder(minimum 1000ms) {
                     <div class="flex justify-center items-center">
                         <mat-spinner></mat-spinner>
                     </div>
-                }
-        
+                }        
         </div>
     </div>    
 </div>

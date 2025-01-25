@@ -1,14 +1,8 @@
-import { BehaviorSubject, Observable, Subject, catchError, of, retry, shareReplay, take, tap  } from 'rxjs';
-import { Injectable, computed, inject, signal } from '@angular/core';
 
+import { Injectable, computed, inject, signal } from '@angular/core';
 import { AUTH } from 'app/app.config';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'environments/environment.prod';
-import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
-import { signalState, PartialStateUpdater, patchState } from '@ngrx/signals';
-import { exhaustMap, pipe, throwError } from 'rxjs';
-import { rxMethod } from '@ngrx/signals/rxjs-interop';
-import { tapResponse } from '@ngrx/operators';
 import { IStatus, IPriority, ITeam, IKanban, IType } from 'app/models/kanban';
 
 @Injectable({
@@ -21,7 +15,6 @@ export class KanbanService {
   private authService = inject(AUTH);  
   private baseUrl = environment.baseUrl;
   
-
   teamUrl = this.baseUrl + `/v1/team_read`; 
   updateTaskUrl = this.baseUrl + 'v1/task_update'
   priorityUrl = this.baseUrl + '/v1/task_priority_list';
@@ -42,6 +35,7 @@ export class KanbanService {
   updateTask(task: IKanban) {
     return this.httpClient.post<IKanban[]>(this.updateTaskUrl, task);
   }
+  
   update(k: IKanban) {
     var url = this.baseUrl + '/v1/task_update';
     var email = this.authService.currentUser.email;
@@ -124,41 +118,40 @@ export class KanbanService {
       //this.kanbanList.update(items => [...items, kanban])        
     }
     
-  updateStatusStatic(s: IStatus){
-    var url = this.baseUrl + '/v1/task_status_update';
-
-  }
-
-  updateStatus(k: any) {
-    var url = this.baseUrl + '/v1/task_update_status';
-    var email = this.authService.currentUser.email;
-    const dDate = new Date();
-    const updateDate = dDate.toISOString().split('T')[0];
-
-    var data = {
-      id: k.id,
-      status: k.status,
-      rankid: k.rankid,
-      priority: k.priority
+    updateStatusStatic(s: IStatus){
+      var url = this.baseUrl + '/v1/task_status_update';
     }
 
-    return this.httpClient.post<IKanban>(url, data);
-  }
+    updateStatus(k: any) {
+      var url = this.baseUrl + '/v1/task_update_status';
+      var email = this.authService.currentUser.email;
+      const dDate = new Date();
+      const updateDate = dDate.toISOString().split('T')[0];
 
-  copy(id: string) {
-    var data = {
-      Id: id
-    }
-    var url = this.baseUrl + '/v1/kanban_copy';
-    return this.httpClient.post<IKanban[]>(url, data);    
-  }
+      var data = {
+        id: k.id,
+        status: k.status,
+        rankid: k.rankid,
+        priority: k.priority
+      }
 
-  // Delete
-  delete(id: number) {
-    var data = {
-      Id: id
+      return this.httpClient.post<IKanban>(url, data);
     }
-    var url = this.baseUrl + '/v1/kanban_delete';
-    return this.httpClient.post<IKanban>(url, data);    
-  }
+
+    copy(id: string) {
+      var data = {
+        Id: id
+      }
+      var url = this.baseUrl + '/v1/kanban_copy';
+      return this.httpClient.post<IKanban[]>(url, data);    
+    }
+
+    // Delete
+    delete(id: number) {
+      var data = {
+        Id: id
+      }
+      var url = this.baseUrl + '/v1/kanban_delete';
+      return this.httpClient.post<IKanban>(url, data);    
+    }
 }

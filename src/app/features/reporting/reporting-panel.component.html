@@ -64,13 +64,13 @@
 
                     <!-- Panel title -->
                     <div class="ml-2 lg:ml-0 text-3xl font-bold tracking-tight leading-none">
-                        {{ getPanelInfo(selectedPanel).title }}
+                        {{ getPanelInfo(selectedPanel.id).title }}
                     </div>
                 </div>
 
                 <!-- Load settings panel -->
                 <div class="mt-8">
-                    @switch (selectedPanel) {
+                    @switch (selectedPanel.lastPanelOpened) {
                         @case ('tb-grid') { <tb-grid></tb-grid>  }
                         @case ('trial-balance') { <trial-balance></trial-balance>}
                         @case ('balance-sheet-statement') { <balance-sheet-statement-rpt></balance-sheet-statement-rpt> }

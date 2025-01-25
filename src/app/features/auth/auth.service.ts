@@ -43,7 +43,7 @@ export class AuthService {
   public User$: Observable<IUser[]>;
 
   // sources
-  private user$ = authState(this.auth);
+  public user$ = authState(this.auth);
   private toastService = inject(ToastrService);
 
   // state
@@ -94,7 +94,7 @@ export class AuthService {
   getCurrentUser() {
     var uid: string;
     var rc: any
-    this.Store.dispatch(getUserState());
+    //this.Store.dispatch(getUserState());
     this.user$.pipe(takeUntilDestroyed()).subscribe((user) => {
         uid = user.uid;
         this.Store.select(getUserById(uid)).subscribe((user) => {
@@ -194,8 +194,5 @@ export class AuthService {
       )
     );
   }
-}
-function getUserState(): any {
-  throw new Error('Function not implemented.');
 }
 

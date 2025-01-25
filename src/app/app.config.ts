@@ -59,7 +59,7 @@ import { periodEffects } from './state/periods/periods.effects';
 import { subTypeEffects } from './state/subtype/sub-type.effects';
 
 
-import { PanelStateService } from "./services/panel.state.service";
+import { PanelService } from "./services/panel.state.service";
 import { kanbanEffects } from './state/kanban-state/kanban/kanban.effects';
 import { partyEffects } from './state/party/party.effects';
 import { accountEffects } from './state/accts/accts.effects';
@@ -114,7 +114,7 @@ const CoreProviders = [
 
 export const appConfig: ApplicationConfig = {
   providers: [
-    PanelStateService,
+    PanelService,
     provideAnimations(),
     provideAppInitializer(() => {
       console.log('App initialized');

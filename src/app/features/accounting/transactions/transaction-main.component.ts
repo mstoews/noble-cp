@@ -17,7 +17,7 @@ import { EntryWizardComponent } from './wizard/wizard-entry.component';
 import { JournalTemplateComponent } from './journal-template.component';
 import { ARTransactionComponent } from './ar-listing.component';
 import { APTransactionComponent } from './ap-listing.component';
-import { PanelStateService } from "../../../services/panel.state.service";
+import { PanelService } from "../../../services/panel.state.service";
 import { GLTransactionListComponent } from './gl-listing.component';
 
 
@@ -134,7 +134,7 @@ export class TransactionMainComponent implements OnInit, OnDestroy {
     defaultPanel = "listing";
     private _unsubscribeAll: Subject<any> = new Subject<any>();
     public lastPanelOpened = signal<string>("");
-    public panelService = inject(PanelStateService);
+    public panelService = inject(PanelService);
     public selectedPanel: string;
     public storedPanel: string;
 
@@ -145,7 +145,7 @@ export class TransactionMainComponent implements OnInit, OnDestroy {
         private _changeDetectorRef: ChangeDetectorRef,
         private _fuseMediaWatcherService: FuseMediaWatcherService,
     ) {
-        this.selectedPanel = this.panelService.lastPanelOpened();
+       // this.selectedPanel = this.panelService.lastPanelOpened();
         if (this.selectedPanel === '') {
             this.selectedPanel = localStorage.getItem("transactionsPanel");
         }
@@ -167,7 +167,7 @@ export class TransactionMainComponent implements OnInit, OnDestroy {
         // Setup available panels
 
 
-        if (this.selectedPanel === '' && this.storedPanel === null) {
+        if (this.selectedPanel === '' && this.storedPanel === null || this.selectedPanel === undefined) {
             this.selectedPanel = this.defaultPanel;
         }
 
@@ -274,11 +274,14 @@ export class TransactionMainComponent implements OnInit, OnDestroy {
         }
 
 
+        localStorage.setItem("transactionsPanel", this.selectedPanel);
+
+
         var user: string;
         const userId = this.panelService.getUserId()
             .subscribe((uid) => {
                 user = uid;
-                this.panelService.addPanel(user, panelState);
+                // this.panelService.addPanel(user, panelState);
             });
 
         var transactionPanel: any

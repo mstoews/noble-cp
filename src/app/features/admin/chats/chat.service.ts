@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Chat, Contact, Profile } from './chat.types';
 import { BehaviorSubject, filter, map, Observable, of, switchMap, take, tap, throwError } from 'rxjs';
-import { AuthService } from '../auth/auth.service';
+import { AuthService } from '../../auth/auth.service';
 import { FIRESTORE } from 'app/app.config';
 import { toObservable } from '@angular/core/rxjs-interop';
 
@@ -12,9 +12,8 @@ import { collectionData } from 'rxfire/firestore';
 import { catchError, retry } from 'rxjs/operators';
 
 
-@Injectable({providedIn: 'root'})
-export class ChatService
-{
+@Injectable({ providedIn: 'root' })
+export class ChatService {
     private _chat: BehaviorSubject<Chat> = new BehaviorSubject(null);
     private _chats: BehaviorSubject<Chat[]> = new BehaviorSubject(null);
     private _contact: BehaviorSubject<Contact> = new BehaviorSubject(null);
@@ -26,7 +25,7 @@ export class ChatService
     private firestore = inject(FIRESTORE);
     private authService = inject(AuthService);
     private authUser$ = toObservable(this.authService.user);
-    
+
 
     // -----------------------------------------------------------------------------------------------------
     // @ Accessors
@@ -35,40 +34,35 @@ export class ChatService
     /**
      * Getter for chat
      */
-    get chat$(): Observable<Chat>
-    {
+    get chat$(): Observable<Chat> {
         return this._chat.asObservable();
     }
 
     /**
      * Getter for chats
      */
-    get chats$(): Observable<Chat[]>
-    {
+    get chats$(): Observable<Chat[]> {
         return this._chats.asObservable();
     }
 
     /**
      * Getter for contact
      */
-    get contact$(): Observable<Contact>
-    {
+    get contact$(): Observable<Contact> {
         return this._contact.asObservable();
     }
 
     /**
      * Getter for contacts
      */
-    get contacts$(): Observable<Contact[]>
-    {
+    get contacts$(): Observable<Contact[]> {
         return this._contacts.asObservable();
     }
 
     /**
      * Getter for profile
      */
-    get profile$(): Observable<Profile>
-    {
+    get profile$(): Observable<Profile> {
         return this._profile.asObservable();
     }
 
@@ -79,11 +73,9 @@ export class ChatService
     /**
      * Get chats
      */
-    getChats(): Observable<any>
-    {
+    getChats(): Observable<any> {
         return this._httpClient.get<Chat[]>('api/apps/chat/chats').pipe(
-            tap((response: Chat[]) =>
-            {
+            tap((response: Chat[]) => {
                 this._chats.next(response);
             }),
         );
@@ -94,11 +86,9 @@ export class ChatService
      *
      * @param id
      */
-    getContact(id: string): Observable<any>
-    {
-        return this._httpClient.get<Contact>('api/apps/chat/contacts', {params: {id}}).pipe(
-            tap((response: Contact) =>
-            {
+    getContact(id: string): Observable<any> {
+        return this._httpClient.get<Contact>('api/apps/chat/contacts', { params: { id } }).pipe(
+            tap((response: Contact) => {
                 this._contact.next(response);
             }),
         );
@@ -107,11 +97,9 @@ export class ChatService
     /**
      * Get contacts
      */
-    getContacts(): Observable<any>
-    {
+    getContacts(): Observable<any> {
         return this._httpClient.get<Contact[]>('api/apps/chat/contacts').pipe(
-            tap((response: Contact[]) =>
-            {
+            tap((response: Contact[]) => {
                 this._contacts.next(response);
             }),
         );
@@ -120,11 +108,9 @@ export class ChatService
     /**
      * Get profile
      */
-    getProfile(): Observable<any>
-    {
+    getProfile(): Observable<any> {
         return this._httpClient.get<Profile>('api/apps/chat/profile').pipe(
-            tap((response: Profile) =>
-            {
+            tap((response: Profile) => {
                 this._profile.next(response);
             }),
         );
@@ -135,21 +121,17 @@ export class ChatService
      *
      * @param id
      */
-    getChatById(id: string): Observable<any>
-    {
-        return this._httpClient.get<Chat>('api/apps/chat/chat', {params: {id}}).pipe(
-            map((chat) =>
-            {
+    getChatById(id: string): Observable<any> {
+        return this._httpClient.get<Chat>('api/apps/chat/chat', { params: { id } }).pipe(
+            map((chat) => {
                 // Update the chat
                 this._chat.next(chat);
 
                 // Return the chat
                 return chat;
             }),
-            switchMap((chat) =>
-            {
-                if ( !chat )
-                {
+            switchMap((chat) => {
+                if (!chat) {
                     return throwError('Could not found chat with id of ' + id + '!');
                 }
 
@@ -164,16 +146,14 @@ export class ChatService
      * @param id
      * @param chat
      */
-    updateChat(id: string, chat: Chat): Observable<Chat>
-    {
+    updateChat(id: string, chat: Chat): Observable<Chat> {
         return this.chats$.pipe(
             take(1),
             switchMap(chats => this._httpClient.patch<Chat>('api/apps/chat/chat', {
                 id,
                 chat,
             }).pipe(
-                map((updatedChat) =>
-                {
+                map((updatedChat) => {
                     // Find the index of the updated chat
                     const index = chats.findIndex(item => item.id === id);
 
@@ -189,8 +169,7 @@ export class ChatService
                 switchMap(updatedChat => this.chat$.pipe(
                     take(1),
                     filter(item => item && item.id === id),
-                    tap(() =>
-                    {
+                    tap(() => {
                         // Update the chat if it's selected
                         this._chat.next(updatedChat);
 
@@ -205,33 +184,32 @@ export class ChatService
     /**
      * Reset the selected chat
      */
-    resetChat(): void
-    {
+    resetChat(): void {
         this._chat.next(null);
     }
 
     private getMessages() {
         const messagesCollection = query(
-          collection(this.firestore, 'chats'),
-          orderBy('createdAt', 'desc'),
-          limit(50)
+            collection(this.firestore, 'chats'),
+            orderBy('createdAt', 'desc'),
+            limit(50)
         );
-  
-      return collectionData(messagesCollection, { idField: 'id' }).pipe(
-        map((messages) => [...messages].reverse())
-      ) as Observable<Chat[]>;
+
+        return collectionData(messagesCollection, { idField: 'id' }).pipe(
+            map((messages) => [...messages].reverse())
+        ) as Observable<Chat[]>;
     }
-  
+
     private addMessage(message: string) {
-      const newMessage = {
-        author: this.authService.user()?.email,
-        content: message,
-        created: Date.now().toString(),
-      };
-  
-  
-      const messagesCollection = collection(this.firestore, 'messages');
-      return defer(() => addDoc(messagesCollection, newMessage));
+        const newMessage = {
+            author: this.authService.user()?.email,
+            content: message,
+            created: Date.now().toString(),
+        };
+
+
+        const messagesCollection = collection(this.firestore, 'messages');
+        return defer(() => addDoc(messagesCollection, newMessage));
     }
 
 }
