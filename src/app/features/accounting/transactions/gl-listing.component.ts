@@ -1,5 +1,6 @@
 import {
   Component,
+  inject,
 } from "@angular/core";
 import {
   FormsModule,
@@ -9,7 +10,7 @@ import { NgxMatSelectSearchModule } from "ngx-mat-select-search";
 import { CommonModule } from "@angular/common";
 import { MaterialModule } from "app/services/material.module";
 import { JournalEntryComponent } from "./journal-listing.component";
-import { GridMenubarStandaloneComponent } from "../grid-components/grid-menubar.component";
+import { ToastrService } from "ngx-toastr";
 
 const imports = [
   CommonModule,
@@ -18,94 +19,76 @@ const imports = [
   FormsModule,
   NgxMatSelectSearchModule,
   JournalEntryComponent,
-  GridMenubarStandaloneComponent
 ];
 
 @Component({
   selector: "gl-transactions-list",
   imports: [imports],
   template: `
-  <div id="settings" class=" control-section default-splitter flex flex-col overflow-auto">            
-    <grid-menubar class="ml-1 mr-1" [inTitle]="toolbarTitle" 
-                  [prd]="prd"  
-                  [prd_year]="prd_year"                   
-                  (openSettings)="openDrawer()" 
-                  (onPrint)="onPrint()"                          
-                  (exportXL)="exportLX()"
-                  (exportPRD)="exportPDF()"
-                  (exportCSV)="exportCSV()"
-                  (showPrint)="true"
-                  (showExportXL)="true"
-                  (showExportPDF)="true"
-                  (showExportCSV)="true"
-                  (showSettings)="true"
-                  (showBack)="false" >
-                </grid-menubar>  
-</div>                
-  <div class="flex-auto">
-    <div class="flex flex-col min-w-0 overflow-y-auto -px-10" cdkScrollable>
-        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 w-full min-w-0">
-
-        </div>
-
-        <div class="flex flex-col min-w-0 overflow-y-auto -px-10" cdkScrollable>
-
-        <div class="flex-auto">
+    <div id="settings" class=" control-section default-splitter flex flex-col overflow-auto">            
         <div class="h-full border-gray-300 rounded-2xl">
-            @defer {
-                 <mat-card class="m-1">    
-                   <transactions [transactionType]="transType"></transactions>        
-                 </mat-card>
-                }
-                @placeholder(minimum 1000ms) {
+            <ng-container>                    
+                @defer {
+                    <transactions [transactionType]="transType"></transactions>
+                }                
+                @placeholder(minimum 200ms) {
                     <div class="flex justify-center items-center">
                         <mat-spinner></mat-spinner>
                     </div>
-                }        
-        </div>
-    </div>    
-</div>
+                }
+            </ng-container>                                          
+        </div>    
+    </div>                
 `,
 
 })
 export class GLTransactionListComponent {
 
+  private toast = inject(ToastrService);
   public transType: string = "GL";
   public toolbarTitle = "General Ledger Transactions";
-  public prd = "1";
-  public prd_year = "2024";
+  
 
+  onNew() {
+    this.toast.success('Add new Journal Entry','Add');
+  }
+  
+  onTemplate() {
+    this.toast.success('Template', 'Template');
+
+  }
+  
+  onClone() {
+    this.toast.success('Template Clone', 'Clone');
+  } 
 
   openDrawer() {
-    throw new Error('Method not implemented.');
+    this.toast.success('Template');
   }
   exportLX() {
-    throw new Error('Method not implemented.');
+    this.toast.success('Template');
   }
   exportPDF() {
-    throw new Error('Method not implemented.');
+    this.toast.success('Template');
   }
   exportCSV() {
-    throw new Error('Method not implemented.');
+    this.toast.success('Template');
   }
   onPrint() {
-    throw new Error('Method not implemented.');
+    this.toast.success('Template');
   }
 
   onRefresh() {
-    throw new Error('Method not implemented.');
-  }
-  onAdd() {
-    throw new Error('Method not implemented.');
+    this.toast.success('Template');
   }
   onDeleteSelection() {
-    throw new Error('Method not implemented.');
+    this.toast.success('Template');
   }
   onUpdateSelection() {
-    throw new Error('Method not implemented.');
+    this.toast.success('Template');
   }
   onReceipts() {
-    throw new Error('Method not implemented.');
+    this.toast.success('Template');
   }
 
 }

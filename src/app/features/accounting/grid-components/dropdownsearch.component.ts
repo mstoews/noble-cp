@@ -4,7 +4,7 @@ import { FormControl } from '@angular/forms';
 import { MatSelect } from '@angular/material/select';
 import { MaterialModule } from 'app/services/material.module';
 import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
-import { ObservableInput, ReplaySubject, Subject, take, takeUntil } from 'rxjs';
+import { ReplaySubject, Subject, take, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'DropDownSearch',

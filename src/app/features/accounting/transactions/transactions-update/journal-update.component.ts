@@ -253,6 +253,7 @@ export class JournalUpdateComponent
         this.router.navigate(["/journals"]);
     }
 
+    
 
     public aggregates = [
         {
@@ -752,6 +753,9 @@ export class JournalUpdateComponent
     }
 
     public onClone(e: any) {
+
+        this.toastr.success("Journal Cloned", "Success");
+    
         const confirmation = this.fuseConfirmationService.open({
             title: "Clone Current Transaction",
             message:

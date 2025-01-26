@@ -63,31 +63,14 @@ const imports = [
   FormsModule,
   NgxMatSelectSearchModule,
   JournalEntryComponent,
-  SummaryCardComponent,
-  GridMenubarStandaloneComponent
+  SummaryCardComponent  
 ];
 
 @Component({
   selector: "ap-transactions",
   imports: [imports],
   template: `
-  <div id="settings" class=" control-section default-splitter flex flex-col overflow-auto">            
-    <grid-menubar [inTitle]="toolbarTitle"
-                  [prd]="prd"  
-                  [prd_year]="prd_year"
-                  (openSettings)="openDrawer()" 
-                  (onPrint)="onPrint()"                          
-                  (exportXL)="exportLX()"
-                  (exportPRD)="exportPDF()"
-                  (exportCSV)="exportCSV()"
-                  (showPrint)="true"
-                  (showExportXL)="true"
-                  (showExportPDF)="true"
-                  (showExportCSV)="true"
-                  (showSettings)="true"
-                  (showBack)="false" >
-                </grid-menubar>  
-</div>                
+<div id="settings" class="control-section default-splitter flex flex-col overflow-auto"></div>                
 <div class="flex-auto">
     <div class="flex flex-col min-w-0 overflow-y-auto -px-10" cdkScrollable>
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 w-full min-w-0">
@@ -117,7 +100,6 @@ const imports = [
         </div>
 
         <div class="flex flex-col min-w-0 overflow-y-auto -px-10" cdkScrollable>
-
         <div class="flex-auto">
           <div class="h-full border-gray-300 rounded-2xl">
             @defer {    
@@ -129,9 +111,8 @@ const imports = [
                  </div>
             }
           </div>
-    </div>
-    
-</div>
+        </div>
+      </div>
   `,
   providers: [
     JournalStore,

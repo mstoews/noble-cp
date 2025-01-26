@@ -29,6 +29,11 @@ export interface IJournalHeader {
   debit?: number
 }
 
+export interface ITemplateParams {
+  journal_id: number,
+	template_description: string,
+	templateType: string
+}
 
 export interface ITBParams {
   period: number,

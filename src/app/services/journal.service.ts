@@ -17,6 +17,7 @@ import {
   IJournalHeader,
   IJournalTemplate,
   IReadJournalDetailsParams,
+  ITemplateParams,
   ITransactionDate
 } from 'app/models/journals';
 
@@ -323,6 +324,18 @@ export class JournalService implements OnDestroy {
   createHttpJournalDetail(detail: IJournalDetail) {
     let url = this.baseUrl + '/v1/create_journal_detail';
     return this.httpClient.post<IJournalDetail>(url, detail).pipe(      
+      shareReplay({ bufferSize: 1, refCount: true }));
+  }
+
+  cloneJournalById(journal_id: number) {
+    let url = this.baseUrl + '/v1/clone_journal_entry';
+    return this.httpClient.post<IJournalHeader>(url, { journal_id : journal_id }).pipe(
+      shareReplay({ bufferSize: 1, refCount: true }));
+  }
+
+  createTemplateById(journalTemplate: ITemplateParams)  {
+    let url = this.baseUrl + '/v1/create_journal';
+    return this.httpClient.post<IJournalHeader>(url, journalTemplate).pipe(
       shareReplay({ bufferSize: 1, refCount: true }));
   }
 

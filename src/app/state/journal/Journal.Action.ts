@@ -28,6 +28,11 @@ export const ADD_JOURNAL_HEADER_SUCCESS = '[JRN_HEADER] add success'
 export const UPDATE_JOURNAL_HEADER = '[JRN_HEADER] update'
 export const UPDATE_JOURNAL_HEADER_SUCCESS = '[JRN_HEADER] update success'
 
+export const CLONE_JOURNAL = '[JRN_CLONE] clone'
+export const CLONE_JOURNAL_SUCCESS = '[JRN_CLONE] clone success'
+export const CLONE_JOURNAL_FAILURE = '[JRN_CLONE] clone failure'
+
+
 export const GET_JOURNAL_HEADER = '[JRN_HEADER] get jrn_header'
 export const GET_JOURNAL_HEADER_SUCCESS = '[JRN_HEADER] get journal_header success'
 export const GET_JOURNAL_HEADER_FAILURE = '[JRN_HEADER] get journal_header failure'
@@ -35,6 +40,10 @@ export const GET_JOURNAL_HEADER_FAILURE = '[JRN_HEADER] get journal_header failu
 export const loadJournalHeader = createAction(LOAD_JOURNAL_HEADER);
 export const loadJournalHeaderSuccess = createAction(LOAD_JOURNAL_HEADER_SUCCESS, props<{ journals: IJournalHeader[] }>());
 export const loadJournalHeaderFailure = createAction(LOAD_JOURNAL_HEADER_FAILURE, props<{ error: string }>());
+
+export const cloneJournal = createAction(CLONE_JOURNAL, props<{ journal_id: number }>());
+export const cloneJournalSuccess = createAction(GET_JOURNAL_HEADER_SUCCESS, props<{ journals: IJournalHeader}>() );
+export const cloneJournalFailure = createAction(GET_JOURNAL_HEADER_FAILURE, props<{ error: string }>());
 
 
 export const loadJournalHeaderByPeriod = createAction(LOAD_JOURNAL_HEADER_BY_PERIOD, props<{ period: IPeriodParam }>());

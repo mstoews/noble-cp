@@ -16,7 +16,7 @@ const imports = [
     FormsModule,
     SummaryCardComponent,
     JournalEntryComponent,
-    GridMenubarStandaloneComponent
+    
 ];
 
 @Component({
@@ -24,21 +24,7 @@ const imports = [
     imports: [imports,],
     template: `
     <div id="settings" class=" control-section default-splitter flex flex-col overflow-auto">            
-    <grid-menubar [inTitle]="toolbarTitle" 
-                  [prd]="prd"  
-                  [prd_year]="prd_year"                   
-                  (openSettings)="openDrawer()" 
-                  (onPrint)="onPrint()"                          
-                  (exportXL)="exportLX()"
-                  (exportPRD)="exportPDF()"
-                  (exportCSV)="exportCSV()"
-                  (showPrint)="true"
-                  (showExportXL)="true"
-                  (showExportPDF)="true"
-                  (showExportCSV)="true"
-                  (showSettings)="true"
-                  (showBack)="false" >
-                </grid-menubar>  
+    
     </div>                
         <div class="flex-auto">
             <div class="flex flex-col min-w-0 overflow-y-auto -px-10" cdkScrollable>
@@ -70,14 +56,14 @@ const imports = [
         
         <div class="h-full border-gray-300 rounded-2xl">
                 <ng-container>                    
-                @defer {
+                    @defer {
                         <transactions [transactionType]="transType"></transactions>
-                }                
-                @placeholder(minimum 1000ms) {
-                    <div class="flex justify-center items-center">
-                        <mat-spinner></mat-spinner>
-                    </div>
-                }
+                    }                
+                    @placeholder(minimum 200ms) {
+                        <div class="flex justify-center items-center">
+                            <mat-spinner></mat-spinner>
+                        </div>
+                    }
                 </ng-container>                     
                             
         </div>

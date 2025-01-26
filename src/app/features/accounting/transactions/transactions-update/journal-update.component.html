@@ -1,12 +1,17 @@
 <div id="contextmenutarget" class="flex flex-col w-full filter-article filter-interactive text-gray-700">
     <div class="sm:hide md:visible ml-5 mr-5">
-        <grid-menubar [showBack]="true" (back)="onBack()" class="pl-5 pr-5"
-            [inTitle]="'General Ledger Transactions Update'" [prd]="store.currentPeriod()"
+        <grid-menubar 
+            class="pl-5 pr-5"            
+            [showBack]="true" 
+            (back)="onBack()"  
+            (clone)="onClone('GL')"           
+            [inTitle]="'General Ledger Transactions Update'" 
+            [prd]="store.currentPeriod()"
             [prd_year]="store.currentYear()">
         </grid-menubar>
     </div>
 
-    @defer (on viewport; on timer(1s)) {
+    @defer (on viewport; on timer(200ms)) {
     <mat-drawer-container id="target"
         class=" control-section default-splitter flex flex-col overflow-auto h-[calc(100vh-14rem)] ml-5 mr-5"
         [hasBackdrop]="'false'">
@@ -130,31 +135,28 @@
                             </form>
                             <div mat-dialog-actions class="gap-2 mb-3 mt-5">
                                 @if (bDetailDirty === true) {
-                                <button mat-icon-button class="bg-gray-200 fill-slate-100 hover:bg-slate-400 ml-1"
-                                    (click)="onUpdateJournalDetail()" matTooltip="Update Line Item"
-                                    aria-label="hover over">
-                                    <mat-icon [svgIcon]="'feather:save'"></mat-icon>
-                                </button>
+                                    <button mat-icon-button color="primary" class="bg-gray-200 fill-slate-100 hover:bg-slate-400 ml-1"
+                                        (click)="onUpdateJournalDetail()" matTooltip="Update Line Item"
+                                        aria-label="hover over">
+                                        <mat-icon [svgIcon]="'feather:save'"></mat-icon>
+                                    </button>
                                 }
+
+                                <button mat-icon-button color="primary" class="bg-slate-200 hover:bg-slate-400 ml-1"
+                                    (click)="onNewLineItem()" matTooltip="Add New Entry" aria-label="hovered over">
+                                    <span class="e-icons e-circle-add"></span>
+                                </button>                                
 
                                 <button mat-icon-button color="primary"
                                     class="bg-gray-200 fill-slate-100 hover:bg-slate-400 ml-1"
                                     (click)="onDeleteDetail()" matTooltip="Remove Current Line" aria-label="hover over">
-
                                     <span class="e-icons e-circle-remove"></span>
                                 </button>
 
-                                <button mat-icon-button color="primary" class="bg-slate-200 hover:bg-slate-400 ml-1"
-                                    (click)="onNewLineItem()" matTooltip="Add New Entry" aria-label="hovered over">
-                                    <span class="e-icons e-table-insert-row"></span>
-                                </button>
-
-
                                 <button mat-icon-button color="primary"
                                     class="bg-gray-200 fill-slate-100  hover:bg-slate-400 ml-1" (click)="closeDrawer()"
-                                    matTooltip="Cancel" aria-label="hovered over">
-                                    <!-- <mat-icon [svgIcon]="'mat_outline:close'"></mat-icon> -->
-                                    <span class="e-icons e-circle-close"></span>
+                                    matTooltip="Close Edit" aria-label="hovered over">                                    
+                                    <span class="e-icons e-chevron-left"></span>
                                 </button>
 
                             </div>
@@ -207,7 +209,8 @@
                                     </div>
 
                                     <ejs-grid id="grid-journal-list" [dataSource]='store.gl() |filterType: "GL"'
-                                        [selectionSettings]="selectionOptions" [editSettings]='editSettings'
+                                        [selectionSettings]="selectionOptions" 
+                                        [editSettings]='editSettings'
                                         [allowSorting]='true'
                                         [sortSettings]='initialSort'  
                                         [searchSetting]="searchOptions" [allowFiltering]='false' [rowHeight]="30"
@@ -350,31 +353,13 @@
                                             </button>
                                             }
 
-                                            
 
 
                                             <button mat-icon-button color="primary"
-                                                class="bg-slate-200 hover:bg-slate-400 ml-1" (click)="onClone($event)"
-                                                matTooltip="Clone" aria-label="hovered over">
-
-                                                <span class="e-icons e-copy"></span>
-                                            </button>
-
-
-
-                                            <button mat-icon-button color="primary"
-                                                class="bg-slate-200 text-gray-100 hover:bg-slate-400 ml-1"
-                                                (click)="onDelete($event)" matTooltip="Cancel Transaction"
-                                                aria-label="hovered over">
-                                                <mat-icon [svgIcon]="'feather:trash-2'"></mat-icon>
-                                            </button>
-
-                                            <button mat-icon-button color="primary"
-                                                class="bg-gray-200 hover:bg-slate-400 ml-1" (click)="onAddEvidence()"
+                                                class="bg-gray-200 hover:bg-slate-400 ml-1" 
+                                                (click)="onAddEvidence()"
                                                 matTooltip="Evidence" aria-label="Evidence">
-
                                                 <span class="e-icons e-text-alternative"></span>
-
                                             </button>
 
 
@@ -384,6 +369,14 @@
                                                 aria-label="complete">
                                                 <span class="e-icons e-check-box"></span>
                                             </button>
+
+                                            <button mat-icon-button color="primary"
+                                                class="bg-slate-200 text-gray-100 hover:bg-slate-400 ml-1"
+                                                (click)="onDelete($event)" matTooltip="Cancel Transaction"
+                                                aria-label="hovered over">
+                                                <mat-icon [svgIcon]="'feather:trash-2'"></mat-icon>
+                                            </button>
+
 
                                         </div>
                                         @defer () {

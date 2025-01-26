@@ -9,6 +9,12 @@ export const selectJournals = createSelector(
     }
 );
 
+export const cloneJournals = createSelector(
+    getJournalState, (state) => {
+        return state.journals;
+    }
+);
+
 export const selectPanelCode = createSelector(
     getJournalState,
     ({ journalLedgerPanel }) => journalLedgerPanel

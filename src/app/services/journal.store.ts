@@ -19,6 +19,7 @@ import {
     IJournalDetailTemplate,
     IJournalHeader,
     IJournalTemplate,
+    ITemplateParams,
     
 } from 'app/models/journals';
 import { JournalService } from '../services/journal.service';
@@ -29,6 +30,7 @@ import { IType } from 'app/models/types';
 import { IPeriod, IPeriodParam } from 'app/models/period';
 import { ISubType } from 'app/models/subtypes';
 import {FundsService} from "./funds.service";
+import { ITemplateRender } from '@syncfusion/ej2-grids';
 
 
 export interface JournalStateInterface {
@@ -378,6 +380,34 @@ export const JournalStore = signalStore(
             next: (journal) => patchState(state, { details: journal}),
             error: console.error,
             finalize: () => patchState(state, { isLoading: false }),
+          })
+        );
+      })
+    )
+  ),
+  cloneJournal: rxMethod<number>(
+    pipe(
+      tap(() => patchState(state, { isLoading: true })),
+      switchMap((params) => {
+        return journalService.cloneJournalById(params).pipe(
+        tapResponse({
+          next: console.log,
+          error: console.error,
+          finalize: () => patchState(state, { isLoading: false }),
+          })
+        );
+      })
+    )
+  ),
+  createTemplate: rxMethod<ITemplateParams>(
+    pipe(
+      tap(() => patchState(state, { isLoading: true })),
+      switchMap((params) => {
+        return journalService.createTemplateById(params).pipe(
+        tapResponse({
+          next: console.log,
+          error: console.error,
+          finalize: () => patchState(state, { isLoading: false }),
           })
         );
       })

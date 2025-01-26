@@ -20,6 +20,7 @@ import {
         loadPeriodSuccess,
         loadPeriodFailure,
         loadPeriod,
+        cloneJournalSuccess,
                 
         } from './Journal.Action'; 
          
@@ -30,6 +31,14 @@ const journalReducer = createReducer(
         return {
             ...state,
             journals : action.journals,
+            error: null,
+        }
+    }),
+
+    on(cloneJournalSuccess, (state, action) => {
+        return {
+            ...state,
+            journals: [...state.journals, action.journals],
             error: null,
         }
     }),

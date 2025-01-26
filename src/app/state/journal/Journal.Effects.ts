@@ -24,6 +24,10 @@ import {
   loadJournalHeaderByPeriodSuccess,
   loadJournalHeaderByPeriodFailure,
 
+  cloneJournal,
+  cloneJournalSuccess,
+  cloneJournalFailure,
+
   emptyAction,
 
 } from "./Journal.Action";
@@ -48,11 +52,23 @@ export class journalHeaderEffects {
     )
   );
 
+  _cloneJournal = createEffect(() =>
+    this.actions.pipe(
+      ofType(cloneJournal),
+      exhaustMap((action) => {
+        return this.journalService.cloneJournalById(action.journal_id).pipe(
+          map((data) => cloneJournalSuccess({ journals : data })),
+          catchError((error) => of(cloneJournalFailure({ error })))
+        );
+      })
+    )
+  );
+
   _loadJournalHeaderByPeriod = createEffect(() =>
     this.actions.pipe(
       ofType(loadJournalHeaderByPeriod),
       exhaustMap((action) => {
-        return this.journalService.getJournalHeaderByPeriod( action.period).pipe(
+        return this.journalService.getJournalHeaderByPeriod(action.period).pipe(
           map((data) => loadJournalHeaderByPeriodSuccess({ journals : data })),
           catchError((error) => of(loadJournalHeaderByPeriodFailure({ error })))
         );
