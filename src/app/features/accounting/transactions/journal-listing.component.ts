@@ -155,7 +155,7 @@ const imports = [
 
                                 <e-columns>
                                     <e-column field='journal_id' headerText='ID' isPrimaryKey='true' isIdentity='true' visible='true' width='60'></e-column>
-                                    <e-column field='status' headerText='Status' width='60'>
+                                    <e-column field='status' headerText='Status' width='70'>
                                             <ng-template #template let-data>                       
                                                 @if(data.status === 'CLOSED') {
                                                     <div>
@@ -280,7 +280,6 @@ export class JournalEntryComponent implements OnInit, OnDestroy {
 
     sTitle = 'Transaction Listings by Journal Type';
     
-
     currentRowData: any;
     drawOpen: 'open' | 'close' = 'open';
     collapsed = false;
@@ -339,8 +338,7 @@ export class JournalEntryComponent implements OnInit, OnDestroy {
             case 'Create Template':
                 this.onTemplate();
                 break;
-            case 'Settings':
-                
+            case 'Settings':                
                 this.openDrawer();
                 break;
         }
@@ -371,10 +369,10 @@ export class JournalEntryComponent implements OnInit, OnDestroy {
         this.toast.success('Template');        
     }
 
-    onClone() {
-        this.toast.success('Clone', this.currentRowData.journal_id);        
+    onClone() {        
         this.Store.dispatch(cloneJournal({ journal_id: this.currentRowData.journal_id }));
         this.Store.dispatch(loadJournalHeaderByPeriod({ period: this.periodParam }));
+        this.toast.success('Journal Entry Cloned : ', this.currentRowData.journal_id);        
     }
 
     onAdd() {
