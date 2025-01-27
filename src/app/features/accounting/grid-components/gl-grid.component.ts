@@ -53,12 +53,11 @@ const keyExpr = ["account", "child"];
                 [columns]="columns()"
                 [allowSorting]='true'
                 [showColumnMenu]='true'                
-                [gridLines]="lines"
-                [allowFiltering]='true'   
-                (rowSelected)="rowSelected($event)"              
+                [gridLines]="lines"                
                 [toolbar]='toolbarOptions'                 
                 [filterSettings]='filterOptions'
                 [editSettings]='editSettings'
+                [allowFiltering]='true'                   
                 [enablePersistence]='false'
                 [enableStickyHeader]='true'
                 [allowGrouping]="false"
@@ -68,6 +67,7 @@ const keyExpr = ["account", "child"];
                 [allowPdfExport]='true' 
                 [contextMenuItems]="contextMenuItems"
                 (actionBegin)='actionBegin($event)' 
+                (rowSelected)="rowSelected($event)"              
                 (actionComplete)='actionComplete($event)'>
         </ejs-grid>
         </ng-container>        
