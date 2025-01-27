@@ -125,19 +125,19 @@ const imports = [
                   (showBack)="false" >
     </grid-menubar>  
 
-    <mat-drawer-container id="target" class="flex flex-col min-w-0 overflow-y-auto -px-10 h-[calc(100vh-25rem)] mt-2 e-section-control">    
+    <mat-drawer-container id="target" class="flex flex-col min-w-0 overflow-y-auto -px-10 h-[calc(100vh-23.75rem)] ">    
         <mat-card>
             <div class="flex-auto">
                 <div class="h-full border-gray-300">            
                     <div class="flex-col">
                     @defer (on viewport; on timer(300ms)) {
                         @if(journalHeader$ | async; as journals) {                                           
-                            <ng-container>                     
+                        <ng-container>                     
                             <ejs-grid 
                                 [dataSource]="journals | filterType: transactionType()"
                                 [rowHeight]='30'
                                 [allowSorting]='true'
-                                [showColumnMenu]='true'                
+                                [showColumnMenu]='false'                
                                 [gridLines]="lines"
                                 [allowFiltering]='false'                 
                                 [toolbar]='toolbarOptions'                                             
@@ -213,7 +213,7 @@ const imports = [
                                         <e-column field='party_id'    headerText='Vendor' width='100' [visible]='false'></e-column>
                                 </e-columns>
                             </ejs-grid>         
-                            </ng-container> 
+                        </ng-container> 
 
                         }
                         @else {
@@ -255,10 +255,10 @@ export class JournalEntryComponent implements OnInit, OnDestroy {
     public route = inject(Router);
     public Store = inject(Store);
     public toast = inject(ToastrService);
-
-
-    public periodForm!: FormGroup;
     private fb = inject(FormBuilder);
+
+
+    public periodForm!: FormGroup;    
     public transactionType = input('GL');
     public toolbarTitle: string = "Journal Entry";
     public sGridTitle = 'Journal Entry';
@@ -280,7 +280,6 @@ export class JournalEntryComponent implements OnInit, OnDestroy {
 
     sTitle = 'Transaction Listings by Journal Type';
     
-
     currentRowData: any;
     drawOpen: 'open' | 'close' = 'open';
     collapsed = false;
@@ -297,14 +296,8 @@ export class JournalEntryComponent implements OnInit, OnDestroy {
             iconCss: 'e-icons e-edit-2'
         },
         {
-            separator: true
-        },
-        {
             text: 'Create New Journal',
             iconCss: 'e-icons e-circle-add'
-        },
-        {
-            separator: true
         },
         {
             text: 'Clone Journal Entry',
@@ -319,7 +312,7 @@ export class JournalEntryComponent implements OnInit, OnDestroy {
         },
         {
             text: 'Settings',
-            iconCss: 'e-icons e-table-overwrite-cells'
+            iconCss: 'e-icons e-settings'
         },
 
     ];

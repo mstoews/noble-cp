@@ -8,13 +8,17 @@ import { GridSettingsService, IGridSettingsModel } from 'app/services/grid.setti
 import { ReactiveFormsModule, FormsModule, FormBuilder } from '@angular/forms';
 import { MaterialModule } from 'app/services/material.module';
 import { MatDrawer } from '@angular/material/sidenav';
+import { MenuEventArgs, MenuItemModel } from '@syncfusion/ej2-navigations';
+import { ToastrService } from 'ngx-toastr';
+import { ContextMenuAllModule } from '@syncfusion/ej2-angular-navigations';
 
 const mods = [
     CommonModule,
     MaterialModule,
     ReactiveFormsModule,
     FormsModule,
-    GridModule
+    GridModule,
+    ContextMenuAllModule
 ];
 
 const providers = [
@@ -30,7 +34,8 @@ const providers = [
     EditService,
     AggregateService,
     ColumnMenuService,
-    SearchService
+    SearchService,
+    ContextMenuService
 ];
 
 const keyExpr = ["account", "child"];
@@ -42,14 +47,15 @@ const keyExpr = ["account", "child"];
     template: `    
     <mat-drawer-container class="flex-col">        
     <ng-container >
-        <ejs-grid  #grid_parent id="grid_parent"  class="e-grid mt-3 h-[calc(100vh)-100px]"         
+        <ejs-grid  #grid_parent id="grid_parent" class="e-grid mt-3 h-[calc(100vh)-100px] border-1 border-gray-200"         
                 [rowHeight]='30'               
                 [dataSource]="data()" 
                 [columns]="columns()"
                 [allowSorting]='true'
                 [showColumnMenu]='true'                
                 [gridLines]="lines"
-                [allowFiltering]='true'                 
+                [allowFiltering]='true'   
+                (rowSelected)="rowSelected($event)"              
                 [toolbar]='toolbarOptions'                 
                 [filterSettings]='filterOptions'
                 [editSettings]='editSettings'
@@ -64,7 +70,7 @@ const keyExpr = ["account", "child"];
                 (actionBegin)='actionBegin($event)' 
                 (actionComplete)='actionComplete($event)'>
         </ejs-grid>
-        </ng-container>
+        </ng-container>        
     </mat-drawer-container>
     `,
     providers: [providers],
@@ -82,6 +88,7 @@ const keyExpr = ["account", "child"];
     ]
 })
 export class GLGridComponent implements OnInit {
+    
     gridForm: any;
     public context: any;
 
@@ -94,6 +101,7 @@ export class GLGridComponent implements OnInit {
     public lines: GridLine;
     private authService = inject(AuthService);
     private gridSettingsService = inject(GridSettingsService);
+    toast = inject(ToastrService);
 
     readonly data = input<Object[]>(undefined);
     readonly columns = input<Object[]>(undefined);
@@ -114,12 +122,18 @@ export class GLGridComponent implements OnInit {
     public filterSettings: FilterSettingsModel;
 
     public grid = viewChild<GridComponent>('parent_grid');
-    public drawer = viewChild<MatDrawer>('drawer');
+    public editDrawer = viewChild<MatDrawer>('drawer');
     private fb = inject(FormBuilder);
     public state?: GridComponent;
     public message?: string;
     public userId: string;
     sTitle: any;
+
+
+    public animation = {
+        effect: 'FadeIn',
+        duration: 800
+    };
 
     public filterOptions: Object = { type: 'Excel' };
 
@@ -131,15 +145,40 @@ export class GLGridComponent implements OnInit {
         this.context = { enableContextMenu: true, contextMenuItems: [], customContextMenuItems: [{ id: 'clear', text: "Clear Selection" }] };
         this.initialDatagrid();
         this.lines = 'Both';
-        this.contextMenuItems = ['AutoFit', 'AutoFitAll', 'SortAscending', 'SortDescending',
-            'Copy', 'Edit', 'Delete', 'Save', 'Cancel',
-            'PdfExport', 'ExcelExport', 'CsvExport', 'FirstPage', 'PrevPage',
-            'LastPage', 'NextPage'];
         this.editing = { allowDeleting: true, allowEditing: true, allowEditOnDblClick: false, allowAdding: true };
         this.userId = this.authService.user()?.uid
         this.createEmptyForm();
-
     }
+
+    onClone(e: any) {
+        this.toast.success('Template Clone', 'Clone');
+    }
+
+    rowSelected($event: any) {
+        this.onFocusChanged.emit($event);
+    }
+
+    onEdit(e: any) {
+        this.toast.success('Edit Journal', 'Edit');
+    }
+
+    onDelete(e: any) {
+        this.toast.success('Template');
+    }
+
+    onUpdate(e: any) {
+        const rawData = {
+            settings_name: this.gridForm.value.settings_name,
+            grid_name: this.gridForm.value.grid_name,
+        };
+        this.closeDrawer();
+    }
+
+    onCreate($event: any) {
+        this.toast.success('onCreate called');
+    }
+
+
 
     public readSettings() {
         return this.gridSettingsService.readAll();
@@ -177,7 +216,7 @@ export class GLGridComponent implements OnInit {
     onExportPDF() {
         console.log('Refresh');
         const fileName = new Date().toLocaleDateString() + '.xlsx';
-        this.grid()!.pdfExport({            
+        this.grid()!.pdfExport({
             pageOrientation: 'Landscape', pageSize: 'A4', fileName: 'TB-31-01-2024.pdf', header: {
                 fromTop: 0,
                 height: 120,
@@ -192,7 +231,7 @@ export class GLGridComponent implements OnInit {
         });
     }
 
-    public onAdd() { 
+    public onAdd() {
 
     }
 
@@ -261,40 +300,25 @@ export class GLGridComponent implements OnInit {
         });
     }
 
-    public openDrawer() {
-        const opened = this.drawer().opened;
+    public openEditDrawer() {
+        const opened = this.editDrawer().opened;
         if (opened !== true) {
-            this.drawer().toggle();
+            this.editDrawer().toggle();
         } else {
             return;
         }
     }
 
     closeDrawer() {
-        const opened = this.drawer().opened;
+        const opened = this.editDrawer().opened;
         if (opened === true) {
-            this.drawer().toggle();
+            this.editDrawer().toggle();
         } else {
             return;
         }
     }
 
-    onUpdate(e: any) {
-        const rawData = {
-            settings_name: this.gridForm.value.settings_name,
-            grid_name: this.gridForm.value.grid_name,
-        };
 
-        this.closeDrawer();
-    }
-
-    onCreate($event: any) {
-        throw new Error('Method not implemented.');
-    }
-
-    onDelete($event: any) {
-        throw new Error('Method not implemented.');
-    }
 
 
 }

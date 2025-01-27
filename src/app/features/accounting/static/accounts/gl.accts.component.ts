@@ -34,6 +34,9 @@ import { GLGridComponent } from "../../grid-components/gl-grid.component";
 import { Store } from "@ngrx/store";
 import { accountsFeature } from "app/state/accts/accts.state";
 import { accountPageActions } from "app/state/accts/actions/accts-page.actions";
+import { MenuEventArgs, MenuItemModel } from "@syncfusion/ej2-navigations";
+import { ContextMenuAllModule } from "@syncfusion/ej2-angular-navigations";
+import { ToastrService } from "ngx-toastr";
 
 const imports = [
   CommonModule,
@@ -42,15 +45,92 @@ const imports = [
   FormsModule,
   GridMenubarStandaloneComponent,
   GLGridComponent,
+  ContextMenuAllModule
 ];
 
 const keyExpr = ["account", "child"];
 
 @Component({
   selector: "glaccounts",
-  imports: [imports, ],
+  imports: [imports,],
   template: `
     <div class="h-[calc(100vh)-100px] ">
+    <mat-drawer
+        class="w-[450px]"
+        #settings
+        [opened]="false"
+        mode="over"
+        [position]="'end'"
+        [disableClose]="false"
+      >
+        <mat-card class="m-2 p-2 border-1 border-gray-500">
+        <div class="flex flex-col w-full text-gray-700 max-w-140 filter-article filter-interactive">
+          <div class="h-12 rounded-lg p-2 text-2xl text-justify text-gray-200 bg-slate-600" mat-dialog-title> Settings </div>
+          <form [formGroup]="settingsForm" class="form">
+          <div class="w-full mt-2">            
+            <div class="text-secondary">Accounts Used for Payments and Receivables</div>
+        </div>
+        <div class="grid sm:grid-cols-4 gap-6 w-full mt-8">
+            <!-- Accounts Receivable Contra -->            
+            <div class="sm:col-span-4">
+                <mat-form-field class="fuse-mat-emphasized-affix w-full"  [subscriptSizing]="'dynamic'">                    
+                   <div class="text-secondary"  matPrefix> AR Contra </div>                   
+                   <input [formControlName]="'arc'" matInput>
+                </mat-form-field>
+            </div>
+            <!-- Accounts Receivable -->
+            <div class="sm:col-span-4">
+                <mat-form-field  class="fuse-mat-emphasized-affix w-full"  [subscriptSizing]="'dynamic'">                    
+                    <div class="text-secondary"  matPrefix> AR </div>
+                    <input [formControlName]="'ar'"  matInput>
+                </mat-form-field>
+            </div>
+
+            <!-- Accounts Payable Contra -->            
+            <div class="sm:col-span-4">
+                <mat-form-field class="fuse-mat-emphasized-affix w-full"  [subscriptSizing]="'dynamic'">                    
+                   <div class="text-secondary"  matPrefix> AP Contra </div>                   
+                   <input [formControlName]="'apc'" matInput>
+                </mat-form-field>
+            </div>
+            <!-- Accounts Payable -->
+            <div class="sm:col-span-4">
+                <mat-form-field  class="fuse-mat-emphasized-affix w-full"  [subscriptSizing]="'dynamic'">                    
+                    <div class="text-secondary"  matPrefix> AP </div>
+                    <input [formControlName]="'ap'"  matInput>
+                </mat-form-field>
+            </div>
+                        
+          </div>
+          </form>
+
+          <div mat-dialog-actions class="gap-2 mb-3 mt-4">
+                  @if (bSettingsDirty === true) {
+                    <button mat-icon-button color="primary" class="bg-slate-200 hover:bg-slate-400 ml-1" (click)="onUpdateJournalEntry()"
+                      matTooltip="Save" aria-label="hovered over">
+                      <span class="e-icons e-save"></span>
+                    </button>
+                    }
+
+                    <!-- <button mat-icon-button color="primary" 
+                            class=" hover:bg-slate-400 ml-1" (click)="onAdd()" matTooltip="New" aria-label="hovered over">                        
+                        <span class="e-icons e-circle-add"></span>
+                    </button>
+
+                    <button mat-icon-button color="primary" 
+                            class=" hover:bg-slate-400 ml-1" (click)="onDelete($event)" matTooltip="Delete" aria-label="hovered over">                        
+                        <span class="e-icons e-trash"></span>
+                    </button> -->
+
+                    <button mat-icon-button color="primary"
+                            class=" hover:bg-slate-400 ml-1"  (click)="closeSettings()" matTooltip="Close"
+                            aria-label="hovered over">
+                            <span class="e-icons e-circle-close"></span>
+                    </button>                    
+            </div>
+            </div>
+        </mat-card>
+      </mat-drawer>
       <mat-drawer
         class="w-[450px]"
         #drawer
@@ -141,7 +221,7 @@ const keyExpr = ["account", "child"];
           </form>
 
           <div mat-dialog-actions class="gap-2 mb-3">
-                  @if (bHeaderDirty === true) {
+                  @if (bAccountsDirty === true) {
                     <button mat-icon-button color="primary" class="bg-slate-200 hover:bg-slate-400 ml-1" (click)="onUpdateJournalEntry()"
                       matTooltip="Save" aria-label="hovered over">
                       <span class="e-icons e-save"></span>
@@ -167,22 +247,19 @@ const keyExpr = ["account", "child"];
             </div>
         </mat-card>
       </mat-drawer>
-      <mat-drawer-container class="flex-col">
+      <mat-drawer-container id="target" class="flex-col">
         <ng-container>
           <div class="border-1 border-gray-500 mt-3">
-            <grid-menubar
-              (notifyParentRefresh)="onRefresh()"
-              (notifyParentAdd)="onAdd()"
-              (notifyParentDelete)="onDeleteSelection()"
-              (notifyParentUpdate)="onSelection()"
-              [inTitle]="'Account Maintenance'"
-            >
-            </grid-menubar>
-
+          <grid-menubar 
+            class="pl-5 pr-5"            
+            [showBack]="false"                         
+            [inTitle]="'General Ledger Account Maintenance'">
+          </grid-menubar>
             
-            @if ((isLoading$ | async) === false) {
+           @if ((isLoading$ | async) === false) {
             @if(accounts$ | async; as accounts) {
               <gl-grid #gl_grid
+              (onFocusChanged)="onSelection($event)"
               (onUpdateSelection)="selectedRow($event)"
               [data]="accounts"
               [columns]="cols" >
@@ -197,6 +274,12 @@ const keyExpr = ["account", "child"];
           </div>
         </ng-container>
       </mat-drawer-container>
+      <ejs-contextmenu              
+             target='#target' 
+             (select)="itemSelect($event)"
+             [animationSettings]='animation'
+             [items]= 'menuItems'> 
+      </ejs-contextmenu> 
     </div>
   `,
   providers: [
@@ -223,16 +306,18 @@ const keyExpr = ["account", "child"];
     `,
   ],
 })
-export class GlAccountsComponent  extends GLGridComponent {
-  
-  public drawer = viewChild<MatDrawer>("drawer"); 
+export class GlAccountsComponent extends GLGridComponent {
+
+  public editDrawer = viewChild<MatDrawer>("drawer");
+  public settingsDrawer = viewChild<MatDrawer>("settings");
+
   accountsForm!: FormGroup;
+  settingsForm!: FormGroup;
 
   private _fuseConfirmationService = inject(FuseConfirmationService);
 
   private formBuilder = inject(FormBuilder);
   private auth = inject(AuthService);
-  // accountService = inject(AccountsService);
   subtypeService = inject(SubTypeService);
   typeStore = inject(TypeStore);
 
@@ -240,49 +325,105 @@ export class GlAccountsComponent  extends GLGridComponent {
   accounts$ = this.Store.select(accountsFeature.selectAccounts);
   selectedAccounts$ = this.Store.select(accountsFeature.selectSelectedAccount);
   isLoading$ = this.Store.select(accountsFeature.selectIsLoading);
+  toast = inject(ToastrService);
 
   public sTitle = "Settings/Account Maintenance";
   public title = "General Ledger Accounts";
   public selectedItemKeys: any[] = [];
   public bDirty: boolean = false;
   private currentRow: Object;
+  public bSettingsDirty: boolean = false;
 
-  onSelection() {    
-    this.openDrawer();
+  onSelection(e: any) {
+    this.toast.success("Selected", JSON.stringify(e.data));
+    this.currentRow = e.data;
   }
 
   public cols = [
-    { field: "account",     headerText: "Group",        width: 80, textAlign: "Left" },
-    { field: "child",       headerText: "Account",      width: 80, textAlign: "Left", isPrimaryKey: true,    },
-    { field: "acct_type",   headerText: "Type",         width: 80, textAlign: "Left" },
-    { field: "description", headerText: "Description",  width: 200,textAlign: "Left" },
-    { field: "update_date", headerText: "Date",         width: 80, textAlign: "Left" },
-    { field: "update_user", headerText: "User",         width: 80, textAlign: "Left" },
-    { field: "comments",    headerText: "Comment",      width: 80, textAlign: "Left" },
+    { field: "account", headerText: "Group", width: 80, textAlign: "Left" },
+    { field: "child", headerText: "Account", width: 80, textAlign: "Left", isPrimaryKey: true, },
+    { field: "acct_type", headerText: "Type", width: 80, textAlign: "Left" },
+    { field: "description", headerText: "Description", width: 200, textAlign: "Left" },
+    { field: "update_date", headerText: "Date", width: 80, textAlign: "Left" },
+    { field: "update_user", headerText: "User", width: 80, textAlign: "Left" },
+    { field: "comments", headerText: "Comment", width: 80, textAlign: "Left" },
   ];
 
-  readonly displayModes = [
-    { text: "Display Mode 'full'", value: "full" },
-    { text: "Display Mode 'compact'", value: "compact" },
-  ];
+  public bAccountsDirty: boolean = false;
   
-  displayMode = "compact";
-  showInfo = true;
-  showNavButtons = true;
-  bHeaderDirty: any;
-  data: any
-
   ngOnInit() {
     // this.accountService.read();
     this.Store.dispatch(accountPageActions.load());
 
-    this.accounts$.subscribe((data) => {
-      this.data = data;
-    });
-
     this.createEmptyForm();
+
+    this.settingsForm.valueChanges.subscribe((value) => {
+      this.bSettingsDirty = true;
+    });
     
+    this.accountsForm.valueChanges.subscribe((value) => {
+      this.bAccountsDirty = true
+    });
   }
+
+
+  public menuItems: MenuItemModel[] = [
+    {
+      id: 'Edit',
+      text: 'Update Account',
+      iconCss: 'e-icons e-edit-2'
+    },
+    {
+      id: 'Create',
+      text: 'Create Account',
+      iconCss: 'e-icons e-circle-add'
+    },
+    {
+      id: 'Clone',
+      text: 'Clone Account',
+      iconCss: 'e-icons e-copy'
+    },
+    {
+      id: 'Delete',
+      text: 'Deactivate Account',
+      iconCss: 'e-icons e-delete-1'
+    },
+    {
+      separator: true
+    },
+    {
+      id: 'Settings',
+      text: 'Settings',
+      iconCss: 'e-icons e-settings'
+    },
+
+  ];
+
+  public itemSelect(args: MenuEventArgs): void {
+
+    switch (args.item.id) {
+      case 'Edit':        
+        this.selectedRow(this.currentRow);
+        break;
+      case 'Create':
+        this.onAdd();
+        break;
+      case 'Clone':
+        this.onClone("");
+        break;
+      case 'Delete':
+        this.onDelete("");
+        break;
+      case 'Settings':
+        this.onOpenSettings();
+        break;
+    }
+  }
+
+  onOpenSettings() {
+    this.settingsDrawer().open();
+  }
+
 
   selectedRow($event) {
     this.onDoubleClicked($event);
@@ -305,31 +446,32 @@ export class GlAccountsComponent  extends GLGridComponent {
     this.closeDrawer();
   }
 
-  
+
   onDoubleClicked(args: any) {
+    this.bAccountsDirty = false;
     const type = args.acct_type;
     var parent: boolean;
     parent = args.parent_account;
-    this.accountsForm.setValue({
+    this.accountsForm.patchValue({      
       account: [args.account],
       child: [args.child],
-      parent_account: parent,
+      parent_account: args.parent_account,
       description: [args.description],
       acct_type: type,
       comments: [args.comments],
     });
 
-    this.openDrawer();  
+    this.openEditDrawer();
   }
 
   onNew($event: any) {
     this.createEmptyForm();
-    this.openDrawer();
-    
+    this.openEditDrawer();
+
   }
-  
+
   onCancel() {
-      this.drawer().toggle();
+    this.editDrawer().toggle();
   }
 
 
@@ -349,7 +491,7 @@ export class GlAccountsComponent  extends GLGridComponent {
   onUpdate(e: any) {
     const dDate = new Date();
     const updateDate = dDate.toISOString().split("T")[0];
-    const user = '@'+this.auth.user().email.split("T")[0];
+    const user = '@' + this.auth.user().email.split("T")[0];
 
     const account = this.accountsForm.getRawValue();
     const rawData = {
@@ -407,7 +549,7 @@ export class GlAccountsComponent  extends GLGridComponent {
 
   onAdd() {
     this.createEmptyForm();
-    this.openDrawer();
+    this.openEditDrawer();
   }
 
   createEmptyForm() {
@@ -419,7 +561,14 @@ export class GlAccountsComponent  extends GLGridComponent {
       acct_type: ["", Validators.required],
       comments: ["", Validators.required],
     });
+    this.settingsForm = this.formBuilder.group({
+      arc: ["", Validators.required],
+      ar: ["", Validators.required],
+      apc: ["", Validators.required],
+      ap: ["", Validators.required],
+    });
   }
+
 
   createForm(e: any) {
     var parent: boolean;
@@ -438,19 +587,25 @@ export class GlAccountsComponent  extends GLGridComponent {
     this.closeDrawer();
   }
 
-  openDrawer() {
-    const opened = this.drawer().opened;
-    if (opened !== true) {
-      this.drawer().toggle();
+  closeSettings() {
+    this.settingsDrawer().close();
+  }
+
+  openEditDrawer() {
+    if (this.settingsDrawer().opened) {
+      this.settingsDrawer().close();
+    }
+    if (this.editDrawer().opened !== true) {
+      this.editDrawer().open();
     } else {
       return;
     }
   }
 
-  closeDrawer() {
-    const opened = this.drawer().opened;
+  closeEditDrawer() {
+    const opened = this.editDrawer().opened;
     if (opened === true) {
-      this.drawer().toggle();
+      this.editDrawer().toggle();
     } else {
       return;
     }
