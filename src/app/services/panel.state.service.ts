@@ -14,7 +14,6 @@ import { Panel } from '@syncfusion/ej2-angular-layouts';
 
 
 export interface PanelModel {
-  id: string;
   uid: string;
   panelName: string;
   lastPanelOpened: string;
@@ -64,8 +63,8 @@ export class PanelService {
     this.lastAccountingPanel.set(panel);
   }
 
-  addPanel(uid: string, panelState: PanelModel) {
-    return addDoc(collection(this.firestore, `users/${uid}/panels`), panelState) 
+  setPanel(uid: string, panelName: string, panelState: PanelModel) {    
+    return setDoc(doc(this.firestore, `users/${uid}/${panelName}`),  panelState); 
   }
   
   // get user id  
@@ -134,7 +133,7 @@ export const AppStore = signalStore(
   })),
   withMethods((state, panelService = inject(PanelService)) => ({       
         
-    addPanel: rxMethod<PanelModel>(
+    setPanel: rxMethod<PanelModel>(
       pipe(
         switchMap((value) => {
           patchState(state, { isLoading: true });

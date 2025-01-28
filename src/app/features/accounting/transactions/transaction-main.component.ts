@@ -19,6 +19,7 @@ import { ARTransactionComponent } from './ar-listing.component';
 import { APTransactionComponent } from './ap-listing.component';
 import { PanelService } from "../../../services/panel.state.service";
 import { GLTransactionListComponent } from './gl-listing.component';
+import { uiUpdate } from '@syncfusion/ej2-grids';
 
 
 const imports = [
@@ -268,6 +269,7 @@ export class TransactionMainComponent implements OnInit, OnDestroy {
     ngOnDestroy(): void {
 
         const panelState = {
+            uiUpdate: uiUpdate,
             id: this.selectedPanel,
             panelName: 'transactionsPanel',
             lastPanelOpened: this.selectedPanel
@@ -281,7 +283,7 @@ export class TransactionMainComponent implements OnInit, OnDestroy {
         const userId = this.panelService.getUserId()
             .subscribe((uid) => {
                 user = uid;
-                // this.panelService.addPanel(user, panelState);
+                this.panelService.setPanel(user, panelState.panelName, panelState);
             });
 
         var transactionPanel: any
