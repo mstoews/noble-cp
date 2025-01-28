@@ -149,9 +149,6 @@ export class GlMainComponent {
     panels: any[] = [];
     selectedPanel: string = 'accounts';
     
-
-    
-    
     private _unsubscribeAll: Subject<any> = new Subject<any>();
 
     constructor(
