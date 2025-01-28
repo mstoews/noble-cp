@@ -10,6 +10,7 @@ import { loadTemplates } from 'app/state/template/Template.Action';
 import { GLGridComponent } from '../grid-components/gl-grid.component';
 import { MatDrawer } from '@angular/material/sidenav';
 import { Store } from '@ngrx/store';
+import { AcademyComponent } from "../../admin/academy/academy.component";
 
 
 const imports = [
@@ -25,68 +26,74 @@ const imports = [
     selector: 'journal-template',
     imports: [imports],
     template: `
-        <mat-drawer class="lg:w-[400px] md:w-full bg-white-100" #drawer [opened]="false" mode="over" [position]="'end'"
-        [disableClose]="false">
-        <div class="flex flex-col w-full text-gray-700 max-w-140 filter-article filter-interactive">
-            <div class="h-10 pt-2 text-2xl text-justify text-black bg-slate-100" mat-dialog-title>
-                Template Update
-            </div>
-            <div mat-dialog-content>
-                <form [formGroup]="templateForm" class="flex flex-col">
-
-                    <div class="flex flex-col m-1">
-                        
-                        <div class="flex flex-col grow">
-                            <mat-label class="ml-2 text-base"> Name </mat-label>
-                            <mat-form-field class="m-1 form-element grow" appearance="outline">
-                                <input matInput placeholder="Name" formControlName="template_name" />
-                            </mat-form-field>
-                        </div>
-                        
-                        <div class="flex flex-col grow">
-                            <mat-label class="ml-2 text-base">Description</mat-label>
-                            <mat-form-field class="m-1 form-element" appearance="outline">
-                                <input matInput placeholder="Description" formControlName="description" />
-                            </mat-form-field>
-                        </div>
-
-                        <div class="flex flex-col grow">
-                            <mat-label class="ml-2 text-base">Journal Type</mat-label>
-                            <mat-form-field class="m-1 form-element" appearance="outline">
-                                <input matInput placeholder="Journal Type" formControlName="journal_type" />
-                            </mat-form-field>
-                        </div>
-
+        <mat-drawer class="lg:w-[400px] md:w-full bg-white-100" #drawer [opened]="false" mode="over" [position]="'end'" [disableClose]="false">
+        <mat-card elevated-container-elevation="3" class="m-2">
+            <div class="flex flex-col w-full text-gray-700 max-w-140 filter-article filter-interactive">
+                <div class="h-10 pt-2 text-2xl text-justify text-black bg-slate-100" >
+                <div class="flex flex-col w-full filter-article filter-interactive text-gray-700 rounded-lg">
+                    <div class="text-3xl gap-2 m-1 text-gray-100 p-2 bg-slate-600 rounded-md" mat-dialog-title>
+                     {{ "Journal Update" }}
                     </div>
-                </form>
+                </div>
+                </div>
+                <div mat-dialog-content>
+                    <form [formGroup]="templateForm" class="flex flex-col">
+
+                        <div class="flex flex-col m-1">
+                            
+                            <div class="flex flex-col grow">
+                                <mat-label class="ml-2 text-base"> Name </mat-label>
+                                <mat-form-field class="m-1 form-element grow" appearance="outline">
+                                    <input matInput placeholder="Name" formControlName="template_name" />
+                                </mat-form-field>
+                            </div>
+                            
+                            <div class="flex flex-col grow">
+                                <mat-label class="ml-2 text-base">Description</mat-label>
+                                <mat-form-field class="m-1 form-element" appearance="outline">
+                                    <input matInput placeholder="Description" formControlName="description" />
+                                </mat-form-field>
+                            </div>
+
+                            <div class="flex flex-col grow">
+                                <mat-label class="ml-2 text-base">Journal Type</mat-label>
+                                <mat-form-field class="m-1 form-element" appearance="outline">
+                                    <input matInput placeholder="Journal Type" formControlName="journal_type" />
+                                </mat-form-field>
+                            </div>
+
+                        </div>
+                    </form>
+                </div>
+                <div mat-dialog-actions>
+                        @if (bHeaderDirty === true) {
+                                <button mat-icon-button color="primary" class="hover:bg-slate-400 ml-1"
+                                            (click)="onUpdate()" matTooltip="Save"
+                                            aria-label="hovered over">                                    
+                                        <span class="e-icons e-save"></span>
+                                </button>
+                        }
+                        
+                        <button mat-icon-button color="primary" 
+                                class=" hover:bg-slate-400 ml-1" color="primary" (click)="onAdd()" matTooltip="New" aria-label="hovered over">                        
+                                <span class="e-icons e-circle-add"></span>
+                        </button>
+
+                        <button mat-icon-button color="primary" 
+                                class=" hover:bg-slate-400 ml-1" color="primary" (click)="onDelete($event)" matTooltip="Delete" aria-label="hovered over">                        
+                                <span class="e-icons e-trash"></span>
+                        </button>
+
+                        <button mat-icon-button color="primary"
+                                class=" hover:bg-slate-400 ml-1" color="primary"  (click)="onCancel()" matTooltip="Close"
+                                aria-label="hovered over">
+                                <span class="e-icons e-circle-close"></span>
+                        </button>
+                        
+
+                </div>
             </div>
-            <div mat-dialog-actions>
-            @if (bDirty === true) {
-                            <button mat-icon-button color="primary" class="hover:bg-slate-400 ml-1"
-                                        (click)="onUpdate()" matTooltip="Save"
-                                        aria-label="hovered over">                                    
-                                    <span class="e-icons e-save"></span>
-                            </button>
-                     }
-                    <button mat-icon-button color="primary" 
-                            class=" hover:bg-slate-400 ml-1" (click)="onAdd()" matTooltip="New" aria-label="hovered over">                        
-                        <span class="e-icons e-circle-add"></span>
-                    </button>
-
-                    <button mat-icon-button color="primary" 
-                            class=" hover:bg-slate-400 ml-1" (click)="onDelete($event)" matTooltip="Delete" aria-label="hovered over">                        
-                        <span class="e-icons e-trash"></span>
-                    </button>
-
-                    <button mat-icon-button color="primary"
-                            class=" hover:bg-slate-400 ml-1"  (click)="onCancel()" matTooltip="Close"
-                            aria-label="hovered over">
-                            <span class="e-icons e-circle-close"></span>
-                    </button>
-                    
-
-            </div>
-        </div>
+        </mat-card>
     </mat-drawer>
     <mat-drawer-container class="flex-col">
     <div class="sm:hide md:visible">
@@ -164,7 +171,7 @@ export class JournalTemplateComponent implements OnInit {
 
     ];
 
-    bDirty: boolean = false;
+    bHeaderDirty: boolean = false;
 
     ngOnInit() {
         this.store.dispatch(loadTemplates());
@@ -173,6 +180,10 @@ export class JournalTemplateComponent implements OnInit {
         this.currentDate = dDate.toISOString().split('T')[0];
         this.formatoptions = { type: 'dateTime', format: 'M/dd/yyyy' }
         this.createEmptyForm();
+        this.journalForm.valueChanges.subscribe((value) => {
+            this.bHeaderDirty = true;            
+        });
+
     }
 
     createEmptyForm() {
@@ -190,24 +201,6 @@ export class JournalTemplateComponent implements OnInit {
         this.bOpenDetail = true;
         // this.openDrawer();
     }
-
-    changeType(e) {
-        console.debug('changeType ', JSON.stringify(e));
-    }
-
-    changeSubType(e) {
-        console.debug('changeType ', JSON.stringify(e));
-    }
-
-
-    changeFund(e) {
-        console.debug('changeType ', JSON.stringify(e));
-    }
-
-    changeChildAccount(e) {
-        console.debug('changeType ', JSON.stringify(e));
-    }
-
 
     onAdd() {
         this.bOpenDetail = true;

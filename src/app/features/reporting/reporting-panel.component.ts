@@ -17,7 +17,7 @@ import { TrialBalanceComponent } from './trial-balance/trial-balance.component';
 import { BalanceSheetStatementRptComponent } from './financial-statement/balance-sheet-statement-rpt.component';
 import { IncomeStatementRptComponent } from './financial-statement/income-statement-rpt.component';
 import { IncomeStatementComparisonRptComponent } from './financial-statement/income-statement-comparison.component';
-import { DistributedTbComponent } from './distributed-tb.component';
+import { DistributedTbComponent } from './diistributed-tb/distributed-tb.component';
 import { TbGridComponent } from './tb-grid/tb-grid.component';
 import { AppStore, PanelService } from "../../services/panel.state.service";
 import { GridTemplateComponent } from './grid-template/grid-template.component';
@@ -41,14 +41,102 @@ const mods = [
     selector: 'transaction-main',
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    templateUrl: './reporting-panel.component.html',
+    template: `
+    <div class="flex flex-col w-full min-w-0 sm:absolute sm:inset-0 sm:overflow-hidden">
+    <mat-drawer-container class="flex-auto sm:h-full">
+        <!-- Drawer -->
+        <mat-drawer class="sm:w-72 dark:bg-gray-900" [autoFocus]="false" [mode]="drawerMode" [opened]="drawerOpened"
+            #drawer>
+            <!-- Header -->
+            <div class="flex items-center justify-between m-8 mr-6 sm:my-10">
+                <!-- Title -->
+                <div class="text-4xl font-extrabold tracking-tight leading-none">
+                    Reporting
+                </div>
+                <!-- Close button -->
+                <div class="lg:hidden">
+                    <button mat-icon-button (click)="drawer.close()">
+                        <mat-icon [svgIcon]="'heroicons_outline:academic-cap'"></mat-icon>
+                    </button>
+                </div>
+            </div>
+            <!-- Panel links -->
+            <div class="flex flex-col divide-y border-t border-b">
+                @for (panel of panels; track trackByFn($index, panel)) {
+
+                <div class="flex px-8 py-5 cursor-pointer" [ngClass]="{
+                            'hover:bg-gray-100 dark:hover:bg-hover':
+                                !selectedPanel || selectedPanel !== panel.id,
+                            'bg-primary-50 dark:bg-hover':
+                                selectedPanel && selectedPanel === panel.id
+                        }" (click)="goToPanel(panel.id)">
+                    <mat-icon [ngClass]="{
+                                'text-hint':
+                                    !selectedPanel ||
+                                    selectedPanel !== panel.id,
+                                'text-primary dark:text-primary-500':
+                                    selectedPanel && selectedPanel === panel.id
+                            }" [svgIcon]="panel.icon"></mat-icon>
+                    <div class="ml-3">
+                        <div class="font-medium leading-6" [ngClass]="{
+                                    'text-primary dark:text-primary-500':
+                                        selectedPanel &&
+                                        selectedPanel === panel.id
+                                }">
+                            {{ panel.title }}
+                        </div>
+                        <div class="mt-0.5 text-secondary">
+                            {{ panel.description }}
+                        </div>
+                    </div>
+                </div>
+
+                }
+            </div>
+        </mat-drawer>
+
+        <!-- Drawer content -->
+        <mat-drawer-content class="flex flex-col">
+            <!-- Main -->
+            <div class="flex-auto px-6 pt-9 pb-12 md:p-8 md:pb-12 lg:p-12">
+                <!-- Panel header -->
+                <div class="flex items-center">
+                    <!-- Drawer toggle -->
+                    <button class="lg:hidden -ml-2" mat-icon-button (click)="drawer.toggle()">
+                        <mat-icon [svgIcon]="'heroicons_outline:bars-3'"></mat-icon>
+                    </button>
+
+                    <!-- Panel title -->
+                    <div class="ml-2 lg:ml-0 text-3xl font-bold tracking-tight leading-none">
+                    {{ getPanelInfo(selectedPanel).title }}
+                    </div>
+                </div>
+
+                <!-- Load settings panel -->
+                <div class="mt-8">
+                    @switch (selectedPanel) {
+                        @case ('tb-grid') { <tb-grid></tb-grid>  }
+                        @case ('trial-balance') { <trial-balance></trial-balance>}
+                        @case ('balance-sheet-statement') { <balance-sheet-statement-rpt></balance-sheet-statement-rpt> }
+                        @case ('income-statement') { <income-statement-rpt></income-statement-rpt> }
+                        @case ('income-statement-comparison') {  <income-statement-comparison-rpt></income-statement-comparison-rpt> }                                        
+                        @case ('distributed-tb') { <distributed-tb></distributed-tb>  }
+                        @case ('grid-template') { <grid-template></grid-template> }                        
+                    }
+
+                    </div>
+                </div>
+            </mat-drawer-content>
+        </mat-drawer-container>
+    </div>
+    `,
     styles: ``,
     imports: [mods],
+    providers: [],
     standalone: true
 })
 export class ReportingPanelComponent {
     
-
     @ViewChild('drawer') drawer: MatDrawer;
     drawerMode: 'over' | 'side' = 'side';
     drawerOpened: boolean = true;
@@ -57,10 +145,10 @@ export class ReportingPanelComponent {
 
     private _unsubscribeAll: Subject<any> = new Subject<any>();
     
-    store = inject(AppStore);
-    panelService = inject(PanelService);
-    authService = inject(AuthService);
-    
+    //store = inject(AppStore);
+    //panelService = inject(PanelService);
+    //authService = inject(AuthService);
+    selectedPanel: string = 'distributed-tb';
 
     /**
      * Constructor
@@ -68,11 +156,12 @@ export class ReportingPanelComponent {
     constructor(
         private _changeDetectorRef: ChangeDetectorRef,
         private _fuseMediaWatcherService: FuseMediaWatcherService,
-    ) {
-
+    ) 
+    {
+        
     }
 
-    public selectedPanel = this.panelService.lastReportingPanel();
+    
 
     // -----------------------------------------------------------------------------------------------------
     // @ Lifecycle hooks
@@ -83,9 +172,11 @@ export class ReportingPanelComponent {
      */
     ngOnInit() {
          
-        this.authService.user$.pipe(takeUntilDestroyed()).subscribe((user) => {                         
-             this.store.loadPanels(user.uid)
-        });
+        // this.authService.user$.pipe(takeUntilDestroyed()).subscribe((user) => {                         
+        //      this.store.loadPanels(user.uid)
+        // });
+
+        // this.selectedPanel  = this.store.panel().lastPanelOpened || this.defaultPanel;
 
             
         this.panels = [
@@ -209,14 +300,13 @@ export class ReportingPanelComponent {
      *
      * @param panel
      */
-    goToPanel(panel: string): void {
-        this.selectedPanel.lastPanelOpened = panel;
-        this.panelService.setLastPanel(panel);
-        // Close the drawer on 'over' mode
-        if (this.drawerMode === 'over') {
-            this.drawer.close();
-        }
-    }
+    // goToPanel(panel: string): void {        
+    //     this.panelService.setLastPanel(panel);
+    //     // Close the drawer on 'over' mode
+    //     if (this.drawerMode === 'over') {
+    //         this.drawer.close();
+    //     }
+    // }
 
     /**
      * Get the details of the panel
