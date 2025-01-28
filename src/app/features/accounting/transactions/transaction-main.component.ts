@@ -166,6 +166,15 @@ export class TransactionMainComponent implements OnInit, OnDestroy {
      */
     ngOnInit(): void {
         // Setup available panels
+        var user: string;
+        const userId = this.panelService.getUserId()
+            .subscribe((uid) => {
+                user = uid;
+                this.panelService.getLastPanel(user, 'transactionsPanel').subscribe((panel) => {
+                    this.storedPanel = panel[0].lastPanelOpened;
+                })
+            });
+                    
 
 
         if (this.selectedPanel === '' && this.storedPanel === null || this.selectedPanel === undefined) {
@@ -245,7 +254,7 @@ export class TransactionMainComponent implements OnInit, OnDestroy {
 
 
     goToPanel(panel: string): void {
-        this.panelService.setLastPanel(panel);
+        // this.panelService.setPanel(panel);
         this.selectedPanel = panel;
         if (this.drawerMode === 'over') {
             this.drawer().close();
@@ -268,23 +277,24 @@ export class TransactionMainComponent implements OnInit, OnDestroy {
 
     ngOnDestroy(): void {
 
+        localStorage.setItem("transactionsPanel", this.selectedPanel);
+
         const panelState = {
-            uiUpdate: uiUpdate,
-            id: this.selectedPanel,
+            uid: '',
             panelName: 'transactionsPanel',
             lastPanelOpened: this.selectedPanel
         }
-
-
-        localStorage.setItem("transactionsPanel", this.selectedPanel);
-
 
         var user: string;
         const userId = this.panelService.getUserId()
             .subscribe((uid) => {
                 user = uid;
-                this.panelService.setPanel(user, panelState.panelName, panelState);
-            });
+                panelState.uid = user;
+                this.panelService.setPanel(panelState).then (res => {
+                    console.log(res);
+                });
+        });
+        
 
         var transactionPanel: any
 

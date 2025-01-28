@@ -38,33 +38,12 @@ export class PanelService {
   private authService = inject(AuthService);
   private authUser = this.authService.user;
   
-  public lastPanelOpened: WritableSignal<PanelModel> = signal<PanelModel>({id: '', uid: '', panelName: '', lastPanelOpened: ''});
-  public lastAccountingPanel : WritableSignal<PanelModel> = signal<PanelModel>({id: '', uid: '', panelName: '', lastPanelOpened: ''});
-  public lastBudgetPanel : WritableSignal<PanelModel> = signal<PanelModel>({id: '', uid: '', panelName: '', lastPanelOpened: ''});
-  public lastReportingPanel : WritableSignal<PanelModel> = signal<PanelModel>({id: '', uid: '', panelName: '', lastPanelOpened: ''});
-  public lastProjectsPanel: WritableSignal<PanelModel> = signal<PanelModel>({id: '', uid: '', panelName: '', lastPanelOpened: ''});
-
-  
-  public setLastPanel(panel) {
-    this.lastPanelOpened.set(panel);
+  setPanel(panelState: PanelModel) {    
+    return setDoc(doc(this.firestore, `users/${panelState.uid}/panels/${panelState.panelName}`),  panelState); 
   }
 
-  public setLastBudgetPanel(panel : PanelModel) {
-    this.lastBudgetPanel.set(panel);
-  }
-  public setLastReportingPanel(panel : PanelModel ) {
-    this.lastReportingPanel.set(panel);
-  }
-  public setLastProjectsPanel(panel : PanelModel ) {
-    this.lastProjectsPanel.set(panel);
-  }
-
-  public setLastAccountingPanel(panel : PanelModel ) {
-    this.lastAccountingPanel.set(panel);
-  }
-
-  setPanel(uid: string, panelName: string, panelState: PanelModel) {    
-    return setDoc(doc(this.firestore, `users/${uid}/${panelName}`),  panelState); 
+  update ( panelState: PanelModel) {
+    return of(this.setPanel(panelState));
   }
   
   // get user id  
@@ -72,9 +51,15 @@ export class PanelService {
     return of(this.authUser().uid);
   }
 
+  getLastPanel(uid: string, panelName) {
+    const ref = doc(this.firestore, `users/${uid}/panels`, panelName) as any;
+    const panel = collectionData<PanelModel>(ref) 
+    return panel;
+  }
+
   // delete
   delete(panel: PanelModel): Observable<PanelModel> {
-    const ref = doc(this.firestore, `users/${panel.uid}/panels`, panel.id) as any;
+    const ref = doc(this.firestore, `users/${panel.uid}/panels`, panel.panelName) as any;
     var panel: PanelModel; 
     const p =  (deleteDoc(ref).then(() => {
       panel = panel
@@ -83,30 +68,30 @@ export class PanelService {
   }
 
   // update
-  update(panel: PanelModel) : Observable<PanelModel> {
-    var panelUpdate: PanelModel;    
-    const ref = doc(this.firestore, `users/${panel.uid}/panels`, panel.id) as any;
-    updateDoc(ref, panel).then (() => {
-      this.setLastPanel(panel);
-      panelUpdate = panel;
-    });
-    return of(panelUpdate);
-  }
+  // update(panel: PanelModel) : Observable<PanelModel> {
+  //   var panelUpdate: PanelModel;    
+  //   const ref = doc(this.firestore, `users/${panel.uid}/panels`, panel.id) as any;
+  //   updateDoc(ref, panel).then (() => {
+  //     this.setLastPanel(panel);
+  //     panelUpdate = panel;
+  //   });
+  //   return of(panelUpdate);
+  // }
 
-  // updateLast
-  updateLast(uid: string, panelState: PanelModel): Observable<PanelModel> {    
-    var panel: PanelModel;    
-    const ref = doc(this.firestore, `users/${uid}/panels`, panelState.id) as any;
-    updateDoc(ref, panelState).then(() => {
-      this.setLastPanel(panelState);
-      panel = panelState;
-    });    
-    return of(panel); 
-  }
+  // // updateLast
+  // updateLast(uid: string, panelState: PanelModel): Observable<PanelModel> {    
+  //   var panel: PanelModel;    
+  //   const ref = doc(this.firestore, `users/${uid}/panels`, panelState.id) as any;
+  //   updateDoc(ref, panelState).then(() => {
+  //     this.setLastPanel(panelState);
+  //     panel = panelState;
+  //   });    
+  //   return of(panel); 
+  // }
 
   // Read
   readByUserId(uid: string ): Observable<PanelModel[]> {
-    const q = query(collection(this.firestore, `users/${uid}/panels`), orderBy('panelName'));
+    const q = query(collection(this.firestore, `users/${uid}/panels`), where , orderBy('panelName'));
     const panels = collectionData(q)
     return panels as Observable<PanelModel[]>;
   }
@@ -116,6 +101,12 @@ export class PanelService {
     return of(panel);
   } 
 
+  findPanelByName(uid: string , panelName: string): Observable<PanelModel> {
+    const collectionRef = collection(this.firestore, `users/${uid}/panels`);
+    const q = query(collectionRef, where('panelName', '==', panelName));
+    const list = collectionData(q)  as Observable<PanelModel[]>;    
+    return list.pipe(map((col) => col[0]));
+  }
 }
   
 
@@ -127,10 +118,7 @@ export const AppStore = signalStore(
     uid: '',
     error: null,
     isLoading: false,
-  }),
-  withComputed((state) => ({
-    selected: computed(() => state.panels().filter((t) => state.panels()[t.id])),
-  })),
+  }),  
   withMethods((state, panelService = inject(PanelService)) => ({       
         
     setPanel: rxMethod<PanelModel>(
@@ -155,7 +143,7 @@ export const AppStore = signalStore(
           return panelService.update(value).pipe(
             tapResponse({              
                 next: (panel) => {
-                  const updatedFund = state.panels().filter((panels) => panels.panelName !== panel.panelName);
+                  const updatedFund = state.panels().filter((panels) => panels.panelName !== panels.panelName);
                   patchState(state, { panels: updatedFund });                
                 },               
               error: console.error,

@@ -31,6 +31,7 @@ import { Store } from '@ngrx/store';
 import { loadFunds } from 'app/state/funds/Funds.Action';
 import { selectFunds } from 'app/state/funds/Funds.Selector';
 import { PartyComponent } from './gl.party.component';
+import { PanelService } from 'app/services/panel.state.service';
 
 @Component({
     template: `
@@ -148,6 +149,7 @@ export class GlMainComponent {
     drawerOpened: boolean = true;
     panels: any[] = [];
     selectedPanel: string = 'accounts';
+    public panelService = inject(PanelService);
     
     private _unsubscribeAll: Subject<any> = new Subject<any>();
 
@@ -234,6 +236,24 @@ export class GlMainComponent {
      * On destroy
      */
     ngOnDestroy(): void {
+
+        const panelState = {
+            uid: '',
+            panelName: 'referencePanel',
+            lastPanelOpened: this.selectedPanel
+        }
+
+        var user: string;
+        const userId = this.panelService.getUserId()
+            .subscribe((uid) => {
+                user = uid;
+                panelState.uid = user;
+                this.panelService.setPanel(panelState).then (res => {
+                    console.log(res);
+                });
+        });
+    
+
         // Unsubscribe from all subscriptions
         this._unsubscribeAll.next(null);
         this._unsubscribeAll.complete();

@@ -17,7 +17,7 @@ import { TrialBalanceComponent } from './trial-balance/trial-balance.component';
 import { BalanceSheetStatementRptComponent } from './financial-statement/balance-sheet-statement-rpt.component';
 import { IncomeStatementRptComponent } from './financial-statement/income-statement-rpt.component';
 import { IncomeStatementComparisonRptComponent } from './financial-statement/income-statement-comparison.component';
-import { DistributedTbComponent } from './diistributed-tb/distributed-tb.component';
+import { DistributedTbComponent } from './distributed-tb/distributed-tb.component';
 import { TbGridComponent } from './tb-grid/tb-grid.component';
 import { AppStore, PanelService } from "../../services/panel.state.service";
 import { GridTemplateComponent } from './grid-template/grid-template.component';
@@ -142,6 +142,7 @@ export class ReportingPanelComponent {
     drawerOpened: boolean = true;
     panels: any[] = [];
     defaultPanel = "distributed-tb"
+    panelService = inject(PanelService);
 
     private _unsubscribeAll: Subject<any> = new Subject<any>();
     
@@ -287,6 +288,23 @@ export class ReportingPanelComponent {
      */
     ngOnDestroy(): void {
         // Unsubscribe from all subscriptions
+        const panelState = {
+            uid: '',
+            panelName: 'reportingPanel',
+            lastPanelOpened: this.selectedPanel
+        }
+
+        var user: string;
+        const userId = this.panelService.getUserId()
+            .subscribe((uid) => {
+                user = uid;
+                panelState.uid = user;
+                this.panelService.setPanel(panelState).then (res => {
+                    console.log(res);
+                });
+        });
+    
+
         this._unsubscribeAll.next(null);
         this._unsubscribeAll.complete();
     }

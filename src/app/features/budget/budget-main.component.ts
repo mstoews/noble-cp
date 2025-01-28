@@ -1,5 +1,5 @@
 import { NgClass, NgSwitch, NgSwitchCase } from '@angular/common';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { MatDrawer } from '@angular/material/sidenav';
 import { FuseMediaWatcherService } from '@fuse/services/media-watcher';
 import { MaterialModule } from 'app/services/material.module';
@@ -7,6 +7,7 @@ import { Subject, takeUntil } from 'rxjs';
 import { BudgetWizardComponent } from './budget-wizard.component';
 import { BudgetUpdateComponent } from './update/budget-update.component';
 import { BudgetLandingComponent } from './budget-landing/budget-landing.component';
+import { PanelService } from 'app/services/panel.state.service';
 
 
 const imports = [
@@ -33,6 +34,7 @@ export class BudgetMainComponent {
     panels: any[] = [];
     selectedPanel: string = 'budget-landing';
     private _unsubscribeAll: Subject<any> = new Subject<any>();
+    public panelService = inject(PanelService);
 
     /**
      * Constructor
@@ -102,6 +104,23 @@ export class BudgetMainComponent {
      * On destroy
      */
     ngOnDestroy(): void {
+        const panelState = {
+            uid: '',
+            panelName: 'budgetPanel',
+            lastPanelOpened: this.selectedPanel
+        }
+
+        var user: string;
+        const userId = this.panelService.getUserId()
+            .subscribe((uid) => {
+                user = uid;
+                panelState.uid = user;
+                this.panelService.setPanel(panelState).then (res => {
+                    console.log(res);
+                });
+        });
+    
+
         // Unsubscribe from all subscriptions
         this._unsubscribeAll.next(null);
         this._unsubscribeAll.complete();
