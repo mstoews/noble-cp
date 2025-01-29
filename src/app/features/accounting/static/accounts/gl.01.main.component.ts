@@ -31,15 +31,16 @@ import { Store } from '@ngrx/store';
 import { loadFunds } from 'app/state/funds/Funds.Action';
 import { selectFunds } from 'app/state/funds/Funds.Selector';
 import { PartyComponent } from './gl.party.component';
-import { PanelService } from 'app/services/panel.state.service';
+import { AppStore, PanelService } from 'app/services/panel.state.service';
 
 @Component({
     template: `
     <div class="flex flex-col w-full min-w-0 sm:absolute sm:inset-0 sm:overflow-hidden">
     <mat-drawer-container class="flex-auto sm:h-full">
         <!-- Drawer -->
-        <mat-drawer class="sm:w-72 dark:bg-gray-900" [autoFocus]="false" [mode]="drawerMode" [opened]="drawerOpened"
-            #drawer>
+        @if(store.panels().length > 0) {
+
+        <mat-drawer class="sm:w-72 dark:bg-gray-900" [autoFocus]="false" [mode]="drawerMode" [opened]="drawerOpened"  #drawer>
             <!-- Header -->
             <div class="flex items-center justify-between m-8 mr-6 sm:my-10">
                 <!-- Title -->
@@ -47,7 +48,7 @@ import { PanelService } from 'app/services/panel.state.service';
                     Reference Data
                 </div>
                 <!-- Close button -->
-                <div class="lg:hidden">
+                <div class="xl2:hidden">
                     <button mat-icon-button (click)="drawer.close()">
                         <mat-icon [svgIcon]="'heroicons_outline:academic-cap'"></mat-icon>
                     </button>
@@ -58,9 +59,7 @@ import { PanelService } from 'app/services/panel.state.service';
                 @for (panel of panels; track trackByFn($index, panel)) {
 
                 <div class="flex px-8 py-5 cursor-pointer" [ngClass]="{
-                            'hover:bg-gray-100 dark:hover:bg-hover':
-                                !selectedPanel || selectedPanel !== panel.id,
-                            'bg-primary-50 dark:bg-hover':
+                            'hover:bg-gray-100 dark:hover:bg-hover': !selectedPanel || selectedPanel !== panel.id, 'bg-primary-50 dark:bg-hover':
                                 selectedPanel && selectedPanel === panel.id
                         }" (click)="goToPanel(panel.id)">
                     <mat-icon [ngClass]="{
@@ -87,6 +86,7 @@ import { PanelService } from 'app/services/panel.state.service';
                 }
             </div>
         </mat-drawer>
+        }
 
         <!-- Drawer content -->
         <mat-drawer-content class="flex flex-col">
@@ -139,7 +139,7 @@ import { PanelService } from 'app/services/panel.state.service';
         NgClass,
         TeamsComponent,
     ],
-    providers: [HttpClient],
+    providers: [HttpClient, AppStore],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class GlMainComponent {
@@ -149,18 +149,44 @@ export class GlMainComponent {
     drawerOpened: boolean = true;
     panels: any[] = [];
     selectedPanel: string = 'accounts';
+    PANEL_ID = 'referencePanel';    
     public panelService = inject(PanelService);
-    
+
+    store = inject(AppStore);
+
     private _unsubscribeAll: Subject<any> = new Subject<any>();
 
     constructor(
         private _changeDetectorRef: ChangeDetectorRef,
         private _fuseMediaWatcherService: FuseMediaWatcherService,
-    ) 
-    {                 
+    )  { 
+        
+        // this.store.panels().forEach((p) => {
+        //     if (p.panelName === this.PANEL_ID) {
+        //         this.selectedPanel = p.lastPanelOpened;
+        //     }
+        // });                
+
+        console.log('Current User Login',this.store.uid());
+        
+        this.panelService.getUserId().subscribe((uid) => {
+             this.panelService.findPanelByName(uid, this.PANEL_ID).subscribe((panel) => {
+                 this.selectedPanel = panel.lastPanelOpened;
+           });
+        });
+
     }
 
+    
+
     ngOnInit(): void {
+
+        // this.panelService.getUserId().subscribe((uid) => {
+        //     this.panelService.findPanelByName(uid, this.PANEL_ID).subscribe((panel) => {
+        //         this.selectedPanel = panel.lastPanelOpened;
+        //     });
+        // });
+
         // Setup available panels
         this.panels = [
             {
@@ -230,6 +256,8 @@ export class GlMainComponent {
                 // Mark for check
                 this._changeDetectorRef.markForCheck();
             });
+
+    
     }
 
     /**
@@ -239,7 +267,7 @@ export class GlMainComponent {
 
         const panelState = {
             uid: '',
-            panelName: 'referencePanel',
+            panelName: this.PANEL_ID,
             lastPanelOpened: this.selectedPanel
         }
 

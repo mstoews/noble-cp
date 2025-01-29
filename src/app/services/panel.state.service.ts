@@ -11,6 +11,7 @@ import { signalStore, withState, withComputed, withMethods, patchState, withHook
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { IFunds } from 'app/models';
 import { Panel } from '@syncfusion/ej2-angular-layouts';
+import { load } from '@syncfusion/ej2-grids';
 
 
 export interface PanelModel {
@@ -53,8 +54,8 @@ export class PanelService {
 
   getLastPanel(uid: string, panelName) {
     const ref = doc(this.firestore, `users/${uid}/panels`, panelName) as any;
-    const panel = collectionData<PanelModel>(ref) 
-    return panel;
+    const panel = collectionData<PanelModel>(ref) as any;
+    return panel as Observable<PanelModel>;
   }
 
   // delete
@@ -67,33 +68,11 @@ export class PanelService {
     return of(panel);
   }
 
-  // update
-  // update(panel: PanelModel) : Observable<PanelModel> {
-  //   var panelUpdate: PanelModel;    
-  //   const ref = doc(this.firestore, `users/${panel.uid}/panels`, panel.id) as any;
-  //   updateDoc(ref, panel).then (() => {
-  //     this.setLastPanel(panel);
-  //     panelUpdate = panel;
-  //   });
-  //   return of(panelUpdate);
-  // }
-
-  // // updateLast
-  // updateLast(uid: string, panelState: PanelModel): Observable<PanelModel> {    
-  //   var panel: PanelModel;    
-  //   const ref = doc(this.firestore, `users/${uid}/panels`, panelState.id) as any;
-  //   updateDoc(ref, panelState).then(() => {
-  //     this.setLastPanel(panelState);
-  //     panel = panelState;
-  //   });    
-  //   return of(panel); 
-  // }
-
-  // Read
-  readByUserId(uid: string ): Observable<PanelModel[]> {
-    const q = query(collection(this.firestore, `users/${uid}/panels`), where , orderBy('panelName'));
-    const panels = collectionData(q)
-    return panels as Observable<PanelModel[]>;
+  loadByUserId(uid: string ): Observable<PanelModel[]> {
+    const collectionRef = collection(this.firestore, `users/${uid}/panels`);
+    const q = query(collectionRef);
+    const list = collectionData(q)  as Observable<PanelModel[]>;    
+    return list;
   }
 
   create(panel: PanelModel): Observable<PanelModel> {
@@ -120,6 +99,20 @@ export const AppStore = signalStore(
     isLoading: false,
   }),  
   withMethods((state, panelService = inject(PanelService)) => ({       
+    loadUid: rxMethod<void> (
+      pipe(
+        tap(() => patchState(state, { isLoading: true })),
+        switchMap(() => {
+          return panelService.getUserId().pipe(
+            tapResponse({
+              next: (uid) => patchState(state, { uid: uid }),
+              error: console.error,
+              finalize: () => patchState(state, { isLoading: false }),
+            })
+          );
+        })
+      )
+    ),
         
     setPanel: rxMethod<PanelModel>(
       pipe(
@@ -157,7 +150,7 @@ export const AppStore = signalStore(
       pipe(
         tap(() => patchState(state, { isLoading: true })),
         switchMap((uid) => {
-          return panelService.readByUserId(uid).pipe(
+          return panelService.loadByUserId(uid).pipe(
             tapResponse({
               next: (panels) => patchState(state, { panels: panels }),
               error: console.error,
@@ -169,7 +162,9 @@ export const AppStore = signalStore(
     ),
   })),
   withHooks({
-    onInit(store) {      
+    onInit(store) { 
+      store.loadUid();    
+      store.loadPanels(store.uid); 
     },
   })
 );

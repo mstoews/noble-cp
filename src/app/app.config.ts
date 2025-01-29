@@ -108,7 +108,7 @@ export const AUTH = new InjectionToken('Firebase auth', {
 });
 
 const CoreProviders = [
-  provideHttpClient(withInterceptors([authTokenInterceptor, loggingInterceptor, retryInterceptor])),
+  provideHttpClient(withInterceptors([authTokenInterceptor, retryInterceptor])),
 ];
 
 

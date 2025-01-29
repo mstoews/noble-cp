@@ -17,7 +17,7 @@ import { EntryWizardComponent } from './wizard/wizard-entry.component';
 import { JournalTemplateComponent } from './journal-template.component';
 import { ARTransactionComponent } from './ar-listing.component';
 import { APTransactionComponent } from './ap-listing.component';
-import { PanelService } from "../../../services/panel.state.service";
+import { AppStore, PanelService } from "../../../services/panel.state.service";
 import { GLTransactionListComponent } from './gl-listing.component';
 import { uiUpdate } from '@syncfusion/ej2-grids';
 
@@ -38,10 +38,12 @@ const imports = [
     imports: [imports],
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
+    providers: [AppStore],
     template: `
         <div class="flex flex-col w-full min-w-0 sm:absolute sm:inset-0 sm:overflow-hidden">
             <mat-drawer-container class="flex-auto sm:h-full">
                 <!-- Drawer -->
+                @if(store.panels().length > 0) {
                 <mat-drawer class="sm:w-72 dark:bg-gray-900" [autoFocus]="false" [mode]="drawerMode" [opened]="drawerOpened"
                             #drawer>
                     <!-- Header -->
@@ -91,6 +93,7 @@ const imports = [
                         }
                     </div>
                 </mat-drawer>
+                }
 
                 <!-- Drawer content -->
                 <mat-drawer-content class="flex flex-col">
@@ -99,7 +102,7 @@ const imports = [
                         <!-- Panel header -->
                         <div class="flex items-center">
                             <!-- Drawer toggle -->
-                            <button class="lg:hidden -ml-2" mat-icon-button (click)="drawer.toggle()">
+                            <button class="lx2:hidden -ml-2" mat-icon-button (click)="drawer().toggle()">
                                 <mat-icon [svgIcon]="'heroicons_outline:bars-3'"></mat-icon>
                             </button>
 
@@ -136,8 +139,12 @@ export class TransactionMainComponent implements OnInit, OnDestroy {
     private _unsubscribeAll: Subject<any> = new Subject<any>();
     public lastPanelOpened = signal<string>("");
     public panelService = inject(PanelService);
-    public selectedPanel: string;
+    selectedPanel: string = 'entry';
     public storedPanel: string;
+
+    PANEL_ID = 'transactionsPanel';            
+    store = inject(AppStore);
+    
 
     /**
      * Constructor
@@ -147,13 +154,20 @@ export class TransactionMainComponent implements OnInit, OnDestroy {
         private _fuseMediaWatcherService: FuseMediaWatcherService,
     ) {
        // this.selectedPanel = this.panelService.lastPanelOpened();
-        if (this.selectedPanel === '') {
-            this.selectedPanel = localStorage.getItem("transactionsPanel");
-        }
-        if (this.selectedPanel === null) {
-            this.selectedPanel = this.defaultPanel;
-        }
+        // if (this.selectedPanel === '') {
+        //     this.selectedPanel = localStorage.getItem("transactionsPanel");
+        // }
+        // if (this.selectedPanel === null) {
+        //     this.selectedPanel = this.defaultPanel;
+        // }
 
+        console.log('Current User Login',this.store.uid());
+        
+        this.panelService.getUserId().subscribe((uid) => {
+             this.panelService.findPanelByName(uid, this.PANEL_ID).subscribe((panel) => {
+                 this.selectedPanel = panel.lastPanelOpened;
+           });
+        });
 
     }
 
@@ -277,11 +291,11 @@ export class TransactionMainComponent implements OnInit, OnDestroy {
 
     ngOnDestroy(): void {
 
-        localStorage.setItem("transactionsPanel", this.selectedPanel);
+        //localStorage.setItem("transactionsPanel", this.selectedPanel);
 
         const panelState = {
             uid: '',
-            panelName: 'transactionsPanel',
+            panelName: this.PANEL_ID,
             lastPanelOpened: this.selectedPanel
         }
 
@@ -291,9 +305,10 @@ export class TransactionMainComponent implements OnInit, OnDestroy {
                 user = uid;
                 panelState.uid = user;
                 this.panelService.setPanel(panelState).then (res => {
-                    console.log(res);
+                    console.log("panel Service Set Panel", JSON.stringify(panelState));
                 });
         });
+    
         
 
         var transactionPanel: any
