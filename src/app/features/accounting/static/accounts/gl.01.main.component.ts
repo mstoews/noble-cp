@@ -145,49 +145,31 @@ import { AppStore, PanelService } from 'app/services/panel.state.service';
 export class GlMainComponent {
     
     @ViewChild('drawer') drawer: MatDrawer;
-    drawerMode: 'over' | 'side' = 'side';
-    drawerOpened: boolean = true;
-    panels: any[] = [];
-    selectedPanel: string = 'accounts';
-    PANEL_ID = 'referencePanel';    
-    public panelService = inject(PanelService);
-
-    store = inject(AppStore);
-
     private _unsubscribeAll: Subject<any> = new Subject<any>();
+    private _changeDetectorRef = inject(ChangeDetectorRef);
+    private _fuseMediaWatcherService = inject(FuseMediaWatcherService);
 
-    constructor(
-        private _changeDetectorRef: ChangeDetectorRef,
-        private _fuseMediaWatcherService: FuseMediaWatcherService,
-    )  { 
-        
-        // this.store.panels().forEach((p) => {
-        //     if (p.panelName === this.PANEL_ID) {
-        //         this.selectedPanel = p.lastPanelOpened;
-        //     }
-        // });                
+    public drawerMode: 'over' | 'side' = 'side';
+    public drawerOpened: boolean = true;
+    public panels: any[] = [];
+    public selectedPanel: string = 'accounts';
+    public PANEL_ID = 'referencePanel';    
+    public panelService = inject(PanelService);
+    public store = inject(AppStore);
 
-        console.log('Current User Login',this.store.uid());
-        
+    /**
+     * Constructor
+     */
+
+    constructor() {                 
         this.panelService.getUserId().subscribe((uid) => {
              this.panelService.findPanelByName(uid, this.PANEL_ID).subscribe((panel) => {
                  this.selectedPanel = panel.lastPanelOpened;
            });
         });
-
     }
 
-    
-
     ngOnInit(): void {
-
-        // this.panelService.getUserId().subscribe((uid) => {
-        //     this.panelService.findPanelByName(uid, this.PANEL_ID).subscribe((panel) => {
-        //         this.selectedPanel = panel.lastPanelOpened;
-        //     });
-        // });
-
-        // Setup available panels
         this.panels = [
             {
                 id: 'accounts',
@@ -269,13 +251,12 @@ export class GlMainComponent {
             uid: '',
             panelName: this.PANEL_ID,
             lastPanelOpened: this.selectedPanel
-        }
+        };
 
         var user: string;
         const userId = this.panelService.getUserId()
-            .subscribe((uid) => {
-                user = uid;
-                panelState.uid = user;
+            .subscribe((id) => {                
+                panelState.uid = id;
                 this.panelService.setPanel(panelState).then (res => {
                     console.log(res);
                 });
@@ -287,15 +268,7 @@ export class GlMainComponent {
         this._unsubscribeAll.complete();
     }
 
-    // -----------------------------------------------------------------------------------------------------
-    // @ Public methods
-    // -----------------------------------------------------------------------------------------------------
 
-    /**
-     * Navigate to the panel
-     *
-     * @param panel
-     */
     goToPanel(panel: string): void {
         this.selectedPanel = panel;
 
@@ -324,3 +297,5 @@ export class GlMainComponent {
         return item.id || index;
     }
 }
+
+
