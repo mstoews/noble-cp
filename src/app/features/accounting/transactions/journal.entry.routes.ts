@@ -1,7 +1,7 @@
 import { Routes } from '@angular/router';
 import { TransactionMainComponent } from './transaction-main.component';
 import { JournalResolver } from 'app/services/journal.resolver';
-import { JournalUpdateComponent } from './transactions-update/journal-update.component';
+import { JournalUpdateComponent } from './journal-update.component';
 
 export default [
     {

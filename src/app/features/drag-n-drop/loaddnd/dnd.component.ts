@@ -22,6 +22,7 @@ import { MaterialModule } from 'app/services/material.module';
         MaterialModule,
     ],
     selector: 'image-dnd',
+    standalone: true,
     templateUrl: './dnd.component.html',
     styleUrls: ['./dnd.component.scss']
 })
