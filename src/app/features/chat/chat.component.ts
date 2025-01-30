@@ -41,7 +41,7 @@ import { CommonModule } from '@angular/common';
                 </e-pane>
                 <e-pane size="80%" [resizable]='false' cssClass="chat-rightContent">
                     <ng-template #content>
-                            <div id="integration-chat" ejs-chatui #chatUI [user]="currentUser" [messages]="currentMessages" [headerText]="headerText" [headerIconCss]="headerIconCss" [headerToolbar]="headerToolbar" (messageSend)="onMessageSend($event)">
+                            <div id="integration-chat" color="primary" ejs-chatui #chatUI [user]="currentUser" [messages]="currentMessages" [headerText]="headerText" [headerIconCss]="headerIconCss" [headerToolbar]="headerToolbar" (messageSend)="onMessageSend($event)">
                                 <ng-template #emptyChatTemplate>
                                     <div class="emptychat-content">
                                         <h3><span class="e-icons e-comment-show"></span></h3>
@@ -59,7 +59,7 @@ import { CommonModule } from '@angular/common';
   `,
   encapsulation: ViewEncapsulation.None,
   standalone: true,
-  imports: [ChatUIModule, ButtonModule, CommonModule, ListViewModule,SplitterModule ]
+  imports: [ChatUIModule, ButtonModule, CommonModule, ListViewModule, SplitterModule ]
 })
 export class ChatComponent implements OnInit {
   @ViewChild('chatUI') public chatUI: ChatUIComponent;

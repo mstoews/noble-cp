@@ -5,7 +5,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage';
 import { Observable, Subject, map, of, } from 'rxjs';
 import { ProgressComponent } from '../progress/progress.component';
-import { DndDirective } from './dnd.directive';
+
 import { ReactiveFormsModule } from '@angular/forms';
 import { STORAGE } from 'app/app.config';
 
@@ -13,17 +13,67 @@ import { STORAGE } from 'app/app.config';
 import { EvidenceService } from 'app/services/evidence.service';
 import { DateTime } from 'luxon';
 import { MaterialModule } from 'app/services/material.module';
+import { DndDirective } from './dnd.directive';
 
 @Component({
     imports: [
         CommonModule,
-        DndDirective,
         ReactiveFormsModule,
         MaterialModule,
     ],
     selector: 'image-dnd',
     standalone: true,
-    templateUrl: './dnd.component.html',
+    template: `
+    <div class="bg-slate-50">
+        <div class="flex">
+          <img class="flex-none w-10 h-10 p-2" src='assets/img/dnd/ic-upload-file.svg' alt="dnd">
+          <span class="flex-1 text-3xl text-black mt-1">Transaction Evidence</span>
+        </div>
+        <div mat-dialog-content>
+          <form [formGroup]="formGroup" #myForm="ngForm">
+            <div class="container" appDnd (fileDropped)="onFileDropped($event)">
+              <input type="file" #fileDropRef id="fileDropRef" multiple (change)="fileBrowseHandler($event)" />
+              <div class="text-black">Drag and drop file here</div>
+              <div>or</div>
+              <label for="fileDropRef">Browse for file</label>
+            </div>
+            <div class="files-list">
+              @for (file of files; track file; let i = $index) {
+              <div class="single-file">
+                <img class="flex-none w-8 h-8 p-1" src='assets/img/dnd/ic-file.svg' alt="dnd">
+                <div class="info">
+                  <div class="name">
+                    {{ file?.name }}
+                  </div>
+                  <div class="size">
+                    {{ formatBytes(file?.size) }}
+                  </div>
+                  @if ((percentageChange$ | async); as percentage) {
+                  <div>
+                    <mat-progress-bar class="progress-bar" mode="determinate" [value]="percentage">
+                    </mat-progress-bar>
+                    <span>{{percentage / 100 | percent}}</span>
+                  </div>
+                  }
+                </div>
+                <img src="assets/img/dnd/ic-delete-file.svg" class="w-8 h-8" width="20px" alt="file" (click)="deleteFile(i)">
+              </div>
+              }
+            </div>
+          </form>
+            
+          <button mat-icon-button color="primary" class="mr-1 bg-gray-100" (click)="onCreate()" matTooltip="Update"
+            aria-label="Update">
+            <mat-icon [svgIcon]="'mat_outline:system_update'"></mat-icon>
+          </button>
+            
+          <button mat-icon-button color="primary" class="mr-1 bg-gray-100" (click)="closeDialog()" matTooltip="Close"
+            aria-label="Amend">
+            <mat-icon [svgIcon]="'mat_outline:close'"></mat-icon>
+          </button>            
+        </div>            
+</div>
+    `,
     styleUrls: ['./dnd.component.scss']
 })
 export class DndComponent implements OnDestroy {

@@ -71,7 +71,6 @@ import { JournalService } from "app/services/journal.service";
 import { FilterTypePipe } from "app/filter-type.pipe";
 
 
-
 const imp = [
     CommonModule,
     ReactiveFormsModule,
@@ -86,7 +85,6 @@ const imp = [
     SplitterModule,
     EvidenceCardComponent,
     FilterTypePipe,
-    DndComponent
 ];
 
 @Component({
