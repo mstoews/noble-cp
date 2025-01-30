@@ -31,7 +31,7 @@ import { Store } from '@ngrx/store';
 import { loadFunds } from 'app/state/funds/Funds.Action';
 import { selectFunds } from 'app/state/funds/Funds.Selector';
 import { PartyComponent } from './gl.party.component';
-import { AppStore, PanelService } from 'app/services/panel.state.service';
+import { AppStore, ApplicationService } from 'app/services/application.state.service';
 
 @Component({
     template: `
@@ -143,7 +143,7 @@ import { AppStore, PanelService } from 'app/services/panel.state.service';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class GlMainComponent {
-    
+
     @ViewChild('drawer') drawer: MatDrawer;
     private _unsubscribeAll: Subject<any> = new Subject<any>();
     private _changeDetectorRef = inject(ChangeDetectorRef);
@@ -153,19 +153,19 @@ export class GlMainComponent {
     public drawerOpened: boolean = true;
     public panels: any[] = [];
     public selectedPanel: string = 'accounts';
-    public PANEL_ID = 'referencePanel';    
-    public panelService = inject(PanelService);
+    public PANEL_ID = 'referencePanel';
+    public panelService = inject(ApplicationService);
     public store = inject(AppStore);
 
     /**
      * Constructor
      */
 
-    constructor() {                 
+    constructor() {
         this.panelService.getUserId().subscribe((uid) => {
-             this.panelService.findPanelByName(uid, this.PANEL_ID).subscribe((panel) => {
-                 this.selectedPanel = panel.lastPanelOpened;
-           });
+            this.panelService.findPanelByName(uid, this.PANEL_ID).subscribe((panel) => {
+                this.selectedPanel = panel.lastPanelOpened;
+            });
         });
     }
 
@@ -239,7 +239,7 @@ export class GlMainComponent {
                 this._changeDetectorRef.markForCheck();
             });
 
-    
+
     }
 
     /**
@@ -255,13 +255,11 @@ export class GlMainComponent {
 
         var user: string;
         const userId = this.panelService.getUserId()
-            .subscribe((id) => {                
+            .subscribe((id) => {
                 panelState.uid = id;
-                this.panelService.setPanel(panelState).then (res => {
-                    console.log(res);
-                });
-        });
-    
+                this.panelService.setPanel(panelState);
+            });
+
 
         // Unsubscribe from all subscriptions
         this._unsubscribeAll.next(null);

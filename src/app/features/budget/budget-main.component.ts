@@ -7,7 +7,7 @@ import { Subject, takeUntil } from 'rxjs';
 import { BudgetWizardComponent } from './budget-wizard.component';
 import { BudgetUpdateComponent } from './update/budget-update.component';
 import { BudgetLandingComponent } from './budget-landing/budget-landing.component';
-import { AppStore, PanelService } from 'app/services/panel.state.service';
+import { AppStore, ApplicationService } from 'app/services/application.state.service';
 
 
 const imports = [
@@ -21,7 +21,7 @@ const imports = [
 @Component({
     selector: 'budget-main',
     imports: [imports],
-    providers: [AppStore, PanelService],
+    providers: [AppStore, ApplicationService],
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
     template: `<div class="flex flex-col w-full min-w-0 sm:absolute sm:inset-0 sm:overflow-hidden">
@@ -120,11 +120,11 @@ export class BudgetMainComponent {
     drawerOpened: boolean = true;
     panels: any[] = [];
     selectedPanel: string = 'budget-landing';
-    private _unsubscribeAll: Subject<any> = new Subject<any>();    
-    PANEL_ID = 'budgetPanel';        
+    private _unsubscribeAll: Subject<any> = new Subject<any>();
+    PANEL_ID = 'budgetPanel';
     store = inject(AppStore);
-    panelService = inject(PanelService);
-    
+    panelService = inject(ApplicationService);
+
 
     /**
      * Constructor
@@ -134,12 +134,12 @@ export class BudgetMainComponent {
         private _fuseMediaWatcherService: FuseMediaWatcherService,
     ) {
 
-        console.log('Current User Login',this.store.uid());
-        
+        console.log('Current User Login', this.store.uid());
+
         this.panelService.getUserId().subscribe((uid) => {
-             this.panelService.findPanelByName(uid, this.PANEL_ID).subscribe((panel) => {
-                 this.selectedPanel = panel.lastPanelOpened;
-           });
+            this.panelService.findPanelByName(uid, this.PANEL_ID).subscribe((panel) => {
+                this.selectedPanel = panel.lastPanelOpened;
+            });
         });
 
     }
@@ -214,11 +214,9 @@ export class BudgetMainComponent {
             .subscribe((uid) => {
                 user = uid;
                 panelState.uid = user;
-                this.panelService.setPanel(panelState).then (res => {
-                    console.log(res);
-                });
-        });
-        
+                this.panelService.setPanel(panelState);
+            });
+
         // Unsubscribe from all subscriptions
         this._unsubscribeAll.next(null);
         this._unsubscribeAll.complete();

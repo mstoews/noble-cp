@@ -22,6 +22,8 @@ import {
     ClickEventArgs,
     ContextMenuComponent,
     ContextMenuModule,
+    MenuEventArgs,
+    MenuItemModel,
 } from "@syncfusion/ej2-angular-navigations";
 import {
     AggregateService,
@@ -40,6 +42,7 @@ import {
     GroupService,    
     ColumnMenuService,
     ResizeService,
+    ContextMenuService,
 } from "@syncfusion/ej2-angular-grids";
 
 import { 
@@ -67,6 +70,7 @@ import { JournalService } from "app/services/journal.service";
 import { FilterTypePipe } from "app/filter-type.pipe";
 
 
+
 const imports = [
     CommonModule,
     ReactiveFormsModule,
@@ -82,7 +86,8 @@ const imports = [
     MatSortModule,
     SplitterModule,
     EvidenceCardComponent,
-    FilterTypePipe
+    FilterTypePipe,
+    
 ];
 
 @Component({
@@ -101,8 +106,9 @@ const imports = [
         GroupService,
         RowDDService,
         ResizeService,
-        ColumnMenuService,
+        ContextMenuService,        
         JournalStore,
+        ColumnMenuService 
     ],
     styles: [
         `
@@ -162,7 +168,12 @@ export class JournalUpdateComponent
 
     drawer = viewChild<MatDrawer>("drawer");
 
-    @ViewChild("contextmenu")
+
+    public animation = {
+        effect: 'FadeIn',
+        duration: 800
+    };
+
 
     private _location = inject(Location);
     private router = inject(Router);
@@ -248,6 +259,50 @@ export class JournalUpdateComponent
     singleDebitSelection = viewChild<MatSelect>("singleDebitSelection");
     singleTemplateSelect = viewChild<MatSelect>("singleTemplateSelect");
     singlePartySelect = viewChild<MatSelect>("singlePartySelect");
+
+    public menuItems: MenuItemModel[] = [
+            {
+                text: 'Edit Journal',
+                iconCss: 'e-icons e-edit-2'
+            },
+            {
+                text: 'Create New Journal',
+                iconCss: 'e-icons e-circle-add'
+            },
+            {
+                text: 'Create Template',
+                iconCss: 'e-icons e-table-overwrite-cells'
+            },
+            {
+                separator: true
+            },
+            {
+                text: 'Settings',
+                iconCss: 'e-icons e-settings'
+            },
+    
+        ];
+    
+        public itemSelect(args: MenuEventArgs): void {
+            
+            switch (args.item.text) {
+                case 'Edit Journal':
+                    this.route.navigate(['journals/gl', this.currentRowData.journal_id]);
+                    break;
+                case 'Create New Journal':
+                    this.onAdd();                
+                    break;                
+                case 'Create Template':
+                    this.onTemplate();
+                    break;
+                case 'Settings':                
+                    this.openDrawer();
+                    break;
+            }
+        }    
+    
+    
+
     
     onBack() {
         this.router.navigate(["/journals"]);

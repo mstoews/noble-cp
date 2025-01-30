@@ -59,7 +59,7 @@ import { periodEffects } from './state/periods/periods.effects';
 import { subTypeEffects } from './state/subtype/sub-type.effects';
 
 
-import { PanelService } from "./services/panel.state.service";
+import { ApplicationService } from "./services/application.state.service";
 import { kanbanEffects } from './state/kanban-state/kanban/kanban.effects';
 import { partyEffects } from './state/party/party.effects';
 import { accountEffects } from './state/accts/accts.effects';
@@ -114,7 +114,7 @@ const CoreProviders = [
 
 export const appConfig: ApplicationConfig = {
   providers: [
-    PanelService,
+    ApplicationService,
     provideAnimations(),
     provideAppInitializer(() => {
       console.log('App initialized');
@@ -133,9 +133,9 @@ export const appConfig: ApplicationConfig = {
           dateInput: 'DD/MM/YYYY',
         },
         display: {
-          dateInput: 'DD/MM/YYYY', 
-          monthYearLabel: 'MMM YYYY', 
-          dateA11yLabel: 'LL', 
+          dateInput: 'DD/MM/YYYY',
+          monthYearLabel: 'MMM YYYY',
+          dateA11yLabel: 'LL',
           monthYearA11yLabel: 'MMMM YYYY',
         },
       },
@@ -156,9 +156,9 @@ export const appConfig: ApplicationConfig = {
     provideState(fromKanban.kanbanFeature),
     provideState(fromAccounts.accountsFeature),
     provideEffects(
-      [ 
+      [
         accountEffects,
-        periodEffects,        
+        periodEffects,
         kanbanEffects,
         templateEffects,
         partyEffects,

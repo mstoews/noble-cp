@@ -381,7 +381,7 @@
                                         </div>
                                         @defer () {
 
-                                        <div class="flex flex-col">
+                                        <div id="target" class="flex flex-col">
                                             <div class="text-3xl m-1 text-gray-100 p-2 bg-slate-600 rounded-md">Details</div>
                                             <div class="flex flex-col h-full ml-1 mr-1 text-gray-800">
                                                 <ejs-grid class="m-1" [dataSource]="store.details()" 
@@ -497,6 +497,12 @@
                                 </div>
                             </div>
                         </ng-template>
+                    <ejs-contextmenu              
+                        target='#target' 
+                        (select)="itemSelect($event)"
+                        [animationSettings]='animation'
+                        [items]= 'menuItems'> 
+                    </ejs-contextmenu> 
                     </e-pane>
 
                 </e-panes>
@@ -509,4 +515,5 @@
         <mat-spinner></mat-spinner>
     </div>
     }
+    
 </div>

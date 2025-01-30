@@ -17,7 +17,7 @@ import { EntryWizardComponent } from './wizard/wizard-entry.component';
 import { JournalTemplateComponent } from './journal-template.component';
 import { ARTransactionComponent } from './ar-listing.component';
 import { APTransactionComponent } from './ap-listing.component';
-import { AppStore, PanelService } from "../../../services/panel.state.service";
+import { AppStore, ApplicationService } from "../../../services/application.state.service";
 import { GLTransactionListComponent } from './gl-listing.component';
 import { uiUpdate } from '@syncfusion/ej2-grids';
 
@@ -138,13 +138,13 @@ export class TransactionMainComponent implements OnInit, OnDestroy {
     defaultPanel = "listing";
     private _unsubscribeAll: Subject<any> = new Subject<any>();
     public lastPanelOpened = signal<string>("");
-    public panelService = inject(PanelService);
+    public panelService = inject(ApplicationService);
     selectedPanel: string = 'entry';
     public storedPanel: string;
 
-    PANEL_ID = 'transactionsPanel';            
+    PANEL_ID = 'transactionsPanel';
     store = inject(AppStore);
-    
+
 
     /**
      * Constructor
@@ -153,7 +153,7 @@ export class TransactionMainComponent implements OnInit, OnDestroy {
         private _changeDetectorRef: ChangeDetectorRef,
         private _fuseMediaWatcherService: FuseMediaWatcherService,
     ) {
-       // this.selectedPanel = this.panelService.lastPanelOpened();
+        // this.selectedPanel = this.panelService.lastPanelOpened();
         // if (this.selectedPanel === '') {
         //     this.selectedPanel = localStorage.getItem("transactionsPanel");
         // }
@@ -161,12 +161,12 @@ export class TransactionMainComponent implements OnInit, OnDestroy {
         //     this.selectedPanel = this.defaultPanel;
         // }
 
-        console.log('Current User Login',this.store.uid());
-        
+        console.log('Current User Login', this.store.uid());
+
         this.panelService.getUserId().subscribe((uid) => {
-             this.panelService.findPanelByName(uid, this.PANEL_ID).subscribe((panel) => {
-                 this.selectedPanel = panel.lastPanelOpened;
-           });
+            this.panelService.findPanelByName(uid, this.PANEL_ID).subscribe((panel) => {
+                this.selectedPanel = panel.lastPanelOpened;
+            });
         });
 
     }
@@ -188,7 +188,7 @@ export class TransactionMainComponent implements OnInit, OnDestroy {
                     this.storedPanel = panel[0].lastPanelOpened;
                 })
             });
-                    
+
 
 
         if (this.selectedPanel === '' && this.storedPanel === null || this.selectedPanel === undefined) {
@@ -304,12 +304,10 @@ export class TransactionMainComponent implements OnInit, OnDestroy {
             .subscribe((uid) => {
                 user = uid;
                 panelState.uid = user;
-                this.panelService.setPanel(panelState).then (res => {
-                    console.log("panel Service Set Panel", JSON.stringify(panelState));
-                });
-        });
-    
-        
+                this.panelService.setPanel(panelState);
+            });
+
+
 
         var transactionPanel: any
 

@@ -19,7 +19,7 @@ import { IncomeStatementRptComponent } from './financial-statement/income-statem
 import { IncomeStatementComparisonRptComponent } from './financial-statement/income-statement-comparison.component';
 import { DistributedTbComponent } from './distributed-tb/distributed-tb.component';
 import { TbGridComponent } from './tb-grid/tb-grid.component';
-import { AppStore, PanelService } from "../../services/panel.state.service";
+import { AppStore, ApplicationService } from "../../services/application.state.service";
 import { GridTemplateComponent } from './grid-template/grid-template.component';
 
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -31,7 +31,7 @@ const mods = [
     TrialBalanceComponent,
     BalanceSheetStatementRptComponent,
     IncomeStatementRptComponent,
-    IncomeStatementComparisonRptComponent,    
+    IncomeStatementComparisonRptComponent,
     DistributedTbComponent,
     TbGridComponent,
     GridTemplateComponent
@@ -124,40 +124,39 @@ const mods = [
     `,
     styles: ``,
     imports: [mods],
-    providers: [AppStore, PanelService],
+    providers: [AppStore, ApplicationService],
     standalone: true
 })
 export class ReportingPanelComponent {
-    
+
     @ViewChild('drawer') drawer: MatDrawer;
     drawerMode: 'over' | 'side' = 'side';
     drawerOpened: boolean = true;
     panels: any[] = [];
     selectedPanel: string = 'distributed-tb';
-    PANEL_ID = 'reportingPanel';        
-    
+    PANEL_ID = 'reportingPanel';
+
     store = inject(AppStore);
-    panelService = inject(PanelService);
+    panelService = inject(ApplicationService);
 
-    private _unsubscribeAll: Subject<any> = new Subject<any>();    
+    private _unsubscribeAll: Subject<any> = new Subject<any>();
 
-    
+
     /**
      * Constructor
      */
     constructor(
         private _changeDetectorRef: ChangeDetectorRef,
         private _fuseMediaWatcherService: FuseMediaWatcherService,
-    ) 
-    {
+    ) {
         this.panelService.getUserId().subscribe((uid) => {
-             this.panelService.findPanelByName(uid, this.PANEL_ID).subscribe((panel) => {
-                 this.selectedPanel = panel.lastPanelOpened;
-           });
-        });        
+            this.panelService.findPanelByName(uid, this.PANEL_ID).subscribe((panel) => {
+                this.selectedPanel = panel.lastPanelOpened;
+            });
+        });
     }
 
-    
+
 
     // -----------------------------------------------------------------------------------------------------
     // @ Lifecycle hooks
@@ -167,8 +166,8 @@ export class ReportingPanelComponent {
      * On init
      */
     ngOnInit() {
-         
-            
+
+
         this.panels = [
             {
                 id: 'distributed-tb',
@@ -195,7 +194,7 @@ export class ReportingPanelComponent {
                 title: 'Balance Sheet Financial Statement',
                 description: 'Balance sheet by period reporting',
             },
-            
+
             {
                 id: 'income-statement',
                 icon: 'heroicons_outline:currency-dollar',
@@ -244,7 +243,7 @@ export class ReportingPanelComponent {
                 icon: 'feather:image',
                 title: 'Grid Template ',
                 description: 'Example of using a html in grid',
-            }     
+            }
         ];
 
         // Subscribe to media changes
@@ -279,13 +278,11 @@ export class ReportingPanelComponent {
 
         this.panelService.getUserId()
             .subscribe((id) => {
-                
+
                 panelState.uid = id;
-                this.panelService.setPanel(panelState).then (res => {
-                 console.log(res);
+                this.panelService.setPanel(panelState);
             });
-        });
-        
+
         // Unsubscribe from all subscriptions
         this._unsubscribeAll.next(null);
         this._unsubscribeAll.complete();
@@ -326,7 +323,7 @@ export class ReportingPanelComponent {
         return this.panels.find(panel => panel.id === id);
     }
 
-    
+
 
     /**
      * Track by function for ngFor loops
