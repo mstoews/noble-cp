@@ -783,7 +783,7 @@ export class EntryWizardComponent implements OnInit, OnDestroy, AfterViewInit {
         //     period_year: this.currentYear
         // }
 
-        // this.store.updateDistributionListing(prd)
+        //this.store.updateDistributionListing(prd)
 
         // this.journalService.getLastJournalNo().subscribe(journal_no => {
         //     this.journal_id = Number(journal_no);       

@@ -57,6 +57,28 @@ const imports = [
     imports: [imports],
     encapsulation: ViewEncapsulation.None,
     template: `
+
+    <grid-menubar class="ml-1 mr-1 w-full" [inTitle]="toolbarTitle" 
+                  [prd]="periodParam.period"  
+                  [prd_year]="periodParam.period_year"                   
+                  (openSettings)="openDrawer()" 
+                  (onPrint)="onPrint()"                          
+                  (exportXL)="exportLX()"
+                  (exportPRD)="exportPDF()"
+                  (exportCSV)="exportCSV()"
+                  (new)="onAdd()"
+                  (clone)="onClone()"
+                  (template)="onTemplate()"
+                  [showNew]="true"
+                  [showClone]="true" 
+                  [showTemplate]="true"
+                  [showPrint]="true"
+                  [showExportXL]="false"
+                  [showExportPDF]="false"
+                  [showExportCSV]="false"
+                  [showSettings]="true"
+                  (showBack)="false" >
+    </grid-menubar>  
     
     <mat-drawer class="lg:w-[400px] md:w-full bg-white-100" #drawer [opened]="false" mode="over" [position]="'end'" [disableClose]="false">
         <mat-card class="m-2">
@@ -103,27 +125,7 @@ const imports = [
         </mat-card>
     </mat-drawer> 
 
-    <grid-menubar class="ml-1 mr-1 w-full" [inTitle]="toolbarTitle" 
-                  [prd]="periodParam.period"  
-                  [prd_year]="periodParam.period_year"                   
-                  (openSettings)="openDrawer()" 
-                  (onPrint)="onPrint()"                          
-                  (exportXL)="exportLX()"
-                  (exportPRD)="exportPDF()"
-                  (exportCSV)="exportCSV()"
-                  (new)="onAdd()"
-                  (clone)="onClone()"
-                  (template)="onTemplate()"
-                  [showNew]="true"
-                  [showClone]="true" 
-                  [showTemplate]="true"
-                  [showPrint]="true"
-                  [showExportXL]="false"
-                  [showExportPDF]="false"
-                  [showExportCSV]="false"
-                  [showSettings]="true"
-                  (showBack)="false" >
-    </grid-menubar>  
+    
 
     <mat-drawer-container id="target" class="flex flex-col min-w-0 overflow-y-auto -px-10 h-[calc(100vh-23.75rem)] ">    
         <mat-card>
