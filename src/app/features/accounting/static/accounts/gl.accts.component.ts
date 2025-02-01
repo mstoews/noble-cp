@@ -54,8 +54,27 @@ const keyExpr = ["account", "child"];
   selector: "glaccounts",
   imports: [imports,],
   template: `
-    <div class="h-[calc(100vh)-100px] ">
-    <mat-drawer
+  @if ((isLoading$ | async) === false) {
+    
+    <mat-drawer-container id="target" class="flex-col h-screen">    
+
+        <ng-container>
+          <div class="border-1 border-gray-500 mt-3">
+
+              @if(accounts$ | async; as accounts) {
+                <grid-menubar  class="pl-5 pr-5"  [showBack]="false" [inTitle]="'General Ledger Account Maintenance'"/> 
+                    <gl-grid #gl_grid
+                    (onFocusChanged)="onSelection($event)"
+                    (onUpdateSelection)="selectedRow($event)"
+                    [data]="accounts"
+                    [columns]="cols" >
+                  </gl-grid> 
+              }
+            
+          </div>
+        </ng-container>
+        
+        <mat-drawer
         class="w-[450px]"
         #settings
         [opened]="false"
@@ -130,8 +149,8 @@ const keyExpr = ["account", "child"];
             </div>
             </div>
         </mat-card>
-      </mat-drawer>
-      <mat-drawer
+    </mat-drawer>
+    <mat-drawer
         class="w-[450px]"
         #drawer
         [opened]="false"
@@ -246,41 +265,14 @@ const keyExpr = ["account", "child"];
             </div>
             </div>
         </mat-card>
-      </mat-drawer>
-      <mat-drawer-container id="target" class="flex-col">
-        <ng-container>
-          <div class="border-1 border-gray-500 mt-3">
-          <grid-menubar 
-            class="pl-5 pr-5"            
-            [showBack]="false"                         
-            [inTitle]="'General Ledger Account Maintenance'">
-          </grid-menubar>
-            
-           @if ((isLoading$ | async) === false) {
-            @if(accounts$ | async; as accounts) {
-              <gl-grid #gl_grid
-              (onFocusChanged)="onSelection($event)"
-              (onUpdateSelection)="selectedRow($event)"
-              [data]="accounts"
-              [columns]="cols" >
-            </gl-grid> 
-            }
-
-            } @else {
-            <div class="fixed z-[1050] -translate-x-2/4 -translate-y-2/4 left-2/4 top-2/4" >
-              <mat-spinner></mat-spinner>
-            </div>
-            }
-          </div>
-        </ng-container>
+    </mat-drawer>
+    
       </mat-drawer-container>
-      <ejs-contextmenu              
-             target='#target' 
-             (select)="itemSelect($event)"
-             [animationSettings]='animation'
-             [items]= 'menuItems'> 
-      </ejs-contextmenu> 
-    </div>
+  } @else {
+      <div class="fixed z-[1050] -translate-x-2/4 -translate-y-2/4 left-2/4 top-2/4" >
+           <mat-spinner></mat-spinner>
+      </div>
+  }
   `,
   providers: [
     TypeStore,

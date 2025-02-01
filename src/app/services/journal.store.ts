@@ -14,6 +14,7 @@ import { tapResponse } from '@ngrx/operators';
 import {
    
     IArtifacts,
+    IJournalArrayParams,
     IJournalDetail,
     IJournalDetailDelete,
     IJournalDetailTemplate,
@@ -35,9 +36,6 @@ import { ITemplateRender } from '@syncfusion/ej2-grids';
 
 export interface JournalStateInterface {
   gl: IJournalHeader[];
-  ap: IJournalHeader[];
-  ar: IJournalHeader[];
-  tb: ITrialBalance[];
   details: IJournalDetail[];
   templates: IJournalTemplate[];
   templateDetails: IJournalDetailTemplate[];
@@ -58,9 +56,6 @@ export const JournalStore = signalStore(
   { protectedState: false },
    withState<JournalStateInterface>({
     gl: [],
-    ap: [],
-    ar: [],
-    tb: [],
     details: [],
     accounts: [],
     account_type: [],
@@ -97,6 +92,7 @@ export const JournalStore = signalStore(
         })
       )
     ),
+
     createJournalHeader: rxMethod<IJournalHeader>(
       pipe(
         switchMap((value) => {
@@ -105,6 +101,36 @@ export const JournalStore = signalStore(
             tapResponse({
               next: (journal) => {
                 patchState(state, { gl: [...state.gl(), journal] });
+              },
+              error: console.error,
+              finalize: () => patchState(state, { isLoading: false }),
+            })
+          );
+        })
+      )
+    ),
+    createJournal: rxMethod<IJournalArrayParams>(
+      pipe(
+        switchMap((value) => {
+          patchState(state, { isLoading: true });
+          return journalService.createJournal(value).pipe(
+            tapResponse({
+              next: (journal) => {
+                const header = {
+                  journal_id: journal.journal_id,
+                  description: journal.description,
+                  booked: false,                  
+                  booked_user: journal.booked_user,                                    
+                  period: journal.period,
+                  period_year: journal.period_year,
+                  transaction_date: journal.transaction_date,                  
+                  type: journal.type,                  
+                  amount: journal.amount,    
+                  party_id: journal.party_id,
+                  invoice_no: journal.invoice_no,
+                  template_name:  journal.template_name,                  
+                }
+                patchState(state, { gl: [...state.gl(), header ] });
               },
               error: console.error,
               finalize: () => patchState(state, { isLoading: false }),
@@ -153,7 +179,8 @@ export const JournalStore = signalStore(
       pipe(
         tap(() => patchState(state, { isLoading: true })),
         switchMap((value) => {
-          return journalService.createHttpJournalDetail(value).pipe(            
+          return journalService.createHttpJournalDetail(value).pipe(   
+            debounceTime(1000),         
             tapResponse({
               next: (journal) => {
                 patchState(state, { details: [...state.details(), journal] });
@@ -269,20 +296,7 @@ export const JournalStore = signalStore(
         })
       )
     ),
-    accountsPayable: rxMethod<void>(
-      pipe(
-        tap(() => patchState(state, { isLoading: true })),
-        exhaustMap(() => {
-          return journalService.readHttpJournalHeader().pipe(
-            tapResponse({
-              next: (journal) => patchState(state, { ap: journal.filter(ap => ap.type === 'AP') }),
-              error: console.error,
-              finalize: () => patchState(state, { isLoading: false }),
-            })
-          );
-        })
-      )
-    ),
+    
     loadAccounts: rxMethod<void>(
       pipe(
         tap(() => patchState(state, { isLoading: true })),
@@ -297,20 +311,7 @@ export const JournalStore = signalStore(
         })
       )
     ),
-    accountsReceivable: rxMethod<void>(
-      pipe(
-        tap(() => patchState(state, { isLoading: true })),
-        exhaustMap(() => {
-          return journalService.readHttpJournalHeader().pipe(
-            tapResponse({
-              next: (journal) => patchState(state, { ar: journal.filter(ar => ar.type === 'AR') }),
-              error: console.error,
-              finalize: () => patchState(state, { isLoading: false }),
-            })
-          );
-        })
-      )
-    ),
+    
     loadArtifactsByJournalId: rxMethod<number>(
       pipe(
         tap(() => patchState(state, { isLoading: true })),

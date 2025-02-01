@@ -26,8 +26,21 @@ const imports = [
 ];
 
 @Component({
-    template: `<mat-drawer-container class="flex-col h-full">
-    <mat-drawer class="lg:w-[400px] md:w-full bg-white-100" #drawer [opened]="false" mode="over" [position]="'end'" [disableClose]="false">
+    template: `
+    @if (store.isLoading() === false) {
+    <mat-drawer-container class="flex-col h-screen">    
+    
+        <ng-container>
+            <grid-menubar class="pl-5 pr-5" [showBack]="false" [inTitle]="'General Ledger Account Maintenance'"/>                                                        
+                <gl-grid 
+                    (onUpdateSelection)="selectedRow($event)"
+                    [data]="store.type()" 
+                    [columns]="columns">
+                </gl-grid>                        
+                         
+        </ng-container> 
+    
+        <mat-drawer class="lg:w-[400px] h-screen md:w-full bg-white-100" #drawer [opened]="false" mode="over" [position]="'end'" [disableClose]="false">         
         <mat-card>
             <div class="flex flex-col w-full text-gray-700 max-w-140 filter-article filter-interactive">
             <div class="bg-slate-600 text-justify m-2 p-2 text-white h-10 text-2xl border-l-4 border-gray-400"
@@ -86,33 +99,13 @@ const imports = [
             </div>
             </div>
         </mat-card>
-    </mat-drawer>
-            <ng-container>
-                    <grid-menubar 
-                    (notifyParentRefresh)="onRefresh()" 
-                    (notifyParentAdd)="onAdd()"
-                    (notifyParentDelete)="onDeleteSelection()" 
-                    (notifyParentUpdate)="onUpdateSelection()">
-                     </grid-menubar>                         
-                     
-                     @if (store.isLoading() === false) 
-                    {                            
-                        <gl-grid 
-                            (openTradeId)="selectedRow($event)"
-                            [data]="store.type()" 
-                            [columns]="columns">
-                        </gl-grid>                        
-                    }
-                       @else
-                    {
-                        <div class="fixed z-[1050] -translate-x-2/4 -translate-y-2/4 left-2/4 top-2/4">
-                            <mat-spinner></mat-spinner>
-                        </div>
-                    }
-            
-            </ng-container> 
-
+        </mat-drawer>
     </mat-drawer-container>
+     } @else  {
+                <div class="fixed z-[1050] -translate-x-2/4 -translate-y-2/4 left-2/4 top-2/4">
+                    <mat-spinner></mat-spinner>
+                </div>
+     }
     `,
     selector: 'gl-types',
     imports: [imports],
@@ -181,6 +174,10 @@ export class GlTypeComponent implements OnInit {
             update_date: [''],
             update_user: [''],
         });
+    }
+
+    selectedRow(e: any) {        
+        this.openDrawer();
     }
 
     openDrawer() {

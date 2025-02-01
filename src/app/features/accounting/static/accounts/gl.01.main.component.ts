@@ -1,13 +1,10 @@
 
-import { BalanceSheetComponent } from '../../../reporting/balance-sheet/balance-sheet.component';
-import { CdkScrollable } from '@angular/cdk/scrolling';
 import { GlAccountsComponent } from './gl.accts.component';
 import { GlTypeComponent } from './gl.types.component';
 import { HttpClient } from '@angular/common/http';
-import { TrialBalanceComponent } from '../../../reporting/trial-balance/trial-balance.component';
 import { Subject, takeUntil } from 'rxjs';
 import { FuseMediaWatcherService } from '@fuse/services/media-watcher';
-import { NgClass, NgSwitch, NgSwitchCase } from '@angular/common';
+import { NgClass } from '@angular/common';
 
 import {
     ChangeDetectionStrategy,
@@ -23,20 +20,16 @@ import { GlSubTypeComponent } from './gl.subtype.component';
 import { PeriodsComponent } from './gl.periods.component';
 import { RolesComponent } from './gl.roles.component';
 import { TeamsComponent } from './gl.teams.component';
-import { RouterLink } from '@angular/router';
 import { MatDrawer } from '@angular/material/sidenav';
 import { FundsComponent } from './gl.funds.component';
-import { GLGridComponent } from '../../grid-components/gl-grid.component';
-import { Store } from '@ngrx/store';
-import { loadFunds } from 'app/state/funds/Funds.Action';
-import { selectFunds } from 'app/state/funds/Funds.Selector';
 import { PartyComponent } from './gl.party.component';
 import { AppStore, ApplicationService } from 'app/services/application.state.service';
 
 @Component({
     template: `
-    <div class="flex flex-col w-full min-w-0 sm:absolute sm:inset-0 sm:overflow-hidden">
-    <mat-drawer-container class="flex-auto sm:h-full">
+    
+    <div class="flex w-full min-w-0 flex-col sm:absolute sm:inset-0 sm:overflow-hidden">     
+    <mat-drawer-container class="flex-auto sm:h-full overflow-hidden">
         <!-- Drawer -->
         @if(store.panels().length > 0) {
 
@@ -89,7 +82,7 @@ import { AppStore, ApplicationService } from 'app/services/application.state.ser
         }
 
         <!-- Drawer content -->
-        <mat-drawer-content class="flex flex-col">
+        <mat-drawer-content class="flex flex-col overflow-hidden">
             <!-- Main -->
             <div class="flex-auto px-6 pt-9 pb-12 md:p-8 md:pb-12 lg:p-12">
                 <!-- Panel header -->
@@ -122,8 +115,8 @@ import { AppStore, ApplicationService } from 'app/services/application.state.ser
                 </div>
             </div>
         </mat-drawer-content>
-        </mat-drawer-container>
-        </div>
+    </mat-drawer-container>
+    </div>
     `,
     selector: 'gl-main',
     encapsulation: ViewEncapsulation.None,
@@ -138,6 +131,7 @@ import { AppStore, ApplicationService } from 'app/services/application.state.ser
         GlSubTypeComponent,
         NgClass,
         TeamsComponent,
+        GlAccountsComponent
     ],
     providers: [HttpClient, AppStore],
     changeDetection: ChangeDetectionStrategy.OnPush

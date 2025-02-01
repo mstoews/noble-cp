@@ -1,4 +1,4 @@
-import { AsyncPipe, DatePipe } from '@angular/common'
+import { DatePipe } from '@angular/common'
 import {
   Component,
   inject,
@@ -62,13 +62,12 @@ import { IUser, User } from '../user/user'
       }
     `,
     imports: [
-        MatCardModule,
-        MatIconModule,
-        MatButtonModule,
-        MatDividerModule,
-        AsyncPipe,
-        DatePipe,
-    ]
+    MatCardModule,
+    MatIconModule,
+    MatButtonModule,
+    MatDividerModule,
+    DatePipe
+]
 })
 export class ViewUserComponent implements OnInit, OnChanges, OnDestroy {
   private readonly route = inject(ActivatedRoute)

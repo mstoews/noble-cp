@@ -198,8 +198,7 @@ export const appRoutes: Route[] = [
             {
                 path: 'settings',
                 canActivate: [isAuthenticatedGuard()],
-                loadChildren: () =>
-                    import('app/features/pages/settings/settings.routes'),
+                loadChildren: () =>  import('app/features/pages/settings/settings.routes'),                
             },
             {
                 path: 'docs',

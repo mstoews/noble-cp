@@ -10,6 +10,7 @@ import { IPeriodParam } from 'app/models/period';
 
 import {
   IArtifacts,
+  IJournalArrayParams,
   IJournalDetail,
   IJournalDetailDelete,
   IJournalDetailTemplate,
@@ -54,6 +55,20 @@ export class JournalService implements OnDestroy {
       shareReplay({ bufferSize: 1, refCount: true }));
   }
 
+  createJournal(params: IJournalArrayParams) {
+    var url = this.baseUrl + '/v1/create_journal';
+    return this.httpClient.post<IJournalArrayParams>(url, params).pipe(
+      catchError(err => {
+        if (err.status === 200) {
+          
+          return 
+        }
+        const message = err.error;
+        this.ShowAlert(JSON.stringify(message), 'failed');
+        return throwError(() => new Error(`${JSON.stringify(err)}`));
+      }),
+      shareReplay({ bufferSize: 1, refCount: true }));
+  }
 
   readHttpLoadArtifactsByJournalId(journal_id: number) {
     var url = this.baseUrl + '/v1/read_artifacts_by_jrn_id/' + journal_id;
@@ -303,8 +318,10 @@ export class JournalService implements OnDestroy {
 
   createJournalFullHeader(header: IJournalHeader) {
     let url = this.baseUrl + '/v1/create_full_journal_header';
-    let journalHeader: any = {
+    let journalHeader: IJournalHeader = {
+        "journal_id" : header.journal_id,
         "description" : header.description,
+        "booked" : header.booked,
 	      "booked_user" : header.booked_user,
 	      "period" : header.period,
 	      "period_year" : header.period_year,

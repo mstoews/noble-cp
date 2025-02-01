@@ -29,6 +29,44 @@ export interface IJournalHeader {
   debit?: number
 }
 
+export interface IJournalArrayParams 
+{
+  journal_id: number
+  description: string
+  type: string
+  booked_user: string
+  period: number
+  period_year: number
+  transaction_date: string
+  amount: number
+  template_name: string
+  invoice_no: string
+  party_id: string
+  fund: string
+  reference: string
+  details: Details
+}
+
+export interface Details {
+  detail: Detail[]
+}
+
+export interface Detail {
+  journal_id: number
+  journal_subid: number
+  account: number
+  child: number
+  subtype: string
+  description: string
+  debit: number
+  credit: number
+  create_date: string
+  create_user: string
+  fund: string
+  reference: string
+}
+
+
 export interface ITemplateParams {
   journal_id: number,
 	template_description: string,
@@ -47,7 +85,7 @@ export interface IJournalDetail {
   child         : number,
   child_desc?   : string,
   fund          : string,
-  sub_type      : string,
+  subtype      : string,
   description   : string,
   reference     : string,
   debit         : number,
@@ -65,7 +103,7 @@ export interface IJournalDetailUpdate {
   account       : number,
   child         : number,
   fund          : string,
-  sub_type      : string,
+  subtype      : string,
   description   : string,
   reference     : string,
   debit         : number,

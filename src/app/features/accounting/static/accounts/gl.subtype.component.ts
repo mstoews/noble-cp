@@ -108,7 +108,7 @@ const imports = [
                     }
             
             </ng-container> 
-        </mat-drawer-container>
+    </mat-drawer-container>
     `,
     selector: 'subtypes',
     imports: [imports],

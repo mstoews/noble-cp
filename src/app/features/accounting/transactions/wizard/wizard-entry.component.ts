@@ -32,6 +32,8 @@ import { MatSelect } from '@angular/material/select';
 import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 import { IDropDownAccounts, IFunds } from 'app/models';
 import {
+    Detail,
+    IJournalArrayParams,
     IJournalDetail,
     IJournalDetailTemplate,
     IJournalDetailUpdate,
@@ -123,6 +125,7 @@ const mods = [
 export class EntryWizardComponent implements OnInit, OnDestroy, AfterViewInit {
 
 
+
     private journalService = inject(JournalService);
     private accountsService = inject(AccountsService);
     private formBuilder      = inject(FormBuilder);
@@ -194,7 +197,7 @@ export class EntryWizardComponent implements OnInit, OnDestroy, AfterViewInit {
     store = inject(JournalStore);
     
     drawer = viewChild<MatDrawer>("drawer");
-
+    
     @ViewChild("singleDebitSelect", { static: true }) singleDebitSelect: MatSelect;
     @ViewChild("singleCreditSelect", { static: true }) singleCreditSelect: MatSelect;
     @ViewChild("singleTemplateSelect", { static: true }) singleTemplateSelect: MatSelect;
@@ -254,7 +257,7 @@ export class EntryWizardComponent implements OnInit, OnDestroy, AfterViewInit {
 
         
         this.journalService.getLastJournalNo().subscribe(journal_no => {
-            this.journal_id = Number(journal_no) + 1;
+            this.journal_id = Number(journal_no);
         });
 
 
@@ -267,6 +270,12 @@ export class EntryWizardComponent implements OnInit, OnDestroy, AfterViewInit {
         this.createEmptyForms();
         this.onChanges()
 
+    }
+
+    public onClear() {
+        this.journalService.getLastJournalNo().subscribe(journal_no => {
+            this.journal_id = Number(journal_no);            
+        });        
     }
 
     public createEmptyForms() {
@@ -350,7 +359,7 @@ export class EntryWizardComponent implements OnInit, OnDestroy, AfterViewInit {
         this.detailForm.patchValue({
             debitAccountFilterCtrl: journalDetail.child.toString(),
             description: journalDetail.description,
-            sub_type: journalDetail.sub_type,
+            sub_type: journalDetail.subtype,
             debit: journalDetail.debit,
             credit: journalDetail.credit,
             reference: journalDetail.reference,
@@ -394,7 +403,7 @@ export class EntryWizardComponent implements OnInit, OnDestroy, AfterViewInit {
             description: data.description,
             create_date: currentDate,
             create_user: email,
-            sub_type: data.sub_type,
+            subtype: data.subtype,
             debit: debit,
             credit: credit,
             reference: '',
@@ -428,7 +437,7 @@ export class EntryWizardComponent implements OnInit, OnDestroy, AfterViewInit {
             description: data.description,
             create_date: currentDate,
             create_user: email,
-            sub_type: data.sub_type,
+            subtype: data.subtype,
             debit: data.debit,
             credit: data.credit,
             reference: data.reference,
@@ -596,17 +605,21 @@ export class EntryWizardComponent implements OnInit, OnDestroy, AfterViewInit {
 
     public updateHeaderData() {
 
-
         const updateDate = new Date().toISOString().split('T')[0];
         const inputs = { ...this.journalEntryForm.value }
         const momentDate = new Date(inputs.step1.transaction_date).toISOString().split('T')[0];
         const email = '@' + this.auth.currentUser?.email.split('@')[0];
+        
+        
         
         var party: any;
         var party_id: string;
 
         const template = this.templateCtrl.value;
         const template_name = this.templateList.find((x) => x.template_name === template.template_name).template_name;
+
+        this.journalDetails = [];
+
         if (template.journal_type !== 'GL') {
             party = this.partyCtrl.getRawValue();
             party_id = this.partyList.find((x) => x.party_id === party.party_id).party_id;
@@ -642,8 +655,7 @@ export class EntryWizardComponent implements OnInit, OnDestroy, AfterViewInit {
             invoice_no: inputs.step1.invoice_no,
         }
 
-        
-        this.journalDetails = [];
+        this.journalHeader = journalHeader;
         
         this.store.templateDetails().forEach((templateDetail) => {
             let journalDetail: IJournalDetailUpdate = {
@@ -654,7 +666,7 @@ export class EntryWizardComponent implements OnInit, OnDestroy, AfterViewInit {
                 description: templateDetail.description,
                 create_date: updateDate,
                 create_user: email,
-                sub_type: '',
+                subtype: templateDetail.sub_type,
                 debit: templateDetail.debit * journalHeader.amount,
                 credit: templateDetail.credit * journalHeader.amount,
                 reference: '',
@@ -666,7 +678,6 @@ export class EntryWizardComponent implements OnInit, OnDestroy, AfterViewInit {
 
         this.journalDetailSignal.set(this.journalDetails);
         
-        this.journalHeader = journalHeader;
         this.bDirty = true;
     }
 
@@ -681,35 +692,61 @@ export class EntryWizardComponent implements OnInit, OnDestroy, AfterViewInit {
         const updateDate = new Date().toISOString().split('T')[0];
         const email = '@' + this.auth.currentUser?.email.split('@')[0];
         this.journalHeader.transaction_date = inputs.step1.transaction_date;
-        
-        this.store.createJournalHeader(this.journalHeader);
-        
-        this.journalDetailSignal().forEach((detail) => {
-            
-            const journalDetail: IJournalDetail = {
-                journal_id: detail.journal_id-1,
-                journal_subid: detail.journal_subid,
-                account: detail.account,
-                child: detail.child,
-                description: detail.description,
-                create_date: detail.create_date,
-                create_user: detail.create_user,
-                sub_type: detail.sub_type,
-                debit: detail.debit,
-                credit: detail.credit,
-                reference: detail.reference,
-                fund: detail.fund,
-            }            
-            this.journalService.createHttpJournalDetail(journalDetail)
-            .pipe(takeUntil(this._onDestroy))
-            .subscribe((response) => {
-                this.ShowAlert(`Journal detail updated : ${response.journal_subid} `, "pass");
-            });
-        });
 
-        this.toastr.success('Journal Entry Created');
-        const currentPeriod = this.store.currentPeriod();
-        const currentYear = this.store.currentYear();   
+        var detail: Detail[] = this.journalDetailSignal();
+
+        var journalArray: IJournalArrayParams = {
+            
+            journal_id: this.journalHeader.journal_id,
+            description: this.journalHeader.description,
+            type: this.journalHeader.type,
+            booked_user: this.journalHeader.booked_user,
+            period: this.journalHeader.period,
+            period_year: this.journalHeader.period_year,
+            transaction_date: this.journalHeader.transaction_date,
+            amount: this.journalHeader.amount,
+            template_name: this.journalHeader.template_name,
+            invoice_no: this.journalHeader.invoice_no,
+            party_id: this.journalHeader.party_id,
+            fund: '',
+            reference: '',
+            details:  { detail: detail }
+        }
+
+
+        this.journalService.createJournal(journalArray).pipe(takeUntil(this._onDestroy)).subscribe((response) => {
+            this.ShowAlert(`Journal updated : ${response.journal_id}`, "pass");
+        });
+        
+        // this.store.createJournalHeader(this.journalHeader);
+        
+        // this.journalDetailSignal().forEach((detail) => {            
+            
+        //     const journalDetail: IJournalDetail = {
+        //         journal_id: this.journalHeader.journal_id,
+        //         journal_subid: detail.journal_subid,
+        //         account: detail.account,
+        //         child: detail.child,
+        //         description: detail.description,
+        //         create_date: detail.create_date,
+        //         create_user: detail.create_user,
+        //         sub_type: detail.sub_type,
+        //         debit: detail.debit,
+        //         credit: detail.credit,
+        //         reference: detail.reference,
+        //         fund: detail.fund,
+        //     }
+
+        //     // this.store.createJournalDetail(journalDetail);
+
+        //     this.journalService.createHttpJournalDetail(journalDetail).pipe(takeUntil(this._onDestroy)).subscribe((response) => {
+        //         this.ShowAlert(`Journal detail updated : ${response.journal_id} - ${response.journal_subid} `, "pass");
+        //     });
+        // });
+
+        // this.toastr.success('Journal Entry Created');
+        // const currentPeriod = this.store.currentPeriod();
+        // const currentYear = this.store.currentYear();   
 
         const prd = {
             period: this.currentPeriod,
@@ -718,11 +755,12 @@ export class EntryWizardComponent implements OnInit, OnDestroy, AfterViewInit {
 
         this.store.updateDistributionListing(prd)
 
-        this.bDirty = false;
-    }
+        // this.journalService.getLastJournalNo().subscribe(journal_no => {
+        //     this.journal_id = Number(journal_no);       
+        //     this.ShowAlert(`Journal detail updated : ${this.journal_id}`, "pass");
+        // });        
 
-       onUpdateJournalDetail(detail: IJournalDetail) {                                
-                
+        this.bDirty = false;
     }
 
     onAddArtifact() {

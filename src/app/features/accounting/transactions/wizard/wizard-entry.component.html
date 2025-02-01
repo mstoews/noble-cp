@@ -354,22 +354,23 @@
                             </div>
                         </ng-container>
                         @if (journalHeader) {
-                        <div class="text-gray-800 text-bold text-3xl m-1">Transaction Confirmed</div>
-                        <div class="flex">
-                            <div class="text-gray-600 m-1">Description : {{journalHeader.description}}</div>
-                        </div>
-                        <div class="flex">
-                            <div class="text-gray-600 m-1">Transaction Date : {{journalHeader.transaction_date}}</div>
-                        </div>
-                        <div class="flex">
-                            <div class="text-gray-600 m-1">Amount : {{journalHeader.amount | number: '1.2-2'}}</div>
-                        </div>
+                            
+                            <div class="text-gray-800 text-bold text-3xl m-1">Transaction Confirmed</div>
+                            <div class="flex">
+                                <div class="text-gray-600 m-1">Description : {{journalHeader.description}}</div>
+                            </div>
+                            <div class="flex">
+                                <div class="text-gray-600 m-1">Transaction Date : {{journalHeader.transaction_date}}</div>
+                            </div>
+                            <div class="flex">
+                                <div class="text-gray-600 m-1">Amount : {{journalHeader.amount | number: '1.2-2'}}</div>
+                            </div>
 
-                        <div class="flex">
-                            <div class="text-gray-600 m-1">The transaction has been completed. Please add a digital artifact
-                                to confirm the transaction.</div>
-                        </div>
-
+                            <div class="flex">
+                                <div class="text-gray-600 m-1">The transaction has been completed. Please add a digital artifact
+                                    to confirm the transaction.</div>
+                            </div>
+                        
                         }
                         <div class="flex justify-end mt-8">
                             <button class="px-8 mr-2" mat-flat-button [color]="'accent'" type="button"
@@ -380,8 +381,7 @@
                                 (click)="onAddArtifact()">
                                 Add an Artifact
                             </button>
-                            <button class="px-8" mat-flat-button [color]="'primary'" type="reset"
-                                (click)="verticalStepper.reset();">
+                            <button class="px-8" mat-flat-button [color]="'primary'" type="reset" (click)="verticalStepper.reset()">
                                 Clear and Restart
                             </button>
                         </div>

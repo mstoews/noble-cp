@@ -96,7 +96,7 @@ const imports = [
                 }
 
                 <!-- Drawer content -->
-                <mat-drawer-content class="flex flex-col">
+                <mat-drawer-content class="flex flex-col overflow-hidden">
                     <!-- Main -->
                     <div class="flex-auto px-6 pt-9 pb-12 md:p-8 md:pb-12 lg:p-12">
                         <!-- Panel header -->

@@ -351,7 +351,7 @@ export class BudgetWizardComponent implements OnInit, OnDestroy, AfterViewInit {
         description: inputs.step2.detail_description,
         create_date: updateDate,
         create_user: email,
-        sub_type: inputs.step2.sub_type,
+        subtype: inputs.step2.sub_type,
         debit: debit,
         credit: credit,
         reference: inputs.step2.reference,
@@ -381,7 +381,7 @@ export class BudgetWizardComponent implements OnInit, OnDestroy, AfterViewInit {
         description: inputs.step2.detail_description,
         create_date: updateDate,
         create_user: email,
-        sub_type: inputs.step2.sub_type,
+        subtype: inputs.step2.sub_type,
         debit: debit,
         credit: credit,
         reference: inputs.step2.reference,
@@ -392,7 +392,7 @@ export class BudgetWizardComponent implements OnInit, OnDestroy, AfterViewInit {
     this.changeDetectionRef.markForCheck();
   }
 
-  postTransaction() {
+  public postTransaction() {
     var details: any;
     this.journalService.createJournalFullHeader(this.journalHeader).subscribe(journal => {
       console.debug(JSON.stringify(journal));
