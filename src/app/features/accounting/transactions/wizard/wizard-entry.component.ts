@@ -128,11 +128,11 @@ export class EntryWizardComponent implements OnInit, OnDestroy, AfterViewInit {
 
     private journalService = inject(JournalService);
     private accountsService = inject(AccountsService);
-    private formBuilder      = inject(FormBuilder);
+    private formBuilder = inject(FormBuilder);
     private partyService = inject(PartyService);
     private router = inject(Router);
-    public  auth = inject(AUTH);
-    public  matDialog = inject(MatDialog);
+    public auth = inject(AUTH);
+    public matDialog = inject(MatDialog);
     private toastr = inject(ToastrService);
 
     public journalDetailSignal = signal<IJournalDetail[]>(null);
@@ -146,7 +146,7 @@ export class EntryWizardComponent implements OnInit, OnDestroy, AfterViewInit {
     public transactionType = 'GL';
     public isVerified = false;
 
-    
+
     public journalHeader: IJournalHeader;
 
     public journal_id = 0;
@@ -189,15 +189,15 @@ export class EntryWizardComponent implements OnInit, OnDestroy, AfterViewInit {
     // Grid Options
     public selectionOptions: Object;
     public journalDetails: IJournalDetail[] = [];
-    
+
     public accountsListSubject: Subscription;
     public gridControl = viewChild<GridComponent>('grid');
     public currentRowData: any;
 
     store = inject(JournalStore);
-    
+
     drawer = viewChild<MatDrawer>("drawer");
-    
+
     @ViewChild("singleDebitSelect", { static: true }) singleDebitSelect: MatSelect;
     @ViewChild("singleCreditSelect", { static: true }) singleCreditSelect: MatSelect;
     @ViewChild("singleTemplateSelect", { static: true }) singleTemplateSelect: MatSelect;
@@ -212,30 +212,30 @@ export class EntryWizardComponent implements OnInit, OnDestroy, AfterViewInit {
         { value: "AR", viewValue: "Receipts", checked: false },
     ];
 
-    EditTransaction() {        
+    EditTransaction() {
         this.router.navigate(["journals/gl", this.journal_id]);
     }
 
     Store = inject(Store);
-    template$ : Observable<IJournalTemplate[]>; 
-    accountsDropdown$ : Observable<IDropDownAccounts[]>;
-    funds$ : Observable<IFunds[]>;
-    subtype$ : Observable<ISubType[]>;
-    
+    template$: Observable<IJournalTemplate[]>;
+    accountsDropdown$: Observable<IDropDownAccounts[]>;
+    funds$: Observable<IFunds[]>;
+    subtype$: Observable<ISubType[]>;
+
     // -----------------------------------------------------------------------------------------------------
     // @ Lifecycle hooks
     // -----------------------------------------------------------------------------------------------------
 
     ngOnInit(): void {
-        
-        this.Store.dispatch(loadTemplates());           
-        
+
+        this.Store.dispatch(loadTemplates());
+
         this.Store.select(getTemplates).subscribe((templates) => {
             this.templateList = templates;
             this.templateFilter.next(templates);
         });
 
-      
+
         this.accountsService.readAccountDropdown().subscribe((accounts) => {
             this.debitAccounts = accounts;
             this.creditAccounts = accounts;
@@ -246,7 +246,7 @@ export class EntryWizardComponent implements OnInit, OnDestroy, AfterViewInit {
 
         this.selectedOption = this.types[0].value;
 
-    
+
         this.currentPeriod = this.store.currentPeriod();
         this.currentYear = this.store.currentYear();
 
@@ -255,7 +255,7 @@ export class EntryWizardComponent implements OnInit, OnDestroy, AfterViewInit {
             this.partyFilter.next(this.partyList.slice());
         });
 
-        
+
         this.journalService.getLastJournalNo().subscribe(journal_no => {
             this.journal_id = Number(journal_no);
         });
@@ -274,8 +274,8 @@ export class EntryWizardComponent implements OnInit, OnDestroy, AfterViewInit {
 
     public onClear() {
         this.journalService.getLastJournalNo().subscribe(journal_no => {
-            this.journal_id = Number(journal_no);            
-        });        
+            this.journal_id = Number(journal_no);
+        });
     }
 
     public createEmptyForms() {
@@ -293,7 +293,7 @@ export class EntryWizardComponent implements OnInit, OnDestroy, AfterViewInit {
             credit: ["", Validators.required],
         });
 
-        
+
 
         this.journalEntryForm = this.formBuilder.group({
             step1: this.formBuilder.group({
@@ -381,42 +381,78 @@ export class EntryWizardComponent implements OnInit, OnDestroy, AfterViewInit {
         this.drawer().close();
     }
 
-    public actionBegin(args: SaveEventArgs): void {
+    public actionBegin(args: SaveEventArgs): void 
+    {
+        if (args.requestType === "refresh")
+        {
+            args.cancel = true;
+            return;
+        }
 
-        const subid = args.rowData as IJournalDetail;
+        if (args.requestType === "beginEdit" || args.requestType !== "delete") {
+            args.cancel = true;
+            const subid = args.rowData as IJournalDetail;
 
-        const currentSub = this.journalDetailSignal().find((x) => x.journal_subid === subid.journal_subid);
+            const currentSub = this.journalDetailSignal().find((x) => x.journal_subid === subid.journal_subid);
 
-        const currentDate = new Date().toISOString().split("T")[0];
-        const data = args.rowData as IJournalDetail;
-        console.log(JSON.stringify(data));
-        const email = '@' + this.auth.currentUser.email.split('@')[0];
-        const debit = currentSub.debit;
-        const credit = currentSub.credit;
+            const currentDate = new Date().toISOString().split("T")[0];
+            const data = args.rowData as IJournalDetail;
+            console.log(JSON.stringify(data));
+            const email = '@' + this.auth.currentUser.email.split('@')[0];
+            const debit = currentSub.debit;
+            const credit = currentSub.credit;
 
-        let JournalDetail = {
-            journal_id: data.journal_id,
-            journal_subid: data.journal_subid,
-            account: data.account,
-            child: data.child,
-            child_desc: data.child_desc,
-            description: data.description,
-            create_date: currentDate,
-            create_user: email,
-            subtype: data.subtype,
-            debit: debit,
-            credit: credit,
-            reference: '',
-            fund: data.fund
-        } as IJournalDetail;
+            let JournalDetail = {
+                journal_id: data.journal_id,
+                journal_subid: data.journal_subid,
+                account: data.account,
+                child: data.child,
+                child_desc: data.child_desc,
+                description: data.description,
+                create_date: currentDate,
+                create_user: email,
+                subtype: data.subtype,
+                debit: debit,
+                credit: credit,
+                reference: '',
+                fund: data.fund
+            } as IJournalDetail;
 
-        if (args.requestType === "beginEdit" || args.requestType === "add") {
-            args.cancel = true;            
             this.updateForm(JournalDetail);
             this.openDrawer();
         }
+
         if (args.requestType === "save") {
             args.cancel = true;
+
+            const subid = args.rowData as IJournalDetail;
+
+            const currentSub = this.journalDetailSignal().find((x) => x.journal_subid === subid.journal_subid);
+
+            const currentDate = new Date().toISOString().split("T")[0];
+            const data = args.rowData as IJournalDetail;
+            console.log(JSON.stringify(data));
+            const email = '@' + this.auth.currentUser.email.split('@')[0];
+            const debit = currentSub.debit;
+            const credit = currentSub.credit;
+
+            let JournalDetail = {
+                journal_id: data.journal_id,
+                journal_subid: data.journal_subid,
+                account: data.account,
+                child: data.child,
+                child_desc: data.child_desc,
+                description: data.description,
+                create_date: currentDate,
+                create_user: email,
+                subtype: data.subtype,
+                debit: debit,
+                credit: credit,
+                reference: '',
+                fund: data.fund
+            } as IJournalDetail;
+
+
             this.onSavedDetails(JournalDetail);
         }
     }
@@ -444,7 +480,7 @@ export class EntryWizardComponent implements OnInit, OnDestroy, AfterViewInit {
             fund: data.fund,
         } as IJournalDetail;
 
-        this.currentRowData = journalDetail;        
+        this.currentRowData = journalDetail;
 
         this.updateForm(journalDetail);
         this.onChanges();
@@ -472,7 +508,7 @@ export class EntryWizardComponent implements OnInit, OnDestroy, AfterViewInit {
         //this.onSavedDetails(args.data[0]);
     }
 
-    onSavedDetails(e: IJournalDetail) {                
+    onSavedDetails(e: IJournalDetail) {
         this.store.createJournalDetail(e);
     }
 
@@ -594,7 +630,6 @@ export class EntryWizardComponent implements OnInit, OnDestroy, AfterViewInit {
 
 
     public createJournalDetailsFromTemplate(value: IJournalTemplate) {
-        console.log('Template : ', value);
         this.transactionType = value.journal_type;
         this.store.loadTemplateDetails(value.journal_no.toString());
     }
@@ -609,9 +644,9 @@ export class EntryWizardComponent implements OnInit, OnDestroy, AfterViewInit {
         const inputs = { ...this.journalEntryForm.value }
         const momentDate = new Date(inputs.step1.transaction_date).toISOString().split('T')[0];
         const email = '@' + this.auth.currentUser?.email.split('@')[0];
-        
-        
-        
+
+
+
         var party: any;
         var party_id: string;
 
@@ -624,8 +659,7 @@ export class EntryWizardComponent implements OnInit, OnDestroy, AfterViewInit {
             party = this.partyCtrl.getRawValue();
             party_id = this.partyList.find((x) => x.party_id === party.party_id).party_id;
         }
-        else
-        {
+        else {
             party_id = '';
         }
 
@@ -656,13 +690,13 @@ export class EntryWizardComponent implements OnInit, OnDestroy, AfterViewInit {
         }
 
         this.journalHeader = journalHeader;
-        
+
         this.store.templateDetails().forEach((templateDetail) => {
             let journalDetail: IJournalDetailUpdate = {
                 journal_id: this.journal_id,
                 journal_subid: count,
                 account: Number(templateDetail.account),
-                child: Number(templateDetail.child),                
+                child: Number(templateDetail.child),
                 description: templateDetail.description,
                 create_date: updateDate,
                 create_user: email,
@@ -677,7 +711,7 @@ export class EntryWizardComponent implements OnInit, OnDestroy, AfterViewInit {
         });
 
         this.journalDetailSignal.set(this.journalDetails);
-        
+
         this.bDirty = true;
     }
 
@@ -689,14 +723,10 @@ export class EntryWizardComponent implements OnInit, OnDestroy, AfterViewInit {
             return;
         }
 
-        const updateDate = new Date().toISOString().split('T')[0];
-        const email = '@' + this.auth.currentUser?.email.split('@')[0];
-        this.journalHeader.transaction_date = inputs.step1.transaction_date;
-
         var detail: Detail[] = this.journalDetailSignal();
 
         var journalArray: IJournalArrayParams = {
-            
+
             journal_id: this.journalHeader.journal_id,
             description: this.journalHeader.description,
             type: this.journalHeader.type,
@@ -708,20 +738,20 @@ export class EntryWizardComponent implements OnInit, OnDestroy, AfterViewInit {
             template_name: this.journalHeader.template_name,
             invoice_no: this.journalHeader.invoice_no,
             party_id: this.journalHeader.party_id,
-            fund: '',
-            reference: '',
-            details:  { detail: detail }
+            subtype: '',
+            details: { detail: detail }
         }
 
 
         this.journalService.createJournal(journalArray).pipe(takeUntil(this._onDestroy)).subscribe((response) => {
-            this.ShowAlert(`Journal updated : ${response.journal_id}`, "pass");
+            console.log(response);
+            this.ShowAlert(`Journal created  : ${response.description} ID: ${response.journal_id}`, "pass");
         });
-        
+
         // this.store.createJournalHeader(this.journalHeader);
-        
+
         // this.journalDetailSignal().forEach((detail) => {            
-            
+
         //     const journalDetail: IJournalDetail = {
         //         journal_id: this.journalHeader.journal_id,
         //         journal_subid: detail.journal_subid,
@@ -748,12 +778,12 @@ export class EntryWizardComponent implements OnInit, OnDestroy, AfterViewInit {
         // const currentPeriod = this.store.currentPeriod();
         // const currentYear = this.store.currentYear();   
 
-        const prd = {
-            period: this.currentPeriod,
-            period_year: this.currentYear
-        }
+        // const prd = {
+        //     period: this.currentPeriod,
+        //     period_year: this.currentYear
+        // }
 
-        this.store.updateDistributionListing(prd)
+        // this.store.updateDistributionListing(prd)
 
         // this.journalService.getLastJournalNo().subscribe(journal_no => {
         //     this.journal_id = Number(journal_no);       
@@ -821,14 +851,21 @@ export class EntryWizardComponent implements OnInit, OnDestroy, AfterViewInit {
 
     ShowAlert(message: string, response: string) {
         if (response == "pass") {
-          this.toastr.success(message);
+            this.toastr.success(message);
         } else {
-          this.toastr.error(message);
+            this.toastr.error(message);
         }
-        return ;
+        return;
     }
 
 }
 
 
-  
+
+
+
+//{"headers":{"normalizedNames":{},"lazyUpdate":null},"status":200,"statusText":"OK","url":"http://localhost:8080/v1/create_journal",
+// "ok":false,"name":"HttpErrorResponse","message":"Http failure during parsing for http://localhost:8080/v1/create_journal",
+// "error":{"error":{},"text":"
+// 
+//{\"journal_id\":204,\"journal_subid\":1,\"account\":1000,\"child\":1001,\"sub_type\":\"Operating\",\"description\":\"Office Expenses\",\"debit\":0,\"credit\":5000.00,\"create_date\":\"2025-02-01\",\"create_user\":\"@mstoews.10.14\",\"fund\":\"Reserve\",\"reference\":\"\"}{\"journal_id\":204,\"journal_subid\":2,\"account\":6000,\"child\":6030,\"sub_type\":\"Operating\",\"description\":\"Office Expenses\",\"debit\":5000.00,\"credit\":0,\"create_date\":\"2025-02-01\",\"create_user\":\"@mstoews.10.14\",\"fund\":\"Reserve\",\"reference\":\"\"}"}}

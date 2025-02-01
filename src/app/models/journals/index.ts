@@ -42,8 +42,7 @@ export interface IJournalArrayParams
   template_name: string
   invoice_no: string
   party_id: string
-  fund: string
-  reference: string
+  subtype: string
   details: Details
 }
 
@@ -85,7 +84,7 @@ export interface IJournalDetail {
   child         : number,
   child_desc?   : string,
   fund          : string,
-  subtype      : string,
+  subtype       : string,
   description   : string,
   reference     : string,
   debit         : number,

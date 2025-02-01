@@ -59,13 +59,15 @@ export class JournalService implements OnDestroy {
     var url = this.baseUrl + '/v1/create_journal';
     return this.httpClient.post<IJournalArrayParams>(url, params).pipe(
       catchError(err => {
-        if (err.status === 200) {
-          
-          return 
-        }
+        if (err.status === 200) {          
+          console.debug(JSON.stringify(err));
+          this.ShowAlert(JSON.stringify(err.message), 'pass');           
+        } else {
+
         const message = err.error;
         this.ShowAlert(JSON.stringify(message), 'failed');
         return throwError(() => new Error(`${JSON.stringify(err)}`));
+        }
       }),
       shareReplay({ bufferSize: 1, refCount: true }));
   }
