@@ -13,8 +13,7 @@ import { CurrencyPipe } from '@angular/common';
   providers: [ReportStore],
   imports: [MatTableModule, GridMenubarStandaloneComponent, MatProgressSpinnerModule, CurrencyPipe],
   template: `
-
-<div class="flex flex-col min-w-0 overflow-y-auto -px-10">
+  <div class="flex flex-col min-w-0 overflow-y-auto -px-10">
     <div class="flex-auto">
         <div class="h-full border-gray-300">
             <div class="flex-col">
@@ -76,10 +75,11 @@ import { CurrencyPipe } from '@angular/common';
         </div>
     </div>
   </div>
-
-  
   `,
-  styles: ``
+  styles: `
+  :root {
+    --mat-table-background-color: gray;
+  }`
 })
 export class TbGridComponent implements OnInit {
 

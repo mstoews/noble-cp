@@ -50,12 +50,88 @@ const declarations = [
 ];
 
 @Component({
+    
+    template: `
+        <div class="flex flex-col min-w-0 overflow-y-auto overflow-x-auto" cdkScrollable>
+        <!-- Main -->
+        <div class="flex-auto p-2 sm:p-10">
+            <div class="h-max border-gray-300 rounded-2xl">                
+            <reporting-toolbar 
+                (notifyParentRefresh)="onRefresh()"
+                (notifyExcel)="onExportExcel()" 
+                (notifyCSV)="onExportCSV()">
+            </reporting-toolbar>                
+                @if (store.isLoading() === false) {
+                    <ejs-grid #grid id="grid" 
+                        [rowHeight]='30'
+                        (click)="onClickGrid($event)"                        
+                        [dataSource]="store.header()" 
+                        [childGrid]="childDataGrid"
+                        allowPaging='true' 
+                        allowSorting='true'  
+                        showColumnMenu='true' 
+                        allowEditing='false' 
+                        [allowFiltering]='true' 
+                        [toolbar]='toolbarOptions' 
+                        [selectionOptions]='selectionOptions'  
+                        [filterSettings]='filterSettings'
+                        [editSettings]='editSettings' 
+                        [pageSettings]='pageSettings' 
+                        [searchSetting]='searchOptions'
+                        (rowSelected)="onRowSelected($event)"
+                        (actionBegin)="actionBegin($event)" 
+                        [enablePersistence]='true'
+                        [allowGrouping]='true'
+                        [allowExcelExport]='true'
+                        [allowPdfExport]='true'
+                        (load)='onLoad()'>
+        
+                        <e-columns>                            
+                            <e-column headerText="Group"    field="account" width="100"></e-column>
+                            <e-column headerText="Account"  field="child" isPrimaryKey='true'  width="100" ></e-column>                            
+                            <e-column headerText="Prd"      field="period" width="100" ></e-column>
+                            <e-column headerText="Year"     field="period_year" width="100" ></e-column>
+                            <e-column headerText="Description" field="description" width="200" ></e-column>
+                            <e-column headerText="Open"     textAlign="Right" format="N2" field="opening_balance" width="100" ></e-column>
+                            <e-column headerText="Debit"    textAlign="Right" format="N2" field="debit_balance" width="100" ></e-column>
+                            <e-column headerText="Credit"   textAlign="Right" format="N2" field="credit_balance" width="100" ></e-column>
+                            <e-column headerText="Closing"  textAlign="Right" format="N2" field="closing_balance" width="100" ></e-column>
+                            <e-aggregates>
+                                <e-aggregate>
+                                    <e-columns>
+                                        <e-column type="Sum" field="opening_balance" format="N2">
+                                            <ng-template #footerTemplate let-data>{{data.Sum}}</ng-template>
+                                        </e-column>
+                                        <e-column type="Sum" field="debit_balance" format="N2">
+                                            <ng-template #footerTemplate let-data>{{data.Sum}}</ng-template>
+                                        </e-column>
+                                        <e-column type="Sum" field="credit_balance" format="N2">
+                                            <ng-template #footerTemplate let-data>{{data.Sum}}</ng-template>
+                                        </e-column>
+                                        <e-column type="Sum" field="closing_balance" format="N2">
+                                            <ng-template #footerTemplate let-data>{{data.Sum}}</ng-template>
+                                        </e-column>
+                                    </e-columns>
+                                </e-aggregate>                            
+                            </e-aggregates>
+                        </e-columns>
+                    </ejs-grid>        
+                    }
+                    @else
+                    {
+                    <div class="flex justify-center items-center">
+                        <mat-spinner></mat-spinner>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+    `,
     selector: 'trial-balance',
     imports: [imports],
-    templateUrl: './trial-balance.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [declarations],
-    styles: [` .e-detailcell .e-grid td.e-cellselectionbackground { background-color: #00b7ea; }`]
+    styles: ``
 })
 export class TrialBalanceComponent implements OnInit, AfterViewInit {
 
@@ -83,8 +159,8 @@ export class TrialBalanceComponent implements OnInit, AfterViewInit {
             { field: 'journal_id', headerText: 'ID', textAlign: 'left', width: 50 },
             { field: 'child', headerText: 'Child', textAlign: 'left', width: 100 },
             { field: 'description', headerText: 'Description', textAlign: 'left', width: 160 },
-            { field: 'fund', headerText: 'Fund', textAlign: 'left', width: 100 },
-            { field: 'debit', headerText: 'Debit', textAlign: 'Right', format: 'N2', width: 80 },
+            { field: 'fund', headerText: 'Fund', textAlign: 'left', width: 80 },
+            { field: 'debit', headerText: 'Debit', textAlign: 'Right', format: 'N2', width: 70 },
             { field: 'credit', headerText: 'Credit', textAlign: 'Right', format: 'N2', width: 70 },
             { field: '', headerText: '', textAlign: 'Right', format: 'N2', width: 65 },
         ],

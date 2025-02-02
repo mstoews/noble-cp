@@ -26,7 +26,7 @@ let modules = [MatToolbarModule, MatIconModule, MatButtonModule, CommonModule,  
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [modules],
     template: `
-    <mat-toolbar class="text-white font-sans bg-gray-500 text-2xl rounded-lg">  {{ inTitle() }} {{ prd() }} - {{prd_year()}}
+    <mat-toolbar class="text-white font-sans bg-gray-500 text-2xl rounded-lg">  {{ inTitle() }} {{ prd() }}  {{prd_year()}}
 
       <span class="flex-1"></span>
 

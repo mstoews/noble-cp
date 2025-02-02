@@ -1,10 +1,6 @@
-<kb-menubar class="" [inTitle]="'Tasks'" (notifyParentRefresh)="onRefresh()" (notifyParentAdd)="onAdd()"
-    (notifyParentDelete)="onDeleteCurrentSelection()" (notifyParentUpdate)="onUpdateCurrentSelection()"></kb-menubar>
-<div class="flex flex-col min-w-0 overflow-y-auto bg-transparent" cdkScrollable>
 
-    <div class="flex-auto">
-        <div class="h-full rounded-2xl">
-            <mat-drawer class="w-128 bg-gray-100" #drawer [opened]="false" mode="over" [position]="'end'"
+<div class="flex flex-col min-w-0 overflow-y-auto bg-transparent" cdkScrollable>
+    <mat-drawer class="w-128 bg-gray-100" #drawer [opened]="false" mode="over" [position]="'end'"
                 [disableClose]="false">
                 <mat-card class="mt-2 ml-3 mr-3 mat-elevation-z8">
                     <div mat-card-title
@@ -109,12 +105,19 @@
                     </div>
                 </mat-card>
 
-            </mat-drawer>
-            <mat-drawer-container>
+    </mat-drawer>
+
+    <div class="flex-auto overflow-hidden">
+        <grid-menubar class="mb-2" [showBack]="true" (back)="onBack()" [inTitle]="'Project Tasks'">
+        </grid-menubar>
+        
+        <div class="h-full rounded-2xl overflow-hidden">
+            
+            <mat-drawer-container class="overflow-hidden">
                 <mat-drawer-content>
                     @if (store.isLoading() == false) {
                     <div class="" cdkScrollable>
-                        <div class="control-section">
+                        <div class="control-section overflow-hidden">
                             <div class="content-wrapper">
                                 <ejs-kanban #kanbanObj cssClass='kanban-overview' keyField="status"
                                     [dataSource]='store.tasks()' [cardSettings]='cardSettings' enableTooltip='false'

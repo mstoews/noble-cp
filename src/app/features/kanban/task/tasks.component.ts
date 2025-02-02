@@ -17,6 +17,7 @@ import { AUTH } from 'app/app.config';
 import { KanbanStore } from '../kanban.store';
 import { debounce, defer, from, of, take, timer } from 'rxjs';
 import { IKanban } from 'app/models/kanban';
+import { GridMenubarStandaloneComponent } from 'app/features/accounting/grid-components/grid-menubar.component';
 
 interface IValue {
   value: string;
@@ -31,7 +32,8 @@ const imports = [
   CommonModule,
   KanbanModule,
   CheckBoxAllModule,
-  KanbanMenubarComponent
+  GridMenubarStandaloneComponent
+  
 ]
 
 @Component({
@@ -44,6 +46,12 @@ const imports = [
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TasksComponent implements OnInit {
+onBack() {
+throw new Error('Method not implemented.');
+}
+onClone(arg0: string) {
+throw new Error('Method not implemented.');
+}
   @ViewChild('kanbanObj') kanbanObj!: KanbanComponent;
   @ViewChild('drawer') drawer: MatDrawer;
   private fb = inject(FormBuilder);

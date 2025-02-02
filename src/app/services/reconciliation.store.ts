@@ -13,9 +13,10 @@ import {
   import { JournalService } from './journal.service';
   import { tapResponse } from '@ngrx/operators';
   import { IJournalDetail } from 'app/models/journals';
-  import { IAccounts } from 'app/models/journals';
+
   import { AccountsService } from './accounts.service';
   import { IReadJournalDetailsParams } from 'app/models/journals';
+  import { IAccounts } from 'app/models';
 
   
   export interface IReconciledAmounts {

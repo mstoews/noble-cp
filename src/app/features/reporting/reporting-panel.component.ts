@@ -42,7 +42,7 @@ const mods = [
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
     template: `
-    <div class="flex flex-col w-full min-w-0 sm:absolute sm:inset-0 sm:overflow-hidden">
+    <div class="flex flex-col w-full min-w-0 sm:absolute sm:inset-0 sm:overflow-hidden overflow-x-hidden">
     <mat-drawer-container class="flex-auto sm:h-full">
         <!-- Drawer -->
         @if(store.panels().length > 0) {
@@ -87,7 +87,7 @@ const mods = [
         </mat-drawer>
         }
         
-        <mat-drawer-content class="flex flex-col">
+        <mat-drawer-content class="flex flex-col overflow-x-hidden">
             <!-- Main -->
             <div class="flex-auto px-6 pt-9 pb-12 md:p-8 md:pb-12 lg:p-12">
                 <!-- Panel header -->

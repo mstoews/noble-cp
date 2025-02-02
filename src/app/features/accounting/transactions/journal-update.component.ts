@@ -19,7 +19,6 @@ import { NgxMatSelectSearchModule } from "ngx-mat-select-search";
 import { IDropDownAccounts, IDropDownAccountsGridList, IFunds, IJournalParams } from "app/models";
 
 import {
-    ClickEventArgs,
     ContextMenuComponent,
     ContextMenuModule,
     MenuEventArgs,
@@ -57,8 +56,6 @@ import { Router, ActivatedRoute, NavigationStart } from "@angular/router";
 import { Location } from "@angular/common";
 import { MatDrawer } from "@angular/material/sidenav";
 import { JournalStore } from "app/services/journal.store";
-import { MatSortModule } from "@angular/material/sort";
-import { MatTableModule } from "@angular/material/table";
 import { Splitter, SplitterComponent, SplitterModule } from '@syncfusion/ej2-angular-layouts';
 import { EvidenceCardComponent } from "app/features/file-manager/file-manager-card/evidence-card.component";
 import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from "@angular/material/form-field";
@@ -596,14 +593,14 @@ const imp = [
     </div>
     }    
 
-    <!-- <ejs-contextmenu 
+    <ejs-contextmenu 
       #contextmenu id='contextmenu'             
       target='#target' 
       (select)="itemSelect($event)"
       [animationSettings]='animation'
       [items]= 'menuItems'> 
     </ejs-contextmenu> 
-     -->
+    
 
     </div>
     `,

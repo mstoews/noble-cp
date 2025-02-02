@@ -37,7 +37,7 @@ const imports = [
   ReactiveFormsModule,
   FormsModule,
   GridMenubarStandaloneComponent,
-  GridModule
+  GridModule,
 ];
 
 @Component({
@@ -49,11 +49,15 @@ const imports = [
       
     @if (ngrxStore.isLoading() === false) 
      {     
-        <gl-grid                             
-            (onUpdateSelection)="onSelection($event)"
-            [data]="ngrxStore.tasks()" 
-            [columns]="columns">
-        </gl-grid>                                 
+      <grid-menubar 
+            class="pl-5 pr-5"            
+            [showBack]="true" 
+            (back)="onBack()"  
+            (clone)="onClone('GL')"           
+            [inTitle]="'General Ledger Transactions Update'" 
+            [prd]="store.currentPeriod()"
+            [prd_year]="store.currentYear()">
+        </grid-menubar>
      }
     @else
      {
