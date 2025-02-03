@@ -79,7 +79,7 @@ const keyExpr = ["account", "child"];
         #settings
         [opened]="false"
         mode="over"
-        [position]="'end'"
+        
         [disableClose]="false"
       >
         <mat-card class="m-2 p-2 border-1 border-gray-500">
@@ -155,7 +155,6 @@ const keyExpr = ["account", "child"];
         #drawer
         [opened]="false"
         mode="over"
-        [position]="'end'"
         [disableClose]="false"
       >
         <mat-card class="m-2">

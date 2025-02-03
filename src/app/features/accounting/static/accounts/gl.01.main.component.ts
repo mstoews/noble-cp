@@ -148,7 +148,7 @@ export class GlMainComponent {
     public panels: any[] = [];
     public selectedPanel: string = 'accounts';
     public PANEL_ID = 'referencePanel';
-    public panelService = inject(ApplicationService);
+    public appService = inject(ApplicationService);
     public store = inject(AppStore);
 
     /**
@@ -156,11 +156,11 @@ export class GlMainComponent {
      */
 
     constructor() {
-        this.panelService.getUserId().subscribe((uid) => {
-            this.panelService.findPanelByName(uid, this.PANEL_ID).subscribe((panel) => {
+        this.appService.getUserId().subscribe((uid) => {
+            this.appService.findPanelByName(uid, this.PANEL_ID).subscribe((panel) => {
                 this.selectedPanel = panel.lastPanelOpened;
             });
-        });
+        });        
     }
 
     ngOnInit(): void {
@@ -233,6 +233,10 @@ export class GlMainComponent {
                 this._changeDetectorRef.markForCheck();
             });
 
+            
+            
+            
+            
 
     }
 
@@ -248,10 +252,10 @@ export class GlMainComponent {
         };
 
         var user: string;
-        const userId = this.panelService.getUserId()
+        const userId = this.appService.getUserId()
             .subscribe((id) => {
                 panelState.uid = id;
-                this.panelService.setPanel(panelState);
+                this.appService.setPanel(panelState);
             });
 
 

@@ -29,16 +29,35 @@ export interface ProfileModel {
   updated: string;
 }
 
+export interface TbDataParam {
+  account: number;
+  period: number;
+  periodYear: number;  
+}
+
+
 export interface PanelModel {
   uid: string;
   panelName: string;
   lastPanelOpened: string;
 }
 
+export interface TbData {
+  account: number;
+  child: number
+  openingBalance: number;
+  closingBalance: number;
+  debitBalance: number;
+  creditBalance: number;
+  description: string;
+}
+
+
 export interface AppStateInterface {
   panels: PanelModel[];
   panel: PanelModel | null;
   profile: ProfileModel | null;
+  cashAccount: TbData | null;
   uid: string;
   isLoading: boolean;
   error: string | null;
@@ -93,11 +112,6 @@ export class ApplicationService {
     return of(this.authUser().uid);
   }
 
-  getLastPanel(uid: string, panelName) {
-    const ref = doc(this.firestore, `users/${uid}/panels`, panelName) as any;
-    const panel = collectionData<PanelModel>(ref) as any;
-    return panel as Observable<PanelModel>;
-  }
 
   // delete
   delete(panel: PanelModel): Observable<PanelModel> {
@@ -127,6 +141,21 @@ export class ApplicationService {
     const list = collectionData(q) as Observable<PanelModel[]>;
     return list.pipe(map((col) => col[0]));
   }
+
+  getDashboardAccount(periodYear: number,  period: number, account: number) {  
+    const ref = doc(this.firestore, `trial_balance/${periodYear}/${period}`, account.toString()) as any;
+    const acct$ = docData(ref) as Observable<TbData>;
+    return acct$;
+  }
+
+  getLastPanel(uid: string, panelName) {
+    const ref = doc(this.firestore, `users/${uid}/panels`, panelName) as any;
+    const panel = collectionData<PanelModel>(ref) as any;
+    return panel as Observable<PanelModel>;
+  }
+
+
+
 }
 
 
@@ -135,6 +164,7 @@ export const AppStore = signalStore(
     panels: [],
     profile: null,
     panel: null,
+    cashAccount: null,
     uid: '',
     error: null,
     isLoading: false,
@@ -154,7 +184,22 @@ export const AppStore = signalStore(
         })
       )
     ),
-
+    setCashAccount: rxMethod<TbDataParam>(
+      pipe(
+        switchMap((value) => {
+          patchState(state, { isLoading: true });
+          return applicationService.getDashboardAccount(value.periodYear, value.period, value.account).pipe(
+            tapResponse({
+              next: (account) => {
+                patchState(state, { cashAccount: account });
+              },
+              error: console.error,
+              finalize: () => patchState(state, { isLoading: false }),
+            })
+          );
+        })
+      )
+    ),
     setPanel: rxMethod<PanelModel>(
       pipe(
         switchMap((value) => {

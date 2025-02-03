@@ -1,60 +1,35 @@
 import {
   Component,
-  OnDestroy,
-  OnInit,
-  ViewChild,
   inject,
-  viewChild,
 } from "@angular/core";
 import {
-  FormControl,
-  FormGroup,
   FormsModule,
   ReactiveFormsModule,
-  Validators,
 } from "@angular/forms";
-import { Subject } from "rxjs";
 import { NgxMatSelectSearchModule } from "ngx-mat-select-search";
 import { CommonModule } from "@angular/common";
-import { DndComponent } from "app/features/drag-n-drop/loaddnd/dnd.component";
 
-import { MatDrawer } from "@angular/material/sidenav";
 import { MaterialModule } from "app/services/material.module";
 import {
-  DialogEditEventArgs,
   EditService,
-  SelectionSettingsModel,
   GroupService,
   FilterService,
-  GridModule,
   PageService,
-  SaveEventArgs,
   SortService,
   ToolbarService,
-  GridComponent,
   AggregateService,
-  FilterSettingsModel,
-  ToolbarItems,
-  SearchSettingsModel,
-  GroupSettingsModel,
   ColumnMenuService,
   ResizeService,
-  ExcelExport,
   PdfExportService,
   ExcelExportService,
   ReorderService,
 } from "@syncfusion/ej2-angular-grids";
-import { Browser } from "@syncfusion/ej2-base";
-import { Dialog } from "@syncfusion/ej2-popups";
 
-import { DropDownListComponent } from "@syncfusion/ej2-angular-dropdowns";
-import { IJournalHeader } from "app/models/journals";
 
 import { JournalStore } from "app/services/journal.store";
-import { Router } from "@angular/router";
-import { GridMenubarStandaloneComponent } from "../grid-components/grid-menubar.component";
 import { SummaryCardComponent } from "../../admin/dashboard/summary-card.component";
 import { JournalEntryComponent } from "./journal-listing.component";
+import { AppStore } from "app/services/application.state.service";
 
 const imports = [
   CommonModule,
@@ -76,7 +51,7 @@ const imports = [
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 w-full min-w-0">
 
             <div (click)="onReceipts()" class="flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden m-2 hover:cursor-pointer">
-                <summary-card   [mainValue]="23226.00" [caption]="'Payments'" [title]="'Funds'"
+                <summary-card   [mainValue]="store.cashAccount().closingBalance" [caption]="'Savings Account'" [title]="'Funds'"
                                 [subtitle]="" [subtitle_value]="">
                 </summary-card>
             </div>
@@ -133,10 +108,16 @@ const imports = [
 })
 export class APTransactionComponent {
 
+  store = inject(AppStore);
+
   public transType: string = "AP";
   public toolbarTitle = "Accounts Payable Transactions";
   public prd = "1";
   public prd_year = "2024";
+
+  constructor() {
+    this.store.setCashAccount({periodYear: 2024, period: 1, account: 1001});
+  }
 
   openDrawer() {
     throw new Error('Method not implemented.');
