@@ -114,8 +114,8 @@ const imports = [
                         <!-- Load settings panel -->
                         <div class="mt-8">
                             @switch (selectedPanel) {
-                                @case ('entry') { <entry-wizard></entry-wizard>  }
                                 @case ('listing') {  <gl-transactions-list></gl-transactions-list>  }
+                                @case ('entry') { <entry-wizard></entry-wizard>  }                                
                                 @case ('ap')    { <ap-transactions></ap-transactions>}
                                 @case ('ar')    { <ar-transactions></ar-transactions>}
                                 @case ('template') { <journal-template></journal-template>  }
@@ -153,22 +153,11 @@ export class TransactionMainComponent implements OnInit, OnDestroy {
         private _changeDetectorRef: ChangeDetectorRef,
         private _fuseMediaWatcherService: FuseMediaWatcherService,
     ) {
-        // this.selectedPanel = this.panelService.lastPanelOpened();
-        // if (this.selectedPanel === '') {
-        //     this.selectedPanel = localStorage.getItem("transactionsPanel");
-        // }
-        // if (this.selectedPanel === null) {
-        //     this.selectedPanel = this.defaultPanel;
-        // }
-
-        console.log('Current User Login', this.store.uid());
-
-        this.panelService.getUserId().subscribe((uid) => {
-            this.panelService.findPanelByName(uid, this.PANEL_ID).subscribe((panel) => {
-                this.selectedPanel = panel.lastPanelOpened;
-            });
+        
+        this.panelService.findPanelByName(this.store.uid(), this.PANEL_ID).subscribe((panel) => {                
+                this.selectedPanel = panel.lastPanelOpened;                
         });
-
+        
     }
 
     // -----------------------------------------------------------------------------------------------------
@@ -179,35 +168,25 @@ export class TransactionMainComponent implements OnInit, OnDestroy {
      * On init
      */
     ngOnInit(): void {
-        // Setup available panels
-        var user: string;
-        const userId = this.panelService.getUserId()
-            .subscribe((uid) => {
-                user = uid;
-                this.panelService.getLastPanel(user, 'transactionsPanel').subscribe((panel) => {
-                    this.storedPanel = panel[0].lastPanelOpened;
-                })
-            });
-
-
-
+        
         if (this.selectedPanel === '' && this.storedPanel === null || this.selectedPanel === undefined) {
             this.selectedPanel = this.defaultPanel;
         }
 
         this.panels = [
             {
-                id: 'entry',
-                icon: 'heroicons_outline:document-plus',
-                title: 'Transaction Wizard',
-                description: 'Create transactions and append digital artifacts for each transaction',
-            },
-            {
                 id: 'listing',
                 icon: 'heroicons_outline:document-check',
                 title: 'Transactions Listing',
                 description: 'Manage your transactions and documentation',
             },
+            {
+                id: 'entry',
+                icon: 'heroicons_outline:document-plus',
+                title: 'Transaction Wizard',
+                description: 'Create transactions and append digital artifacts for each transaction',
+            },
+            
             {
                 id: 'ar',
                 icon: 'mat_outline:money',

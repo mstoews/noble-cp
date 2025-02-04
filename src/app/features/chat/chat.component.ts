@@ -8,18 +8,12 @@ import { CommonModule } from '@angular/common';
 @Component({
   selector: 'control-content',
   template: `
-  <div class="control-section chat-integration">
-    <div class="integration-chatui">
-        <ejs-splitter id="splitter" height='100%' width='100%'>
+  <div class="control-section chat-integration" class="w-full h-full">
+    <div class="integration-chatui" class="w-full h-full">
+        <ejs-splitter id="splitter" class="w-full h-full">
             <e-panes>
                 <e-pane size="auto" [resizable]='false' cssClass="chat-leftContent">
                     <ng-template #content>
-                                <div class="chat-options-container">
-                                    <button ejs-button id="activitybtn" cssClass="e-flat" iconCss="e-icons e-stamp" class="chat_options" iconPosition="Top"><span>Activity</span></button>
-                                    <button ejs-button id="chatbtn" cssClass="e-flat" iconCss="e-icons e-comment-show" class="chat_options chat_interactable" iconPosition="Top"><span>Chat</span></button>
-                                    <button ejs-button id="calendarbtn" cssClass="e-flat" iconCss="e-icons e-month" class="chat_options" iconPosition="Top"><span>Calendar</span></button>
-                                    <button ejs-button id="teamsbtn" cssClass="e-flat" iconCss="e-icons e-people" class="chat_options" iconPosition="Top"><span>Teams</span></button>
-                                </div>
                                 <div id="toggle-chat-list" class="toggle-chat-listview e-card">
                                     <ejs-listview id="listview_template" #listView [dataSource]='data' cssClass="e-list-template" headerTitle='Chats' showHeader='true' (actionComplete)="onActionComplete()" (select)="onChatItemSelected($event)">
                                         <ng-template #template let-item>

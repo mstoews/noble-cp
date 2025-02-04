@@ -155,12 +155,15 @@ export class GlMainComponent {
      * Constructor
      */
 
+
+
     constructor() {
         this.appService.getUserId().subscribe((uid) => {
             this.appService.findPanelByName(uid, this.PANEL_ID).subscribe((panel) => {
                 this.selectedPanel = panel.lastPanelOpened;
             });
-        });        
+        });
+    
     }
 
     ngOnInit(): void {

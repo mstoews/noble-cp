@@ -135,11 +135,19 @@ export class ApplicationService {
     return of(panel);
   }
 
-  findPanelByName(uid: string, panelName: string): Observable<PanelModel> {
+  
+  // This function seems to give an error on the map function under the hood of collectionData 
+  findPanelByNameOld(uid: string, panelName: string): Observable<PanelModel> {
     const collectionRef = collection(this.firestore, `users/${uid}/panels`);
-    const q = query(collectionRef, where('panelName', '==', panelName));
+    const q = query(collectionRef, where('panelName', '==', panelName)) as any
     const list = collectionData(q) as Observable<PanelModel[]>;
     return list.pipe(map((col) => col[0]));
+  }
+
+  findPanelByName(uid: string, panelName: string): Observable<PanelModel> {
+    const collectionRef = collection(this.firestore, `users/${uid}/panels`);
+    const acct = doc(collectionRef, panelName);
+    return docData(acct) as Observable<PanelModel | undefined>;
   }
 
   getDashboardAccount(periodYear: number,  period: number, account: number) {  
@@ -148,10 +156,17 @@ export class ApplicationService {
     return acct$;
   }
 
+  findDashboardByAccount(periodYear: number,  period: number, account: number): Observable<TbData | undefined> {
+    const collectionRef = collection(this.firestore, `trial_balance/${periodYear}/${period}`, account.toString());
+    const acct = doc(collectionRef, account.toString());
+    return docData(acct) as Observable<TbData | undefined>;
+  }
+
+
   getLastPanel(uid: string, panelName) {
-    const ref = doc(this.firestore, `users/${uid}/panels`, panelName) as any;
-    const panel = collectionData<PanelModel>(ref) as any;
-    return panel as Observable<PanelModel>;
+    const collectionRef = collection(this.firestore, `users/${uid}/panels`);
+    const acct = doc(collectionRef, panelName);
+    return docData(acct) as Observable<PanelModel | undefined>;
   }
 
 

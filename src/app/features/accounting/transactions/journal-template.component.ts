@@ -1,5 +1,5 @@
 import { Component, inject, OnInit, viewChild } from '@angular/core';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { AccountsService } from 'app/services/accounts.service';
 import { GridMenubarStandaloneComponent } from '../grid-components/grid-menubar.component';
@@ -109,7 +109,7 @@ const imports = [
     <div class="flex flex-col min-w-0 overflow-y-auto -px-10" cdkScrollable>
         <div class="flex-auto">
             <div class="h-full border-gray-300 rounded-2xl">                                      
-            <div  class="flex flex-1 flex-col">   
+            <div  class="flex flex-1 flex-col" height="400px">   
                 @if (detailsList | async;  as List) {        
                 <gl-grid 
                 (onUpdateSelection)="onUpdateSelection($event)"
@@ -156,7 +156,7 @@ export class JournalTemplateComponent implements OnInit {
     drawOpen: 'open' | 'close' = 'open';
 
     customizeTooltip = (pointsInfo: { originalValue: string; }) => ({ text: `${parseInt(pointsInfo.originalValue)}%` });
-    journalForm!: FormGroup;
+
     keyField: any;
     detailsList: any
 
@@ -180,20 +180,17 @@ export class JournalTemplateComponent implements OnInit {
         this.currentDate = dDate.toISOString().split('T')[0];
         this.formatoptions = { type: 'dateTime', format: 'M/dd/yyyy' }
         this.createEmptyForm();
-        this.journalForm.valueChanges.subscribe((value) => {
+        this.templateForm.valueChanges.subscribe((value) => {
             this.bHeaderDirty = true;            
         });
 
     }
 
     createEmptyForm() {
-        this.templateForm = this.fb.group({
-            template_ref: [''],
-            template_name: [''],
-            description: [''],
-            journal_type: [''],
-            create_date: [''],
-            create_user: [''],
+        this.templateForm = this.fb.group({            
+            template_name: ['', Validators.required],
+            description: ['', Validators.required],
+            journal_type: ['', Validators.required],            
         });
     }
 
@@ -232,7 +229,7 @@ export class JournalTemplateComponent implements OnInit {
     }
 
     onBooked(booked: boolean) {
-        this.journalForm.patchValue({ booked: booked });
+        this.templateForm.patchValue({ booked: booked });
     }
 
     formatNumber(e) {

@@ -162,7 +162,7 @@ export class BudgetLandingComponent implements OnInit {
             grid: {
                 borderColor: 'var(--fuse-border)',
             },
-            labels: this.data.githubIssues.labels,
+            labels: ["Labels", "Issues"],
             legend: {
                 show: false,
             },

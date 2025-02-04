@@ -44,6 +44,9 @@ export class SettingsComponent implements OnInit, OnDestroy {
      */
     ngOnInit(): void {
         // Setup available panels
+
+        
+
         this.panels = [
             {
                 id: 'account',

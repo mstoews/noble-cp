@@ -24,16 +24,6 @@
                     </button>
                 </div>
             </div>
-            <!-- Project selector -->
-            <!-- <div class="relative flex self-start pt-2 pb-1 pl-5 pr-4 cursor-pointer overflow-hidden rounded-t-xl border border-b-0 bg-default"
-                matRipple>
-                <div class="flex items-center">
-                    <div class="overflow-hidden">
-                        <div class="font-medium leading-6 truncate dark:text-gray-100">{{selectedProject}}</div>
-                    </div>
-
-                </div>
-            </div> -->
         </div>
     </div>
 
@@ -44,36 +34,30 @@
                         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 w-full min-w-0">
                             <!-- Summary -->
                             <div class="flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden mat-elevation-z8">                                
-                                <summary-card [mainValue]=special() [caption]="'Special Assessment'" [title]="'Funds'"
-                                    [subtitle]="" [subtitle_value]="">
+                                <summary-card [mainValue]=special() [caption]="'Special Assessment'" [title]="'Funds'"  [subtitle]="" [subtitle_value]="">
                                 </summary-card>
                             </div>
                             <!-- Overdue -->
                             <div class="flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden">
-                                <summary-card [mainValue]=reserve() [caption]="'Reserve Fund'" [title]="'Reserve'" [chart]="'chart-axes'"
-                                    [subtitle]="''" [subtitle_value]="">
+                                <summary-card [mainValue]=reserve() [caption]="'Reserve Fund'" [title]="'Reserve'" [chart]="'chart-axes'"  [subtitle]="''" [subtitle_value]="">
                                 </summary-card>
                             </div>
                             <div class="flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden">
-                                <summary-card [mainValue]=capital() [caption]="'Capital Assets'" [title]="'Capital'" [chart]="'chart-legend'"
-                                    [subtitle]="''" [subtitle_value]="">
+                                <summary-card [mainValue]=capital() [caption]="'Capital Assets'" [title]="'Capital'" [chart]="'chart-legend'"  [subtitle]="''" [subtitle_value]="">
                                 </summary-card>
                             </div>
                             <!-- Issues -->
                             <div class="flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden">
-                                <summary-card [mainValue]=operations() [caption]="caption" [title]="caption" [chart]="'chart-insert-column'"
-                                    [subtitle]="''" [subtitle_value]="">
+                                <summary-card [mainValue]=operations() [caption]="caption" [title]="caption" [chart]="'chart-insert-column'"  [subtitle]="''" [subtitle_value]="">
                                 </summary-card>
                             </div>
                             <!-- Features -->
                             <!-- Transactions listing -->
-                            <div
-                                class="sm:col-span-2 md:col-span-4 flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden">
+                            <div class="sm:col-span-2 md:col-span-4 flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden">
                                 <div class="flex flex-col sm:flex-row items-start justify-between">
                                     <div class="text-lg font-medium tracking-tight leading-6 truncate">Transaction Processing</div>
                                     <div class="mt-3 sm:mt-0 sm:ml-2">
-                                        <mat-button-toggle-group value="this-week"
-                                            #githubIssuesWeekSelector="matButtonToggleGroup">
+                                        <mat-button-toggle-group value="this-week" #githubIssuesWeekSelector="matButtonToggleGroup">
                                             <mat-button-toggle value="last-week">Previous Period</mat-button-toggle>
                                             <mat-button-toggle value="this-week">Current Period</mat-button-toggle>
                                         </mat-button-toggle-group>

@@ -134,13 +134,15 @@ export class BudgetMainComponent {
         private _fuseMediaWatcherService: FuseMediaWatcherService,
     ) {
 
-        console.log('Current User Login', this.store.uid());
-
+        
+        
         this.panelService.getUserId().subscribe((uid) => {
             this.panelService.findPanelByName(uid, this.PANEL_ID).subscribe((panel) => {
                 this.selectedPanel = panel.lastPanelOpened;
             });
         });
+
+        
 
     }
 
