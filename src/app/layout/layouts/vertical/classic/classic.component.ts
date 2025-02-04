@@ -98,8 +98,8 @@ export class ClassicLayoutComponent implements OnInit, OnDestroy {
     navigation: Navigation;
     private _unsubscribeAll: Subject<any> = new Subject<any>();
     // readonly store = inject(AppStore);
-    // readonly applicationService = inject(ApplicationService);
-    // public profile:  ProfileModel;
+    readonly applicationService = inject(ApplicationService);
+    public profile:  ProfileModel;
         
 
     /**
@@ -140,15 +140,12 @@ export class ClassicLayoutComponent implements OnInit, OnDestroy {
                 this.navigation = navigation;
             });
 
-            // this.applicationService.getUserId().subscribe((uid) => {   
-            //     this.store.loadProfile(uid);                
-            // });
             
-            // this.applicationService.getUserId().subscribe((uid) => {               
-            //     this.applicationService.loadProfile(uid).subscribe((prof) => {
-            //         this.profile = prof;                
-            //     });
-            // });        
+            this.applicationService.getUserId().subscribe((uid) => {               
+                this.applicationService.loadProfile(uid).subscribe((prof) => {
+                    this.profile = prof;                
+                });
+            });        
             
 
         // Subscribe to media changes

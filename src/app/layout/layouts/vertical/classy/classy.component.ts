@@ -55,7 +55,7 @@ import { Subject, takeUntil } from 'rxjs';
                 <div class="flex w-full flex-col items-center p-4">
                     <div class="relative h-24 w-24">
                         
-                            <!-- @if(profile.photoURL !== null && profile.photoURL !== undefined) {
+                        @if(profile.photoURL !== null && profile.photoURL !== undefined && profile.photoURL !== '') {
                                 <img
                                     class="w-full h-full rounded-full"
                                     [src]="profile.photoURL"
@@ -67,15 +67,15 @@ import { Subject, takeUntil } from 'rxjs';
                                 class="icon-size-24"
                                 [svgIcon]="'heroicons_solid:user-circle'">
                             </mat-icon>
-                            } -->
+                        }
                         
                     </div>
                     <div class="mt-6 flex w-full flex-col items-center justify-center">
                         <div  class="w-full overflow-hidden text-ellipsis whitespace-nowrap text-center font-medium leading-normal"  >
-                            <!-- {{profile.name}}  -->
+                            {{profile.name}} 
                         </div>
                         <div  class="text-secondary mt-0.5 w-full overflow-hidden text-ellipsis whitespace-nowrap text-center text-md font-medium leading-normal">
-                            <!-- {{profile.email}}  -->
+                            {{profile.email}} 
                         </div>
                     </div>
                 </div>
