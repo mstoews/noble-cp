@@ -24,7 +24,7 @@ import { ApplicationService, AppStore, ProfileModel } from 'app/services/applica
 import { Subject, takeUntil } from 'rxjs';
 
 @Component({
-    
+
     template: `
     <!-- Loading bar -->
         <!-- <fuse-loading-bar></fuse-loading-bar> -->
@@ -43,7 +43,7 @@ import { Subject, takeUntil } from 'rxjs';
                     <!-- Logo -->
                     <div class="flex items-center justify-center">
                         <img class="w-8" src="assets/images/logo/nobleledger.jpg" alt="logo"> 
-                        <span>Noble Ledger v0.0.4.7</span>  
+                        <span>Noble Ledger v0.0.4.8</span>  
                     </div>
                     <!-- Components -->
                     <div class="ml-auto flex items-center">
@@ -140,26 +140,26 @@ import { Subject, takeUntil } from 'rxjs';
     selector: 'classy-layout',
     providers: [AppStore, ApplicationService],
     imports: [
-    // FuseLoadingBarComponent,
-    FuseVerticalNavigationComponent,
-    UserComponent,
-    MatIconModule,
-    MatButtonModule,
-    FuseFullscreenComponent,
-    SearchComponent,
-    RouterOutlet
-],
+        // FuseLoadingBarComponent,
+        FuseVerticalNavigationComponent,
+        UserComponent,
+        MatIconModule,
+        MatButtonModule,
+        FuseFullscreenComponent,
+        SearchComponent,
+        RouterOutlet
+    ],
 })
 export class ClassyLayoutComponent implements OnInit, OnDestroy {
     isScreenSmall: boolean;
     navigation: Navigation;
-    
+
     private _unsubscribeAll: Subject<any> = new Subject<any>();
 
     readonly store = inject(AppStore);
     readonly applicationService = inject(ApplicationService);
-    public profile:  ProfileModel;
-    
+    public profile: ProfileModel;
+
 
     /**
      * Constructor
@@ -171,7 +171,7 @@ export class ClassyLayoutComponent implements OnInit, OnDestroy {
         private _userService: UserService,
         private _fuseMediaWatcherService: FuseMediaWatcherService,
         private _fuseNavigationService: FuseNavigationService
-    ) {}
+    ) { }
 
     // -----------------------------------------------------------------------------------------------------
     // @ Accessors
@@ -206,12 +206,12 @@ export class ClassyLayoutComponent implements OnInit, OnDestroy {
         //         this.user = user;
         //     });
 
-        this.applicationService.getUserId().subscribe((uid) => {               
+        this.applicationService.getUserId().subscribe((uid) => {
             this.applicationService.loadProfile(uid).subscribe((prof) => {
-                this.profile = prof;                
+                this.profile = prof;
             });
-        });        
-        
+        });
+
 
         // Subscribe to media changes
         this._fuseMediaWatcherService.onMediaChange$

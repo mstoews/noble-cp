@@ -13,7 +13,7 @@ import { UserComponent } from 'app/layout/common/user/user.component';
 import { AppStore, ApplicationService, ProfileModel } from 'app/services/application.state.service';
 import { Subject, takeUntil } from 'rxjs';
 
-@Component({    
+@Component({
     template: `
                 <!-- Loading bar -->
             <!-- <fuse-loading-bar></fuse-loading-bar> -->
@@ -32,7 +32,7 @@ import { Subject, takeUntil } from 'rxjs';
                                 <!-- Logo -->
                                 <div class="flex items-center justify-center">
                                     <img class="w-8" src="assets/images/logo/nobleledger.jpg" alt="logo">                        
-                                    <span class="font-medium text-secondary">Noble Ledger v0.0.4.7</span>
+                                    <span class="font-medium text-secondary">Noble Ledger v0.0.4.8</span>
                                 </div>                                                            
                             </div>
                             <!-- User -->
@@ -42,7 +42,7 @@ import { Subject, takeUntil } from 'rxjs';
                         <!-- <ng-container fuseVerticalNavigationContentFooter>
                             <div class="flex items-center justify-center">
                                 <img class="w-8" src="assets/images/logo/nobleledger.jpg" alt="logo">
-                                Noble Ledger v0.0.4.7
+                                Noble Ledger v0.0.4.8
                             </div>
                         </ng-container> -->
             </fuse-vertical-navigation>
@@ -78,7 +78,7 @@ import { Subject, takeUntil } from 'rxjs';
                 <!-- Footer -->
                 <div
                     class="relative flex flex-0 items-center justify-start w-full h-14 px-4 md:px-6 z-49 border-t bg-card dark:bg-transparent print:hidden">
-                    <span class="font-medium text-secondary">Noble Ledger v0.0.4.7 &copy; {{currentYear}}</span>
+                    <span class="font-medium text-secondary">Noble Ledger v0.0.4.8 &copy; {{currentYear}}</span>
                 </div>
 
             </div>
@@ -99,8 +99,8 @@ export class ClassicLayoutComponent implements OnInit, OnDestroy {
     private _unsubscribeAll: Subject<any> = new Subject<any>();
     // readonly store = inject(AppStore);
     readonly applicationService = inject(ApplicationService);
-    public profile:  ProfileModel;
-        
+    public profile: ProfileModel;
+
 
     /**
      * Constructor
@@ -140,13 +140,13 @@ export class ClassicLayoutComponent implements OnInit, OnDestroy {
                 this.navigation = navigation;
             });
 
-            
-        this.applicationService.getUserId().subscribe((uid) => {               
-                this.applicationService.loadProfile(uid).subscribe((prof) => {
-                    this.profile = prof;                
-                });
-            });        
-            
+
+        this.applicationService.getUserId().subscribe((uid) => {
+            this.applicationService.loadProfile(uid).subscribe((prof) => {
+                this.profile = prof;
+            });
+        });
+
 
         // Subscribe to media changes
         this._fuseMediaWatcherService.onMediaChange$
