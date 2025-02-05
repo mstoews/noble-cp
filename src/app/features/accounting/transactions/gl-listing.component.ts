@@ -29,7 +29,7 @@ const imports = [
         <div class="h-full border-gray-300 rounded-2xl">
             <ng-container>                    
                 @defer {
-                    <transactions [transactionType]="transType"></transactions>
+                    <transactions></transactions>
                 }                
                 @placeholder(minimum 200ms) {
                     <div class="flex justify-center items-center">

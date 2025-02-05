@@ -13,7 +13,7 @@ import { FuseMediaWatcherService } from '@fuse/services/media-watcher';
 import { MaterialModule } from 'app/services/material.module';
 import { Subject, takeUntil } from 'rxjs';
 import { FileManagerComponent } from 'app/features/file-manager/file-manager.component';
-import { EntryWizardComponent } from './wizard/wizard-entry.component';
+import { EntryWizardComponent } from './wizard-entry.component';
 import { JournalTemplateComponent } from './journal-template.component';
 import { ARTransactionComponent } from './ar-listing.component';
 import { APTransactionComponent } from './ap-listing.component';

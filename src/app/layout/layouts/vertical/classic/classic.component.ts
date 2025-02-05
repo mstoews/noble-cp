@@ -141,7 +141,7 @@ export class ClassicLayoutComponent implements OnInit, OnDestroy {
             });
 
             
-            this.applicationService.getUserId().subscribe((uid) => {               
+        this.applicationService.getUserId().subscribe((uid) => {               
                 this.applicationService.loadProfile(uid).subscribe((prof) => {
                     this.profile = prof;                
                 });

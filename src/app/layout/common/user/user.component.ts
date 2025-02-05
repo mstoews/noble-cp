@@ -1,5 +1,6 @@
 import { BooleanInput } from '@angular/cdk/coercion';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, ViewEncapsulation, input } from '@angular/core';
+import { inject } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatIconModule } from '@angular/material/icon';
@@ -7,6 +8,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { Router } from '@angular/router';
 import { UserService } from 'app/core/user/user.service';
 import { User } from 'app/core/user/user.types';
+import { ApplicationService, ProfileModel } from 'app/services/application.state.service';
 import { Subject, takeUntil } from 'rxjs';
 
 @Component({
@@ -15,6 +17,7 @@ import { Subject, takeUntil } from 'rxjs';
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
     exportAs: 'user',
+    providers: [ApplicationService],
     imports: [MatButtonModule, MatMenuModule, MatIconModule, MatDividerModule]
 })
 export class UserComponent implements OnInit, OnDestroy {
@@ -22,8 +25,11 @@ export class UserComponent implements OnInit, OnDestroy {
     static ngAcceptInputType_showAvatar: BooleanInput;
     /* eslint-enable @typescript-eslint/naming-convention */
 
+    applicationService = inject(ApplicationService);
+
     readonly showAvatar = input<boolean>(true);
     user: User;
+    profile: ProfileModel;
 
     private _unsubscribeAll: Subject<any> = new Subject<any>();
 
@@ -35,7 +41,14 @@ export class UserComponent implements OnInit, OnDestroy {
         private _router: Router,
         private _userService: UserService,
     ) {
+
+        this.applicationService.getUserId().subscribe((uid) => {
+            this.applicationService.loadProfile(uid).subscribe((prof) => {
+                this.profile = prof;
+            });
+        });
     }
+
 
     // -----------------------------------------------------------------------------------------------------
     // @ Lifecycle hooks
@@ -98,7 +111,4 @@ export class UserComponent implements OnInit, OnDestroy {
         this._router.navigate(['/settings']);
     }
 
-    profile(): void {
-        this._router.navigate(['/profile']);
-    }
 }

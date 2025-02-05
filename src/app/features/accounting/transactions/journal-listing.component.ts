@@ -157,7 +157,7 @@ const imports = [
 
                                 <e-columns>
                                     <e-column field='journal_id' headerText='ID' isPrimaryKey='true' isIdentity='true' visible='true' width='60'></e-column>
-                                    <e-column field='status' headerText='Status' width='70'>
+                                    <e-column field='status' headerText='Status' width='70' textAlign='Center'>
                                             <ng-template #template let-data>                       
                                                 @if(data.status === 'CLOSED') {
                                                     <div>
@@ -167,7 +167,7 @@ const imports = [
                                                 {                                            
                                                 <div>
                                                 <div>
-                                                        <span class="text-blue-800 border-2 p-1 rounded-md text-sm bg-gray-100">{{data.status}}</span> 
+                                                        <span class="text-gray-100 border-2 p-1  rounded-xl text-sm bg-blue-800">{{data.status}}</span> 
                                                     </div>
                                                 </div>                                                                                            
                                                 }   
@@ -175,21 +175,21 @@ const imports = [
 
                                         </e-column>
                                         
-                                        <e-column field='type' headerText='Type' width='60'>
+                                        <e-column field='type' headerText='Type' width='60' textAlign='Center'>
                                         <ng-template #template let-data>                       
                                                 @if(data.type === 'GL') {
                                                     <div>
-                                                        <span class="text-green-800">{{data.type}}</span> 
+                                                    <span class="text-gray-100 bg-green-700 p-1  rounded-xl ">{{data.type}}</span> 
                                                     </div>
                                                 } @else 
                                                 {                                            
-                                                <div>
-                                                <div>
-                                                        <span class="text-blue-800">{{data.type}}</span> 
-                                                    </div>
-                                                </div>                                                                                            
+                                                    <div>
+                                                        <div>
+                                                        <span class="text-gray-200 bg-blue-700 p-1  rounded-xl">{{data.type}}</span> 
+                                                        </div>
+                                                    </div>                                                                                            
                                                 }   
-                                            </ng-template>       
+                                         </ng-template>       
                                         </e-column>
                                         <e-column field='description' headerText='Description' width='200'></e-column>
                                         <e-column field='booked' headerText='Bk' width='60' [visible]=false ></e-column>

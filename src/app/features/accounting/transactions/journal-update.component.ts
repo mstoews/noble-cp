@@ -1,4 +1,4 @@
-import { AfterViewInit, ChangeDetectionStrategy, Component, EventEmitter, HostListener, OnDestroy, OnInit, Output, SimpleChanges, ViewChild, inject, viewChild } from "@angular/core";
+import { AfterViewInit, ChangeDetectionStrategy, Component, EventEmitter, HostListener, OnDestroy, OnInit, Output, SimpleChanges, ViewChild, inject, signal, viewChild } from "@angular/core";
 import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from "@angular/forms";
 import { ReplaySubject, Subject, Subscription, take, takeUntil } from "rxjs";
 import { CommonModule } from "@angular/common";
@@ -46,8 +46,11 @@ import {
 } from "@syncfusion/ej2-angular-grids";
 
 import {
+    Detail,
+    IJournalArrayParams,
     IJournalDetail,
     IJournalDetailTemplate,
+    IJournalDetailUpdate,
     IJournalHeader,
     IJournalTemplate,
 } from "app/models/journals";
@@ -81,7 +84,7 @@ const imp = [
     DropDownListAllModule,
     SplitterModule,
     EvidenceCardComponent,
-    FilterTypePipe,
+    // FilterTypePipe,
 ];
 
 @Component({
@@ -291,24 +294,43 @@ const imp = [
                                             Transaction List
                                 </div>
                                     <mat-card class="mat-elevation-z8 h-[calc(100vh-14.2rem)]">                                        
-                                        <ejs-grid id="grid-journal-list" [dataSource]='store.gl() |filterType: "GL"'
+                                        <ejs-grid id="grid-journal-list" [dataSource]='store.gl()'
                                             [selectionSettings]="selectionOptions" 
-                                            [editSettings]='editSettings'
+                                            [allowEditing]='false'
                                             [allowSorting]='true'
                                             [sortSettings]='initialSort'  
-                                            [searchSetting]="searchOptions" [allowFiltering]='false' [rowHeight]="30"
-                                            [enableStickyHeader]=true [toolbar]='toolbarOptions' allowSorting='true'
-                                            showColumnMenu='true' (rowSelected)="onRowSelected($event)"
+                                            [searchSetting]="searchOptions" 
+                                            [allowFiltering]='false' 
+                                            [rowHeight]="30"
+                                            [showColumnMenu]='false'                
+                                            [enableStickyHeader]=true 
+                                            [toolbar]='toolbarOptions' 
+                                            [allowSorting]='true'                                            
+                                            (rowSelected)="onRowSelected($event)"
                                             [gridLines]="'Both'">
                                             <e-columns>
-                                                <e-column field='journal_id' headerText='ID' [visible]='true' isPrimaryKey='true' width='100'></e-column>
+                                            <e-column field='journal_id'  headerText='ID' [visible]='true' isPrimaryKey='true' width='80'></e-column>
+                                            <e-column field="type" headerText="Type"   [visible]='true' width="70" dataType="text" textAlign="Center">
+                                                <ng-template #template let-data>                       
+                                                    @if(data.type === 'GL') {
+                                                        <div>                                                        
+                                                            <span class="text-gray-300 bg-green-700 p-1 rounded-xl">{{data.type}}</span> 
+                                                        </div>
+                                                    } 
+                                                    @else {
+                                                        <div>                                                        
+                                                            <span class="text-gray-300 bg-blue-800 p-1 rounded-xl">{{data.type}}</span> 
+                                                        </div>
+                                                    }   
+                                                </ng-template>    
+                                                </e-column>
+                                                
                                                 <e-column field='description' headerText='Journal Description'   [visible]='true'></e-column>
-                                                <e-column field='amount' headerText='Amount' [visible]='false'  textAlign='Right' width='150' format="N2"></e-column>
-                                                <e-column field="type" headerText="Type" [visible]='false' width="100" dataType="text" textAlign="left"></e-column>
-                                                <e-column field="booked" headerText="Booked" [visible]='false' width="100" [displayAsCheckBox]='true' type="boolean"></e-column>
-                                                <e-column field="amount" headerText="Amount" [visible]='false' width="150"  format='N2' textAlign="Right"></e-column>
-                                                <e-column field="period" headerText="Prd" [visible]='false' width="100"></e-column>
-                                                <e-column field="period_year" headerText="Yr" [visible]='false' width="100"></e-column>
+                                                <e-column field='amount'      headerText='Amount' [visible]='false'  textAlign='Right' width='150' format="N2"></e-column>
+                                                <e-column field="booked"      headerText="Booked" [visible]='false' width="100" [displayAsCheckBox]='true' type="boolean"></e-column>
+                                                <e-column field="amount"      headerText="Amount" [visible]='false' width="150"  format='N2' textAlign="Right"></e-column>
+                                                <e-column field="period"      headerText="Prd"    [visible]='false' width="100"></e-column>
+                                                <e-column field="period_year" headerText="Yr"     [visible]='false' width="100"></e-column>
                                             </e-columns>
                                         </ejs-grid>
                                     </mat-card>
@@ -320,10 +342,18 @@ const imp = [
                             <ng-template #content>
                                 <div id='vertical_splitter' class="vertical_splitter overflow-hidden">                                    
                                         <div class="content overflow-hidden">
-                                            @if (journal_id > 0) {
-                                            <div class="text-3xl gap-2 m-1 text-gray-100 p-2 bg-slate-600 rounded-md">
-                                                General Ledger : {{ journal_id }}
-                                            </div>
+                                            @if (journalHeader.journal_id > 0) {
+                                                <div class="text-3xl gap-2 m-1 text-gray-100 p-2 bg-slate-600 rounded-md">
+                                                    @if (journalHeader.type == 'GL') {
+                                                        General Ledger : {{ journalHeader.journal_id }}
+                                                    } 
+                                                    @if (journalHeader.type == 'AP') {
+                                                        Accounts Payable : {{ journalHeader.journal_id }}
+                                                    }
+                                                    @if (journalHeader.type == 'AR') {
+                                                        Accounts Receivable : {{ journalHeader.journal_id }}
+                                                    }                                                
+                                                </div>
                                             } @else {
                                             <div class="text-3xl gap-2 m-1 text-gray-100 p-2 bg-slate-600 rounded-md">
                                                 General Ledger
@@ -332,26 +362,26 @@ const imp = [
                                             <form [formGroup]="journalForm">
                                                 <section class="flex flex-col md:flex-row">
                                                     @if (templateFilter | async; as templates ) {
-                                                    <div class="flex flex-col w-[300px]">
-                                                        <mat-form-field class="mt-1 ml-1 mr-1 flex-start">
+                                                        <div class="flex flex-col w-[300px]">
+                                                            <mat-form-field class="mt-1 ml-1 mr-1 flex-start">
 
-                                                            <mat-select [formControl]="templateCtrl"
-                                                                [placeholder]="'Journal Template'" #singleTemplateSelect
-                                                                required>
-                                                                <mat-option>
-                                                                    <ngx-mat-select-search
-                                                                        [formControl]="templateFilterCtrl"
-                                                                        [noEntriesFoundLabel]="'No entries found'"
-                                                                        [placeholderLabel]="'Search'">
-                                                                    </ngx-mat-select-search>
-                                                                </mat-option>
-                                                                @for (template of templates; track template) {
-                                                                <mat-option
-                                                                    [value]="template">{{template.description}}</mat-option>
-                                                                }
-                                                            </mat-select>
-                                                            <mat-icon class="icon-size-5" matPrefix
-                                                                [svgIcon]="'heroicons_solid:document-chart-bar'"></mat-icon>
+                                                                <mat-select [formControl]="templateCtrl"
+                                                                    [placeholder]="'Journal Template'" #singleTemplateSelect
+                                                                    required>
+                                                                    <mat-option>
+                                                                        <ngx-mat-select-search
+                                                                            [formControl]="templateFilterCtrl"
+                                                                            [noEntriesFoundLabel]="'No entries found'"
+                                                                            [placeholderLabel]="'Search'">
+                                                                        </ngx-mat-select-search>
+                                                                    </mat-option>
+                                                                    @for (template of templates; track template) {
+                                                                    <mat-option
+                                                                        [value]="template">{{template.description}}</mat-option>
+                                                                    }
+                                                                </mat-select>
+                                                                <mat-icon class="icon-size-5" matPrefix
+                                                                    [svgIcon]="'heroicons_solid:document-chart-bar'"></mat-icon>
                                                         </mat-form-field>
                                                     </div>
                                                     }
@@ -363,65 +393,64 @@ const imp = [
                                                                 [svgIcon]="'heroicons_solid:document'"></mat-icon>
                                                         </mat-form-field>
                                                     </div>
-                                                    @if (transactionType == 'GL') {
-                                                    <mat-form-field class="mt-1 ml-1 mr-1 w-[250px]">
-                                                        <input type="text" class="text-left" matInput
-                                                            placeholder="Reference Number" formControlName="invoice_no" />
-                                                        <mat-icon class="icon-size-5" matPrefix
-                                                            [svgIcon]="'heroicons_solid:clipboard-document-check'"></mat-icon>
-                                                    </mat-form-field>
-                                                    }
-                                                    <div class="flex flex-col w-[150px]">
-                                                        <mat-form-field class="mt-1 flex-start mr-1">
-                                                            <input type="text" mask="separator.2" [leadZero]="true"
-                                                                thousandSeparator="," class="text-right" matInput
-                                                                placeholder="Amount" formControlName="amount"
-                                                                [placeholder]="'Transaction Total'" />
+                                                    @if (journalHeader.type == 'GL') {
+                                                        <mat-form-field class="mt-1 ml-1 mr-1 w-[250px]">
+                                                            <input type="text" class="text-left" matInput
+                                                                placeholder="Reference Number" formControlName="invoice_no" />
                                                             <mat-icon class="icon-size-5" matPrefix
-                                                                [svgIcon]="'heroicons_solid:currency-dollar'"></mat-icon>
+                                                                [svgIcon]="'heroicons_solid:clipboard-document-check'"></mat-icon>
                                                         </mat-form-field>
-                                                    </div>
-                                                    <div class="flex flex-col w-[150px]">
-                                                        <mat-form-field class="mt-1 flex-start mr-1">
-                                                            <input matInput (dateChange)="onHeaderDateChanged($event)"
-                                                                formControlName="transaction_date"
-                                                                [matDatepicker]="picker" />
-                                                            <mat-datepicker-toggle matIconPrefix
-                                                                [for]="picker"></mat-datepicker-toggle>
-                                                            <mat-datepicker #picker></mat-datepicker>
-                                                        </mat-form-field>
-                                                    </div>
-                                                </section>
+                                                        }
+                                                        <div class="flex flex-col w-[150px]">
+                                                            <mat-form-field class="mt-1 flex-start mr-1">
+                                                                <input type="text" mask="separator.2" [leadZero]="true"
+                                                                    thousandSeparator="," class="text-right" matInput
+                                                                    placeholder="Amount" formControlName="amount"
+                                                                    [placeholder]="'Transaction Total'" />
+                                                                <mat-icon class="icon-size-5" matPrefix
+                                                                    [svgIcon]="'heroicons_solid:currency-dollar'"></mat-icon>
+                                                            </mat-form-field>
+                                                        </div>
+                                                        <div class="flex flex-col w-[150px]">
+                                                            <mat-form-field class="mt-1 flex-start mr-1">
+                                                                <input matInput (dateChange)="onHeaderDateChanged($event)"
+                                                                    formControlName="transaction_date"
+                                                                    [matDatepicker]="picker" />
+                                                                <mat-datepicker-toggle matIconPrefix
+                                                                    [for]="picker"></mat-datepicker-toggle>
+                                                                <mat-datepicker #picker></mat-datepicker>
+                                                            </mat-form-field>
+                                                        </div>
+                                                    </section>
 
-                                                <section class="flex flex-col md:flex-row">
-                                                    @if (transactionType != 'GL') {
-                                                    @if (partyFilter | async; as parties ) {
-                                                    <div class="flex flex-col w-[300px]">
-                                                        <mat-form-field class="mt-1 ml-1 mr-1 flex-start">
-
-                                                            <mat-select [formControl]="partyCtrl" placeholder="Party"
-                                                                #singlePartySelect required>
-                                                                <mat-option>
-                                                                    <ngx-mat-select-search [formControl]="partyFilterCtrl"
-                                                                        [noEntriesFoundLabel]="'No entries found'"
-                                                                        [placeholderLabel]="'Search'">
-                                                                    </ngx-mat-select-search>
-                                                                </mat-option>
-                                                                @for (party of parties; track party) {
-                                                                <mat-option [value]="party">{{party.party_id}}</mat-option>
-                                                                }
-                                                            </mat-select>
-                                                            <mat-icon class="icon-size-5" matPrefix
-                                                                [svgIcon]="'heroicons_solid:user'"></mat-icon>
-                                                        </mat-form-field>
-                                                    </div>
-                                                    <mat-form-field class="mt-1 ml-1 mr-1 grow">
-                                                        <input type="text" class="text-left" matInput
-                                                            placeholder="Reference Number" formControlName="invoice_no" />
-                                                        <mat-icon class="icon-size-5" matPrefix
-                                                            [svgIcon]="'heroicons_solid:clipboard-document-check'"></mat-icon>
-                                                    </mat-form-field>
-                                                    }
+                                                    <section class="flex flex-col md:flex-row">
+                                                        @if (journalHeader.type != 'GL') {
+                                                            @if (partyFilter | async; as parties ) {
+                                                            <div class="flex flex-col w-[300px]">
+                                                                <mat-form-field class="mt-1 ml-1 mr-1 flex-start">
+                                                                    <mat-select [formControl]="partyCtrl" placeholder="Party"
+                                                                        #singlePartySelect required>
+                                                                        <mat-option>
+                                                                            <ngx-mat-select-search [formControl]="partyFilterCtrl"
+                                                                                [noEntriesFoundLabel]="'No entries found'"
+                                                                                [placeholderLabel]="'Search'">
+                                                                            </ngx-mat-select-search>
+                                                                        </mat-option>
+                                                                        @for (party of parties; track party) {
+                                                                        <mat-option [value]="party">{{party.party_id}}</mat-option>
+                                                                        }
+                                                                    </mat-select>
+                                                                    <mat-icon class="icon-size-5" matPrefix
+                                                                        [svgIcon]="'heroicons_solid:user'"></mat-icon>
+                                                                </mat-form-field>
+                                                            </div>
+                                                            <mat-form-field class="mt-1 ml-1 mr-1 grow">
+                                                                <input type="text" class="text-left" matInput
+                                                                    placeholder="Reference Number" formControlName="invoice_no" />
+                                                                <mat-icon class="icon-size-5" matPrefix
+                                                                    [svgIcon]="'heroicons_solid:clipboard-document-check'"></mat-icon>
+                                                            </mat-form-field>
+                                                        }
                                                     }
                                                 </section>
                                             </form>
@@ -429,7 +458,7 @@ const imp = [
                                                 @if (bHeaderDirty === true) {
                                                 <button mat-icon-button color="primary"
                                                     class="bg-slate-200 hover:bg-slate-400 ml-1"
-                                                    (click)="onUpdateJournalHeader()" matTooltip="Save Transaction"
+                                                    (click)="onUpdateJournalHeader($event)" matTooltip="Save Transaction"
                                                     aria-label="hovered over">
                                                     <span class="e-icons e-save"></span>
                                                 </button>
@@ -464,18 +493,25 @@ const imp = [
                                             <div id="target" class="flex flex-col">
                                                 <div class="text-3xl m-1 text-gray-100 p-2 bg-slate-600 rounded-md">Details</div>
                                                 <div class="flex flex-col h-full ml-1 mr-1 text-gray-800">
-                                                    <ejs-grid class="m-1" [dataSource]="store.details()" 
-                                                        [allowFiltering]="false" [gridLines]="'Both'"
-                                                        [editSettings]='editSettings' [allowRowDragAndDrop]='true'
-                                                        showColumnMenu='false' (actionBegin)="detailRowDoubleClick($event)"
+                                                    <ejs-grid class="m-1" 
+                                                        [dataSource]="store.details()" 
+                                                        [allowFiltering]="false" 
+                                                        [gridLines]="'Both'"
+                                                        [allowColumnMenu]="false"
+                                                        [allowSorting]='true'
+                                                        [sortSettings]= 'detailSort'
+                                                        [editSettings]='editSettings' 
+                                                        [allowRowDragAndDrop]='true'
+                                                        [showColumnMenu]='false' 
+                                                        (actionBegin)="detailRowDoubleClick($event)"
                                                         allowSorting=true>
                                                         <e-columns>
                                                             <e-column field='journal_subid' headerText='ID' [visible]='false' isPrimaryKey='true'  width='100'></e-column> 
                                                             <e-column field='child' headerText='Account'  width='100'></e-column>
                                                             <e-column field='fund' headerText='Fund' width='90'></e-column>
-                                                            <e-column field='sub_type' headerText='Sub Type' [visible]='false' width='90'></e-column>
+                                                            <e-column field='subtype' headerText='Sub Type' [visible]='true' width='90'></e-column>
                                                             <e-column field='description' headerText='Description' width='150'></e-column>
-                                                            <e-column field='reference' headerText='Reference' [visible]='false' width=120></e-column>
+                                                            <e-column field='reference' headerText='Reference' [visible]='true' width=120></e-column>
                                                             <e-column field='debit' headerText='Debit' textAlign='Right' width='100' format="N2"></e-column>
                                                             <e-column field='credit' headerText='Credit' textAlign='Right' width='100' format="N2"></e-column>
                                                         </e-columns>
@@ -654,8 +690,6 @@ const imp = [
 export class JournalUpdateComponent
     implements OnInit, OnDestroy, AfterViewInit {
 
-    [x: string]: any;
-
     @Output() notifyDrawerClose: EventEmitter<any> = new EventEmitter();
 
     private _fuseConfirmationService = inject(FuseConfirmationService);
@@ -668,13 +702,25 @@ export class JournalUpdateComponent
     private partyService = inject(PartyService);
     private templateService = inject(TemplateService);
     private toastr = inject(ToastrService);
+    private journalService = inject(JournalService);
+    
+    
+    public funds$ = this.fundService.read();
+    public subtype$ = this.subtypeService.read();
+    public dropDownChildren$ = this.accountService.readChildren();
+    public fuseConfirmationService = inject(FuseConfirmationService);
+
 
     public matDialog = inject(MatDialog);
     public journalForm!: FormGroup;
     public detailForm!: FormGroup;
     public toolbarTitle: string = "General Ledger Transactions Update";
     public bDetailDirty = false;
-    public transaction!: string;
+    public transaction: string = '';
+    public transactionDate: Date = new Date();
+    public partyId: string = '';
+
+    public bDirty = false;
 
     // create template details only one
     bTemplateDetails = false;
@@ -698,14 +744,11 @@ export class JournalUpdateComponent
     public loading = false;
     public height: string = "250px";
 
-    public funds$ = this.fundService.read();
-    public subtype$ = this.subtypeService.read();
-    public dropDownChildren$ = this.accountService.readChildren();
-    public fuseConfirmationService = inject(FuseConfirmationService);
-
+    
     // Internal control variables
-    public currentRowData: any;
-    public journal_subid: any;
+    public currentRowData: IJournalDetail;
+    // public journal_subid: number = 0;
+    // public journal_id: number = 0;
     public bHeaderDirty = false;
 
 
@@ -721,15 +764,17 @@ export class JournalUpdateComponent
     public toolbar: string[];
     public selectionOptions: Object;
     public searchOptions: Object;
+    public formatoptions: Object;
     public initialSort: Object;
+    public detailSort: Object;
 
     // drop down searchable list
     public accountList: IDropDownAccounts[] = [];
     public subtypeList: ISubType[] = [];
     public fundList: IFunds[] = [];
 
-
     public message?: string;
+    public description?: string;
 
     @ViewChild("grid")
     public grid!: GridComponent;
@@ -755,11 +800,17 @@ export class JournalUpdateComponent
     public debitCtrl: FormControl<IDropDownAccounts> = new FormControl<IDropDownAccounts>(null);
     public debitAccountFilterCtrl: FormControl<string> = new FormControl<string>(null);
     public filteredDebitAccounts: ReplaySubject<IDropDownAccounts[]> = new ReplaySubject<IDropDownAccounts[]>(1);
+    
+    public subtypeCtrl: FormControl<string> = new FormControl<string>(null);
+    public fundCtrl: FormControl<string> = new FormControl<string>(null);
+    public key: number;
+    public journalHeader: IJournalHeader;
 
-    public journalData: IJournalHeader;
+    public journalDetailSignal = signal<IJournalDetail[]>(null);
 
     protected _onCreditDestroy = new Subject<void>();
     protected _onDebitDestroy = new Subject<void>();
+    protected _onTemplateDestroy = new Subject<void>();
     protected _onDestroyDebitAccountFilter = new Subject<void>();
     protected _onDestroyCreditAccountFilter = new Subject<void>();
     protected _onDestroy = new Subject<void>();
@@ -774,7 +825,7 @@ export class JournalUpdateComponent
     singlePartySelect = viewChild<MatSelect>("singlePartySelect");
 
     public menuItems: MenuItemModel[] = [
-        {   
+        {
             id: 'edit',
             text: 'Edit Line Item',
             iconCss: 'e-icons e-edit-2'
@@ -813,9 +864,129 @@ export class JournalUpdateComponent
 
     }
 
+    public updateHeaderData() {
+
+        const updateDate = new Date().toISOString().split('T')[0];
+        const inputs = { ...this.journalForm.value }
+        const momentDate = new Date(inputs.step1.transaction_date).toISOString().split('T')[0];
+        const email = '@' + this.auth.currentUser?.email.split('@')[0];
+
+        var party: any;
+        var party_id: string;
+
+        const template = this.templateCtrl.value;
+        const template_name = this.templateList.find((x) => x.template_name === template.template_name).template_name;
+
+        var journalDetails:  IJournalDetail[]=[];
+
+        if (template.journal_type !== 'GL') {
+            party = this.partyCtrl.getRawValue();
+            party_id = this.partyList.find((x) => x.party_id === party.party_id).party_id;
+        }
+        else {
+            party_id = '';
+        }
+
+        let count: number = 1;
+
+        if (inputs.step1.amount === 0) {
+            return;
+        }
+
+        let journalHeader: IJournalHeader = {
+            // journal_id: this.journal_id,
+            journal_id: inputs.step1.journal_id,
+            description: inputs.step1.description,
+            booked: false,
+            booked_date: updateDate,
+            booked_user: email,
+            create_date: updateDate,
+            create_user: email,
+            period: Number(this.store.currentPeriod()),
+            period_year: Number(this.store.currentYear()),
+            transaction_date: momentDate,
+            status: 'OPEN',
+            type: template.journal_type,
+            sub_type: inputs.step1.sub_type,
+            amount: Number(inputs.step1.amount),
+            party_id: party_id,
+            template_name: template_name,
+            invoice_no: inputs.step1.invoice_no,
+        }
+
+        // this.journalHeader = journalHeader;
+
+        this.store.templateDetails().forEach((templateDetail) => {
+            let journalDetail: IJournalDetailUpdate = {
+                journal_id: inputs.step1.journal_id,
+                journal_subid: count,
+                account: Number(templateDetail.account),
+                child: Number(templateDetail.child),
+                description: templateDetail.description,
+                create_date: updateDate,
+                create_user: email,
+                subtype: templateDetail.sub_type,
+                debit: templateDetail.debit * journalHeader.amount,
+                credit: templateDetail.credit * journalHeader.amount,
+                reference: '',
+                fund: templateDetail.fund,
+            }
+            journalDetails.push(journalDetail);
+            count = count + 1;
+        });
+
+        this.journalDetailSignal.set(journalDetails);
+
+        this.bDirty = true;
+    }
+
+    public onUpdate() {
+
+        const inputs = { ...this.journalForm.value }
+
+        if (inputs.step1.amount === 0) {
+            return;
+        }
+
+        var detail: Detail[] = this.journalDetailSignal();
+
+        var journalArray: IJournalArrayParams = {
+
+            journal_id: this.journalHeader.journal_id,
+            description: this.journalHeader.description,
+            type: this.journalHeader.type,
+            booked_user: this.journalHeader.booked_user,
+            period: this.journalHeader.period,
+            period_year: this.journalHeader.period_year,
+            transaction_date: this.journalHeader.transaction_date,
+            amount: this.journalHeader.amount,
+            template_name: this.journalHeader.template_name,
+            invoice_no: this.journalHeader.invoice_no,
+            party_id: this.journalHeader.party_id,
+            subtype: this.journalHeader.sub_type,
+            details: { detail: detail }
+       
+        }
+
+        this.journalService.createJournal(journalArray).pipe(takeUntil(this._onDestroy)).subscribe((response) => {
+            this.ShowAlert(`Journal created  : ${response.description} ID: ${response.journal_id}`, "pass");
+        });
+        this.bDirty = false;
+    }
+
+    public onEdit() {
+        this.drawer().open();
+        this.toastr.success('Transaction saved');
+    }
+
+    public onSaved(args: any) {
+        this.toastr.success('Transaction saved', args);
+    }
+    
+    
     public itemSelect(args: MenuEventArgs): void {
 
-        switch (args.item.id){
+        switch (args.item.id) {
             case 'edit':
                 this.onEdit();
                 break;
@@ -837,13 +1008,9 @@ export class JournalUpdateComponent
     }
 
 
-
-
-
     onBack() {
         this.router.navigate(["/journals"]);
     }
-
 
 
     public aggregates = [
@@ -897,14 +1064,12 @@ export class JournalUpdateComponent
         this.createEmptyDetailForm();
         this.initialDatagrid();
 
-        this.activatedRoute.data.subscribe((data) => {
-            this.journal_id = data.journal.journal_id;
-            this.store.loadDetails(this.journal_id);
-            this.store.loadArtifactsByJournalId(this.journal_id);
-            this.journalData = data.journal;
-            this.refreshHeader(this.journalData);
-
-            this.router.navigate(["journals/gl", this.journal_id]);
+        this.activatedRoute.data.subscribe((data) => {             
+            this.store.loadDetails(data.journal.journal_id);
+            this.store.loadArtifactsByJournalId(data.journal.journal_id);
+            this.journalHeader = data.journal;
+            this.refreshHeader(this.journalHeader);
+            this.router.navigate(["journals/gl", data.journal.journal_id]);
         });
 
 
@@ -986,9 +1151,9 @@ export class JournalUpdateComponent
         this.templateService.read().pipe(takeUntil(this._onDestroy)).subscribe((templates) => {
             this.templateList = templates;
             this.templateFilter.next(this.templateList.slice());
-            if (this.journalData.template_name != null) {
+            if (this.journalHeader.template_name != null) {
                 this.templateCtrl.setValue(
-                    this.templateList.find((x) => x.template_name === this.journalData.template_name)
+                    this.templateList.find((x) => x.template_name === this.journalHeader.template_name)
                 );
             }
         });
@@ -997,9 +1162,9 @@ export class JournalUpdateComponent
         this.partyService.read().pipe(takeUntil(this._onDestroy)).subscribe((party) => {
             this.partyList = party;
             this.partyFilter.next(this.partyList.slice());
-            if (this.journalData.template_name != null) {
+            if (this.journalHeader.template_name != null) {
                 this.partyCtrl.setValue(
-                    this.partyList.find((x) => x.party_id === this.journalData.party_id)
+                    this.partyList.find((x) => x.party_id === this.journalHeader.party_id)
                 );
             }
         });
@@ -1052,16 +1217,16 @@ export class JournalUpdateComponent
 
 
         this.partyCtrl.setValue(
-            this.partyList.find((x) => x.party_id === this.journalData.party_id)
+            this.partyList.find((x) => x.party_id === this.journalHeader.party_id)
         );
 
         this.templateCtrl.setValue(
-            this.templateList.find((x) => x.template_name === this.journalData.template_name)
+            this.templateList.find((x) => x.template_name === this.journalHeader.template_name)
         );
 
-        if (this.journalData.template_name != null) {
+        if (this.journalHeader.template_name != null) {
             this.templateCtrl.setValue(
-                this.templateList.find((x) => x.template_name === this.journalData.template_name)
+                this.templateList.find((x) => x.template_name === this.journalHeader.template_name)
             );
         }
         this.onChanges();
@@ -1073,7 +1238,7 @@ export class JournalUpdateComponent
         });
 
         this.templateCtrl.valueChanges.subscribe((value) => {
-            this.beHeaderDirty = true;
+            this.bHeaderDirty = true;
             this.createJournalDetailsFromTemplate(value);
             console.log('Header is true 2 from party change');
         });
@@ -1094,12 +1259,11 @@ export class JournalUpdateComponent
     }
 
     public onRowSelected(args: RowSelectEventArgs): void {
-        const queryData: any = args.data;
-        this.key = queryData.journal_id;
+        const queryData: any = args.data;        
         this.refreshHeader(queryData);
-        this.store.loadDetails(this.key);
-        this.store.loadArtifactsByJournalId(this.key);
-        this.router.navigate(["journals/gl", this.key]);
+        this.store.loadDetails(queryData.journal_id);
+        this.store.loadArtifactsByJournalId(queryData.journal_id);
+        this.router.navigate(["journals/gl", queryData.journal_id]);
         this.closeDrawer();
     }
 
@@ -1121,14 +1285,17 @@ export class JournalUpdateComponent
         this.initialSort = {
             columns: [{ field: 'journal_id', direction: 'Descending' },]
         };
+        
+        this.detailSort = {
+            columns: [{ field: 'debit', direction: 'Descending' },]
+        };
 
     }
 
-    public onEditJournal(id: number) {
-        this.journal_id = id;
+    public onEditJournal(id: number) {        
         this.store.loadDetails(id);
-        this.journalData = this.store.gl().find((x) => x.journal_id === id);
-        this.refreshHeader(this.journalData);
+        this.journalHeader = this.store.gl().find((x) => x.journal_id === id);
+        this.refreshHeader(this.journalHeader);
         this.closeDrawer();
     }
 
@@ -1302,6 +1469,9 @@ export class JournalUpdateComponent
 
 
     public refreshHeader(header: IJournalHeader) {
+
+        this.journalHeader = header; 
+
         this.journalForm.patchValue({
             description: header.description,
             amount: header.amount,
@@ -1316,11 +1486,11 @@ export class JournalUpdateComponent
             this.templateList.find((x) => x.template_name === header.template_name)
         );
 
-        this.journal_id = header.journal_id;
-
-        this.partyCtrl.setValue(
-            this.partyList.find((x) => x.party_id === header.party_id)
-        );
+        if (header.party_id !== null || header.party_id !== undefined || header.party_id !== '') {
+            this.partyCtrl.setValue(
+                this.partyList.find((x) => x.party_id === header.party_id)
+            );
+        }
 
         this.bHeaderDirty = false;
     }
@@ -1381,9 +1551,9 @@ export class JournalUpdateComponent
         confirmation.afterClosed().subscribe((result) => {
             if (result === "confirmed") {
                 var journalParam = {
-                    child: this.journalData.journal_id,
-                    period: this.journalData.period,
-                    period_year: this.journalData.period_year
+                    child: this.journalHeader.journal_id,
+                    period: this.journalHeader.period,
+                    period_year: this.journalHeader.period_year
                 };
                 this.store.createJournalTemplate(journalParam);
             }
@@ -1392,11 +1562,12 @@ export class JournalUpdateComponent
 
     // Add evidence 
     public onAddEvidence() {
+        const inputs = { ...this.journalForm.value } as IJournalHeader;
         const dialogRef = this.matDialog.open(DndComponent, {
             width: "600px",
             data: {
-                journal_id: this.journal_id,
-                reference_no: this.journal_id,
+                journal_id: inputs.journal_id,
+                reference_no: inputs.invoice_no,
                 description: this.description,
             },
         });
@@ -1409,7 +1580,7 @@ export class JournalUpdateComponent
             switch (result.event) {
                 case "Create":
                     console.debug(result.data);
-                    this.store.loadArtifactsByJournalId(this.journal_id);
+                    this.store.loadArtifactsByJournalId(inputs.journal_id);
                     break;
                 case "Cancel":
                     break;
@@ -1465,8 +1636,10 @@ export class JournalUpdateComponent
     // On delete journal detail
     public onDeleteDetail() {
 
+        const inputs = { ...this.journalForm.value } as IJournalHeader
+
         var journalDetail = {
-            journal_id: this.journal_id,
+            journal_id: inputs.journal_id,
             journal_subid: this.currentRowData.journal_subid,
         };
 
@@ -1485,8 +1658,8 @@ export class JournalUpdateComponent
             // If the confirm button pressed...
             if (result === "confirmed") {
                 this.store.deleteJournalDetail(journalDetail);
-                this.store.loadDetails(this.journal_id);
-                this.store.loadArtifactsByJournalId(this.journal_id);
+                this.store.loadDetails(inputs.journal_id);
+                this.store.loadArtifactsByJournalId(inputs.journal_id);
                 this.bDetailDirty = false;
                 this.closeDrawer();
             }
@@ -1497,14 +1670,15 @@ export class JournalUpdateComponent
 
     // On delete journal detail
     public onDelete(args: any) {
+        const inputs = { ...this.journalForm.value }
         const index = (this.grid as GridComponent).getSelectedRowIndexes();
         const rowData = this.grid.getCurrentViewRecords().at(index[0]) as any;
         var journalDetail = {
-            journal_id: this.journal_id,
+            journal_id: inputs.journal_id,
             journal_subid: rowData.journal_subid,
         };
         const confirmation = this._fuseConfirmationService.open({
-            title: `Delete  transaction number : ${this.journal_id}-${rowData.journal_subid} `,
+            title: `Delete  transaction number : ${rowData.journal_id}-${rowData.journal_subid} `,
             message: "Are you sure you want to delete this line entry? ",
             actions: {
                 confirm: {
@@ -1530,6 +1704,7 @@ export class JournalUpdateComponent
 
     // add a new line entry
     public onNewLineItem() {
+        const inputs = { ...this.journalForm.value } as IJournalHeader;
         const updateDate = new Date().toISOString().split("T")[0];
         var max = 0;
 
@@ -1539,7 +1714,7 @@ export class JournalUpdateComponent
             }
         });
 
-        if (this.journal_id === 0) {
+        if ( inputs.journal_id === 0) {
             return;
         }
 
@@ -1590,9 +1765,10 @@ export class JournalUpdateComponent
     }
 
     journalEntryCleanUp() {
+        const inputs = { ...this.journalForm.value } as IJournalHeader;
         this.detailForm.reset();
         this.debitCtrl.reset();
-        this.store.renumberJournalDetail(this.journal_id);
+        this.store.renumberJournalDetail(inputs.journal_id);
     }
 
     public onHeaderDateChanged(event: any): void {
@@ -1601,9 +1777,8 @@ export class JournalUpdateComponent
         console.log('Header is true 4');
     }
 
-
     // Update journal header
-    onUpdateJournalHeader() {
+    onUpdateJournalHeader(e: any) {
 
         if (this.bHeaderDirty === false) {
             this.toastr.show('Journal Entry Created', 'Failed');
@@ -1628,12 +1803,12 @@ export class JournalUpdateComponent
         }
 
         const journalHeaderUpdate: IJournalHeader = {
-            journal_id: this.journal_id,
-            type: this.journalData.type,
-            booked: this.journalData.booked,
-            period: this.journalData.period,
-            period_year: this.journalData.period_year,
-            booked_user: this.journalData.booked_user,
+            journal_id: this.journalHeader.journal_id,
+            type: this.journalHeader.type,
+            booked: this.journalHeader.booked,
+            period: this.journalHeader.period,
+            period_year: this.journalHeader.period_year,
+            booked_user: this.journalHeader.booked_user,
             description: header.description,
             transaction_date: header.transaction_date,
             amount: Number(header.amount),
@@ -1643,7 +1818,7 @@ export class JournalUpdateComponent
         };
 
         this.store.updateJournalHeader(journalHeaderUpdate);
-        this.toastr.success(`Journal header updated : ${this.journal_id}`);
+        // this.toastr.success(`Journal header updated : ${this.journal_id}`);
         this.bHeaderDirty = false;
     }
     // Create or new journal entry
@@ -1651,7 +1826,7 @@ export class JournalUpdateComponent
 
         var header = this.journalForm.getRawValue();
         var detail = this.detailForm.getRawValue();
-        
+
         const updateDate = new Date().toISOString().split("T")[0];
         const name = '@' + this.auth.currentUser?.email.split("@")[0];
 
@@ -1705,7 +1880,7 @@ export class JournalUpdateComponent
     }
 
     onUpdateJournalDetail() {
-        
+
         var detail = this.detailForm.getRawValue();
         const dDate = new Date();
         const updateDate = dDate.toISOString().split("T")[0];
@@ -1764,8 +1939,8 @@ export class JournalUpdateComponent
     public exitWindow() {
 
         const prd = {
-            period: this.journalData.period,
-            period_year: this.journalData.period_year,
+            period: this.journalHeader.period,
+            period_year: this.journalHeader.period_year,
         }
 
         if (this.bHeaderDirty === false) {
@@ -1793,6 +1968,15 @@ export class JournalUpdateComponent
             });
 
         }
+    }
+
+    ShowAlert(message: string, response: string) {
+        if (response == "pass") {
+            this.toastr.success(message);
+        } else {
+            this.toastr.error(message);
+        }
+        return;
     }
 
 }
