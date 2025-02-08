@@ -2,8 +2,11 @@
 <fuse-loading-bar></fuse-loading-bar>
 
 <!-- Navigation -->
-<fuse-vertical-navigation class="dark bg-gray-900 print:hidden" [appearance]="'compact'"
-    [mode]="isScreenSmall ? 'over' : 'side'" [name]="'mainNavigation'" [navigation]="navigation.compact"
+<fuse-vertical-navigation class="dark bg-gray-900 print:hidden" 
+    [appearance]="'compact'"
+    [mode]="isScreenSmall ? 'over' : 'side'" 
+    [name]="'mainNavigation'" 
+    [navigation]="navigation.compact"
     [opened]="!isScreenSmall">
     <!-- Navigation header hook -->
     <ng-container fuseVerticalNavigationContentHeader>

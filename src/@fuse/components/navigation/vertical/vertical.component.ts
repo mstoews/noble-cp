@@ -2,7 +2,7 @@ import { animate, AnimationBuilder, AnimationPlayer, style } from '@angular/anim
 import { BooleanInput, coerceBooleanProperty } from '@angular/cdk/coercion';
 import { ScrollStrategy, ScrollStrategyOptions } from '@angular/cdk/overlay';
 import { DOCUMENT, NgIf } from '@angular/common';
-import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, HostBinding, HostListener, Inject, OnChanges, OnDestroy, OnInit, Output, QueryList, Renderer2, SimpleChanges, ViewChild, ViewChildren, ViewEncapsulation, input } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, HostBinding, HostListener, Inject, OnChanges, OnDestroy, OnInit, Output, QueryList, Renderer2, SimpleChanges, ViewChild, ViewChildren, ViewEncapsulation, input, signal } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
 import { fuseAnimations } from '@fuse/animations';
 import { FuseNavigationService } from '@fuse/components/navigation/navigation.service';
@@ -67,6 +67,10 @@ export class FuseVerticalNavigationComponent implements OnChanges, OnInit, After
     private _fuseScrollbarDirectivesSubscription: Subscription;
     private _unsubscribeAll: Subject<any> = new Subject<any>();
 
+    private _internalOpened = signal(this.opened());
+
+    computedOpened = signal(this._internalOpened);
+
     /**
      * Constructor
      */
@@ -105,7 +109,7 @@ export class FuseVerticalNavigationComponent implements OnChanges, OnInit, After
             'fuse-vertical-navigation-inner': this.inner(),
             'fuse-vertical-navigation-mode-over': this.mode() === 'over',
             'fuse-vertical-navigation-mode-side': this.mode() === 'side',
-            'fuse-vertical-navigation-opened': this.opened(),
+            'fuse-vertical-navigation-opened': this._internalOpened(),
             'fuse-vertical-navigation-position-left': this.position() === 'left',
             'fuse-vertical-navigation-position-right': this.position() === 'right',
         };
@@ -117,7 +121,7 @@ export class FuseVerticalNavigationComponent implements OnChanges, OnInit, After
      */
     @HostBinding('style') get styleList(): any {
         return {
-            'visibility': this.opened() ? 'visible' : 'hidden',
+            'visibility': this._internalOpened() ? 'visible' : 'hidden',
         };
     }
 
@@ -200,7 +204,6 @@ export class FuseVerticalNavigationComponent implements OnChanges, OnInit, After
      */
     ngOnChanges(changes: SimpleChanges): void {
         // Appearance
-        var inner = this.inner();
         if ('appearance' in changes) {
             // Execute the observable
             this.appearanceChanged.next(changes.appearance.currentValue);
@@ -209,11 +212,12 @@ export class FuseVerticalNavigationComponent implements OnChanges, OnInit, After
         // Inner
         if ('inner' in changes) {
             // Coerce the value to a boolean
-            inner = coerceBooleanProperty(changes.inner.currentValue);
+            const value = coerceBooleanProperty(changes.inner.currentValue);
+            // this.inner = coerceBooleanProperty(changes.inner.currentValue); 
+            
         }
 
         // Mode
-        const opened = this.opened();
         if ('mode' in changes) {
             // Get the previous and current values
             const currentMode = changes.mode.currentValue;
@@ -234,7 +238,7 @@ export class FuseVerticalNavigationComponent implements OnChanges, OnInit, After
                 this.closeAside();
 
                 // If the navigation is opened
-                if (opened) {
+                if (this.opened) {
                     // Show the overlay
                     this._showOverlay();
                 }
@@ -260,10 +264,12 @@ export class FuseVerticalNavigationComponent implements OnChanges, OnInit, After
         // Opened
         if ('opened' in changes) {
             // Coerce the value to a boolean
-            //this.opened = coerceBooleanProperty(changes.opened.currentValue);
+            const value = coerceBooleanProperty(changes.opened.currentValue);
+            this._internalOpened.set(value);
 
             // Open/close the navigation
-            this._toggleOpened(opened);
+            this._toggleOpened(this._internalOpened());
+            //this._toggleOpened(value);
         }
 
         // Position
@@ -275,7 +281,8 @@ export class FuseVerticalNavigationComponent implements OnChanges, OnInit, After
         // Transparent overlay
         if ('transparentOverlay' in changes) {
             // Coerce the value to a boolean
-            //this.transparentOverlay = coerceBooleanProperty(changes.transparentOverlay.currentValue);
+            const value = coerceBooleanProperty(changes.transparentOverlay.currentValue);
+            // this.transparentOverlay = coerceBooleanProperty( changes.transparentOverlay.currentValue );
         }
     }
 
@@ -301,7 +308,7 @@ export class FuseVerticalNavigationComponent implements OnChanges, OnInit, After
             .subscribe(() => {
                 // If the mode is 'over' and the navigation is opened...
                 const mode = this.mode();
-                if (mode === 'over' && this.opened()) {
+                if (mode === 'over' && this._internalOpened()) {
                     // Close the navigation
                     this.close();
                 }
@@ -415,7 +422,7 @@ export class FuseVerticalNavigationComponent implements OnChanges, OnInit, After
      */
     open(): void {
         // Return if the navigation is already open
-        if (this.opened()) {
+        if (this._internalOpened()) {
             return;
         }
 
@@ -428,7 +435,7 @@ export class FuseVerticalNavigationComponent implements OnChanges, OnInit, After
      */
     close(): void {
         // Return if the navigation is already closed
-        if (!this.opened()) {
+        if (!this._internalOpened()) {
             return;
         }
 
@@ -444,11 +451,11 @@ export class FuseVerticalNavigationComponent implements OnChanges, OnInit, After
      */
     toggle(): void {
         // Toggle
-        if (this.opened()) {
+        if (this._internalOpened()) {
             this.close();
         }
         else {
-            this.open();
+            this._internalOpened();
         }
     }
 
@@ -477,7 +484,6 @@ export class FuseVerticalNavigationComponent implements OnChanges, OnInit, After
      * Close the aside
      */
     closeAside(): void {
-        // Close
         this.activeAsideItemId = null;
 
         // Hide the aside overlay
@@ -705,7 +711,7 @@ export class FuseVerticalNavigationComponent implements OnChanges, OnInit, After
         // If the navigation opened, and the mode
         // is 'over', show the overlay
         if (this.mode() === 'over') {
-            if (this.opened()) {
+            if (this._internalOpened()) {
                 this._showOverlay();
             }
             else {

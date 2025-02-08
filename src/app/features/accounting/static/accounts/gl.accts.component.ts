@@ -60,17 +60,14 @@ const keyExpr = ["account", "child"];
 
         <ng-container>
           <div class="border-1 border-gray-500 mt-3">
-
-              @if(accounts$ | async; as accounts) {
+            @if(accounts$ | async; as accounts) {
                 <grid-menubar  class="pl-5 pr-5"  [showBack]="false" [inTitle]="'General Ledger Account Maintenance'"/> 
-                    <gl-grid #gl_grid
-                    (onFocusChanged)="onSelection($event)"
-                    (onUpdateSelection)="selectedRow($event)"
-                    [data]="accounts"
-                    [columns]="cols" >
+                  <gl-grid #gl_grid  
+                  (onFocusChanged)="onSelection($event)"  
+                  (onUpdateSelection)="selectedRow($event)"  
+                  [data]="accounts"  [columns]="cols">
                   </gl-grid> 
-              }
-            
+            }            
           </div>
         </ng-container>
         
@@ -79,9 +76,7 @@ const keyExpr = ["account", "child"];
         #settings
         [opened]="false"
         mode="over"
-        
-        [disableClose]="false"
-      >
+        [disableClose]="false" >
         <mat-card class="m-2 p-2 border-1 border-gray-500">
         <div class="flex flex-col w-full text-gray-700 max-w-140 filter-article filter-interactive">
           <div class="h-12 rounded-lg p-2 text-2xl text-justify text-gray-200 bg-slate-600" mat-dialog-title> Settings </div>
@@ -131,16 +126,6 @@ const keyExpr = ["account", "child"];
                     </button>
                     }
 
-                    <!-- <button mat-icon-button color="primary" 
-                            class=" hover:bg-slate-400 ml-1" (click)="onAdd()" matTooltip="New" aria-label="hovered over">                        
-                        <span class="e-icons e-circle-add"></span>
-                    </button>
-
-                    <button mat-icon-button color="primary" 
-                            class=" hover:bg-slate-400 ml-1" (click)="onDelete($event)" matTooltip="Delete" aria-label="hovered over">                        
-                        <span class="e-icons e-trash"></span>
-                    </button> -->
-
                     <button mat-icon-button color="primary"
                             class=" hover:bg-slate-400 ml-1"  (click)="closeSettings()" matTooltip="Close"
                             aria-label="hovered over">
@@ -155,8 +140,7 @@ const keyExpr = ["account", "child"];
         #drawer
         [opened]="false"
         mode="over"
-        [disableClose]="false"
-      >
+        [disableClose]="false" >
         <mat-card class="m-2">
         <div class="flex flex-col w-full text-gray-700 max-w-140 filter-article filter-interactive">
           <div class="h-12 m-2 rounded-lg p-2 text-2xl text-justify text-gray-200 bg-slate-600" mat-dialog-title> {{ sTitle }} </div>
@@ -201,8 +185,7 @@ const keyExpr = ["account", "child"];
                   <mat-checkbox
                     color="primary"
                     class="mt-5"
-                    formControlName="parent_account"
-                  >
+                    formControlName="parent_account">
                     Parent
                   </mat-checkbox>
                 </div>
@@ -265,8 +248,7 @@ const keyExpr = ["account", "child"];
             </div>
         </mat-card>
     </mat-drawer>
-    
-      </mat-drawer-container>
+    </mat-drawer-container>
   } @else {
       <div class="fixed z-[1050] -translate-x-2/4 -translate-y-2/4 left-2/4 top-2/4" >
            <mat-spinner></mat-spinner>
@@ -326,9 +308,10 @@ export class GlAccountsComponent extends GLGridComponent {
   public bSettingsDirty: boolean = false;
 
   onSelection(e: any) {
-    this.toast.success("Selected", JSON.stringify(e.data));
+    // this.toast.success("Selected", JSON.stringify(e.data));
     this.currentRow = e.data;
   }
+
 
   public cols = [
     { field: "account", headerText: "Group", width: 80, textAlign: "Left" },
@@ -390,26 +373,6 @@ export class GlAccountsComponent extends GLGridComponent {
 
   ];
 
-  public itemSelect(args: MenuEventArgs): void {
-
-    switch (args.item.id) {
-      case 'Edit':        
-        this.selectedRow(this.currentRow);
-        break;
-      case 'Create':
-        this.onAdd();
-        break;
-      case 'Clone':
-        this.onClone("");
-        break;
-      case 'Delete':
-        this.onDelete("");
-        break;
-      case 'Settings':
-        this.onOpenSettings();
-        break;
-    }
-  }
 
   onOpenSettings() {
     this.settingsDrawer().open();
@@ -432,8 +395,12 @@ export class GlAccountsComponent extends GLGridComponent {
       sub_type: account.sub_type,
       balance: account.balance,
       comments: account.comments,
+      create_date: new Date().toISOString().split("T")[0],
+      create_user: '@' + this.auth.user().email.split("T")[0],
+      update_date: new Date().toISOString().split("T")[0],
+      update_user: '@' + this.auth.user().email.split("T")[0],
     };
-    // this.accountService.create(rawData);
+    this.Store.dispatch(accountPageActions.addAccount({ account: rawData }));
     this.closeDrawer();
   }
 

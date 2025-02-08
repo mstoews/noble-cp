@@ -56,20 +56,6 @@ interface IValue {
                 <div class="div flex flex-col grow">
                     <section class="flex flex-col md:flex-col m-1">
 
-                         <!-- 
-                          "team_member": "@admin", 
-                          "first_name": "Admin", 
-                          "last_name": "Admin", 
-                          "location": "Office", 
-                          "title": "Initial account", 
-                          "updatedte": "2023-12-13T22:41:07.925Z", 
-                          "updateusr": "admin", 
-                          "email": "mstoews@hotmail.com", 
-                          "image": "''", 
-                          "uid": "''", 
-                          "role": "admin"  -->
-                        
-                        <!-- title -->
                         <div class="flex flex-col grow">
                             <mat-form-field class="m-1 flex-start">                                
                                 <input #myInput matInput placeholder="Title" formControlName="title" />
@@ -162,14 +148,14 @@ interface IValue {
     <mat-drawer-container class="flex-col">        
         <ng-container>
             <grid-menubar 
-            [inTitle]="'Team Members'"
-            (notifyParentRefresh)="onRefresh()" 
-            (notifyParentAdd)="onAdd()"
-            (notifyParentDelete)="onDeleteSelection()" 
-            (notifyParentUpdate)="onUpdateSelection()">
+                [inTitle]="'Team Members'"
+                (notifyParentRefresh)="onRefresh()" 
+                (notifyParentAdd)="onAdd()"
+                (notifyParentDelete)="onDeleteSelection()" 
+                (notifyParentUpdate)="onUpdateSelection()">
              </grid-menubar>                         
              
-             @if (store.isLoading() === false) 
+            @if (store.isLoading() === false) 
             {                            
                 <gl-grid 
                     (onUpdateSelection)="selectedRow($event)"
@@ -183,8 +169,7 @@ interface IValue {
                     <mat-spinner></mat-spinner>
                 </div>
             }
-    
-    </ng-container>         
+        </ng-container>         
     </mat-drawer-container>
     </div>
   `,

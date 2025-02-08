@@ -46,31 +46,37 @@ const keyExpr = ["account", "child"];
     imports: [mods],
     template: `    
     <mat-drawer-container class="flex-col">        
-    <ng-container >
-        <ejs-grid  #grid_parent id="grid_parent" class="e-grid mt-3 h-[calc(100vh)-100px] border-1 border-gray-200"         
-                [rowHeight]='30'               
-                [dataSource]="data()" 
-                [columns]="columns()"
-                [allowSorting]='true'
-                [showColumnMenu]='true'                
-                [gridLines]="lines"                
-                [toolbar]='toolbarOptions'                 
-                [filterSettings]='filterOptions'
-                [editSettings]='editSettings'
-                [allowFiltering]='true'                   
-                [enablePersistence]='false'
-                [enableStickyHeader]='true'
-                [allowGrouping]="false"
-                [allowResizing]='true' 
-                [allowReordering]='true' 
-                [allowExcelExport]='true' 
-                [allowPdfExport]='true' 
-                [contextMenuItems]="contextMenuItems"
-                (actionBegin)='actionBegin($event)' 
-                (rowSelected)="rowSelected($event)"              
-                (actionComplete)='actionComplete($event)'>
-        </ejs-grid>
-        </ng-container>        
+        <ng-container >
+            <ejs-grid  #grid_parent id="grid_parent" class="e-grid mt-3 h-[calc(100vh)-100px] border-1 border-gray-200"         
+                    [rowHeight]='30'               
+                    [dataSource]="data()" 
+                    [columns]="columns()"
+                    [allowSorting]='true'
+                    [showColumnMenu]='true'                
+                    [gridLines]="lines"                
+                    [toolbar]='toolbarOptions'                 
+                    [filterSettings]='filterOptions'
+                    [editSettings]='editSettings'
+                    [allowFiltering]='true'                   
+                    [enablePersistence]='false'
+                    [enableStickyHeader]='true'
+                    [allowGrouping]="false"
+                    [allowResizing]='true' 
+                    [allowReordering]='true' 
+                    [allowExcelExport]='true' 
+                    [allowPdfExport]='true' 
+                    [contextMenuItems]="contextMenuItems"
+                    (actionBegin)='actionBegin($event)' 
+                    (rowSelected)="rowSelected($event)"              
+                    (actionComplete)='actionComplete($event)'>
+            </ejs-grid>
+        </ng-container>       
+        <ejs-contextmenu              
+             target='#target' 
+             (select)="itemSelect($event)"
+             [animationSettings]='animation'
+             [items]= 'menuItems'> 
+         </ejs-contextmenu>  
     </mat-drawer-container>
     `,
     providers: [providers],
@@ -129,12 +135,60 @@ export class GLGridComponent implements OnInit {
     public userId: string;
     sTitle: any;
 
-
-    public animation = {
+      public animation = {
         effect: 'FadeIn',
         duration: 800
     };
+    
+    public menuItems: MenuItemModel[] = [
+        {
+            text: 'Edit Journal',
+            iconCss: 'e-icons e-edit-2'
+        },
+        {
+            text: 'Create New Journal',
+            iconCss: 'e-icons e-circle-add'
+        },
+        {
+            text: 'Clone Journal Entry',
+            iconCss: 'e-icons e-copy'
+        },
+        {
+            text: 'Create Template',
+            iconCss: 'e-icons e-table-overwrite-cells'
+        },
+        {
+            separator: true
+        },
+        {
+            text: 'Settings',
+            iconCss: 'e-icons e-settings'
+        },
+    
+    ];
 
+    public itemSelect(args: MenuEventArgs): void {
+        
+        switch (args.item.text) {
+            case 'Edit Journal':
+                //this.route.navigate(['journals/gl', this.currentRowData.journal_id]);
+                break;
+            case 'Create New Journal':
+                this.onAdd();                
+                break;
+            case 'Clone Journal Entry':
+                //this.onClone();
+                break;
+            case 'Create Template':
+                //this.onTemplate();
+                break;
+            case 'Settings':                
+                //this.openDrawer();
+                break;
+        }
+    }    
+
+    
     public filterOptions: Object = { type: 'Excel' };
 
     openTrade($event) {

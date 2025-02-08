@@ -126,7 +126,6 @@ const imports = [
                                     [allowPdfExport]='true'            
                                     (rowSelected)='onRowSelected($event)'                                
                                     (actionBegin)='selectedRow($event)' >
-
                                     <e-columns>
                                         <e-column field='journal_id' headerText='ID' isPrimaryKey='true' isIdentity='true' visible='true' width='60'></e-column>
                                         <e-column field='status' headerText='Status' width='70' textAlign='Center'>

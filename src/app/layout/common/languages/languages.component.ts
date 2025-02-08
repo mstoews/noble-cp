@@ -113,10 +113,10 @@ export class LanguagesComponent implements OnInit, OnDestroy {
         }
 
         // Get the flat navigation data
-        const navigation = navComponent.navigation();
+        const navigation = navComponent.navigation;
 
         // Get the Project dashboard item and update its title
-        const projectDashboardItem = this._fuseNavigationService.getItem('dashboards.project', navigation);
+        const projectDashboardItem = this._fuseNavigationService.getItem('dashboards.project', navigation());
         if (projectDashboardItem) {
             this._translocoService.selectTranslate('Project').pipe(take(1))
                 .subscribe((translation) => {
@@ -129,7 +129,7 @@ export class LanguagesComponent implements OnInit, OnDestroy {
         }
 
         // Get the Analytics dashboard item and update its title
-        const analyticsDashboardItem = this._fuseNavigationService.getItem('dashboards.analytics', navigation);
+        const analyticsDashboardItem = this._fuseNavigationService.getItem('dashboards.analytics', navigation());
         if (analyticsDashboardItem) {
             this._translocoService.selectTranslate('Analytics').pipe(take(1))
                 .subscribe((translation) => {

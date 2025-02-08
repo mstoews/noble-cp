@@ -19,6 +19,7 @@ import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { addFunds, deleteFunds, loadFunds, updateFunds } from 'app/state/funds/Funds.Action';
 import { selectFunds } from 'app/state/funds/Funds.Selector';
+import { MenuEventArgs, MenuItemModel } from '@syncfusion/ej2-navigations';
 
 
 const imports = [
@@ -141,6 +142,60 @@ export class FundsComponent implements OnInit {
             }
         });
     }
+
+     public menuItems: MenuItemModel[] = [
+        {
+          id: 'Edit',
+          text: 'Update Account',
+          iconCss: 'e-icons e-edit-2'
+        },
+        {
+          id: 'Create',
+          text: 'Create Account',
+          iconCss: 'e-icons e-circle-add'
+        },
+        {
+          id: 'Clone',
+          text: 'Clone Account',
+          iconCss: 'e-icons e-copy'
+        },
+        {
+          id: 'Delete',
+          text: 'Deactivate Account',
+          iconCss: 'e-icons e-delete-1'
+        },
+        {
+          separator: true
+        },
+        {
+          id: 'Settings',
+          text: 'Settings',
+          iconCss: 'e-icons e-settings'
+        },
+    
+      ];
+    
+      public itemSelect(args: MenuEventArgs): void {
+    
+        switch (args.item.id) {
+          case 'Edit':        
+            //this.selectedRow(this.currentRow);
+            break;
+          case 'Create':
+            this.onAdd();
+            break;
+          case 'Clone':
+            //this.onClone("");
+            break;
+          case 'Delete':
+            //this.onDelete("");
+            break;
+          case 'Settings':
+            //this.onOpenSettings();
+            break;
+        }
+      }
+    
 
     public createEmptyForm() {
         this.fundsForm = new FormGroup({
