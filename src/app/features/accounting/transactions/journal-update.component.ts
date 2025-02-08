@@ -392,7 +392,7 @@ const imp = [
                                                             <mat-icon class="icon-size-5" matPrefix
                                                                 [svgIcon]="'heroicons_solid:document'"></mat-icon>
                                                         </mat-form-field>
-                                                    </div>
+                                                    </div>                                                    
                                                     @if (journalHeader.type == 'GL') {
                                                         <mat-form-field class="mt-1 ml-1 mr-1 w-[250px]">
                                                             <input type="text" class="text-left" matInput
@@ -856,6 +856,42 @@ export class JournalUpdateComponent
 
     ];
 
+    ngOnInit(): void {
+        this.createEmptyForm();
+        this.createEmptyDetailForm();
+        this.initialDatagrid();
+
+        this.activatedRoute.data.subscribe((data) => {             
+            this.store.loadDetails(data.journal.journal_id);
+            this.store.loadArtifactsByJournalId(data.journal.journal_id);
+            this.journalHeader = data.journal;
+            this.refreshHeader(this.journalHeader);
+            this.router.navigate(["journals/gl", data.journal.journal_id]);
+        });
+
+
+        this.accountsListSubject = this.dropDownChildren$.subscribe((accounts) => {
+            accounts.forEach((acct) => {
+                let list = {
+                    childName: Number(acct.child),
+                    descriptionName: acct.description,
+                };
+                this.accountsGrid.push(list);
+            });
+        });
+
+        this.fundListSubject = this.funds$.subscribe((funds) => {
+            funds.forEach((fund) => {
+                var list = {
+                    fund: fund.fund,
+                    description: fund.description,
+                };
+                this.fundList.push(list);
+            });
+        });
+        this.bHeaderDirty = false;
+    }
+
     onClose() {
 
     }
@@ -914,8 +950,6 @@ export class JournalUpdateComponent
             invoice_no: inputs.step1.invoice_no,
         }
 
-        // this.journalHeader = journalHeader;
-
         this.store.templateDetails().forEach((templateDetail) => {
             let journalDetail: IJournalDetailUpdate = {
                 journal_id: inputs.step1.journal_id,
@@ -964,8 +998,7 @@ export class JournalUpdateComponent
             invoice_no: this.journalHeader.invoice_no,
             party_id: this.journalHeader.party_id,
             subtype: this.journalHeader.sub_type,
-            details: { detail: detail }
-       
+            details: { detail: detail }       
         }
 
         this.journalService.createJournal(journalArray).pipe(takeUntil(this._onDestroy)).subscribe((response) => {
@@ -1044,7 +1077,10 @@ export class JournalUpdateComponent
         this.bDetailDirty = true;
     }
 
-
+    changeTemplate(e: any) {
+        console.log('change template: ', e);        
+        this.bDetailDirty = true;
+    }
 
     public onCreated() {
         let splitterObj1 = new Splitter({
@@ -1059,46 +1095,10 @@ export class JournalUpdateComponent
         splitterObj1.appendTo('#vertical_splitter');
     }
 
-    ngOnInit(): void {
-        this.createEmptyForm();
-        this.createEmptyDetailForm();
-        this.initialDatagrid();
-
-        this.activatedRoute.data.subscribe((data) => {             
-            this.store.loadDetails(data.journal.journal_id);
-            this.store.loadArtifactsByJournalId(data.journal.journal_id);
-            this.journalHeader = data.journal;
-            this.refreshHeader(this.journalHeader);
-            this.router.navigate(["journals/gl", data.journal.journal_id]);
-        });
-
-
-        this.accountsListSubject = this.dropDownChildren$.subscribe((accounts) => {
-            accounts.forEach((acct) => {
-                let list = {
-                    childName: Number(acct.child),
-                    descriptionName: acct.description,
-                };
-                this.accountsGrid.push(list);
-            });
-        });
-
-        this.fundListSubject = this.funds$.subscribe((funds) => {
-            funds.forEach((fund) => {
-                var list = {
-                    fund: fund.fund,
-                    description: fund.description,
-                };
-                this.fundList.push(list);
-            });
-        });
-
-        this.initialDatagrid();
-    }
 
 
     public createJournalDetailsFromTemplate(value: IJournalTemplate) {
-        console.log('Template : ', value);
+        // console.log('Template : ', value);
         if (value === null || value === undefined) {
             return;
         }
@@ -1230,7 +1230,7 @@ export class JournalUpdateComponent
             );
         }
         this.onChanges();
-        this.bHeaderDirty = false;
+
 
         this.partyCtrl.valueChanges.subscribe((value) => {
             this.bHeaderDirty = true;
@@ -1239,11 +1239,10 @@ export class JournalUpdateComponent
 
         this.templateCtrl.valueChanges.subscribe((value) => {
             this.bHeaderDirty = true;
+            this.journalHeader.type = value.journal_type;
             this.createJournalDetailsFromTemplate(value);
-            console.log('Header is true 2 from party change');
+            console.debug('Header is true for changes from template');
         });
-
-        console.log('NG After View Init completed');
 
     }
 
@@ -1382,7 +1381,7 @@ export class JournalUpdateComponent
         //     this.bHeaderDirty = true;                             
         // });
 
-        this.journalForm.valueChanges.subscribe((value) => {
+        this.journalForm.valueChanges.subscribe((value) => {            
             this.bHeaderDirty = true;
         });
 
@@ -1408,6 +1407,7 @@ export class JournalUpdateComponent
             reference: ["", Validators.required],
             fund: ["", Validators.required],
         });
+        
         //this.openDrawer();
     }
 
@@ -1776,6 +1776,9 @@ export class JournalUpdateComponent
         this.bHeaderDirty = true;
         console.log('Header is true 4');
     }
+
+
+    // AIzaSyDi2tojVzbLApe5ddEx_OI5n9JIB5w9S3Y
 
     // Update journal header
     onUpdateJournalHeader(e: any) {

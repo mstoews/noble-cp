@@ -11,6 +11,7 @@ import {
     ChangeDetectorRef,
     Component,
     inject,
+    viewChild,
     ViewChild,
     ViewEncapsulation,
 } from '@angular/core';
@@ -88,7 +89,7 @@ import { AppStore, ApplicationService } from 'app/services/application.state.ser
                 <!-- Panel header -->
                 <div class="flex items-center">
                     <!-- Drawer toggle -->
-                    <button class="lg:hidden -ml-2" mat-icon-button (click)="drawer.toggle()">
+                    <button class="lx2:hidden -ml-2" mat-icon-button (click)="drawer().toggle()">
                         <mat-icon [svgIcon]="'heroicons_outline:bars-3'"></mat-icon>
                     </button>
 
@@ -102,14 +103,14 @@ import { AppStore, ApplicationService } from 'app/services/application.state.ser
                 <div class="mt-8">
 
                     @switch (selectedPanel) {
-                    @case ('accounts'){ <glaccounts></glaccounts> }
-                    @case ('party'){ <party></party> }
-                    @case ('types') { <gl-types></gl-types> }
-                    @case ('subtypes'){ <subtypes></subtypes> }                     
-                    @case ('funds') { <funds> </funds> }
-                    @case ('periods') { <periods></periods> }
-                    @case ('team') { <team></team> }
-                    @case ('roles') { <roles></roles> }
+                        @case ('accounts'){ <glaccounts></glaccounts> }
+                        @case ('party'){ <party></party> }
+                        @case ('types') { <gl-types></gl-types> }
+                        @case ('subtypes'){ <subtypes></subtypes> }                     
+                        @case ('funds') { <funds> </funds> }
+                        @case ('periods') { <periods></periods> }
+                        @case ('team') { <team></team> }
+                        @case ('roles') { <roles></roles> }
                     }
 
                 </div>
@@ -138,7 +139,7 @@ import { AppStore, ApplicationService } from 'app/services/application.state.ser
 })
 export class GlMainComponent {
 
-    @ViewChild('drawer') drawer: MatDrawer;
+    drawer = viewChild<MatDrawer>("drawer");
     private _unsubscribeAll: Subject<any> = new Subject<any>();
     private _changeDetectorRef = inject(ChangeDetectorRef);
     private _fuseMediaWatcherService = inject(FuseMediaWatcherService);
@@ -235,12 +236,6 @@ export class GlMainComponent {
                 // Mark for check
                 this._changeDetectorRef.markForCheck();
             });
-
-            
-            
-            
-            
-
     }
 
     /**
@@ -254,7 +249,6 @@ export class GlMainComponent {
             lastPanelOpened: this.selectedPanel
         };
 
-        var user: string;
         const userId = this.appService.getUserId()
             .subscribe((id) => {
                 panelState.uid = id;
@@ -273,7 +267,7 @@ export class GlMainComponent {
 
         // Close the drawer on 'over' mode
         if (this.drawerMode === 'over') {
-            this.drawer.close();
+            this.drawer().close();
         }
     }
 

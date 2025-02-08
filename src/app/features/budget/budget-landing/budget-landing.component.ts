@@ -33,7 +33,7 @@ export class BudgetLandingComponent implements OnInit {
         throw new Error('Method not implemented.');
     }
 
-    selectedProject = 'All Projects';
+    selectedProject = 'Budget Analysis';
 
     chartGithubIssues: ApexOptions = {};
     chartTaskDistribution: ApexOptions = {};

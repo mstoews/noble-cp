@@ -21,12 +21,13 @@ const imports = [
 
 @Component({
     selector: 'ar-transactions',
-    imports: [imports,],
+    imports: [imports, GridMenubarStandaloneComponent],
     template: `
-    <div id="settings" class=" control-section default-splitter flex flex-col overflow-auto">            
-    
+    <div id="settings" class="control-section default-splitter flex flex-col overflow-hidden">
+
+    <grid-menubar class="ml-1 mr-1 mb-2 w-full" [inTitle]="toolbarTitle"></grid-menubar>
     </div>                
-        <div class="flex-auto">
+    <div class="flex-auto">
             <div class="flex flex-col min-w-0 overflow-y-auto -px-10" cdkScrollable>
             <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 w-full min-w-0">
             
@@ -52,49 +53,29 @@ const imports = [
                     [subtitle]="''" [subtitle_value]="">
                 </summary-card>
             </div>
-        </div>
+    </div>
         
         <div class="h-full border-gray-300 rounded-2xl">
                 <ng-container>                    
                     @defer {
-                        <transactions [transactionType]="transType"></transactions>
+                        <transactions [transactionType]="'AR'" ></transactions>
                     }                
                     @placeholder(minimum 200ms) {
                         <div class="flex justify-center items-center">
                             <mat-spinner></mat-spinner>
                         </div>
                     }
-                </ng-container>                     
-                            
+                </ng-container>                                                 
         </div>
     </div>
     
-</div>
+    </div>
     `,
 })
 export class ARTransactionComponent {
-    
-    public transType: string = "AR";
+        
     public prd = "1";
     public prd_year = "2024";
-
-    openDrawer() {
-        throw new Error('Method not implemented.');
-    }
-    onPrint() {
-        throw new Error('Method not implemented.');
-    }
-    exportLX() {
-        throw new Error('Method not implemented.');
-    }
-    exportPDF() {
-        throw new Error('Method not implemented.');
-    }
-    exportCSV() {
-        throw new Error('Method not implemented.');
-    }
-
-    
 
     alert: { type: FuseAlertType; message: string } = {
         type: 'success',
@@ -103,21 +84,32 @@ export class ARTransactionComponent {
     toolbarTitle = "Accounts Receivable Transactions";
 
     onReceipts() {
-
     }
 
-    onRefresh() {
-        throw new Error('Method not implemented.');
+    onRefresh() {        
     }
-    onAdd() {
-        throw new Error('Method not implemented.');
+    onAdd() {        
     }
+
     onDeleteSelection() {
-        throw new Error('Method not implemented.');
+        
     }
-    onUpdateSelection() {
-        throw new Error('Method not implemented.');
+    onUpdateSelection() {      
     }
-
+    openDrawer() {
+        
+    }
+    onPrint() {
+        
+    }
+    exportLX() {
+        
+    }
+    exportPDF() {
+        
+    }
+    exportCSV() {
+        
+    }
 
 }

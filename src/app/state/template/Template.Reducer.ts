@@ -1,6 +1,6 @@
 import { createReducer, on } from '@ngrx/store';
 import { templateState } from './Template.State';
-import { loadTemplatesFailure, loadTemplatesSuccess } from './Template.Action';
+import { loadTemplatesDetailsFailure, loadTemplatesDetailsSuccess, loadTemplatesFailure, loadTemplatesSuccess } from './Template.Action';
 
 const templateReducer = createReducer(  templateState,
     on(loadTemplatesSuccess, (state, action ) => {
@@ -16,8 +16,22 @@ const templateReducer = createReducer(  templateState,
             list: [],
             error: action.error,
         }
-    }
-    )
+    }),
+    on(loadTemplatesDetailsSuccess, (state, action ) => {
+        return {
+            ...state,
+            detail: action.detail,
+            error: null,
+        }
+    }),
+    on(loadTemplatesDetailsFailure, (state, action ) => {
+        return {
+            ...state,
+            detail: [],
+            error: null,
+        }
+    }),
+
  );
 
 

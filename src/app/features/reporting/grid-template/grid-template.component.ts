@@ -41,10 +41,10 @@ import { NgIf } from '@angular/common';
             <e-column field='Designation' headerText='Designation' width='160'></e-column>
             <e-column field='Team' headerText='Team(s)' width='160'></e-column>
             <e-column field='ReportTo' headerText='Reporter' width='120'></e-column>
-            <e-column field='EmployeeAvailability' headerText='Availability' width='200'>
+            <e-column field='EmployeeAvailability' headerText='Availability' width='100'>
                 <ng-template #template let-data>                       
                     <div *ngIf="data.EmployeeAvailability === 'Available';else login" class="statustemp e-availablecolor">                                          
-                            <span class="statustxt e-availablecolor">{{data.EmployeeAvailability}}</span>           
+                            <span class="statustxt e-availablecolor rounded-sm">{{data.EmployeeAvailability}}</span>           
                     </div>
                     <ng-template #login>
                         <div class="statustemp e-notavailablecolor">

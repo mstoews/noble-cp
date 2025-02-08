@@ -11,10 +11,26 @@
     [xPosition]="'before'"
     #userActions="matMenu">
     <button mat-menu-item>
-        <span class="flex flex-col leading-none">
-            <span>Signed in as</span>
-            <span class="mt-1.5 text-md font-medium">{{profile.userName}}</span>
-        </span>
+        @if(profile) {
+            @if(profile.photoURL == "") {
+                <img
+                    class="w-10 h-10 rounded-full"
+                    [src]="src/assets/images/avatars/chat.jpg"
+                    alt="profile">
+            } @else {
+                <img
+                    class="w-8 h-8 rounded-full"
+                    [src]="profile.photoURL"
+                    [alt]="profile.name">
+            }            
+            <span class="flex flex-col leading-none">                    
+                <span class="mt-.65 ml-1 text-md font-medium">{{profile.userName}}</span>
+            </span>
+        }
+        @else {
+            
+        }        
+        
     </button>
     <mat-divider class="my-2"></mat-divider>
     <!-- <button mat-menu-item (click)="profile()">

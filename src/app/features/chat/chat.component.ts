@@ -5,6 +5,9 @@ import { SplitterComponent, SplitterModule } from '@syncfusion/ej2-angular-layou
 import { ButtonModule } from '@syncfusion/ej2-angular-buttons'
 import { integrationMessagedata, integrationListTemplateData, botData, chatSuggestions, botMessagedata, walterMessagedata, lauraMessagedata, teamsMessagedate as teamsMessageDate, suyamaMessagedata } from './messageData';
 import { CommonModule } from '@angular/common';
+
+
+
 @Component({
   selector: 'control-content',
   template: `
@@ -53,7 +56,7 @@ import { CommonModule } from '@angular/common';
   `,
   encapsulation: ViewEncapsulation.None,
   standalone: true,
-  imports: [ChatUIModule, ButtonModule, CommonModule, ListViewModule, SplitterModule ]
+  imports: [ChatUIModule, ButtonModule, CommonModule, ListViewModule, SplitterModule]
 })
 export class ChatComponent implements OnInit {
   @ViewChild('chatUI') public chatUI: ChatUIComponent;
@@ -77,18 +80,24 @@ export class ChatComponent implements OnInit {
   public headerText = 'Albert';
   public headerIconCss = 'chat_user1_avatar';
 
+
+
   public headerToolbar: ToolbarSettingsModel = {
     items: [ { iconCss: 'sf-icon-phone-call', align: 'Right', tooltip: 'Audio call' }]
   };
-  ngOnInit(): void {
+
+  
+  async ngOnInit() {
     this.selectChatUser(0);
+    
   }
+
   onChatItemSelected(args: SelectEventArgs): void {
     this.chatMessages[this.chatUI.user.id] = this.chatUI.messages;
     this.chatUI.suggestions = [];
     this.selectChatUser(args.index);
     if(args.index >= 0) this.toggleListView();
-  }
+  }  
   onActionComplete(): void {
     this.listView.selectItem(integrationListTemplateData[0]);
     const chatBtn: HTMLElement = document.getElementById('chatbtn');

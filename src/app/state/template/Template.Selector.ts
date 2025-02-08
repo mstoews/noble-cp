@@ -9,4 +9,10 @@ export const getTemplates = createSelector(
     }
 );
 
+export const getDetailTemplates = createSelector(
+    getTemplateState, (state) => { 
+        return state.detail
+    }
+);
+
 

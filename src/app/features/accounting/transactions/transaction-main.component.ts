@@ -114,12 +114,12 @@ const imports = [
                         <!-- Load settings panel -->
                         <div class="mt-8">
                             @switch (selectedPanel) {
-                                @case ('listing') {  <gl-transactions-list></gl-transactions-list>  }
-                                @case ('entry') { <entry-wizard></entry-wizard>  }                                
-                                @case ('ap')    { <ap-transactions></ap-transactions>}
-                                @case ('ar')    { <ar-transactions></ar-transactions>}
-                                @case ('template') { <journal-template></journal-template>  }
-                                @case ('artifact') { <app-file-manager></app-file-manager>}
+                                @case ('entry') {  <entry-wizard></entry-wizard>}                                
+                                @case ('gl')    {  <gl-transactions-list></gl-transactions-list>  }                                
+                                @case ('ap')    {  <ap-transactions></ap-transactions>}
+                                @case ('ar')    {  <ar-transactions></ar-transactions>}
+                                @case ('tp')   { <journal-template></journal-template>  }
+                                @case ('at')   { <app-file-manager></app-file-manager>}
                             }
                         </div>
                     </div>
@@ -174,19 +174,19 @@ export class TransactionMainComponent implements OnInit, OnDestroy {
         }
 
         this.panels = [
-            {
-                id: 'listing',
-                icon: 'heroicons_outline:document-check',
-                title: 'Transactions Listing',
-                description: 'Manage your transactions and documentation',
-            },
+            
             {
                 id: 'entry',
                 icon: 'heroicons_outline:document-plus',
                 title: 'Transaction Wizard',
                 description: 'Create transactions and append digital artifacts for each transaction',
             },
-            
+            {
+                id: 'gl',
+                icon: 'heroicons_outline:document-check',
+                title: 'Transactions Listing',
+                description: 'Manage your transactions and documentation',
+            },            
             {
                 id: 'ar',
                 icon: 'mat_outline:money',
@@ -200,13 +200,13 @@ export class TransactionMainComponent implements OnInit, OnDestroy {
                 description: 'Pay your bills and manage your accounts payable',
             },
             {
-                id: 'template',
+                id: 'tp',
                 icon: 'heroicons_outline:document-duplicate',
                 title: 'Templates',
                 description: 'Manage your accounting patterns to automate, reduce effort and provide consistency in accounting',
             },
             {
-                id: 'artifact',
+                id: 'at',
                 icon: 'heroicons_outline:document-arrow-up',
                 title: 'Artifact Management',
                 description: 'Manage the documentation of transactions',

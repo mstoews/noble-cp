@@ -44,9 +44,9 @@ export class TemplateService {
         return this.httpClient.post<IJournalTemplate>(url, template).pipe(shareReplay({ bufferSize: 1, refCount: true }))
     }
 
-    readDetail(template: IJournalDetailTemplate) {
-        var url = this.baseUrl + '/v1/read_detail_templates';
-        return this.httpClient.get<IJournalTemplate[]>(url).pipe(shareReplay({ bufferSize: 1, refCount: true }))
+    readTemplateDetails(template: string) {
+        var url = this.baseUrl + '/v1/read_template_details/' + template;
+        return this.httpClient.get<IJournalDetailTemplate[]>(url).pipe(shareReplay({ bufferSize: 1, refCount: true }))
     }
 
     update_details(template: IJournalDetailTemplate) {

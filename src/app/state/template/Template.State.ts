@@ -1,7 +1,7 @@
-import { TemplateModel } from './Template.Model';
 
 export const templateState = {
-    templates: [],
+    list: [],
+    detail: [],
     isLoading: false,
     error: null,
     };

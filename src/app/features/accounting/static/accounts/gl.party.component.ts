@@ -81,19 +81,19 @@ const imports = [
                                 }
 
                                 <button mat-icon-button color="primary" 
-                                        class=" hover:bg-slate-400 ml-1" (click)="onAdd()" matTooltip="New" aria-label="hovered over">                        
+                                    class=" hover:bg-slate-400 ml-1" (click)="onAdd()" matTooltip="New" aria-label="hovered over">                        
                                     <span class="e-icons e-circle-add"></span>
                                 </button>
 
                                 <button mat-icon-button color="primary" 
-                                        class=" hover:bg-slate-400 ml-1" (click)="onDelete($event)" matTooltip="Delete" aria-label="hovered over">                        
+                                    class=" hover:bg-slate-400 ml-1" (click)="onDelete($event)" matTooltip="Delete" aria-label="hovered over">                        
                                     <span class="e-icons e-trash"></span>
                                 </button>
 
                                 <button mat-icon-button color="primary"
-                                        class=" hover:bg-slate-400 ml-1"  (click)="onCancel()" matTooltip="Close"
-                                        aria-label="hovered over">
-                                        <span class="e-icons e-circle-close"></span>
+                                    class=" hover:bg-slate-400 ml-1"  (click)="onCancel()" matTooltip="Close"
+                                    aria-label="hovered over">
+                                    <span class="e-icons e-circle-close"></span>
                                 </button>                    
                             </div>
                         </div>

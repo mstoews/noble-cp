@@ -176,12 +176,7 @@ export class ReportingPanelComponent {
                 description: 'Tabular summary of trial balance by account',
             },
 
-            {
-                id: 'tb-grid',
-                icon: 'heroicons_outline:document-check',
-                title: 'TB Example Grid',
-                description: 'Distributed trial balance listing including the associated journal entries',
-            },
+            
             {
                 id: 'trial-balance',
                 icon: 'heroicons_outline:document-check',
@@ -243,6 +238,12 @@ export class ReportingPanelComponent {
                 icon: 'feather:image',
                 title: 'Grid Template ',
                 description: 'Example of using a html in grid',
+            },
+            {
+                id: 'tb-grid',
+                icon: 'heroicons_outline:document-check',
+                title: 'TB Example Grid',
+                description: 'Distributed trial balance listing including the associated journal entries',
             }
         ];
 

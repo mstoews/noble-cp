@@ -1,7 +1,7 @@
 import { Actions, createEffect, ofType } from "@ngrx/effects";
 import { TemplateService } from "app/services/template.service";
 import { exhaustMap, map, catchError, of } from "rxjs";
-import { loadTemplates, loadTemplatesFailure, loadTemplatesSuccess, TemplateActions } from "./Template.Action";
+import { TemplateActions } from "./Template.Action";
 import { inject } from "@angular/core";
 
 export class templateEffects {
@@ -10,27 +10,26 @@ export class templateEffects {
     private actions = inject(Actions);
 
     _loadTemplates = createEffect(() => this.actions.pipe(
-        ofType(loadTemplates),
+        ofType(TemplateActions.loadTemplates),
         exhaustMap(() => {
             return this.templateService.read().pipe(
-                map((data) => loadTemplatesSuccess({ list: data })),
-                catchError((error) => of(loadTemplatesFailure({ error })))
+                map((data) => TemplateActions.loadTemplatesSuccess({ list: data })),
+                catchError((error) => of(TemplateActions.loadTemplatesFailure({ error })))
             )
         })
       )
     );
+
+    _loadTemplatesDetails = createEffect(() => this.actions.pipe(
+        ofType(TemplateActions.loadTemplatesDetails),
+        exhaustMap((action) => {
+            return this.templateService.readTemplateDetails(action.ref).pipe(
+                map((data) => TemplateActions.loadTemplatesDetailsSuccess({ detail: data })),
+                catchError((error) => of(TemplateActions.loadTemplatesDetailsFailure({ error })))
+            )
+        })
+      )
+    );
+
     
 }
-
-
-/*
-exhaustMap(() => {
-          return templateService.read().pipe(
-            tapResponse({
-              next: (template) => patchState(state, { template: template }),
-              error: console.error,
-              finalize: () => patchState(state, { isLoading: false }),
-            })
-          );
-        })
-*/

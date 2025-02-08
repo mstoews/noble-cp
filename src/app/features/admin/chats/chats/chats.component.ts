@@ -12,6 +12,9 @@ import { Chat, Profile } from '../chat.types';
 import { NewChatComponent } from '../new-chat/new-chat.component';
 import { ProfileComponent } from '../profile/profile.component';
 import { Subject, takeUntil } from 'rxjs';
+import { gemini15Flash, googleAI } from '@genkit-ai/googleai';
+import { genkit } from 'genkit';
+
 
 @Component({
     selector: 'chat-chats',
@@ -32,7 +35,21 @@ export class ChatsComponent implements OnInit, OnDestroy {
     private _chatService = inject(ChatService);
     private _changeDetectorRef = inject(ChangeDetectorRef);
 
-    ngOnInit(): void {
+    
+
+    async GenerateChat() {
+        const ai = genkit({
+            plugins: [googleAI()],
+            model: gemini15Flash,
+        });
+        const response = await ai.generate(
+            "Hi, how are you?"            
+        );
+
+        console.log(response.data);
+    }
+
+     async ngOnInit(): Promise<void> {
         // Chats
         this._chatService.chats$
             .pipe(takeUntil(this._unsubscribeAll))
@@ -62,6 +79,8 @@ export class ChatsComponent implements OnInit, OnDestroy {
                 // Mark for check
                 this._changeDetectorRef.markForCheck();
             });
+        await this.GenerateChat();
+         
     }
 
     /**
