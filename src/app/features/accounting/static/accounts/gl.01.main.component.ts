@@ -42,9 +42,9 @@ import { AppStore, ApplicationService } from 'app/services/application.state.ser
                     Reference Data
                 </div>
                 <!-- Close button -->
-                <div class="xl2:hidden">
+                <div class="md:hidden">
                     <button mat-icon-button (click)="drawer.close()">
-                        <mat-icon [svgIcon]="'heroicons_outline:academic-cap'"></mat-icon>
+                        <mat-icon [svgIcon]="'heroicons_outline:bars-3'"></mat-icon>
                     </button>
                 </div>
             </div>

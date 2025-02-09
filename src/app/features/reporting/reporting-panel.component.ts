@@ -54,9 +54,9 @@ const mods = [
                     Reporting
                 </div>
                 <!-- Close button -->
-                <div>
+                <div class="md:hidden">
                     <button mat-icon-button (click)="drawer.close()">
-                        <mat-icon [svgIcon]="'heroicons_outline:academic-cap'"></mat-icon>
+                        <mat-icon [svgIcon]="'heroicons_outline:bars-3'"></mat-icon>
                     </button>
                 </div>
             </div>
