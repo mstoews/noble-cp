@@ -10,7 +10,7 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { fuseAnimations } from '@fuse/animations';
 import { FuseAlertComponent, FuseAlertType } from '@fuse/components/alert';
 
-import { UserService } from 'app/core/user/user.service';
+import { UserService } from 'app/fuse/core/user/user.service';
 import { AuthService } from 'app/features/auth/auth.service';
 
 @Component({

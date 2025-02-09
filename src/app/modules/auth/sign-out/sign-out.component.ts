@@ -1,7 +1,7 @@
 import { I18nPluralPipe } from '@angular/common';
 import { Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
-import { AuthService } from 'app/core/auth/auth.service';
+import { AuthService } from 'app/fuse/core/auth/auth.service';
 import { Subject, finalize, takeUntil, takeWhile, tap, timer } from 'rxjs';
 
 @Component({
@@ -24,7 +24,7 @@ export class AuthSignOutComponent implements OnInit, OnDestroy {
     constructor(
         private _authService: AuthService,
         private _router: Router
-    ) {}
+    ) { }
 
     // -----------------------------------------------------------------------------------------------------
     // @ Lifecycle hooks

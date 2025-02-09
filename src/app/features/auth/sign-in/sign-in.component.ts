@@ -20,7 +20,7 @@ import { fuseAnimations } from '@fuse/animations';
 import { FuseAlertComponent, FuseAlertType } from '@fuse/components/alert';
 
 import { AuthService } from '../auth.service';
-import { LoginService } from 'app/core/auth.signal/login/data-access/login.service';
+import { LoginService } from 'app/fuse/core/auth.signal/login/data-access/login.service';
 
 var components = [
     RouterLink,

@@ -1,4 +1,4 @@
-import { LayoutComponent } from 'app/layout/layout.component';
+import { LayoutComponent } from 'app/fuse/layout/layout.component';
 import { PageNotFoundComponent } from './page-not-found.component';
 import { Route } from '@angular/router';
 import { initialDataResolver } from 'app/app.resolvers';
@@ -18,7 +18,7 @@ export const appRoutes: Route[] = [
             layout: 'empty',
         },
         loadChildren: () =>
-            import('app/core/auth.signal/auth.routes').then(
+            import('app/fuse/core/auth.signal/auth.routes').then(
                 (m) => m.AUTH_ROUTES
             ),
     },
