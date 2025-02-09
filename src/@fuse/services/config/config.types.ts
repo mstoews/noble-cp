@@ -8,8 +8,7 @@ export type Themes = { id: string; name: string }[];
  * AppConfig interface. Update this interface to strictly type your config
  * object.
  */
-export interface FuseConfig
-{
+export interface FuseConfig {
     layout: string;
     scheme: Scheme;
     screens: Screens;

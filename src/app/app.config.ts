@@ -8,7 +8,7 @@ import { provideFuse } from '@fuse';
 import { appRoutes } from 'app/app.routing';
 import { provideIcons } from 'app/core/icons/icons.provider';
 import { provideTransloco } from 'app/core/transloco/transloco.provider';
-import { mockApiServices } from 'app/mock-api';
+import { MockApiService } from 'app/mock-api';
 import { environment } from 'environments/environment.prod';
 import { InjectionToken } from '@angular/core';
 import { authTokenInterceptor } from './auth.token.interceptor';
@@ -178,7 +178,7 @@ export const appConfig: ApplicationConfig = {
     provideFuse({
       mockApi: {
         delay: 0,
-        services: mockApiServices,
+        service: MockApiService,
       },
       fuse: {
         layout: 'dense',

@@ -1,6 +1,15 @@
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
-import { NgIf } from '@angular/common';
-import { Component, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewEncapsulation, input } from '@angular/core';
+
+import {
+    Component,
+    inject,
+    Input,
+    OnChanges,
+    OnDestroy,
+    OnInit,
+    SimpleChanges,
+    ViewEncapsulation,
+} from '@angular/core';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { FuseLoadingService } from '@fuse/services/loading';
 import { Subject, takeUntil } from 'rxjs';
@@ -11,20 +20,16 @@ import { Subject, takeUntil } from 'rxjs';
     styleUrls: ['./loading-bar.component.scss'],
     encapsulation: ViewEncapsulation.None,
     exportAs: 'fuseLoadingBar',
-    imports: [MatProgressBarModule]
+    imports: [MatProgressBarModule],
 })
 export class FuseLoadingBarComponent implements OnChanges, OnInit, OnDestroy {
-    readonly autoMode = input<boolean>(true);
+    private _fuseLoadingService = inject(FuseLoadingService);
+
+    @Input() autoMode: boolean = true;
     mode: 'determinate' | 'indeterminate';
     progress: number = 0;
     show: boolean = false;
     private _unsubscribeAll: Subject<any> = new Subject<any>();
-
-    /**
-     * Constructor
-     */
-    constructor(private _fuseLoadingService: FuseLoadingService) {
-    }
 
     // -----------------------------------------------------------------------------------------------------
     // @ Lifecycle hooks
@@ -39,7 +44,9 @@ export class FuseLoadingBarComponent implements OnChanges, OnInit, OnDestroy {
         // Auto mode
         if ('autoMode' in changes) {
             // Set the auto mode in the service
-            this._fuseLoadingService.setAutoMode(coerceBooleanProperty(changes.autoMode.currentValue));
+            this._fuseLoadingService.setAutoMode(
+                coerceBooleanProperty(changes.autoMode.currentValue)
+            );
         }
     }
 
@@ -65,7 +72,6 @@ export class FuseLoadingBarComponent implements OnChanges, OnInit, OnDestroy {
             .subscribe((value) => {
                 this.show = value;
             });
-
     }
 
     /**
