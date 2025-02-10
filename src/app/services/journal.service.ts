@@ -55,6 +55,17 @@ export class JournalService implements OnDestroy {
       shareReplay({ bufferSize: 1, refCount: true }));
   }
 
+  updateFirebaseTrialBalance(period: IPeriodParam) {
+    var url = this.baseUrl + '/v1/update_firebase_trial_balance';
+    return this.httpClient.post(url, period).pipe(
+      catchError(err => {
+        const message = "Failed to complete - firebase trial balance  ...";
+        this.ShowAlert(message, 'failed');
+        return throwError(() => new Error(`${JSON.stringify(err)}`));
+      }),
+      shareReplay({ bufferSize: 1, refCount: true }));
+  }
+
   createJournal(params: IJournalArrayParams) {
     var url = this.baseUrl + '/v1/create_journal';
     return this.httpClient.post<IJournalArrayParams>(url, params).pipe(

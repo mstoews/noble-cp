@@ -1,13 +1,14 @@
 import { inject, Injectable } from '@angular/core';
 import { FIRESTORE } from "../app.config";
 import { AuthService } from "../features/auth/auth.service";
-import { addDoc, collection, deleteDoc, doc, query, setDoc, updateDoc, where } from "firebase/firestore";
+import { addDoc, collection, deleteDoc, doc, orderBy, query, setDoc, updateDoc, where } from "firebase/firestore";
 import { collectionData, docData } from "rxfire/firestore";
 import { map, switchMap, tap } from "rxjs/operators";
 import { Observable, of, pipe } from "rxjs";
 import { tapResponse } from '@ngrx/operators';
 import { signalStore, withState, withMethods, patchState, withHooks } from '@ngrx/signals';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
+import { list } from 'rxfire/database';
 
 
 export interface ProfileModel {
@@ -35,6 +36,10 @@ export interface TbDataParam {
   periodYear: number;  
 }
 
+export interface TbPeriod {
+  period: number;
+  periodYear: number;
+}
 
 export interface PanelModel {
   uid: string;
@@ -53,15 +58,6 @@ export interface TbData {
 }
 
 
-export interface AppStateInterface {
-  panels: PanelModel[];
-  panel: PanelModel | null;
-  profile: ProfileModel | null;
-  cashAccount: TbData | null;
-  uid: string;
-  isLoading: boolean;
-  error: string | null;
-}
 
 
 @Injectable({
@@ -150,11 +146,18 @@ export class ApplicationService {
     return docData(acct) as Observable<PanelModel | undefined>;
   }
 
-  getDashboardAccount(periodYear: number,  period: number, account: number) {  
+  getDashboardAccount(periodYear: number,  period: number, account: number): Observable<TbData> {  
     const ref = doc(this.firestore, `trial_balance/${periodYear}/${period}`, account.toString()) as any;
     const acct$ = docData(ref) as Observable<TbData>;
     return acct$;
   }
+
+  getTrialBalance(periodYear: number,  period: number) {  
+    const ref = collection(this.firestore, `trial_balance/${periodYear}/${period}`) as any;
+    return  collectionData(ref) as Observable<TbData[]>;    
+  }
+
+
 
   findDashboardByAccount(periodYear: number,  period: number, account: number): Observable<TbData | undefined> {
     const collectionRef = collection(this.firestore, `trial_balance/${periodYear}/${period}`, account.toString());
@@ -169,17 +172,43 @@ export class ApplicationService {
     return docData(acct) as Observable<PanelModel | undefined>;
   }
 
+  // getTB(periodYear: number, period: number): Observable<TbData[]> {
+  //   const collectionRef = collection(this.firestore, `trial_balance/${periodYear}/${period}`);
+  //   return collectionData(ref) as Observable<TbData[]>;    
+  // }
+
+  getTb(periodYear: number, period: number): Observable<TbData[]> {
+    const col = `trial_balance/${periodYear}/${period}`
+    const collectionRef = collection(this.firestore, col );
+    const q = query(collectionRef, orderBy('account', 'asc'));
+    return collectionData(q, { idField: 'account' }) as Observable<TbData[]>;
+  }
 
 
 }
 
+export interface AppStateInterface {
+  panels: PanelModel[];
+  panel: PanelModel | null;
+  profile: ProfileModel | null;
+  trialBalance: TbData[];
+  cashAccount: TbData | null;
+  payableAccount: TbData | null;
+  operatingFundAccount: TbData | null;
+  uid: string;
+  isLoading: boolean;
+  error: string | null;
+}
 
 export const AppStore = signalStore(
   { protectedState: false }, withState<AppStateInterface>({
     panels: [],
+    trialBalance: [],
     profile: null,
     panel: null,
     cashAccount: null,
+    payableAccount: null,
+    operatingFundAccount: null,
     uid: '',
     error: null,
     isLoading: false,
@@ -199,6 +228,20 @@ export const AppStore = signalStore(
         })
       )
     ),
+    loadTrialBalance: rxMethod<TbPeriod>(
+      pipe(
+        tap(() => patchState(state, { isLoading: true })),
+        switchMap((value) => {
+          return applicationService.getTb(value.periodYear, value.period).pipe(
+            tapResponse({
+              next: (trialBalance) => patchState(state, { trialBalance: trialBalance }),
+              error: console.error,
+              finalize: () => patchState(state, { isLoading: false }),
+            })
+          );
+        })
+      )
+    ),
     setCashAccount: rxMethod<TbDataParam>(
       pipe(
         switchMap((value) => {
@@ -207,6 +250,39 @@ export const AppStore = signalStore(
             tapResponse({
               next: (account) => {
                 patchState(state, { cashAccount: account });
+              },
+              error: console.error,
+              finalize: () => patchState(state, { isLoading: false }),
+            })
+          );
+        })
+      )
+    ),
+
+    setPayableAccount: rxMethod<TbDataParam>(
+      pipe(
+        switchMap((value) => {
+          patchState(state, { isLoading: true });
+          return applicationService.getDashboardAccount(value.periodYear, value.period, value.account).pipe(
+            tapResponse({
+              next: (account) => {
+                patchState(state, { payableAccount: account });
+              },
+              error: console.error,
+              finalize: () => patchState(state, { isLoading: false }),
+            })
+          );
+        })
+      )
+    ),
+    setOperatingFundAccount: rxMethod<TbDataParam>(
+      pipe(
+        switchMap((value) => {
+          patchState(state, { isLoading: true });
+          return applicationService.getDashboardAccount(value.periodYear, value.period, value.account).pipe(
+            tapResponse({
+              next: (account) => {
+                patchState(state, { operatingFundAccount: account });
               },
               error: console.error,
               finalize: () => patchState(state, { isLoading: false }),
@@ -331,7 +407,8 @@ export const AppStore = signalStore(
   withHooks({
     onInit(store) {
       store.loadUid();
-      store.loadPanels(store.uid);      
+      store.loadPanels(store.uid);    
+      store.loadTrialBalance({periodYear: 2024, period: 1});  
     },
   })
 );

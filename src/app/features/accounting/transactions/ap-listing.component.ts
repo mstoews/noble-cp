@@ -1,6 +1,8 @@
 import {
   Component,
   inject,
+  OnInit,
+  signal,
 } from "@angular/core";
 import {
   FormsModule,
@@ -50,10 +52,12 @@ const imports = [
     <grid-menubar class="ml-1 mr-1 w-full" [inTitle]="toolbarTitle"></grid-menubar>
     <div class="grid grid-row-3 overflow-hidden">
     <div class="flex flex-col min-w-0 overflow-y-auto -px-10" cdkScrollable>
+      
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 w-full min-w-0 overflow-hidden">            
-        <div (click)="onReceipts()" class="flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden m-2 hover:cursor-pointer">
+          
+              <div (click)="onReceipts()" class="flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden m-2 hover:cursor-pointer">
                   <summary-card 
-                    [mainValue]="store.cashAccount().closingBalance" 
+                    [mainValue]="cash()" 
                     [caption]="'Total Cash on Hand'" 
                     [title]="'Funds'"
                     [chart]="'donut'"   
@@ -63,20 +67,22 @@ const imports = [
               <div  class="flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden m-2 hover:cursor-pointer">
                   <summary-card  
                   (click)="onReceipts()" 
-                  [mainValue]="23330.15" 
-                  [caption]="'Year to Date'" 
+                  [mainValue]="ap()" 
+                  [caption]="'Accounts Payable'" 
                   [chart]="'chart-legend-right'"   
                   [title]="'30 Days'"
-                  [subtitle]="'January to Current Date'" 
+                  [subtitle]="'Total Outstanding'" 
                   [subtitle_value]="1256">
                   </summary-card>
               </div>
               <div class="flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden m-2 hover:cursor-pointer">
                   <summary-card  
-                  (click)="onReceipts()" [mainValue]="45050.00" 
+                  (click)="onReceipts()" 
+                  [mainValue]="liabilities()" 
                   [chart]="'chart-lines'"
-                  [caption]="'Current Accounts Payable'" [title]="'Capital'"
-                                [subtitle]="'Total Outstanding'" [subtitle_value]="">
+                  [caption]="'Current Liabilities'" 
+                  [title]="'Liabilities'"
+                  [subtitle]="'Total Outstanding'" [subtitle_value]="">
                   </summary-card>
               </div>              
               <div class="flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden m-2 hover:cursor-pointer">
@@ -90,7 +96,9 @@ const imports = [
                   [subtitle_value]="">
                   </summary-card>
               </div>             
-        </div>
+            
+          </div>
+          
         <div class="grid grid-cols-1 gap-4 w-full min-w-0 border-gray-300 overflow-hidden">
             <ng-container>                    
                 @defer {
@@ -122,18 +130,48 @@ const imports = [
     ColumnMenuService,
   ]
 })
-export class APTransactionComponent {
+export class APTransactionComponent implements OnInit{
 
-  store = inject(AppStore);
+  public store = inject(AppStore);
 
   public transType: string = "AP";
   public toolbarTitle = "Accounts Payable Transactions";
-  public prd = "1";
-  public prd_year = "2024";
-  periodParam: any;
+  public prd = 1;
+  public prd_year = 2024;
 
-  constructor() {
-    this.store.setCashAccount({periodYear: 2024, period: 1, account: 1001});
+  public cash = signal<number>(0);
+  public ap = signal<number>(0);
+  public liabilities = signal<number>(0);
+  public operating = signal<number>(0);
+  
+  ngOnInit(): void {  
+    this.loadCash();
+    this.loadAP();
+    this.loadLiability();
+  }
+
+  loadAP() {
+    var tb = this.store.trialBalance().filter((tb) => tb.child == 3010 );
+    if (tb.length > 0) {
+      console.debug('TrialBalance : ', tb[0].closingBalance);
+      this.ap.set(Math.abs(tb[0].closingBalance));
+    }
+  }
+
+  loadLiability() {
+    var tb = this.store.trialBalance().filter((tb) => tb.child == 3020 );
+    if (tb.length > 0) {
+      console.debug('TrialBalance : ', tb[0].closingBalance);
+      this.liabilities.set(Math.abs(tb[0].closingBalance));
+    }
+  }
+
+  loadCash() {
+    var tb = this.store.trialBalance().filter((tb) => tb.child == 1001 );
+    if (tb.length > 0) {
+      console.debug('TrialBalance : ', tb[0].closingBalance);
+      this.cash.set(Math.abs(tb[0].closingBalance));
+    }
   }
 
   openDrawer() {
