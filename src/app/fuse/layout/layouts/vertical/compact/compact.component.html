@@ -2,11 +2,8 @@
 <fuse-loading-bar></fuse-loading-bar>
 
 <!-- Navigation -->
-<fuse-vertical-navigation class="dark bg-gray-900 print:hidden" 
-    [appearance]="'compact'"
-    [mode]="isScreenSmall ? 'over' : 'side'" 
-    [name]="'mainNavigation'" 
-    [navigation]="navigation.compact"
+<fuse-vertical-navigation class="dark bg-gray-900 print:hidden" [appearance]="'compact'"
+    [mode]="isScreenSmall ? 'over' : 'side'" [name]="'mainNavigation'" [navigation]="navigation.compact"
     [opened]="!isScreenSmall">
     <!-- Navigation header hook -->
     <ng-container fuseVerticalNavigationContentHeader>
@@ -48,7 +45,7 @@
     <!-- Footer -->
     <div
         class="relative flex flex-0 items-center justify-start w-full h-14 px-4 md:px-6 z-49 border-t bg-card dark:bg-transparent print:hidden">
-        <span class="font-medium text-secondary">Noble Ledger v0.0.4.9 &copy; {{currentYear}}</span>
+        <span class="font-medium text-secondary">Noble Ledger v0.0.4.10 &copy; {{currentYear}}</span>
     </div>
 
 </div>
