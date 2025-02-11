@@ -5,16 +5,17 @@ import { IPeriodParam } from "app/models/period";
 import { IType } from "app/models/types";
 
 export interface JournalState {
-    journals: IJournalHeader[];
-    journalDetails: IJournalDetail[];        
-    template: IJournalTemplate[];
-    accounts: IAccounts[];
-    account_type: IType[];
-    party: IParty[];    
+    journals: IJournalHeader[] | null;
+    activeJournalId: number | null;
+    activeJournal: IJournalHeader | null;
+    journalDetails: IJournalDetail[] | null;        
+    template: IJournalTemplate[] | null;
+    accounts: IAccounts[] | null
+    account_type: IType[] | null;
+    party: IParty[] | null;    
     isLoading: boolean;
     status: 'pending' | 'success' | 'loading' | 'error';
     error: string | null;
-    journal: number | null;
     period: IPeriodParam | null;    
     journalLedgerPanel: string | null;
 }

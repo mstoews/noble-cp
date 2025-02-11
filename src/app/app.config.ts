@@ -144,9 +144,9 @@ export const appConfig: ApplicationConfig = {
 
     /// NGRX Store and Effects
     provideStore({
-      'tpl': TemplateReducer,
-      'journals': JournalReducer,
-      'fnd': FundsReducer
+      tpl: TemplateReducer,
+      journals: JournalReducer,
+      fnd: FundsReducer
     }),
 
     provideState(fromPriority.priorityFeature),

@@ -72,14 +72,12 @@ const imports = [
                             </form>
                             
                             <div mat-dialog-actions class="flew-row gap-2 mb-3">
-                            @if (bDirty === true) {
-                                
-                                <button mat-icon-button color="primary" class="bg-slate-200 hover:bg-slate-400 ml-1" (click)="onUpdate($event)"
-                                matTooltip="Save" aria-label="hovered over">
-                                <span class="e-icons e-save"></span>
-                                </button>
+                                @if (bDirty === true) {                                
+                                    <button mat-icon-button color="primary" class="bg-slate-200 hover:bg-slate-400 ml-1" (click)="onUpdate($event)"
+                                    matTooltip="Save" aria-label="hovered over">
+                                    <span class="e-icons e-save"></span>
+                                    </button>
                                 }
-
                                 <button mat-icon-button color="primary" 
                                     class=" hover:bg-slate-400 ml-1" (click)="onAdd()" matTooltip="New" aria-label="hovered over">                        
                                     <span class="e-icons e-circle-add"></span>
@@ -95,6 +93,7 @@ const imports = [
                                     aria-label="hovered over">
                                     <span class="e-icons e-circle-close"></span>
                                 </button>                    
+
                             </div>
                         </div>
                     </div>      

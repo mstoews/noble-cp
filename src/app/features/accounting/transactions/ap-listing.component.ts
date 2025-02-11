@@ -53,56 +53,34 @@ const imports = [
     <div class="grid grid-row-3 overflow-hidden">
     <div class="flex flex-col min-w-0 overflow-y-auto -px-10" cdkScrollable>
       
-        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 w-full min-w-0 overflow-hidden">            
-          
-              <div (click)="onReceipts()" class="flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden m-2 hover:cursor-pointer">
-                  <summary-card 
-                    [mainValue]="cash()" 
-                    [caption]="'Total Cash on Hand'" 
-                    [title]="'Funds'"
-                    [chart]="'donut'"   
-                    [subtitle]="'Current Funds'">
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 w-full min-w-0 overflow-hidden">                      
+              
+             <div  class="flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden m-2 hover:cursor-pointer">
+                  <summary-card  (click)="onReceipts()" [mainValue]="cash()" [caption]="'Total Cash on Hand'" [title]="'Funds'"[chart]="'donut'"   [subtitle]="">
                   </summary-card>
               </div>              
               <div  class="flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden m-2 hover:cursor-pointer">
-                  <summary-card  
-                  (click)="onReceipts()" 
-                  [mainValue]="ap()" 
-                  [caption]="'Accounts Payable'" 
-                  [chart]="'chart-legend-right'"   
-                  [title]="'30 Days'"
-                  [subtitle]="'Total Outstanding'" 
-                  [subtitle_value]="1256">
+                  <summary-card  (click)="onReceipts()" [mainValue]="ap()" [caption]="'Accounts Payable'" [chart]="'chart-legend-right'" [subtitle]="" [subtitle_value]="1256">
                   </summary-card>
               </div>
               <div class="flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden m-2 hover:cursor-pointer">
-                  <summary-card  
-                  (click)="onReceipts()" 
-                  [mainValue]="liabilities()" 
-                  [chart]="'chart-lines'"
-                  [caption]="'Current Liabilities'" 
-                  [title]="'Liabilities'"
-                  [subtitle]="'Total Outstanding'" [subtitle_value]="">
+                  <summary-card  (click)="onReceipts()" [mainValue]="liabilities()" [chart]="'chart-lines'"[caption]="'Current Liabilities'" [title]="'Liabilities'"[subtitle]="" [subtitle_value]="">
                   </summary-card>
               </div>              
               <div class="flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden m-2 hover:cursor-pointer">
-                  <summary-card  
-                  (click)="onReceipts()"  
-                  [mainValue]="5000.00" 
-                  [caption]="'Past Due Payments'" 
-                  [title]="'Capital'"
-                  [chart]="'chart-insert-column'"
-                  [subtitle]="'90 Days Outstanding'" 
-                  [subtitle_value]="">
+                  <summary-card  (click)="onReceipts()"  [mainValue]="5000.00" [caption]="'Past Due Payments'" [title]="'Capital'"[chart]="'chart-insert-column'"[subtitle]="" [subtitle_value]="">
                   </summary-card>
               </div>             
             
           </div>
           
-        <div class="grid grid-cols-1 gap-4 w-full min-w-0 border-gray-300 overflow-hidden">
+        <div class="grid grid-cols-1 gap-4 h-full w-full min-w-0 border-gray-300 overflow-hidden">
             <ng-container>                    
                 @defer {
-                    <transactions [transactionType]="transType"></transactions>
+                    <transactions 
+                    class="group relative flex flex-col overflow-hidden rounded-lg  pb-2 flex-grow"
+                    [transactionType]="transType">
+                    </transactions>
                 }                
                 @placeholder(minimum 200ms) {
                     <div class="flex justify-center items-center">

@@ -1,4 +1,4 @@
-import { Component, inject, input, OnInit, output, viewChild } from '@angular/core';
+import { HostListener, Component, inject, input, OnInit, output, viewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AggregateService, ColumnMenuService, ContextMenuItem, ContextMenuService, DialogEditEventArgs, EditService, EditSettingsModel, ExcelExportService, FilterService, FilterSettingsModel, GridComponent, GridLine, GridModule, GroupService, PageService, PdfExportService, ReorderService, ResizeService, SaveEventArgs, SearchService, SearchSettingsModel, SelectionSettingsModel, SortService, ToolbarItems, ToolbarService } from '@syncfusion/ej2-angular-grids';
 import { DropDownListComponent } from '@syncfusion/ej2-angular-dropdowns';
@@ -26,6 +26,7 @@ const providers = [
     PdfExportService,
     ExcelExportService,
     ContextMenuService,
+    GroupService,
     SortService,
     PageService,
     ResizeService,
@@ -45,9 +46,10 @@ const keyExpr = ["account", "child"];
     selector: 'gl-grid',
     imports: [mods],
     template: `    
-    <mat-drawer-container class="flex-col">        
+    <mat-drawer-container class="flex-col h-2/3">        
         <ng-container >
-            <ejs-grid  #grid_parent id="grid_parent" class="e-grid mt-3 h-[calc(100vh)-100px] border-1 border-gray-200"         
+            <ejs-grid  #grid_parent id="grid_parent" class="e-grid mt-3 border-1 border-gray-200"
+                    [height]='gridHeight'
                     [rowHeight]='30'               
                     [dataSource]="data()" 
                     [columns]="columns()"
@@ -60,7 +62,7 @@ const keyExpr = ["account", "child"];
                     [allowFiltering]='true'                   
                     [enablePersistence]='false'
                     [enableStickyHeader]='true'
-                    [allowGrouping]="false"
+                    [allowGrouping]="true"
                     [allowResizing]='true' 
                     [allowReordering]='true' 
                     [allowExcelExport]='true' 
@@ -97,6 +99,7 @@ export class GLGridComponent implements OnInit {
     
     gridForm: any;
     public context: any;
+    public gridHeight: number;
 
     public selectedItemKeys: any[] = [];
     public bDirty: boolean = false;
@@ -139,6 +142,15 @@ export class GLGridComponent implements OnInit {
         effect: 'FadeIn',
         duration: 800
     };
+
+    @HostListener('window:resize', ['$event'])
+    onResize(event: any) {
+        this.gridHeight = event.target.innerHeight - 500;
+    }
+
+    constructor() {
+        this.gridHeight = window.innerHeight - 540;
+    }
     
     public menuItems: MenuItemModel[] = [
         {

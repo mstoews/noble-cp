@@ -16,7 +16,6 @@ import { EditService, FilterService, FilterSettingsModel, GridModule, PageServic
 import { GLGridComponent } from "../../grid-components/gl-grid.component";
 import { IFunds } from 'app/models';
 import { Store } from '@ngrx/store';
-import { Observable } from 'rxjs';
 import { addFunds, deleteFunds, loadFunds, updateFunds } from 'app/state/funds/Funds.Action';
 import { selectFunds } from 'app/state/funds/Funds.Selector';
 import { MenuEventArgs, MenuItemModel } from '@syncfusion/ej2-navigations';

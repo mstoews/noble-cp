@@ -52,21 +52,22 @@ const keyExpr = ["account", "child"];
 
 @Component({
   selector: "glaccounts",
-  imports: [imports,],
+  imports: [imports],
   template: `
   @if ((isLoading$ | async) === false) {
     
-    <mat-drawer-container id="target" class="flex-col h-screen">    
-
+    <grid-menubar  class="pl-5 pr-5"  [showBack]="false" [inTitle]="'General Ledger Account Maintenance'"/> 
+    
+    <mat-drawer-container id="target" class="flex-col h-screen">        
         <ng-container>
-          <div class="border-1 border-gray-500 mt-3">
-            @if(accounts$ | async; as accounts) {
-                <grid-menubar  class="pl-5 pr-5"  [showBack]="false" [inTitle]="'General Ledger Account Maintenance'"/> 
-                  <gl-grid #gl_grid  
+          <div class="border-1 border-gray-500">
+            @if(accounts$ | async; as accounts) {        
+              <gl-grid #gl_grid                    
                   (onFocusChanged)="onSelection($event)"  
                   (onUpdateSelection)="selectedRow($event)"  
-                  [data]="accounts"  [columns]="cols">
-                  </gl-grid> 
+                  [data]="accounts"  
+                  [columns]="cols">
+              </gl-grid> 
             }            
           </div>
         </ng-container>
@@ -242,7 +243,7 @@ const keyExpr = ["account", "child"];
                     <button mat-icon-button color="primary"
                             class=" hover:bg-slate-400 ml-1"  (click)="onCancel()" matTooltip="Close"
                             aria-label="hovered over">
-                            <span class="e-icons e-circle-close"></span>
+                          <span class="e-icons e-circle-close"></span>
                     </button>                    
             </div>
             </div>

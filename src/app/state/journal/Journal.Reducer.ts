@@ -1,33 +1,12 @@
 import { createReducer, on } from '@ngrx/store';
 import { initialState } from './Journal.State';
 
-import { 
-        addJournalHeaderSuccess, 
-        deleteJournalHeaderSuccess, 
-        getJournalHeaderSuccess,
-        loadJournalHeaderFailure,
-        updateJournalHeaderSuccess,
-        loadJournalHeaderSuccess,          
-        loadJournalDetailSuccess,
-        loadJournalDetailFailure,
-        deleteJournalDetailSuccess,
-        addJournalDetailSuccess,
-        updateJournalDetailSuccess,
-        getJournalDetailSuccess,
-        loadJournalDetail,
-        loadJournalHeaderByPeriodSuccess,
-        loadJournalHeaderByPeriodFailure,
-        loadPeriodSuccess,
-        loadPeriodFailure,
-        loadPeriod,
-        cloneJournalSuccess,
-                
-        } from './Journal.Action'; 
+import { JournalActions } from './Journal.Action'; 
          
 
 const journalReducer = createReducer(
     initialState,
-    on(loadJournalHeaderSuccess, (state, action) => {
+    on(JournalActions.loadJournalHeaderSuccess, (state, action) => {
         return {
             ...state,
             journals : action.journals,
@@ -35,7 +14,7 @@ const journalReducer = createReducer(
         }
     }),
 
-    on(cloneJournalSuccess, (state, action) => {
+    on(JournalActions.addJournalHeaderSuccess, (state, action) => {
         return {
             ...state,
             journals: [...state.journals, action.journals],
@@ -43,7 +22,7 @@ const journalReducer = createReducer(
         }
     }),
     
-    on(loadJournalHeaderByPeriodSuccess, (state, action) => {
+    on(JournalActions.loadJournalHeaderByPeriodSuccess, (state, action) => {
         return {
             ...state,
             journals : action.journals,
@@ -51,7 +30,7 @@ const journalReducer = createReducer(
         }
     }),
 
-    on(loadJournalDetailSuccess, (state, action) => {
+    on(JournalActions.loadJournalDetailSuccess, (state, action) => {
         return {
             ...state,
             journalDetails : action.journalDetails,
@@ -59,7 +38,7 @@ const journalReducer = createReducer(
         }
     }),
     
-    on(loadJournalHeaderFailure, (state, action) => {
+    on(JournalActions.loadJournalHeaderFailure, (state, action) => {
         return {
             ...state,
             journals: [],
@@ -67,7 +46,7 @@ const journalReducer = createReducer(
         }
     }
     ),
-    on(loadJournalHeaderFailure, (state, action) => {
+    on(JournalActions.loadJournalHeaderFailure, (state, action) => {
         return {
             ...state,
             journals: [],
@@ -75,28 +54,28 @@ const journalReducer = createReducer(
         }
     }
     ),
-    on(deleteJournalHeaderSuccess, (state, action) => {
+    on(JournalActions.deleteJournalHeaderSuccess, (state, action) => {
         return {
             ...state,
             journals: state.journals.filter(x => x.journal_id !== action.id),
             error: null,
         }
     }),
-    on(addJournalHeaderSuccess, (state, action) => {
+    on(JournalActions.addJournalHeaderSuccess, (state, action) => {
         return {
             ...state,
             journals: [...state.journals, action.journals],
             error: null,
         }
     }),
-    on(updateJournalHeaderSuccess, (state, action) => {
+    on(JournalActions.updateJournalHeaderSuccess, (state, action) => {
         return {
             ...state,
             journal_selected: state.journals.map(x => x.journal_id === action.journals.journal_id ? action.journals.journal_id : x),
             error: null,
         }
     }),
-    on(getJournalHeaderSuccess, (state, action) => {
+    on(JournalActions.getJournalHeaderSuccess, (state, action) => {
          return {
              ...state,
              journal_selected: action.journals,

@@ -11,7 +11,7 @@ import { selectJournals } from 'app/state/journal/Journal.Selector';
 import { IPeriodParam } from 'app/models/period';
 import { MatDrawer } from '@angular/material/sidenav';
 import { FilterTypePipe } from 'app/filter-type.pipe';
-import { AggregateService, ColumnMenuService, ContextMenuService, EditService, EditSettingsModel, ExcelExportService, FilterService, FilterSettingsModel, GridLine, GridModule, PageService, PdfExportService, ReorderService, ResizeService, RowSelectEventArgs, SearchService, SearchSettingsModel, SelectionSettingsModel, SortService, ToolbarItems, ToolbarService } from '@syncfusion/ej2-angular-grids';
+import { AggregateService, ColumnMenuService, ContextMenuService, EditService, EditSettingsModel, ExcelExportService, FilterService, FilterSettingsModel, GridLine, GridModule, Group, GroupService, PageService, PdfExportService, ReorderService, ResizeService, RowSelectEventArgs, SearchService, SearchSettingsModel, SelectionSettingsModel, SortService, ToolbarItems, ToolbarService } from '@syncfusion/ej2-angular-grids';
 import { DropDownListComponent } from '@syncfusion/ej2-angular-dropdowns';
 import { ToastrService } from 'ngx-toastr';
 import { MenuEventArgs, MenuItemModel } from '@syncfusion/ej2-navigations';
@@ -23,6 +23,7 @@ const providers = [
     PdfExportService,
     ExcelExportService,
     ContextMenuService,
+    GroupService,
     SortService,
     PageService,
     ResizeService,
@@ -31,7 +32,7 @@ const providers = [
     EditService,
     AggregateService,
     ColumnMenuService,
-    SearchService,
+    SearchService    
 ];
 
 
@@ -102,14 +103,13 @@ const imports = [
         <mat-card>
             <div class="flex-auto">
                 <div class=" border-gray-300">            
-                    <div class="flex-col h-[440px]">
+                    <div class="flex-col h-[420px]">
                         @defer (on viewport; on timer(300ms)) {
                             @if(journalHeader$ | async; as journals  ) {                                           
                             <ng-container>                     
                                 <ejs-grid 
                                     [dataSource]="journals | filterType : transactionType()"
-                                    height="100%"
-                                    [rowHeight]='30'
+                                    height="100%"                                    
                                     [allowSorting]='true'
                                     [showColumnMenu]='false'                
                                     [gridLines]="lines"
@@ -118,12 +118,13 @@ const imports = [
                                     [editSettings]='editSettings'
                                     [enablePersistence]='false'
                                     [enableStickyHeader]='true'
-                                    [allowGrouping]="false"
+                                    [allowGrouping]="true"
                                     [allowResizing]='true' 
                                     [allowReordering]='true' 
                                     [allowExcelExport]='true'
-                                    [allowSelection]='true' 
+                                    [allowSelection]='true'                                     
                                     [allowPdfExport]='true'            
+                                    [groupSettings]='groupSettings' 
                                     (rowSelected)='onRowSelected($event)'                                
                                     (actionBegin)='selectedRow($event)' >
                                     <e-columns>
@@ -189,9 +190,25 @@ const imports = [
                                             <e-column field='amount' headerText='Amount' width='80' format='N2' textAlign='Right'></e-column>
                                             <e-column field='period_year' headerText='Yr' width='100' [visible]='false'></e-column>
                                             <e-column field='create_date' headerText='Updated' width='100' format='M/dd/yyyy' [visible]='false'></e-column>
-                                            <e-column field='create_user' headerText='User' width='100' [visible]='true'></e-column>
-                                            <e-column field='party_id'    headerText='Vendor' width='100' [visible]='false'></e-column>
+                                            <e-column field='create_user' headerText='User' width='100' [visible]='false'></e-column>
+                                            <e-column field='party_id'    headerText='Vendor' width='100' [visible]='true'></e-column>
                                     </e-columns>
+                                    <e-aggregates>
+                                            <e-aggregate>
+                                                <e-columns>
+                                                    <e-column type="Sum" field="amount" format="N2">
+                                                        <ng-template #groupFooterTemplate let-data>{{data.Sum}}</ng-template>
+                                                    </e-column>
+                                                </e-columns>
+                                            </e-aggregate>
+                                            <e-aggregate>
+                                                <e-columns>
+                                                    <e-column type="Sum" field="amount" format="N2">
+                                                        <ng-template #footerTemplate let-data>{{data.Sum}}</ng-template>
+                                                    </e-column>                                                    
+                                                </e-columns>
+                                            </e-aggregate>
+                                    </e-aggregates>
                                 </ejs-grid>         
                             </ng-container> 
                             }
@@ -254,6 +271,7 @@ export class JournalEntryComponent implements OnInit, OnDestroy {
     public journalHeader$: Observable<IJournalHeader[]>;
     public user$: Observable<string>;
     public periodParam!: IPeriodParam;
+    public groupSettings: { [x: string]: Object } = { showDropArea: false, columns: ['party_id'] };
 
     drawer = viewChild<MatDrawer>("drawer");
 

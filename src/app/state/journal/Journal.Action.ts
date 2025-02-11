@@ -1,6 +1,44 @@
 import { createAction, props } from "@ngrx/store";
-import { IJournalDetail, IJournalHeader }  from "app/models/journals";
+import { IAccounts } from "app/models";
+import { IJournalDetail, IJournalHeader, IJournalTemplate }  from "app/models/journals";
+import { IParty } from "app/models/party";
 import { IPeriodParam } from "app/models/period";
+import { IType } from "app/models/types";
+
+
+// Load Static Data Actions
+
+export const LOAD_ACCOUNTS = '[ACCOUNTS] load';
+export const LOAD_ACCOUNTS_SUCCESS = '[ACCOUNTS] load success';
+export const LOAD_ACCOUNTS_FAILURE = '[ACCOUNTS] load failure';
+
+export const LOAD_ACCOUNT_TYPE = '[ACCOUNT_TYPE] load';
+export const LOAD_ACCOUNT_TYPE_SUCCESS = '[ACCOUNT_TYPE] load success';
+export const LOAD_ACCOUNT_TYPE_FAILURE = '[ACCOUNT_TYPE] load failure';
+
+export const LOAD_PARTY = '[PARTY] load';
+export const LOAD_PARTY_SUCCESS = '[PARTY] load success';
+export const LOAD_PARTY_FAILURE = '[PARTY] load failure';
+
+export const LOAD_TEMPLATE = '[TEMPLATE] load';
+export const LOAD_TEMPLATE_SUCCESS = '[TEMPLATE] load success';
+export const LOAD_TEMPLATE_FAILURE = '[TEMPLATE] load failure';
+
+export const loadAccounts = createAction(LOAD_ACCOUNTS);
+export const loadAccountsSuccess = createAction(LOAD_ACCOUNTS_SUCCESS, props<{ accounts: IAccounts[] }>());
+export const loadAccountsFailure = createAction(LOAD_ACCOUNTS_FAILURE, props<{ error: string }>());
+
+export const loadAccountType = createAction(LOAD_ACCOUNT_TYPE);
+export const loadAccountTypeSuccess = createAction(LOAD_ACCOUNT_TYPE_SUCCESS, props<{ account_type: IType[] }>());
+export const loadAccountTypeFailure = createAction(LOAD_ACCOUNT_TYPE_FAILURE, props<{ error: string }>());
+
+export const loadParty = createAction(LOAD_PARTY);
+export const loadPartySuccess = createAction(LOAD_PARTY_SUCCESS, props<{ party: IParty[] }>());
+export const loadPartyFailure = createAction(LOAD_PARTY_FAILURE, props<{ error: string }>());
+
+export const loadTemplate = createAction(LOAD_TEMPLATE);
+export const loadTemplateSuccess = createAction(LOAD_TEMPLATE_SUCCESS, props<{ template: IJournalTemplate[] }>());
+export const loadTemplateFailure = createAction(LOAD_TEMPLATE_FAILURE, props<{ error: string }>());
 
 
 export const LOAD_JOURNAL_HEADER = '[JRN_HEADER] getall';
@@ -36,6 +74,9 @@ export const CLONE_JOURNAL_FAILURE = '[JRN_CLONE] clone failure'
 export const GET_JOURNAL_HEADER = '[JRN_HEADER] get jrn_header'
 export const GET_JOURNAL_HEADER_SUCCESS = '[JRN_HEADER] get journal_header success'
 export const GET_JOURNAL_HEADER_FAILURE = '[JRN_HEADER] get journal_header failure'
+export const GET_JOURNAL_ACTIVE_JOURNAL = '[JRN_HEADER] get active journal'
+
+export const getActiveJournal  = createAction(GET_JOURNAL_ACTIVE_JOURNAL, props<{ activeJournalId: number }>());
 
 export const loadJournalHeader = createAction(LOAD_JOURNAL_HEADER);
 export const loadJournalHeaderSuccess = createAction(LOAD_JOURNAL_HEADER_SUCCESS, props<{ journals: IJournalHeader[] }>());
@@ -131,7 +172,35 @@ export const JournalActions = {
     loadJournalDetail,
     loadJournalDetailSuccess,
     loadJournalDetailFailure,
-    deleteJournalDetail
+    deleteJournalDetail,
+    cloneJournal,
+    cloneJournalSuccess,
+    cloneJournalFailure,
+    loadJournalHeaderByPeriodSuccess,
+    setPeriod,
+    setPeriodSuccess,
+    setPeriodFailure,
+    loadPeriod,
+    loadPeriodSuccess,
+    loadPeriodFailure,
+    addJournalDetail,
+    addJournalDetailSuccess,
+
+};
+
+export const JournalStaticDataActions = {
+    loadAccounts,
+    loadAccountsSuccess,
+    loadAccountsFailure,
+    loadAccountType,
+    loadAccountTypeSuccess,
+    loadAccountTypeFailure,
+    loadParty,
+    loadPartySuccess,
+    loadPartyFailure,
+    loadTemplate,
+    loadTemplateSuccess,
+    loadTemplateFailure
 };
 
 
