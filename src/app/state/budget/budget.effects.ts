@@ -20,8 +20,7 @@ export const loadBudget = createEffect((
         ),
         catchError((error) =>
           of(budgetAPIActions.loadBudgetFailure({ error }))
-        )
-      )));
+        ))));
   },
   {
     functional: true,

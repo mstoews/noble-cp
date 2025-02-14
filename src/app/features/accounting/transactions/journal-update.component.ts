@@ -47,7 +47,7 @@ import {
 
 import {
     Detail,
-    IJournalArrayParams,
+    IJournalTransactions,
     IJournalDetail,
     IJournalDetailTemplate,
     IJournalDetailUpdate,
@@ -476,7 +476,7 @@ const imp = [
                                                     class="bg-slate-200  hover:bg-slate-400 ml-1"
                                                     (click)="onCloseTransaction()" matTooltip="Lock Transaction"
                                                     aria-label="complete">
-                                                    <span class="e-icons e-check-box"></span>
+                                                    <span class="e-icons e-lock"></span>
                                                 </button>
 
                                                 <button mat-icon-button color="primary"
@@ -703,8 +703,8 @@ export class JournalUpdateComponent
     private templateService = inject(TemplateService);
     private toastr = inject(ToastrService);
     private journalService = inject(JournalService);
-    
-    
+
+
     public funds$ = this.fundService.read();
     public subtype$ = this.subtypeService.read();
     public dropDownChildren$ = this.accountService.readChildren();
@@ -736,7 +736,6 @@ export class JournalUpdateComponent
 
     private _location = inject(Location);
     private router = inject(Router);
-
     public store = inject(JournalStore);
 
     public contextmenu: ContextMenuComponent;
@@ -744,7 +743,7 @@ export class JournalUpdateComponent
     public loading = false;
     public height: string = "250px";
 
-    
+
     // Internal control variables
     public currentRowData: IJournalDetail;
     // public journal_subid: number = 0;
@@ -800,7 +799,7 @@ export class JournalUpdateComponent
     public debitCtrl: FormControl<IDropDownAccounts> = new FormControl<IDropDownAccounts>(null);
     public debitAccountFilterCtrl: FormControl<string> = new FormControl<string>(null);
     public filteredDebitAccounts: ReplaySubject<IDropDownAccounts[]> = new ReplaySubject<IDropDownAccounts[]>(1);
-    
+
     public subtypeCtrl: FormControl<string> = new FormControl<string>(null);
     public fundCtrl: FormControl<string> = new FormControl<string>(null);
     public key: number;
@@ -861,7 +860,7 @@ export class JournalUpdateComponent
         this.createEmptyDetailForm();
         this.initialDatagrid();
 
-        this.activatedRoute.data.subscribe((data) => {             
+        this.activatedRoute.data.subscribe((data) => {
             this.store.loadDetails(data.journal.journal_id);
             this.store.loadArtifactsByJournalId(data.journal.journal_id);
             this.journalHeader = data.journal;
@@ -913,7 +912,7 @@ export class JournalUpdateComponent
         const template = this.templateCtrl.value;
         const template_name = this.templateList.find((x) => x.template_name === template.template_name).template_name;
 
-        var journalDetails:  IJournalDetail[]=[];
+        var journalDetails: IJournalDetail[] = [];
 
         if (template.journal_type !== 'GL') {
             party = this.partyCtrl.getRawValue();
@@ -984,7 +983,7 @@ export class JournalUpdateComponent
 
         var detail: Detail[] = this.journalDetailSignal();
 
-        var journalArray: IJournalArrayParams = {
+        var journalArray: IJournalTransactions = {
 
             journal_id: this.journalHeader.journal_id,
             description: this.journalHeader.description,
@@ -998,7 +997,7 @@ export class JournalUpdateComponent
             invoice_no: this.journalHeader.invoice_no,
             party_id: this.journalHeader.party_id,
             subtype: this.journalHeader.sub_type,
-            details: { detail: detail }       
+            details: { detail: detail }
         }
 
         this.journalService.createJournal(journalArray).pipe(takeUntil(this._onDestroy)).subscribe((response) => {
@@ -1015,8 +1014,8 @@ export class JournalUpdateComponent
     public onSaved(args: any) {
         this.toastr.success('Transaction saved', args);
     }
-    
-    
+
+
     public itemSelect(args: MenuEventArgs): void {
 
         switch (args.item.id) {
@@ -1078,7 +1077,7 @@ export class JournalUpdateComponent
     }
 
     changeTemplate(e: any) {
-        console.log('change template: ', e);        
+        console.log('change template: ', e);
         this.bDetailDirty = true;
     }
 
@@ -1258,7 +1257,7 @@ export class JournalUpdateComponent
     }
 
     public onRowSelected(args: RowSelectEventArgs): void {
-        const queryData: any = args.data;        
+        const queryData: any = args.data;
         this.refreshHeader(queryData);
         this.store.loadDetails(queryData.journal_id);
         this.store.loadArtifactsByJournalId(queryData.journal_id);
@@ -1284,14 +1283,14 @@ export class JournalUpdateComponent
         this.initialSort = {
             columns: [{ field: 'journal_id', direction: 'Descending' },]
         };
-        
+
         this.detailSort = {
             columns: [{ field: 'debit', direction: 'Descending' },]
         };
 
     }
 
-    public onEditJournal(id: number) {        
+    public onEditJournal(id: number) {
         this.store.loadDetails(id);
         this.journalHeader = this.store.gl().find((x) => x.journal_id === id);
         this.refreshHeader(this.journalHeader);
@@ -1381,7 +1380,7 @@ export class JournalUpdateComponent
         //     this.bHeaderDirty = true;                             
         // });
 
-        this.journalForm.valueChanges.subscribe((value) => {            
+        this.journalForm.valueChanges.subscribe((value) => {
             this.bHeaderDirty = true;
         });
 
@@ -1407,7 +1406,7 @@ export class JournalUpdateComponent
             reference: ["", Validators.required],
             fund: ["", Validators.required],
         });
-        
+
         //this.openDrawer();
     }
 
@@ -1470,7 +1469,7 @@ export class JournalUpdateComponent
 
     public refreshHeader(header: IJournalHeader) {
 
-        this.journalHeader = header; 
+        this.journalHeader = header;
 
         this.journalForm.patchValue({
             description: header.description,
@@ -1714,7 +1713,7 @@ export class JournalUpdateComponent
             }
         });
 
-        if ( inputs.journal_id === 0) {
+        if (inputs.journal_id === 0) {
             return;
         }
 

@@ -38,7 +38,7 @@ export class FileManagerComponent {
   sTitle = 'File Management';
   selectedItemKeys: any[] = [];
 
-  evidence$ = this.evidenceServer.readEvidence();
+  evidence$ = this.evidenceServer.read();
 
   onRefresh() { }
   onAdd() { }

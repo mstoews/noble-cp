@@ -48,6 +48,7 @@ import { UsersReducer } from './state/users/Users.Reducer';
 // Effects 
 
 import { journalHeaderEffects } from './state/journal/Journal.Effects';
+import { journalTransactionEffects } from './state/journalTransactions/Journal.Effects';
 import { templateEffects } from './state/template/Template.Effects';
 import { userEffects } from './state/users/Users.Effects';
 import { provideRouterStore } from '@ngrx/router-store';
@@ -63,6 +64,7 @@ import { ApplicationService } from "./services/application.state.service";
 import { kanbanEffects } from './state/kanban-state/kanban/kanban.effects';
 import { partyEffects } from './state/party/party.effects';
 import { accountEffects } from './state/accts/accts.effects';
+import { JournalTransactionReducer } from './state/journalTransactions/Journal.Reducer';
 
 
 const app = initializeApp(environment.firebase);
@@ -146,7 +148,9 @@ export const appConfig: ApplicationConfig = {
     provideStore({
       tpl: TemplateReducer,
       journals: JournalReducer,
-      fnd: FundsReducer
+      transactions: JournalTransactionReducer,
+      fnd: FundsReducer,
+      usr: UsersReducer
     }),
 
     provideState(fromPriority.priorityFeature),
@@ -155,14 +159,14 @@ export const appConfig: ApplicationConfig = {
     provideState(fromParty.partyFeature),
     provideState(fromKanban.kanbanFeature),
     provideState(fromAccounts.accountsFeature),
-    provideEffects(
-      [
+    provideEffects( [
         accountEffects,
         periodEffects,
         kanbanEffects,
         templateEffects,
         partyEffects,
         journalHeaderEffects,
+        journalTransactionEffects,
         periodEffects,
         fundsEffects,
         subTypeEffects

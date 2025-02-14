@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, inject, viewChild, input, output } from '@angular/core';
+import { Component, OnInit, ViewChild, inject, viewChild, input, output, HostListener } from '@angular/core';
 import {
     FormControl,    
     FormGroup,
@@ -12,13 +12,15 @@ import { CommonModule } from '@angular/common';
 import { FuseConfirmationService } from '@fuse/services/confirmation';
 import { GridMenubarStandaloneComponent } from '../../grid-components/grid-menubar.component';
 import { MaterialModule } from 'app/services/material.module';
-import { EditService, FilterService, FilterSettingsModel, GridModule, PageService, SearchSettingsModel, SelectionSettingsModel, SortService, ToolbarItems, ToolbarService } from '@syncfusion/ej2-angular-grids';
+import { EditService, FilterService, GridComponent, GridModule, PageService,  SortService, ToolbarService } from '@syncfusion/ej2-angular-grids';
 import { GLGridComponent } from "../../grid-components/gl-grid.component";
-import { IFunds } from 'app/models';
+
 import { Store } from '@ngrx/store';
-import { addFunds, deleteFunds, loadFunds, updateFunds } from 'app/state/funds/Funds.Action';
+import { FundsActions } from 'app/state/funds/Funds.Action';
 import { selectFunds } from 'app/state/funds/Funds.Selector';
 import { MenuEventArgs, MenuItemModel } from '@syncfusion/ej2-navigations';
+import { Observable } from 'rxjs';
+import { IFunds } from 'app/models';
 
 
 const imports = [
@@ -94,15 +96,21 @@ const imports = [
             @if (funds$ | async; as funds ) {
             <grid-menubar [inTitle]="sTitle" [showNew]=true [showSettings]=false (newRecord)="onAdd()"></grid-menubar>        
             <gl-grid 
-               (onUpdateSelection)="onUpdateSelection($event)"
+               (onUpdateSelection)="onSelection($event)"
                [data]="funds" 
                [columns]="columns">
             </gl-grid>            
             }
         </ng-container>
         </mat-drawer-container>
-`,
-    providers: [SortService, PageService, FilterService, ToolbarService, EditService],
+    `,
+    providers: [
+        SortService, 
+        PageService, 
+        FilterService, 
+        ToolbarService, 
+        EditService,
+        ],
 })
 export class FundsComponent implements OnInit {
 
@@ -110,13 +118,14 @@ export class FundsComponent implements OnInit {
     public sTitle = 'Reserve Funds';
     public fundsForm!: FormGroup;
     public formdata: any = {};
+    public drawer = viewChild<MatDrawer>('drawer');
 
     store = inject(Store);    
     notifyFundUpdate = output();    
     bDirty: boolean = false;
 
-    funds$ = this.store.select(selectFunds);
-    drawer = viewChild<MatDrawer>('drawer');
+    funds$: Observable < IFunds[] > ;    
+    
 
     public columns = [
         { field: 'fund', headerText: 'Fund', width: 80, textAlign: 'Left' },
@@ -125,11 +134,26 @@ export class FundsComponent implements OnInit {
         { field: 'create_user', headerText: 'Create User', width: 80, textAlign: 'Left' }
     ];
 
+
     ngOnInit() {
         this.createEmptyForm();
-        this.onChanges(); 
-        this.store.dispatch(loadFunds());                
+        this.onChanges();         
+        this.store.dispatch(FundsActions.loadFunds());                
     }
+
+
+    onSelection(data: IFunds) {
+        const dDate = new Date();
+        const updateDate = dDate.toISOString().split('T')[0];
+        this.bDirty = false;
+        this.fundsForm.patchValue({
+            id: [data.id],
+            fund: [data.fund],
+            description: [data.description]
+        });
+        this.openDrawer();
+    }
+
 
     public onChanges(): void {
         this.fundsForm.valueChanges.subscribe((dirty) => {
@@ -142,59 +166,7 @@ export class FundsComponent implements OnInit {
         });
     }
 
-     public menuItems: MenuItemModel[] = [
-        {
-          id: 'Edit',
-          text: 'Update Account',
-          iconCss: 'e-icons e-edit-2'
-        },
-        {
-          id: 'Create',
-          text: 'Create Account',
-          iconCss: 'e-icons e-circle-add'
-        },
-        {
-          id: 'Clone',
-          text: 'Clone Account',
-          iconCss: 'e-icons e-copy'
-        },
-        {
-          id: 'Delete',
-          text: 'Deactivate Account',
-          iconCss: 'e-icons e-delete-1'
-        },
-        {
-          separator: true
-        },
-        {
-          id: 'Settings',
-          text: 'Settings',
-          iconCss: 'e-icons e-settings'
-        },
-    
-      ];
-    
-      public itemSelect(args: MenuEventArgs): void {
-    
-        switch (args.item.id) {
-          case 'Edit':        
-            //this.selectedRow(this.currentRow);
-            break;
-          case 'Create':
-            this.onAdd();
-            break;
-          case 'Clone':
-            //this.onClone("");
-            break;
-          case 'Delete':
-            //this.onDelete("");
-            break;
-          case 'Settings':
-            //this.onOpenSettings();
-            break;
-        }
-      }
-    
+     
 
     public createEmptyForm() {
         this.fundsForm = new FormGroup({
@@ -215,7 +187,7 @@ export class FundsComponent implements OnInit {
             create_user: '@admin',
         } as IFunds;
         
-        this.store.dispatch(addFunds({ funds: rawData }));        
+        this.store.dispatch(FundsActions.addFunds({ funds: rawData }));        
         this.bDirty = false;
         this.closeDrawer();
     }
@@ -228,32 +200,7 @@ export class FundsComponent implements OnInit {
     public onCancel() {
         this.closeDrawer();
     }
-
-    public public() {
-        if (this.bDirty === true) {
-            const confirm = this.confirmation.open({
-                title: 'Fund Modified',
-                message: 'Are you sure you want to exit without saving? ',
-                actions: {
-                    confirm: {
-                        label: 'Confirm',
-                    },
-                },
-            });
-
-            confirm.afterClosed().subscribe((result) => {
-                // If the confirm button pressed...
-                if (result === 'confirmed') {
-                    this.closeDrawer();
-                    this.fundsForm.reset();
-                }
-            });
-        } else {
-            this.closeDrawer();
-            this.bDirty = false;
-            return;
-        }
-    }
+   
 
     public onDelete(e: any) {
         var data = this.fundsForm.value;
@@ -271,7 +218,7 @@ export class FundsComponent implements OnInit {
         confirmation.afterClosed().subscribe((result) => {
             // If the confirm button pressed...            
             if (result === 'confirmed') {
-                this.store.dispatch(deleteFunds({ id: data.fund[0] }));
+                this.store.dispatch(FundsActions.deleteFunds({ id: data.fund[0] }));
             }
         });
         this.closeDrawer();
@@ -283,11 +230,6 @@ export class FundsComponent implements OnInit {
         const dDate = new Date();
         const updateDate = dDate.toISOString().split('T')[0];
         this.bDirty = false;
-        this.fundsForm.patchValue({
-            id: [data.id],
-            fund: [data.fund],
-            description: [data.description]
-        });
 
         const rawData = {
             fund: data.fund,
@@ -296,10 +238,107 @@ export class FundsComponent implements OnInit {
             create_user: '@admin',
         } as IFunds;
 
-        this.store.dispatch(updateFunds({ funds: rawData }));
+        this.store.dispatch(FundsActions.updateFunds({ funds: rawData }));
 
         this.openDrawer();
     }
+
+    
+    public onUpdate() {
+        const updateDate = new Date().toISOString().split('T')[0];
+        const fund = this.fundsForm.value;
+        const rawData = {
+            id: fund.id[0],
+            fund: fund.fund[0],
+            description: fund.description,
+            create_date: updateDate,
+            create_user: '@admin'
+        } as IFunds;
+        this.store.dispatch(FundsActions.updateFunds({ funds: rawData }));
+        this.bDirty = false;
+        this.closeDrawer();
+    }
+    
+    public menuItems: MenuItemModel[] = [
+        {
+          id: 'Edit',
+          text: 'Update Account',
+          iconCss: 'e-icons e-edit-2'
+        },
+        {
+          id: 'Create',
+          text: 'Create Account',
+          iconCss: 'e-icons e-circle-add'
+        },
+        {
+          id: 'Copy',
+          text: 'Clone Account',
+          iconCss: 'e-icons e-copy'
+        },
+        {
+          id: 'Delete',
+          text: 'Deactivate Account',
+          iconCss: 'e-icons e-delete-1'
+        },
+        {
+          separator: true
+        },
+        {
+          id: 'Settings',
+          text: 'Settings',
+          iconCss: 'e-icons e-settings'
+        },
+    
+      ];
+    
+    public itemSelect(args: MenuEventArgs): void {
+    
+        switch (args.item.id) {
+          case 'Edit':        
+            //this.onSelection("");
+            break;
+          case 'Create':
+            this.onAdd();
+            break;
+          case 'Clone':
+            this.onClone("");
+            break;
+          case 'Delete':
+            //this.onDelete("");
+            break;
+          case 'Settings':
+            //this.onOpenSettings();
+            break;
+        }
+      }
+     public onClone(arg0: string) {
+        
+     }
+
+     @HostListener("window:exit")
+     public exit() {
+         if (this.bDirty === true) {
+             const confirm = this.confirmation.open({
+                 title: 'Fund Modified',
+                 message: 'Are you sure you want to exit without saving? ',
+                 actions: {
+                     confirm: {
+                         label: 'Confirm',
+                     },
+                 },
+             });
+ 
+             confirm.afterClosed().subscribe((result) => {
+                 // If the confirm button pressed...
+                 if (result === 'confirmed') {
+                     this.closeDrawer();
+                     this.fundsForm.reset();
+                 }
+             });
+         } else {
+             return;
+         }
+     }
 
     public openDrawer() {
         const opened = this.drawer().opened;
@@ -318,21 +357,26 @@ export class FundsComponent implements OnInit {
             return;
         }
     }
-
-    public onUpdate() {
-        const updateDate = new Date().toISOString().split('T')[0];
-        const fund = this.fundsForm.value;
-        this.formdata = this.fundsForm.value;
-        console.log('rawData', JSON.stringify(this.formdata));
-        const rawData = {
-            id: fund.id[0],
-            fund: fund.fund[0],
-            description: fund.description,
-            create_date: updateDate,
-            create_user: '@admin'
-        } as IFunds;
-        this.store.dispatch(updateFunds({ funds: rawData }));
-        this.bDirty = false;
-        this.closeDrawer();
+   
+    constructor() { 
+        this.funds$ = this.store.select(selectFunds);        
     }
+
+    grid = viewChild<GridComponent>('grid');
+
+    @HostListener('window:resize', ['$event'])
+    onResize(event: any) {
+      this.adjustHeight();
+    }
+  
+    ngAfterViewInit() {
+      this.adjustHeight();
+    }
+    
+    adjustHeight() {
+      if (this.grid()) {
+        this.grid().height = (window.innerHeight - 450) + 'px'; // Adjust as needed
+      }
+    }
+    
 }

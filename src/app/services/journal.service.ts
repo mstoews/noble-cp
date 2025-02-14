@@ -4,13 +4,13 @@ import { Observable, TimeoutError, catchError, debounceTime, distinctUntilChange
 import { environment } from 'environments/environment.prod';
 import { ToastrService } from "ngx-toastr";
 import { IPeriod } from 'app/models/period';
-import { IAccounts} from 'app/models';
+import { IAccounts } from 'app/models';
 import { IJournalParams } from 'app/models';
 import { IPeriodParam } from 'app/models/period';
 
 import {
   IArtifacts,
-  IJournalArrayParams,
+  IJournalTransactions,
   IJournalDetail,
   IJournalDetailDelete,
   IJournalDetailTemplate,
@@ -66,22 +66,34 @@ export class JournalService implements OnDestroy {
       shareReplay({ bufferSize: 1, refCount: true }));
   }
 
-  createJournal(params: IJournalArrayParams) {
-    var url = this.baseUrl + '/v1/create_journal';
-    return this.httpClient.post<IJournalArrayParams>(url, params).pipe(
-      catchError(err => {
-        if (err.status === 200) {          
-          console.debug(JSON.stringify(err));
-          this.ShowAlert(JSON.stringify(err.message), 'pass');           
-        } else {
+  // Journal Params Arrays
 
-        const message = err.error;
-        this.ShowAlert(JSON.stringify(message), 'failed');
-        return throwError(() => new Error(`${JSON.stringify(err)}`));
+  createJournal(params: IJournalTransactions) {
+    var url = this.baseUrl + '/v1/create_journal';
+    return this.httpClient.post<IJournalTransactions>(url, params).pipe(
+      catchError(err => {
+        if (err.status === 200) {
+          this.ShowAlert(JSON.stringify(err.message), 'pass');
+        } else {
+          const message = err.error;
+          this.ShowAlert(JSON.stringify(message), 'failed');
+          return throwError(() => new Error(`${JSON.stringify(err)}`));
         }
       }),
       shareReplay({ bufferSize: 1, refCount: true }));
   }
+
+  
+  readJournalTransactions(params: IPeriodParam): Observable<IJournalTransactions[]> {
+    var url = this.baseUrl + '/v1/read_journals_by_period';
+    return this.httpClient.post<IJournalTransactions[]>(url, params).pipe(
+      catchError(err => {
+        this.ShowAlert("Failed to read journal entry ...", 'failed');
+        return throwError(() => new Error(`${JSON.stringify(err)}`));
+      }),
+      shareReplay({ bufferSize: 1, refCount: true }));
+  }
+
 
   readHttpLoadArtifactsByJournalId(journal_id: number) {
     var url = this.baseUrl + '/v1/read_artifacts_by_jrn_id/' + journal_id;
@@ -144,7 +156,7 @@ export class JournalService implements OnDestroy {
     return this.httpClient.post<IJournalHeader>(url,
       {
         journal_id: journal_id,
-        status: "CLOSED" 
+        status: "CLOSED"
       },
     ).pipe(
       catchError(err => {
@@ -225,6 +237,7 @@ export class JournalService implements OnDestroy {
       }),
       shareReplay({ bufferSize: 1, refCount: true }));
   }
+
 
   // read_tb_by_period
 
@@ -307,7 +320,7 @@ export class JournalService implements OnDestroy {
       amount: Number(header.amount),
       template_name: header.template_name,
       party_id: header.party_id,
-      invoice_no: header.invoice_no,      
+      invoice_no: header.invoice_no,
     }
     return this.httpClient.post<any>(url, journalHeaderUpdate).pipe(
       shareReplay({ bufferSize: 1, refCount: true }));
@@ -325,26 +338,26 @@ export class JournalService implements OnDestroy {
       period: prd.period,
       year: prd.period_year
     }
-    return this.httpClient.post<string>(url, { periodYear},).pipe(shareReplay({ bufferSize: 1, refCount: true }));
+    return this.httpClient.post<string>(url, { periodYear },).pipe(shareReplay({ bufferSize: 1, refCount: true }));
   }
 
 
   createJournalFullHeader(header: IJournalHeader) {
     let url = this.baseUrl + '/v1/create_full_journal_header';
     let journalHeader: IJournalHeader = {
-        "journal_id" : header.journal_id,
-        "description" : header.description,
-        "booked" : header.booked,
-	      "booked_user" : header.booked_user,
-	      "period" : header.period,
-	      "period_year" : header.period_year,
-	      "type" : header.type,
-	      "amount" : header.amount,
-        "transaction_date" : header.transaction_date,
-	      "party_id" : header.party_id,
-	      "template_name" : header.template_name,
-	      "invoice_no" : header.invoice_no,
-        "status" : "CLOSED",
+      "journal_id": header.journal_id,
+      "description": header.description,
+      "booked": header.booked,
+      "booked_user": header.booked_user,
+      "period": header.period,
+      "period_year": header.period_year,
+      "type": header.type,
+      "amount": header.amount,
+      "transaction_date": header.transaction_date,
+      "party_id": header.party_id,
+      "template_name": header.template_name,
+      "invoice_no": header.invoice_no,
+      "status": "CLOSED",
     }
     return this.httpClient.post<IJournalHeader>(url, journalHeader).pipe(
       shareReplay({ bufferSize: 1, refCount: true }));
@@ -353,17 +366,17 @@ export class JournalService implements OnDestroy {
 
   createHttpJournalDetail(detail: IJournalDetail) {
     let url = this.baseUrl + '/v1/create_journal_detail';
-    return this.httpClient.post<IJournalDetail>(url, detail).pipe(      
+    return this.httpClient.post<IJournalDetail>(url, detail).pipe(
       shareReplay({ bufferSize: 1, refCount: true }));
   }
 
   cloneJournalById(journal_id: number) {
     let url = this.baseUrl + '/v1/clone_journal_entry';
-    return this.httpClient.post<IJournalHeader>(url, { journal_id : journal_id }).pipe(
+    return this.httpClient.post<IJournalHeader>(url, { journal_id: journal_id }).pipe(
       shareReplay({ bufferSize: 1, refCount: true }));
   }
 
-  createTemplateById(journalTemplate: ITemplateParams)  {
+  createTemplateById(journalTemplate: ITemplateParams) {
     let url = this.baseUrl + '/v1/create_journal';
     return this.httpClient.post<IJournalHeader>(url, journalTemplate).pipe(
       shareReplay({ bufferSize: 1, refCount: true }));

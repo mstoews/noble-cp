@@ -1,21 +1,21 @@
-import { Component, OnDestroy, OnInit, ViewEncapsulation, inject, input, viewChild } from '@angular/core';
+import { AfterViewInit, Component, HostListener, OnDestroy, OnInit, ViewEncapsulation, inject, input, viewChild } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { MaterialModule } from 'app/services/material.module';
-import { Router } from '@angular/router';
-import { Store } from '@ngrx/store';
 import { cloneJournal, loadJournalHeaderByPeriod } from 'app/state/journal/Journal.Action';
 import { Observable } from 'rxjs';
-import { IJournalHeader } from 'app/models/journals';
-import { selectJournals } from 'app/state/journal/Journal.Selector';
+import { IJournalHeader, IJournalTransactions } from 'app/models/journals';
 import { IPeriodParam } from 'app/models/period';
 import { MatDrawer } from '@angular/material/sidenav';
 import { FilterTypePipe } from 'app/filter-type.pipe';
-import { AggregateService, ColumnMenuService, ContextMenuService, EditService, EditSettingsModel, ExcelExportService, FilterService, FilterSettingsModel, GridLine, GridModule, Group, GroupService, PageService, PdfExportService, ReorderService, ResizeService, RowSelectEventArgs, SearchService, SearchSettingsModel, SelectionSettingsModel, SortService, ToolbarItems, ToolbarService } from '@syncfusion/ej2-angular-grids';
+import { AggregateService, ColumnMenuService, ContextMenuService, EditService, EditSettingsModel, ExcelExportService, FilterService, FilterSettingsModel, GridComponent, GridLine, GridModule, Group, GroupService, PageService, PdfExportService, ReorderService, ResizeService, RowSelectEventArgs, SearchService, SearchSettingsModel, SelectionSettingsModel, SortService, ToolbarItems, ToolbarService } from '@syncfusion/ej2-angular-grids';
 import { DropDownListComponent } from '@syncfusion/ej2-angular-dropdowns';
 import { ToastrService } from 'ngx-toastr';
 import { MenuEventArgs, MenuItemModel } from '@syncfusion/ej2-navigations';
 import { ContextMenuModule } from '@syncfusion/ej2-angular-navigations';
+import { selectJournals } from 'app/state/journal/Journal.Selector';
+import { Router } from '@angular/router';
+import { Store } from '@ngrx/store';
 
 
 const providers = [
@@ -34,8 +34,6 @@ const providers = [
     ColumnMenuService,
     SearchService    
 ];
-
-
 
 const imports = [
     CommonModule,
@@ -101,16 +99,14 @@ const imports = [
 
     <mat-drawer-container id="target" class="flex flex-col min-w-0 overflow-y-auto -px-10 h-[calc(100vh-21.5rem)] ">    
         <mat-card>
-            <div class="flex-auto">
-                <div class=" border-gray-300">            
-                    <div class="flex-col h-[420px]">
+            <div class="flex-auto">                    
                         @defer (on viewport; on timer(300ms)) {
-                            @if(journalHeader$ | async; as journals  ) {                                           
+                            @if(journalHeader$  | async; as journals  ) {                                           
                             <ng-container>                     
-                                <ejs-grid 
+                                <ejs-grid #grid id="grid"
                                     [dataSource]="journals | filterType : transactionType()"
-                                    height="100%"                                    
-                                    [allowSorting]='true'
+                                    height="360"                                    
+                                    [allowSorting]='true'                                    
                                     [showColumnMenu]='false'                
                                     [gridLines]="lines"
                                     [allowFiltering]='false'                 
@@ -223,8 +219,7 @@ const imports = [
                             <mat-spinner></mat-spinner>
                             </div>
                         }
-                    </div>
-                </div>
+                                    
             </div>
          </mat-card>   
 
@@ -246,7 +241,7 @@ const imports = [
     `,
     providers: [providers]
 })
-export class JournalEntryComponent implements OnInit, OnDestroy {
+export class JournalEntryComponent implements OnInit, OnDestroy, AfterViewInit {
 
     public route = inject(Router);
     public Store = inject(Store);
@@ -256,6 +251,7 @@ export class JournalEntryComponent implements OnInit, OnDestroy {
 
     public periodForm!: FormGroup;    
     public transactionType = input('');
+
     public toolbarTitle: string = "Journal Entry";
     public sGridTitle = 'Journal Entry';
     public formatoptions: Object;
@@ -269,11 +265,14 @@ export class JournalEntryComponent implements OnInit, OnDestroy {
     public filterSettings: FilterSettingsModel;
     public lines: GridLine;
     public journalHeader$: Observable<IJournalHeader[]>;
-    public user$: Observable<string>;
+    public journalTransaction$ : Observable<IJournalTransactions[]>;
+    
+    
     public periodParam!: IPeriodParam;
     public groupSettings: { [x: string]: Object } = { showDropArea: false, columns: ['party_id'] };
 
     drawer = viewChild<MatDrawer>("drawer");
+    grid = viewChild<GridComponent>('grid');
 
     sTitle = 'Transaction Listings by Journal Type';
     
@@ -282,62 +281,10 @@ export class JournalEntryComponent implements OnInit, OnDestroy {
     collapsed = false;
     
 
-    public animation = {
-        effect: 'FadeIn',
-        duration: 800
-    };
-
-    public menuItems: MenuItemModel[] = [
-        {
-            text: 'Edit Journal',
-            iconCss: 'e-icons e-edit-2'
-        },
-        {
-            text: 'Create New Journal',
-            iconCss: 'e-icons e-circle-add'
-        },
-        {
-            text: 'Clone Journal Entry',
-            iconCss: 'e-icons e-copy'
-        },
-        {
-            text: 'Create Template',
-            iconCss: 'e-icons e-table-overwrite-cells'
-        },
-        {
-            separator: true
-        },
-        {
-            text: 'Settings',
-            iconCss: 'e-icons e-settings'
-        },
-
-    ];
-
-    public itemSelect(args: MenuEventArgs): void {
-        
-        switch (args.item.text) {
-            case 'Edit Journal':
-                this.route.navigate(['journals/gl', this.currentRowData.journal_id]);
-                break;
-            case 'Create New Journal':
-                this.onAdd();                
-                break;
-            case 'Clone Journal Entry':
-                this.onClone();
-                break;
-            case 'Create Template':
-                this.onTemplate();
-                break;
-            case 'Settings':                
-                this.openDrawer();
-                break;
-        }
-    }    
-
 
     ngOnInit() {
         this.periodParam = { period: 1, period_year: 2024 };
+
         this.Store.dispatch(loadJournalHeaderByPeriod({ period: this.periodParam }));
         this.journalHeader$ = this.Store.select(selectJournals);
 
@@ -346,6 +293,7 @@ export class JournalEntryComponent implements OnInit, OnDestroy {
             period: ['', Validators.required],
             period_year: ['', Validators.required],
         });
+        
         this.formatoptions = { type: 'dateTime', format: 'M/dd/yyyy' }
         this.selectionOptions = { mode: 'Row' , type: 'Single' };
         this.editSettings = { allowEditing: true, allowAdding: false, allowDeleting: false };
@@ -353,7 +301,7 @@ export class JournalEntryComponent implements OnInit, OnDestroy {
         this.toolbarOptions = ['Search'];
         this.filterSettings = { type: 'Excel' };
         this.lines = 'Both';
-
+        
     }
 
     onTemplate() {        
@@ -361,8 +309,7 @@ export class JournalEntryComponent implements OnInit, OnDestroy {
     }
 
     onClone() {        
-        this.Store.dispatch(cloneJournal({ journal_id: this.currentRowData.journal_id }));
-        this.Store.dispatch(loadJournalHeaderByPeriod({ period: this.periodParam }));
+        this.Store.dispatch(cloneJournal({ journal_id: this.currentRowData.journal_id }));        
         this.toast.success('Journal Entry Cloned : ', this.currentRowData.journal_id);        
     }
 
@@ -378,7 +325,7 @@ export class JournalEntryComponent implements OnInit, OnDestroy {
     selectedRow(args: any) {
         if (args.requestType === 'beginEdit' || args.requestType === 'add') {
             args.cancel = true;
-            var data = args.rowData as IJournalHeader;
+            // var data = args.rowData as IJournalHeader;
             this.currentRowData = args.rowData;
             this.route.navigate(['journals/gl', args.rowData.journal_id]);
         }
@@ -464,5 +411,75 @@ export class JournalEntryComponent implements OnInit, OnDestroy {
         { field: 'create_user', headerText: 'User', width: 100, visible: false },
         { field: 'party_id', headerText: 'Party', width: 100, visible: false }
     ];
+
+    public animation = {
+        effect: 'FadeIn',
+        duration: 800
+    };
+
+    public menuItems: MenuItemModel[] = [
+        {
+            text: 'Edit Journal',
+            iconCss: 'e-icons e-edit-2'
+        },
+        {
+            text: 'Create New Journal',
+            iconCss: 'e-icons e-circle-add'
+        },
+        {
+            text: 'Clone Journal Entry',
+            iconCss: 'e-icons e-copy'
+        },
+        {
+            text: 'Create Template',
+            iconCss: 'e-icons e-table-overwrite-cells'
+        },
+        {
+            separator: true
+        },
+        {
+            text: 'Settings',
+            iconCss: 'e-icons e-settings'
+        },
+
+    ];
+
+    public itemSelect(args: MenuEventArgs): void {
+        
+        switch (args.item.text) {
+            case 'Edit Journal':
+                this.route.navigate(['journals/gl', this.currentRowData.journal_id]);
+                break;
+            case 'Create New Journal':
+                this.onAdd();                
+                break;
+            case 'Clone Journal Entry':
+                this.onClone();
+                break;
+            case 'Create Template':
+                this.onTemplate();
+                break;
+            case 'Settings':                
+                this.openDrawer();
+                break;
+        }
+    }    
+
+    
+
+    @HostListener('window:resize', ['$event'])
+    onResize(event: any) {
+      this.adjustHeight();
+    }
+  
+    ngAfterViewInit() {
+      this.adjustHeight();
+    }
+    
+    adjustHeight() {
+      if (this.grid()) {
+        this.grid().height = (window.innerHeight - 600) + 'px'; // Adjust as needed
+      }
+    }
 
 }

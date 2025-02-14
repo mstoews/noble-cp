@@ -7,7 +7,7 @@ export interface IJournalDetailDelete {
 }
 
 export interface IJournalHeader {
-  journal_id?: number,         
+  journal_id?: number,
   description: string,
   booked: boolean,
   booked_date?: string,
@@ -20,7 +20,7 @@ export interface IJournalHeader {
   status?: string,
   type: string,
   sub_type?: string,
-  amount: number,    
+  amount: number,
   party_id: string,
   invoice_no: string,
   template_name: string,
@@ -29,8 +29,7 @@ export interface IJournalHeader {
   debit?: number
 }
 
-export interface IJournalArrayParams 
-{
+export interface IJournalTransactions {
   journal_id: number
   description: string
   type: string
@@ -68,8 +67,8 @@ export interface Detail {
 
 export interface ITemplateParams {
   journal_id: number,
-	template_description: string,
-	templateType: string
+  template_description: string,
+  templateType: string
 }
 
 export interface ITBParams {
@@ -78,37 +77,37 @@ export interface ITBParams {
 }
 
 export interface IJournalDetail {
-  journal_id    : number,
-  journal_subid : number,
-  account       : number,
-  child         : number,
-  child_desc?   : string,
-  fund          : string,
-  subtype       : string,
-  description   : string,
-  reference     : string,
-  debit         : number,
-  credit        : number,
-  create_date   : string,
-  create_user   : string,
-  period?       : number,
-  period_year?  : number, 
-  template_name?: string 
+  journal_id: number,
+  journal_subid: number,
+  account: number,
+  child: number,
+  child_desc?: string,
+  fund: string,
+  subtype: string,
+  description: string,
+  reference: string,
+  debit: number,
+  credit: number,
+  create_date: string,
+  create_user: string,
+  period?: number,
+  period_year?: number,
+  template_name?: string
 }
 
 export interface IJournalDetailUpdate {
-  journal_id    : number,
-  journal_subid : number,
-  account       : number,
-  child         : number,
-  fund          : string,
-  subtype      : string,
-  description   : string,
-  reference     : string,
-  debit         : number,
-  credit        : number,
-  create_date   : string,
-  create_user   : string
+  journal_id: number,
+  journal_subid: number,
+  account: number,
+  child: number,
+  fund: string,
+  subtype: string,
+  description: string,
+  reference: string,
+  debit: number,
+  credit: number,
+  create_date: string,
+  create_user: string
 }
 
 export interface ITransactionDate {
@@ -117,13 +116,13 @@ export interface ITransactionDate {
 }
 
 export interface IArtifacts {
-  id?           : number,
-  journal_id    : number,
-  reference     : string,
-  description   : string,
-  location      : string,
-  date_created  : string,
-  user_created  : string
+  id?: number,
+  journal_id: number,
+  reference: string,
+  description: string,
+  location: string,
+  date_created: string,
+  user_created: string
 }
 
 export interface IReadJournalDetailsParams {
@@ -158,20 +157,20 @@ export interface IJournalDetailTemplate {
 
 
 export interface IJournalViewDetails {
-    period?         : number,
-    period_year?    : number,
-    journal_id      : number,
-    journal_subid   : number,
-    account         : number,
-    child           : number,
-    description     : string,
-    sub_type        : string,
-    debit           : number,
-    credit          : number,
-    create_date     : Date,
-    create_user     : string,
-    fund            : string,
-    reference       : string,
+  period?: number,
+  period_year?: number,
+  journal_id: number,
+  journal_subid: number,
+  account: number,
+  child: number,
+  description: string,
+  sub_type: string,
+  debit: number,
+  credit: number,
+  create_date: Date,
+  create_user: string,
+  fund: string,
+  reference: string,
 }
 
 

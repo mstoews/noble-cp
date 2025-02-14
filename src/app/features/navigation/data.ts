@@ -87,33 +87,46 @@ export const defaultNavigation: FuseNavigationItem[] = [
         ],
     },
     {
+        id: 'divider-2',
+        type: 'divider',
+    },
+    {
         id: 'support',
         title: 'Support',
         subtitle: 'Documentation and Help Center',
-        type: 'group',
-        icon: 'heroicons_outline:home',
+        type: 'group',        
+        icon: 'heroicons_outline:bars-3',
         children: [
             {
-                id: 'chat',
-                title: 'Chat',
-                type: 'basic',
-                icon: 'mat_outline:chat',
-                link: '/chat',
-            },
-            {
-                id: 'help-center',
-                title: 'Help Center',
-                type: 'basic',
-                icon: 'mat_outline:help_center',
-                link: '/help',
-            },
+                id: 'navigation-features.level.0',
+                title: 'Level 0',
+                icon: 'heroicons_outline:check-circle',
+                type: 'collapsable',
+                    children: [
+                        {
+                            id: 'chat',
+                            title: 'Chat',
+                            type: 'basic',
+                            icon: 'mat_outline:chat',
+                            link: '/chat',
+                        },
+                        {
+                            id: 'help-center',
+                            title: 'Help Center',
+                            type: 'basic',
+                            icon: 'mat_outline:help_center',
+                            link: '/help',
+                        },
 
-            {
-                id: 'accounting.learning',
-                title: 'Learning',
-                type: 'basic',
-                icon: 'heroicons_outline:academic-cap',
-                link: '/learning',
+                        {
+                            id: 'accounting.learning',
+                            title: 'Learning',
+                            type: 'basic',
+                            icon: 'heroicons_outline:academic-cap',
+                            link: '/learning',
+                        },
+                    ],
+        
             },
         ],
     },
@@ -203,6 +216,10 @@ export const compactNavigation: FuseNavigationItem[] = [
                 link: '/settings',
             },
         ],
+    },
+    {
+        id: 'divider-2',
+        type: 'divider',
     },
     {
         id: 'support',

@@ -13,7 +13,7 @@ import { DndComponent } from 'app/features/drag-n-drop/loaddnd/dnd.component';
 import { MatSelect } from '@angular/material/select';
 import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 import { IDropDownAccounts, IFunds } from 'app/models';
-import { Detail, IJournalArrayParams, IJournalDetail, IJournalDetailUpdate, IJournalHeader, IJournalTemplate }  from 'app/models/journals';
+import { Detail, IJournalTransactions, IJournalDetail, IJournalDetailUpdate, IJournalHeader, IJournalTemplate } from 'app/models/journals';
 import { JournalStore } from 'app/services/journal.store';
 import { MatStepperModule } from '@angular/material/stepper';
 import { MAT_FORM_FIELD_DEFAULT_OPTIONS, MatFormFieldModule } from '@angular/material/form-field';
@@ -504,8 +504,8 @@ export class EntryWizardComponent implements OnInit, OnDestroy, AfterViewInit {
     private formBuilder = inject(FormBuilder);
     private partyService = inject(PartyService);
     private router = inject(Router);
-    public  auth = inject(AUTH);
-    public  matDialog = inject(MatDialog);
+    public auth = inject(AUTH);
+    public matDialog = inject(MatDialog);
     private toastr = inject(ToastrService);
 
     public journalDetailSignal = signal<IJournalDetail[]>(null);
@@ -749,10 +749,8 @@ export class EntryWizardComponent implements OnInit, OnDestroy, AfterViewInit {
         this.drawer().close();
     }
 
-    public actionBegin(args: SaveEventArgs): void 
-    {
-        if (args.requestType === "refresh")
-        {
+    public actionBegin(args: SaveEventArgs): void {
+        if (args.requestType === "refresh") {
             args.cancel = true;
             return;
         }
@@ -862,16 +860,16 @@ export class EntryWizardComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     rowDrop(args: RowDragEventArgs): void {
-        
+
         this.message = `Drop  ${args.originalEvent} ${JSON.stringify(args.data)}`;
         console.debug(this.message);
         const value = [];
         for (let r = 0; r < (args.rows as Element[]).length; r++) {
             value.push((args.fromIndex as number) + r);
         }
-        
+
         this.gridControl().reorderRows(value, (args.dropIndex as number));
-        
+
         // this.onSavedDetails(args.data[0]);
     }
 
@@ -1098,7 +1096,7 @@ export class EntryWizardComponent implements OnInit, OnDestroy, AfterViewInit {
 
         var detail: Detail[] = this.journalDetailSignal();
 
-        var journalArray: IJournalArrayParams = {
+        var journalArray: IJournalTransactions = {
             journal_id: this.journalHeader.journal_id,
             description: this.journalHeader.description,
             type: this.journalHeader.type,

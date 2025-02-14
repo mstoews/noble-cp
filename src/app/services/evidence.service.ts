@@ -18,7 +18,7 @@ export class EvidenceService {
     return this.httpClient.post<IArtifacts>(url, evidence).pipe(shareReplay({ bufferSize: 1, refCount: true }));
   }
 
-  readEvidence() {
+  read() {
     var url = this.baseUrl + '/v1/read_evidence';
     return this.httpClient.get<IArtifacts[]>(url).pipe(shareReplay({ bufferSize: 1, refCount: true }));
   }

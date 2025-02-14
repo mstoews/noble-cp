@@ -7,11 +7,19 @@ import { MatTableModule } from '@angular/material/table';
 import { GridMenubarStandaloneComponent } from 'app/features/accounting/grid-components/grid-menubar.component';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { CurrencyPipe } from '@angular/common';
+import { DropDownListModule } from '@syncfusion/ej2-angular-dropdowns';
+import { IDataOptions, PivotView, PivotViewModule, IDataSet, VirtualScrollService } from '@syncfusion/ej2-angular-pivotview';
+import { DataManager, WebApiAdaptor } from '@syncfusion/ej2-data';
 
 @Component({
   selector: 'tb-grid',
   providers: [ReportStore],
-  imports: [MatTableModule, GridMenubarStandaloneComponent, MatProgressSpinnerModule, CurrencyPipe],
+  imports: [
+    MatTableModule,  
+    MatProgressSpinnerModule, 
+    GridMenubarStandaloneComponent,
+    PivotViewModule, 
+    DropDownListModule ],
   template: `
   <div class="flex flex-col min-w-0 overflow-y-auto -px-10">
     <div class="flex-auto">
@@ -23,39 +31,23 @@ import { CurrencyPipe } from '@angular/common';
                         
                         @if (store.isLoading() === false) 
                         {                            
-                          <table mat-table [dataSource]="store.tb()" class="mat-elevation-z8 ">
-  
-                            <ng-container matColumnDef="account">
-                              <th mat-header-cell *matHeaderCellDef> Account </th>
-                              <td mat-cell *matCellDef="let element"> {{element.account}} </td>
-                            </ng-container>
-
-
-                            <ng-container matColumnDef="child">
-                              <th mat-header-cell *matHeaderCellDef> Child </th>
-                              <td mat-cell *matCellDef="let element"> {{element.child}} </td>
-                            </ng-container>
-
-
-                            <ng-container matColumnDef="description">
-                              <th mat-header-cell *matHeaderCellDef> Description </th>
-                              <td mat-cell *matCellDef="let element"> {{element.description}} </td>
-                            </ng-container>
-
-
-                            <ng-container matColumnDef="debit_amount">
-                              <th mat-header-cell *matHeaderCellDef> Debit </th>
-                              <td mat-cell *matCellDef="let element"> {{element.debit_amount | currency}} </td>
-                            </ng-container>
-
-                            <ng-container matColumnDef="credit_amount">
-                              <th mat-header-cell *matHeaderCellDef> Credit </th>
-                              <td mat-cell *matCellDef="let element"> {{element.credit_amount | currency}} </td>
-                            </ng-container>
-
-                            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-                            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-                          </table>
+                          <div class="control-section">
+                            <div id="ddl-control">
+                                <ejs-dropdownlist id='performance' #performance 
+                                    [dataSource]='dataSource' 
+                                    [fields]='fields' 
+                                    showFieldList='true' 
+                                    width="240" 
+                                    index='0'
+                                    (change)='onChange($event)' 
+                                    placeholder="Select a Data Range" popupHeight="240px">
+                                </ejs-dropdownlist>
+                                <span id="performanceTime">Time Taken: 0 sec</span>
+                            </div>
+                            <ejs-pivotview #pivotview id='PivotView' [dataSourceSettings]=dataSourceSettings [width]='width' height='300'
+                                  enableVirtualization='true' [gridSettings]='gridSettings' (dataBound)='ondataBound($event)' (load)='load()'>
+                            </ejs-pivotview>
+                          </div>
 
                         }
                            @else
@@ -84,10 +76,21 @@ import { CurrencyPipe } from '@angular/common';
 export class TbGridComponent implements OnInit {
 
   store = inject(ReportStore);
-  displayedColumns: string[] = ['account', 'child', 'description', 'debit_amount', 'credit_amount'];
-  dataSource: ITrialBalance[] = [];
+  dataSource: ITrialBalance[] = [];  
+  dataSourceSettings: IDataOptions;  
+  Pivot_Data: IDataSet[] = [];
+  public remoteData: DataManager;
+  
+  public jsonReport: IDataOptions;
 
+  
   ngOnInit(): void {
+
+    this.remoteData = new DataManager({
+      url: 'https://',
+      adaptor: new WebApiAdaptor,
+      crossDomain: true
+    });
 
     const periodParams = {
       period: 1,
@@ -97,5 +100,29 @@ export class TbGridComponent implements OnInit {
     this.store.loadTB(periodParams);
     this.dataSource = this.store.tb();
 
+    this.jsonReport = {
+      url: '',
+      dataSource: this.getPivotData(),
+      type: 'JSON',
+      expandAll: true,
+      filters: [],
+      columns: [{ name: 'ProductName', caption: 'Product Name' }],
+      rows: [{ name: 'ShipCountry', caption: 'Ship Country' }, { name: 'ShipCity', caption: 'Ship City' }],
+      formatSettings: [{ name: 'UnitPrice', format: 'C0' }],
+      values: [{ name: 'Quantity' }, { name: 'UnitPrice', caption: 'Unit Price' }]
+    };
+    
+  }
+
+  getPivotData(): any {
+    let pivotData: IDataSet[] = this.dataSource.map((item: ITrialBalance) => {
+      return {
+        Account: item.account,
+        AccountName: item.account_description,
+        Debit: item.credit_amount,
+        Credit: item.debit_amount,
+        Balance: item.opening_balance,
+      };
+    } );
   }
 }
