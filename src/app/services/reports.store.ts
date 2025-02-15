@@ -8,7 +8,7 @@ import {
   } from '@ngrx/signals';
   
   import { rxMethod } from '@ngrx/signals/rxjs-interop';
-  import { pipe, switchMap, tap } from 'rxjs';
+  import { concatMap, pipe, switchMap, tap } from 'rxjs';
   import { inject } from '@angular/core';
   import { tapResponse } from '@ngrx/operators';
   import { ITrialBalance } from 'app/models';
@@ -39,7 +39,7 @@ import { GridSettingsService, IGridSettingsModel } from './grid.settings.service
         loadTB: rxMethod<ITBParams>(
             pipe(
             tap(() => patchState(state, { isLoading: true })),
-            switchMap((value) => {
+            concatMap((value) => {
                 return reportService.readTbByPeriod(value).pipe(
                 tapResponse({
                     next: (tb) => patchState(state, { tb: tb }),
