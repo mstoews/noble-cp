@@ -18,7 +18,7 @@ import { MaterialModule } from 'app/services/material.module';
 import { TasksComponent } from './task/tasks.component';
 import { KanbanListComponent } from './kanban-list/kanban-list.component';
 import { ScheduleNobleComponent } from './schedule/schedule.component';
-import { TeamsComponent } from '../accounting/static/accounts/gl.teams.component';
+import { TeamsComponent } from '../accounting/static/team/gl.teams.component';
 
 @Component({
     selector: 'gl-kanban-panel',
@@ -27,8 +27,8 @@ import { TeamsComponent } from '../accounting/static/accounts/gl.teams.component
     imports: [
         MaterialModule,
         NgClass,
-        TasksComponent,                
-        KanbanListComponent,        
+        TasksComponent,
+        KanbanListComponent,
         ScheduleNobleComponent,
         TeamsComponent,
         ScheduleNobleComponent

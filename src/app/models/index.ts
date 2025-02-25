@@ -1,6 +1,7 @@
 import type { User } from "firebase/auth";
 import { DocumentReference, Timestamp, FieldValue } from "firebase/firestore";
 import * as subtypes from './subtypes';
+import { AcroFormButton } from "jspdf";
 
 export interface IDashboardFund {
   fund: string,
@@ -242,7 +243,7 @@ export interface IAccounts {
   id?: number;
   account: number;
   child: number;
-  parent_account: number;
+  parent_account: boolean;
   acct_type: string;
   sub_type: string;
   description: string;
@@ -254,6 +255,13 @@ export interface IAccounts {
   update_date: string;
   update_user: string;
 }
+
+export interface IAccountSettings {
+  ar: string;
+  ap: string;
+  apc: string;
+  arc: string;
+} 
 
 
 export interface imageItem {

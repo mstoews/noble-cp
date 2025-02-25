@@ -110,7 +110,7 @@ export const appRoutes: Route[] = [
                 canActivate: [isAuthenticatedGuard()],
                 loadChildren: () =>
                     import(
-                        'app/features/accounting/static/accounts/gl.01.main.components.routes'
+                        'app/features/accounting/static/gl.01.main.components.routes'
                     ),
             },
             {
@@ -193,12 +193,12 @@ export const appRoutes: Route[] = [
                 path: 'glaccts',
                 canActivate: [isAuthenticatedGuard()],
                 loadChildren: () =>
-                    import('app/features/accounting/static/accounts/gl.accts.routes'),
+                    import('app/features/accounting/static/accts/accts.routes'),
             },
             {
                 path: 'settings',
                 canActivate: [isAuthenticatedGuard()],
-                loadChildren: () =>  import('app/features/pages/settings/settings.routes'),                
+                loadChildren: () => import('app/features/pages/settings/settings.routes'),
             },
             {
                 path: 'docs',

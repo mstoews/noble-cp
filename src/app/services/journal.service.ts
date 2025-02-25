@@ -322,7 +322,7 @@ export class JournalService implements OnDestroy {
       party_id: header.party_id,
       invoice_no: header.invoice_no,
     }
-    return this.httpClient.post<any>(url, journalHeaderUpdate).pipe(
+    return this.httpClient.post<IJournalHeader>(url, journalHeaderUpdate).pipe(
       shareReplay({ bufferSize: 1, refCount: true }));
   }
 

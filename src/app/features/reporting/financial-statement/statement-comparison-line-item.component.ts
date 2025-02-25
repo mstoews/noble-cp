@@ -8,11 +8,8 @@ import { AcademyComponent } from "../../admin/academy/academy.component";
   selector: 'statement-comparison-item',
   imports: [CommonModule, MatCardModule],  
   template: `        
-            
-            <section class="grid grid-cols-1 text-sm">
-
-              
-              
+          <div class="">
+          <section class="grid grid-cols-1 text-sm">              
                 @if (item().trans_type == 'TB Summary') {                    
                   <div class="grid grid-cols-12 gap-2 border-t border-gray-700 mt-2 bg-gray-100">      
                     <div (click)="onChild($event)" class="col-start-1 text-bold text-gray-900">{{item().child}}</div>
@@ -33,7 +30,7 @@ import { AcademyComponent } from "../../admin/academy/academy.component";
                   </div>
                 }                
           </section>
-        
+          </div>  
   `,
 })
 

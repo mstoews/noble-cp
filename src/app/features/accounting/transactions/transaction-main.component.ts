@@ -19,7 +19,7 @@ import { ARTransactionComponent } from './ar-listing.component';
 import { APTransactionComponent } from './ap-listing.component';
 import { AppStore, ApplicationService } from "../../../services/application.state.service";
 import { GLTransactionListComponent } from './gl-listing.component';
-import { uiUpdate } from '@syncfusion/ej2-grids';
+import { CdkScrollable } from '@angular/cdk/scrolling';
 
 
 const imports = [
@@ -30,7 +30,8 @@ const imports = [
     JournalTemplateComponent,
     ARTransactionComponent,
     APTransactionComponent,
-    GLTransactionListComponent
+    GLTransactionListComponent,
+    CdkScrollable
 ]
 
 @Component({
@@ -40,63 +41,46 @@ const imports = [
     changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [AppStore],
     template: `
-        <div class="flex flex-col w-full min-w-0 sm:absolute sm:inset-0 sm:overflow-hidden">
-            <mat-drawer-container class="flex-auto sm:h-full">
-                <!-- Drawer -->
+        <div class="flex flex-col w-full min-w-0 sm:absolute sm:inset-0 sm:overflow-x-hidden">
+            <mat-drawer-container class="flex-auto sm:h-full">                
                 @if(store.panels().length > 0) {
-                <mat-drawer class="sm:w-72 dark:bg-gray-900" [autoFocus]="false" [mode]="drawerMode" [opened]="drawerOpened"
-                            #drawer>
-                    <!-- Header -->
-                    <div class="flex items-center justify-between m-8 mr-6 sm:my-10">
-                        <!-- Title -->
-                        <div class="text-4xl font-extrabold tracking-tight leading-none">
-                            Transactions
-                        </div>
-                        <!-- Close button -->
-                        <div class="lg:hidden">
-                            <button mat-icon-button (click)="drawer.close()">
-                                <mat-icon [svgIcon]="'heroicons_outline:academic-cap'"></mat-icon>
-                            </button>
-                        </div>
-                    </div>
-                    <!-- Panel links -->
-                    <div class="flex flex-col divide-y border-t border-b">
-                        @for (panel of panels; track trackByFn($index, panel)) {
-
-                            <div class="flex px-8 py-5 cursor-pointer" [ngClass]="{
-                            'hover:bg-gray-100 dark:hover:bg-hover':
-                                !selectedPanel || selectedPanel !== panel.id,
-                            'bg-primary-50 dark:bg-hover':
-                                selectedPanel && selectedPanel === panel.id
-                        }" (click)="goToPanel(panel.id)">
-                                <mat-icon [ngClass]="{
-                                'text-hint':
-                                    !selectedPanel ||
-                                    selectedPanel !== panel.id,
-                                'text-primary dark:text-primary-500':
-                                    selectedPanel && selectedPanel === panel.id
-                            }" [svgIcon]="panel.icon"></mat-icon>
-                                <div class="ml-3">
-                                    <div class="font-medium leading-6" [ngClass]="{
-                                    'text-primary dark:text-primary-500':
-                                        selectedPanel &&
-                                        selectedPanel === panel.id
-                                }">
-                                        {{ panel.title }}
-                                    </div>
-                                    <div class="mt-0.5 text-secondary">
-                                        {{ panel.description }}
-                                    </div>
-                                </div>
+                    <mat-drawer class="sm:w-72 dark:bg-gray-900" [autoFocus]="false" [mode]="drawerMode" [opened]="drawerOpened" #drawer>
+                        <!-- Header -->
+                        <div class="flex items-center justify-between m-8 mr-6 sm:my-10">
+                            <!-- Title -->
+                            <div class="text-4xl font-extrabold tracking-tight leading-none">
+                                Transactions
                             </div>
-
-                        }
-                    </div>
-                </mat-drawer>
+                            <!-- Close button -->
+                            <div class="lg:hidden">
+                                <button mat-icon-button (click)="drawer.close()">
+                                    <mat-icon [svgIcon]="'heroicons_outline:academic-cap'"></mat-icon>
+                                </button>
+                            </div>
+                        </div>
+                        <!-- Panel links -->
+                        <div class="flex flex-col divide-y border-t border-b">
+                            @for (panel of panels; track trackByFn($index, panel)) {
+                               <div class="flex px-8 py-5 cursor-pointer" [ngClass]="{'hover:bg-gray-100 dark:hover:bg-hover':  !selectedPanel || selectedPanel !== panel.id,
+                                    'bg-primary-50 dark:bg-hover':
+                                        selectedPanel && selectedPanel === panel.id
+                                    }" (click)="goToPanel(panel.id)">
+                                        <mat-icon [ngClass]="{'text-hint':!selectedPanel || selectedPanel !== panel.id, 'text-primary dark:text-primary-500': selectedPanel && selectedPanel === panel.id
+                                    }" [svgIcon]="panel.icon"></mat-icon>
+                                        <div class="ml-3">
+                                            <div class="font-medium leading-6" [ngClass]="{'text-primary dark:text-primary-500': selectedPanel && selectedPanel === panel.id }">
+                                                {{ panel.title }}
+                                            </div>
+                                            <div class="mt-0.5 text-secondary">
+                                                {{ panel.description }}
+                                            </div>
+                                        </div>
+                                    </div>
+                            }
+                        </div>
+                    </mat-drawer>
                 }
-
-                <!-- Drawer content -->
-                <mat-drawer-content class="flex flex-col overflow-hidden">
+                <mat-drawer-content class="flex flex-col overflow-x-hidden" cdkScrollable>
                     <!-- Main -->
                     <div class="flex-auto px-6 pt-9 pb-12 md:p-8 md:pb-12 lg:p-12">
                         <!-- Panel header -->
@@ -114,12 +98,12 @@ const imports = [
                         <!-- Load settings panel -->
                         <div class="mt-8">
                             @switch (selectedPanel) {
-                                @case ('entry') {  <entry-wizard></entry-wizard>}                                
-                                @case ('gl')    {  <gl-transactions-list></gl-transactions-list>  }                                
-                                @case ('ap')    {  <ap-transactions></ap-transactions>}
-                                @case ('ar')    {  <ar-transactions></ar-transactions>}
-                                @case ('tp')   { <journal-template></journal-template>  }
-                                @case ('at')   { <app-file-manager></app-file-manager>}
+                                @case ('entry') { <entry-wizard></entry-wizard>}                                
+                                @case ('gl')    { <gl-transactions-list></gl-transactions-list>  }                                
+                                @case ('ap')    { <ap-transactions></ap-transactions>}
+                                @case ('ar')    { <ar-transactions></ar-transactions>}
+                                @case ('tp')    { <journal-template></journal-template>  }
+                                @case ('at')    { <app-file-manager></app-file-manager>}
                             }
                         </div>
                     </div>

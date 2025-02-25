@@ -3,9 +3,9 @@ export interface IParty {
     name: string;
     party_type: string;
     address_id: number;
-    create_date: Date,
+    create_date: string,
     create_user: string,
-    update_date: Date,
+    update_date: string,
     update_user: string
   }
   

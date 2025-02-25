@@ -19,10 +19,11 @@ import { provideStoreDevtools } from '@ngrx/store-devtools';
 
 import * as fromPriority from 'app/state/kanban-state/priority/priority.state';
 import * as fromKanban from 'app/state/kanban-state/kanban/kanban.state';
-import * as fromPeriods from 'app/state/periods/periods.state';
-import * as fromSubtype from 'app/state/subtype/sub-type.state';
-import * as fromParty from 'app/state/party/party.state';
-import * as fromAccounts from 'app/state/accts/accts.state'
+import * as fromPeriods from 'app/features/accounting/static/periods/periods.state';
+import * as fromSubtype from 'app/features/accounting/static/subtype/sub-type.state';
+import * as fromParty from 'app/features/accounting/static/party/party.state';
+import * as fromAccounts from 'app/features/accounting/static/accts/accts.state'
+import * as fromGlType from 'app/features/accounting/static/gltype/gltype.state';
 
 
 import {
@@ -52,19 +53,20 @@ import { journalTransactionEffects } from './state/journalTransactions/Journal.E
 import { templateEffects } from './state/template/Template.Effects';
 import { userEffects } from './state/users/Users.Effects';
 import { provideRouterStore } from '@ngrx/router-store';
-import { FundsReducer } from './state/funds/Funds.Reducer';
-import { fundsEffects } from './state/funds/Funds.Effects';
+import { FundsReducer } from './features/accounting/static/funds/Funds.Reducer';
+import { fundsEffects } from './features/accounting/static/funds/Funds.Effects';
 import { UserService } from './services/user.service';
 
-import { periodEffects } from './state/periods/periods.effects';
-import { subTypeEffects } from './state/subtype/sub-type.effects';
+import { periodEffects } from './features/accounting/static/periods/periods.effects';
+import { subTypeEffects } from './features/accounting/static/subtype/sub-type.effects';
 
 
 import { ApplicationService } from "./services/application.state.service";
 import { kanbanEffects } from './state/kanban-state/kanban/kanban.effects';
-import { partyEffects } from './state/party/party.effects';
-import { accountEffects } from './state/accts/accts.effects';
+import { partyEffects } from './features/accounting/static/party/party.effects';
+import { accountEffects } from './features/accounting/static/accts/accts.effects';
 import { JournalTransactionReducer } from './state/journalTransactions/Journal.Reducer';
+import { glTypeEffects } from './features/accounting/static/gltype/gltype.effects';
 
 
 const app = initializeApp(environment.firebase);
@@ -159,18 +161,20 @@ export const appConfig: ApplicationConfig = {
     provideState(fromParty.partyFeature),
     provideState(fromKanban.kanbanFeature),
     provideState(fromAccounts.accountsFeature),
-    provideEffects( [
-        accountEffects,
-        periodEffects,
-        kanbanEffects,
-        templateEffects,
-        partyEffects,
-        journalHeaderEffects,
-        journalTransactionEffects,
-        periodEffects,
-        fundsEffects,
-        subTypeEffects
-      ]),
+    provideState(fromGlType.gltypeFeature),
+    provideEffects([
+      accountEffects,
+      periodEffects,
+      kanbanEffects,
+      templateEffects,
+      partyEffects,
+      journalHeaderEffects,
+      journalTransactionEffects,
+      periodEffects,
+      fundsEffects,
+      subTypeEffects,
+      glTypeEffects,
+    ]),
     provideRouterStore(),
     provideStoreDevtools({ maxAge: 25 }),
 

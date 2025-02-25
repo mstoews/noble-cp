@@ -1,5 +1,5 @@
 import { NgClass, NgSwitch, NgSwitchCase } from '@angular/common';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, OnDestroy, OnInit, viewChild, ViewChild, ViewEncapsulation } from '@angular/core';
 import { MatDrawer } from '@angular/material/sidenav';
 import { FuseMediaWatcherService } from '@fuse/services/media-watcher';
 import { MaterialModule } from 'app/services/material.module';
@@ -28,8 +28,7 @@ const imports = [
     <mat-drawer-container class="flex-auto sm:h-full">
         <!-- Drawer -->
         @if(store.panels().length > 0) {
-        <mat-drawer class="sm:w-72 dark:bg-gray-900" [autoFocus]="false" [mode]="drawerMode" [opened]="drawerOpened"
-            #drawer>
+        <mat-drawer class="sm:w-72 dark:bg-gray-900" [autoFocus]="false" [mode]="drawerMode" [opened]="drawerOpened" #drawer>
             <!-- Header -->
             <div class="flex items-center justify-between m-8 mr-6 sm:my-10">
                 <!-- Title -->
@@ -38,7 +37,7 @@ const imports = [
                 </div>
                 <!-- Close button -->
                 <div class="lg:hidden">
-                    <button mat-icon-button (click)="drawer.close()">
+                    <button mat-icon-button (click)="drawer().close()">
                         <mat-icon [svgIcon]="'heroicons_outline:academic-cap'"></mat-icon>
                     </button>
                 </div>
@@ -47,25 +46,14 @@ const imports = [
             <div class="flex flex-col divide-y border-t border-b">
                 @for (panel of panels; track trackByFn($index, panel)) {
 
-                <div class="flex px-8 py-5 cursor-pointer" [ngClass]="{
-                            'hover:bg-gray-100 dark:hover:bg-hover':
-                                !selectedPanel || selectedPanel !== panel.id,
+                <div class="flex px-8 py-5 cursor-pointer" [ngClass]="{ 'hover:bg-gray-100 dark:hover:bg-hover': !selectedPanel || selectedPanel !== panel.id,
                             'bg-primary-50 dark:bg-hover':
                                 selectedPanel && selectedPanel === panel.id
                         }" (click)="goToPanel(panel.id)">
-                    <mat-icon [ngClass]="{
-                                'text-hint':
-                                    !selectedPanel ||
-                                    selectedPanel !== panel.id,
-                                'text-primary dark:text-primary-500':
-                                    selectedPanel && selectedPanel === panel.id
+                    <mat-icon [ngClass]="{'text-hint': !selectedPanel || selectedPanel !== panel.id, 'text-primary dark:text-primary-500': selectedPanel && selectedPanel === panel.id
                             }" [svgIcon]="panel.icon"></mat-icon>
                     <div class="ml-3">
-                        <div class="font-medium leading-6" [ngClass]="{
-                                    'text-primary dark:text-primary-500':
-                                        selectedPanel &&
-                                        selectedPanel === panel.id
-                                }">
+                        <div class="font-medium leading-6" [ngClass]="{ 'text-primary dark:text-primary-500': selectedPanel && selectedPanel === panel.id }">
                             {{ panel.title }}
                         </div>
                         <div class="mt-0.5 text-secondary">
@@ -85,8 +73,9 @@ const imports = [
                 <!-- Panel header -->
                 <div class="flex items-center">
                     <!-- Drawer toggle -->
-                    <button class="lg:hidden -ml-2" mat-icon-button (click)="drawer.toggle()">
-                        <mat-icon [svgIcon]="'heroicons_outline:bars-3'"></mat-icon>
+                    
+                    <button class="lx2:hidden -ml-2" mat-icon-button (click)="drawer().toggle()">
+                                <mat-icon [svgIcon]="'heroicons_outline:bars-3'"></mat-icon>
                     </button>
 
                     <!-- Panel title -->
@@ -97,13 +86,12 @@ const imports = [
 
                 <!-- Load settings panel -->
                 <div class="mt-8">
-                    @switch (selectedPanel) {                    
+                @switch (selectedPanel) {                    
                     @case ('budget-landing') { <budget-landing></budget-landing> }
                     @case ('budget-update') { <budget-update></budget-update> }                                        
                     @case ('entry') { <entry-wizard></entry-wizard> }                    
-                    @case ('budget-wizard') { <budget-wizard></budget-wizard> }
-                    
-                    }
+                    @case ('budget-wizard') { <budget-wizard></budget-wizard> }                    
+                 }
 
                 </div>
             </div>
@@ -114,8 +102,7 @@ const imports = [
     styles: ``
 })
 export class BudgetMainComponent {
-
-    @ViewChild('drawer') drawer: MatDrawer;
+    drawer = viewChild<MatDrawer>('drawer');
     drawerMode: 'over' | 'side' = 'side';
     drawerOpened: boolean = true;
     panels: any[] = [];
@@ -125,34 +112,17 @@ export class BudgetMainComponent {
     store = inject(AppStore);
     panelService = inject(ApplicationService);
 
-
-    /**
-     * Constructor
-     */
     constructor(
         private _changeDetectorRef: ChangeDetectorRef,
         private _fuseMediaWatcherService: FuseMediaWatcherService,
-    ) {
-
-        
-        
+    ) {        
         this.panelService.getUserId().subscribe((uid) => {
             this.panelService.findPanelByName(uid, this.PANEL_ID).subscribe((panel) => {
                 this.selectedPanel = panel.lastPanelOpened;
             });
         });
-
-        
-
     }
 
-    // -----------------------------------------------------------------------------------------------------
-    // @ Lifecycle hooks
-    // -----------------------------------------------------------------------------------------------------
-
-    /**
-     * On init
-     */
     ngOnInit(): void {
         // Setup available panels
         this.panels = [
@@ -168,12 +138,6 @@ export class BudgetMainComponent {
                 title: 'Budget Maintenance',
                 description: 'Manage your budget transactions',
             },
-            // {
-            //     id: 'entry',
-            //     icon: 'heroicons_outline:document-plus',
-            //     title: 'Add Budget Entry',
-            //     description: 'Create budget entry for each of the current trial balance line entry items.',
-            // },
             {
                 id: 'budget-wizard',
                 icon: 'heroicons_outline:document-duplicate',
@@ -238,7 +202,7 @@ export class BudgetMainComponent {
 
         // Close the drawer on 'over' mode
         if (this.drawerMode === 'over') {
-            this.drawer.close();
+            this.drawer().close();
         }
     }
 

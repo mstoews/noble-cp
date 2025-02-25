@@ -67,18 +67,13 @@ const keyExpr = ["account", "child"];
                     [allowReordering]='true' 
                     [allowExcelExport]='true' 
                     [allowPdfExport]='true' 
-                    [contextMenuItems]="contextMenuItems"
+                    
                     (actionBegin)='actionBegin($event)' 
                     (rowSelected)="rowSelected($event)"              
                     (actionComplete)='actionComplete($event)'>
             </ejs-grid>
         </ng-container>       
-        <ejs-contextmenu              
-             target='#target' 
-             (select)="itemSelect($event)"
-             [animationSettings]='animation'
-             [items]= 'menuItems'> 
-         </ejs-contextmenu>  
+        
     </mat-drawer-container>
     `,
     providers: [providers],
@@ -151,55 +146,6 @@ export class GLGridComponent implements OnInit {
     constructor() {
         this.gridHeight = window.innerHeight - 540;
     }
-    
-    public menuItems: MenuItemModel[] = [
-        {
-            text: 'Edit Journal',
-            iconCss: 'e-icons e-edit-2'
-        },
-        {
-            text: 'Create New Journal',
-            iconCss: 'e-icons e-circle-add'
-        },
-        {
-            text: 'Clone Journal Entry',
-            iconCss: 'e-icons e-copy'
-        },
-        {
-            text: 'Create Template',
-            iconCss: 'e-icons e-table-overwrite-cells'
-        },
-        {
-            separator: true
-        },
-        {
-            text: 'Settings',
-            iconCss: 'e-icons e-settings'
-        },
-    
-    ];
-
-    public itemSelect(args: MenuEventArgs): void {
-        
-        switch (args.item.text) {
-            case 'Edit Journal':
-                //this.route.navigate(['journals/gl', this.currentRowData.journal_id]);
-                break;
-            case 'Create New Journal':
-                this.onAdd();                
-                break;
-            case 'Clone Journal Entry':
-                //this.onClone();
-                break;
-            case 'Create Template':
-                //this.onTemplate();
-                break;
-            case 'Settings':                
-                //this.openDrawer();
-                break;
-        }
-    }    
-
     
     public filterOptions: Object = { type: 'Excel' };
 
