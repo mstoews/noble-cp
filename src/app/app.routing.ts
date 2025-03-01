@@ -134,6 +134,13 @@ export const appRoutes: Route[] = [
                     ),
             },
             {
+                path: 'edit-journals',
+                canActivate: [isAuthenticatedGuard()],
+                loadChildren: () =>
+                    import( 'app/features/accounting/transactions/edit-journal.entry.routes'
+                    ),
+            },
+            {
                 path: 'analytics',
                 canActivate: [isAuthenticatedGuard()],
                 loadChildren: () =>

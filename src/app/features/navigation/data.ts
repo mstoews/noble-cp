@@ -30,7 +30,14 @@ export const defaultNavigation: FuseNavigationItem[] = [
                 type: 'basic',
                 icon: 'heroicons_outline:banknotes',
                 link: '/journals',
-            },            
+            },
+            {
+                id: 'accounts.edit-journals',
+                title: 'Edit Transactions',
+                type: 'basic',
+                icon: 'heroicons_outline:currency-dollar',
+                link: '/edit-journals',
+            },                        
             {
                 id: 'budgeting',
                 title: 'Budget Analysis',
@@ -162,6 +169,13 @@ export const compactNavigation: FuseNavigationItem[] = [
                 icon: 'heroicons_outline:banknotes',
                 link: '/journals',
             },            
+            {
+                id: 'accounts.edit-journals',
+                title: 'Edit Transactions',
+                type: 'basic',
+                icon: 'heroicons_outline:currency-dollar',
+                link: '/edit-journals',
+            },                        
             {
                 id: 'budgeting',
                 title: 'Budget Analysis',

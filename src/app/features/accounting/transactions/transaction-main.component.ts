@@ -30,8 +30,7 @@ const imports = [
     JournalTemplateComponent,
     ARTransactionComponent,
     APTransactionComponent,
-    GLTransactionListComponent,
-    JournalRouteComponent,
+    GLTransactionListComponent,    
     CdkScrollable
 ]
 
@@ -99,8 +98,7 @@ const imports = [
                         <!-- Load settings panel -->
                         <div class="mt-8">
                             @switch (selectedPanel) {
-                                @case ('entry') { <entry-wizard></entry-wizard>}                                
-                                @case ('edit')  { <journal-route></journal-route> }
+                                @case ('entry') { <entry-wizard></entry-wizard>}                                                                
                                 @case ('gl')    { <gl-transactions-list></gl-transactions-list>  }                                
                                 @case ('ap')    { <ap-transactions></ap-transactions>}
                                 @case ('ar')    { <ar-transactions></ar-transactions>}
@@ -166,12 +164,6 @@ export class TransactionMainComponent implements OnInit, OnDestroy {
                 icon: 'heroicons_outline:document-plus',
                 title: 'Transaction Wizard',
                 description: 'Create transactions and append digital artifacts for each transaction',
-            },
-            {
-                id: 'edit',
-                icon: 'heroicons_outline:document-check',
-                title: 'Transaction Edit',
-                description: 'Edit current transactions',
             },
             {
                 id: 'gl',
