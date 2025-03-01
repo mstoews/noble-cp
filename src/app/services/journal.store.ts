@@ -12,7 +12,6 @@ import { debounceTime, exhaustMap, pipe, switchMap, tap } from 'rxjs';
 import { inject } from '@angular/core';
 import { tapResponse } from '@ngrx/operators';
 import {
-
   IArtifacts,
   IJournalTransactions,
   IJournalDetail,
@@ -32,9 +31,12 @@ import { IPeriod, IPeriodParam } from 'app/models/period';
 import { ISubType } from 'app/models/subtypes';
 import { FundsService } from "./funds.service";
 import { ITemplateRender } from '@syncfusion/ej2-grids';
+import { getJournalHeader } from 'app/state/journal/Journal.Action';
 
 
 export interface JournalStateInterface {
+  currentJournal: IJournalHeader;
+  maxJournal: number | null;
   gl: IJournalHeader[];
   details: IJournalDetail[];
   templates: IJournalTemplate[];
@@ -53,8 +55,10 @@ export interface JournalStateInterface {
 }
 
 export const JournalStore = signalStore(
-  { protectedState: false },
+  { providedIn: 'root' },
   withState<JournalStateInterface>({
+    currentJournal: null,
+    maxJournal: 0,    
     gl: [],
     details: [],
     accounts: [],
@@ -76,7 +80,7 @@ export const JournalStore = signalStore(
   withMethods((state,
     fundsService = inject(FundsService),
     journalService = inject(JournalService)) => ({
-      removeJournalHeader: rxMethod<IJournalHeader>(
+    removeJournalHeader: rxMethod<IJournalHeader>(
         pipe(
           switchMap((value) => {
             patchState(state, { isLoading: true });
@@ -93,7 +97,7 @@ export const JournalStore = signalStore(
         )
       ),
 
-      createJournalHeader: rxMethod<IJournalHeader>(
+    createJournalHeader: rxMethod<IJournalHeader>(
         pipe(
           switchMap((value) => {
             patchState(state, { isLoading: true });
@@ -109,7 +113,7 @@ export const JournalStore = signalStore(
           })
         )
       ),
-      createJournal: rxMethod<IJournalTransactions>(
+    createJournal: rxMethod<IJournalTransactions>(
         pipe(
           switchMap((value) => {
             patchState(state, { isLoading: true });
@@ -139,6 +143,19 @@ export const JournalStore = signalStore(
           })
         )
       ),
+      getJournalHeader: rxMethod<number>(
+        pipe(
+          tap(() => patchState(state, { isLoading: true })),
+          switchMap((value) => {
+            return journalService.getJournalHeaderById(value).pipe(
+              tapResponse({
+                next: (journal) => patchState(state, { currentJournal: journal }),
+                error: console.error,
+                finalize: () => patchState(state, { isLoading: false }),
+              })
+            );
+          })
+      )),
       updateJournalHeader: rxMethod<IJournalHeader>(
         pipe(
           switchMap((value) => {
@@ -175,7 +192,7 @@ export const JournalStore = signalStore(
           })
         )
       ),
-      createJournalDetail: rxMethod<IJournalDetail>(
+    createJournalDetail: rxMethod<IJournalDetail>(
         pipe(
           tap(() => patchState(state, { isLoading: true })),
           switchMap((value) => {
@@ -192,7 +209,7 @@ export const JournalStore = signalStore(
           })
         )
       ),
-      createJournalTemplate: rxMethod<IJournalParams>(
+    createJournalTemplate: rxMethod<IJournalParams>(
         pipe(
           tap(() => patchState(state, { isLoading: true })),
           switchMap((value) => {
@@ -208,7 +225,7 @@ export const JournalStore = signalStore(
           })
         )
       ),
-      deleteJournalDetail: rxMethod<IJournalDetailDelete>(
+    deleteJournalDetail: rxMethod<IJournalDetailDelete>(
         pipe(
           tap(() => patchState(state, { isLoading: true })),
           switchMap((value) => {
@@ -372,6 +389,19 @@ export const JournalStore = signalStore(
           })
         )
       ),
+      loadMaxJournal: rxMethod<void>(
+          pipe(
+          tap(() => patchState(state, { isLoading: true })),
+          exhaustMap(() => {
+            return journalService.getLastJournalNo().pipe(
+              tapResponse({
+                next: (journal_no) => patchState(state, { maxJournal: journal_no }),
+                error: console.error,
+                finalize: () => patchState(state, { isLoading: false }),
+              })
+            );
+          })
+      )),
       renumberJournalDetail: rxMethod<number>(
         pipe(
           tap(() => patchState(state, { isLoading: true })),
@@ -429,14 +459,16 @@ export const JournalStore = signalStore(
         )
       ),
     })),
-  withHooks({
-    onInit(store) {
+  withHooks( store => ({
+    onInit: () => {
       store.loadTemplates();
       store.loadJournals();
       store.loadAccounts();
       store.loadFunds();
       store.loadPeriod('Period');
       store.loadYear('Year');
+      store.loadMaxJournal();
     },
-  })
+  }))
+
 );

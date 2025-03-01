@@ -31,6 +31,12 @@
           "search"
         ]
       }
+    ],
+    "axe/keyboard": [
+      "default",
+      {
+        "nested-interactive": "off"
+      }
     ]
   }
 }

@@ -8,13 +8,12 @@ import { ScrollService } from 'app/services/scroll.service';
 import { MaterialModule } from 'app/services/material.module';
 import { MatDrawer } from '@angular/material/sidenav';
 import { AuthService } from 'app/features/auth/auth.service';
-import { PricingTableComponent } from 'app/features/pages/pricing/table/table.component';
 
 @Component({
     selector: 'app-login',
     templateUrl: './login.component.html',
     providers: [LoginService],
-    imports: [RouterModule, PricingTableComponent, LoginFormComponent, MatProgressSpinnerModule, MaterialModule,]
+    imports: [RouterModule, LoginFormComponent, MatProgressSpinnerModule, MaterialModule,]
 })
 export default class LoginComponent {
     public loginService = inject(LoginService);
@@ -58,6 +57,10 @@ export default class LoginComponent {
 
     onScrollTo(id: string) {
         this.scrollService.scrollToElementById(id);
+    }
+
+    gotoLink(link: string) {
+        window.location.href = link;
     }
 
     onService() {

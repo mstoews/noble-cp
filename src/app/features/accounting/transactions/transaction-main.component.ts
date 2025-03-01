@@ -20,7 +20,7 @@ import { APTransactionComponent } from './ap-listing.component';
 import { AppStore, ApplicationService } from "../../../services/application.state.service";
 import { GLTransactionListComponent } from './gl-listing.component';
 import { CdkScrollable } from '@angular/cdk/scrolling';
-
+import { JournalRouteComponent } from './journal-route.component';
 
 const imports = [
     MaterialModule,
@@ -31,6 +31,7 @@ const imports = [
     ARTransactionComponent,
     APTransactionComponent,
     GLTransactionListComponent,
+    JournalRouteComponent,
     CdkScrollable
 ]
 
@@ -99,6 +100,7 @@ const imports = [
                         <div class="mt-8">
                             @switch (selectedPanel) {
                                 @case ('entry') { <entry-wizard></entry-wizard>}                                
+                                @case ('edit')  { <journal-route></journal-route> }
                                 @case ('gl')    { <gl-transactions-list></gl-transactions-list>  }                                
                                 @case ('ap')    { <ap-transactions></ap-transactions>}
                                 @case ('ar')    { <ar-transactions></ar-transactions>}
@@ -164,6 +166,12 @@ export class TransactionMainComponent implements OnInit, OnDestroy {
                 icon: 'heroicons_outline:document-plus',
                 title: 'Transaction Wizard',
                 description: 'Create transactions and append digital artifacts for each transaction',
+            },
+            {
+                id: 'edit',
+                icon: 'heroicons_outline:document-check',
+                title: 'Transaction Edit',
+                description: 'Edit current transactions',
             },
             {
                 id: 'gl',

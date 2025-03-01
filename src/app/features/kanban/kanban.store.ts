@@ -15,6 +15,7 @@ import { IKanban, IKanbanStatus, IPriority, ITeam} from 'app/models/kanban';
 import { tapResponse } from '@ngrx/operators';
 
 export interface KanbanStateInterface {
+  task: IKanban;
   tasks: IKanban[];
   priority: IPriority[],
   team: ITeam[],
@@ -26,6 +27,7 @@ export interface KanbanStateInterface {
 export const KanbanStore = signalStore(
   { protectedState: false }, 
     withState<KanbanStateInterface>({
+    task: null,
     tasks: [],
     types: [],
     priority: [],

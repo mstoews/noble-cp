@@ -655,8 +655,7 @@ const imp = [
         GroupService,
         RowDDService,
         ResizeService,
-        ContextMenuService,
-        JournalStore,
+        ContextMenuService,        
         ColumnMenuService
     ],
     styles: [
@@ -745,11 +744,8 @@ export class JournalUpdateComponent
 
 
     // Internal control variables
-    public currentRowData: IJournalDetail;
-    // public journal_subid: number = 0;
-    // public journal_id: number = 0;
+    public currentRowData: IJournalDetail;    
     public bHeaderDirty = false;
-
 
     // Datagrid variables
     public accountsListSubject: Subscription;
@@ -803,8 +799,8 @@ export class JournalUpdateComponent
     public subtypeCtrl: FormControl<string> = new FormControl<string>(null);
     public fundCtrl: FormControl<string> = new FormControl<string>(null);
     public key: number;
+    
     public journalHeader: IJournalHeader;
-
     public journalDetailSignal = signal<IJournalDetail[]>(null);
 
     protected _onCreditDestroy = new Subject<void>();
@@ -822,6 +818,51 @@ export class JournalUpdateComponent
     singleDebitSelection = viewChild<MatSelect>("singleDebitSelection");
     singleTemplateSelect = viewChild<MatSelect>("singleTemplateSelect");
     singlePartySelect = viewChild<MatSelect>("singlePartySelect");
+
+
+    ngOnInit(): void {
+        this.createEmptyForm();
+        this.createEmptyDetailForm();
+        this.initialDatagrid();        
+
+        this.activatedRoute.data.subscribe((data) => {
+            this.store.loadDetails(data.journal.journal_id);
+            this.store.loadArtifactsByJournalId(data.journal.journal_id);
+            this.journalHeader = data.journal;
+            this.refreshHeader(this.journalHeader);
+            
+        });
+
+        if (this.journalHeader === undefined) {
+            this.journalService.getLastJournalNo().pipe(takeUntil(this._onDestroy)).subscribe((journal) => {  
+                if (journal > 1) {             
+                    //this.router.navigate(["journals/gl",journal]);                            
+                }
+            });                            
+        }
+
+        this.accountsListSubject = this.dropDownChildren$.subscribe((accounts) => {
+            accounts.forEach((acct) => {
+                let list = {
+                    childName: Number(acct.child),
+                    descriptionName: acct.description,
+                };
+                this.accountsGrid.push(list);
+            });
+        });
+
+        this.fundListSubject = this.funds$.subscribe((funds) => {
+            funds.forEach((fund) => {
+                var list = {
+                    fund: fund.fund,
+                    description: fund.description,
+                };
+                this.fundList.push(list);
+            });
+        });
+        this.bHeaderDirty = false;
+    }
+
 
     public menuItems: MenuItemModel[] = [
         {
@@ -855,42 +896,7 @@ export class JournalUpdateComponent
 
     ];
 
-    ngOnInit(): void {
-        this.createEmptyForm();
-        this.createEmptyDetailForm();
-        this.initialDatagrid();
-
-        this.activatedRoute.data.subscribe((data) => {
-            this.store.loadDetails(data.journal.journal_id);
-            this.store.loadArtifactsByJournalId(data.journal.journal_id);
-            this.journalHeader = data.journal;
-            this.refreshHeader(this.journalHeader);
-            this.router.navigate(["journals/gl", data.journal.journal_id]);
-        });
-
-
-        this.accountsListSubject = this.dropDownChildren$.subscribe((accounts) => {
-            accounts.forEach((acct) => {
-                let list = {
-                    childName: Number(acct.child),
-                    descriptionName: acct.description,
-                };
-                this.accountsGrid.push(list);
-            });
-        });
-
-        this.fundListSubject = this.funds$.subscribe((funds) => {
-            funds.forEach((fund) => {
-                var list = {
-                    fund: fund.fund,
-                    description: fund.description,
-                };
-                this.fundList.push(list);
-            });
-        });
-        this.bHeaderDirty = false;
-    }
-
+    
     onClose() {
 
     }
