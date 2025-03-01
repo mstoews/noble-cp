@@ -1,6 +1,6 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable, OnDestroy, inject } from '@angular/core';
-import { Observable, TimeoutError, catchError, debounceTime, distinctUntilChanged, retry, shareReplay, take, takeUntil, tap, throwError, timeout, timer } from 'rxjs';
+import { Observable, TimeoutError, catchError, debounce, debounceTime, distinctUntilChanged, interval, retry, shareReplay, take, takeUntil, tap, throwError, timeout, timer } from 'rxjs';
 import { environment } from 'environments/environment.prod';
 import { ToastrService } from "ngx-toastr";
 import { IPeriod } from 'app/models/period';
@@ -130,6 +130,7 @@ export class JournalService implements OnDestroy {
   getLastJournalNo(): Observable<number> {
     var url = this.baseUrl + '/v1/read_last_journal_no';
     return this.httpClient.get<number>(url).pipe(
+      debounce(() => interval(2000)),
       catchError(err => {
         const message = "Failed to connect to server for journals ...";
         this.ShowAlert(message, 'failed');
