@@ -2,13 +2,12 @@ import { Injectable, computed, inject, signal } from '@angular/core';
 import { shareReplay, Subject } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'environments/environment.prod';
-import { ISubType } from 'app/models/subtypes';
+import { ISubType, ISubtypeDropDown } from 'app/models/subtypes';
 
 interface SubtypeState {
   types: ISubType[];
   error: string | null;
 }
-
 
 @Injectable({
   providedIn: 'root',
@@ -51,6 +50,12 @@ export class SubTypeService {
   read() {
     var url = this.baseUrl + '/v1/subtype_list';
     return this.httpClient.get<ISubType[]>(url).pipe(
+      shareReplay({ bufferSize: 1, refCount: true }))
+  }
+
+  read_dropdown() {
+    var url = this.baseUrl + '/v1/subtype_dropdown';
+    return this.httpClient.get<ISubtypeDropDown[]>(url).pipe(
       shareReplay({ bufferSize: 1, refCount: true }))
   }
 

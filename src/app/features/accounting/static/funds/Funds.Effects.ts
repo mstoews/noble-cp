@@ -19,6 +19,16 @@ export class fundsEffects {
     })
    ));
 
+   _loadFundsDropdown = createEffect(() => this.actions.pipe(
+    ofType(fromFunds.loadFundsDropdown),
+    exhaustMap(() => {
+      return this.fundsService.readDropdown().pipe(
+        map((data) => fromFunds.loadFundsSuccess({ funds: data })),
+        catchError((error) => of(fromFunds.loadFundsFailure({ error })))
+      )
+    })
+   ));
+
    // delete is mergeMap
 
    _deleteFunds = createEffect(() =>

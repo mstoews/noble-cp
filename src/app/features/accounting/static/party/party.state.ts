@@ -32,11 +32,9 @@ const reducer = createReducer(
   on(partyAPIActions.partyDeletedFail, (state) => ({...state, isLoading: false,  })),    
   
   // updated Party
-  on(partyAPIActions.partyUpdatedFail , (state)  => 
-    ({ ...state, isLoading: false,  })),
-  on(partyAPIActions.partyUpdatedSuccess, (state, action) => ({ ...state,  party: state.party.map(x => x.party_id === action.party.party_id ? action.party : x),
-            isLoading: false, }))
-    );
+  on(partyAPIActions.partyUpdatedFail , (state)  =>   ({ ...state, isLoading: false,  })),
+  on(partyAPIActions.partyUpdatedSuccess, (state, action) => ({ ...state,  party: state.party.map(x => x.party_id === action.party.party_id ? action.party : x), isLoading: false, }))
+ );
 
 export const partyFeature = createFeature({
   name: 'partyFeature',

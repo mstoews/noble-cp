@@ -16,7 +16,7 @@ import { PeriodStore } from 'app/services/periods.store';
 import { GLGridComponent } from '../../grid-components/gl-grid.component';
 import { IPeriod } from 'app/models/period';
 import { Store } from '@ngrx/store';
-import { periodsPageActions } from 'app/features/accounting/static/periods/actions/periods-page.actions';
+import { periodsPageActions } from 'app/features/accounting/static/periods/periods-page.actions';
 import { periodsFeature } from 'app/features/accounting/static/periods/periods.state';
 import { toSignal } from '@angular/core/rxjs-interop';
 

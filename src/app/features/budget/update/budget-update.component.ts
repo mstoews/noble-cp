@@ -1,6 +1,6 @@
 import { AfterViewInit, ChangeDetectionStrategy, Component, EventEmitter, OnDestroy, OnInit, Output, ViewChild, inject, viewChild, input } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { ReplaySubject, Subject, Subscription, takeUntil } from 'rxjs';
+import { map, ReplaySubject, Subject, Subscription, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { SubTypeService } from "app/services/subtype.service";
 
@@ -34,6 +34,11 @@ import { AccountsService } from 'app/services/accounts.service';
 import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 import { MatDrawer } from '@angular/material/sidenav';
 import { AUTH } from 'app/app.config';
+import { DropDownAccountComponent } from "../../accounting/grid-components/drop-down-account.component";
+import { Store } from '@ngrx/store';
+import { accountsFeature } from 'app/features/accounting/static/accts/accts.state';
+import { ToastrService } from 'ngx-toastr';
+import { accountPageActions } from 'app/features/accounting/static/accts/accts-page.actions';
 
 
 const imp = [
@@ -45,7 +50,8 @@ const imp = [
   GridModule,
   NgxMaskDirective,
   NgxMatSelectSearchModule,
-  GridMenubarStandaloneComponent
+  GridMenubarStandaloneComponent,
+  DropDownAccountComponent
 ];
 
 const providers = [
@@ -71,29 +77,164 @@ const providers = [
 @Component({
   selector: 'budget-update',
   imports: [imp],
-  templateUrl: './budget-update.component.html',
+  template: `
+    <mat-drawer class="w-full md:w-[400px]" #drawer [opened]="false" mode="over" [position]="'end'"  [disableClose]="true">
+
+            <mat-card class="">
+                <form [formGroup]="detailForm">
+                    <div class="flex flex-col w-full filter-article filter-interactive text-gray-700 rounded-lg">
+                        <div class="text-3xl gap-2 m-1 text-gray-100 p-2 bg-slate-600 rounded-md" mat-dialog-title>
+                            {{ "Budget Update" }}
+                        </div>
+                    </div>
+                    <section class="flex flex-col gap-1">
+                     
+                      <!-- Drop down accounts list -->
+                      @if ((isLoading$ | async) === false) {
+                            @if (accounts$ | async; as accounts ) {
+                              <account-drop-down [dropdownList]="accounts" controlKey="account" label="Account" #accountDropDown></account-drop-down>
+                            }
+                      }
+
+                      
+                        <mat-form-field class="flex-col ml-2 mr-2 mt-1 grow">
+                            <mat-label class="text-md ml-2">Description</mat-label>
+                            <input matInput placeholder="Description" formControlName="description"
+                                [placeholder]="'Description'" />
+                            <mat-icon class="icon-size-5 text-green-700" matPrefix
+                                [svgIcon]="'heroicons_solid:calculator'"></mat-icon>
+                        </mat-form-field>
+
+                        <!-- Reference  -->
+                        
+                        <mat-form-field class="flex-col grow mr-2 ml-2 mt-1">
+                            <mat-label class="text-md ml-2">Reference</mat-label>
+                            <input matInput placeholder="Reference" formControlName="reference"
+                                [placeholder]="'Reference'" />
+                            <mat-icon class="icon-size-5 text-green-700" matPrefix
+                                [svgIcon]="'heroicons_solid:document'"></mat-icon>
+                        </mat-form-field>
+
+                        
+
+                        <!-- Budget Amount  -->
+
+                        <mat-form-field class="ml-2 mt-1 grow">
+                            <mat-label class="text-md ml-2">Budget Amount</mat-label>
+                            <input type="text" mask="separator.2" [leadZero]="true" thousandSeparator=","
+                                class="text-right" matInput [placeholder]="'Budger Amount'" formControlName="amount" />
+                            <mat-icon class="icon-size-5 text-green-700" matPrefix
+                                [svgIcon]="'heroicons_solid:currency-dollar'"></mat-icon>
+                        </mat-form-field>
+
+                        
+
+                    </section>
+                </form>
+                <div mat-dialog-actions class="gap-2 mb-3 mt-5">
+                    @if (bDirty === true) {
+                    <button mat-icon-button color="warm"
+                        class="bg-gray-200 fill-slate-100 text-white hover:bg-slate-400 ml-1" (click)="onBudgetDetail()"
+                        matTooltip="Update Transaction" aria-label="hover over">
+                        <mat-icon [svgIcon]="'feather:save'"></mat-icon>
+                    </button>
+                    }
+
+                    <button mat-icon-button color="warm"
+                        class="bg-gray-200 fill-slate-100 text-white hover:bg-slate-400 ml-1" (click)="onDeleteDetail()"
+                        matTooltip="Delete" aria-label="hover over">
+                        <mat-icon [svgIcon]="'feather:trash'"></mat-icon>
+                    </button>
+
+
+                    <button mat-icon-button color="warn"
+                        class="bg-gray-200 fill-slate-100 text-white hover:bg-slate-400 ml-1" (click)="closeDrawer()"
+                        matTooltip="Cancel" aria-label="hovered over">
+                        <mat-icon [svgIcon]="'mat_outline:close'"></mat-icon>
+                    </button>
+
+                </div>
+            </mat-card>
+    </mat-drawer>
+    <div class="flex flex-col w-full filter-article filter-interactive text-gray-700">
+      <grid-menubar class="pl-1 pr-1 mb-2" [inTitle]="'Budget Details'" 
+          (notifyParentRefresh)="onRefresh()"
+          (notifyParentAdd)="onAdd()" 
+          (notifyParentDelete)="onDeleteSelection()"
+          (notifyParentUpdate)="onUpdateSelection()">
+      </grid-menubar>
+
+      <mat-drawer-container class=" control-section default-splitter flex flex-col overflow-auto h-[calc(100vh-14rem)]"
+          [hasBackdrop]="'false'">
+
+          
+          @defer {
+          <div class="flex flex-col h-full ml-1 mr-1 text-gray-800 ">
+
+              <ejs-grid #grid id='grid' class="h-[calc(100vh-15rem)]" [dataSource]='store.budgetAmt()' [rowHeight]='30' 
+                  showColumnMenu='true' allowEditing='false' (actionBegin)="actionBegin($event)" [gridLines]="'Both'"
+                  [allowFiltering]='true' [allowGrouping]='true' [toolbar]='toolbarOptions'
+                  [filterSettings]='filterSettings' [editSettings]='editSettings' keyExpr="child"
+                  (toolbarClick)='toolbarClick($event)'>
+                  <e-columns>
+                      <e-column headerText="Period" field="period_year" width="100"></e-column>
+                      <e-column headerText="Account" field="child" isPrimaryKey="true" width="130"></e-column>
+                      <e-column headerText="Description" field="description" width="250"></e-column>
+                      <e-column headerText="Reference" field="reference" width="200"></e-column>
+                      <e-column headerText="Amount" field="amount" format='N2' textAlign="Right" width="120"></e-column>
+                      <e-column headerText="Update Date" field="update_date" width="120"></e-column>
+                      <e-column headerText="Update User" field="update_user" width="120"></e-column>
+                  </e-columns>
+
+                  <e-aggregates>
+                      <e-aggregate>
+                          <e-columns>
+                              <e-column type="Sum" field="amount" format="N2">
+                                  <ng-template #footerTemplate let-data>{{data.Sum}}</ng-template>
+                              </e-column>
+
+                          </e-columns>
+                      </e-aggregate>
+                  </e-aggregates>
+              </ejs-grid>
+          </div>
+          } @placeholder(minimum 1000ms) {
+          <div class="flex justify-center items-center">
+              <mat-spinner></mat-spinner>
+          </div>
+          }
+      </mat-drawer-container>
+    </div>
+
+  `,
   providers: [providers],
-  changeDetection: ChangeDetectionStrategy.OnPush,
   styles: ``
 })
 export class BudgetUpdateComponent implements OnInit, OnDestroy, AfterViewInit {
   public bDirty = false;
 
+  accountDropDown = viewChild<DropDownAccountComponent>("accountDropDown");
+
 
   @Output() notifyDrawerClose: EventEmitter<any> = new EventEmitter();
   public readonly sTitle = input<string>(undefined);
 
-
-
   private subtypeService = inject(SubTypeService);
+  private fuseConfirmationService = inject(FuseConfirmationService);
+  
   public subtype$ = this.subtypeService.read();
-
   private auth = inject(AUTH);
+  
+  detailForm = new FormGroup({
+    description: new FormControl(''),
+    reference: new FormControl(''),
+    amount: new FormControl(0.0),
+    account: new FormGroup({
+      dropdown: new FormControl('')
+    }),
+  });
 
-  private fb = inject(FormBuilder);
-
-  // Data grid settings
-
+  
   public editSettings: Object;
   public editArtifactSettings: Object;
   public filterSettings: Object;
@@ -109,24 +250,31 @@ export class BudgetUpdateComponent implements OnInit, OnDestroy, AfterViewInit {
   public filterOptions: FilterSettingsModel;
   public submitClicked: boolean = false;
   public toolbarOptions?: ToolbarItems[];
-  public detailForm!: FormGroup;
+
   public filteredDebitAccounts: ReplaySubject<IDropDownAccounts[]> = new ReplaySubject<IDropDownAccounts[]>(1);
 
 
   public value = 0;
   public loading = false;
   public height: string = '250px';
-  private fuseConfirmationService = inject(FuseConfirmationService);
+  
   public accountsListSubject: Subscription;
   public detailsSubject: Subscription;
 
+  store = inject(BudgetStore);
 
+  Store = inject(Store);
+  accounts$ = this.Store.select(accountsFeature.selectChildren);
+  isLoading$ = this.Store.select(accountsFeature.selectIsLoading);
+  toast = inject(ToastrService);
+
+  
+  
   // drop down searchable list
-  public accountList: IDropDownAccounts[] = [];
+
   public accountCtrl: FormControl<IDropDownAccounts> = new FormControl<IDropDownAccounts>(null);
   public accountFilterCtrl: FormControl<string> = new FormControl<string>('');
 
-  public store = inject(BudgetStore);
 
   public debitAccounts: IDropDownAccounts[] = [];
   public debitCtrl: FormControl<IDropDownAccounts> = new FormControl<IDropDownAccounts>(null);
@@ -141,26 +289,58 @@ export class BudgetUpdateComponent implements OnInit, OnDestroy, AfterViewInit {
   protected _onDestroy = new Subject<void>();
   public drawer = viewChild<MatDrawer>("drawer");
 
+  // debitAccounts: IDropDownAccounts[] = [
+  //   { account : "1000", child: "5020", description: '5020 - Account 1' },
+  //   { account : "1000", child: "5030", description: 'Account 2' },
+  //   { account : "1000", child: "5040", description: 'Account 3' },
+  //   { account : "1000", child: "4", description: 'Account 4' },
+  //   { account : "1000", child: "5", description: 'Account 5' },
+  //   { account : "1000", child: "6", description: 'Account 6' },
+  //   { account : "1000", child: "7", description: 'Account 7' },
+  //   { account : "1000", child: "8", description: 'Account 8' },
+  //   { account : "1000", child: "9", description: 'Account 9' },
+  //   { account : "1000", child: "10", description: 'Account 10' },
+  // ]
+
   ngOnInit(): void {
+    this.Store.dispatch(accountPageActions.children());    
+  }
 
-    this.createEmptyForm();
+  ngAfterViewInit() {
+    this.initialDatagrid();
 
-    this.accountService
-      .readChildren()
-      .pipe(takeUntil(this._onDestroy))
-      .subscribe((accounts) => {
-        this.debitAccounts = accounts;
-        this.filteredDebitAccounts.next(this.debitAccounts.slice());
-      });
+    // const gl$ = this.accounts$.pipe(map( acct => {
+    //   const data = acct.map((accts) => ({
+    //   account: accts.account.toString(),
+    //   child: accts.child.toString(),
+    //   description: accts.description
+    //  })); 
+    //  return data;
+    // }));
+  
+    //   $.subscribe((data) => {
+    //    this.debitAccounts = data
+    //    this.filteredDebitAccounts.next(this.debitAccounts.slice());
+    //  });
 
-    this.debitAccountFilterCtrl.valueChanges
-      .pipe(takeUntil(this._onDestroyDebitAccountFilter))
-      .subscribe(() => {
-        this.filterDebitAccounts();
-      });
 
+    // this.accountService
+    //   .readChildren()
+    //   .pipe(takeUntil(this._onDestroy))
+    //   .subscribe((accounts) => {
+    //     this.debitAccounts = accounts;
+    //     this.filteredDebitAccounts.next(this.debitAccounts.slice());
+    // });
+
+  //   this.debitAccountFilterCtrl.valueChanges
+  //   .pipe(takeUntil(this._onDestroyDebitAccountFilter))
+  //   .subscribe(() => {
+  //     this.filterDebitAccounts();
+  //     this.bDirty = true;
+  // });
 
   }
+
 
   toolbarClick($event: any) {
     throw new Error('Method not implemented.');
@@ -190,7 +370,6 @@ export class BudgetUpdateComponent implements OnInit, OnDestroy, AfterViewInit {
     );
   }
 
-
   initialDatagrid() {
     // this.pageSettings = { pageCount: 10 };        
     this.toolbarOptions = ['ExcelExport', 'CsvExport'];
@@ -203,10 +382,7 @@ export class BudgetUpdateComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
 
-  ngAfterViewInit() {
-    this.initialDatagrid();
-  }
-
+  
   onFocusedDetailRowChanged(e: any) { }
 
   onDeleteDetail() {
@@ -246,8 +422,6 @@ export class BudgetUpdateComponent implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
-
-
   public OnCardDoubleClick(data: any): void {
 
     const email = this.auth.currentUser.email;
@@ -269,37 +443,20 @@ export class BudgetUpdateComponent implements OnInit, OnDestroy, AfterViewInit {
     } as IBudget;
 
     const accountString = data.child.toString();
-    this.debitCtrl.setValue(
-      this.debitAccounts.find((x) => x.child === accountString)
-    );
 
-    this.detailForm = this.fb.group({
-      debitAccountFilterCtrl: [data.child.toString(), Validators.required],
-      description: [data.description, Validators.required],
-      reference: [data.reference, Validators.required],
-      amount: [data.amount, Validators.required],
+    this.accountDropDown().setDropdownValue(accountString);
+
+    this.debitCtrl.setValue(accountString);
+
+    this.detailForm.patchValue({
+      reference: BudgetDetail.reference,
+      description: BudgetDetail.description,
+      amount: BudgetDetail.amount,
+      
     });
 
     this.openDrawer();
 
-    // this.createForm(BudgetDetail);
-    // this.onChanges();
-  }
-
-  private createForm(budget: IBudget) {
-    const accountString = budget.child.toString();
-    this.debitCtrl.setValue(
-      this.debitAccounts.find((x) => x.child === accountString)
-    );
-
-    this.detailForm = this.fb.group({
-      debitAccountFilterCtrl: [budget.child.toString(), Validators.required],
-      description: [budget.description, Validators.required],
-      reference: [budget.reference, Validators.required],
-      amount: [budget.amount, Validators.required],
-    });
-
-    this.openDrawer();
   }
 
   public onChanges(): void {
@@ -313,39 +470,9 @@ export class BudgetUpdateComponent implements OnInit, OnDestroy, AfterViewInit {
     });
   }
 
-  updateForm(row: any) {
-    this.detailForm.reset();
-    this.detailForm = this.fb.group({
-      debitAccountFilterCtrl: [''],
-      description: [''],
-      reference: [''],
-      amount: [''],
-    });
-  }
-
-  createEmptyForm() {
-    this.detailForm = this.fb.group({
-      debitAccountFilterCtrl: [''],
-      description: [''],
-      reference: [''],
-      amount: [''],
-    });
-  }
-
   closeDrawer() {
     this.drawer().close();
   }
-
-
-  onCreate() { }
-
-  loadContent() {
-    this.loading = true;
-  }
-
-  changeFund($event: any) { }
-
-  changeChildAccount($event: any) { }
 
   formatNumber(e: any) {
     const options = {

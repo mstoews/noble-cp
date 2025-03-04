@@ -29,6 +29,23 @@ export class subTypeEffects {
     )
   );
 
+  loadSubTypeDropdown$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(subTypePageActions.load),
+      concatMap(() =>
+        this.subTypeService.read_dropdown().pipe(
+          map((subtype) =>
+            subTypeAPIActions.subTypeDropdownSuccess({ subtype: subtype })
+          ),
+          catchError((error) =>
+            of(subTypeAPIActions.subTypeDropdownFailure({ error }))
+          )
+        )
+      )
+    )
+  );
+
+
   addSubType$ = createEffect(() =>
     this.actions$.pipe(
       ofType(subTypePageActions.addSubtype),

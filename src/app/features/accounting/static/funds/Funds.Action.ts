@@ -1,9 +1,13 @@
 import { createAction, props } from "@ngrx/store";
-import { IFunds } from "app/models";
+import { IDropDown, IFunds } from "app/models";
 
 export const LOAD_FUNDS = '[funds] getall';
 export const LOAD_FUNDS_SUCCESS = '[funds] getall success';
 export const LOAD_FUNDS_FAILURE = '[funds] getall failure'; 
+
+export const LOAD_FUNDS_DROPDOWN = '[funds] getall dropdown';
+export const LOAD_FUNDS_DROPDOWN_SUCCESS = '[funds] getall dropdown success';
+export const LOAD_FUNDS_DROPDOWN_FAILURE = '[funds] getall dropdown failure';
 
 export const DELETE_FUNDS = '[funds] delete'
 export const DELETE_FUNDS_SUCCESS = '[funds] delete success'
@@ -19,6 +23,10 @@ export const GET_FUNDS = '[funds] get'
 export const loadFunds = createAction(LOAD_FUNDS);
 export const loadFundsSuccess = createAction(LOAD_FUNDS_SUCCESS, props<{ funds: IFunds[] }>());
 export const loadFundsFailure = createAction(LOAD_FUNDS_FAILURE, props<{ error: string }>());
+
+export const loadFundsDropdown = createAction(LOAD_FUNDS_DROPDOWN);
+export const loadFundsDropdownSuccess = createAction(LOAD_FUNDS_DROPDOWN_SUCCESS, props<{ funds: IDropDown[] }>());
+export const loadFundsDropdownFailure = createAction(LOAD_FUNDS_DROPDOWN_FAILURE, props<{ error: string }>());
 
 export const deleteFunds = createAction(DELETE_FUNDS, props<{ id: string }>());
 export const deleteFundsSuccess = createAction(DELETE_FUNDS_SUCCESS, props<{ id: string }>());
@@ -45,7 +53,10 @@ export const FundsActions = {
     updateFundsSuccess,
     getFundsById,
     getFundsSuccess,
-    getFundsFailure
+    getFundsFailure,
+    loadFundsDropdown,
+    loadFundsDropdownSuccess,
+    loadFundsDropdownFailure
 };
 
 

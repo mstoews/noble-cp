@@ -28,6 +28,22 @@ export class accountEffects {
     )
   );
 
+  loadChild$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(accountPageActions.children),
+      concatMap(() =>
+        this.accountService. readAccountDropdown().pipe(
+          map((accounts) =>
+            accountAPIActions.loadChildrenSuccess({ accounts })
+          ),
+          catchError((error) =>
+            of(accountAPIActions.loadChildrenFailure({ error }))
+          )
+        )
+      )
+    )
+  );
+
   addAccount$ = createEffect(() =>
     this.actions$.pipe(
       ofType(accountPageActions.addAccount),

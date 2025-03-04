@@ -9,12 +9,9 @@ export const CREATE_TEMPLATES = 'create template getall';
 export const CREATE_TEMPLATES_SUCCESS = 'create  template success';
 export const CREATE_TEMPLATES_FAILURE = 'create  template failure'; 
 
-
 export const DELETE_TEMPLATES = 'template delete'
 export const DELETE_TEMPLATES_SUCCESS = 'template delete success'
-
-export const ADD_TEMPLATES = 'template add'
-export const ADD_TEMPLATES_SUCCESS = 'template add success'
+export const DELETE_TEMPLATES_FAILURE = 'delete template failure'; 
 
 export const UPDATE_TEMPLATES = 'template update'
 export const UPDATE_TEMPLATES_SUCCESS = 'template update success'
@@ -31,9 +28,6 @@ export const CREATE_TEMPLATES_DETAILS_FAILURE = 'create detail template failure'
 export const DELETE_TEMPLATES_DETAILS = 'template detail delete'
 export const DELETE_TEMPLATES_DETAILS_SUCCESS = 'template detail delete success'
 
-export const ADD_TEMPLATES_DETAILS = 'template detail add'
-export const ADD_TEMPLATES_DETAILS_SUCCESS = 'template detail add success'
-
 export const UPDATE_TEMPLATES_DETAILS = 'template detail update'
 export const UPDATE_TEMPLATES_DETAILS_SUCCESS = 'template detail update success'
 
@@ -41,15 +35,12 @@ export const loadTemplates = createAction(LOAD_TEMPLATES);
 export const loadTemplatesSuccess = createAction(LOAD_TEMPLATES_SUCCESS, props<{ list: IJournalTemplate[] }>());
 export const loadTemplatesFailure = createAction(LOAD_TEMPLATES_FAILURE, props<{ error: string }>());
 
-export const createTemplates        = createAction(CREATE_TEMPLATES, props<{ template: ITemplateParams }>());
-export const createTemplatesSuccess = createAction(CREATE_TEMPLATES_SUCCESS, props<{ list: IJournalTemplate[] }>());
+export const createTemplates        = createAction(CREATE_TEMPLATES, props<{ template: IJournalTemplate }>());
+export const createTemplatesSuccess = createAction(CREATE_TEMPLATES_SUCCESS, props<{ list: IJournalTemplate }>());
 export const createTemplatesFailure = createAction(CREATE_TEMPLATES_FAILURE, props<{ error: string }>());
 
 export const deleteTemplates = createAction(DELETE_TEMPLATES, props<{ id: number }>());
 export const deleteTemplatesSuccess = createAction(DELETE_TEMPLATES_SUCCESS, props<{ id: number }>());
-
-export const addTemplates = createAction(ADD_TEMPLATES, props<{ template: IJournalTemplate }>());
-export const addTemplatesSuccess = createAction(ADD_TEMPLATES_SUCCESS, props<{ template: IJournalTemplate }>());
 
 export const updateTemplates = createAction(UPDATE_TEMPLATES, props<{ template: IJournalTemplate }>());
 export const updateTemplatesSuccess = createAction(UPDATE_TEMPLATES_SUCCESS, props<{ template: IJournalTemplate }>());
@@ -69,9 +60,6 @@ export const createTemplatesDetailsFailure = createAction(CREATE_TEMPLATES_DETAI
 export const deleteTemplatesDetails = createAction(DELETE_TEMPLATES_DETAILS, props<{ id: number }>());
 export const deleteTemplatesDetailsSuccess = createAction(DELETE_TEMPLATES_DETAILS_SUCCESS, props<{ id: number }>());
 
-export const addTemplatesDetails = createAction(ADD_TEMPLATES_DETAILS, props<{ template: IJournalDetailTemplate }>());
-export const addTemplatesDetailsSuccess = createAction(ADD_TEMPLATES_DETAILS_SUCCESS, props<{ template: IJournalDetailTemplate }>());
-
 export const updateTemplatesDetails = createAction(UPDATE_TEMPLATES_DETAILS, props<{ template: IJournalTemplate }>());
 export const updateTemplatesDetailsSuccess = createAction(UPDATE_TEMPLATES_DETAILS_SUCCESS, props<{ template: IJournalDetailTemplate }>());
 
@@ -84,8 +72,6 @@ export const TemplateActions = {
     loadTemplatesFailure,
     deleteTemplates,
     deleteTemplatesSuccess,
-    addTemplates,
-    addTemplatesSuccess,
     updateTemplates,
     updateTemplatesSuccess,
     getTemplates,
@@ -96,8 +82,6 @@ export const TemplateActions = {
     loadTemplatesDetailsFailure,
     deleteTemplatesDetails,
     deleteTemplatesDetailsSuccess,
-    addTemplatesDetails,
-    addTemplatesDetailsSuccess,
     updateTemplatesDetails,
     updateTemplatesDetailsSuccess,
     createTemplates,

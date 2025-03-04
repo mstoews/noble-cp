@@ -30,11 +30,12 @@ const imports = [
     FormsModule,
     GridModule,
     GridMenubarStandaloneComponent,
+    GLGridComponent
 ];
 
 @Component({
     selector: 'funds',
-    imports: [imports, GLGridComponent],
+    imports: [imports],
     template: `
         <mat-drawer class="lg:w-1/3 sm:w-full bg-white-100" #drawer [opened]="false" mode="over" [position]="'end'"  [disableClose]="false">
         <mat-card class="m-2 p-2 mat-elevation-z8">
@@ -123,7 +124,7 @@ export class FundsComponent implements OnInit {
     store = inject(Store);
     notifyFundUpdate = output();
     bDirty: boolean = false;
-    funds$: Observable<IFunds[]>;
+    funds$ = this.store.select(selectFunds);
 
     public columns = [
         { field: 'fund', headerText: 'Fund', width: 80, textAlign: 'Left' },
@@ -357,7 +358,7 @@ export class FundsComponent implements OnInit {
     }
 
     constructor() {
-        this.funds$ = this.store.select(selectFunds);
+        
     }
 
     grid = viewChild<GridComponent>('grid');

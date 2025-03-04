@@ -39,3 +39,7 @@ export const selectJournalById = (journal_id: number) =>
             journals.find(j => j.journal_id === journal_id)
     );
 
+export const isLoading = createSelector(
+    getTransactionState,
+        ({ isLoading }) => isLoading
+);

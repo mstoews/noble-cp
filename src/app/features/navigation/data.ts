@@ -106,7 +106,7 @@ export const defaultNavigation: FuseNavigationItem[] = [
         children: [
             {
                 id: 'navigation-features.level.0',
-                title: 'Level 0',
+                title: 'Support',
                 icon: 'heroicons_outline:check-circle',
                 type: 'collapsable',
                     children: [

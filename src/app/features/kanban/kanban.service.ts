@@ -3,7 +3,7 @@ import { Injectable, computed, inject, signal } from '@angular/core';
 import { AUTH } from 'app/app.config';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'environments/environment.prod';
-import { IStatus, IPriority, ITeam, IKanban, IType } from 'app/models/kanban';
+import { IStatus, IPriority, ITeam, IKanban, IType, IProjects } from 'app/models/kanban';
 
 @Injectable({
   providedIn: 'root',
@@ -153,5 +153,27 @@ export class KanbanService {
       }
       var url = this.baseUrl + '/v1/kanban_delete';
       return this.httpClient.post<IKanban>(url, data);    
+    }
+
+    // projects
+
+    readProjects () {
+      var url = this.baseUrl + '/v1/project_list';
+      return this.httpClient.get<IProjects[]>(url);
+    }
+
+    updateProjects (project: IProjects) {
+      var url = this.baseUrl + '/v1/project_update';
+      return this.httpClient.post<IProjects[]>(url, project);
+    }
+
+    deleteProjects (project: IProjects)  {
+      var url = this.baseUrl + '/v1/project_delete';
+      return this.httpClient.post<IProjects[]>(url, project);
+    }
+
+    createProjects (project: IProjects)  {
+      var url = this.baseUrl + '/v1/project_create';
+      return this.httpClient.post<IProjects[]>(url, project);
     }
 }

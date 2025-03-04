@@ -8,3 +8,8 @@ export interface ISubType {
   update_user: string
 }
 
+export interface ISubtypeDropDown { 
+  subtype: string
+  description: string
+}
+

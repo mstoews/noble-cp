@@ -24,6 +24,7 @@ import * as fromSubtype from 'app/features/accounting/static/subtype/sub-type.st
 import * as fromParty from 'app/features/accounting/static/party/party.state';
 import * as fromAccounts from 'app/features/accounting/static/accts/accts.state'
 import * as fromGlType from 'app/features/accounting/static/gltype/gltype.state';
+import * as fromProjects from 'app/state/kanban-state/projects/projects.state';
 
 
 import {
@@ -67,6 +68,8 @@ import { partyEffects } from './features/accounting/static/party/party.effects';
 import { accountEffects } from './features/accounting/static/accts/accts.effects';
 import { JournalTransactionReducer } from './state/journalTransactions/Journal.Reducer';
 import { glTypeEffects } from './features/accounting/static/gltype/gltype.effects';
+import { project } from './fuse/mock-api/dashboards/project/data';
+import { projectEffects } from './state/kanban-state/projects/projects.effects';
 
 
 const app = initializeApp(environment.firebase);
@@ -162,6 +165,7 @@ export const appConfig: ApplicationConfig = {
     provideState(fromKanban.kanbanFeature),
     provideState(fromAccounts.accountsFeature),
     provideState(fromGlType.gltypeFeature),
+    provideState(fromProjects.projectFeature),
     provideEffects([
       accountEffects,
       periodEffects,
@@ -174,6 +178,7 @@ export const appConfig: ApplicationConfig = {
       fundsEffects,
       subTypeEffects,
       glTypeEffects,
+      projectEffects
     ]),
     provideRouterStore(),
     provideStoreDevtools({ maxAge: 25 }),

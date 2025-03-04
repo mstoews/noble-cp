@@ -20,7 +20,7 @@ import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 import { IDropDownAccounts } from 'app/models';
 import { filter } from 'lodash';
 import { IJournalDetail, IJournalHeader, ITransactionDate } from 'app/models/journals';
-import { DropDownSearchComponent } from '../accounting/grid-components/dropdownsearch.component';
+
 
 
 const imports = [
@@ -68,7 +68,6 @@ export class BudgetWizardComponent implements OnInit, OnDestroy, AfterViewInit {
   // IDropDownAccounts drop down 
 
   public debitAccounts: IDropDownAccounts[] = [];
-  public funds: DropDownSearchComponent = new DropDownSearchComponent();
   public debitCtrl: FormControl<IDropDownAccounts> = new FormControl<IDropDownAccounts>(null);
   public debitAccountFilterCtrl: FormControl<string> = new FormControl<string>(null);
   public filteredDebitAccounts: ReplaySubject<IDropDownAccounts[]> = new ReplaySubject<IDropDownAccounts[]>(1);
@@ -351,7 +350,7 @@ export class BudgetWizardComponent implements OnInit, OnDestroy, AfterViewInit {
         description: inputs.step2.detail_description,
         create_date: updateDate,
         create_user: email,
-        subtype: inputs.step2.sub_type,
+        sub_type: inputs.step2.sub_type,
         debit: debit,
         credit: credit,
         reference: inputs.step2.reference,
@@ -381,7 +380,7 @@ export class BudgetWizardComponent implements OnInit, OnDestroy, AfterViewInit {
         description: inputs.step2.detail_description,
         create_date: updateDate,
         create_user: email,
-        subtype: inputs.step2.sub_type,
+        sub_type: inputs.step2.sub_type,
         debit: debit,
         credit: credit,
         reference: inputs.step2.reference,
@@ -410,7 +409,7 @@ export class BudgetWizardComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   changeSubtype(e: any) {
-    console.debug('Subytype :', e.value);
+    console.debug('Subtype :', e.value);
   }
 
   changeChildAccount($event: any) {

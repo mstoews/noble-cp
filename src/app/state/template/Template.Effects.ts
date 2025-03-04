@@ -31,5 +31,16 @@ export class templateEffects {
       )
     );
 
+    _createTemplates = createEffect(() => this.actions.pipe(
+        ofType(TemplateActions.createTemplates),
+        exhaustMap((action) => {
+            return this.templateService.create(action.template).pipe(
+                map((data) => TemplateActions.createTemplatesSuccess({ list: data })),
+                catchError((error) => of(TemplateActions.createTemplatesFailure({ error })))
+            )
+        })
+      )
+    );
+
     
 }

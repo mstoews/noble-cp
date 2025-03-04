@@ -9,4 +9,15 @@ export const selectFunds = createSelector(
     }
 );
 
+export const selectFundsDownload = createSelector(
+    selectFundsState, (state) => {
+        return state.fundsDropDown
+    }
+);
+
+export const isFundsLoading = createSelector(
+    selectFundsState,
+    ({ isLoading }) => isLoading
+);
+
 

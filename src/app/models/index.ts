@@ -96,6 +96,12 @@ export interface IDropDownAccounts {
   description: string;
 }
 
+export interface IDropDown {
+  value: string;
+  description: string;
+}
+
+
 
 export interface IBudget {
     child : number;

@@ -54,7 +54,7 @@ export interface Detail {
   journal_subid: number
   account: number
   child: number
-  subtype: string
+  sub_type: string
   description: string
   debit: number
   credit: number
@@ -83,7 +83,7 @@ export interface IJournalDetail {
   child: number,
   child_desc?: string,
   fund: string,
-  subtype: string,
+  sub_type: string,
   description: string,
   reference: string,
   debit: number,
@@ -101,7 +101,7 @@ export interface IJournalDetailUpdate {
   account: number,
   child: number,
   fund: string,
-  subtype: string,
+  sub_type: string,
   description: string,
   reference: string,
   debit: number,
@@ -149,7 +149,7 @@ export interface IJournalDetailTemplate {
   description: string,
   account: number,
   child: number,
-  sub_type: string,
+  subtype: string,
   fund: string,
   debit: number,
   credit: number,

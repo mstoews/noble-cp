@@ -15,4 +15,24 @@ export const getDetailTemplates = createSelector(
     }
 );
 
+export const getTemplateError = createSelector(
+    getTemplateState, (state) => {
+        return state.error
+    }
+);  
+
+export const isLoading = createSelector(
+    getTemplateState, (state) => {
+        return state.isLoading
+    }
+);
+
+export const getTemplateById = (template_id: number) =>
+    createSelector(
+        getTemplates,
+        (templates) =>
+            templates.find(t => t.template_ref === template_id)
+    );
+
+
 

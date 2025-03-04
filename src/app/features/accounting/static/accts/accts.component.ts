@@ -60,7 +60,8 @@ const keyExpr = ["account", "child"];
            (Cancel)="onClose()"
            (Update)="onUpdate($event)"
            (Add)="onAdd($event)"
-           (Delete)="onDelete($event)"></accts-drawer>
+           (Delete)="onDelete($event)">
+          </accts-drawer>
   </mat-drawer>
   
   @if ((isLoading$ | async) === false) {  

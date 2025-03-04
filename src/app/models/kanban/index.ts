@@ -83,3 +83,12 @@ export interface IKanban {
   estimatedate: string
 }
 
+export interface IProjects {
+  project_ref: number,
+  name: string,
+  description: string,
+  start_date: string,
+  forecast_end_date: string,
+  create_user: string,
+  create_date: string,
+}

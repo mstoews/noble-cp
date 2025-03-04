@@ -26,6 +26,11 @@ export class FundsService {
     return this.httpClient.get<IFunds[]>(url).pipe(shareReplay());
   }
 
+  readDropdown() {
+    var url = this.baseUrl + '/v1/funds_dropdown';
+    return this.httpClient.get<IFunds[]>(url).pipe(shareReplay());
+  }
+
   // Update
   update(t: IFunds) {
     var url = this.baseUrl + '/v1/fund_update';

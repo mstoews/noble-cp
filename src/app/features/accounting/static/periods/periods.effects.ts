@@ -4,14 +4,14 @@ import { catchError, map, concatMap, mergeMap } from 'rxjs/operators';
 import { of } from 'rxjs';
 
 import { PeriodsService } from 'app/services/periods.service';
-import { periodsPageActions } from './actions/periods-page.actions';
-import { periodsAPIActions } from './actions/periods.actions';
+import { periodsPageActions } from './periods-page.actions';
+import { periodsAPIActions } from './periods.actions';
 
 export class periodEffects {
   actions$ = inject(Actions);
   periodService = inject(PeriodsService);
 
-  
+
   loadPeriods$ = createEffect(() =>
     this.actions$.pipe(
       ofType(periodsPageActions.load),
