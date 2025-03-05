@@ -389,6 +389,7 @@ export const AppStore = signalStore(
       )
     ),
 
+
     loadProfile: rxMethod<string>(
       pipe(
         tap(() => patchState(state, { isLoading: true })),
@@ -403,11 +404,13 @@ export const AppStore = signalStore(
         })
       )
     ),
+
   })),
   withHooks({
     onInit(store) {
       store.loadUid();
-      store.loadPanels(store.uid);    
+      store.loadPanels(store.uid);   
+      store.loadProfile(store.uid); 
       store.loadTrialBalance({periodYear: 2024, period: 1});  
     },
   })

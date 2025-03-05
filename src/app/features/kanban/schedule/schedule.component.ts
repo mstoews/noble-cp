@@ -1,14 +1,30 @@
 import { Component, ViewEncapsulation, Inject, ViewChild, AfterViewChecked } from '@angular/core';
 import { ItemModel, DropDownButtonModule } from '@syncfusion/ej2-angular-splitbuttons';
-import { SelectedEventArgs, TextBoxComponent, UploaderModule } from '@syncfusion/ej2-angular-inputs';
-import { ScheduleComponent, GroupModel, DayService, WeekService, WorkWeekService, MonthService, YearService, AgendaService, TimelineViewsService, TimelineMonthService, TimelineYearService, ResizeService, DragAndDropService, View, EventSettingsModel, Timezone, CurrentAction, CellClickEventArgs, ResourcesModel, EJ2Instance, PrintService, ExcelExportService, ICalendarExportService, ICalendarImportService, CallbackFunction, PopupOpenEventArgs, ScheduleModule } from '@syncfusion/ej2-angular-schedule';
-import { addClass, extend, removeClass, closest, remove, isNullOrUndefined, Internationalization, compile } from '@syncfusion/ej2-base';
+import { ColorPickerComponent, ColorPickerModule, SelectedEventArgs, TextBoxComponent, TextBoxModule, UploaderModule } from '@syncfusion/ej2-angular-inputs';
+import { addClass, extend, removeClass, closest, remove, isNullOrUndefined, Internationalization, compile, createElement } from '@syncfusion/ej2-base';
 import { ChangeEventArgs as SwitchEventArgs, SwitchComponent, ButtonModule, CheckBoxModule } from '@syncfusion/ej2-angular-buttons';
-import { MultiSelectComponent, ChangeEventArgs, MultiSelectChangeEventArgs, DropDownListComponent, MultiSelectModule, DropDownListModule } from '@syncfusion/ej2-angular-dropdowns';
+import { MultiSelectComponent, ChangeEventArgs, MultiSelectChangeEventArgs, DropDownListComponent, MultiSelectModule, DropDownListModule, DropDownList } from '@syncfusion/ej2-angular-dropdowns';
 import { DataManager, Predicate, Query } from '@syncfusion/ej2-data';
-import { ClickEventArgs, ContextMenuComponent, MenuItemModel, BeforeOpenCloseMenuEventArgs, MenuEventArgs, AppBarModule, ToolbarModule, ContextMenuModule } from '@syncfusion/ej2-angular-navigations';
+import { ClickEventArgs, ContextMenuComponent, MenuItemModel, BeforeOpenCloseMenuEventArgs, MenuEventArgs, AppBarModule, ToolbarModule, ContextMenuModule,  SidebarComponent, SidebarModule } from '@syncfusion/ej2-angular-navigations';
 import { ChangeEventArgs as TimeEventArgs } from '@syncfusion/ej2-calendars';
-import { TimePickerModule } from '@syncfusion/ej2-angular-calendars';
+import { CalendarComponent, CalendarModule, TimePickerModule } from '@syncfusion/ej2-angular-calendars';
+
+
+import {
+  ScheduleModule, DayService, WeekService, MonthService, AgendaService, TimelineMonthService,
+  YearService, ResizeService, DragAndDropService, addDays, addMonths, addYears, resetTime, WEEK_LENGTH,
+  ActionEventArgs, MS_PER_MINUTE, EventRenderedArgs, MS_PER_DAY, getWeekFirstDate, getWeekLastDate,
+  EventSettingsModel, View, ScheduleComponent, GroupModel, PopupOpenEventArgs,
+  EJ2Instance
+} from '@syncfusion/ej2-angular-schedule';
+
+import { NgIf } from '@angular/common';
+import { GridModule, GridComponent } from '@syncfusion/ej2-angular-grids';
+import { ListViewModule, ListViewComponent, SelectEventArgs } from '@syncfusion/ej2-angular-lists';
+
+import { personalData, companyData, birthdayData, holidayData } from './data';
+import { DialogModule, DialogComponent, ButtonPropsModel, AnimationSettingsModel } from '@syncfusion/ej2-angular-popups';
+
 declare var moment: any;
 
 /**
@@ -18,565 +34,430 @@ declare var moment: any;
     // tslint:disable-next-line:component-selector
     selector: 'schedule',
     templateUrl: 'schedule.component.html',
-    styleUrls: ['schedule.css'],
-    providers: [DayService, WeekService, WorkWeekService, MonthService, YearService, AgendaService,
-        TimelineViewsService, TimelineMonthService, TimelineYearService, ResizeService, DragAndDropService, PrintService, ExcelExportService, ICalendarExportService, ICalendarImportService],
-    encapsulation: ViewEncapsulation.None,
-    imports: [AppBarModule, ButtonModule, UploaderModule, DropDownButtonModule, ToolbarModule, CheckBoxModule, ScheduleModule, ContextMenuModule, MultiSelectModule, DropDownListModule, TimePickerModule]
+  styleUrls: ['schedule.css'],
+  providers: [DayService, WeekService, MonthService, AgendaService, TimelineMonthService, YearService, DragAndDropService, ResizeService],
+  encapsulation: ViewEncapsulation.None,
+  standalone: true,
+  imports: [ToolbarModule, SidebarModule, CalendarModule, ListViewModule, ScheduleModule, GridModule, DialogModule, TextBoxModule, ColorPickerModule,   NgIf]
 })
 export class ScheduleNobleComponent {
-  @ViewChild('scheduleObj') scheduleObj: ScheduleComponent;
-  @ViewChild('workWeekDaysObj') workWeek: MultiSelectComponent;
-  @ViewChild('resouresObj') resources: MultiSelectComponent;
-  @ViewChild('eventTypeObj') eventTypeObj: DropDownListComponent;
-  @ViewChild('titleObj') titleObj: TextBoxComponent;
-  @ViewChild('notesObj') notesObj: TextBoxComponent;
-  @ViewChild('viewSwitch') viewSwitch: SwitchComponent;
-  @ViewChild('groupSwitch') groupSwitch: SwitchComponent;
-  @ViewChild('gridlinesSwitch') gridlinesSwitch: SwitchComponent;
-  @ViewChild('rowHeightSwitch') rowHeightSwitch: SwitchComponent;
-  @ViewChild('tooltipSwitch') tooltipSwitch: SwitchComponent;
-  @ViewChild('dragSwitch') dragSwitch: SwitchComponent;
-  public showFileList = false;
-  public multiple = false;
-  public buttons: Record<string, any> = { browse: this.importTemplateFn({ text: 'Import' })[0] as HTMLElement };
+  @ViewChild('scheduleObj') public scheduleObj: ScheduleComponent | undefined;
+  @ViewChild('leftSidebar') public leftSidebar: SidebarComponent | undefined;
+  @ViewChild('calendarObj') public calendarObj: CalendarComponent | undefined;
+  @ViewChild('rightSidebar') public rightSidebar: SidebarComponent | undefined;
+  @ViewChild('calendarsList') public calendarsList: ListViewComponent | undefined;
+  @ViewChild('gridObj') public gridObj: GridComponent | undefined;
+  @ViewChild('dialogObj') public dialogObj: DialogComponent | undefined;
+  @ViewChild('calendarName') public calendarName: TextBoxComponent | undefined;
+  @ViewChild('calendarColor') public calendarColor: ColorPickerComponent | undefined;
   public intl: Internationalization = new Internationalization();
-  public currentView: View = 'Week';
-  public liveTimeUpdate: string = new Date().toLocaleTimeString('en-US', { timeZone: 'UTC' });
-  public timezone: string = 'UTC';
-  public group: GroupModel = { resources: ['Calendars'] };
-  public resourceDataSource: Record<string, any>[] = [
-    { CalendarText: 'My Calendar', CalendarId: 1, CalendarColor: '#c43081' },
-    { CalendarText: 'Company', CalendarId: 2, CalendarColor: '#ff7f50' },
-    { CalendarText: 'Birthday', CalendarId: 3, CalendarColor: '#AF27CD' },
-    { CalendarText: 'Holiday', CalendarId: 4, CalendarColor: '#808000' }
+  public dateRange: string = "";
+  public calendars: Record<string, any>[] = [
+    { name: "My Calendar", id: 1, color: "#c43081", isSelected: true },
+    { name: "Company", id: 2, color: "#ff7f50", isSelected: true },
+    { name: "Birthday", id: 3, color: "#AF27CD", isSelected: true },
+    { name: "Holiday", id: 4, color: "#808000", isSelected: true }
   ];
-  public resourceQuery: Query = new Query().where('CalendarId', 'equal', 1);
-  public allowMultiple = true;
-  public isTimelineView = false;
-  public exportItems: ItemModel[] = [
-    { text: 'iCalendar', iconCss: 'e-icons e-export' },
-    { text: 'Excel', iconCss: 'e-icons e-export-excel' }
+  public calendarFields: Record<string, any> = { id: "id", text: "name", isChecked: "isSelected" };
+  public activeCalendarData: Record<string, any> = { id: 0, name: "New Calendar", color: "#008000ff" };
+  public selectedCalendars: Record<string, any> = this.getSelectedCalendars();
+  public appointmentData: Record<string, any>[] = this.generateCalendarData();
+  public filteredData: Record<string, any> = this.getFilteredData();
+  public selectedDate: Date = new Date();
+  public currentView: View = "Week";
+  public eventSettings: EventSettingsModel = { dataSource: extend([], this.filteredData.planned, null, true) as Record<string, any>[] };
+  public scheduleResources: Record<string, any>[] = [
+    { name: "Nancy", id: 1, color: "#df5286" },
+    { name: "Steven", id: 2, color: "#7fa900" },
+    { name: "Robert", id: 3, color: "#ea7a57" },
+    { name: "Smith", id: 4, color: "#5978ee" },
+    { name: "Micheal", id: 5, color: "#df5286" },
+    { name: "Root", id: 6, color: "#00bdae" }
   ];
-  public checkboxMode = 'CheckBox';
-  public firstDayOfWeek = 0;
-  public workDays: number[] = [1, 2, 3, 4, 5];
-  public calendarsValue: number[] = [1];
-  public fields: Record<string, any> = { text: 'text', value: 'value' };
-  public calendarFields: Record<string, any> = { text: 'CalendarText', value: 'CalendarId' };
-  public dayStartHourValue: Date = new Date(new Date().setHours(0, 0, 0));
-  public dayEndHourValue: Date = new Date(new Date().setHours(23, 59, 59));
-  public workStartHourValue: Date = new Date(new Date().setHours(9, 0, 0));
-  public workEndHourValue: Date = new Date(new Date().setHours(18, 0, 0));
-  public liveTimeInterval: NodeJS.Timeout;
-  public weekDays: Record<string, any>[] = [
-    { text: 'Sunday', value: 0 },
-    { text: 'Monday', value: 1 },
-    { text: 'Tuesday', value: 2 },
-    { text: 'Wednesday', value: 3 },
-    { text: 'Thursday', value: 4 },
-    { text: 'Friday', value: 5 },
-    { text: 'Saturday', value: 6 }
-  ];
-  public timezoneData: Record<string, any>[] = [
-    { text: 'UTC -12:00', value: 'Etc/GMT+12' },
-    { text: 'UTC -11:00', value: 'Etc/GMT+11' },
-    { text: 'UTC -10:00', value: 'Etc/GMT+10' },
-    { text: 'UTC -09:00', value: 'Etc/GMT+9' },
-    { text: 'UTC -08:00', value: 'Etc/GMT+8' },
-    { text: 'UTC -07:00', value: 'Etc/GMT+7' },
-    { text: 'UTC -06:00', value: 'Etc/GMT+6' },
-    { text: 'UTC -05:00', value: 'Etc/GMT+5' },
-    { text: 'UTC -04:00', value: 'Etc/GMT+4' },
-    { text: 'UTC -03:00', value: 'Etc/GMT+3' },
-    { text: 'UTC -02:00', value: 'Etc/GMT+2' },
-    { text: 'UTC -01:00', value: 'Etc/GMT+1' },
-    { text: 'UTC +00:00', value: 'Etc/GMT' },
-    { text: 'UTC +01:00', value: 'Etc/GMT-1' },
-    { text: 'UTC +02:00', value: 'Etc/GMT-2' },
-    { text: 'UTC +03:00', value: 'Etc/GMT-3' },
-    { text: 'UTC +04:00', value: 'Etc/GMT-4' },
-    { text: 'UTC +05:00', value: 'Etc/GMT-5' },
-    { text: 'UTC +05:30', value: 'Asia/Calcutta' },
-    { text: 'UTC +06:00', value: 'Etc/GMT-6' },
-    { text: 'UTC +07:00', value: 'Etc/GMT-7' },
-    { text: 'UTC +08:00', value: 'Etc/GMT-8' },
-    { text: 'UTC +09:00', value: 'Etc/GMT-9' },
-    { text: 'UTC +10:00', value: 'Etc/GMT-10' },
-    { text: 'UTC +11:00', value: 'Etc/GMT-11' },
-    { text: 'UTC +12:00', value: 'Etc/GMT-12' },
-    { text: 'UTC +13:00', value: 'Etc/GMT-13' },
-    { text: 'UTC +14:00', value: 'Etc/GMT-14' }
-  ];
-  public timeSlotDuration: Record<string, any>[] = [
-    { Name: '1 hour', Value: 60 },
-    { Name: '1.5 hours', Value: 90 },
-    { Name: '2 hours', Value: 120 },
-    { Name: '2.5 hours', Value: 150 },
-    { Name: '3 hours', Value: 180 },
-    { Name: '3.5 hours', Value: 210 },
-    { Name: '4 hours', Value: 240 },
-    { Name: '4.5 hours', Value: 270 },
-    { Name: '5 hours', Value: 300 },
-    { Name: '5.5 hours', Value: 330 },
-    { Name: '6 hours', Value: 360 },
-    { Name: '6.5 hours', Value: 390 },
-    { Name: '7 hours', Value: 420 },
-    { Name: '7.5 hours', Value: 450 },
-    { Name: '8 hours', Value: 480 },
-    { Name: '8.5 hours', Value: 510 },
-    { Name: '9 hours', Value: 540 },
-    { Name: '9.5 hours', Value: 570 },
-    { Name: '10 hours', Value: 600 },
-    { Name: '10.5 hours', Value: 630 },
-    { Name: '11 hours', Value: 660 },
-    { Name: '11.5 hours', Value: 690 },
-    { Name: '12 hours', Value: 720 }
-  ];
-  public timeSlotFields = { text: 'Name', value: 'Value' };
-  public timeSlotCount: number[] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
-  public timeSlotDurationValue = 60;
-  public timeSlotCountValue = 2;
-  public timeFormatData: Record<string, any>[] = [
-    { Name: '12 hours', Value: 'hh:mm a' },
-    { Name: '24 hours', Value: 'HH:mm' }
-  ];
-  public timeFormatValue = 'hh:mm a';
-  public weekNumberData: Record<string, any>[] = [
-    { Name: 'Off', Value: 'Off' },
-    { Name: 'First Day of Year', Value: 'FirstDay' },
-    { Name: 'First Full Week', Value: 'FirstFullWeek' },
-    { Name: 'First Four-Day Week', Value: 'FirstFourDayWeek' }
-  ];
-  public tooltipData: Record<string, any>[] = [
-    { Name: 'Off', Value: 'Off' },
-    { Name: 'On', Value: 'On' },
-  ];
-  public weekNumberValue = 'Off';
-  public tooltipValue = 'Off';
-  public eventSettings: EventSettingsModel = { dataSource: this.generateEvents() };
-  @ViewChild('menuObj') public menuObj: ContextMenuComponent;
-  public selectedTarget: Element;
-  public menuItems: MenuItemModel[] = [
-    { text: 'New Event', iconCss: 'e-icons e-plus', id: 'Add' },
-    { text: 'New Recurring Event', iconCss: 'e-icons e-repeat', id: 'AddRecurrence' },
-    { text: 'Today', iconCss: 'e-icons e-timeline-today', id: 'Today' },
-    { text: 'Edit Event', iconCss: 'e-icons e-edit', id: 'Save' },
-    {
-      text: 'Edit Event', id: 'EditRecurrenceEvent', iconCss: 'e-icons e-edit',
-      items: [
-        { text: 'Edit Occurrence', id: 'EditOccurrence' },
-        { text: 'Edit Series', id: 'EditSeries' }
-      ]
-    },
-    { text: 'Delete Event', iconCss: 'e-icons e-trash', id: 'Delete' },
-    {
-      text: 'Delete Event', id: 'DeleteRecurrenceEvent', iconCss: 'e-icons e-trash',
-      items: [
-        { text: 'Delete Occurrence', id: 'DeleteOccurrence' },
-        { text: 'Delete Series', id: 'DeleteSeries' }
-      ]
-    }
-  ];
+  public timelineGroup: GroupModel = { resources: ["Resources"] };
+  public unPlannedData: Record<string, any>[] = extend([], this.filteredData.unPlanned, null, true) as Record<string, any>[];
+  public animationSettings: AnimationSettingsModel = { effect: "Zoom" };
+  public dlgButtons: ButtonPropsModel[] = [{ click: this.addCalendar.bind(this), buttonModel: { content: "Add", isPrimary: true } }];
 
-  constructor() {
-    
+  public constructor() {
+    this.updateDateRange();
   }
 
-  public ngAfterViewChecked(): void {
-    this.viewSwitch?.element?.setAttribute('tabindex', '0');
-    this.groupSwitch?.element?.setAttribute('tabindex', '0');
-    this.gridlinesSwitch?.element?.setAttribute('tabindex', '0');
-    this.rowHeightSwitch?.element?.setAttribute('tabindex', '0');
-  }
-
-  public importTemplateFn(data: Record<string, any>): NodeList {
-    const template: string = '<div class="e-template-btn"><span class="e-btn-icon e-icons e-upload-1 e-icon-left"></span>${text}</div>';
-    return compile(template.trim())(data) as NodeList;
-  }
-
-  public generateEvents(): Record<string, any>[] {
-    const eventData: Record<string, any>[] = [];
-    const eventSubjects: string[] = [
-      'Bering Sea Gold', 'Technology', 'Maintenance', 'Meeting', 'Traveling', 'Annual Conference', 'Birthday Celebration',
-      'Farewell Celebration', 'Wedding Anniversary', 'Alaska: The Last Frontier', 'Deadliest Catch', 'Sports Day', 'MoonShiners',
-      'Close Encounters', 'HighWay Thru Hell', 'Daily Planet', 'Cash Cab', 'Basketball Practice', 'Rugby Match', 'Guitar Class',
-      'Music Lessons', 'Doctor checkup', 'Brazil - Mexico', 'Opening ceremony', 'Final presentation'
-    ];
-    const weekDate: Date = new Date(new Date().setDate(new Date().getDate() - new Date().getDay()));
-    let startDate: Date = new Date(weekDate.getFullYear(), weekDate.getMonth(), weekDate.getDate(), 10, 0);
-    let endDate: Date = new Date(weekDate.getFullYear(), weekDate.getMonth(), weekDate.getDate(), 11, 30);
-    eventData.push({
-      Id: 1,
-      Subject: eventSubjects[Math.floor(Math.random() * (24 - 0 + 1) + 0)],
-      StartTime: startDate,
-      EndTime: endDate,
-      Location: '',
-      Description: 'Event Scheduled',
-      RecurrenceRule: 'FREQ=WEEKLY;BYDAY=MO,TU,WE,TH,FR;INTERVAL=1;COUNT=10;',
-      IsAllDay: false,
-      IsReadonly: false,
-      CalendarId: 1
-    });
-    for (let a = 0, id = 2; a < 500; a++) {
-      const month: number = Math.floor(Math.random() * (11 - 0 + 1) + 0);
-      const date: number = Math.floor(Math.random() * (28 - 1 + 1) + 1);
-      const hour: number = Math.floor(Math.random() * (23 - 0 + 1) + 0);
-      const minutes: number = Math.floor(Math.random() * (59 - 0 + 1) + 0);
-      const start: Date = new Date(new Date().getFullYear(), month, date, hour, minutes, 0);
-      const end: Date = new Date(start.getTime());
-      end.setHours(end.getHours() + 2);
-      startDate = new Date(start.getTime());
-      endDate = new Date(end.getTime());
-      eventData.push({
-        Id: id,
-        Subject: eventSubjects[Math.floor(Math.random() * (24 - 0 + 1) + 0)],
-        StartTime: startDate,
-        EndTime: endDate,
-        Location: '',
-        Description: 'Event Scheduled',
-        IsAllDay: id % 10 === 0,
-        IsReadonly: endDate < new Date(),
-        CalendarId: (a % 4) + 1
-      });
-      id++;
-    }
-    if (/MSIE \d|Trident.*rv:/.test(navigator.userAgent)) {
-      Timezone.prototype.offset = (date: Date, zone: string): number => moment.tz.zone(zone).utcOffset(date.getTime());
-    }
-    const overviewEvents: { [key: string]: Date }[] = extend([], eventData, null, true) as { [key: string]: Date }[];
-    const timezone: Timezone = new Timezone();
-    const utcTimezone: never = 'UTC' as never;
-    const currentTimezone: never = timezone.getLocalTimezoneName() as never;
-    for (const event of overviewEvents) {
-      event.StartTime = timezone.convert(event.StartTime, utcTimezone, currentTimezone);
-      event.EndTime = timezone.convert(event.EndTime, utcTimezone, currentTimezone);
-    }
-    return overviewEvents;
-  }
-
-  public onToolbarCreated(): void {
-    this.liveTimeInterval = setInterval(() => { this.updateLiveTime(this.scheduleObj ? this.scheduleObj.timezone : 'UTC'); }, 1000);
-  }
-
-  public onToolbarItemClicked(args: ClickEventArgs): void {
-    switch (args.item.text) {
-      case 'Day':
-        this.currentView = this.isTimelineView ? 'TimelineDay' : 'Day';
-        break;
-      case 'Week':
-        this.currentView = this.isTimelineView ? 'TimelineWeek' : 'Week';
-        break;
-      case 'WorkWeek':
-        this.currentView = this.isTimelineView ? 'TimelineWorkWeek' : 'WorkWeek';
-        break;
-      case 'Month':
-        this.currentView = this.isTimelineView ? 'TimelineMonth' : 'Month';
-        break;
-      case 'Year':
-        this.currentView = this.isTimelineView ? 'TimelineYear' : 'Year';
-        break;
-      case 'Agenda':
-        this.currentView = 'Agenda';
-        break;
-      case 'New Event':
-        const eventData: Record<string, any> = this.getEventData();
-        this.scheduleObj.openEditor(eventData, 'Add', true);
-        break;
-      case 'New Recurring Event':
-        const recEventData: Record<string, any> = this.getEventData();
-        this.scheduleObj.openEditor(recEventData, 'Add', true, 1);
-        break;
-    }
-  }
-
-  private getEventData(): Record<string, any> {
-    const date: Date = this.scheduleObj.selectedDate;
-    return {
-      Id: this.scheduleObj.getEventMaxID(),
-      Subject: '',
-      StartTime: new Date(date.getFullYear(), date.getMonth(), date.getDate(), new Date().getHours(), 0, 0),
-      EndTime: new Date(date.getFullYear(), date.getMonth(), date.getDate(), new Date().getHours() + 1, 0, 0),
-      Location: '',
-      Description: '',
-      IsAllDay: false,
-      CalendarId: 1
-    };
-  }
-
-  public updateLiveTime(timezone: string = 'UTC'): void {
-    if(this.scheduleObj.isAdaptive) {
-      this.liveTimeUpdate = new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', timeZone: timezone });
-    }
-    else {
-      this.liveTimeUpdate = new Date().toLocaleTimeString('en-US', { timeZone: timezone });
-    }
-  }
-
-  public onTimelineViewChange(args: SwitchEventArgs): void {
-    this.isTimelineView = args.checked;
-    switch (this.scheduleObj.currentView) {
-      case 'Day':
-      case 'TimelineDay':
-        this.currentView = this.isTimelineView ? 'TimelineDay' : 'Day';
-        break;
-      case 'Week':
-      case 'TimelineWeek':
-        this.currentView = this.isTimelineView ? 'TimelineWeek' : 'Week';
-        break;
-      case 'WorkWeek':
-      case 'TimelineWorkWeek':
-        this.currentView = this.isTimelineView ? 'TimelineWorkWeek' : 'WorkWeek';
-        break;
-      case 'Month':
-      case 'TimelineMonth':
-        this.currentView = this.isTimelineView ? 'TimelineMonth' : 'Month';
-        break;
-      case 'Year':
-      case 'TimelineYear':
-        this.currentView = this.isTimelineView ? 'TimelineYear' : 'Year';
-        break;
-      case 'Agenda':
-        this.currentView = 'Agenda';
-        break;
-    }
-  }
-
-  public onGroupingChange(args: SwitchEventArgs): void {
-    this.scheduleObj.group.resources = args.checked ? ['Calendars'] : [];
-  }
-
-  public onGridlinesChange(args: SwitchEventArgs): void {
-    this.scheduleObj.timeScale.enable = args.checked;
-  }
-
-  public onRowAutoHeightChange(args: SwitchEventArgs): void {
-    this.scheduleObj.rowAutoHeight = args.checked;
-  }
-
-  public onSelected(args: SelectedEventArgs): void {
-    this.scheduleObj.importICalendar((args.event.target as HTMLInputElement).files[0]);
-  }
-
-  public OnUploaderCreated(): void {
-    const element = document.querySelector('.calendar-import .e-css.e-btn');
-    element.classList.add('e-inherit');
-  }
-
-  public onSettingsClick(args): void {
-    const settingsPanel: Element = document.querySelector('.overview-content .right-panel');
-    if (settingsPanel.classList.contains('hide')) {
-      removeClass([settingsPanel], 'hide');
-      this.workWeek.refresh();
-      this.resources.refresh();
-    } else {
-      addClass([settingsPanel], 'hide');
-    }
-    this.scheduleObj.refreshEvents();
-  }
-
-  public getWeatherImage(value: Date): string {
-    switch (value.getDay()) {
-      case 0:
-        return '<img class="weather-image" src="./assets/schedule/images/weather-clear.svg"/>';
-      case 1:
-        return '<img class="weather-image" src="./assets/schedule/images/weather-clouds.svg"/>';
-      case 2:
-        return '<img class="weather-image" src="./assets/schedule/images/weather-rain.svg"/>';
-      case 3:
-        return '<img class="weather-image" src="./assets/schedule/images/weather-clouds.svg"/>';
-      case 4:
-        return '<img class="weather-image" src="./assets/schedule/images/weather-rain.svg"/>';
-      case 5:
-        return '<img class="weather-image" src="./assets/schedule/images/weather-clear.svg"/>';
-      case 6:
-        return '<img class="weather-image" src="./assets/schedule/images/weather-clouds.svg"/>';
-      default:
-        return null;
-    }
-  }
-
-  public getDateHeaderDay(value: Date): string {
-    return this.intl.formatDate(value, { skeleton: 'E' });
-  }
-  public getDateHeaderDate(value: Date): string {
-    return this.intl.formatDate(value, { skeleton: 'd' });
-  }
-
-  public onWeekDayChange(args: ChangeEventArgs): void {
-    this.scheduleObj.firstDayOfWeek = args.value as number;
-  }
-
-  public onWorkWeekDayChange(args: MultiSelectChangeEventArgs): void {
-    this.scheduleObj.workDays = args.value as number[];
-  }
-
-  public onResourceChange(args: MultiSelectChangeEventArgs): void {
-    let resourcePredicate: Predicate;
-    for (const value of args.value) {
-      if (resourcePredicate) {
-        resourcePredicate = resourcePredicate.or(new Predicate('CalendarId', 'equal', value as number));
-      } else {
-        resourcePredicate = new Predicate('CalendarId', 'equal', value as number);
+  public getSelectedCalendars(): Record<string, any> {
+    const selectedIds: number[] = [];
+    const selectedItems: Record<string, any>[] = [];
+    for (let calendar of this.calendars) {
+      if (calendar.isSelected) {
+        selectedIds.push(calendar.id);
+        selectedItems.push(calendar);
       }
     }
-    this.scheduleObj.resources[0].query = resourcePredicate ? new Query().where(resourcePredicate) as any :
-      new Query().where('CalendarId', 'equal', 1);
+    return { ids: selectedIds, items: selectedItems };
   }
 
-  public onTimezoneChange(args: ChangeEventArgs): void {
-    this.scheduleObj.timezone = args.value as string;
-    this.updateLiveTime(this.scheduleObj.timezone);
-    this.timezone = args.itemData.text;
-  }
-
-  public onDayStartHourChange(args: TimeEventArgs): void {
-    this.scheduleObj.startHour = this.intl.formatDate(args.value, { skeleton: 'Hm' });
-  }
-
-  public onDayEndHourChange(args: TimeEventArgs): void {
-    this.scheduleObj.endHour = this.intl.formatDate(args.value, { skeleton: 'Hm' });
-  }
-
-  public onWorkStartHourChange(args: TimeEventArgs): void {
-    this.scheduleObj.workHours.start = this.intl.formatDate(args.value, { skeleton: 'Hm' });
-  }
-
-  public onWorkEndHourChange(args: TimeEventArgs): void {
-    this.scheduleObj.workHours.end = this.intl.formatDate(args.value, { skeleton: 'Hm' });
-  }
-
-  public onTimescaleDurationChange(args: ChangeEventArgs): void {
-    this.scheduleObj.timeScale.interval = args.value as number;
-  }
-
-  public onTimescaleIntervalChange(args: ChangeEventArgs): void {
-    this.scheduleObj.timeScale.slotCount = args.value as number;
-  }
-
-  public onTimeFormatChange(args: ChangeEventArgs): void {
-    this.scheduleObj.timeFormat = args.value as string;
-  }
-
-  public onWeekNumberChange(args: ChangeEventArgs): void {
-    if (args.value === 'Off') {
-      this.scheduleObj.showWeekNumber = false;
-    } else {
-      this.scheduleObj.showWeekNumber = true;
-      this.scheduleObj.weekRule = args.value as any;
+  public generateCalendarData(): Record<string, any>[] {
+    let collections: Record<string, any>[] = extend([], [...personalData, ...companyData, ...birthdayData, ...holidayData], null, true) as Record<string, any>[];
+    const oldTime: number = new Date(2021, 3, 1).getTime();
+    const newTime: number = resetTime(new Date()).getTime();
+    for (const data of collections) {
+      data.IsPlanned = !(data.Id % 2);
+      data.IsAllDay = [1, 2].indexOf(data.CalendarId) <= -1;
+      const diff: number = oldTime - resetTime(new Date(data.StartTime)).getTime();
+      const hour: number = Math.floor(Math.random() * (13 - 9) + 9);
+      data.StartTime = new Date(newTime - diff + (data.IsAllDay ? 0 : (hour * 60 * MS_PER_MINUTE)));
+      data.EndTime = new Date(data.StartTime.getTime() + (data.IsAllDay ? MS_PER_DAY : MS_PER_MINUTE * 60));
+      data.ResourceId = Math.floor(Math.random() * 6) + 1;
     }
-  }
-  public onTooltipChange(args: ChangeEventArgs): void {
-    if (args.value === 'Off') {
-      this.scheduleObj.eventSettings.enableTooltip = false;
-    } else {
-      this.scheduleObj.eventSettings.enableTooltip = true;
-    }
+    return collections;
   }
 
-  public onContextMenuBeforeOpen(args: BeforeOpenCloseMenuEventArgs): void {
-    const newEventElement: HTMLElement = document.querySelector('.e-new-event') as HTMLElement;
-    if (newEventElement) {
-      remove(newEventElement);
-      removeClass([document.querySelector('.e-selected-cell')], 'e-selected-cell');
-    }
-    this.scheduleObj.closeQuickInfoPopup();
-    const targetElement: HTMLElement = args.event.target as HTMLElement;
-    if (closest(targetElement, '.e-contextmenu')) {
-      return;
-    }
-    this.selectedTarget = closest(targetElement, '.e-appointment,.e-work-cells,' +
-      '.e-vertical-view .e-date-header-wrap .e-all-day-cells,.e-vertical-view .e-date-header-wrap .e-header-cells');
-    if (isNullOrUndefined(this.selectedTarget)) {
-      args.cancel = true;
-      return;
-    }
-    if (this.selectedTarget.classList.contains('e-appointment')) {
-      const eventObj: Record<string, any> = this.scheduleObj.getEventDetails(this.selectedTarget) as Record<string, any>;
-      if (eventObj.RecurrenceRule) {
-        this.menuObj.showItems(['EditRecurrenceEvent', 'DeleteRecurrenceEvent'], true);
-        this.menuObj.hideItems(['Add', 'AddRecurrence', 'Today', 'Save', 'Delete'], true);
-      } else {
-        this.menuObj.showItems(['Save', 'Delete'], true);
-        this.menuObj.hideItems(['Add', 'AddRecurrence', 'Today', 'EditRecurrenceEvent', 'DeleteRecurrenceEvent'], true);
+  public getFilteredData(): Record<string, any> {
+    const planned: Record<string, any>[] = [];
+    const unPlanned: Record<string, any>[] = [];
+    for (const data of this.appointmentData) {
+      if (this.selectedCalendars.ids.indexOf(data.CalendarId) > -1) {
+        if (data.IsPlanned) {
+          planned.push(data);
+        } else {
+          unPlanned.push(data);
+        }
       }
-      return;
-    } else if ((this.selectedTarget.classList.contains('e-work-cells') || this.selectedTarget.classList.contains('e-all-day-cells')) &&
-      !this.selectedTarget.classList.contains('e-selected-cell')) {
-      removeClass([].slice.call(this.scheduleObj.element.querySelectorAll('.e-selected-cell')), 'e-selected-cell');
-      this.selectedTarget.classList.add('e-selected-cell');
-      this.selectedTarget.setAttribute('aria-selected', 'true');
     }
-    this.menuObj.hideItems(['Save', 'Delete', 'EditRecurrenceEvent', 'DeleteRecurrenceEvent'], true);
-    this.menuObj.showItems(['Add', 'AddRecurrence', 'Today'], true);
+    return { planned: planned, unPlanned: unPlanned };
   }
 
-  public onMenuItemSelect(args: MenuEventArgs): void {
-    const selectedMenuItem: string = args.item.id;
-    let eventObj: { [key: string]: number };
-    if (this.selectedTarget.classList.contains('e-appointment')) {
-      eventObj = this.scheduleObj.getEventDetails(this.selectedTarget) as { [key: string]: number };
+  public toolbarClick(args: ClickEventArgs): void {
+    if (!args.item) {
+      return;
     }
-    switch (selectedMenuItem) {
-      case 'Today':
+    switch (args.item.cssClass) {
+      case "e-menu-btn":
+        if (this.leftSidebar) {
+          this.leftSidebar.toggle();
+        }
+        break;
+      case "e-create":
+        if (this.scheduleObj && this.calendars.length > 0) {
+          const data: Record<string, any> = {
+            StartTime: resetTime(new Date()),
+            EndTime: resetTime(addDays(new Date(), 1)),
+            ResourceId: this.selectedCalendars?.ids[0] || this.calendars[0]?.id,
+          };
+          this.scheduleObj.openEditor(data, "Add", true);
+        }
+        break;
+      case "e-previous":
+        this.scheduleObj.selectedDate = this.getPreviousNextDate(true);
+        break;
+      case "e-next":
+        this.scheduleObj.selectedDate = this.getPreviousNextDate(false);
+        break;
+      case "e-today":
         this.scheduleObj.selectedDate = new Date();
         break;
-      case 'Add':
-      case 'AddRecurrence':
-        const selectedCells: Element[] = this.scheduleObj.getSelectedElements();
-        const activeCellsData: CellClickEventArgs =
-          this.scheduleObj.getCellDetails(selectedCells.length > 0 ? selectedCells : this.selectedTarget);
-        if (selectedMenuItem === 'Add') {
-          this.scheduleObj.openEditor(activeCellsData, 'Add');
-        } else {
-          this.scheduleObj.openEditor(activeCellsData, 'Add', null, 1);
-        }
+      case "e-day":
+        this.scheduleObj.currentView = "Day";
         break;
-      case 'Save':
-      case 'EditOccurrence':
-      case 'EditSeries':
-        if (selectedMenuItem === 'EditSeries') {
-          const query: Query = new Query().where(this.scheduleObj.eventFields.id, 'equal', eventObj.RecurrenceID);
-          eventObj = new DataManager(this.scheduleObj.eventsData).executeLocal(query)[0] as { [key: string]: number };
-        }
-        this.scheduleObj.openEditor(eventObj, selectedMenuItem);
+      case "e-week":
+        this.scheduleObj.currentView = "Week";
         break;
-      case 'Delete':
-        this.scheduleObj.deleteEvent(eventObj);
+      case "e-month":
+        this.scheduleObj.currentView = "Month";
         break;
-      case 'DeleteOccurrence':
-      case 'DeleteSeries':
-        this.scheduleObj.deleteEvent(eventObj, selectedMenuItem);
+      case "e-agenda":
+        this.scheduleObj.currentView = "Agenda";
+        break;
+      case "e-timeline":
+        this.scheduleObj.currentView = "TimelineMonth";
+        break;
+      case "e-year":
+        this.scheduleObj.currentView = "Year";
+        break;
+      default:
         break;
     }
   }
 
-  public onPrintClick(): void {
-    this.scheduleObj.print();
-  }
-
-  public onExportClick(args): void {
-    if (args.item.text === 'Excel') {
-      let exportDatas: Record<string, any>[] = [];
-      const eventCollection: Record<string, any>[] = this.scheduleObj.getEvents();
-      const resourceCollection: ResourcesModel[] = this.scheduleObj.getResourceCollections();
-      const resourceData: Record<string, any>[] = resourceCollection[0].dataSource as Record<string, any>[];
-      for (const resource of resourceData) {
-        const data: Record<string, any>[] = eventCollection.filter((e: Record<string, any>) => e.CalendarId === resource.CalendarId);
-        exportDatas = exportDatas.concat(data as Record<string, any>[]);
+  public getPreviousNextDate(isPrevious: boolean): Date {
+    let currentDate: Date = this.scheduleObj.selectedDate;
+    if (this.scheduleObj) {
+      const view: string = this.scheduleObj.currentView;
+      switch (view) {
+        case "Day":
+        case "Agenda":
+          currentDate = addDays(currentDate, isPrevious ? -1 : 1);
+          break;
+        case "Week":
+          currentDate = addDays(currentDate, isPrevious ? -WEEK_LENGTH : WEEK_LENGTH);
+          break;
+        case "Month":
+        case "TimelineMonth":
+          currentDate = addMonths(currentDate, isPrevious ? -1 : 1);
+          break;
+        case "Year":
+          currentDate = addYears(currentDate, isPrevious ? -1 : 1);
+          break;
+        default:
+          break;
       }
-      this.scheduleObj.exportToExcel({
-        exportType: 'xlsx', customData: exportDatas, fields: ['Id', 'Subject', 'StartTime', 'EndTime', 'CalendarId']
-      });
+    }
+    return currentDate;
+  }
+
+  public updateDateRange(): void {
+    const view: View = this.scheduleObj ? this.scheduleObj.currentView : this.currentView;
+    switch (view) {
+      case "Day":
+        this.dateRange = this.intl.formatDate(this.scheduleObj.selectedDate, { format: "MMMM dd, yyyy" });
+        break;
+      case "Week":
+      case "Agenda": {
+        let currentViewDates: Date[] = this.scheduleObj ? this.scheduleObj.getCurrentViewDates() : [];
+        if (isNullOrUndefined(this.scheduleObj) && view === "Week" && currentViewDates.length < 1) {
+          currentViewDates = [getWeekFirstDate(this.selectedDate, 0), getWeekLastDate(this.selectedDate, 0)];
+        }
+        if (currentViewDates.length > 0) {
+          const start: Date = currentViewDates[0];
+          const end: Date = currentViewDates[currentViewDates.length - 1];
+          if (start.getFullYear() !== end.getFullYear()) {
+            this.dateRange = this.intl.formatDate(start, { format: "MMMM dd, yyyy" }) + " - " + this.intl.formatDate(end, { format: "MMMM dd, yyyy" });
+          } else if (start.getMonth() !== end.getMonth()) {
+            this.dateRange = this.intl.formatDate(start, { format: "MMMM dd" }) + " - " + this.intl.formatDate(end, { format: "MMMM dd, yyyy" });
+          } else {
+            this.dateRange = this.intl.formatDate(start, { format: "MMMM dd" }) + " - " + this.intl.formatDate(end, { format: "dd, yyyy" });
+          }
+        }
+        break;
+      }
+      case "Month":
+      case "TimelineMonth":
+        this.dateRange = this.intl.formatDate(this.scheduleObj.selectedDate, { format: "MMMM yyyy" });
+        break;
+      case "Year":
+        this.dateRange = this.intl.formatDate(this.scheduleObj.selectedDate, { format: "yyyy" });
+        break;
+      default:
+        break;
+    }
+  }
+
+  public onCalendarChange(args: ChangeEventArgs): void {
+    if (args?.isInteracted && this.scheduleObj) {
+       // this.scheduleObj.selectedDate = args.value;
+    }
+  }
+
+  public listViewActionComplete() {
+    this.applyBackgroundColors();
+  }
+
+  public showAddCalendarDialog(): void {
+    if (this.dialogObj) {
+      this.dialogObj.header = "New Calendar";
+      this.activeCalendarData = { id: 0, name: "", color: "#008000ff" };
+      this.dialogObj.buttons = this.dlgButtons;
+      this.dialogObj.show();
+    }
+  }
+
+  public applyBackgroundColors(): void {
+    this.calendars.forEach((calendar: Record<string, any>): void => {
+      const listItem: Element = this.calendarsList.element.querySelector(`[data-uid="${calendar.id}"]`);
+      if (listItem) {
+        const checkboxFrame: Element = listItem.querySelector(`.e-checkbox-wrapper .e-frame.e-check,
+          .e-css.e-checkbox-wrapper .e-frame.e-check,.e-checkbox-wrapper .e-frame,.e-css.e-checkbox-wrapper .e-frame`);
+        if (checkboxFrame) {
+          (checkboxFrame as HTMLElement).style.backgroundColor = calendar.color;
+          (checkboxFrame as HTMLElement).style.borderColor = calendar.color;
+        }
+      }
+    });
+  }
+
+  public listViewSelect(args: SelectEventArgs) {
+    const idFromArgs: number = Number((args.data as { [key: string]: Object; }).id);
+    this.calendars[args.index].isSelected = args.isChecked;
+    this.selectedCalendars = this.getSelectedCalendars();
+    if (args.isChecked) {
+      this.changeCheckboxBackgroundColor(idFromArgs);
+    }
+    this.filteredData = this.getFilteredData();
+    this.scheduleObj.eventSettings.dataSource = extend([], this.filteredData.planned, null, true) as Record<string, any>[];
+    this.gridObj.dataSource = extend([], this.filteredData.unPlanned, null, true) as Record<string, any>[];
+  }
+
+  public changeCheckboxBackgroundColor(idFromArgs: number): void {
+    const listItem: Element = this.calendarsList.element.querySelector(`[data-uid="${idFromArgs}"]`);
+    if (listItem) {
+      const checkboxFrame: Element = listItem.querySelector(".e-checkbox-wrapper .e-frame.e-check, .e-css.e-checkbox-wrapper .e-frame.e-check");
+      const selectedItem: Record<string, any> = this.calendars.find((item: Record<string, any>): boolean => item.id === idFromArgs);
+      if (checkboxFrame && selectedItem?.color) {
+        (checkboxFrame as HTMLElement).style.backgroundColor = selectedItem.color as string;
+        (checkboxFrame as HTMLElement).style.borderColor = selectedItem.color as string;
+      }
+    }
+  }
+
+  public calendarEditClick(e: MouseEvent): void {
+    e.stopImmediatePropagation();
+    if (this.dialogObj && e?.target) {
+      this.dialogObj.header = "Edit Calendar";
+      const calendarID: number = +(e.target as HTMLElement).dataset.calendarId;
+      this.activeCalendarData = this.calendars.find((item: Record<string, any>): boolean => item.id === calendarID);
+      this.dialogObj.buttons = [{ click: this.editCalendar.bind(this), buttonModel: { content: "Save", isPrimary: true } }];
+      this.dialogObj.show();
+    }
+  }
+
+  public calendarDeleteClick(e: MouseEvent): void {
+    e.stopImmediatePropagation();
+    if (e?.target && this.calendars.length > 1) {
+      const calendarID: number = +(e.target as HTMLElement).dataset.calendarId;
+      this.activeCalendarData = this.calendars.find((item: Record<string, any>): boolean => item.id === calendarID);
+      this.calendarsList.removeItem(this.activeCalendarData);
+      this.calendars = this.calendars.filter((item: Record<string, any>): boolean => item.id !== calendarID);
+      this.appointmentData = this.appointmentData.filter((item: Record<string, any>): boolean => item.CalendarId !== calendarID);
+      this.selectedCalendars = this.getSelectedCalendars();
+      this.filteredData = this.getFilteredData();
+      this.scheduleObj.eventSettings.dataSource = extend([], this.filteredData.planned, null, true) as Record<string, any>[];
+      this.gridObj.dataSource = extend([], this.filteredData.unPlanned, null, true) as Record<string, any>[];
+    }
+  }
+
+  public scheduleActionComplete(args: ActionEventArgs): void {
+    if (args.requestType === "dateNavigate" || args.requestType === "viewNavigate") {
+      this.updateDateRange();
+      if (args.requestType === "dateNavigate" && resetTime(this.calendarObj?.value) !== resetTime(this.scheduleObj.selectedDate)) {
+        this.calendarObj.value = this.scheduleObj.selectedDate;
+      }
+    } else if (args.requestType === "eventCreated" || args.requestType === "eventChanged" || args.requestType === "eventRemoved") {
+      for (const event of args.addedRecords) {
+        event.IsPlanned = true;
+        this.appointmentData.push(event);
+      }
+      for (const event of args.changedRecords) {
+        const index: number = this.appointmentData.findIndex((item: Record<string, any>): boolean => item.Id === event.Id);
+        this.appointmentData[index] = event;
+      }
+      for (const event of args.deletedRecords) {
+        const index: number = this.appointmentData.findIndex((item: Record<string, any>): boolean => item.Id === event.Id);
+        this.appointmentData.splice(index, 1);
+      }
+      const events: Record<string, any>[] = args.addedRecords.concat(args.changedRecords);
+      for (const event of events) {
+        let calendar: Record<string, any> = this.selectedCalendars.items.find((item: Record<string, any>): boolean => item.id === event.CalendarId);
+        if (isNullOrUndefined(calendar)) {
+          calendar = this.calendars.find((item: Record<string, any>): boolean => item.id === event.CalendarId);
+          calendar.isSelected = true;
+          this.selectedCalendars = this.getSelectedCalendars();
+          this.filteredData = this.getFilteredData();
+          this.calendarsList.dataSource = extend([], this.calendars, null, true) as Record<string, any>[];
+          this.scheduleObj.eventSettings.dataSource = extend([], this.filteredData.planned, null, true) as Record<string, any>[];
+          this.gridObj.dataSource = extend([], this.filteredData.unPlanned, null, true) as Record<string, any>[];
+        }
+      }
+    }
+  }
+
+  public onEventRendered(args: EventRenderedArgs): void {
+    const categoryColor: string = this.calendars.find((c: Record<string, any>): boolean => c.id === args.data.CalendarId)?.color;
+    if (!args.element || !categoryColor) {
+      return;
+    }
+    if (this.scheduleObj.currentView === "Agenda") {
+      (args.element.firstChild as HTMLElement).style.borderLeftColor = categoryColor;
     } else {
-      this.scheduleObj.exportToICalendar();
+      args.element.style.backgroundColor = categoryColor;
     }
   }
 
-  public ngOnDestroy(): void {
-    if (this.liveTimeInterval) {
-      clearInterval(this.liveTimeInterval);
+  public schedulePopupOpen(args: PopupOpenEventArgs): void {
+    if (args.type === "Editor") {
+      if (!args.element.querySelector(".custom-field-row")) {
+        const row: HTMLElement = createElement("div", { className: "custom-field-row" });
+        const formElement: HTMLElement = args.element.querySelector(".e-schedule-form");
+        formElement.firstChild.insertBefore(row, args.element.querySelector(".e-resources-row"));
+        const container: HTMLElement = createElement("div", { className: "custom-field-container" });
+        const inputEle: HTMLElement = createElement("input", { className: "e-field", attrs: { name: "CalendarId" } });
+        container.appendChild(inputEle);
+        row.appendChild(container);
+        const dropDownList: DropDownList = new DropDownList({
+          dataSource: extend([], this.calendars, null, true) as Record<string, any>[],
+          cssClass: "calendar-ddl",
+          fields: { text: "name", value: "id" },
+          value: args.data?.CalendarId || this.selectedCalendars?.ids[0] || this.calendars[0]?.id,
+          floatLabelType: "Always", placeholder: "Calendar"
+        });
+        dropDownList.appendTo(inputEle);
+        inputEle.setAttribute("name", "CalendarId");
+      } else {
+        const calendarDDL: DropDownList = (args.element.querySelector(".calendar-ddl input") as EJ2Instance).ej2_instances[0] as DropDownList;
+        calendarDDL.dataSource = extend([], this.calendars, null, true) as Record<string, any>[];
+        calendarDDL.value = args.data?.CalendarId || this.selectedCalendars?.ids[0] || this.calendars[0]?.id;
+      }
+    } else if (args.type === "QuickInfo" && isNullOrUndefined(args.data.Id)) {
+      args.cancel = true;
     }
   }
 
+  public showRightSidebar(e: MouseEvent): void {
+    if (!this.rightSidebar.isOpen && e?.target) {
+      this.filteredData = this.getFilteredData();
+      this.gridObj.dataSource = extend([], this.filteredData.unPlanned, null, true) as Record<string, any>[];
+      (e.target as HTMLElement).parentElement.style.display = "none";
+      this.rightSidebar.toggle();
+    }
+  }
+
+  public collapseRightSidebar(): void {
+    if (this.rightSidebar.isOpen) {
+      this.rightSidebar.toggle();
+    }
+  }
+
+  public rightSidebarClose(): void {
+    const unplannedElement: HTMLElement = this.rightSidebar.element.parentElement.querySelector(".unplanned-container");
+    if (unplannedElement) {
+      unplannedElement.style.display = "block";
+    }
+  }
+
+  public addCalendar(): void {
+    if (this.dialogObj) {
+      const newId = (this.calendars.length + 1);
+      let calendarNameValue: string = this.calendarName.value.trim();
+      calendarNameValue = calendarNameValue === "" ? "New Calendar" : calendarNameValue;
+      const newItem = { name: calendarNameValue, id: newId, color: this.calendarColor.value, isSelected: true };
+      this.calendars.push(newItem);
+      this.selectedCalendars = this.getSelectedCalendars();
+      this.calendarsList.dataSource = extend([], this.calendars, null, true) as Record<string, any>[];
+      this.dialogObj.hide();
+    }
+  }
+
+  public editCalendar(): void {
+    if (this.dialogObj) {
+      const newValue: string = this.calendarName.value.trim();
+      const newColor: string = this.calendarColor.value.trim();
+      if (newValue.length > 0) {
+        this.calendars = this.calendars.map((item: Record<string, any>): Record<string, any> => {
+          if (item.id === this.activeCalendarData.id) {
+            return { ...item, name: newValue, color: newColor };
+          }
+          return item;
+        });
+        this.selectedCalendars = this.getSelectedCalendars();
+        this.calendarsList.dataSource = extend([], this.calendars, null, true) as Record<string, any>[];
+        this.scheduleObj.refreshEvents();
+      }
+      this.dialogObj.hide();
+    }
+  }
+
+  public beforeDialogOpen(): void {
+    if (this.calendarName && this.calendarColor) {
+      this.calendarName.value = this.activeCalendarData.name;
+      this.calendarColor.value = this.activeCalendarData.color;
+    }
+  }
 }

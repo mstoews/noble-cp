@@ -201,31 +201,11 @@ export class ProjectComponent implements OnInit {
 
     public onChanges(): void {
 
-        // this.projectsForm.get('name').valueChanges.subscribe(value => {
-        //     console.log('Name changed:', value);
-        //     this.bDirty = true;
-        //     return;
-        // });
+        this.projectsForm.valueChanges.subscribe(value => {        
+            this.bDirty = true;
+            return;
+        });
 
-        // this.projectsForm.get('description').valueChanges.subscribe(value => {
-        //     console.log('Description changed:', value);
-        //     this.bDirty = true;
-        //     return;
-        // });
-        
-
-        // this.projectsForm.get('start_date').valueChanges.subscribe(value => {
-        //     console.log('Start Date changed:', value);
-        //     this.bDirty = true;
-        //     return;
-        // });
-
-
-        // this.projectsForm.get('forecast_end_date').valueChanges.subscribe(value => {
-        //     console.log('Forecast End Date changed:', value);
-        //     this.bDirty = true;
-        //     return;
-        // });
         this.bDirty = true;
     }
 
@@ -249,7 +229,7 @@ export class ProjectComponent implements OnInit {
         this.closeDrawer();
     }
 
-    public onAddNew(e: string) {
+    public onAddNew() {
         this.projectsForm.reset();
         this.toast.success('Add a new project', 'Success');
         this.openDrawer();
@@ -259,10 +239,14 @@ export class ProjectComponent implements OnInit {
         this.closeDrawer();
     }
 
+    public onClone() {
+        const project = this.projectsForm.value;
+        
+    }
 
     public onDelete() {
 
-        const data = this.projectsForm.value;
+        const data = this.projectsForm.value as IProjects;
         
         const confirmation = this.confirmation.open({
             title: 'Delete Fund?',
@@ -276,7 +260,7 @@ export class ProjectComponent implements OnInit {
 
         confirmation.afterClosed().subscribe((result) => {            
             if (result === 'confirmed') {
-                this.store.dispatch(projectsPageActions.delete({ project_ref: data.name }));
+                this.store.dispatch(projectsPageActions.delete({ project: data }));
                 this.toast.success(`Project ${data.name} has been deleted`, 'Success');
             }
         });
@@ -302,15 +286,32 @@ export class ProjectComponent implements OnInit {
         this.closeDrawer();
     }
 
+    public openDrawer() {
+        const opened = this.drawer().opened;
+        if (opened !== true) {
+            this.drawer().toggle();
+        } else {
+            return;
+        }
+    }
+
+    public closeDrawer() {
+        const opened = this.drawer().opened;
+        if (opened === true) {
+            this.drawer().toggle();
+        } else {
+            return;
+        }
+    }
 
     public menuItems: MenuItemModel[] = [
-        {   id: 'Edit', text: 'Update Account', iconCss: 'e-icons e-edit-2' },
-        {   id: 'Create', text: 'Create Account', iconCss: 'e-icons e-circle-add'   },
-        {   id: 'Copy',  text: 'Clone Account',  iconCss: 'e-icons e-copy'   },
-        {   id: 'Delete', text: 'Deactivate Account', iconCss: 'e-icons e-delete-1' },
+        {   id: 'Edit',    text: 'Update Account', iconCss: 'e-icons e-edit-2' },
+        {   id: 'Create',  text: 'Create Account', iconCss: 'e-icons e-circle-add'   },
+        {   id: 'Copy',    text: 'Clone Account',  iconCss: 'e-icons e-copy'   },
+        {   id: 'Delete',  text: 'Deactivate Account', iconCss: 'e-icons e-delete-1' },
         {   separator: true
         },
-        {   id: 'Settings', text: 'Settings', iconCss: 'e-icons e-settings' },
+        {   id: 'Settings',text: 'Settings', iconCss: 'e-icons e-settings' },
 
     ];
 
@@ -318,27 +319,27 @@ export class ProjectComponent implements OnInit {
 
         switch (args.item.id) {
             case 'Edit':
-                //this.onSelection("");
+                this.onUpdate();
                 break;
-            case 'Create':
-                // this.onAdd();
+            case 'Create':                
+                this.onAddNew()
                 break;
             case 'Clone':
-                // this.onClone("");
+                this.onClone();
                 break;
             case 'Delete':
-                //this.onDelete("");
+                this.onDelete();
                 break;
             case 'Settings':
-                //this.onOpenSettings();
+                this.onOpenSettings();
                 break;
         }
     }
-    
-    public onClone(arg0: string) {
 
+    public onOpenSettings() {
+        this.toast.info('Settings', 'Not Implemented');
     }
-
+    
     @HostListener("window:exit")
     public exit() {
         if (this.bDirty === true) {
@@ -363,26 +364,6 @@ export class ProjectComponent implements OnInit {
             return;
         }
     }
-
-    public openDrawer() {
-        const opened = this.drawer().opened;
-        if (opened !== true) {
-            this.drawer().toggle();
-        } else {
-            return;
-        }
-    }
-
-    public closeDrawer() {
-        const opened = this.drawer().opened;
-        if (opened === true) {
-            this.drawer().toggle();
-        } else {
-            return;
-        }
-    }
-
-    
 
     @HostListener('window:resize', ['$event'])
     onResize(event: any) {

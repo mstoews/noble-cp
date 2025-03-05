@@ -23,3 +23,9 @@ export interface IGLType {
   update_date: string,
   update_user: string
 }
+
+export interface IValue {
+  value: string;
+  viewValue: string;
+}
+

@@ -164,16 +164,16 @@ export class KanbanService {
 
     updateProjects (project: IProjects) {
       var url = this.baseUrl + '/v1/project_update';
-      return this.httpClient.post<IProjects[]>(url, project);
+      return this.httpClient.post<IProjects>(url, project);
     }
 
     deleteProjects (project: IProjects)  {
       var url = this.baseUrl + '/v1/project_delete';
-      return this.httpClient.post<IProjects[]>(url, project);
+      return this.httpClient.post<IProjects>(url, project);
     }
 
     createProjects (project: IProjects)  {
       var url = this.baseUrl + '/v1/project_create';
-      return this.httpClient.post<IProjects[]>(url, project);
+      return this.httpClient.post<IProjects>(url, project);
     }
 }

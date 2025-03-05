@@ -1,11 +1,5 @@
-import {
-  Component,
-  inject,
-} from "@angular/core";
-import {
-  FormsModule,
-  ReactiveFormsModule,
-} from "@angular/forms";
+import { Component,inject} from "@angular/core";
+import { FormsModule,  ReactiveFormsModule} from "@angular/forms";
 import { NgxMatSelectSearchModule } from "ngx-mat-select-search";
 import { CommonModule } from "@angular/common";
 import { MaterialModule } from "app/services/material.module";
@@ -85,7 +79,6 @@ export class GLTransactionListComponent {
   
   onTemplate() {
     this.toast.success('Template', 'Template');
-
   }
   
   onClone() {

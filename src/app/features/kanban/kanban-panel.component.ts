@@ -89,12 +89,12 @@ import { ProjectComponent } from './kb.projects.component';
                     <div class="mt-8">
                         @switch (selectedPanel) {
                             @case ('kanban') { <kanban></kanban> }
-                            @case ('scheduler') { <schedule></schedule> }
+                            @case ('schedule') { <schedule></schedule> }
                             @case ('priority') { <kanban-priority></kanban-priority> }
                             @case ('status') { <kanban-status></kanban-status>}
                             @case ('tasks') { <kanban-list></kanban-list> }
                             @case ('team') { <team></team> }
-                            @case ('projects') { <kb-projects></kb-projects> }
+                            @case ('projects') { <kb-projects></kb-projects> }                            
                         @case ('type') { <kanban-types></kanban-types>}
 
                         }
@@ -180,19 +180,12 @@ export class KanbanPanelComponent {
                 title: 'Team',
                 description: 'List of team members to assign tasks',
             },
-            // {
-            //     id: 'type',
-            //     icon: 'heroicons_outline:chart-bar',
-            //     title: 'Kanban Action Types',
-            //     description: 'Type of actions that can used to categorize the work being completed',
-            // }
-            // ,
-            // {
-            //     id: 'schedule',
-            //     icon: 'heroicons_outline:calendar',
-            //     title: 'Schedule',
-            //     description: 'Schedule events and meeting for completion of tasks',
-            // }
+            {
+                id: 'schedule',
+                icon: 'heroicons_outline:calendar',
+                title: 'Schedule',
+                description: 'Schedule events and meeting for completion of tasks',
+            }
 
         ];
 

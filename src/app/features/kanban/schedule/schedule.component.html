@@ -1,267 +1,120 @@
 <style>
-    .control-section{
-        margin-top: 100px;
-    }
-    
-    </style>
-    <div class="col-lg-12 control-section">
-      <div class="content-wrapper">
-        <div class="schedule-overview">
-          <ejs-appbar colorMode="Primary">
-            <span class="time e-icons e-time-zone"></span>
-            <span id="timezoneBtn" class="time ">{{timezone}}</span>
-            <span class="time e-icons e-clock"></span>
-            <span id="timeBtn" class="time current-time">{{liveTimeUpdate}}</span>
-            <div class="e-appbar-spacer"></div>
-            <button ejs-button id="printBtn" cssClass="title-bar-btn e-inherit" iconCss="e-icons e-print"
-                    (click)="onPrintClick()">Print</button>
-            <div class="control-panel import-button">
-              <ejs-uploader id='icalendar' cssClass='calendar-import' [multiple]='multiple' [buttons]='buttons'
-                [showFileList]='showFileList' allowedExtensions='.ics' (selected)='onSelected($event)' (created)= 'OnUploaderCreated()'></ejs-uploader>
-            </div>
-            <div class="control-panel calendar-export">
-              <button ejs-dropdownbutton id="exportBtn"  (select)="onExportClick($event)"
-                [items]='exportItems' cssClass = "e-inherit">Export</button>
-            </div>
-            <button ejs-button id="settingsBtn" iconCss="e-icons e-settings" cssClass="overview-toolbar-settings e-inherit"
-                iconPosition="Top" (click)="onSettingsClick($event)"></button>
-          </ejs-appbar>
-              <ejs-toolbar id="toolbarOptions" cssClass="overview-toolbar" height="70px" overflowMode="Scrollable" scrollStep="100"
-                (created)="onToolbarCreated()" (clicked)="onToolbarItemClicked($event)">
-                <e-items>
-                  <e-item prefixIcon='e-icons e-plus' tooltipText='New Event' text='New Event' tabIndex={0}>
-                  </e-item>
-                  <e-item prefixIcon='e-icons e-repeat' tooltipText='New Recurring Event' text='New Recurring Event' tabIndex={0}>
-                  </e-item>
-                  <e-item type='Separator'></e-item>
-                  <e-item prefixIcon='e-icons e-day' tooltipText='Day' text='Day' tabIndex={0}></e-item>
-                  <e-item prefixIcon='e-icons e-week' tooltipText='Week' text='Week' tabIndex={0}></e-item>
-                  <e-item prefixIcon='e-icons e-week' tooltipText='WorkWeek' text='WorkWeek' tabIndex={0}></e-item>
-                  <e-item prefixIcon='e-icons e-month' tooltipText='Month' text='Month' tabIndex={0}>
-                  </e-item>
-                  <e-item prefixIcon='e-icons e-month' tooltipText='Year' text='Year' tabIndex={0}></e-item>
-                  <e-item prefixIcon='e-icons e-agenda-date-range' tooltipText='Agenda' text='Agenda' tabIndex={0}>
-                  </e-item>
-                  <e-item tooltipText='Timeline Views'>
-                    <ng-template #template>
-                      <div class="template">
-                        <div class="icon-child">
-                          <ejs-checkbox #viewSwitch id="timeline_views" [checked]="false"
-                            (change)="onTimelineViewChange($event)"></ejs-checkbox>
-                        </div>
-                        <div class="text-child">Timeline Views</div>
-                      </div>
-                    </ng-template>
-                  </e-item>
-                  <e-item type='Separator'></e-item>
-                  <e-item tooltipText='Resource Grouping'>
-                    <ng-template #template>
-                      <div class="template">
-                        <div class="icon-child">
-                          <ejs-checkbox #groupSwitch id="grouping" [checked]="true" (change)="onGroupingChange($event)">
-                          </ejs-checkbox>
-                        </div>
-                        <div class="text-child">Grouping</div>
-                      </div>
-                    </ng-template>
-                  </e-item>
-                  <e-item tooltipText='Time Slots'>
-                    <ng-template #template>
-                      <div class="template">
-                        <div class="icon-child">
-                          <ejs-checkbox #gridlinesSwitch id="gridlines" [checked]="true" (change)="onGridlinesChange($event)">
-                          </ejs-checkbox>
-                        </div>
-                        <div class="text-child">Time Slots</div>
-                      </div>
-                    </ng-template>
-                  </e-item>
-                  <e-item tooltipText='Auto Fit Rows'>
-                    <ng-template #template>
-                      <div class="template">
-                        <div class="icon-child">
-                          <ejs-checkbox #rowHeightSwitch id="row_auto_height" [checked]="false"
-                            (change)="onRowAutoHeightChange($event)">
-                          </ejs-checkbox>
-                        </div>
-                        <div class="text-child">Auto Fit Rows</div>
-                      </div>
-                    </ng-template>
-                  </e-item>
-                </e-items>
-              </ejs-toolbar>
-          <div class="overview-content">
-            <div class="left-panel">
-              <div class="overview-scheduler">
-                <ejs-schedule #scheduleObj cssClass='schedule-overview' height='100%' [group]='group'
-                  [(currentView)]="currentView" timezone='UTC' [eventSettings]="eventSettings">
-                  <ng-template #dateHeaderTemplate let-data>
-                    <div class="date-text">{{getDateHeaderDay(data.date)}}</div>
-                    <div class="date-text">{{getDateHeaderDate(data.date)}}</div>
-                    <div [innerHTML]="getWeatherImage(data.date)"></div>
-                  </ng-template>
-                  <e-views>
-                    <e-view option="Day"></e-view>
-                    <e-view option="Week"></e-view>
-                    <e-view option="WorkWeek"></e-view>
-                    <e-view option="Month"></e-view>
-                    <e-view option="Year"></e-view>
-                    <e-view option="Agenda"></e-view>
-                    <e-view option="TimelineDay"></e-view>
-                    <e-view option="TimelineWeek"></e-view>
-                    <e-view option="TimelineWorkWeek"></e-view>
-                    <e-view option="TimelineMonth"></e-view>
-                    <e-view option="TimelineYear"></e-view>
-                  </e-views>
-                  <e-resources>
-                    <e-resource field='CalendarId' title='Calendars' [dataSource]='resourceDataSource'
-                      [query]='resourceQuery' [allowMultiple]='allowMultiple' name='Calendars' textField='CalendarText'
-                      idField='CalendarId' colorField='CalendarColor'>
-                    </e-resource>
-                  </e-resources>
-                </ejs-schedule>
-                <ejs-contextmenu #menuObj cssClass='schedule-context-menu' target='.e-schedule' [items]='menuItems'
-                  (beforeOpen)='onContextMenuBeforeOpen($event)' (select)='onMenuItemSelect($event)'></ejs-contextmenu>
-              </div>
-            </div>
-            <div class="right-panel hide">
-              <div class="control-panel e-css">
-                <div class="col-row">
-                  <div class="col-left">
-                    <label style="line-height: 34px; margin: 0;">Calendar</label>
-                  </div>
-                  <div class="col-right">
-                    <ejs-multiselect #resouresObj id='resources' [dataSource]='resourceDataSource'
-                      [mode]='checkboxMode' [fields]='calendarFields'  [showClearButton]='false'
-                      [showDropDownIcon]='true' [value]='calendarsValue' (change)='onResourceChange($event)' cssClass='schedule-resource'>
-                    </ejs-multiselect>
+  .control-section{
+      margin-top: 100px;
+  }
+  
+  </style>
+  <div class="control-section event-calendar-control-section">
+    <div class="control-wrapper">
+      <div class="toolbar-container">
+        <ejs-toolbar cssClass="event-calendar-toolbar" (clicked)="toolbarClick($event)">
+          <e-items>
+            <e-item prefixIcon="e-menu" tooltipText="Menu" cssClass="e-menu-btn"></e-item>
+            <e-item prefixIcon="e-chevron-left" tooltipText="Previous" cssClass="e-previous"></e-item>
+            <e-item prefixIcon="e-chevron-right" tooltipText="Next" cssClass="e-next"></e-item>
+            <e-item [text]="dateRange" cssClass="e-date-range"></e-item>
+            <e-item prefixIcon="e-plus" text="Create" align="Right" cssClass="e-create"></e-item>
+            <e-item type="Separator" align="Right"></e-item>
+            <e-item text="Today" align="Right" cssClass="e-today"></e-item>
+            <e-item type="Separator" align="Right"></e-item>
+            <e-item text="Day" align="Right" cssClass="e-day"></e-item>
+            <e-item text="Week" align="Right" cssClass="e-week"></e-item>
+            <e-item text="Month" align="Right" cssClass="e-month"></e-item>
+            <e-item text="Agenda" align="Right" cssClass="e-agenda"></e-item>
+            <e-item text="Timeline" align="Right" cssClass="e-timeline"></e-item>
+            <e-item text="Year" align="Right" cssClass="e-year"></e-item>
+          </e-items>
+        </ejs-toolbar>
+      </div>
+      <ejs-sidebar #leftSidebar id="sidebar-left" #sidebar width="300px" target=".main-content">
+        <div class="table-content">
+          <ejs-calendar #calendarObj id="calendar" cssClass="selected-date-calendar" [value]="selectedDate"
+            (change)="onCalendarChange($event)"></ejs-calendar>
+          <div class="calendar-list-container">
+            <ejs-listview #calendarsList id="listview-def" height="240px" [dataSource]="calendars"
+              [fields]="calendarFields" [showCheckBox]="true" [showHeader]="true"
+              (actionComplete)="listViewActionComplete()" (select)="listViewSelect($event)">
+              <ng-template #headerTemplate let-data="">
+                <div class="calendars-list-header">
+                  <div class="header-text">Calendars</div>
+                  <div class="header-icon e-icons e-plus" (click)="showAddCalendarDialog()"></div>
+                </div>
+              </ng-template>
+              <ng-template #template let-data="">
+                <div class="calendar-list-item">
+                  <div class="calendar-name" [attr.title]="data.name">{{data.name}}</div>
+                  <div class="calendar-buttons" *ngIf="data.id !== 1">
+                    <span id="calendar-edit-btn" [attr.data-calendar-id]="data.id" class="e-icons e-edit"
+                      (click)="calendarEditClick($event)"></span>
+                    <span id="calendar-delete-btn" [attr.data-calendar-id]="data.id" class="e-icons e-trash"
+                      (click)="calendarDeleteClick($event)"></span>
                   </div>
                 </div>
-                <div class="col-row">
-                  <div class="col-left">
-                    <label style="line-height: 34px; margin: 0;">First Day of Week</label>
-                  </div>
-                  <div class="col-right">
-                    <ejs-dropdownlist id='weekFirstDay' [dataSource]='weekDays'
-                      (change)='onWeekDayChange($event)' [value]='firstDayOfWeek' [fields]='fields'>
-                    </ejs-dropdownlist>
-                  </div>
-                </div>
-                <div class="col-row">
-                  <div class="col-left">
-                    <label style="line-height: 34px; margin: 0;">Work week</label>
-                  </div>
-                  <div class="col-right">
-                    <ejs-multiselect #workWeekDaysObj id='workWeekDays' [dataSource]='weekDays'
-                      [showClearButton]='false' [showDropDownIcon]='true' [mode]='checkboxMode' [fields]='fields'
-                      [value]='workDays' (change)='onWorkWeekDayChange($event)'></ejs-multiselect>
-                  </div>
-                </div>
-                <div class="col-row">
-                  <div class="col-left">
-                    <label style="line-height: 34px; margin: 0;">Timezone</label>
-                  </div>
-                  <div class="col-right">
-                    <ejs-dropdownlist id='timezone' [dataSource]='timezoneData'
-                      (change)='onTimezoneChange($event)' value='Etc/GMT' [fields]='fields' popupHeight='150px'>
-                    </ejs-dropdownlist>
-                  </div>
-                </div>
-                <div class="col-row">
-                  <div class="col-left">
-                    <label style="line-height: 34px; margin: 0;">Day Start Hour</label>
-                  </div>
-                  <div class="col-right">
-                    <ejs-timepicker id='dayStartHour' [showClearButton]='false' [value]='dayStartHourValue'
-                      (change)='onDayStartHourChange($event)'>
-                    </ejs-timepicker>
-                  </div>
-                </div>
-                <div class="col-row">
-                  <div class="col-left">
-                    <label style="line-height: 34px; margin: 0;">Day End Hour</label>
-                  </div>
-                  <div class="col-right">
-                    <ejs-timepicker id='dayEndHour' [showClearButton]='false' [value]='dayEndHourValue'
-                      (change)='onDayEndHourChange($event)'>
-                    </ejs-timepicker>
-                  </div>
-                </div>
-                <div class="col-row">
-                  <div class="col-left">
-                    <label style="line-height: 34px; margin: 0;">Work Start Hour</label>
-                  </div>
-                  <div class="col-right">
-                    <ejs-timepicker id='workHourStart' [showClearButton]='false' [value]='workStartHourValue'
-                      (change)='onWorkStartHourChange($event)'>
-                    </ejs-timepicker>
-                  </div>
-                </div>
-                <div class="col-row">
-                  <div class="col-left">
-                    <label style="line-height: 34px; margin: 0;">Work End Hour</label>
-                  </div>
-                  <div class="col-right">
-                    <ejs-timepicker id='workHourEnd' [showClearButton]='false' [value]='workEndHourValue'
-                      (change)='onWorkEndHourChange($event)'></ejs-timepicker>
-                  </div>
-                </div>
-                <div class="col-row">
-                  <div class="col-left">
-                    <label style="line-height: 34px; margin: 0;">Slot Duration</label>
-                  </div>
-                  <div class="col-right">
-                    <ejs-dropdownlist id='slotDuration' [dataSource]='timeSlotDuration'
-                      [fields]='timeSlotFields' (change)='onTimescaleDurationChange($event)' [value]='timeSlotDurationValue'
-                      popupHeight='150px'></ejs-dropdownlist>
-                  </div>
-                </div>
-                <div class="col-row">
-                  <div class="col-left">
-                    <label style="line-height: 34px; margin: 0;">Slot Interval</label>
-                  </div>
-                  <div class="col-right">
-                    <ejs-dropdownlist id='slotInterval' [dataSource]='timeSlotCount'
-                      (change)='onTimescaleIntervalChange($event)' [value]='timeSlotCountValue' popupHeight='150px'>
-                    </ejs-dropdownlist>
-                  </div>
-                </div>
-                <div class="col-row">
-                  <div class="col-left">
-                    <label style="line-height: 34px; margin: 0;">Time Format</label>
-                  </div>
-                  <div class="col-right">
-                    <ejs-dropdownlist id='timeFormat' [dataSource]='timeFormatData'
-                      (change)='onTimeFormatChange($event)' [fields]='timeSlotFields' [value]='timeFormatValue'
-                      popupHeight='150px'></ejs-dropdownlist>
-                  </div>
-                </div>
-                <div class="col-row">
-                  <div class="col-left">
-                    <label style="line-height: 34px; margin: 0;">Week Numbers</label>
-                  </div>
-                  <div class="col-right">
-                    <ejs-dropdownlist id='weekNumber' [dataSource]='weekNumberData'
-                      (change)='onWeekNumberChange($event)' [fields]='timeSlotFields' [value]='weekNumberValue'
-                      popupHeight='150px'></ejs-dropdownlist>
-                  </div>
-                </div>
-                <div class="col-row">
-                  <div class="col-left">
-                    <label style="line-height: 34px; margin: 0;">Tooltip</label>
-                  </div>
-                  <div class="col-right">
-                    <ejs-dropdownlist id='tooltip' [dataSource]='tooltipData'
-                      (change)='onTooltipChange($event)' [fields]='timeSlotFields' [value]='tooltipValue'
-                      popupHeight='150px'></ejs-dropdownlist>
-                  </div>
-                </div>
-              </div>
-            </div>
+              </ng-template>
+            </ejs-listview>
+          </div>
+        </div>
+      </ejs-sidebar>
+      <ejs-sidebar #rightSidebar id="sidebar-right" #sidebar width="300px" target=".main-content" position="Right"
+        type="Push" [isOpen]="false" (close)="rightSidebarClose()">
+        <ejs-toolbar cssClass="unplanned-events-toolbar">
+          <e-items>
+            <e-item prefixIcon="e-exit-full-screen" tooltipText="Open/Close Sidebar" cssClass="e-exit"
+              (click)="collapseRightSidebar()"></e-item>
+            <e-item>
+              <ng-template #template>
+                <h4 id="headerText">Unplanned Events</h4>
+              </ng-template>
+            </e-item>
+          </e-items>
+        </ejs-toolbar>
+        <ejs-grid #gridObj cssClass="unplanned-events-grid" [dataSource]="unPlannedData">
+          <e-columns>
+            <e-column field="Subject" headerText="Event" textAlign="Left" width="120"></e-column>
+            <e-column field="StartTime" headerText="Date" format="dd MMMM yyyy" width="140"></e-column>
+          </e-columns>
+        </ejs-grid>
+      </ejs-sidebar>
+      <div class="main-content">
+        <div class="sidebar-content">
+          <div class="schedule-container">
+            <ejs-schedule #scheduleObj id="Schedule" height="650px" [selectedDate]="selectedDate"
+              [currentView]="currentView" [eventSettings]="eventSettings" [showHeaderBar]="false"
+              (actionComplete)="scheduleActionComplete($event)" (eventRendered)="onEventRendered($event)"
+              (popupOpen)="schedulePopupOpen($event)">
+              <e-resources>
+                <e-resource field="ResourceId" title="Resources" [dataSource]="scheduleResources" name="Resources"
+                  textField="name" idField="id" colorField="color"></e-resource>
+              </e-resources>
+              <e-views>
+                <e-view option="Day"></e-view>
+                <e-view option="Week"></e-view>
+                <e-view option="Month"></e-view>
+                <e-view option="Agenda"></e-view>
+                <e-view option="TimelineMonth" [group]="timelineGroup"></e-view>
+                <e-view option="Year"></e-view>
+              </e-views>
+            </ejs-schedule>
+          </div>
+          <div class="unplanned-container">
+            <div id="plannedOpen" class="e-icons e-chevron-left-double" (click)="showRightSidebar($event)"></div>
+            <div class="unplanned-text-container">Unplanned events</div>
           </div>
         </div>
       </div>
+      <ejs-dialog #dialogObj id="dialog" width="320px" cssClass="calendar-edit-dialog" [buttons]="dlgButtons"
+        [animationSettings]="animationSettings" [showCloseIcon]="true" [visible]="false" [isModal]="true"
+        header="New Calendar" (beforeOpen)="beforeDialogOpen()">
+        <ng-template #content>
+          <div>Calendar Name</div>
+          <div class="dialog-content">
+            <ejs-textbox #calendarName placeholder="Enter the calendar name" cssClass="e-outline" class="calendar-name"
+              floatLabelType="Never"></ejs-textbox>
+            <input ejs-colorpicker #calendarColor class="calendar-color" type="color" />
+          </div>
+        </ng-template>
+      </ejs-dialog>
     </div>
-    
-    
-    
+  </div>
+  
+  

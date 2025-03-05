@@ -8,6 +8,6 @@ export const projectsPageActions = createActionGroup({
     select: props<IProjects>(),
     add: props<{ project: IProjects }>(),
     update: props<{ project: IProjects }>(),
-    delete: props<{ project_ref: string }>()        
+    delete: props<{ project: IProjects }>()        
   },
 });

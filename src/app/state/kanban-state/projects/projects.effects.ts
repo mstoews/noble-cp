@@ -1,5 +1,4 @@
 import { inject, Injectable } from '@angular/core';
-import { Router } from '@angular/router';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import {
   catchError,
@@ -20,7 +19,7 @@ export class projectEffects {
   actions$ = inject(Actions);
   kanbanService = inject(KanbanService);
 
-  loadProjects$ = createEffect(() =>
+  _loadProject$ = createEffect(() =>
     this.actions$.pipe(
       ofType(projectsPageActions.load),
       concatMap(() =>
@@ -35,14 +34,27 @@ export class projectEffects {
       )
     )
   );
-  addKanban$ = createEffect(() =>
+  
+_addProject$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(projectsPageActions.update),
+      concatMap(({ project }) =>
+        this.kanbanService.createProjects(project).pipe( map(() =>  
+          projectsAPIActions.addedProjectsSuccess( { projects: project })),          
+          catchError((error) =>
+            of(projectsAPIActions.addedProjectsFail({ message: error }))
+          )
+        )
+      )
+    )
+  );
+
+_updateProject$ = createEffect(() =>
   this.actions$.pipe(
-    ofType(projectsPageActions.add),
-    concatMap((tasks) =>
-      this.kanbanService.create(tasks).pipe(
-        map((newKanban) =>
-          projectsAPIActions.addedProjectsSuccess ({ Kanban: newKanban })
-        ),
+    ofType(projectsPageActions.update),
+    mergeMap(({ project }) =>
+      this.kanbanService.updateProjects(project).pipe( map(() =>  
+        projectsAPIActions.updatedProjectsSuccess( { projects: project })),          
         catchError((error) =>
           of(projectsAPIActions.updatedProjectsFail({ message: error }))
         )
@@ -51,37 +63,20 @@ export class projectEffects {
   )
 );
 
-updateKanban$ = createEffect(() =>
+_deleteProject$ = createEffect(() =>
   this.actions$.pipe(
-    ofType(projectsAPIActions.updateKanban),
-    concatMap(({ tasks }) =>
-      this.kanbanService.update(tasks).pipe(
-        map(() =>
-          projectsAPIActions.addedProjectsSuccess({
-            update: { id: tasks.id, changes: tasks },
-          })
-        ),
+    ofType(projectsPageActions.delete),
+    concatMap(({ project }) =>
+      this.kanbanService.deleteProjects(project).pipe( map(() =>  
+        projectsAPIActions.deletedProjectsSuccess( { projects: project })),          
         catchError((error) =>
-          of(projectsAPIActions.kanbanUpdatedFail({ message: error }))
+          of(projectsAPIActions.deletedProjectsFail({ message: error }))
         )
       )
     )
   )
 );
 
-deleteKanban$ = createEffect(() =>
-  this.actions$.pipe(
-    ofType(KanbanAPIActions.deleteKanban),
-    mergeMap(({ id }) =>
-      this.kanbanService
-        .delete(id)
-        .pipe(map(() => projectsAPIActions.addedProjectsSuccess({ id })))
-    ),
-    catchError((error) =>
-      of(projectsAPIActions.kanbanDeletedFail({ message: error }))
-    )
-  )
-);
 }
 
 

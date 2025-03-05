@@ -99,9 +99,7 @@ export class ClassicLayoutComponent implements OnInit, OnDestroy {
     private _unsubscribeAll: Subject<any> = new Subject<any>();
     // readonly store = inject(AppStore);
     readonly applicationService = inject(ApplicationService);
-    public profile: ProfileModel;
-
-
+    
     /**
      * Constructor
      */
@@ -139,13 +137,6 @@ export class ClassicLayoutComponent implements OnInit, OnDestroy {
             .subscribe((navigation: Navigation) => {
                 this.navigation = navigation;
             });
-
-
-        this.applicationService.getUserId().subscribe((uid) => {
-            this.applicationService.loadProfile(uid).subscribe((prof) => {
-                this.profile = prof;
-            });
-        });
 
 
         // Subscribe to media changes

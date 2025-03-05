@@ -15,8 +15,7 @@ const imports = [
     MaterialModule,
     FormsModule,
     SummaryCardComponent,
-    JournalEntryComponent,
-    
+    JournalEntryComponent    
 ];
 
 @Component({

@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CardClickEventArgs, KanbanModule } from '@syncfusion/ej2-angular-kanban';
 import { CheckBoxAllModule } from '@syncfusion/ej2-angular-buttons';
-import { ChangeDetectionStrategy, Component, OnInit, ViewChild, ViewEncapsulation, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, ViewChild, ViewEncapsulation, inject, viewChild } from '@angular/core';
 import { addClass } from '@syncfusion/ej2-base';
 import { KanbanComponent, ColumnsModel, CardSettingsModel, SwimlaneSettingsModel, CardRenderedEventArgs } from '@syncfusion/ej2-angular-kanban';
 
@@ -15,94 +15,138 @@ import { KanbanMenubarComponent } from '../kanban/kanban-menubar/grid-menubar.co
 import { AUTH } from 'app/app.config';
 
 import { KanbanStore } from '../kanban.store';
-import { debounce, defer, from, of, take, timer } from 'rxjs';
+import { debounce, defer, from, Observable, of, take, timer } from 'rxjs';
 import { IKanban } from 'app/models/kanban';
 import { GridMenubarStandaloneComponent } from 'app/features/accounting/grid-components/grid-menubar.component';
-
-interface IValue {
-  value: string;
-  viewValue: string;
-}
+import { KanbanDrawerComponent } from './kanban-drawer.component';
 
 const imports = [
   MaterialModule,
   FormsModule,
   ReactiveFormsModule,
-  CommonModule,
-  CommonModule,
+  CommonModule,  
   KanbanModule,
   CheckBoxAllModule,
-  GridMenubarStandaloneComponent
-  
+  GridMenubarStandaloneComponent,
+  KanbanDrawerComponent  
 ]
 
 @Component({
     selector: 'kanban',
     encapsulation: ViewEncapsulation.None,
     imports: [imports],
-    templateUrl: './tasks.component.html',
+    template: `
+    <div class="flex flex-col min-w-0 overflow-y-auto bg-transparent" cdkScrollable>
+    <mat-drawer class="w-[450px]"  #drawer [opened]="false" mode="push" [position]="'end'"
+                [disableClose]="false">
+                <kanban-drawer
+                    [tasks] = "selectedTask$ | async"
+                    (Cancel)="onCancel()"
+                    (Update)="onUpdate($event)"
+                    (Add)="onAdd($event)"
+                    (Copy)="onCopy($event)"
+                    (Delete)="onDelete($event)"></kanban-drawer>
+    </mat-drawer>
+
+    <div class="flex-auto overflow-hidden">
+        <grid-menubar class="mb-2 mt-2" [showBack]="true" (back)="onBack()" [inTitle]="'Project Tasks'">
+        </grid-menubar>
+        
+        <div class="h-full rounded-2xl overflow-hidden mt-2">
+            
+            <mat-drawer-container class="overflow-hidden">
+                <mat-drawer-content>
+                    @if (store.isLoading() == false) {
+                    <div class="" cdkScrollable>
+                        <div class="control-section overflow-hidden">
+                            <div class="content-wrapper">
+                                <ejs-kanban #kanbanObj cssClass='kanban-overview' keyField="status"
+                                    [dataSource]='store.tasks()' [cardSettings]='cardSettings' enableTooltip='false'
+                                    [swimlaneSettings]='swimlaneSettings' (cardDoubleClick)='OnCardDoubleClick($event)'
+                                    (dragStart)='OnDragStart($event)' (drag)='OnDrag($event)'
+                                    (dragStop)='OnDragStop($event)' (cardRendered)='cardRendered($event)'>
+                                    <e-columns>
+                                        <e-column class="text-gray-400" *ngFor="let column of columns;"
+                                            headerText={{column.headerText}} keyField='{{column.keyField}}'
+                                            allowToggle='{{column.allowToggle}}'>
+                                            <ng-template #template let-data>
+                                                <div class="header-template-wrap">
+                                                    <div class="header-icon e-icons {{data.keyField}}"></div>
+                                                    <div class="header-text text-gray-300">{{data.headerText}}</div>
+                                                </div>
+                                            </ng-template>
+                                        </e-column>
+                                    </e-columns>
+                                    <ng-template #cardSettingsTemplate let-data>
+                                        <div class='card-template'>
+                                            <div class='e-card-header'>
+                                                <div class='e-card-header-caption'>
+                                                    <div class='e-card-header-title e-tooltip-text'>{{data.title}}</div>
+                                                </div>
+                                            </div>
+                                            <div class='e-card-content e-tooltip-text'>
+                                                <div class='e-text'>{{data.summary}}</div>
+
+                                                <div class='e-date'>Start :{{data.startdate}}</div>
+                                                <div class='e-date'>Estimate: {{data.estimatedate}}</div>
+
+                                            </div>
+                                            <div class='e-card-custom-footer'>
+                                                <div class="e-card-tag-field e-tooltip-text">                                                
+                                                  @for (tag of data.tags.split(','); track tag) {
+                                                    {{tag}}
+                                                  }
+                                                  </div>
+                                                <div class='e-card-avatar'>{{getString(data.assignee)}}</div>
+                                            </div>
+                                        </div>
+                                    </ng-template>
+                                </ejs-kanban>
+                            </div>
+                        </div>
+                    </div>
+                    } @else
+                    {
+                    <div class="flex flex-col items-center justify-center h-screen mat-spinner-color w-full bg-white">
+                        <div class="flex justify-center items-center">
+                            <mat-spinner>Loading ...</mat-spinner>
+                        </div>
+                    </div>
+                    }
+                </mat-drawer-content>
+            </mat-drawer-container>
+        </div>
+      </div>
+    </div>
+    `,
     styleUrl: './tasks.component.scss',
     providers: [provideNativeDateAdapter(), KanbanStore],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TasksComponent implements OnInit {
-onBack() {
-throw new Error('Method not implemented.');
-}
-onClone(arg0: string) {
-throw new Error('Method not implemented.');
-}
-  @ViewChild('kanbanObj') kanbanObj!: KanbanComponent;
-  @ViewChild('drawer') drawer: MatDrawer;
-  private fb = inject(FormBuilder);
 
-  drawOpen: 'open' | 'close' = 'open';
-  team: any[];
-  taskGroup: FormGroup;
-  sTitle = 'Add Kanban Task';
-  cPriority: string;
-  cRAG: string;
-  cType: string;
-  currentDate: Date;
+  private _fuseConfirmationService = inject(FuseConfirmationService)
+  private drawer = viewChild<MatDrawer>("drawer");
+  
+  
+  public drawOpen: 'open' | 'close' = 'open';
+  public taskGroup: FormGroup;
+  public sTitle = 'Add Kanban Task';
+  
+  public currentDate = new Date().toISOString().split('T')[0];
 
   public swimlaneSettings: SwimlaneSettingsModel = { keyField: 'assignee' };
-  private _fuseConfirmationService = inject(FuseConfirmationService)
-  auth = inject(AUTH);
-  
-  tk: string
-  
+  public  currentUser = inject(AUTH).currentUser;
+
+  public selectedTask$! : Observable<IKanban>;
+    
   // kanbanService = inject(KanbanService);
   store = inject(KanbanStore);
-  user = this.auth.currentUser;
-
-  ngOnInit() {
-    this.bAdding = true;
-    this.createEmptyForm();
-  }
-
-  // these values should be replaced with data from the database
-
-  types: IValue[] = [
-    { value: 'Add', viewValue: 'Add' },
-    { value: 'Update', viewValue: 'Update' },
-    { value: 'Delete', viewValue: 'Delete' },
-    { value: 'Verify', viewValue: 'Verify' },
-  ];
-
   
-  rag: IValue[] = [
-    { value: '#238823', viewValue: 'Green' },
-    { value: '#FFBF00', viewValue: 'Amber' },
-    { value: '#D2222D', viewValue: 'Red' },
-  ];
-
-  priorities: IValue[] = [
-    { value: 'Critical', viewValue: 'Critical' },
-    { value: 'High', viewValue: 'High' },
-    { value: 'Normal', viewValue: 'Normal' },
-    { value: 'Low', viewValue: 'Low' },
-  ];
-
+  ngOnInit() {
+    this.bAdding = true;    
+  }
+  
   OnDragStop(e: any): void {
     const d = {
       id: e.data[0].id,
@@ -119,7 +163,7 @@ throw new Error('Method not implemented.');
 
   OnCardDoubleClick(args: CardClickEventArgs): void {
     this.bAdding = false;
-    const email = this.auth.currentUser.email;
+    const userName = '@' + this.currentUser.email.split('@')[0];
     const dDate = new Date()
     var currentDate = dDate.toISOString().split('T')[0];
 
@@ -137,118 +181,23 @@ throw new Error('Method not implemented.');
       rankid: args.data.rankid,
       color: args.data.color,
       className: '',
-      updateuser: email,
+      updateuser: userName,
       updatedate: currentDate,
       startdate: args.data.startdate,
       estimatedate: args.data.estimatedate
     } as IKanban;
-
-    this.createForm(kanban)
-    this.toggleDrawer();
+    this.selectedTask$ = of(kanban);
+    this.drawer().open();    
   }
 
-  createEmptyForm() {
-    this.bAdding = true;
-    this.sTitle = 'Kanban Task';
-
-    this.taskGroup = this.fb.group({
-      title: [''],
-      status: [''],
-      summary: [''],
-      type: [''],
-      priority: [''],
-      tags: [''],
-      estimate: [''],
-      assignee: [''],
-      rankid: [''],
-      color: [''],
-      updatedate: [''],
-      updateuser: [''],
-      startdate: [''],
-      estimatedate: ['']
-    });
+  onBack() {
+      throw new Error('Method not implemented.');
   }
 
-  createForm(task: IKanban) {
-    this.sTitle = 'Kanban Task - ' + task.id;
-
-
-    const dDate = new Date()
-    var currentDate = dDate.toISOString().split('T')[0];
-
-    const priority = this.assignPriority(task);
-    this.assignType(task);
-    this.assignRag(task);
-
-    // var assignee = this.assignAssignee(task)
-
-    if (task.estimatedate === null)
-      task.estimatedate = currentDate;
-
-    this.taskGroup = this.fb.group({
-      id: [task.id],
-      title: [task.title, Validators.required],
-      status: [task.status],
-      summary: [task.summary, Validators.required],
-      type: this.cType,
-      priority: [priority, Validators.required],
-      tags: [task.tags, Validators.required],
-      estimate: [task.estimate, Validators.required],
-      assignee: [task.assignee,Validators.required],
-      rankid: [task.rankid.toString()],
-      color: [this.cRAG],
-      updatedate: [currentDate],
-      updateuser: [this.user.email, Validators.required],
-      startdate: [task.startdate, Validators.required],
-      estimatedate: [task.estimatedate, Validators.required]
-
-    });
-  }
-
-  private assignType(task: IKanban): string {
-    if (task.kanban_type !== null && task.kanban_type !== undefined) {
-      const type = this.types.find((x) => x.value === task.kanban_type.toString());
-      if (type === undefined) {
-        this.cType = 'Add';
-      } else {
-        this.cType = type.value;
-      }
-    } else {
-      this.cType = 'Add';
-    }
-    return this.cType;
-  }
-
-  private assignRag(task: IKanban): string {
-    if (task.color !== null && task.color !== undefined) {
-      const rag = this.rag.find((x) => x.value === task.color.toString());
-      if (rag === undefined) {
-        this.cRAG = '#238823';
-      } else {
-        this.cRAG = rag.value;
-      }
-    } else {
-      this.cRAG = '#238823';
-    }
-    return this.cRAG;
-  }
-
-  private assignPriority(task: IKanban): string {
-    if (this.priorities !== undefined) {
-      const priority = this.priorities.find(
-        (x) => x.value === task.priority.toString()
-      );
-      if (priority !== undefined) {
-        this.cPriority = priority.value;
-      } else {
-        this.cPriority = 'Normal';
-      }
-    } else {
-      this.cPriority = 'Normal';
-    }
-    return this.cPriority
-  }
-
+  onCancel() {
+    this.drawer().close();
+  }  
+    
   public columns: ColumnsModel[] = [
     { headerText: 'Initial', keyField: 'Open', allowToggle: true },
     { headerText: 'In Progress', keyField: 'InProgress', allowToggle: true },
@@ -264,24 +213,21 @@ throw new Error('Method not implemented.');
 
   public bAdding?: boolean = true;
 
-  onUpdate() {
-    const data = this.taskGroup.getRawValue()
-    if (data.id === null || data.id === undefined) {
-      this.onAddNew()
+  onUpdate(task: IKanban) {    
+    if (task.id === null || task.id === undefined) {
+      this.onAdd(task)
       return
     }
     else {
       this.bAdding = false;
-      this.store.updateTask(data);
+      this.store.updateTask(task);
       this.closeDrawer();
     }
   }
 
-  onCopy() {
-    var data = this.taskGroup.getRawValue()
-
+  onCopy(kanban: IKanban) {
     const confirmation = this._fuseConfirmationService.open({
-      title: `Copy Task: ${data.title}`,
+      title: `Copy Task: ${kanban.title}`,
       message: 'Are you sure you want to copy this task?',
       actions: {
         confirm: {
@@ -291,18 +237,16 @@ throw new Error('Method not implemented.');
     });
     confirmation.afterClosed().subscribe((result) => {
       if (result === 'confirmed') {
-        this.store.addTasks(data)
+        this.store.addTasks(kanban)
       }
     });
     this.closeDrawer();
 
   }
 
-  onDelete() {
-    var data = this.taskGroup.getRawValue()
-
+  onDelete(kanban: IKanban) {    
     const confirmation = this._fuseConfirmationService.open({
-      title: `Delete Task: ${data.title}`,
+      title: `Delete Task: ${kanban.title}`,
       message: 'Are you sure you want to delete this task?',
       actions: {
         confirm: {
@@ -313,7 +257,7 @@ throw new Error('Method not implemented.');
 
     confirmation.afterClosed().subscribe((result) => {
       if (result === 'confirmed') {
-        this.store.removeTask(data);
+        this.store.removeTask(kanban);
       }
     });
 
@@ -325,7 +269,7 @@ throw new Error('Method not implemented.');
   }
 
   closeDrawer() {
-    this.drawer.toggle();
+    this.drawer().close();
   }
 
   changeType(data) {
@@ -338,12 +282,12 @@ throw new Error('Method not implemented.');
 
 
   toggleDrawer() {
-    const opened = this.drawer.opened;
+    const opened = this.drawer().opened;
     if (opened !== true) {
-      this.drawer.toggle();
+      this.drawer().toggle();
     } else {
       if (this.drawOpen === 'close') {
-        this.drawer.toggle();
+        this.drawer().toggle();
       }
     }
   }
@@ -367,57 +311,19 @@ throw new Error('Method not implemented.');
   }
 
   // Menu
-  onAdd() {
-    this.bAdding = true;
-    this.createEmptyForm()
+  onAdd(kanban: IKanban) {
+    this.bAdding = true;    
     this.toggleDrawer();
   }
 
-  onRefresh() {
-    // this.kanbanData = this.kanbanService.read();
+  addNew(kanban: IKanban) {
+    this.bAdding = true;
+    var sub = this.store.addTask(kanban);
+    this.toggleDrawer();
   }
-
-  onDeleteCurrentSelection() { }
-
-  onUpdateCurrentSelection() { }
-
-  onAddNew() {
-    var data = this.taskGroup.getRawValue();
-    const startDate = new Date(data.startDate).toISOString().split('T')[0];
-    const estimateDate = new Date(data.estimateDate).toISOString().split('T')[0];
-
-    var dt =
-    {
-      title: data.title,
-      status: "Open",
-      summary: data.summary,
-      kanban_type: data.type,
-      priority: data.priority,
-      tags: data.tags,
-      assignee: data.assignee,
-      rankid: 1,
-      color: "#238823",
-      estimate: Number(data.estimate),
-      estimatedate: estimateDate,
-      className: "class",
-      updatedate: estimateDate,
-      updateuser: "mstoews",
-      startdate: startDate
-    }
-    var sub = this.store.addTask(dt);
-    this.closeDrawer();
-  }
-
-  
   
   OnCardClick(args: CardClickEventArgs): void {
     console.log(args.data);
-  }
-
-
-
-  changePriority(e: any) {
-
   }
 
 }

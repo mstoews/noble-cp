@@ -55,10 +55,10 @@ import { Subject, takeUntil } from 'rxjs';
                 <div class="flex w-full flex-col items-center p-4">
                     <div class="relative h-24 w-24">
                         
-                        @if(profile.photoURL !== null && profile.photoURL !== undefined && profile.photoURL !== '') {
+                        @if(store.profile().photoURL !== null && store.profile().photoURL !== undefined && store.profile().photoURL !== '') {
                                 <img
                                     class="w-full h-full rounded-full"
-                                    [src]="profile.photoURL"
+                                    [src]="store.profile().photoURL"
                                     alt="user photo"/>
                             }
                             @else  {
@@ -72,10 +72,10 @@ import { Subject, takeUntil } from 'rxjs';
                     </div>
                     <div class="mt-6 flex w-full flex-col items-center justify-center">
                         <div  class="w-full overflow-hidden text-ellipsis whitespace-nowrap text-center font-medium leading-normal"  >
-                            {{profile.name}} 
+                            {{store.profile().name}} 
                         </div>
                         <div  class="text-secondary mt-0.5 w-full overflow-hidden text-ellipsis whitespace-nowrap text-center text-md font-medium leading-normal">
-                            {{profile.email}} 
+                            {{store.profile().email}} 
                         </div>
                     </div>
                 </div>
@@ -158,8 +158,7 @@ export class ClassyLayoutComponent implements OnInit, OnDestroy {
 
     readonly store = inject(AppStore);
     readonly applicationService = inject(ApplicationService);
-    public profile: ProfileModel;
-
+    
 
     /**
      * Constructor
@@ -198,20 +197,7 @@ export class ClassyLayoutComponent implements OnInit, OnDestroy {
             .subscribe((navigation: Navigation) => {
                 this.navigation = navigation;
             });
-
-        // Subscribe to the user service
-        // this._userService.user$
-        //     .pipe(takeUntil(this._unsubscribeAll))
-        //     .subscribe((user: User) => {
-        //         this.user = user;
-        //     });
-
-        this.applicationService.getUserId().subscribe((uid) => {
-            this.applicationService.loadProfile(uid).subscribe((prof) => {
-                this.profile = prof;
-            });
-        });
-
+        
 
         // Subscribe to media changes
         this._fuseMediaWatcherService.onMediaChange$
