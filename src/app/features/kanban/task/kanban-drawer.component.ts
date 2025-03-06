@@ -1,7 +1,6 @@
-import { Component, input, OnInit, output } from '@angular/core';
+import { Component, input, output } from '@angular/core';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { ITasks } from 'app/models';
-import { IKanban, ITeam } from 'app/models/kanban';
+import { IKanban, IPriority, ITeam, IType } from 'app/models/kanban';
 import { IValue } from 'app/models/types';
 import { MaterialModule } from 'app/services/material.module';
 
@@ -30,16 +29,17 @@ import { MaterialModule } from 'app/services/material.module';
                       <mat-form-field class="grow">
                           <mat-select placeholder="Type" formControlName="type"
                               (selectionChange)="changeType($event)">
-                              <mat-option *ngFor="let p of types" [value]="p.value">
-                                  {{p.viewValue }} </mat-option>
+                              @for(item of types(); track item.type) {
+                                <mat-option [value]="item.type"> {{ item.type}} </mat-option>
+                              }                              
                           </mat-select>
                       </mat-form-field>
 
                       <mat-form-field class="grow">
                           <mat-select placeholder="Priority" formControlName="priority"
                               (selectionChange)="changePriority($event.value)">
-                              @for (item of priority; track item.value) {
-                              <mat-option [value]="item.value"> {{ item.value }} </mat-option>
+                              @for (item of priority(); track item.priority) {
+                               <mat-option [value]="item.priority"> {{ item.priority }} </mat-option>
                               }
                           </mat-select>
                       </mat-form-field>
@@ -74,7 +74,7 @@ import { MaterialModule } from 'app/services/material.module';
                   <mat-form-field class="form-element gap-2">
                       <mat-select placeholder="Assigned" formControlName="assignee"
                           (selectionChange)="changeType($event.value)">
-                          @for (item of teams(); track item) {
+                          @for (item of team(); track item) {
                           <mat-option [value]="item.team_member">
                               {{ item.team_member }}
                           </mat-option>
@@ -122,16 +122,18 @@ import { MaterialModule } from 'app/services/material.module';
   `,
   styles: ``
 })
-export class KanbanDrawerComponent implements OnInit {  
+export class KanbanDrawerComponent  {  
 
   sTitle = 'Kanban Task';
   cPriority: string;
   cRAG: string;
   cType: string;
-  bDirty = false;
+  bDirty = true;
   
   tasks = input< IKanban | null>();
-  teams = input< ITeam[] | null>();
+  team = input< ITeam[] | null>();
+  types = input< IType[] | null>();
+  priority = input< IPriority[] | null>();
 
   Update = output<IKanban>();
   Add = output<IKanban>();
@@ -157,48 +159,19 @@ export class KanbanDrawerComponent implements OnInit {
     startdate: new  FormControl('', Validators.required),
     estimatedate: new  FormControl('', Validators.required)
   });
-
-  types: IValue[] = [
-      { value: 'Add', viewValue: 'Add' },
-      { value: 'Update', viewValue: 'Update' },
-      { value: 'Delete', viewValue: 'Delete' },
-      { value: 'Verify', viewValue: 'Verify' },
-    ];
-
-    
+  
   rag: IValue[] = [
       { value: '#238823', viewValue: 'Green' },
       { value: '#FFBF00', viewValue: 'Amber' },
       { value: '#D2222D', viewValue: 'Red' },
-    ];
-
-  priority: IValue[] = [
-      { value: 'Critical', viewValue: 'Critical' },
-      { value: 'High', viewValue: 'High' },
-      { value: 'Normal', viewValue: 'Normal' },
-      { value: 'Low', viewValue: 'Low' },
-    ];
-
-  ngOnInit() {
-     const tasks = this.tasks();
-     this.taskGroup.patchValue({
-      id: tasks.id,
-      title: tasks.title,
-      status: tasks.status,
-      summary: tasks.summary,
-      type: tasks.kanban_type,
-      priority: tasks.priority,
-      tags: tasks.tags,
-      estimate: tasks.estimate,
-      assignee: tasks.assignee,
-      rankid: tasks.rankid,
-      color: tasks.color,
-      updatedate: tasks.updatedate,
-      updateuser: tasks.updateuser,
-      startdate: tasks.startdate,
-      estimatedate: tasks.estimatedate
-    });
+  ];
+  
+  ngOnChanges() {
+    if (this.tasks) {     
+      this.taskGroup.patchValue(this.tasks());         
+    }
   }
+
 
   onClose() {
     this.CloseDrawer.emit();  
@@ -319,11 +292,11 @@ export class KanbanDrawerComponent implements OnInit {
   
   private assignType(task: IKanban): string {
       if (task.kanban_type !== null && task.kanban_type !== undefined) {
-        const type = this.types.find((x) => x.value === task.kanban_type.toString());
+        const type = this.types().find((x) => x.type === task.kanban_type.toString());
         if (type === undefined) {
           this.cType = 'Add';
         } else {
-          this.cType = type.value;
+          this.cType = type.type;
         }
       } else {
         this.cType = 'Add';
@@ -331,7 +304,7 @@ export class KanbanDrawerComponent implements OnInit {
       return this.cType;
     }
   
-    private assignRag(task: IKanban): string {
+  private assignRag(task: IKanban): string {
       if (task.color !== null && task.color !== undefined) {
         const rag = this.rag.find((x) => x.value === task.color.toString());
         if (rag === undefined) {
@@ -347,11 +320,11 @@ export class KanbanDrawerComponent implements OnInit {
   
     private assignPriority(task: IKanban): string {
       if (this.priority !== undefined) {
-        const priority = this.priority.find(
-          (x) => x.value === task.priority.toString()
+        const priority = this.priority().find(
+          (x) => x.priority === task.priority.toString()
         );
         if (priority !== undefined) {
-          this.cPriority = priority.value;
+          this.cPriority = priority.priority;
         } else {
           this.cPriority = 'Normal';
         }

@@ -13,7 +13,11 @@
                 </div>
                 <!-- Actions -->
                 <div class="flex items-center mt-4 sm:mt-0 sm:ml-2 space-x-3">
-                    <button (click)="openTransactions()" class="bg-accent" mat-flat-button [color]="'accent'">                        
+                    <button (click)="openDocumentation()" class="bg-primary" mat-flat-button >                        
+                        <span class="e-icons e-table-insert-column"></span> 
+                        <span class="ml-2">Documentation</span>
+                    </button>
+                    <button (click)="openTransactions()" class="bg-primary" mat-flat-button >                        
                         <span class="e-icons e-table-insert-column"></span> 
                         <span class="ml-2">Transactions</span>
 
@@ -140,7 +144,6 @@
                             </div>
 
                         </div>
-            
         </div>
     </div>
 

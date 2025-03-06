@@ -5,13 +5,12 @@ import { CardClickEventArgs, KanbanModule } from '@syncfusion/ej2-angular-kanban
 import { CheckBoxAllModule } from '@syncfusion/ej2-angular-buttons';
 import { ChangeDetectionStrategy, Component, OnInit, ViewChild, ViewEncapsulation, inject, viewChild } from '@angular/core';
 import { addClass } from '@syncfusion/ej2-base';
-import { KanbanComponent, ColumnsModel, CardSettingsModel, SwimlaneSettingsModel, CardRenderedEventArgs } from '@syncfusion/ej2-angular-kanban';
+import { ColumnsModel, CardSettingsModel, SwimlaneSettingsModel, CardRenderedEventArgs } from '@syncfusion/ej2-angular-kanban';
 
 import { MatDrawer } from '@angular/material/sidenav';
 import { MaterialModule } from 'app/services/material.module';
 import { FuseConfirmationService } from '@fuse/services/confirmation';
 import { provideNativeDateAdapter } from '@angular/material/core';
-import { KanbanMenubarComponent } from '../kanban/kanban-menubar/grid-menubar.component';
 import { AUTH } from 'app/app.config';
 
 import { KanbanStore } from '../kanban.store';
@@ -41,6 +40,9 @@ const imports = [
                 [disableClose]="false">
                 <kanban-drawer
                     [tasks] = "selectedTask$ | async"
+                    [team]="store.team()"
+                    [types]="store.types()"
+                    [priority]="store.priority()"
                     (Cancel)="onCancel()"
                     (Update)="onUpdate($event)"
                     (Add)="onAdd($event)"
@@ -139,8 +141,6 @@ export class TasksComponent implements OnInit {
   public  currentUser = inject(AUTH).currentUser;
 
   public selectedTask$! : Observable<IKanban>;
-    
-  // kanbanService = inject(KanbanService);
   store = inject(KanbanStore);
   
   ngOnInit() {

@@ -112,6 +112,10 @@ export class ProjectComponent implements OnInit, OnDestroy {
         this._router.navigate(['journals']);
     }
 
+    openDocumentation() {
+        window.location.href = 'https://www.nobleledger-doc.com';
+    }
+
     ngOnInit(): void {
         // Get the data
         this._projectService.data$

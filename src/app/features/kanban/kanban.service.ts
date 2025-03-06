@@ -32,6 +32,10 @@ export class KanbanService {
     return this.httpClient.get<ITeam[]>(this.teamUrl);
   }
 
+  httpReadTypes() {
+    return this.httpClient.get<IType[]>(this.baseUrl + '/v1/task_type_list');
+  }
+
   updateTask(task: IKanban) {
     return this.httpClient.post<IKanban[]>(this.updateTaskUrl, task);
   }
