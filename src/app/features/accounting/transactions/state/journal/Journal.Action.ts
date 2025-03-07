@@ -86,7 +86,6 @@ export const cloneJournal = createAction(CLONE_JOURNAL, props<{ journal_id: numb
 export const cloneJournalSuccess = createAction(GET_JOURNAL_HEADER_SUCCESS, props<{ journals: IJournalHeader}>() );
 export const cloneJournalFailure = createAction(GET_JOURNAL_HEADER_FAILURE, props<{ error: string }>());
 
-
 export const loadJournalHeaderByPeriod = createAction(LOAD_JOURNAL_HEADER_BY_PERIOD, props<{ period: IPeriodParam }>());
 export const loadJournalHeaderByPeriodSuccess = createAction(LOAD_JOURNAL_HEADER_SUCCESS, props<{ journals: IJournalHeader[] }>());
 export const loadJournalHeaderByPeriodFailure = createAction(LOAD_JOURNAL_HEADER_FAILURE, props<{ error: string }>());
@@ -111,8 +110,6 @@ export const updateJournalHeaderSuccess = createAction(UPDATE_JOURNAL_HEADER_SUC
 export const getJournalHeader = createAction(GET_JOURNAL_HEADER, props<{ journal_id: number }>());
 export const getJournalHeaderSuccess = createAction(GET_JOURNAL_HEADER_SUCCESS, props<{ journals: IJournalHeader }>());
 export const getJournalHeaderFailure = createAction(GET_JOURNAL_HEADER_FAILURE, props<{ error: string }>());
-
-
 
 
 // Journal Details Actions

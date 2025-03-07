@@ -22,7 +22,7 @@ import * as fromKanban from 'app/state/kanban-state/kanban/kanban.state';
 import * as fromPeriods from 'app/features/accounting/static/periods/periods.state';
 import * as fromSubtype from 'app/features/accounting/static/subtype/sub-type.state';
 import * as fromParty from 'app/features/accounting/static/party/party.state';
-import * as fromAccounts from 'app/features/accounting/static/accts/accts.state'
+import * as fromAccounts from 'app/features/accounting/static/accts/Accts.state'
 import * as fromGlType from 'app/features/accounting/static/gltype/gltype.state';
 import * as fromProjects from 'app/state/kanban-state/projects/projects.state';
 
@@ -43,15 +43,16 @@ import { getAuth, connectAuthEmulator } from 'firebase/auth';
 import { initializeApp } from 'firebase/app';
 import { loggingInterceptor } from "./logging-interceptor";
 import { retryInterceptor } from "./retry-interceptor";
-import { TemplateReducer } from './state/template/Template.Reducer';
 
-import { JournalReducer } from './state/journal/Journal.Reducer';
+
+import { JournalReducer } from './features/accounting/transactions/state/journal/Journal.Reducer';
 import { UsersReducer } from './state/users/Users.Reducer';
+
 // Effects 
 
-import { journalHeaderEffects } from './state/journal/Journal.Effects';
-import { journalTransactionEffects } from './state/journalTransactions/Journal.Effects';
-import { templateEffects } from './state/template/Template.Effects';
+import { journalHeaderEffects } from './features/accounting/transactions/state/journal/Journal.Effects';
+import { journalTransactionEffects } from './state/journalTransactions/JournalTransactions.Effects';
+
 import { userEffects } from './state/users/Users.Effects';
 import { provideRouterStore } from '@ngrx/router-store';
 import { FundsReducer } from './features/accounting/static/funds/Funds.Reducer';
@@ -65,11 +66,13 @@ import { subTypeEffects } from './features/accounting/static/subtype/sub-type.ef
 import { ApplicationService } from "./services/application.state.service";
 import { kanbanEffects } from './state/kanban-state/kanban/kanban.effects';
 import { partyEffects } from './features/accounting/static/party/party.effects';
-import { accountEffects } from './features/accounting/static/accts/accts.effects';
-import { JournalTransactionReducer } from './state/journalTransactions/Journal.Reducer';
+import { accountEffects } from './features/accounting/static/accts/Accts.effects';
+import { JournalTransactionReducer } from './state/journalTransactions/JournalTransactions.Reducer';
 import { glTypeEffects } from './features/accounting/static/gltype/gltype.effects';
 import { project } from './fuse/mock-api/dashboards/project/data';
 import { projectEffects } from './state/kanban-state/projects/projects.effects';
+import { TemplateReducer } from './features/accounting/transactions/state/template/Template.Reducer';
+import { templateEffects } from './features/accounting/transactions/state/template/Template.Effects';
 
 
 const app = initializeApp(environment.firebase);
@@ -152,8 +155,7 @@ export const appConfig: ApplicationConfig = {
     /// NGRX Store and Effects
     provideStore({
       tpl: TemplateReducer,
-      journals: JournalReducer,
-      transactions: JournalTransactionReducer,
+      jnl: JournalReducer,
       fnd: FundsReducer,
       usr: UsersReducer
     }),
@@ -173,7 +175,6 @@ export const appConfig: ApplicationConfig = {
       templateEffects,
       partyEffects,
       journalHeaderEffects,
-      journalTransactionEffects,
       periodEffects,
       fundsEffects,
       subTypeEffects,

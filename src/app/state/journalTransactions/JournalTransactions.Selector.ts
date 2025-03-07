@@ -1,22 +1,22 @@
 import { createFeatureSelector, createSelector } from "@ngrx/store";
-import { JournalState } from "./Journal.Model";
+import { JournalState } from "./JournalTransactions.Model";
 
-const getTransactionState = createFeatureSelector<JournalState>('journals');
+const getTransactionState = createFeatureSelector<JournalState>('trn');
 
 export const selectTransaction = createSelector(
     getTransactionState, (state) => {
-        return state.journals;
+        return state.transactions;
     }
 );
 
-export const selectJournalId = createSelector( getTransactionState, (state) => {
+export const selectJournalId = createSelector(getTransactionState, (state) => {
     return state.activeJournalId;
-    }
+}
 );
 
 export const cloneJournals = createSelector(
     getTransactionState, (state) => {
-        return state.journals;
+        return state.transactions;
     }
 );
 
@@ -41,5 +41,5 @@ export const selectJournalById = (journal_id: number) =>
 
 export const isLoading = createSelector(
     getTransactionState,
-        ({ isLoading }) => isLoading
+    ({ isLoading }) => isLoading
 );

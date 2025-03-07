@@ -1,7 +1,7 @@
 import { createFeatureSelector, createSelector } from "@ngrx/store";
 import { JournalState } from "./Journal.Model";
 
-const getJournalState = createFeatureSelector<JournalState>('journals');
+const getJournalState = createFeatureSelector<JournalState>('jnl');
 
 export const selectJournals = createSelector(
     getJournalState, (state) => {
@@ -9,9 +9,9 @@ export const selectJournals = createSelector(
     }
 );
 
-export const selectJournalId = createSelector( getJournalState, (state) => {
+export const selectJournalId = createSelector(getJournalState, (state) => {
     return state.activeJournalId;
-    }
+}
 );
 
 export const cloneJournals = createSelector(
@@ -38,4 +38,12 @@ export const selectJournalById = (journal_id: number) =>
         (journals) =>
             journals.find(j => j.journal_id === journal_id)
     );
+
+export const isJournalLoading = createSelector(
+    getJournalState, (state) => {
+        return state.isLoading
+    }
+);
+
+
 

@@ -200,7 +200,7 @@ export const appRoutes: Route[] = [
                 path: 'glaccts',
                 canActivate: [isAuthenticatedGuard()],
                 loadChildren: () =>
-                    import('app/features/accounting/static/accts/accts.routes'),
+                    import('app/features/accounting/static/gl.01.main.components.routes'),
             },
             {
                 path: 'settings',

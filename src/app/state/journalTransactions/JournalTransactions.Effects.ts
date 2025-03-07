@@ -1,7 +1,7 @@
 import { Actions, createEffect, ofType } from "@ngrx/effects";
 import { JournalService } from "app/services/journal.service";
 import { exhaustMap, map, catchError, of } from "rxjs";
-import { JournalActions } from "./Journal.Action";
+import { JournalActions } from "./JournalTransactions.Action";
 import { inject } from "@angular/core";
 import { ToastrService } from "ngx-toastr";
 
@@ -16,12 +16,24 @@ export class journalTransactionEffects {
       ofType(JournalActions.loadJournal),
       exhaustMap((action) => {
         return this.journalService.readJournalTransactions(action.period).pipe(
-          map((data) => JournalActions.loadJournalSuccess({ journals : data })),
+          map((data) => JournalActions.loadJournalSuccess({ transactions: data })),
           catchError((error) => of(JournalActions.loadJournalFailure({ error })))
         );
       })
     )
   );
+
+  // _loadUpdateHeader = createEffect(() =>
+  //   this.actions.pipe(
+  //     ofType(JournalActions.updateJournal),
+  //     exhaustMap((action) => {
+  //       return this.journalService.updateJournalHeader(action.transactions).pipe(
+  //         map((data) => JournalActions.loadJournalSuccess({ transactions: data })),
+  //         catchError((error) => of(JournalActions.loadJournalFailure({ error })))
+  //       );
+  //     })
+  //   )
+  // );
 
   // _cloneJournal = createEffect(() =>
   //   this.actions.pipe(

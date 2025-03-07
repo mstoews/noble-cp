@@ -10,6 +10,7 @@ const journalReducer = createReducer(
         return {
             ...state,
             journals : action.journals,
+            isLoading: false,
             error: null,
         }
     }),
@@ -18,6 +19,7 @@ const journalReducer = createReducer(
         return {
             ...state,
             journals: [...state.journals, action.journals],
+            isLoading : false,
             error: null,
         }
     }),
@@ -26,6 +28,7 @@ const journalReducer = createReducer(
         return {
             ...state,
             journals : action.journals,
+            isLoading: false,
             error: null,
         }
     }),

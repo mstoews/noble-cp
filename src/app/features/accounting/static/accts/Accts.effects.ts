@@ -4,8 +4,8 @@ import { catchError, map, concatMap, mergeMap } from 'rxjs/operators';
 import { of } from 'rxjs';
 
 import { AccountsService } from 'app/services/accounts.service';
-import { accountPageActions } from './accts-page.actions';
-import { accountAPIActions } from './accts.actions';
+import { accountPageActions } from './Accts-page.actions';
+import { accountAPIActions } from './Accts.actions';
 
 export class accountEffects {
   actions$ = inject(Actions);
@@ -32,7 +32,7 @@ export class accountEffects {
     this.actions$.pipe(
       ofType(accountPageActions.children),
       concatMap(() =>
-        this.accountService. readAccountDropdown().pipe(
+        this.accountService.readAccountDropdown().pipe(
           map((accounts) =>
             accountAPIActions.loadChildrenSuccess({ accounts })
           ),

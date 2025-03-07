@@ -3,13 +3,14 @@ import { AfterViewInit, Component, Input, OnDestroy, OnInit, inject, input, view
 import { ControlContainer, FormControl, FormGroup, ReactiveFormsModule} from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSelect, MatSelectModule } from '@angular/material/select';
-import { IFunds } from 'app/models';
+import { IParty } from 'app/models/party';
+
 import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 import { ReplaySubject, Subject, take, takeUntil } from 'rxjs';
 
 
 @Component({
-  selector: 'funds-drop-down',
+  selector: 'party-drop-down',
   imports: [ReactiveFormsModule, NgxMatSelectSearchModule, MatSelectModule, CommonModule, MatIconModule],
   template: `
   @if (dropdownFilter | async; as items ) {
@@ -22,7 +23,7 @@ import { ReplaySubject, Subject, take, takeUntil } from 'rxjs';
                   </ngx-mat-select-search>
                 </mat-option>
               @for (item of items; track item) {
-                <mat-option [value]="item">{{ item.description }}</mat-option>
+                <mat-option [value]="item">{{ item.party_id }}</mat-option>
               }
             </mat-select>
         <mat-icon class="icon-size-5 text-green-700" matPrefix  [svgIcon]="'heroicons_solid:document-chart-bar'"></mat-icon>        
@@ -38,20 +39,19 @@ import { ReplaySubject, Subject, take, takeUntil } from 'rxjs';
     }
   ],
 })
-export class FundsDropDownComponent implements OnInit, OnDestroy, AfterViewInit {
+export class PartyDropDownComponent implements OnInit, OnDestroy, AfterViewInit {
   protected _onDestroyTemplateFilter = new Subject<void>();
   protected _onTemplateDestroy = new Subject<void>();
 
   @Input({ required: true }) controlKey = '';
   @Input() label = '';
   
-  parentContainer = inject(ControlContainer);  
-    
-  dropdownList = input.required<IFunds[]>();
+  parentContainer = inject(ControlContainer);      
+  dropdownList = input.required<IParty[]>();
 
-  public dropdownCtrl: FormControl<IFunds> = new FormControl<IFunds>(null);
+  public dropdownCtrl: FormControl<IParty> = new FormControl<IParty>(null);
   public dropdownFilterCtrl: FormControl<string> = new FormControl<string>(null);
-  public dropdownFilter: ReplaySubject<IFunds[]> = new ReplaySubject<IFunds[]>(null);
+  public dropdownFilter: ReplaySubject<IParty[]> = new ReplaySubject<IParty[]>(null);
   public singleDropdownSelect = viewChild<MatSelect>("singleDropdownSelection");
   
   
@@ -85,10 +85,10 @@ export class FundsDropDownComponent implements OnInit, OnDestroy, AfterViewInit 
           .subscribe(() => {
               if (this.singleDropdownSelect() != null || this.singleDropdownSelect() != undefined)
                   this.singleDropdownSelect()!.compareWith = (
-                      a: IFunds,
-                      b: IFunds
+                      a: IParty,
+                      b: IParty
                   ) => {
-                      return a && b && a.fund === b.fund;
+                      return a && b && a.party_id === b.party_id;
                   };
           });
 
@@ -108,12 +108,12 @@ export class FundsDropDownComponent implements OnInit, OnDestroy, AfterViewInit 
     }
     // filter the banks
     this.dropdownFilter.next(
-      this.dropdownList().filter((item) => item.description.toLowerCase().indexOf(search) > -1)
+      this.dropdownList().filter((item) => item.party_id.toLowerCase().indexOf(search) > -1)
     );
   }
 
   setDropdownValue(value: string) {
-    const update = this.dropdownList().find((f) => f.fund === value)
+    const update = this.dropdownList().find((f) => f.party_id === value)
     if (update !== undefined)
       this.dropdownCtrl.setValue(update);
   }

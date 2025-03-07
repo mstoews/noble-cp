@@ -1,6 +1,6 @@
 import { createFeature, createReducer, createSelector, on } from '@ngrx/store';
-import { accountAPIActions } from './accts.actions';
-import { accountPageActions } from './accts-page.actions';
+import { accountAPIActions } from './Accts.actions';
+import { accountPageActions } from './Accts-page.actions';
 import { IAccounts, IDropDownAccounts } from 'app/models';
 
 export interface State {
@@ -21,11 +21,11 @@ const reducer = createReducer(
   initialState,
   // Accounts 
   on(accountPageActions.load, (state) => ({ ...state, isLoading: true })),
-  on(accountAPIActions.loadAccountsSuccess, (state, { accounts }) =>({ ...state, accounts, isLoading: false, })),
+  on(accountAPIActions.loadAccountsSuccess, (state, { accounts }) => ({ ...state, accounts, isLoading: false, })),
   on(accountAPIActions.loadAccountsFailure, (state) => ({ ...state, isLoading: false, })),
-  
+
   on(accountPageActions.children, (state) => ({ ...state, isLoading: true })),
-  on(accountAPIActions.loadChildrenSuccess,(state, { accounts }) => ({ ...state, children: accounts, isLoading: false, })),  
+  on(accountAPIActions.loadChildrenSuccess, (state, { accounts }) => ({ ...state, children: accounts, isLoading: false, })),
   on(accountAPIActions.loadChildrenFailure, (state) => ({ ...state, isLoading: false, })),
   on(accountPageActions.select, (state, { account }) => ({ ...state, selectedId: account })),
   on(accountPageActions.deleteAccount, (state) => ({ ...state, isLoading: true })),

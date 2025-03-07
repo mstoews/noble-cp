@@ -1,5 +1,4 @@
 import { Component, inject, viewChild } from "@angular/core";
-import { SubTypeService } from "app/services/subtype.service";
 import { TypeStore } from "app/services/type.service";
 import { CommonModule } from "@angular/common";
 import { FuseConfirmationService } from "@fuse/services/confirmation";
@@ -25,13 +24,13 @@ import { IAccounts } from "app/models";
 import { AuthService } from "app/features/auth/auth.service";
 import { GLGridComponent } from "../../grid-components/gl-grid.component";
 import { Store } from "@ngrx/store";
-import { accountsFeature } from "app/features/accounting/static/accts/accts.state";
-import { accountPageActions } from "app/features/accounting/static/accts/accts-page.actions";
+import { accountsFeature } from "app/features/accounting/static/accts/Accts.state";
+import { accountPageActions } from "app/features/accounting/static/accts/Accts-page.actions";
 import { MenuEventArgs, MenuItemModel } from "@syncfusion/ej2-navigations";
 import { ContextMenuAllModule } from "@syncfusion/ej2-angular-navigations";
 import { ToastrService } from "ngx-toastr";
-import { SettingsComponent } from "./accts.settings.component";
-import { DrawerComponent } from "./accts.drawer.component";
+import { SettingsComponent } from "./comp.accts.settings";
+import { DrawerComponent } from "./comp.accts.drawer";
 
 const imports = [
   CommonModule,
@@ -56,11 +55,11 @@ const keyExpr = ["account", "child"];
 
   <mat-drawer  class="w-[450px]" #drawer  [opened]="false"  mode="over" position="end" [disableClose]="false" >
           <accts-drawer
-           [account] = "selectedAccount$ | async"
-           (Cancel)="onClose()"
-           (Update)="onUpdate($event)"
-           (Add)="onAdd($event)"
-           (Delete)="onDelete($event)">
+            [account] = "selectedAccount$ | async"
+            (Cancel)="onClose()"
+            (Update)="onUpdate($event)"
+            (Add)="onAdd($event)"
+            (Delete)="onDelete($event)">
           </accts-drawer>
   </mat-drawer>
   
@@ -109,14 +108,13 @@ const keyExpr = ["account", "child"];
     `,
   ],
 })
-export class GlAccountsComponent  {
+export class GlAccountsComponent {
 
   public editDrawer = viewChild<MatDrawer>("drawer");
   public settingsDrawer = viewChild<MatDrawer>("settings");
   private _fuseConfirmationService = inject(FuseConfirmationService);
-
   private auth = inject(AuthService);
-  
+
   store = inject(Store);
   accounts$ = this.store.select(accountsFeature.selectAccounts);
   selectedAccount$ = this.store.select(accountsFeature.selectSelectedAccount);
@@ -151,11 +149,11 @@ export class GlAccountsComponent  {
   ];
 
   onSelection(account: any) {
-    this.store.dispatch(accountPageActions.select(account.data));                     
+    this.store.dispatch(accountPageActions.select(account.data));
   }
 
   ngOnInit() {
-    this.store.dispatch(accountPageActions.load());    
+    this.store.dispatch(accountPageActions.load());
   }
 
   onOpenSettings() {
@@ -195,7 +193,7 @@ export class GlAccountsComponent  {
     this.openEditDrawer();
   }
 
-  onAdd($event: any) {    
+  onAdd($event: any) {
     this.openEditDrawer();
   }
 
@@ -220,7 +218,7 @@ export class GlAccountsComponent  {
   onUpdate(account: IAccounts) {
     const dDate = new Date();
     const updateDate = dDate.toISOString().split("T")[0];
-    const user = '@' + this.auth.user().email.split("T")[0];    
+    const user = '@' + this.auth.user().email.split("T")[0];
   }
 
   onDeleteSelection() {
@@ -228,7 +226,7 @@ export class GlAccountsComponent  {
   }
 
   onDelete(e: any) {
-    const child = e.child;    
+    const child = e.child;
     const confirmation = this._fuseConfirmationService.open({
       title: `Delete  Account: ${e.account} Child: ${child}`,
       message: "Are you sure you want to delete this account? ",
@@ -238,7 +236,7 @@ export class GlAccountsComponent  {
         },
       },
     });
-    
+
     confirmation.afterClosed().subscribe((result) => {
 
       if (result === "confirmed") {

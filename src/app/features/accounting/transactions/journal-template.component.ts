@@ -1,16 +1,16 @@
 import { Component, inject, OnInit, viewChild } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { AccountsService } from 'app/services/accounts.service';
 import { GridMenubarStandaloneComponent } from '../grid-components/grid-menubar.component';
 import { MaterialModule } from 'app/services/material.module';
 import { AggregateService, ColumnMenuService, ContextMenuService, EditEventArgs, EditService, ExcelExportService, FilterService, GridComponent, GridModule, GroupService, PdfExportService, ResizeService, RowDDService, RowDragEventArgs, SearchService, SortService, ToolbarService } from '@syncfusion/ej2-angular-grids';
-import { getDetailTemplates, getTemplates } from 'app/state/template/Template.Selector';
-import { loadTemplates, loadTemplatesDetails } from 'app/state/template/Template.Action';
+
+import { getDetailTemplates, getTemplates } from './state/template/Template.Selector';
+import { loadTemplates, loadTemplatesDetails } from './state/template/Template.Action';
+
 import { GLGridComponent } from '../grid-components/gl-grid.component';
 import { MatDrawer } from '@angular/material/sidenav';
 import { Store } from '@ngrx/store';
-import { AcademyComponent } from "../../admin/academy/academy.component";
 import { Observable } from 'rxjs';
 import { IJournalDetailTemplate, IJournalTemplate } from 'app/models/journals';
 import { JournalStore } from 'app/services/journal.store';
@@ -30,7 +30,7 @@ const imports = [
     selector: 'journal-template',
     imports: [imports],
     template: `
-        <mat-drawer class="md:w-4/5 sm:w-full bg-white-100" #drawer [opened]="false" mode="over" [position]="'end'" [disableClose]="false">
+    <mat-drawer class="md:w-4/5 sm:w-full bg-white-100" #drawer [opened]="false" mode="over" [position]="'end'" [disableClose]="false">
         <mat-card elevated-container-elevation="4" class="m-2">
                 
                 <div class="flex flex-col w-full filter-article filter-interactive text-gray-700 rounded-lg">
@@ -161,8 +161,8 @@ const imports = [
             <div class="flex-auto">
                 <div class="h-full border-gray-300 rounded-2xl">                                      
                 <div  class="flex flex-1 flex-col" height="400px">   
-                    @if (templateList | async;  as List) {        
-                        <gl-grid  (onUpdateSelection)="onUpdateSelection($event)"  [data]="List"  [columns]="columns">  </gl-grid>    
+                    @if (templateList$ | async;  as templates) {        
+                        <gl-grid  (onUpdateSelection)="onUpdateSelection($event)"  [data]="templates"  [columns]="columns"></gl-grid>    
                     }
                 </div> 
             </div>
@@ -190,7 +190,7 @@ const imports = [
 
 export class JournalTemplateComponent implements OnInit {
     
-    private accountService = inject(AccountsService);
+    //private accountService = inject(AccountsService);
     public Store = inject(JournalStore);
     public gridControl = viewChild<GridComponent>("grid");
 
@@ -229,7 +229,7 @@ export class JournalTemplateComponent implements OnInit {
     ];
 
     keyField: any;
-    templateList: Observable <IJournalTemplate[]>;
+    templateList$ = this.store.select(getTemplates);
     templateDetailList: Observable <IJournalDetailTemplate[]>;
 
     columns = [
@@ -243,7 +243,6 @@ export class JournalTemplateComponent implements OnInit {
 
     ];
 
-    
 
     public actionBegin(args: EditEventArgs): void {
             if (args.requestType === "beginEdit" || args.requestType === "add") {
@@ -257,8 +256,6 @@ export class JournalTemplateComponent implements OnInit {
     ngOnInit() {
             this.createEmptyForm();
             this.store.dispatch(loadTemplates());
-            this.templateList = this.store.select(getTemplates);
-
             this.currentDate = new Date().toISOString().split('T')[0];
             this.formatoptions = { type: 'dateTime', format: 'M/dd/yyyy' }
             

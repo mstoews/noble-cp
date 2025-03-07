@@ -31,7 +31,7 @@ import { IPeriod, IPeriodParam } from 'app/models/period';
 import { ISubType } from 'app/models/subtypes';
 import { FundsService } from "./funds.service";
 import { ITemplateRender } from '@syncfusion/ej2-grids';
-import { getJournalHeader } from 'app/state/journal/Journal.Action';
+import { getJournalHeader } from 'app/features/accounting/transactions/state/journal/Journal.Action';
 
 
 export interface JournalStateInterface {
@@ -58,7 +58,7 @@ export const JournalStore = signalStore(
   { providedIn: 'root' },
   withState<JournalStateInterface>({
     currentJournal: null,
-    maxJournal: 0,    
+    maxJournal: 0,
     gl: [],
     details: [],
     accounts: [],
@@ -80,7 +80,7 @@ export const JournalStore = signalStore(
   withMethods((state,
     fundsService = inject(FundsService),
     journalService = inject(JournalService)) => ({
-    removeJournalHeader: rxMethod<IJournalHeader>(
+      removeJournalHeader: rxMethod<IJournalHeader>(
         pipe(
           switchMap((value) => {
             patchState(state, { isLoading: true });
@@ -97,7 +97,7 @@ export const JournalStore = signalStore(
         )
       ),
 
-    createJournalHeader: rxMethod<IJournalHeader>(
+      createJournalHeader: rxMethod<IJournalHeader>(
         pipe(
           switchMap((value) => {
             patchState(state, { isLoading: true });
@@ -113,7 +113,7 @@ export const JournalStore = signalStore(
           })
         )
       ),
-    createJournal: rxMethod<IJournalTransactions>(
+      createJournal: rxMethod<IJournalTransactions>(
         pipe(
           switchMap((value) => {
             patchState(state, { isLoading: true });
@@ -155,7 +155,7 @@ export const JournalStore = signalStore(
               })
             );
           })
-      )),
+        )),
       updateJournalHeader: rxMethod<IJournalHeader>(
         pipe(
           switchMap((value) => {
@@ -192,7 +192,7 @@ export const JournalStore = signalStore(
           })
         )
       ),
-    createJournalDetail: rxMethod<IJournalDetail>(
+      createJournalDetail: rxMethod<IJournalDetail>(
         pipe(
           tap(() => patchState(state, { isLoading: true })),
           switchMap((value) => {
@@ -209,7 +209,7 @@ export const JournalStore = signalStore(
           })
         )
       ),
-    createJournalTemplate: rxMethod<IJournalParams>(
+      createJournalTemplate: rxMethod<IJournalParams>(
         pipe(
           tap(() => patchState(state, { isLoading: true })),
           switchMap((value) => {
@@ -225,7 +225,7 @@ export const JournalStore = signalStore(
           })
         )
       ),
-    deleteJournalDetail: rxMethod<IJournalDetailDelete>(
+      deleteJournalDetail: rxMethod<IJournalDetailDelete>(
         pipe(
           tap(() => patchState(state, { isLoading: true })),
           switchMap((value) => {
@@ -390,7 +390,7 @@ export const JournalStore = signalStore(
         )
       ),
       loadMaxJournal: rxMethod<void>(
-          pipe(
+        pipe(
           tap(() => patchState(state, { isLoading: true })),
           exhaustMap(() => {
             return journalService.getLastJournalNo().pipe(
@@ -401,7 +401,7 @@ export const JournalStore = signalStore(
               })
             );
           })
-      )),
+        )),
       renumberJournalDetail: rxMethod<number>(
         pipe(
           tap(() => patchState(state, { isLoading: true })),
@@ -459,7 +459,7 @@ export const JournalStore = signalStore(
         )
       ),
     })),
-  withHooks( store => ({
+  withHooks(store => ({
     onInit: () => {
       store.loadTemplates();
       store.loadJournals();

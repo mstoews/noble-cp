@@ -1,5 +1,5 @@
 
-import { GlAccountsComponent } from './accts/accts.component';
+import { GlAccountsComponent } from './accts/comp.accts';
 import { GlTypeComponent } from './gltype/gl.types.component';
 import { HttpClient } from '@angular/common/http';
 import { Subject, takeUntil } from 'rxjs';

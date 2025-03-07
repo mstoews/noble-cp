@@ -2,7 +2,7 @@ import { AfterViewInit, Component, HostListener, OnDestroy, OnInit, ViewEncapsul
 import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { MaterialModule } from 'app/services/material.module';
-import { cloneJournal, loadJournalHeaderByPeriod } from 'app/state/journal/Journal.Action';
+import { cloneJournal, loadJournalHeaderByPeriod } from 'app/features/accounting/transactions/state/journal/Journal.Action';
 import { Observable } from 'rxjs';
 import { IJournalHeader, IJournalTransactions } from 'app/models/journals';
 import { IPeriodParam } from 'app/models/period';
@@ -13,9 +13,9 @@ import { DropDownListComponent } from '@syncfusion/ej2-angular-dropdowns';
 import { ToastrService } from 'ngx-toastr';
 import { MenuEventArgs, MenuItemModel } from '@syncfusion/ej2-navigations';
 import { ContextMenuModule } from '@syncfusion/ej2-angular-navigations';
-import { selectJournals } from 'app/state/journal/Journal.Selector';
+import { isJournalLoading, selectJournals } from 'app/features/accounting/transactions/state/journal/Journal.Selector';
 import { Router } from '@angular/router';
-import { Store } from '@ngrx/store';
+import { select, Store } from '@ngrx/store';
 
 
 const providers = [
@@ -32,7 +32,7 @@ const providers = [
     EditService,
     AggregateService,
     ColumnMenuService,
-    SearchService    
+    SearchService
 ];
 
 const imports = [
@@ -44,13 +44,11 @@ const imports = [
     ContextMenuModule,
     FilterTypePipe,
 ];
-
 @Component({
     selector: 'transactions',
     imports: [imports],
     encapsulation: ViewEncapsulation.None,
-    template: `
-    
+    template: `    
     <mat-drawer class="lg:w-[400px] md:w-full bg-white-100" #drawer [opened]="false" mode="over" [position]="'end'" [disableClose]="false">
         <mat-card class="m-2">
             <div class="flex flex-col w-full text-gray-700 filter-article filter-interactive">
@@ -95,13 +93,12 @@ const imports = [
             </div>         
         </mat-card>
     </mat-drawer> 
-
-
     <mat-drawer-container id="target" class="flex flex-col min-w-0 overflow-y-auto -px-10 h-[calc(100vh-21.5rem)] ">    
         <mat-card>
             <div class="flex-auto">                    
                         @defer (on viewport; on timer(300ms)) {
-                            @if(journalHeader$  | async; as journals  ) {                                           
+                            
+                            @if(journalHeader$  | async; as journals  ) {                              
                             <ng-container>                     
                                 <ejs-grid #grid id="grid"
                                     [dataSource]="journals | filterType : transactionType()"
@@ -207,6 +204,7 @@ const imports = [
                                     </e-aggregates>
                                 </ejs-grid>         
                             </ng-container> 
+                            
                             }
                             @else {
                             <div class="flex justify-center items-center">
@@ -218,8 +216,7 @@ const imports = [
                             <div class="flex justify-center items-center">
                             <mat-spinner></mat-spinner>
                             </div>
-                        }
-                                    
+                        }                                    
             </div>
          </mat-card>   
 
@@ -249,7 +246,7 @@ export class JournalEntryComponent implements OnInit, OnDestroy, AfterViewInit {
     private fb = inject(FormBuilder);
 
 
-    public periodForm!: FormGroup;    
+    public periodForm!: FormGroup;
     public transactionType = input('');
 
     public toolbarTitle: string = "Journal Entry";
@@ -264,53 +261,49 @@ export class JournalEntryComponent implements OnInit, OnDestroy, AfterViewInit {
     public searchOptions?: SearchSettingsModel;
     public filterSettings: FilterSettingsModel;
     public lines: GridLine;
-    public journalHeader$: Observable<IJournalHeader[]>;
-    public journalTransaction$ : Observable<IJournalTransactions[]>;
-    
-    
-    public periodParam!: IPeriodParam;
+
+    journalHeader$ = this.Store.select(selectJournals);
+    isJournalLoading$ = this.Store.select(isJournalLoading);
+
     public groupSettings: { [x: string]: Object } = { showDropArea: false, columns: ['party_id'] };
 
     drawer = viewChild<MatDrawer>("drawer");
     grid = viewChild<GridComponent>('grid');
 
     sTitle = 'Transaction Listings by Journal Type';
-    
+
     currentRowData: any;
     drawOpen: 'open' | 'close' = 'open';
     collapsed = false;
-    
-
 
     ngOnInit() {
-        this.periodParam = { period: 1, period_year: 2024 };
+        var periodParam = { period: 1, period_year: 2024 };
 
-        this.Store.dispatch(loadJournalHeaderByPeriod({ period: this.periodParam }));
-        this.journalHeader$ = this.Store.select(selectJournals);
+        this.Store.dispatch(loadJournalHeaderByPeriod({ period: periodParam }));
 
         this.toolbarTitle = "Journal Transactions by Period ";
         this.periodForm = this.fb.group({
             period: ['', Validators.required],
             period_year: ['', Validators.required],
         });
-        
+
         this.formatoptions = { type: 'dateTime', format: 'M/dd/yyyy' }
-        this.selectionOptions = { mode: 'Row' , type: 'Single' };
+        this.selectionOptions = { mode: 'Row', type: 'Single' };
         this.editSettings = { allowEditing: true, allowAdding: false, allowDeleting: false };
         this.searchOptions = { operator: 'contains', ignoreCase: true, ignoreAccent: true };
         this.toolbarOptions = ['Search'];
         this.filterSettings = { type: 'Excel' };
         this.lines = 'Both';
-        
+
     }
 
-    onTemplate() {        
-        this.toast.success('Template');        
+    onTemplate() {
+        this.toast.success('Template');
     }
 
-    onClone() {        
-        this.Store.dispatch(cloneJournal({ journal_id: this.currentRowData.journal_id }));        
-        this.toast.success('Journal Entry Cloned : ', this.currentRowData.journal_id);        
+    onClone() {
+        this.Store.dispatch(cloneJournal({ journal_id: this.currentRowData.journal_id }));
+        this.toast.success('Journal Entry Cloned : ', this.currentRowData.journal_id);
     }
 
     onAdd() {
@@ -332,7 +325,7 @@ export class JournalEntryComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     openDrawer() {
-        this.periodForm.patchValue({ period: this.periodParam.period, period_year: this.periodParam.period_year });
+        // this.periodForm.patchValue({ period: this.periodParam.period, period_year: this.periodParam.period_year });
         this.drawer().open();
     }
 
@@ -380,16 +373,16 @@ export class JournalEntryComponent implements OnInit, OnDestroy, AfterViewInit {
 
     public onUpdate($event: any) {
         var period = this.periodForm.getRawValue();
-        this.periodParam = { period: Number(period.period), period_year: Number(period.period_year) };
+        var periodParam = { period: Number(period.period), period_year: Number(period.period_year) };
         this.toolbarTitle = "Journal Transactions";
-        this.Store.dispatch(loadJournalHeaderByPeriod({ period: this.periodParam}));
+        this.Store.dispatch(loadJournalHeaderByPeriod({ period: periodParam }));
     }
 
     public onBooked(booked: boolean) {
 
     }
 
-    updateBooked() { 
+    updateBooked() {
 
     }
 
@@ -445,13 +438,13 @@ export class JournalEntryComponent implements OnInit, OnDestroy, AfterViewInit {
     ];
 
     public itemSelect(args: MenuEventArgs): void {
-        
+
         switch (args.item.text) {
             case 'Edit Journal':
                 this.route.navigate(['journals/gl', this.currentRowData.journal_id]);
                 break;
             case 'Create New Journal':
-                this.onAdd();                
+                this.onAdd();
                 break;
             case 'Clone Journal Entry':
                 this.onClone();
@@ -459,27 +452,27 @@ export class JournalEntryComponent implements OnInit, OnDestroy, AfterViewInit {
             case 'Create Template':
                 this.onTemplate();
                 break;
-            case 'Settings':                
+            case 'Settings':
                 this.openDrawer();
                 break;
         }
-    }    
+    }
 
-    
+
 
     @HostListener('window:resize', ['$event'])
     onResize(event: any) {
-      this.adjustHeight();
+        this.adjustHeight();
     }
-  
+
     ngAfterViewInit() {
-      this.adjustHeight();
+        this.adjustHeight();
     }
-    
+
     adjustHeight() {
-      if (this.grid()) {
-        this.grid().height = (window.innerHeight - 600) + 'px'; // Adjust as needed
-      }
+        if (this.grid()) {
+            this.grid().height = (window.innerHeight - 600) + 'px'; // Adjust as needed
+        }
     }
 
 }

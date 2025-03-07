@@ -21,7 +21,7 @@ export const getTemplateError = createSelector(
     }
 );  
 
-export const isLoading = createSelector(
+export const isTemplateLoading = createSelector(
     getTemplateState, (state) => {
         return state.isLoading
     }

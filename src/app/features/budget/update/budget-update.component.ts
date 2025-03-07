@@ -36,9 +36,9 @@ import { MatDrawer } from '@angular/material/sidenav';
 import { AUTH } from 'app/app.config';
 import { DropDownAccountComponent } from "../../accounting/grid-components/drop-down-account.component";
 import { Store } from '@ngrx/store';
-import { accountsFeature } from 'app/features/accounting/static/accts/accts.state';
+import { accountsFeature } from 'app/features/accounting/static/accts/Accts.state';
 import { ToastrService } from 'ngx-toastr';
-import { accountPageActions } from 'app/features/accounting/static/accts/accts-page.actions';
+import { accountPageActions } from 'app/features/accounting/static/accts/Accts-page.actions';
 
 
 const imp = [
@@ -221,10 +221,10 @@ export class BudgetUpdateComponent implements OnInit, OnDestroy, AfterViewInit {
 
   private subtypeService = inject(SubTypeService);
   private fuseConfirmationService = inject(FuseConfirmationService);
-  
+
   public subtype$ = this.subtypeService.read();
   private auth = inject(AUTH);
-  
+
   detailForm = new FormGroup({
     description: new FormControl(''),
     reference: new FormControl(''),
@@ -234,7 +234,7 @@ export class BudgetUpdateComponent implements OnInit, OnDestroy, AfterViewInit {
     }),
   });
 
-  
+
   public editSettings: Object;
   public editArtifactSettings: Object;
   public filterSettings: Object;
@@ -257,7 +257,7 @@ export class BudgetUpdateComponent implements OnInit, OnDestroy, AfterViewInit {
   public value = 0;
   public loading = false;
   public height: string = '250px';
-  
+
   public accountsListSubject: Subscription;
   public detailsSubject: Subscription;
 
@@ -268,8 +268,8 @@ export class BudgetUpdateComponent implements OnInit, OnDestroy, AfterViewInit {
   isLoading$ = this.Store.select(accountsFeature.selectIsLoading);
   toast = inject(ToastrService);
 
-  
-  
+
+
   // drop down searchable list
 
   public accountCtrl: FormControl<IDropDownAccounts> = new FormControl<IDropDownAccounts>(null);
@@ -303,7 +303,7 @@ export class BudgetUpdateComponent implements OnInit, OnDestroy, AfterViewInit {
   // ]
 
   ngOnInit(): void {
-    this.Store.dispatch(accountPageActions.children());    
+    this.Store.dispatch(accountPageActions.children());
   }
 
   ngAfterViewInit() {
@@ -317,7 +317,7 @@ export class BudgetUpdateComponent implements OnInit, OnDestroy, AfterViewInit {
     //  })); 
     //  return data;
     // }));
-  
+
     //   $.subscribe((data) => {
     //    this.debitAccounts = data
     //    this.filteredDebitAccounts.next(this.debitAccounts.slice());
@@ -332,12 +332,12 @@ export class BudgetUpdateComponent implements OnInit, OnDestroy, AfterViewInit {
     //     this.filteredDebitAccounts.next(this.debitAccounts.slice());
     // });
 
-  //   this.debitAccountFilterCtrl.valueChanges
-  //   .pipe(takeUntil(this._onDestroyDebitAccountFilter))
-  //   .subscribe(() => {
-  //     this.filterDebitAccounts();
-  //     this.bDirty = true;
-  // });
+    //   this.debitAccountFilterCtrl.valueChanges
+    //   .pipe(takeUntil(this._onDestroyDebitAccountFilter))
+    //   .subscribe(() => {
+    //     this.filterDebitAccounts();
+    //     this.bDirty = true;
+    // });
 
   }
 
@@ -382,7 +382,7 @@ export class BudgetUpdateComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
 
-  
+
   onFocusedDetailRowChanged(e: any) { }
 
   onDeleteDetail() {
@@ -452,7 +452,7 @@ export class BudgetUpdateComponent implements OnInit, OnDestroy, AfterViewInit {
       reference: BudgetDetail.reference,
       description: BudgetDetail.description,
       amount: BudgetDetail.amount,
-      
+
     });
 
     this.openDrawer();

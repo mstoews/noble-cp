@@ -38,8 +38,8 @@ import { MatDrawer, MatSidenav, MatSidenavModule } from '@angular/material/siden
 import { MatCardModule } from "@angular/material/card";
 import { MatTabsModule } from "@angular/material/tabs";
 import { Store } from '@ngrx/store';
-import { loadTemplates } from 'app/state/template/Template.Action';
-import { getTemplates } from 'app/state/template/Template.Selector';
+import { loadTemplates } from './state/template/Template.Action';
+import { getTemplates } from './state/template/Template.Selector';
 import { ISubType } from 'app/models/subtypes';
 import { ToastrService } from "ngx-toastr";
 import { Router } from '@angular/router';

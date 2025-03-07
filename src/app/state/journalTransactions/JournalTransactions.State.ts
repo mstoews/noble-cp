@@ -1,7 +1,7 @@
-import { JournalState } from './Journal.Model';
+import { JournalState } from './JournalTransactions.Model';
 
-export const initialState : JournalState = {
-    journals: [],
+export const initialState: JournalState = {
+    transactions: [],
     activeJournalId: null,
     activeJournal: null,
     isLoading: false,
@@ -11,4 +11,3 @@ export const initialState : JournalState = {
 };
 
 
- 

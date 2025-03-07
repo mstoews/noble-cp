@@ -5,7 +5,7 @@ help:
 	@echo "make functions - Deploy the functions"
 	@echo "make start - Start the web app"
 	@echo "make open - Open the web app"
-	@echo "make add - Add to git"
+	@echo "make add - Add to git and push to v18 -- required comment='your comment'"
 	@echo "make push - Push to git"
 	@echo "make help - Show this help message"
 

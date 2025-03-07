@@ -3,13 +3,13 @@ import { AfterViewInit, Component, Input, OnDestroy, OnInit, inject, input, view
 import { ControlContainer, FormControl, FormGroup, ReactiveFormsModule} from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSelect, MatSelectModule } from '@angular/material/select';
-import { IFunds } from 'app/models';
+import { IJournalTemplate } from 'app/models/journals';
 import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 import { ReplaySubject, Subject, take, takeUntil } from 'rxjs';
 
 
 @Component({
-  selector: 'funds-drop-down',
+  selector: 'template-drop-down',
   imports: [ReactiveFormsModule, NgxMatSelectSearchModule, MatSelectModule, CommonModule, MatIconModule],
   template: `
   @if (dropdownFilter | async; as items ) {
@@ -25,7 +25,7 @@ import { ReplaySubject, Subject, take, takeUntil } from 'rxjs';
                 <mat-option [value]="item">{{ item.description }}</mat-option>
               }
             </mat-select>
-        <mat-icon class="icon-size-5 text-green-700" matPrefix  [svgIcon]="'heroicons_solid:document-chart-bar'"></mat-icon>        
+        <mat-icon class="icon-size-5 text-green-700" matSuffix  [svgIcon]="'heroicons_solid:document-chart-bar'"></mat-icon>        
         </mat-form-field>        
       </fieldset>
    }
@@ -38,23 +38,22 @@ import { ReplaySubject, Subject, take, takeUntil } from 'rxjs';
     }
   ],
 })
-export class FundsDropDownComponent implements OnInit, OnDestroy, AfterViewInit {
+export class TemplateDropDownComponent implements OnInit, OnDestroy, AfterViewInit {
+
   protected _onDestroyTemplateFilter = new Subject<void>();
   protected _onTemplateDestroy = new Subject<void>();
 
   @Input({ required: true }) controlKey = '';
   @Input() label = '';
   
-  parentContainer = inject(ControlContainer);  
-    
-  dropdownList = input.required<IFunds[]>();
+  parentContainer = inject(ControlContainer);      
+  dropdownList = input.required<IJournalTemplate[]>();
 
-  public dropdownCtrl: FormControl<IFunds> = new FormControl<IFunds>(null);
+  public dropdownCtrl: FormControl<IJournalTemplate> = new FormControl<IJournalTemplate>(null);
   public dropdownFilterCtrl: FormControl<string> = new FormControl<string>(null);
-  public dropdownFilter: ReplaySubject<IFunds[]> = new ReplaySubject<IFunds[]>(null);
+  public dropdownFilter: ReplaySubject<IJournalTemplate[]> = new ReplaySubject<IJournalTemplate[]>(null);
   public singleDropdownSelect = viewChild<MatSelect>("singleDropdownSelection");
-  
-  
+    
   get parentFormGroup() {
     return this.parentContainer.control as FormGroup;
   }
@@ -63,9 +62,7 @@ export class FundsDropDownComponent implements OnInit, OnDestroy, AfterViewInit 
     this.parentFormGroup.addControl(this.controlKey,
       new FormGroup({
         dropdownCtrl: new FormControl(''),
-      }))
-     
-      
+      }))      
   }
   ngOnDestroy() {
     this.parentFormGroup.removeControl(this.controlKey);
@@ -74,22 +71,19 @@ export class FundsDropDownComponent implements OnInit, OnDestroy, AfterViewInit 
   public ngAfterViewInit() {
 
      this.dropdownFilter.next(this.dropdownList().slice());
-
      this.dropdownFilterCtrl.valueChanges.pipe(takeUntil(this._onDestroyTemplateFilter)).subscribe(() => {
         this.filteredDropdown();
     });
 
     if (this.dropdownFilter)
-      this.dropdownFilter
+          this.dropdownFilter
           .pipe(take(1), takeUntil(this._onDestroyTemplateFilter))
           .subscribe(() => {
               if (this.singleDropdownSelect() != null || this.singleDropdownSelect() != undefined)
                   this.singleDropdownSelect()!.compareWith = (
-                      a: IFunds,
-                      b: IFunds
-                  ) => {
-                      return a && b && a.fund === b.fund;
-                  };
+                      a: IJournalTemplate,
+                      b: IJournalTemplate
+                  ) => { return a && b && a.template_name === b.template_name;  };
           });
 
   }
@@ -108,14 +102,22 @@ export class FundsDropDownComponent implements OnInit, OnDestroy, AfterViewInit 
     }
     // filter the banks
     this.dropdownFilter.next(
-      this.dropdownList().filter((item) => item.description.toLowerCase().indexOf(search) > -1)
+      this.dropdownList().filter((item) => item.template_name.toLowerCase().indexOf(search) > -1)
     );
   }
 
   setDropdownValue(value: string) {
-    const update = this.dropdownList().find((f) => f.fund === value)
+    const update = this.dropdownList().find((f) => f.template_name === value)
     if (update !== undefined)
       this.dropdownCtrl.setValue(update);
+  }
+
+  getDropdownValue() {
+    let value = this.dropdownCtrl.value;
+    if (value === null || value === undefined) {
+      return '';
+    }
+    return value.template_name;
   }
 
 }
