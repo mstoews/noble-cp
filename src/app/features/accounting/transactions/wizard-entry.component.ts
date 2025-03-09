@@ -43,6 +43,7 @@ import { getTemplates } from './state/template/Template.Selector';
 import { ISubType } from 'app/models/subtypes';
 import { ToastrService } from "ngx-toastr";
 import { Router } from '@angular/router';
+import { TemplateDropDownComponent } from '../grid-components/drop-down.templates.component';
 
 
 interface ITransactionType {
@@ -70,7 +71,7 @@ const mods = [
     MatDatepickerModule,
     NgxMatSelectSearchModule,
     MaterialModule,
-    GridModule,
+    GridModule,   
 ]
 
 @Component({
@@ -111,6 +112,8 @@ const mods = [
 
                                     </mat-form-field>
                                 }
+
+                                                     
 
 
                                 <!-- Sub Type -->
@@ -282,8 +285,12 @@ const mods = [
                                                 <mat-icon class="icon-size-5" matPrefix
                                                     [svgIcon]="'heroicons_solid:document-chart-bar'"></mat-icon>
                                             </mat-form-field>
-                                        }       
-
+                                        }   
+                                        
+                                        <!-- @if (templateFilter | async; as templates ) {                                        
+                                            <template-drop-down [dropdownList]="templates" controlKey="template" label="Template" #templateDD></template-drop-down>                                         
+                                        } -->
+                                
                                         <mat-form-field class="flex">
                                             <mat-label class="text-md ml-2">Invoice/Reference</mat-label>
                                             <input type="text" class="text-right" matInput [placeholder]="'Reference/Invoice'"
@@ -586,6 +593,8 @@ export class EntryWizardComponent implements OnInit, OnDestroy, AfterViewInit {
         this.router.navigate(["journals/gl", this.journal_id]);
     }
 
+    private _unsubscribeAll: Subject<any> = new Subject<any>();
+
     Store = inject(Store);
     template$: Observable<IJournalTemplate[]>;
     accountsDropdown$: Observable<IDropDownAccounts[]>;
@@ -600,7 +609,7 @@ export class EntryWizardComponent implements OnInit, OnDestroy, AfterViewInit {
 
         this.Store.dispatch(loadTemplates());
 
-        this.Store.select(getTemplates).subscribe((templates) => {
+        this.Store.select(getTemplates).pipe(takeUntil(this._unsubscribeAll)).subscribe((templates) => {
             this.templateList = templates;
             this.templateFilter.next(templates);
         });
@@ -883,6 +892,10 @@ export class EntryWizardComponent implements OnInit, OnDestroy, AfterViewInit {
         this.store.createJournalDetail(e);
     }
 
+    ngAfterViewInit() {
+        this.setInitialValue();
+    }
+
     protected setInitialValue() {
 
         if (this.templateFilter)
@@ -922,10 +935,7 @@ export class EntryWizardComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
 
-    ngAfterViewInit() {
-        this.setInitialValue();
-    }
-
+    
     protected filterCreditAccounts() {
         if (!this.creditAccounts) {
             return;
@@ -1147,6 +1157,9 @@ export class EntryWizardComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     ngOnDestroy(): void {
+
+        this._unsubscribeAll.next(null);
+        this._unsubscribeAll.complete();
 
         if (this._onDestroyDebitAccountFilter) {
             this._onDestroyDebitAccountFilter.unsubscribe();

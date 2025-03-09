@@ -56,7 +56,8 @@ import { journalTransactionEffects } from './state/journalTransactions/JournalTr
 import { userEffects } from './state/users/Users.Effects';
 import { provideRouterStore } from '@ngrx/router-store';
 import { FundsReducer } from './features/accounting/static/funds/Funds.Reducer';
-import { fundsEffects } from './features/accounting/static/funds/Funds.Effects';
+
+
 import { UserService } from './services/user.service';
 
 import { periodEffects } from './features/accounting/static/periods/periods.effects';
@@ -67,11 +68,11 @@ import { ApplicationService } from "./services/application.state.service";
 import { kanbanEffects } from './state/kanban-state/kanban/kanban.effects';
 import { partyEffects } from './features/accounting/static/party/party.effects';
 import { accountEffects } from './features/accounting/static/accts/Accts.effects';
-import { JournalTransactionReducer } from './state/journalTransactions/JournalTransactions.Reducer';
 import { glTypeEffects } from './features/accounting/static/gltype/gltype.effects';
-import { project } from './fuse/mock-api/dashboards/project/data';
 import { projectEffects } from './state/kanban-state/projects/projects.effects';
 import { TemplateReducer } from './features/accounting/transactions/state/template/Template.Reducer';
+import { fundsEffects } from './features/accounting/static/funds/Funds.Effects';
+
 import { templateEffects } from './features/accounting/transactions/state/template/Template.Effects';
 
 
@@ -157,7 +158,7 @@ export const appConfig: ApplicationConfig = {
       tpl: TemplateReducer,
       jnl: JournalReducer,
       fnd: FundsReducer,
-      usr: UsersReducer
+      usr: UsersReducer,      
     }),
 
     provideState(fromPriority.priorityFeature),
@@ -179,7 +180,8 @@ export const appConfig: ApplicationConfig = {
       fundsEffects,
       subTypeEffects,
       glTypeEffects,
-      projectEffects
+      projectEffects,
+    
     ]),
     provideRouterStore(),
     provideStoreDevtools({ maxAge: 25 }),

@@ -25,7 +25,7 @@ import { ReplaySubject, Subject, take, takeUntil } from 'rxjs';
                 <mat-option [value]="item">{{ item.description }}</mat-option>
               }
             </mat-select>
-        <mat-icon class="icon-size-5 text-green-700" matPrefix  [svgIcon]="'heroicons_solid:document-chart-bar'"></mat-icon>        
+        <mat-icon class="icon-size-5 text-green-700" matSuffix  [svgIcon]="'heroicons_solid:document-chart-bar'"></mat-icon>        
         </mat-form-field>        
       </fieldset>
    }
@@ -52,7 +52,7 @@ export class FundsDropDownComponent implements OnInit, OnDestroy, AfterViewInit 
   public dropdownCtrl: FormControl<IFunds> = new FormControl<IFunds>(null);
   public dropdownFilterCtrl: FormControl<string> = new FormControl<string>(null);
   public dropdownFilter: ReplaySubject<IFunds[]> = new ReplaySubject<IFunds[]>(null);
-  public singleDropdownSelect = viewChild<MatSelect>("singleDropdownSelection");
+  public singleDropdownSelect = viewChild<MatSelect>("singleDropdownSelect");
   
   
   get parentFormGroup() {

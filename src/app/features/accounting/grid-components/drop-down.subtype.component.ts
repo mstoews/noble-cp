@@ -52,7 +52,7 @@ export class SubtypeDropDownComponent implements OnInit, OnDestroy, AfterViewIni
   public dropdownCtrl: FormControl<ISubType> = new FormControl<ISubType>(null);
   public dropdownFilterCtrl: FormControl<string> = new FormControl<string>(null);
   public dropdownFilter: ReplaySubject<ISubType[]> = new ReplaySubject<ISubType[]>(null);
-  public singleDropdownSelect = viewChild<MatSelect>("singleDropdownSelection");
+  public singleDropdownSelect = viewChild<MatSelect>("singleDropdownSelect");
   
   
   get parentFormGroup() {

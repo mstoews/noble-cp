@@ -15,9 +15,8 @@ import { ReplaySubject, Subject, take, takeUntil } from 'rxjs';
   template: `
   @if (dropdownFilter | async; as items ) {
     <fieldset [formGroupName]="controlKey">                
-        <mat-form-field class="flex flex-col grow ml-2 mr-2 mt-1 "> 
-          <mat-label class="text-md ml-2" for="dropdown">{{label}}</mat-label>
-              <mat-select [formControl]="dropdownCtrl" placeholder="Account" #singleDropdownSelect required>
+        <mat-form-field class="flex flex-col grow ml-2 mr-2 mt-1 ">           
+              <mat-select [formControl]="dropdownCtrl" [placeholder]="label" #singleDropdownSelect required>
                 <mat-option>
                   <ngx-mat-select-search [formControl]="dropdownFilterCtrl" [noEntriesFoundLabel]="'No entries found'" [placeholderLabel]="'Search'">
                   </ngx-mat-select-search>
@@ -52,7 +51,7 @@ export class PartyDropDownComponent implements OnInit, OnDestroy, AfterViewInit 
   public dropdownCtrl: FormControl<IParty> = new FormControl<IParty>(null);
   public dropdownFilterCtrl: FormControl<string> = new FormControl<string>(null);
   public dropdownFilter: ReplaySubject<IParty[]> = new ReplaySubject<IParty[]>(null);
-  public singleDropdownSelect = viewChild<MatSelect>("singleDropdownSelection");
+  public singleDropdownSelect = viewChild<MatSelect>("singleDropdownSelect");
   
   
   get parentFormGroup() {
@@ -113,9 +112,28 @@ export class PartyDropDownComponent implements OnInit, OnDestroy, AfterViewInit 
   }
 
   setDropdownValue(value: string) {
-    const update = this.dropdownList().find((f) => f.party_id === value)
-    if (update !== undefined)
+    const update = this.dropdownList().find((f) => f.party_id === value) as IParty;
+    if (update !== undefined) {
       this.dropdownCtrl.setValue(update);
+    }
   }
+
+  getDropdownValue() {
+    let value = this.dropdownCtrl.value;
+    if (value === null || value === undefined) {
+      return '';
+    }
+    return value.party_id;
+  }
+
+  getDropdown(): IParty | null {
+    let value = this.dropdownCtrl.value;
+    if (value === null || value === undefined) {
+      return null;
+    }
+    return value;
+  }
+
+
 
 }

@@ -116,6 +116,8 @@ export class DropDownAccountComponent implements OnInit, OnDestroy, AfterViewIni
     const update = this.dropdownList().find((f) => f.child === value)
     if (update !== undefined)
       this.dropdownCtrl.setValue(update);
+    else 
+      this.dropdownCtrl.setValue(this.dropdownList()[0])
   }
 
 }

@@ -14,7 +14,6 @@ import { tapResponse } from '@ngrx/operators';
 import { TemplateService } from './template.service';
 import {IJournalDetailTemplate, IJournalTemplate} from "../models/journals";
 
-
 export interface TemplateStateInterface {
   template: IJournalTemplate[];
   details: IJournalDetailTemplate[];

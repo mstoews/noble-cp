@@ -1,27 +1,28 @@
-import { CommonModule } from '@angular/common';
-import { AfterViewInit, Provider, Component, Input, OnDestroy, OnInit, inject, input, viewChild, forwardRef } from '@angular/core';
-import { ControlContainer, ControlValueAccessor, FormControl, FormGroup, NG_VALUE_ACCESSOR, ReactiveFormsModule } from '@angular/forms';
+import { CommonModule  } from '@angular/common';
+import { AfterViewInit, Provider, Component, Input, input, viewChild, forwardRef, OnDestroy } from '@angular/core';
+import { ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR, ReactiveFormsModule} from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSelect, MatSelectModule } from '@angular/material/select';
-import { IJournalTemplate, ITBParams } from 'app/models/journals';
+import { IJournalTemplate } from 'app/models/journals';
+import { template } from 'lodash';
 import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 import { ReplaySubject, Subject, take, takeUntil } from 'rxjs';
 
 const DROPDOWN_TEMPLATE_ASSESSOR: Provider = {
   provide: NG_VALUE_ACCESSOR,
-  useExisting: forwardRef(() => TemplateDropDownComponent),
+  useExisting: forwardRef(() => TemplateCustomDropDownComponent),
   multi: true,
 }
 
 
 @Component({
-  selector: 'template-drop-down',
+  selector: 'custom-template-drop-down',
   imports: [ReactiveFormsModule, NgxMatSelectSearchModule, MatSelectModule, CommonModule, MatIconModule],
   template: `
   @if (dropdownFilter | async; as items ) {
     <fieldset [formGroupName]="controlKey">                
         <mat-form-field class="flex flex-col grow ml-2 mr-2 mt-1 ">           
-              <mat-select [formControl]="dropdownCtrl" placeholder="Template" #singleDropdownSelect required>              
+              <mat-select (selectionChange)="onSelectionChange($event)" [formControl]="dropdownCtrl" placeholder="Template" #singleDropdownSelect required>              
                 <mat-option>
                   <ngx-mat-select-search [formControl]="dropdownFilterCtrl" [noEntriesFoundLabel]="'No entries found'" [placeholderLabel]="'Search'">
                   </ngx-mat-select-search>
@@ -36,41 +37,20 @@ const DROPDOWN_TEMPLATE_ASSESSOR: Provider = {
    }
   `,
   styles: ``,
-  viewProviders: [
-    {
-      provide: ControlContainer,
-      useFactory: () => inject(ControlContainer, { skipSelf: true })
-    },
-    DROPDOWN_TEMPLATE_ASSESSOR
-  ],
+  viewProviders: [DROPDOWN_TEMPLATE_ASSESSOR],
 })
-export class TemplateDropDownComponent implements OnInit, OnDestroy, AfterViewInit, ControlValueAccessor {
+export class TemplateCustomDropDownComponent implements AfterViewInit, ControlValueAccessor, OnDestroy {
+
+  template!: IJournalTemplate;
 
   private onChange!: Function;
-
-  writeValue(template: string | null): void {
-    if (template && template !== '') {
-      this.setDropdownValue(template);
-    }
-  }
-  registerOnChange(fn: Function): void {
-
-  }
-  registerOnTouched(fn: any): void {
-
-  }
-
-  setDisabledState?(isDisabled: boolean): void {
-
-  }
-
+  private onTouched!: Function;
+  
   protected _onDestroyTemplateFilter = new Subject<void>();
   protected _onTemplateDestroy = new Subject<void>();
 
-  @Input({ required: true }) controlKey = '';
   @Input() label = '';
-
-  parentContainer = inject(ControlContainer);
+  
   dropdownList = input<IJournalTemplate[]>();
 
   public dropdownCtrl: FormControl<IJournalTemplate> = new FormControl<IJournalTemplate>(null);
@@ -78,37 +58,48 @@ export class TemplateDropDownComponent implements OnInit, OnDestroy, AfterViewIn
   public dropdownFilter: ReplaySubject<IJournalTemplate[]> = new ReplaySubject<IJournalTemplate[]>(null);
   public singleDropdownSelect = viewChild<MatSelect>("singleDropdownSelect");
 
-  get parentFormGroup() {
-    return this.parentContainer.control as FormGroup;
+
+  writeValue(template_name:  | null): void {
+    if (template_name &&  template_name !== '') {
+      this.setDropdownValue(template_name);
+    }    
+  }
+  registerOnChange(fn: Function): void {
+    this.onChange = (template: string) => {
+      fn(template);
+    };
+  }
+  registerOnTouched(fn: Function): void {
+    this.onTouched = fn;
   }
 
-  ngOnInit() {
-    this.parentFormGroup.addControl(this.controlKey,
-      new FormGroup({
-        dropdownCtrl: new FormControl(''),
-      }))
-  }
-  ngOnDestroy() {
-    this.parentFormGroup.removeControl(this.controlKey);
+  onSelectionChange(event: any) {
+    this.template = event.value
+    this.onChange(event.value);
+    this.onTouched
   }
 
+  setDisabledState?(isDisabled: boolean): void {
+    
+  }
+  
   public ngAfterViewInit() {
 
-    this.dropdownFilter.next(this.dropdownList().slice());
-    this.dropdownFilterCtrl.valueChanges.pipe(takeUntil(this._onDestroyTemplateFilter)).subscribe(() => {
-      this.filteredDropdown();
+     this.dropdownFilter.next(this.dropdownList().slice());
+     this.dropdownFilterCtrl.valueChanges.pipe(takeUntil(this._onDestroyTemplateFilter)).subscribe(() => {
+        this.filteredDropdown();
     });
 
     if (this.dropdownFilter)
-      this.dropdownFilter
-        .pipe(take(1), takeUntil(this._onDestroyTemplateFilter))
-        .subscribe(() => {
-          if (this.singleDropdownSelect() != null || this.singleDropdownSelect() != undefined)
-            this.singleDropdownSelect()!.compareWith = (
-              a: IJournalTemplate,
-              b: IJournalTemplate
-            ) => { return a && b && a.template_name === b.template_name; };
-        });
+          this.dropdownFilter
+          .pipe(take(1), takeUntil(this._onDestroyTemplateFilter))
+          .subscribe(() => {
+              if (this.singleDropdownSelect() != null || this.singleDropdownSelect() != undefined)
+                  this.singleDropdownSelect()!.compareWith = (
+                      a: IJournalTemplate,
+                      b: IJournalTemplate
+                  ) => { return a && b && a.template_name === b.template_name;  };
+          });
 
   }
 
@@ -131,23 +122,21 @@ export class TemplateDropDownComponent implements OnInit, OnDestroy, AfterViewIn
   }
 
   setDropdownValue(value: string) {
-    const update = this.dropdownList().find((f) => f.template_name === value)
+    const update = this.dropdownList().find((f) => f.template_name === value)    
     if (update !== undefined) {
-      this.dropdownCtrl.setValue(update);      
+      this.dropdownCtrl.setValue(update);
+      this.template = update;
     }
-    else {
+    else
+    {
       this.dropdownCtrl.setValue(this.dropdownList()[0])      
     }
-  }
-
+   }
+  
   getDropdown(): IJournalTemplate | null {
-    let value = this.dropdownCtrl.value;
-    if (value === null || value === undefined) {
-      return null;
-    }
-    return value
+    return this.template    
   }
-
+  
 
   getDropdownValue() {
     let value = this.dropdownCtrl.value;
@@ -156,5 +145,21 @@ export class TemplateDropDownComponent implements OnInit, OnDestroy, AfterViewIn
     }
     return value.template_name;
   }
+
+  ngOnDestroy(): void {
+
+
+
+    if (this._onDestroyTemplateFilter) {
+        this._onDestroyTemplateFilter.unsubscribe();
+    }
+
+    if (this._onTemplateDestroy) {
+        this._onTemplateDestroy.unsubscribe();
+    }
+
+    
+}
+
 
 }

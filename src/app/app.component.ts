@@ -3,6 +3,8 @@ import { Component, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { ApplicationService } from './services/application.service';
 import { AuthService } from './features/auth/auth.service';
+import { Store } from '@ngrx/store';
+import { getTemplates, loadTemplates } from './features/accounting/transactions/state/template/Template.Action';
 
 @Component({
     selector: 'app-root',
@@ -36,12 +38,14 @@ import { AuthService } from './features/auth/auth.service';
 })
 export class AppComponent {
     authService = inject(AuthService);
+    store = inject(Store);
+    templateList$ = this.store.select(getTemplates);     
+
     getState(outlet: any) {
         return outlet.activatedRouteData.state;
     }
-
     constructor() {
-        // this.authService.updateDisplayname('Murray Toews');
+        this.store.dispatch(loadTemplates());
     }
     
 }

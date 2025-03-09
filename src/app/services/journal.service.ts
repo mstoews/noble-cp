@@ -192,8 +192,7 @@ export class JournalService implements OnDestroy {
       shareReplay({ bufferSize: 1, refCount: true }));
   }
 
-  getHttpJournalDetails(journal_id: number) {
-    console.log('getHttpJournalDetails', journal_id);
+  getHttpJournalDetails(journal_id: number) {    
     var url = this.baseUrl + '/v1/get_journal_detail/' + journal_id;
     return this.httpClient.get<IJournalDetail[]>(url).pipe(
       catchError(err => {
