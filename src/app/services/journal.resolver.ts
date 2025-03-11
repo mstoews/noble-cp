@@ -5,4 +5,6 @@ import { JournalService } from "./journal.service";
 
 export const JournalResolver: ResolveFn<IJournalHeader> = (
   route: ActivatedRouteSnapshot,
-  state: RouterStateSnapshot ) => { return inject(JournalService).getJournalHeaderById(Number(route.paramMap.get('id'))); };
+  state: RouterStateSnapshot ) => { 
+    return inject(JournalService).getJournalHeaderById(Number(route.paramMap.get('id'))); 
+  };

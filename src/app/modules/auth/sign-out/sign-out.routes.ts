@@ -3,7 +3,7 @@ import { AuthSignOutComponent } from 'app/modules/auth/sign-out/sign-out.compone
 
 export default [
     {
-        path     : '',
+        path: '',
         component: AuthSignOutComponent,
     },
 ] as Routes;

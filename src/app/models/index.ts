@@ -1,6 +1,7 @@
 import type { User } from "firebase/auth";
 import { DocumentReference, Timestamp, FieldValue } from "firebase/firestore";
-
+import * as subtypes from './subtypes';
+import { AcroFormButton } from "jspdf";
 
 export interface IDashboardFund {
   fund: string,
@@ -45,16 +46,6 @@ export interface ICategory {
 export type CategoryRef = DocumentReference<ICategory>;
 export interface CategorySnap extends ICategory {
   category: ICategory[];
-}
-
-export type IType = {
-  id?: string;
-  type: string;
-  description: string;
-  create_date: string;
-  create_user: string;
-  update_date: Date;
-  update_user: string;  
 }
 
 export type NobleLedgerUser = {
@@ -105,21 +96,12 @@ export interface IDropDownAccounts {
   description: string;
 }
 
-// export interface IAccounts {
-//   account: string;
-//   child: string;
-//   parent_account?: boolean;
-//   type: string;
-//   sub_type: string;
-//   balance: number;
-//   description: string;
-//   comments: string;
-//   status: string;
-//   create_date: string;
-//   create_user: string;
-//   update_date: string;
-//   update_user: string;
-// }
+export interface IDropDown {
+  value: string;
+  description: string;
+}
+
+
 
 export interface IBudget {
     child : number;
@@ -239,19 +221,39 @@ export interface IFunds {
   description: string;
   create_date?: string;
   create_user?: string;
-  update_date?: string;
-  update_user?: string;
 }
 
 
-
-export interface IAccount {
+export interface ITrialBalance {
+  account : number;
+  child : number;
+  account_description: string;
+  transaction_date: Date;
+  id: string;
+  trans_type: string;
+  trans_date: Date;
+  type: string;
+  description: string;
+  reference: string;
+  party_id: string;
+  amount: number;
+  opening_balance: number;
+  debit_amount: number;
+  credit_amount: number;
+  close: number;
+  net: number;
+  pd: number;
+  prd_year: number;
+}
+export interface IAccounts {
+  id?: number;
   account: number;
   child: number;
-  parent_account: number;
-  type: string;
+  parent_account: boolean;
+  acct_type: string;
   sub_type: string;
   description: string;
+  status?: string;
   balance: number;
   comments: string;
   create_date: string;
@@ -260,6 +262,12 @@ export interface IAccount {
   update_user: string;
 }
 
+export interface IAccountSettings {
+  ar: string;
+  ap: string;
+  apc: string;
+  arc: string;
+} 
 
 
 export interface imageItem {

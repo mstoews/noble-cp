@@ -11,8 +11,9 @@ import {
   import { exhaustMap, pipe, switchMap, tap } from 'rxjs';
   import { inject } from '@angular/core';
   import { tapResponse } from '@ngrx/operators';
-  import { IAccounts, IJournalDetailTemplate, IJournalTemplate } from 'app/models/journals';
-  import { IType } from 'app/modules/kanban/kanban.service';
+  import { IAccounts } from 'app/models';
+  import { IJournalDetailTemplate, IJournalTemplate } from 'app/models/journals';
+  import { IType } from 'app/models/kanban';
   import { IParty } from 'app/models/party';
   import { JournalTemplateService } from './journal-template.service';
   
@@ -45,7 +46,7 @@ import {
         pipe(
           tap(() => patchState(state, { isLoading: true })),
           exhaustMap(() => {
-            return templateService.readTemplates().pipe(
+            return templateService.read().pipe(
               tapResponse({
                 next: (template) => patchState(state, { templates: template }),              
                 error: console.error,

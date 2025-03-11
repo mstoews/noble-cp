@@ -1,0 +1,47 @@
+<mat-toolbar class="text-white font-sans bg-gray-500 mb-1 text-2xl">
+  {{inTitle()}} for Period {{currentYear()}}/{{currentPeriod()}}
+  <!-- menu selected -->
+
+  <span class="flex-1"></span>
+
+  
+  <button mat-raised-button class="m-1" [matMenuTriggerFor]="menu" matTooltip="Accounting Period" >
+    <mat-icon>more_vert</mat-icon>
+    Period
+  </button>
+  <mat-menu #menu="matMenu" xPosition="before">
+    <button mat-menu-item (click)="onPeriod(1)" >Prd 1</button>
+    <button mat-menu-item (click)="onPeriod(2)" >Prd 2</button>
+    <button mat-menu-item (click)="onPeriod(3)" >Prd 3</button>
+    <button mat-menu-item (click)="onPeriod(4)" >Prd 4</button>
+    <button mat-menu-item (click)="onPeriod(5)" >Prd 5</button>
+    <button mat-menu-item (click)="onPeriod(6)" >Prd 6</button>
+    <button mat-menu-item (click)="onPeriod(7)" >Prd 7</button>
+    <button mat-menu-item (click)="onPeriod(8)" >Prd 8</button>
+    <button mat-menu-item (click)="onPeriod(9)" >Prd 9</button>
+    <button mat-menu-item (click)="onPeriod(10)">Prd 10</button>
+    <button mat-menu-item (click)="onPeriod(11)">Prd 11</button>
+    <button mat-menu-item (click)="onPeriod(12)">Prd 12</button>
+  </mat-menu>
+
+  <button mat-raised-button class="m-1" [matMenuTriggerFor]="yearmenu" matTooltip="Accounting Year">
+    <mat-icon>more_vert</mat-icon>
+    Year    
+  </button>
+  <mat-menu #yearmenu="matMenu" xPosition="before">
+    <button mat-menu-item (click)="onYear(2024)">2024</button>
+    <button mat-menu-item (click)="onYear(2025)">2025</button>
+  </mat-menu>
+
+  <!-- <button (click)="onClickUpdate()" class="m-1" mat-raised-button matTooltip="Update" aria-label="Update">
+    <mat-icon class="w-3/12 flex justify-end text-white" [svgIcon]="'mat_outline:update'"></mat-icon>
+
+  </button> -->
+
+  <button (click)="onClickRefresh()" class="m-1" mat-raised-button matTooltip="Refresh" aria-label="Add">
+    <mat-icon class="w-3/12 flex justify-end text-white" [svgIcon]="'mat_outline:refresh'"></mat-icon>
+    
+    Refresh
+  </button>
+
+</mat-toolbar>

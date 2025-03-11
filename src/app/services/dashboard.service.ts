@@ -8,7 +8,7 @@ import { catchError, filter, map, retry } from 'rxjs/operators';
 import { FIRESTORE } from 'app/app.config';
 import { IDashboardFund } from 'app/models';
 import { SendhttpService } from './sendhttp.service';
-import { AuthService } from 'app/modules/auth/auth.service';
+import { AuthService } from 'app/features/auth/auth.service';
 
 
 interface MessageState {
@@ -79,18 +79,17 @@ export class DashboardService {
         this.state.update((state) => ({ ...state, error }))
       );
   }
-  
-  private SendHttpRequest()
-   {
-     this.sendHttp.sendRequest();
-   } 
+
+  private SendHttpRequest() {
+    this.sendHttp.sendRequest();
+  }
 
   private getAll() {
-      const messagesCollection = query(
-        collection(this.firestore, 'messages'),
-        orderBy('created', 'desc'),
-        limit(50)
-      );
+    const messagesCollection = query(
+      collection(this.firestore, 'messages'),
+      orderBy('created', 'desc'),
+      limit(50)
+    );
 
     return collectionData(messagesCollection, { idField: 'id' }).pipe(
       map((messages) => [...messages].reverse())
@@ -101,10 +100,10 @@ export class DashboardService {
     const newFundValues = {
       fund: fund,
       amount: value,
-      updatedTime: Date.now().toString(),  
+      updatedTime: Date.now().toString(),
       description: desc
     };
-      
+
     const dashboardCollection = collection(this.firestore, 'dashboard');
     return defer(() => addDoc(dashboardCollection, newFundValues));
   }

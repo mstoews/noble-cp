@@ -3,7 +3,7 @@ import { AuthUnlockSessionComponent } from 'app/modules/auth/unlock-session/unlo
 
 export default [
     {
-        path     : '',
+        path: '',
         component: AuthUnlockSessionComponent,
     },
 ] as Routes;

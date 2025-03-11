@@ -1,17 +1,22 @@
 {
   "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
-  "version": 1,
+  "version": 1,  
   "newProjectRoot": "projects",
   "projects": {
     "nobleledger": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
-          "style": "scss",
-          "inlineTemplate": false,
+          "inlineTemplate": true,
           "inlineStyle": true,
-          "skipTests": true,
-          "flat": true
+          "style": "scss",
+          "standalone": true
+        },
+        "@schematics/angular:directive": {
+          "standalone": true
+        },
+        "@schematics/angular:pipe": {
+          "standalone": true
         }
       },
       "root": "",
@@ -60,7 +65,7 @@
               "src/assets",
               "src/favicon.ico",
               {
-                "glob": "_redirects",
+                "glob": "*.md",
                 "input": "src",
                 "output": "/"
               }
@@ -77,7 +82,7 @@
               "src/@fuse/styles/main.scss",
               "src/styles/styles.scss",
               "src/styles/tailwind.scss",
-              "@angular/material/prebuilt-themes/deeppurple-amber.css"              
+              "node_modules/ngx-toastr/toastr.css"
             ],
             "scripts": []
           },
@@ -183,17 +188,9 @@
   },
   "cli": {
     "analytics": false,
-    "cache": false,
-    "schematicCollections": [
-      "@ionic/angular-toolkit"
-    ]
-  },
-  "schematics": {
-    "@ionic/angular-toolkit:component": {
-      "styleext": "scss"
-    },
-    "@ionic/angular-toolkit:page": {
-      "styleext": "scss"
+    "cache": {
+      "enabled": false
     }
   }
 }
+

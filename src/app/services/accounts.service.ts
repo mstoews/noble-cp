@@ -1,45 +1,71 @@
 import { Injectable, inject, signal } from '@angular/core';
-import { Subject, catchError, exhaustMap, of, pipe, shareReplay, take, tap, throwError } from 'rxjs';
+import { catchError, exhaustMap, pipe, shareReplay, take, tap, throwError } from 'rxjs';
 import { signalState, patchState } from '@ngrx/signals'
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { tapResponse } from '@ngrx/operators';
 
-
 import { HttpClient } from '@angular/common/http';
 import { IDropDownAccounts } from '../models';
 import { environment } from 'environments/environment.prod';
-import { IAccounts } from 'app/models/journals';
+import { IAccounts} from 'app/models'
 
-type AccountState = { account: IAccounts[], isLoading: boolean }
+type AccountState = {
+    account: IAccounts[],
+    isLoading: boolean
+}
 
 const initialState: AccountState = {
     account: [],
     isLoading: false,
 }
 
-
 @Injectable({
     providedIn: 'root',
 })
-export class GLAccountsService {
+export class AccountsService {
+
+    public httpClient = inject(HttpClient)
 
     private parentAccounts = signal<IAccounts[]>([])
     private dropDownList = signal<IDropDownAccounts[]>([])
     private childrenOfParents = signal<IAccounts[]>([])
+
+    public accountList = signal<IAccounts[]>([])
     private accountState = signalState(initialState);
+
+
     private baseUrl = environment.baseUrl;
-    public readUrl = this.baseUrl + '/v1/account_list';
-    public httpClient = inject(HttpClient)
-    public accountList = signal<IAccounts[]>([])    
-        
+    
+
     // readonly accountList = this.accountState.account;
     readonly isLoading = this.accountState.isLoading;
+
+    readAccounts() {
+        const readUrl = this.baseUrl + '/v1/account_list';
+        return this.httpClient.get<IAccounts[]>(readUrl).pipe(shareReplay({ bufferSize: 1, refCount: true }));
+    }
+
+    readAccountDropdown() {
+        var url = this.baseUrl + '/v1/read_dropdown_accounts';
+        return this.httpClient.get<IDropDownAccounts[]>(url).pipe(shareReplay({ bufferSize: 1, refCount: true }));
+    }
+
+    readParents() {
+        var url = this.baseUrl + '/v1/account_parent_list';
+        return this.httpClient.get<IAccounts[]>(url).pipe(shareReplay({ bufferSize: 1, refCount: true }));
+    }
+
+    delete(id: string) {
+        var url = this.baseUrl + '/v1/account_delete/:' + id;
+        return this.httpClient.delete<IAccounts[]>(url).pipe(shareReplay({ bufferSize: 1, refCount: true }));
+    }
+
 
     readonly read = rxMethod<void>(
         pipe(
             tap(() => patchState(this.accountState, { isLoading: true })),
             exhaustMap(() => {
-                return this.httpClient.get<IAccounts[]>(this.readUrl).pipe(
+                return this.readAccounts().pipe(
                     tapResponse({
                         // next: (account) => patchState(this.accountState, { account }),
                         next: (account) => this.accountList.set(account),
@@ -51,11 +77,12 @@ export class GLAccountsService {
         )
     );
 
+
     // account and description only
     public readDropDownChild() {
         var url = this.baseUrl + '/v1/read_child_accounts';
         if (this.dropDownList().length === 0) {
-            this.httpClient.get<IDropDownAccounts[]>(url).pipe(
+            this.readAccountDropdown().pipe(
                 tap(data => this.dropDownList.set(data)),
                 take(1),
                 catchError(err => {
@@ -63,7 +90,7 @@ export class GLAccountsService {
                     console.debug(message, err);
                     return throwError(() => new Error(`${JSON.stringify(err)}`));
                 }),
-                shareReplay()
+                shareReplay({ bufferSize: 1, refCount: true })
             ).subscribe();
         }
         return this.dropDownList;
@@ -71,24 +98,24 @@ export class GLAccountsService {
 
     // only child account and no parents
     public readChildren() {
-        var url = this.baseUrl + '/v1/read_child_accounts';
-        return this.httpClient.get<IDropDownAccounts[]>(url).pipe(
+        return this.readAccountDropdown().pipe(
             tap(data => this.dropDownList.set(data)),
             take(1),
             catchError(err => {
-                const message = "Could not retrieve chil accounts ...";
+                const message = "Could not retrieve child accounts ...";
                 console.debug(message, err);
                 return throwError(() => new Error(`${JSON.stringify(err)}`));
             }),
-            shareReplay()
+            shareReplay({ bufferSize: 1, refCount: true })
         )
     }
 
+
+
     // only parent accounts
     public getParents() {
-        var url = this.baseUrl + '/v1/account_parent_list';
         if (this.parentAccounts().length === 0) {
-            this.httpClient.get<IAccounts[]>(url).pipe(
+            this.readParents().pipe(
                 tap(data => this.parentAccounts.set(data)),
                 take(1),
                 catchError(err => {
@@ -96,7 +123,7 @@ export class GLAccountsService {
                     console.debug(message, err);
                     return throwError(() => new Error(`${JSON.stringify(err)}`));
                 }),
-                shareReplay()
+                shareReplay({ bufferSize: 1, refCount: true })
             ).subscribe();
         }
         return this.parentAccounts;
@@ -114,20 +141,20 @@ export class GLAccountsService {
                     console.debug(message, err);
                     return throwError(() => new Error(`${JSON.stringify(err)}`));
                 }),
-                shareReplay()
+                shareReplay({ bufferSize: 1, refCount: true })
             ).subscribe();
         }
         return this.childrenOfParents;
     }
 
     // Add
-    public create(accounts: Partial<IAccounts>) {
+    public create(accounts: IAccounts) {
 
         var data: IAccounts = {
             account: accounts.account,
             child: accounts.child,
             parent_account: accounts.parent_account,
-            type: accounts.type,
+            acct_type: accounts.acct_type,
             sub_type: accounts.sub_type,
             balance: 0.0,
             description: accounts.description,
@@ -139,13 +166,11 @@ export class GLAccountsService {
             update_user: accounts.update_user,
         }
         var url = this.baseUrl + '/v1/account_create';
-        return this.httpClient.post(url, data)
-            .pipe(
-                shareReplay())
+        return this.httpClient.post<IAccounts>(url, data).pipe(shareReplay({ bufferSize: 1, refCount: true }))
     }
 
     // Update
-    public update(accounts: Partial<IAccounts>) {
+    public update(accounts: IAccounts) {
 
         var url = this.baseUrl + '/v1/account_update';
 
@@ -153,7 +178,7 @@ export class GLAccountsService {
             account: Number(accounts.account),
             child: Number(accounts.child),
             parent_account: accounts.parent_account,
-            type: accounts.type,
+            acct_type: accounts.acct_type,
             sub_type: accounts.sub_type,
             balance: 0.0,
             description: accounts.description,
@@ -171,11 +196,10 @@ export class GLAccountsService {
                 const message = "Could not save journal header ...";
                 console.debug(message, err);
                 return throwError(() => new Error(`Invalid time ${err}`));
-            }),
-            shareReplay()
-        )
-            .subscribe();
+            }), shareReplay({ bufferSize: 1, refCount: true })
+        );
     }
+    // Delete
 
     // update account signal array
     updateAccountList(data: any) {
@@ -183,12 +207,12 @@ export class GLAccountsService {
             account: data.account,
             child: data.child,
             parent_account: data.parent_account,
-            type: data.type,
+            acct_type: data.acct_type,
             sub_type: data.sub_type,
             balance: data.balance,
+            status: data.status,    
             description: data.description,
-            comments: data.comments,
-            status: data.status,
+            comments: data.comments,            
             create_date: data.create_date,
             create_user: data.create_user,
             update_date: data.update_date,
@@ -197,9 +221,4 @@ export class GLAccountsService {
     }
 
 
-    // Delete
-    delete(id: string) {
-        var url = this.baseUrl + '/v1/account_delete';
-        return this.httpClient.get<IAccounts[]>(url).pipe(shareReplay())
-    }
 }

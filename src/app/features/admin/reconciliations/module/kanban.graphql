@@ -1,0 +1,168 @@
+
+fragment KanbanTask on kb_task {
+		party_ref
+    parentId
+    Id
+    assignee
+    due_date
+    start_date
+    description
+    dependencies
+    rankid
+    task_id
+    title
+    assignee
+    estimate
+    status
+    summary
+    classname
+    priority
+    type
+    color
+    tags
+    classname
+
+}
+
+query KanbanTasks {
+  KanbanTask {
+    ...KanbanTask
+  }
+}
+
+query KanbanPriority {
+  KanbanPriority {
+    priority
+    description
+    updatedte
+    updateusr
+  }
+}
+
+query KanbanType {
+  KanbanType {
+    type
+    description
+    updatedte
+    updateusr
+  }
+}
+
+
+query KanbanStatus {
+  KanbanStatus {
+    status
+    description
+    updatedte
+    updateusr
+  }
+}
+
+query KanbanTaskByTaskId ($task_id: String!){
+  KanbanByTaskId(task_id: $task_id){
+    ...KanbanTask
+  }
+}
+
+query KanbanTaskByStatus ($status: String!)
+{
+  KanbanTaskByStatus(status: $status)
+  {
+    ...KanbanTask
+  }
+}
+
+
+
+query KanbanByTaskId($task_id: String!)
+{
+  KanbanByTaskId(task_id: $task_id)
+  {
+    ...KanbanTask
+  }
+}
+
+
+query KanbanTaskByRefAndStatus($partyRef: String!, $status: String!){
+  	KanbanTaskByRefAndStatus(partyRef: $partyRef, status: $status)
+    {
+    ...KanbanTask
+	}
+}
+
+
+query KanbanTaskByRef($party_ref: String!)
+{
+  KanbanTaskByRef(partyRef: $party_ref){
+    ...KanbanTask
+  }
+}
+
+query KanbanByStatus($status: String!){
+  KanbanTaskByStatus(status: $status){
+    ...KanbanTask
+  }
+}
+
+
+
+mutation createKanbanTask ($taskInput: KanbanInputs!) {
+  createTask(data: $taskInput) {
+    ...KanbanTask
+  }
+}
+
+mutation UpdateTask($task_id: String!, $taskInput: KanbanInputs!){
+	updateTask(task_id: $task_id, newData: $taskInput)
+  {
+    ...KanbanTask
+  }
+}
+
+mutation deleteTask($task_id: String!){
+  deleteTask(task_id: $task_id){
+    ...KanbanTask
+  }
+}
+
+query KanbanFirstTask ($party_ref: String!)  {
+  KanbanFirstTask(party_ref: $party_ref){
+    ...KanbanTask
+  }
+}
+
+mutation updateTaskParentId ($task_id: String!, $parentId: Int!){
+  updateTaskParentId(task_id: $task_id, parentId: $parentId){
+    task_id
+    parentId
+  }
+}
+
+query kanbanPartyByType($party_type: String!, $client_ref: String!) {
+  partyByType(party_type: $party_type, client_ref: $client_ref) {
+    party_ref
+    party_type
+    party_short_name
+    party_long_name
+    party_extra_long_name
+    active_ind
+    version_no
+    version_date
+    version_user
+  }
+}
+
+
+query kanbanPartyTypes($party_type: String!, $client_ref: String!) {
+  partyByType(party_type: $party_type, client_ref: $client_ref) {
+    party_ref
+    party_type
+    party_short_name
+    party_long_name
+    party_extra_long_name
+    active_ind
+    version_no
+    version_date
+    version_user
+  }
+}

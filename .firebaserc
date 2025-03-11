@@ -1,6 +1,7 @@
 {
   "projects": {
-    "staging": "condo-mgmt"
+    "staging": "condo-mgmt",
+    "default": "condo-mgmt"
   },
   "targets": {},
   "etags": {}

@@ -1,0 +1,118 @@
+
+$Broadridge_Blue:	#00578E;
+
+img {
+	height: auto;
+	width: 100%;
+}
+
+.mat-chip {
+  font-size: .8 rem;
+}
+
+
+.mat-card {
+  padding: 3px;
+  border-left: solid 8px $Broadridge_Blue;
+	border-top: solid 1px $Broadridge_Blue;
+	border-bottom: solid 1px $Broadridge_Blue;
+	border-right: solid 1px $Broadridge_Blue;
+  margin: 4px;
+  transition: transform .4s;
+  // transition-timing-function: cubic-bezier(.29, 1.01, 1, -0.68);
+  transition-timing-function: ease-in;
+  position: relative;
+  cursor: move;
+  z-index: 1;
+  max-width: 500px;
+}
+
+
+.mat-card:hover {
+	border-left: solid 8px rgb(66, 114, 4);
+  transform: translateX(-1rem);
+}
+
+
+.mat-card-content {
+	max-width: 500px;
+}
+
+
+
+.content {
+	margin: 0 auto;
+	max-width: 1440px;
+}
+.float-right {
+	float: right!important;
+}
+
+.primary-text {
+	font-size: 14px;
+  text-align: left;
+}
+.primary-text + .secondary-text, .secondary-text + .primary-text, .optional-header + .primary-text {
+	margin-top: calc(18px/2/2); /* margin-top is 50% of the primary title font size. */
+  text-align: left;
+}
+.primary-title {
+	padding: 4px 4px;
+  text-align: left;
+}
+.primary-title + .supporting-text, .optional-header + .supporting-text {
+	padding-top: 0;
+}
+.primary-title .optional-header {
+	padding-left: 0;
+	padding-right: 0;
+  text-align: left;
+}
+.secondary-text .action-icon {
+	font-size: inherit;
+	margin: 0;
+	padding: 0;
+}
+.subhead, .secondary-text {
+	color: rgba(0,0,0,.54);
+	font-size: 14px;
+}
+.supporting-text {
+	font-size: 12px;
+	padding: 4px;
+  text-align: left;
+}
+.thumbnail {
+	-moz-border-radius: 50%;
+	-webkit-border-radius: 50%;
+	border-radius: 50%;
+	float: left;
+	height: 40px;
+	position: relative;
+	width: 40px;
+}
+.thumbnail img {
+	background-color: #fff;
+	-moz-border-radius: 50%;
+	-webkit-border-radius: 50%;
+	border-radius: 50%;
+	position: absolute;
+	top: 50%;
+	-moz-transform: translate(0, -50%);
+	-ms-transform: translate(0, -50%);
+	-o-transform: translate(0, -50%);
+	-webkit-transform: translate(0, -50%);
+	transform: translate(0, -50%);
+}
+
+.title {
+	font-size: 14px;
+	font-weight: 500;
+}
+.title + .subhead {
+	margin-top: calc(14px/2/2); /* margin-top is 50% of the title font size. */
+}
+.title, .primary-text {
+	line-height: 1.2;
+}
+

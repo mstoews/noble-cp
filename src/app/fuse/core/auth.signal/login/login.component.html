@@ -1,0 +1,130 @@
+<div class="w-full h-full lg:px-6 xl:px-0 bg-slate-600" id="hero">
+    @if(authService.user() === null){
+    <div class="relative z-20 mx-auto">
+
+        <mat-drawer class="w-full sm:w-4/5 md:w-3/4 h-screen" #drawer [opened]="false" mode="over" [position]="'end'"
+            [disableClose]="false">
+            @if(authService.user() === null) {
+            <div
+                class="flex flex-col sm:flex-row items-center md:items-start sm:justify-center md:justify-start flex-auto min-w-0">
+
+                <div
+                    class="md:flex md:items-center md:justify-end w-full sm:w-auto md:h-full md:w-1/2 py-8 px-4 sm:p-12 md:p-16 sm:rounded-2xl md:rounded-none sm:shadow md:shadow-none sm:bg-card">
+                    <div class="w-full max-w-80 sm:w-80 mx-auto sm:mx-0">
+                        <div class="w-30 border-2 border-gray-700">
+                            <img src="assets/images/logo/logo.png" alt="logo">
+                        </div>
+                        <span>
+                            <div class="mt-8 text-4xl font-extrabold tracking-tight leading-tight">Sign in</div>
+                        </span>
+                        <app-login-form [loginStatus]="loginService.status()"
+                            (login)="loginService.login$.next($event)" />
+                    </div>
+                </div>
+                <div
+                    class="relative hidden md:flex flex-auto items-center justify-center w-1/2 h-full p-16 lg:px-28 overflow-hidden bg-gray-800 dark:border-l">
+                    <svg class="absolute inset-0 pointer-events-none" viewBox="0 0 960 540" width="100%" height="100%"
+                        preserveAspectRatio="xMidYMax slice" xmlns="http://www.w3.org/2000/svg">
+                        <g class="text-gray-700 opacity-25" fill="none" stroke="currentColor" stroke-width="100">
+                            <circle r="234" cx="196" cy="23"></circle>
+                            <circle r="234" cx="790" cy="491"></circle>
+                        </g>
+                    </svg>
+
+                    <svg class="absolute -top-16 -right-16 text-gray-700" viewBox="0 0 220 192" width="220" height="192"
+                        fill="none">
+                        <defs>
+                            <pattern id="837c3e70-6c3a-44e6-8854-cc48c737b659" x="0" y="0" width="20" height="20"
+                                patternUnits="userSpaceOnUse">
+                                <rect x="0" y="0" width="4" height="4" fill="currentColor"></rect>
+                            </pattern>
+                        </defs>
+                        <rect width="220" height="192" fill="url(#837c3e70-6c3a-44e6-8854-cc48c737b659)"></rect>
+                    </svg>
+                    <div class="z-10 relative w-full max-w-2xl">
+                        <div class="text-7xl font-bold leading-none text-gray-100">
+                            <div>Welcome to</div>
+                            <div>Noble Ledger v0.0.4.11 Accounting and Management Application</div>
+                        </div>
+                        <div class="mt-6 text-lg tracking-tight leading-6 text-gray-400">
+                            Noble Ledger v0.0.4.11 is an accounting and property management application specifically
+                            developed for
+                            condominium management.
+                        </div>
+                    </div>
+                </div>
+            </div>
+            }
+        </mat-drawer>
+
+        <mat-drawer-container>
+
+
+            <mat-drawer-content>
+                <section id="hero" class="h-screen bg-white dark:bg-gray-700 m-2">
+                    <nav
+                        class="z-50 flex flex-col md:flex-row md:pl-10 items-center justify-between text-2xl text-gray-900">
+                        <button (click)="toggleDrawer()" class="visiable xl:visible">
+                            <img class="p-1.5 w-40 h-40 m-2 bg-slate-700 dark:bg-gray-300 rounded-lg shadow hover:caret-context-menu"
+                                src="assets/images/logo/logo.png" />
+                            <div class="p-1 text-3xl text-gray-900 dark:text-gray-100 font-garamond hover:border-b">
+                                Noble Ledger v0.0.4.11
+                            </div>
+                        </button>
+
+                        <div class="flex-row">
+                            <div class="hidden sm:flex flex-1 h-10 mr-4 text-3xl sm:space-x-6">
+                                <div class="text-gray-700 uppercase dark:text-gray-100 50 group font-garamond">
+                                    <button
+                                        class="p-2 -mt-5 uppercase rounded-lg dark:text-gray-200 font-garamond hover:border-b hover:text-gray-100 hover:bg-gray-600">
+                                        <a href="https://nobleledger-doc.com">Documentation</a>
+                                    </button>
+                                </div>
+
+                                <div class="text-gray-700 uppercase dark:text-gray-100 text-1xl group">
+                                    <button (click)="toggleDrawer()"
+                                        class="p-2 -mt-5 uppercase rounded-lg dark:text-gray-200 font-garamond hover:border-b hover:text-gray-100 hover:bg-gray-600">
+                                        login
+                                    </button>
+                                </div>
+
+                            </div>
+                        </div>
+                    </nav>
+                    <div class="container relative z-0 h-screen px-0 mx-auto max-w-8xl xl:px-0">
+                        <div class="flex flex-col md:flex-row">
+                            <div class="md:w-2/5 pb-10 md:pt-10 md:pl-10 lg:py-24 xl:py-24">
+                                <div
+                                    class="text-3xl text-center font-black leading-tight tracking-tighter  text-gray-900 uppercase lg:text-6xl xl:text-8xl dark:text-gray-200 md:text-left f-f-i md:w-7/12 text-heading-color">
+                                    Financial Management Accounting software
+                                </div>
+                                <h2
+                                    class="py-4 text-lg text-center text-gray-700 md:w-8/12 md:text-left md:py-8 dark:text-gray-200 lg:text-2xl">
+                                    Manage your accounting with automation and transparency
+                                </h2>
+                                <div class="flex justify-center w-full md:block">
+                                    <button
+                                        class="px-20 py-3 text-sm dark:bg-gray-300 dark:text-black bg-gray-600 text-white bg-gold-700 rounded-full hover:opacity-90 lg:py-5 lg:px-30 md:text-lg f-f-p">
+                                        <a href="https://nobleledger-doc.com/noble_ledger/landing_page/">Learn More</a>
+
+                                    </button>
+                                </div>
+                            </div>
+                            <div
+                                class="hidden -mt-4 md:flex items-center w-2/5 h-64 m-auto overflow-hidden sm:w-3/5 md:h-auto">
+                                <img class="p-.5 rounded-md w-[80%] overflow-hidden shadow bg-slate-700 dark:bg-gray-200"
+                                    src="assets/images/chess-2727443_1920.jpg" alt="avatar" role="img" />
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </mat-drawer-content>
+        </mat-drawer-container>
+    </div>
+    }
+</div>
+
+
+
+
+<!-- Header & Cards -->

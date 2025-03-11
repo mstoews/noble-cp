@@ -1,4 +1,4 @@
-import { AuthMode } from 'app/modules/auth/auth.enum'
+
 export const environment = {
   firebase: {
     apiKey: "AIzaSyAF8q2eq1tAhBO4PvCeNvVQR7oKy5LYUjw",
@@ -10,8 +10,10 @@ export const environment = {
     measurementId: "G-5BFE1ESWF1"
   },
   production: true,
-  useEmulators: false,
-  // baseUrl: "https://noble-server-omq5x5dxza-ue.a.run.app",
+  useEmulators: false,  
+  // baseUrl: "https://noble-server-1023314501312.us-east1.run.app/",
   baseUrl: "http://localhost:8080",
+  apiRetryCount: 0
+  
 };
 

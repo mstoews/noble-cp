@@ -1,5 +1,15 @@
-import { } from '@angular/common';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewEncapsulation } from '@angular/core';
+import {
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
+    Component,
+    Input,
+    OnChanges,
+    OnDestroy,
+    OnInit,
+    SimpleChanges,
+    ViewEncapsulation,
+    inject,
+} from '@angular/core';
 import { fuseAnimations } from '@fuse/animations';
 import { FuseNavigationService } from '@fuse/components/navigation/navigation.service';
 import { FuseNavigationItem } from '@fuse/components/navigation/navigation.types';
@@ -17,24 +27,24 @@ import { FuseHorizontalNavigationSpacerItemComponent } from './components/spacer
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
     exportAs: 'fuseHorizontalNavigation',
-    imports: [FuseHorizontalNavigationBasicItemComponent, FuseHorizontalNavigationBranchItemComponent, FuseHorizontalNavigationSpacerItemComponent]
+    imports: [
+        FuseHorizontalNavigationBasicItemComponent,
+        FuseHorizontalNavigationBranchItemComponent,
+        FuseHorizontalNavigationSpacerItemComponent,
+    ],
 })
-export class FuseHorizontalNavigationComponent implements OnChanges, OnInit, OnDestroy {
+export class FuseHorizontalNavigationComponent
+    implements OnChanges, OnInit, OnDestroy
+{
+    private _changeDetectorRef = inject(ChangeDetectorRef);
+    private _fuseNavigationService = inject(FuseNavigationService);
+    private _fuseUtilsService = inject(FuseUtilsService);
+
     @Input() name: string = this._fuseUtilsService.randomId();
     @Input() navigation: FuseNavigationItem[];
 
     onRefreshed: ReplaySubject<boolean> = new ReplaySubject<boolean>(1);
     private _unsubscribeAll: Subject<any> = new Subject<any>();
-
-    /**
-     * Constructor
-     */
-    constructor(
-        private _changeDetectorRef: ChangeDetectorRef,
-        private _fuseNavigationService: FuseNavigationService,
-        private _fuseUtilsService: FuseUtilsService,
-    ) {
-    }
 
     // -----------------------------------------------------------------------------------------------------
     // @ Lifecycle hooks

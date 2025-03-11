@@ -1,18 +1,31 @@
-
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
-import { ApplicationConfig, ErrorHandler, provideAppInitializer, provideExperimentalZonelessChangeDetection } from '@angular/core';
+import { ApplicationConfig, provideAppInitializer } from '@angular/core';
 import { LuxonDateAdapter } from '@angular/material-luxon-adapter';
 import { DateAdapter, MAT_DATE_FORMATS } from '@angular/material/core';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { PreloadAllModules, provideRouter, withInMemoryScrolling, withPreloading } from '@angular/router';
 import { provideFuse } from '@fuse';
 import { appRoutes } from 'app/app.routing';
-import { provideIcons } from 'app/core/icons/icons.provider';
-import { provideTransloco } from 'app/core/transloco/transloco.provider';
-import { mockApiServices } from 'app/mock-api';
+import { provideIcons } from 'app/fuse/core/icons/icons.provider';
+import { provideTransloco } from 'app/fuse/core/transloco/transloco.provider';
+import { MockApiService } from 'app/fuse/mock-api';
 import { environment } from 'environments/environment.prod';
 import { InjectionToken } from '@angular/core';
 import { authTokenInterceptor } from './auth.token.interceptor';
+import { provideState, provideStore } from '@ngrx/store';
+import { provideToastr } from 'ngx-toastr';
+import { provideEffects } from '@ngrx/effects';
+import { provideStoreDevtools } from '@ngrx/store-devtools';
+
+import * as fromPriority from 'app/state/kanban-state/priority/priority.state';
+import * as fromKanban from 'app/state/kanban-state/kanban/kanban.state';
+import * as fromPeriods from 'app/features/accounting/static/periods/periods.state';
+import * as fromSubtype from 'app/features/accounting/static/subtype/sub-type.state';
+import * as fromParty from 'app/features/accounting/static/party/party.state';
+import * as fromAccounts from 'app/features/accounting/static/accts/Accts.state'
+import * as fromGlType from 'app/features/accounting/static/gltype/gltype.state';
+import * as fromProjects from 'app/state/kanban-state/projects/projects.state';
+
 
 import {
   Firestore,
@@ -28,6 +41,40 @@ import {
 
 import { getAuth, connectAuthEmulator } from 'firebase/auth';
 import { initializeApp } from 'firebase/app';
+import { loggingInterceptor } from "./logging-interceptor";
+import { retryInterceptor } from "./retry-interceptor";
+
+
+import { JournalReducer } from './features/accounting/transactions/state/journal/Journal.Reducer';
+import { UsersReducer } from './state/users/Users.Reducer';
+
+// Effects 
+
+import { journalHeaderEffects } from './features/accounting/transactions/state/journal/Journal.Effects';
+import { journalTransactionEffects } from './state/journalTransactions/JournalTransactions.Effects';
+
+import { userEffects } from './state/users/Users.Effects';
+import { provideRouterStore } from '@ngrx/router-store';
+import { FundsReducer } from './features/accounting/static/funds/Funds.Reducer';
+
+
+import { UserService } from './services/user.service';
+
+import { periodEffects } from './features/accounting/static/periods/periods.effects';
+import { subTypeEffects } from './features/accounting/static/subtype/sub-type.effects';
+
+
+import { ApplicationService } from "./services/application.state.service";
+import { kanbanEffects } from './state/kanban-state/kanban/kanban.effects';
+import { partyEffects } from './features/accounting/static/party/party.effects';
+import { accountEffects } from './features/accounting/static/accts/Accts.effects';
+import { glTypeEffects } from './features/accounting/static/gltype/gltype.effects';
+import { projectEffects } from './state/kanban-state/projects/projects.effects';
+import { TemplateReducer } from './features/accounting/transactions/state/template/Template.Reducer';
+import { fundsEffects } from './features/accounting/static/funds/Funds.Effects';
+
+import { templateEffects } from './features/accounting/transactions/state/template/Template.Effects';
+
 
 const app = initializeApp(environment.firebase);
 
@@ -72,21 +119,20 @@ export const AUTH = new InjectionToken('Firebase auth', {
 });
 
 const CoreProviders = [
-  provideHttpClient(withInterceptors([authTokenInterceptor])),
-  provideAppInitializer((() => () => {})()),
+  provideHttpClient(withInterceptors([authTokenInterceptor, retryInterceptor])),
 ];
 
 
 export const appConfig: ApplicationConfig = {
   providers: [
+    ApplicationService,
     provideAnimations(),
-    provideExperimentalZonelessChangeDetection(),
+    provideAppInitializer(() => {
+      console.log('App initialized');
+
+    },),
     ...CoreProviders,
-    provideRouter(appRoutes,
-      withPreloading(PreloadAllModules),
-      withInMemoryScrolling({ scrollPositionRestoration: 'enabled' }),
-    ),
-    // Material Date Adapter
+    provideRouter(appRoutes, withPreloading(PreloadAllModules), withInMemoryScrolling({ scrollPositionRestoration: 'enabled' }),),
     {
       provide: DateAdapter,
       useClass: LuxonDateAdapter,
@@ -95,26 +141,61 @@ export const appConfig: ApplicationConfig = {
       provide: MAT_DATE_FORMATS,
       useValue: {
         parse: {
-          dateInput: 'D',
+          dateInput: 'DD/MM/YYYY',
         },
         display: {
-          dateInput: 'DDD',
-          monthYearLabel: 'LLL yyyy',
-          dateA11yLabel: 'DD',
-          monthYearA11yLabel: 'LLLL yyyy',
+          dateInput: 'DD/MM/YYYY',
+          monthYearLabel: 'MMM YYYY',
+          dateA11yLabel: 'LL',
+          monthYearA11yLabel: 'MMMM YYYY',
         },
       },
     },
-
-    // Transloco Config
     provideTransloco(),
+
+    /// NGRX Store and Effects
+    provideStore({
+      tpl: TemplateReducer,
+      jnl: JournalReducer,
+      fnd: FundsReducer,
+      usr: UsersReducer,      
+    }),
+
+    provideState(fromPriority.priorityFeature),
+    provideState(fromPeriods.periodsFeature),
+    provideState(fromSubtype.subtypeFeature),
+    provideState(fromParty.partyFeature),
+    provideState(fromKanban.kanbanFeature),
+    provideState(fromAccounts.accountsFeature),
+    provideState(fromGlType.gltypeFeature),
+    provideState(fromProjects.projectFeature),
+    provideEffects([
+      accountEffects,
+      periodEffects,
+      kanbanEffects,
+      templateEffects,
+      partyEffects,
+      journalHeaderEffects,
+      periodEffects,
+      fundsEffects,
+      subTypeEffects,
+      glTypeEffects,
+      projectEffects,
+    
+    ]),
+    provideRouterStore(),
+    provideStoreDevtools({ maxAge: 25 }),
+
+    // Toastr
+    provideToastr(),
+
     // Fuse
     provideIcons(),
     provideFuse({
-      // mockApi: {
-      //   delay: 0,
-      //   services: mockApiServices,
-      // },
+      mockApi: {
+        delay: 0,
+        service: MockApiService,
+      },
       fuse: {
         layout: 'dense',
         scheme: 'dark',
@@ -153,6 +234,8 @@ export const appConfig: ApplicationConfig = {
         ],
       },
     }),
+
   ],
 };
+
 

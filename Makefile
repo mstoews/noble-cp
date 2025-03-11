@@ -1,48 +1,58 @@
-## up: starts all containers in the background without forcing build
+.PHONY: help
+help:
+	@echo "make build - Build the site"
+	@echo "make deploy - Deploy the site"
+	@echo "make functions - Deploy the functions"
+	@echo "make start - Start the web app"
+	@echo "make open - Open the web app"
+	@echo "make add - Add to git and push to v18 -- required comment='your comment'"
+	@echo "make push - Push to git"
+	@echo "make help - Show this help message"
+
+.PHONY: build
 build:
 	@echo "Building site..."
 	ng build --optimization 
 	@echo "Finished started!"
 
-## up_build: stops docker-compose (if running), builds all projects and starts docker compose
+
+.PHONY: deploy
 deploy:
 	@echo "Deploy hosting"
 	ng build --optimization --aot
 	firebase deploy --only hosting
 
-## up_build: stops docker-compose (if running), builds all projects and starts docker compose
+
+.PHONY: functions
 functions:
 	@echo "Deploy functions"
 	firebase deploy --only functions
 
 
-## up_build: stops docker-compose (if running), builds all projects and starts docker compose
+.PHONY: start
 start:
 	@echo "start web app"
-	ng serve 
+	ng serve --watch=false --no-hmr
 
-## up_build: stops docker-compose (if running), builds all projects and starts docker compose
+
+.PHONY: open
 open:
 	@echo "start web app"
 	ng serve -o
 
-## up_build: stops docker-compose (if running), builds all projects and starts docker compose
-add:
-	@echo "push to git"
-	git add .
-	@echo "update"
-	git commit -m 'update repository'
-	@echo "push"
-	git push origin main
 
-## up_build: stops docker-compose (if running), builds all projects and starts docker compose
+.PHONY: add
+add:	
+	@echo "push to git\n" 
+	git add . 
+	@echo "update\n" 
+	git commit -m '$(comment)' 
+	@echo "push to v18\n" 
+	git push origin v18 --force 
+	
+.PHONY: push
 push:
 	@echo "push"
 	git push origin main
 
-gen:
-	@echo "prisma generate"
-	pnpm run gen
-
-## ng generate component acct-drop-down  --flat --inline-template=true --inline-style=true
 

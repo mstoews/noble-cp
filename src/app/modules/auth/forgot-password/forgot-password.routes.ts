@@ -3,7 +3,7 @@ import { AuthForgotPasswordComponent } from 'app/modules/auth/forgot-password/fo
 
 export default [
     {
-        path     : '',
+        path: '',
         component: AuthForgotPasswordComponent,
     },
 ] as Routes;

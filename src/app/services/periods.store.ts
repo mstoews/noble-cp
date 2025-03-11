@@ -11,7 +11,8 @@ import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { exhaustMap, pipe, switchMap, tap } from 'rxjs';
 import { computed, inject } from '@angular/core';
 import { tapResponse } from '@ngrx/operators';
-import { IPeriod, PeriodsService } from './periods.service';
+import { PeriodsService } from './periods.service';
+import { IPeriod } from 'app/models/period';
 
 
 export interface PeriodStateInterface {
@@ -27,17 +28,17 @@ export const PeriodStore = signalStore(
     isLoading: false,
   }),
   withComputed((state) => ({
-    selected: computed(() => state.periods().filter((t) => state.periods()[t.period_id])),
+    selected: computed(() => state.periods().filter((t) => state.periods()[t.period])),
   })),
   withMethods((state, periodService = inject(PeriodsService)) => ({       
     removePeriod: rxMethod<IPeriod>(
       pipe(
         switchMap((value) => {
           patchState(state, { isLoading: true });
-          return periodService.delete(value.period_id).pipe(
+          return periodService.delete(value.period).pipe(
             tapResponse({
               next: () => {
-                patchState(state, { periods: state.periods().filter((prd) => prd.period_id !== value.period_id) });
+                patchState(state, { periods: state.periods().filter((prd) => prd.period !== value.period) });
               },
               error: console.error,
               finalize: () => patchState(state, { isLoading: false }),

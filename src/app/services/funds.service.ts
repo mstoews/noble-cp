@@ -1,15 +1,9 @@
 import { Injectable, computed, inject, signal } from '@angular/core';
 import { Subject, shareReplay } from 'rxjs';
-
-import { AUTH } from 'app/app.config';
 import { HttpClient } from '@angular/common/http';
 import { IFunds } from '../models';
 import { environment } from 'environments/environment.prod';
 
-interface FundState {
-  funds: IFunds[];
-  error: string | null;
-}
 
 
 @Injectable({
@@ -17,72 +11,37 @@ interface FundState {
 })
 export class FundsService {
   private httpClient = inject(HttpClient);
-  private authService = inject(AUTH);
   private baseUrl = environment.baseUrl;
 
   error$ = new Subject<string>();
 
-  funds = computed(() => this.state().funds);
-  error = computed(() => this.state().error);
-
-  private state = signal<FundState>({
-    funds: [],
-    error: null,
-  });
-
   create(t: IFunds) {
-    var url = this.baseUrl + '/v1/type_create';
-    var email = this.authService.currentUser.email;
-    const dDate = new Date();
-
-    var data: IFunds = {
-      id: t.id,
-      fund: t.fund,
-      description: t.description,
-      create_date: t.create_date,
-      create_user: t.create_user,
-      update_date: t.update_date,
-      update_user: t.update_user
-
-    }
-
-    return this.httpClient.post<IFunds>(url, data).pipe(
-      shareReplay())
+    var url = this.baseUrl + '/v1/fund_create';
+    return this.httpClient.post<IFunds>(url, t).pipe(shareReplay({ bufferSize: 1, refCount: true }));
   }
-
 
   // Read
   read() {
     var url = this.baseUrl + '/v1/funds_list';
-    return this.httpClient.get<IFunds[]>(url).pipe(
-      shareReplay())
+    return this.httpClient.get<IFunds[]>(url).pipe(shareReplay());
+  }
+
+  readDropdown() {
+    var url = this.baseUrl + '/v1/funds_dropdown';
+    return this.httpClient.get<IFunds[]>(url).pipe(shareReplay());
   }
 
   // Update
   update(t: IFunds) {
-    var url = this.baseUrl + '/v1/fund_create';
-
-    var data: IFunds = {
-      id: t.id,
-      fund: t.fund,
-      description: t.description,
-      create_date: t.create_date,
-      create_user: t.create_user,
-      update_date: t.update_date,
-      update_user: t.update_user
-    }
-    return this.httpClient.post<IFunds>(url, data).pipe(
-      shareReplay())
+    var url = this.baseUrl + '/v1/fund_update';
+    console.debug('update', JSON.stringify(t));
+    return this.httpClient.post<IFunds>(url, t).pipe(shareReplay({ bufferSize: 1, refCount: true }));
   }
 
   // Delete
   delete(id: string) {
-    var data = {
-      type: id
-    }
-    var url = this.baseUrl + '/v1/fund_delete';
-    return this.httpClient.post<IFunds[]>(url, data).pipe(
-      shareReplay())
+    var url = this.baseUrl + `/v1/fund_delete/'{id}'`;
+    return this.httpClient.delete<IFunds[]>(url).pipe(shareReplay({ bufferSize: 1, refCount: true }));
   }
 
 }

@@ -1,20 +1,20 @@
-import { I18nPluralPipe, } from '@angular/common';
-import { Component, inject, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
+import { I18nPluralPipe } from '@angular/common';
+import { Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
-import { AuthService } from 'app/modules/auth/auth.service';
-import { finalize, Subject, takeUntil, takeWhile, tap, timer } from 'rxjs';
+import { AuthService } from 'app/fuse/core/auth/auth.service';
+import { Subject, finalize, takeUntil, takeWhile, tap, timer } from 'rxjs';
 
 @Component({
     selector: 'auth-sign-out',
     templateUrl: './sign-out.component.html',
     encapsulation: ViewEncapsulation.None,
-    imports: [RouterLink, I18nPluralPipe]
+    imports: [RouterLink, I18nPluralPipe],
 })
 export class AuthSignOutComponent implements OnInit, OnDestroy {
     countdown: number = 5;
     countdownMapping: any = {
         '=1': '# second',
-        'other': '# seconds',
+        other: '# seconds',
     };
     private _unsubscribeAll: Subject<any> = new Subject<any>();
 
@@ -23,9 +23,8 @@ export class AuthSignOutComponent implements OnInit, OnDestroy {
      */
     constructor(
         private _authService: AuthService,
-        private _router: Router,
-    ) {
-    }
+        private _router: Router
+    ) { }
 
     // -----------------------------------------------------------------------------------------------------
     // @ Lifecycle hooks
@@ -36,17 +35,17 @@ export class AuthSignOutComponent implements OnInit, OnDestroy {
      */
     ngOnInit(): void {
         // Sign out
-        this._authService.logout();
+        this._authService.signOut();
 
         // Redirect after the countdown
         timer(1000, 1000)
             .pipe(
                 finalize(() => {
-                    this._router.navigate(['auth/login']);
+                    this._router.navigate(['sign-in']);
                 }),
                 takeWhile(() => this.countdown > 0),
                 takeUntil(this._unsubscribeAll),
-                tap(() => this.countdown--),
+                tap(() => this.countdown--)
             )
             .subscribe();
     }

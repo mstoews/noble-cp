@@ -1,11 +1,9 @@
-import { } from '@angular/common';
-import { Component, OnInit, ViewChild, ViewEncapsulation, effect, inject } from '@angular/core';
-
+import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import {
-    FormBuilder,
     FormsModule,
     NgForm,
     ReactiveFormsModule,
+    UntypedFormBuilder,
     UntypedFormGroup,
     Validators,
 } from '@angular/forms';
@@ -18,42 +16,28 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { fuseAnimations } from '@fuse/animations';
 import { FuseAlertComponent, FuseAlertType } from '@fuse/components/alert';
-
-import { AuthService } from '../auth.service';
-import { LoginService } from 'app/core/auth.signal/login/data-access/login.service';
-
-var components = [
-    RouterLink,
-
-    FuseAlertComponent,
-    FormsModule,
-    ReactiveFormsModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatButtonModule,
-    MatIconModule,
-    MatCheckboxModule,
-    MatProgressSpinnerModule,
-    MatProgressSpinnerModule
-];
+import { AuthService } from 'app/fuse/core/auth/auth.service';
 
 @Component({
     selector: 'auth-sign-in',
     templateUrl: './sign-in.component.html',
     encapsulation: ViewEncapsulation.None,
     animations: fuseAnimations,
-    imports: [...components],
-    providers: [AuthService, LoginService]
+    imports: [
+        RouterLink,
+        FuseAlertComponent,
+        FormsModule,
+        ReactiveFormsModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatButtonModule,
+        MatIconModule,
+        MatCheckboxModule,
+        MatProgressSpinnerModule,
+    ],
 })
 export class AuthSignInComponent implements OnInit {
     @ViewChild('signInNgForm') signInNgForm: NgForm;
-
-    public _activatedRoute = inject(ActivatedRoute);
-    public _loginService = inject(LoginService);
-    public _authService = inject(AuthService);
-    private _router = inject(Router);
-    private _formBuilder = inject(FormBuilder);
-
 
     alert: { type: FuseAlertType; message: string } = {
         type: 'success',
@@ -62,24 +46,43 @@ export class AuthSignInComponent implements OnInit {
     signInForm: UntypedFormGroup;
     showAlert: boolean = false;
 
-    constructor() {
-        effect(() => {
-            if (this._authService.user()) {
-                this._router.navigate(['home']);
-            }
-        });
-    }
+    /**
+     * Constructor
+     */
+    constructor(
+        private _activatedRoute: ActivatedRoute,
+        private _authService: AuthService,
+        private _formBuilder: UntypedFormBuilder,
+        private _router: Router
+    ) { }
 
+    // -----------------------------------------------------------------------------------------------------
+    // @ Lifecycle hooks
+    // -----------------------------------------------------------------------------------------------------
+
+    /**
+     * On init
+     */
     ngOnInit(): void {
         // Create the form
         this.signInForm = this._formBuilder.group({
-            email: ['', [Validators.required, Validators.email]],
-            password: ['', Validators.required],
+            email: [
+                'hughes.brian@company.com',
+                [Validators.required, Validators.email],
+            ],
+            password: ['admin', Validators.required],
             rememberMe: [''],
         });
     }
 
-    async signIn(): Promise<void> {
+    // -----------------------------------------------------------------------------------------------------
+    // @ Public methods
+    // -----------------------------------------------------------------------------------------------------
+
+    /**
+     * Sign in
+     */
+    signIn(): void {
         // Return if the form is invalid
         if (this.signInForm.invalid) {
             return;
@@ -91,16 +94,37 @@ export class AuthSignInComponent implements OnInit {
         // Hide the alert
         this.showAlert = false;
 
-        const credentials = {
-            email: this.signInForm.value.email,
-            password: this.signInForm.value.password,
-        };
+        // Sign in
+        this._authService.signIn(this.signInForm.value).subscribe(
+            () => {
+                // Set the redirect url.
+                // The '/signed-in-redirect' is a dummy url to catch the request and redirect the user
+                // to the correct page after a successful sign in. This way, that url can be set via
+                // routing file and we don't have to touch here.
+                const redirectURL =
+                    this._activatedRoute.snapshot.queryParamMap.get(
+                        'redirectURL'
+                    ) || '/signed-in-redirect';
 
-        this._authService.login(credentials).subscribe((Credentials) => {
-            console.debug(Credentials);
-            // Navigate to the redirect url
-            // this._router.navigateByUrl(this._activatedRoute.snapshot.queryParams.redirectUrl || 'home');
-        });
+                // Navigate to the redirect url
+                this._router.navigateByUrl(redirectURL);
+            },
+            (response) => {
+                // Re-enable the form
+                this.signInForm.enable();
+
+                // Reset the form
+                this.signInNgForm.resetForm();
+
+                // Set the alert
+                this.alert = {
+                    type: 'error',
+                    message: 'Wrong email or password',
+                };
+
+                // Show the alert
+                this.showAlert = true;
+            }
+        );
     }
-
 }

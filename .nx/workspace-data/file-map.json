@@ -1,0 +1,3999 @@
+{
+  "version": "6.0",
+  "nxVersion": "20.1.2",
+  "pathMappings": {},
+  "nxJsonPlugins": [],
+  "fileMap": {
+    "nonProjectFiles": [
+      {
+        "file": "src/@fuse/components/navigation/horizontal/components/branch/branch.component.html",
+        "hash": "3249881781530844962"
+      },
+      {
+        "file": "src/app/app.component.html",
+        "hash": "8359444196553642091"
+      },
+      {
+        "file": "src/app/services/transaction.service.ts",
+        "hash": "13838631636948300072"
+      },
+      {
+        "file": "src/app/modules/admin/academy/details/details.component.html",
+        "hash": "535357334177600865"
+      },
+      {
+        "file": "src/app/modules/admin/image-maintenance/products-image-selection/image-selection.component.html",
+        "hash": "9669000401495853832"
+      },
+      {
+        "file": "src/app/mock-api/apps/academy/api.ts",
+        "hash": "4990193996097189195"
+      },
+      {
+        "file": "src/app/modules/pages/pricing/modern/modern.component.ts",
+        "hash": "13435395297136239266"
+      },
+      {
+        "file": "src/app/modules/chat/chat.component.ts",
+        "hash": "18007216287379233748"
+      },
+      {
+        "file": "src/app/modules/lightbox/lightbox-overlay.component.ts",
+        "hash": "8258685026452327126"
+      },
+      {
+        "file": "src/app/modules/user/user-controls/lemon-rater/lemon-rater.component.ts",
+        "hash": "16353804584830104744"
+      },
+      {
+        "file": "src/app/modules/chat/contact-info/contact-info.component.ts",
+        "hash": "14506117087389911899"
+      },
+      {
+        "file": "src/styles/styles.css.map",
+        "hash": "5072900000453362493"
+      },
+      {
+        "file": "src/@fuse/lib/mock-api/mock-api.service.ts",
+        "hash": "631142304952411147"
+      },
+      {
+        "file": "src/app/modules/reporting/distributed-ledger/journal-detail/journal-detail.component.ts",
+        "hash": "16047889649214253513"
+      },
+      {
+        "file": "src/app/modules/user/user-controls/field-error/field-error.directive.spec.ts",
+        "hash": "952367169849540067"
+      },
+      {
+        "file": "src/assets/images/cards/30-640x480.jpg",
+        "hash": "1316697886473624736"
+      },
+      {
+        "file": "src/assets/user/02.jpg",
+        "hash": "15930030496960995828"
+      },
+      {
+        "file": "src/app/common/simple-dialog.component.ts",
+        "hash": "10458791987167408937"
+      },
+      {
+        "file": "src/app/layout/common/notifications/notifications.types.ts",
+        "hash": "12388792921783829351"
+      },
+      {
+        "file": "src/app/mock-api/common/messages/api.ts",
+        "hash": "6927857856340765395"
+      },
+      {
+        "file": "src/app/layout/common/search/search.component.html",
+        "hash": "9515255320434243636"
+      },
+      {
+        "file": ".gitignore",
+        "hash": "16477499132902451147"
+      },
+      {
+        "file": "src/assets/images/cards/32-640x480.jpg",
+        "hash": "3453216424172596092"
+      },
+      {
+        "file": "src/assets/icons/heroicons-solid.svg",
+        "hash": "4523901164501953759"
+      },
+      {
+        "file": "src/assets/styles/splash-screen.css",
+        "hash": "6147941835564940017"
+      },
+      {
+        "file": "codegen.yml",
+        "hash": "6183528230169362488"
+      },
+      {
+        "file": "src/@fuse/pipes/find-by-key/find-by-key.pipe.ts",
+        "hash": "4721766216471774579"
+      },
+      {
+        "file": "src/app/modules/kanban/task/tasks.component.ts",
+        "hash": "8108209660585886299"
+      },
+      {
+        "file": "src/assets/images/avatars/male-01.jpg",
+        "hash": "4240758940380011584"
+      },
+      {
+        "file": "src/app/modules/kanban/kanban/kanban-menubar/component.html",
+        "hash": "4531639785264464892"
+      },
+      {
+        "file": "src/app/layout/common/quick-chat/quick-chat.component.ts",
+        "hash": "7986585613014412492"
+      },
+      {
+        "file": "src/@fuse/components/alert/alert.service.ts",
+        "hash": "12842725138123179604"
+      },
+      {
+        "file": "tsconfig.json",
+        "hash": "8388563145551927997"
+      },
+      {
+        "file": "src/styles/styles.scss",
+        "hash": "8468405833574277787"
+      },
+      {
+        "file": "src/app/modules/user/profile/profile.component.css.map",
+        "hash": "7541544023566302811"
+      },
+      {
+        "file": "src/app/modules/user/name-input/name-input.component.ts",
+        "hash": "12288230938179072670"
+      },
+      {
+        "file": "src/assets/images/avatars/male-12.jpg",
+        "hash": "6875787727363448458"
+      },
+      {
+        "file": "src/app/graphql.provider.ts",
+        "hash": "9193549865480071250"
+      },
+      {
+        "file": "src/app/modules/admin/finance/finance.service.ts",
+        "hash": "16676283042377063706"
+      },
+      {
+        "file": "src/assets/img/dnd/ic-upload-file.svg",
+        "hash": "10826961520090650387"
+      },
+      {
+        "file": "src/assets/images/cards/36-640x480.jpg",
+        "hash": "9205870543814491716"
+      },
+      {
+        "file": "src/app/modules/auth/cache.service.ts",
+        "hash": "1225043671057184796"
+      },
+      {
+        "file": "src/assets/images/cards/27-640x480.jpg",
+        "hash": "15706763019757146591"
+      },
+      {
+        "file": "src/assets/images/avatars/female-20.jpg",
+        "hash": "15782982823302951023"
+      },
+      {
+        "file": "src/app/modules/pages/coming-soon/classic/coming-soon.component.ts",
+        "hash": "1458146801875544534"
+      },
+      {
+        "file": "src/app/modules/drag-n-drop/drag-n-drop.component.css.map",
+        "hash": "12391069922797085586"
+      },
+      {
+        "file": "src/@fuse/components/navigation/vertical/components/collapsable/collapsable.component.ts",
+        "hash": "12862289050274442819"
+      },
+      {
+        "file": "src/app/layout/layout.component.html",
+        "hash": "16005831965114086283"
+      },
+      {
+        "file": "src/@fuse/components/alert/public-api.ts",
+        "hash": "11553072028952109526"
+      },
+      {
+        "file": "src/assets/images/cards/28-640x480.jpg",
+        "hash": "1222706250654119997"
+      },
+      {
+        "file": "src/@fuse/components/masonry/masonry.component.html",
+        "hash": "7967460945887639115"
+      },
+      {
+        "file": "src/index.html",
+        "hash": "6894726287768038151"
+      },
+      {
+        "file": "src/assets/images/logo/logo-text-on-dark.ico",
+        "hash": "16214490060721475683"
+      },
+      {
+        "file": "src/app/modules/auth/register/register.component.spec.ts",
+        "hash": "3244421341483603138"
+      },
+      {
+        "file": "src/app/modules/admin/dashboard/project.component.ts",
+        "hash": "2759302967696163366"
+      },
+      {
+        "file": "src/@fuse/directives/scrollbar/scrollbar.types.ts",
+        "hash": "4689882073998950223"
+      },
+      {
+        "file": "src/app/modules/landing/landing.component.ts",
+        "hash": "14130958142467258123"
+      },
+      {
+        "file": "src/@fuse/styles/main.scss",
+        "hash": "710823993861106595"
+      },
+      {
+        "file": "src/@fuse/components/navigation/vertical/components/divider/divider.component.ts",
+        "hash": "13755298261962742746"
+      },
+      {
+        "file": "src/_redirects",
+        "hash": "3183170139218197972"
+      },
+      {
+        "file": "src/assets/images/chess-2727443_1920.jpg",
+        "hash": "11888399601885751821"
+      },
+      {
+        "file": "src/app/mock-api/common/shortcuts/data.ts",
+        "hash": "11502550898310131213"
+      },
+      {
+        "file": "src/@fuse/components/navigation/vertical/vertical.component.scss",
+        "hash": "8203433230470624840"
+      },
+      {
+        "file": "firestore.indexes.json",
+        "hash": "2048261650710551311"
+      },
+      {
+        "file": "src/app/modules/reporting/balance-sheet/balance-sheet.component.html",
+        "hash": "12190952541104695353"
+      },
+      {
+        "file": "src/app/layout/common/search/search.component.ts",
+        "hash": "9552873990452403586"
+      },
+      {
+        "file": "src/app/spinner.interceptor.ts",
+        "hash": "6299845945803491325"
+      },
+      {
+        "file": "src/app/mock-api/pages/activities/data.ts",
+        "hash": "8866211089083035194"
+      },
+      {
+        "file": "src/app/modules/pages/invoice/printable/compact/compact.component.ts",
+        "hash": "10550075476631171802"
+      },
+      {
+        "file": "src/app/modules/kanban/task/tasks.component.css.map",
+        "hash": "3717315252494641033"
+      },
+      {
+        "file": "src/app/layout/common/languages/languages.component.ts",
+        "hash": "15991661156517798101"
+      },
+      {
+        "file": "src/app/layout/layouts/horizontal/enterprise/enterprise.component.ts",
+        "hash": "16581590089860428545"
+      },
+      {
+        "file": "src/app/layout/layouts/empty/empty.component.html",
+        "hash": "13910512760907277530"
+      },
+      {
+        "file": "src/app/layout/layouts/empty/empty.component.ts",
+        "hash": "11166867480328276294"
+      },
+      {
+        "file": "src/app/modules/accounting/transactions/ar-transactions/ar-listing.component.html",
+        "hash": "2744593350635221029"
+      },
+      {
+        "file": "src/app/modules/accounting/accts/periods/periods.component.ts",
+        "hash": "14368711047121202670"
+      },
+      {
+        "file": "src/@fuse/version/fuse-version.ts",
+        "hash": "5023857108142141113"
+      },
+      {
+        "file": "src/@fuse/styles/tailwind.css.map",
+        "hash": "10017808465365907318"
+      },
+      {
+        "file": "src/app/modules/kanban/schedule/schedule.css",
+        "hash": "9109474614549914423"
+      },
+      {
+        "file": "src/@fuse/components/alert/alert.component.css",
+        "hash": "2889514342880720166"
+      },
+      {
+        "file": "src/app/modules/reporting/expense/expense.routes.ts",
+        "hash": "12165535688634975942"
+      },
+      {
+        "file": "src/app/modules/reporting/report-test.component.html",
+        "hash": "7477342442984395356"
+      },
+      {
+        "file": "src/assets/images/cards/07-320x200.jpg",
+        "hash": "7960128927943218609"
+      },
+      {
+        "file": "src/app/modules/reporting/financial-statement/statement-totals.component.ts",
+        "hash": "18001673009537439460"
+      },
+      {
+        "file": "src/@fuse/components/navigation/vertical/styles/appearances/default.scss",
+        "hash": "8523351344531872540"
+      },
+      {
+        "file": "src/app/modules/auth/sign-out/sign-out.routes.ts",
+        "hash": "9401620872453119991"
+      },
+      {
+        "file": "src/app/mock-api/apps/mailbox/data.ts",
+        "hash": "10241401349946623137"
+      },
+      {
+        "file": "src/app/modules/navigation/data.ts",
+        "hash": "1257853769664851282"
+      },
+      {
+        "file": "src/@fuse/styles/overrides/perfect-scrollbar.scss",
+        "hash": "6932108278740157910"
+      },
+      {
+        "file": "src/@fuse/services/utils/index.ts",
+        "hash": "10592195664652477185"
+      },
+      {
+        "file": "src/app/modules/auth/register/utils/password-matches.ts",
+        "hash": "9310506740016637872"
+      },
+      {
+        "file": "src/app/layout/layouts/horizontal/centered/centered.component.html",
+        "hash": "14165669789391078070"
+      },
+      {
+        "file": "src/app/modules/reporting/reporting-menubar/component.html",
+        "hash": "5947547545406288462"
+      },
+      {
+        "file": "src/@fuse/lib/mock-api/mock-api.interceptor.ts",
+        "hash": "5532278921982632092"
+      },
+      {
+        "file": "src/app/modules/finance/finance.service.ts",
+        "hash": "16676283042377063706"
+      },
+      {
+        "file": "src/@fuse/styles/overrides/highlightjs.css",
+        "hash": "10359372907912121449"
+      },
+      {
+        "file": "src/app/modules/reporting/report-test.component.ts",
+        "hash": "17372366732395404579"
+      },
+      {
+        "file": "src/app/services/party.service.ts",
+        "hash": "11051784461811249781"
+      },
+      {
+        "file": "src/app/layout/layouts/horizontal/material/material.component.ts",
+        "hash": "11155338222221962422"
+      },
+      {
+        "file": "src/assets/images/cards/17-640x480.jpg",
+        "hash": "1529235831340158404"
+      },
+      {
+        "file": "src/app/modules/pages/pricing/modern/modern.component.html",
+        "hash": "8037603542897398200"
+      },
+      {
+        "file": "src/app/layout/common/quick-chat/quick-chat.component.css.map",
+        "hash": "6303666936578971359"
+      },
+      {
+        "file": "src/app/modules/admin/analytics/analytics.routes.ts",
+        "hash": "17510815161551516840"
+      },
+      {
+        "file": "src/@fuse/lib/mock-api/index.ts",
+        "hash": "5262689304868450722"
+      },
+      {
+        "file": "src/splash-screen.css",
+        "hash": "6147941835564940017"
+      },
+      {
+        "file": "src/assets/images/avatars/female-10.jpg",
+        "hash": "1750801511741552471"
+      },
+      {
+        "file": "src/app/modules/accounting/transactions/wizard/wizard-update.component.ts",
+        "hash": "3066916243105037826"
+      },
+      {
+        "file": "src/@fuse/directives/scrollbar/scrollbar.directive.ts",
+        "hash": "800631289580761307"
+      },
+      {
+        "file": "src/app/services/party.store.ts",
+        "hash": "13436781531708897979"
+      },
+      {
+        "file": "src/@fuse/components/navigation/vertical/components/basic/basic.component.ts",
+        "hash": "4773815661488102708"
+      },
+      {
+        "file": "src/assets/images/avatars/male-03.jpg",
+        "hash": "16190605272004688996"
+      },
+      {
+        "file": "src/@fuse/components/navigation/vertical/styles/appearances/thin.scss",
+        "hash": "5281146856569124847"
+      },
+      {
+        "file": "src/app/modules/admin/academy/academy.component.ts",
+        "hash": "2754710806669779352"
+      },
+      {
+        "file": "src/app/modules/drag-n-drop/drag-n-drop.component.html",
+        "hash": "11036713987697261170"
+      },
+      {
+        "file": "src/assets/images/cards/12-512x512.jpg",
+        "hash": "15488639658130155754"
+      },
+      {
+        "file": "src/app/mock-api/ui/icons/api.ts",
+        "hash": "13457808435408088787"
+      },
+      {
+        "file": "src/app/app.component.css.map",
+        "hash": "4089248704679427786"
+      },
+      {
+        "file": "src/app/mock-api/apps/ecommerce/inventory/data.ts",
+        "hash": "1733763968089328043"
+      },
+      {
+        "file": "src/app/services/local-storage.service.ts",
+        "hash": "1229470462154399577"
+      },
+      {
+        "file": "src/app/common/loading-overlay.component.ts",
+        "hash": "6826604430984421110"
+      },
+      {
+        "file": "src/app/services/team.service.ts",
+        "hash": "2190628130811836889"
+      },
+      {
+        "file": "src/app/modules/analysis/analysis.component.ts",
+        "hash": "2486809100573797226"
+      },
+      {
+        "file": "src/@fuse/components/fullscreen/index.ts",
+        "hash": "15439082091470835798"
+      },
+      {
+        "file": "src/environments/environment.prod.ts",
+        "hash": "17510292151548843548"
+      },
+      {
+        "file": "src/app/core/icons/icons.provider.ts",
+        "hash": "8088507908569126014"
+      },
+      {
+        "file": "src/app/modules/reporting/reporting-panel.component.ts",
+        "hash": "4059451921098953837"
+      },
+      {
+        "file": "src/app/modules/kanban/kanban-panel.component.ts",
+        "hash": "548839282043004838"
+      },
+      {
+        "file": "src/app/modules/auth/sign-in/sign-in.component.html",
+        "hash": "6952783400984959737"
+      },
+      {
+        "file": "src/app/modules/admin/academy/academy.types.ts",
+        "hash": "716950654513826453"
+      },
+      {
+        "file": "src/app/layout/common/messages/messages.types.ts",
+        "hash": "14380652441188150662"
+      },
+      {
+        "file": "firebase.json",
+        "hash": "14035195737458658731"
+      },
+      {
+        "file": "src/app/modules/kanban/task/tasks.component.css",
+        "hash": "9277574516309722105"
+      },
+      {
+        "file": "src/app/core/navigation/navigation.types.ts",
+        "hash": "750602309458566038"
+      },
+      {
+        "file": "src/app/modules/kanban/task/tasks.component.scss",
+        "hash": "8246471588143744640"
+      },
+      {
+        "file": "src/app/modules/kanban/kanban.service.ts",
+        "hash": "4468169648157264352"
+      },
+      {
+        "file": "src/assets/img/dnd/ic-delete-file.svg",
+        "hash": "12316601941794722648"
+      },
+      {
+        "file": "src/app/modules/admin/image-maintenance/image-edit/image-mgt-edit.component.css",
+        "hash": "3244421341483603138"
+      },
+      {
+        "file": "src/app/models/products/index.ts",
+        "hash": "8441152368498336922"
+      },
+      {
+        "file": "src/app/modules/budget/update/budget-update.component.ts",
+        "hash": "14220011547445607877"
+      },
+      {
+        "file": "src/app/animations.ts",
+        "hash": "3110407298562431999"
+      },
+      {
+        "file": "src/app/modules/reporting/expense/expense-rpt.component.html",
+        "hash": "3091220455655672327"
+      },
+      {
+        "file": "src/app/models/party/index.ts",
+        "hash": "10303224598405484192"
+      },
+      {
+        "file": "src/app/modules/reporting/financial-statement/balance-sheet-statement-rpt-routes.ts",
+        "hash": "16130466414206444685"
+      },
+      {
+        "file": "src/app/modules/kanban/kanban/kanban-menubar/component.css",
+        "hash": "6844455649544807932"
+      },
+      {
+        "file": "src/app/layout/common/messages/messages.service.ts",
+        "hash": "17822721426496502518"
+      },
+      {
+        "file": "src/@fuse/animations/expand-collapse.ts",
+        "hash": "3143931169254262517"
+      },
+      {
+        "file": "src/app/shared/interfaces/credentials.ts",
+        "hash": "3997400033658264085"
+      },
+      {
+        "file": "src/@fuse/components/navigation/vertical/vertical.component.css.map",
+        "hash": "7140435585870449338"
+      },
+      {
+        "file": "src/app/modules/reporting/reporting.routes.ts",
+        "hash": "2990737340205231125"
+      },
+      {
+        "file": "src/assets/images/cards/22-640x480.jpg",
+        "hash": "3227548859825871403"
+      },
+      {
+        "file": "src/@fuse/services/config/config.service.ts",
+        "hash": "6063873773627208169"
+      },
+      {
+        "file": "src/assets/images/avatars/female-02.jpg",
+        "hash": "8468656640665950916"
+      },
+      {
+        "file": "src/app/modules/accounting/accts/types/types.components.routes.ts",
+        "hash": "2124406528767330142"
+      },
+      {
+        "file": "src/assets/images/flags/TR.svg",
+        "hash": "949733221512496308"
+      },
+      {
+        "file": "src/app/modules/drag-n-drop/loaddnd/routes.ts",
+        "hash": "4416941495598916341"
+      },
+      {
+        "file": "src/app/models/team/index.ts",
+        "hash": "17986952238791634478"
+      },
+      {
+        "file": "src/app/modules/pages/pricing/single/single.component.ts",
+        "hash": "9752585135365267212"
+      },
+      {
+        "file": "src/app/core/auth.signal/login/data-access/login.service.ts",
+        "hash": "1016318429506297859"
+      },
+      {
+        "file": "src/app/services/roles.store.ts",
+        "hash": "12605743403504718030"
+      },
+      {
+        "file": "src/app/modules/kanban/schedule/schedule.component.html",
+        "hash": "18032622121680418334"
+      },
+      {
+        "file": "src/app/modules/landing/landing.routing.ts",
+        "hash": "6144876405173056136"
+      },
+      {
+        "file": "src/@fuse/styles/components/input.scss",
+        "hash": "340467886774754395"
+      },
+      {
+        "file": "src/@fuse/components/navigation/vertical/styles/appearances/default.css.map",
+        "hash": "1325368982136424184"
+      },
+      {
+        "file": "src/app/modules/lightbox/lightbox-config.service.ts",
+        "hash": "15968731487906018481"
+      },
+      {
+        "file": "src/app/modules/accounting/transactions/gl-transactions/journal-listing.component.html",
+        "hash": "5363418444368012099"
+      },
+      {
+        "file": "src/@fuse/components/loading-bar/loading-bar.component.css",
+        "hash": "9105751975091925211"
+      },
+      {
+        "file": "src/assets/images/cards/33-640x480.jpg",
+        "hash": "11610848512148071434"
+      },
+      {
+        "file": "src/app/modules/admin/finance/finance.component.html",
+        "hash": "11397530637615875187"
+      },
+      {
+        "file": "src/app/page-not-found.component.ts",
+        "hash": "14772239026854075763"
+      },
+      {
+        "file": "src/app/modules/chat/empty-conversation/empty-conversation.component.html",
+        "hash": "14084936826457538230"
+      },
+      {
+        "file": "src/app/mock-api/apps/notes/api.ts",
+        "hash": "10618309154997872185"
+      },
+      {
+        "file": "src/app/modules/lightbox/index.ts",
+        "hash": "4348896076568235014"
+      },
+      {
+        "file": "src/app/core/transloco/transloco.provider.ts",
+        "hash": "1032844190021321158"
+      },
+      {
+        "file": "src/@fuse/validators/validators.ts",
+        "hash": "14091741134543679219"
+      },
+      {
+        "file": "src/app/layout/layouts/vertical/compact/compact.component.ts",
+        "hash": "8220287459238110872"
+      },
+      {
+        "file": "src/@fuse/components/card/card.component.html",
+        "hash": "7013635213571323997"
+      },
+      {
+        "file": "src/main.ts",
+        "hash": "7044223320360870814"
+      },
+      {
+        "file": "src/app/layout/layouts/vertical/classy/classy.component.html",
+        "hash": "14100161132646676676"
+      },
+      {
+        "file": "src/app/modules/drag-n-drop/uploader/uploader.component.scss",
+        "hash": "3244421341483603138"
+      },
+      {
+        "file": "src/app/modules/help-center/guides/category/category.component.html",
+        "hash": "3511747700712993174"
+      },
+      {
+        "file": "src/app/modules/pages/error/error-404/error-404.routes.ts",
+        "hash": "10163691520241549112"
+      },
+      {
+        "file": "src/app/core/auth.signal/register/data-access/register.service.spec.ts",
+        "hash": "3244421341483603138"
+      },
+      {
+        "file": "src/app/services/template.store.ts",
+        "hash": "17170043629035601797"
+      },
+      {
+        "file": "src/assets/images/avatars/male-11.jpg",
+        "hash": "6496050421733782086"
+      },
+      {
+        "file": "src/assets/images/avatars/male-15.jpg",
+        "hash": "3770726829645225550"
+      },
+      {
+        "file": "src/app/modules/pages/error/error-404/error-404.component.html",
+        "hash": "3190398818002153315"
+      },
+      {
+        "file": "src/app/mock-api/dashboards/analytics/api.ts",
+        "hash": "11857091691640593150"
+      },
+      {
+        "file": "src/app/modules/drag-n-drop/loaddnd/dnd.component.ts",
+        "hash": "1105571429104049085"
+      },
+      {
+        "file": "src/@fuse/tailwind/utils/generate-contrasts.js",
+        "hash": "8478083557196911317"
+      },
+      {
+        "file": "src/app/modules/pages/coming-soon/coming-soon.routes.ts",
+        "hash": "7420343003488214461"
+      },
+      {
+        "file": "tsconfig.spec.json",
+        "hash": "4688799365665791289"
+      },
+      {
+        "file": "src/assets/images/cards/35-640x480.jpg",
+        "hash": "17697714615568770627"
+      },
+      {
+        "file": "src/app/modules/pages/settings/security/security.component.ts",
+        "hash": "15414859868676584806"
+      },
+      {
+        "file": "src/assets/fonts/inter/Inter-italic.var.woff2",
+        "hash": "2283011398089021421"
+      },
+      {
+        "file": "src/app/modules/pages/coming-soon/split-screen/coming-soon.component.ts",
+        "hash": "4001061541772794396"
+      },
+      {
+        "file": "src/app/modules/documents/file-manager/file-manager.component.ts",
+        "hash": "3006572876406405915"
+      },
+      {
+        "file": "src/assets/icons/feather.svg",
+        "hash": "5560402236429185004"
+      },
+      {
+        "file": "src/app/mock-api/common/shortcuts/api.ts",
+        "hash": "14754497994617976672"
+      },
+      {
+        "file": "src/app/modules/documents/file-manager/list/list.component.ts",
+        "hash": "14943382542520808383"
+      },
+      {
+        "file": "src/app/modules/pages/activities/activities.types.ts",
+        "hash": "2243382451168045013"
+      },
+      {
+        "file": "src/app/modules/admin/safe.pipe.ts",
+        "hash": "3605022368071768781"
+      },
+      {
+        "file": "src/app/services/sendhttp.service.ts",
+        "hash": "9932021909437573526"
+      },
+      {
+        "file": "src/@fuse/components/navigation/vertical/styles/appearances/thin.css",
+        "hash": "15624387717257026470"
+      },
+      {
+        "file": "src/app/layout/common/quick-chat/quick-chat.component.html",
+        "hash": "6687540024456749891"
+      },
+      {
+        "file": "src/app/mock-api/apps/help-center/api.ts",
+        "hash": "17320711061447841387"
+      },
+      {
+        "file": "src/assets/images/avatars/male-18.jpg",
+        "hash": "5351120127688616710"
+      },
+      {
+        "file": "src/assets/images/cards/09-320x200.jpg",
+        "hash": "7662432182091857042"
+      },
+      {
+        "file": "src/app/modules/pages/pricing/table/table.component.ts",
+        "hash": "11271520400692078125"
+      },
+      {
+        "file": "src/app/modules/help-center/guides/guides.component.ts",
+        "hash": "18037319766153675501"
+      },
+      {
+        "file": "src/app/modules/pages/settings/team/team.component.ts",
+        "hash": "11981882606467186909"
+      },
+      {
+        "file": "src/app/modules/admin/image-maintenance/image-maintenance.module.ts",
+        "hash": "5846078672579783763"
+      },
+      {
+        "file": "src/@fuse/components/card/card.component.css",
+        "hash": "2233721550993585941"
+      },
+      {
+        "file": "src/app/modules/user/name-input/name-input.component.spec.ts",
+        "hash": "7894609767088537832"
+      },
+      {
+        "file": "src/app/modules/help-center/support/support.component.ts",
+        "hash": "655299398572957844"
+      },
+      {
+        "file": "src/assets/images/logo/logo-text.svg",
+        "hash": "14975107125096330206"
+      },
+      {
+        "file": "src/assets/icons/heroicons-mini.svg",
+        "hash": "4490825136675843054"
+      },
+      {
+        "file": "src/assets/account-noble-ledger.png",
+        "hash": "9306951524579412496"
+      },
+      {
+        "file": "src/assets/images/cards/18-640x480.jpg",
+        "hash": "13800516430325810023"
+      },
+      {
+        "file": "src/app/modules/admin/analytics/analytics.component.ts",
+        "hash": "7091822239232871463"
+      },
+      {
+        "file": "src/assets/icons/material-solid.svg",
+        "hash": "2567969963546594757"
+      },
+      {
+        "file": "src/app/modules/pages/pricing/simple/simple.component.ts",
+        "hash": "15375708638006598028"
+      },
+      {
+        "file": "src/app/modules/pages/profile/profile.component.html",
+        "hash": "8661718175890867479"
+      },
+      {
+        "file": "src/app/modules/pages/maintenance/maintenance.component.html",
+        "hash": "2339770473577346609"
+      },
+      {
+        "file": "src/app/modules/pages/settings/account/account.component.ts",
+        "hash": "5915973916911312087"
+      },
+      {
+        "file": "src/app/modules/pages/invoice/printable/modern/modern.component.html",
+        "hash": "16491828633665478957"
+      },
+      {
+        "file": "src/assets/i18n/en.json",
+        "hash": "15712220666280478307"
+      },
+      {
+        "file": "src/app/modules/user/user/user.ts",
+        "hash": "629942292425801881"
+      },
+      {
+        "file": "src/assets/images/cards/04-320x200.jpg",
+        "hash": "10468389948952944599"
+      },
+      {
+        "file": "src/app/modules/reporting/trial-balance/trial-balance.components.routes.ts",
+        "hash": "9083254883062997784"
+      },
+      {
+        "file": "src/assets/icons/heroicons-outline.svg",
+        "hash": "17335524454696621209"
+      },
+      {
+        "file": "src/app/mock-api/apps/scrumboard/api.ts",
+        "hash": "12491268195418507599"
+      },
+      {
+        "file": "src/app/modules/accounting/transactions/ap-transactions/ap-listing.component.html",
+        "hash": "12221029997581768036"
+      },
+      {
+        "file": "src/@fuse/animations/fade.ts",
+        "hash": "18017018513747170004"
+      },
+      {
+        "file": "src/app/modules/accounting/tree/cs-table/cs-table.component.html",
+        "hash": "10970222104097531024"
+      },
+      {
+        "file": "src/app/layout/common/quick-chat/quick-chat.service.ts",
+        "hash": "14327319815023468689"
+      },
+      {
+        "file": "src/@fuse/lib/mock-api/mock-api.constants.ts",
+        "hash": "7744585142387652775"
+      },
+      {
+        "file": "src/app/services/messages/message.ts",
+        "hash": "15537643670444118650"
+      },
+      {
+        "file": "src/app/modules/navigation/api.ts",
+        "hash": "6006466748733450438"
+      },
+      {
+        "file": "src/app/modules/auth/confirmation-required/confirmation-required.routes.ts",
+        "hash": "818188678387571485"
+      },
+      {
+        "file": "src/@fuse/services/utils/public-api.ts",
+        "hash": "12716625436491092363"
+      },
+      {
+        "file": "src/app/modules/chat/sendhttp.service.ts",
+        "hash": "12496519082222801155"
+      },
+      {
+        "file": "src/app/layout/common/shortcuts/shortcuts.component.ts",
+        "hash": "12340291504381557178"
+      },
+      {
+        "file": "src/@fuse/styles/user-themes.scss",
+        "hash": "2199682665048479121"
+      },
+      {
+        "file": "src/app/modules/kanban/priority/priority.component.html",
+        "hash": "67179194321260981"
+      },
+      {
+        "file": "src/app/modules/accounting/transactions/ar-transactions/ar-update.component.html",
+        "hash": "1483645650122071722"
+      },
+      {
+        "file": "src/app/modules/user/view-user/view-user.component.spec.ts",
+        "hash": "7814344182691897154"
+      },
+      {
+        "file": "src/app/modules/admin/finance/finance.routes.ts",
+        "hash": "10621403072762038142"
+      },
+      {
+        "file": "package-lock.json",
+        "hash": "10155504746609226304"
+      },
+      {
+        "file": ".vscode/settings.json",
+        "hash": "6097483171072619093"
+      },
+      {
+        "file": "src/@fuse/services/platform/public-api.ts",
+        "hash": "13076180091617022659"
+      },
+      {
+        "file": "src/app/modules/admin/sales-graph/sales-graph.component.css.map",
+        "hash": "1262003104820174236"
+      },
+      {
+        "file": "src/assets/images/avatars/female-11.jpg",
+        "hash": "6502649379399214373"
+      },
+      {
+        "file": "src/app/modules/drag-n-drop/loaddnd/dnd.component.css.map",
+        "hash": "5842006827621009299"
+      },
+      {
+        "file": "src/assets/images/avatars/brian-hughes.jpg",
+        "hash": "13937613583704513345"
+      },
+      {
+        "file": "src/app/modules/pages/activities/activities.service.ts",
+        "hash": "10534896874858315442"
+      },
+      {
+        "file": "src/app/modules/drag-n-drop/upload-task/upload-task.component.ts",
+        "hash": "4646441226168463580"
+      },
+      {
+        "file": "src/app/modules/budget/budget-main.component.html",
+        "hash": "1100727044296094828"
+      },
+      {
+        "file": "src/@fuse/services/confirmation/dialog/dialog.component.html",
+        "hash": "11738176924333261737"
+      },
+      {
+        "file": "src/@fuse/styles/overrides/angular-material.scss",
+        "hash": "16415572460388476844"
+      },
+      {
+        "file": "src/app/layout/common/shortcuts/shortcuts.component.html",
+        "hash": "4130993734877288794"
+      },
+      {
+        "file": "src/assets/images/cards/20-640x480.jpg",
+        "hash": "3870952109912780177"
+      },
+      {
+        "file": "src/app/modules/accounting/transactions/journal.entry.routes.ts",
+        "hash": "9969784104659386386"
+      },
+      {
+        "file": "src/app/mock-api/apps/academy/data.ts",
+        "hash": "14844341705548339366"
+      },
+      {
+        "file": "src/app/app.routing.ts",
+        "hash": "14785009423076960057"
+      },
+      {
+        "file": "src/app/modules/documents/file-manager/file-manager.types.ts",
+        "hash": "4970650451099117545"
+      },
+      {
+        "file": "src/assets/images/avatars/female-05.jpg",
+        "hash": "4166044825629701968"
+      },
+      {
+        "file": "src/app/modules/pages/coming-soon/modern-reversed/coming-soon.component.html",
+        "hash": "16402904530686185475"
+      },
+      {
+        "file": "src/app/layout/layouts/vertical/dense/dense.component.ts",
+        "hash": "16212292865856074114"
+      },
+      {
+        "file": "src/@fuse/components/alert/alert.types.ts",
+        "hash": "4458741747569800776"
+      },
+      {
+        "file": "src/@fuse/styles/overrides/angular-material.css.map",
+        "hash": "11801662827246027724"
+      },
+      {
+        "file": "src/@fuse/components/alert/index.ts",
+        "hash": "9643241796905756734"
+      },
+      {
+        "file": "src/app/services/accounts.service.ts",
+        "hash": "12265771739834962736"
+      },
+      {
+        "file": "src/app/modules/drag-n-drop/upload-task/firebase.crud.ts",
+        "hash": "7508189019044748678"
+      },
+      {
+        "file": "src/app/modules/drag-n-drop/progress/progress.component.html",
+        "hash": "2211121995028312183"
+      },
+      {
+        "file": "src/app/layout/layouts/vertical/thin/thin.component.ts",
+        "hash": "403494862831665113"
+      },
+      {
+        "file": "src/app/modules/pages/pricing/simple/simple.component.html",
+        "hash": "15700027625587308326"
+      },
+      {
+        "file": "src/app/retry-interceptor.ts",
+        "hash": "1329857442661874066"
+      },
+      {
+        "file": "src/@fuse/services/utils/utils.service.ts",
+        "hash": "8808235029865694073"
+      },
+      {
+        "file": "src/app/modules/pages/error/error-500/error-500.routes.ts",
+        "hash": "969389726717399855"
+      },
+      {
+        "file": "src/app/modules/accounting/accts/teams/teams.component.ts",
+        "hash": "11008730007312497623"
+      },
+      {
+        "file": "src/app/modules/accounting/transactions/gl-transactions/context.css.map",
+        "hash": "10555421183712569811"
+      },
+      {
+        "file": "src/@fuse/components/loading-bar/loading-bar.component.ts",
+        "hash": "4478749099510680818"
+      },
+      {
+        "file": "src/app/services/teams.store.ts",
+        "hash": "3001509584055815691"
+      },
+      {
+        "file": "src/@fuse/components/navigation/vertical/components/group/group.component.ts",
+        "hash": "6332563240047191451"
+      },
+      {
+        "file": "src/@fuse/styles/user-themes.css.map",
+        "hash": "805749656664753765"
+      },
+      {
+        "file": "src/app/modules/finance/finance.routes.ts",
+        "hash": "10621403072762038142"
+      },
+      {
+        "file": "src/app/modules/pages/settings/team/team.component.html",
+        "hash": "680482618707137514"
+      },
+      {
+        "file": "src/app/modules/lightbox/lightbox-event.service.ts",
+        "hash": "85588894629003601"
+      },
+      {
+        "file": "src/app/modules/admin/sales-graph/sales-graph.component.scss",
+        "hash": "3244421341483603138"
+      },
+      {
+        "file": "src/app/modules/admin/academy/academy.routes.ts",
+        "hash": "15803757681024069677"
+      },
+      {
+        "file": "src/@fuse/version/index.ts",
+        "hash": "17350501503626117538"
+      },
+      {
+        "file": "src/@fuse/styles/overrides/highlightjs.css.map",
+        "hash": "5974780828436584203"
+      },
+      {
+        "file": "src/@fuse/styles/tailwind.css",
+        "hash": "7365181038157076516"
+      },
+      {
+        "file": "src/app/modules/kanban/schedule/data.ts",
+        "hash": "1312503594537464093"
+      },
+      {
+        "file": "src/@fuse/components/fullscreen/fullscreen.component.ts",
+        "hash": "6130154104363224653"
+      },
+      {
+        "file": "src/assets/images/avatars/female-01.jpg",
+        "hash": "8586549865935331348"
+      },
+      {
+        "file": "src/assets/images/avatars/female-03.jpg",
+        "hash": "10815203119151814684"
+      },
+      {
+        "file": "src/@fuse/services/platform/index.ts",
+        "hash": "7021005960686365672"
+      },
+      {
+        "file": "src/app/modules/chat/contact-info/contact-info.component.html",
+        "hash": "789083712776347056"
+      },
+      {
+        "file": "src/assets/images/avatars/female-16.jpg",
+        "hash": "15601015359708434110"
+      },
+      {
+        "file": "src/app/modules/user/user-controls/lemon-rater/lemon-rater.component.css.map",
+        "hash": "14681792483486489413"
+      },
+      {
+        "file": "src/app/modules/pages/coming-soon/modern/coming-soon.component.ts",
+        "hash": "13991169855270199559"
+      },
+      {
+        "file": "src/app/modules/admin/image-list/image-list.component.css",
+        "hash": "10256240896056000405"
+      },
+      {
+        "file": "src/app/layout/common/messages/messages.component.html",
+        "hash": "12214730626705714622"
+      },
+      {
+        "file": "src/app/modules/admin/image-maintenance/image-card/image-card.component.css",
+        "hash": "3244421341483603138"
+      },
+      {
+        "file": "http/funds.http",
+        "hash": "8081820210659363282"
+      },
+      {
+        "file": "src/app/layout/common/messages/messages.component.ts",
+        "hash": "15338104323003723445"
+      },
+      {
+        "file": "src/assets/images/avatars/female-12.jpg",
+        "hash": "11919481688176293825"
+      },
+      {
+        "file": "src/app/modules/drag-n-drop/uploader/uploader.component.html",
+        "hash": "11372936939129575998"
+      },
+      {
+        "file": "src/@fuse/components/navigation/vertical/components/spacer/spacer.component.ts",
+        "hash": "13972100225283263667"
+      },
+      {
+        "file": "src/@fuse/components/card/index.ts",
+        "hash": "4294640873146232857"
+      },
+      {
+        "file": "src/@fuse/styles/overrides/highlightjs.scss",
+        "hash": "8045594122632244188"
+      },
+      {
+        "file": "src/app/modules/admin/academy/academy.component.html",
+        "hash": "17816966185630879015"
+      },
+      {
+        "file": "src/@fuse/components/loading-bar/index.ts",
+        "hash": "12802424307058727799"
+      },
+      {
+        "file": "src/assets/images/avatars/female-09.jpg",
+        "hash": "3554008083837229383"
+      },
+      {
+        "file": "src/@fuse/components/highlight/highlight.component.ts",
+        "hash": "15679099315768460745"
+      },
+      {
+        "file": "src/app/modules/pages/coming-soon/classic/coming-soon.component.html",
+        "hash": "8323933994855681000"
+      },
+      {
+        "file": "src/app/modules/accounting/accts/main/gl.main.component.html",
+        "hash": "9680209028365393419"
+      },
+      {
+        "file": "src/@fuse/directives/scroll-reset/public-api.ts",
+        "hash": "7252746230300477734"
+      },
+      {
+        "file": "vite.config.js",
+        "hash": "4907174386351150852"
+      },
+      {
+        "file": "src/app/layout/common/user/user.component.html",
+        "hash": "6713196468747471589"
+      },
+      {
+        "file": "src/app/layout/layouts/horizontal/centered/centered.component.ts",
+        "hash": "14383317838011967257"
+      },
+      {
+        "file": "src/app/modules/admin/academy/list/list.component.html",
+        "hash": "2363232933606772621"
+      },
+      {
+        "file": "src/app/modules/pages/pricing/single/single.component.html",
+        "hash": "16872555034801221060"
+      },
+      {
+        "file": "src/app/mock-api/common/user/data.ts",
+        "hash": "17576715195329096331"
+      },
+      {
+        "file": "src/app/modules/kanban/task/tasks.component.html",
+        "hash": "8280287161250694246"
+      },
+      {
+        "file": "src/@fuse/lib/mock-api/mock-api.utils.ts",
+        "hash": "12590604949637149849"
+      },
+      {
+        "file": "src/app/modules/admin/image-maintenance/collection-image-selection/collection-image-selection.component.html",
+        "hash": "7234244398551937734"
+      },
+      {
+        "file": "src/@fuse/components/fullscreen/public-api.ts",
+        "hash": "501382953331865074"
+      },
+      {
+        "file": "src/app/modules/auth/forgot-password/forgot-password.component.html",
+        "hash": "15289928177448746335"
+      },
+      {
+        "file": "src/@fuse/version/public-api.ts",
+        "hash": "12174018565402443459"
+      },
+      {
+        "file": "src/app/modules/drag-n-drop/upload-task/upload-task.component.css",
+        "hash": "17475914342081426564"
+      },
+      {
+        "file": "src/@fuse/components/navigation/vertical/styles/appearances/compact.scss",
+        "hash": "7425115266849387541"
+      },
+      {
+        "file": "src/@fuse/styles/overrides/angular-material.css",
+        "hash": "5654931112916984163"
+      },
+      {
+        "file": "src/app/modules/accounting/transactions/template/journal-template.component.ts",
+        "hash": "5951296539458441502"
+      },
+      {
+        "file": "src/app/modules/kanban/status/status.component.html",
+        "hash": "8508997854099568716"
+      },
+      {
+        "file": "src/app/modules/user/user.resolve.ts",
+        "hash": "13068659774310727538"
+      },
+      {
+        "file": "src/app/modules/drag-n-drop/progress/progress.component.scss",
+        "hash": "9869430030170000904"
+      },
+      {
+        "file": "src/@fuse/tailwind/plugins/theming.js",
+        "hash": "5372944930443759756"
+      },
+      {
+        "file": "src/@fuse/components/fullscreen/fullscreen.component.html",
+        "hash": "15702271204559720401"
+      },
+      {
+        "file": "src/app/shared/data-access/message.service.ts",
+        "hash": "17794621673925796774"
+      },
+      {
+        "file": "src/app/modules/drag-n-drop/loaddnd/dnd.component.css",
+        "hash": "16698552846967184317"
+      },
+      {
+        "file": "src/app/modules/kanban/kanban-list/kanban-list.component.ts",
+        "hash": "6272697718094600685"
+      },
+      {
+        "file": "src/app/modules/accounting/transactions/ap-transactions/ap-update.component.html",
+        "hash": "6600245816255976126"
+      },
+      {
+        "file": "src/app/services/messages/messages.service.ts",
+        "hash": "17434340748780784114"
+      },
+      {
+        "file": "src/@fuse/components/navigation/vertical/components/basic/basic.component.html",
+        "hash": "2357251620838500484"
+      },
+      {
+        "file": "src/app/modules/pages/coming-soon/modern-reversed/coming-soon.component.ts",
+        "hash": "1802564641740273976"
+      },
+      {
+        "file": "src/@fuse/styles/components/input.css",
+        "hash": "14917326494950643486"
+      },
+      {
+        "file": "src/app/modules/pages/invoice/printable/modern/modern.routes.ts",
+        "hash": "16101116704517109043"
+      },
+      {
+        "file": "src/app/modules/reporting/grid-reporting/grid-menubar.component.ts",
+        "hash": "7739036468353075847"
+      },
+      {
+        "file": "src/app/core/auth/guards/auth.guard.ts",
+        "hash": "6917065892523282274"
+      },
+      {
+        "file": "src/assets/images/cards/24-640x480.jpg",
+        "hash": "11462169375009173788"
+      },
+      {
+        "file": "src/@fuse/services/splash-screen/index.ts",
+        "hash": "7825275835830862417"
+      },
+      {
+        "file": "src/app/modules/auth/reset-password/reset-password.component.ts",
+        "hash": "12964350497902511292"
+      },
+      {
+        "file": "src/app/modules/chat/conversation/conversation.component.html",
+        "hash": "999175443640331165"
+      },
+      {
+        "file": "src/app/modules/pages/invoice/printable/modern/modern.component.ts",
+        "hash": "10629649021578858445"
+      },
+      {
+        "file": "src/app/modules/auth/reset-password/reset-password.routes.ts",
+        "hash": "9832945192040332222"
+      },
+      {
+        "file": "src/@fuse/animations/slide.ts",
+        "hash": "1809061616660893760"
+      },
+      {
+        "file": "src/assets/images/flags/where-to-find-other-flags.txt",
+        "hash": "14816262607826986621"
+      },
+      {
+        "file": "src/app/mock-api/common/notifications/api.ts",
+        "hash": "6880042630833981861"
+      },
+      {
+        "file": "src/app/layout/common/quick-chat/quick-chat.types.ts",
+        "hash": "10061824779976880775"
+      },
+      {
+        "file": "src/app/modules/admin/dashboard/project.service.ts",
+        "hash": "15852698767502518174"
+      },
+      {
+        "file": "src/app/modules/pages/settings/plan-billing/plan-billing.component.html",
+        "hash": "12764804468595239955"
+      },
+      {
+        "file": "src/app/modules/admin/image-maintenance/image-card/image-card.component.html",
+        "hash": "792544532127378869"
+      },
+      {
+        "file": "src/app/modules/accounting/transactions/ap-transactions/ap-update.component.ts",
+        "hash": "14402286383465179028"
+      },
+      {
+        "file": "src/app/modules/help-center/faqs/faqs.component.html",
+        "hash": "6857675343709147829"
+      },
+      {
+        "file": "src/app/modules/accounting/tree/table-example/table-basic-example.ts",
+        "hash": "15107041950856669344"
+      },
+      {
+        "file": "src/app/modules/user/profile/profile.component.css",
+        "hash": "4941638910977271789"
+      },
+      {
+        "file": "src/app/modules/auth/sign-up/sign-up.component.ts",
+        "hash": "16380527072907753491"
+      },
+      {
+        "file": "src/@fuse/components/drawer/drawer.component.scss",
+        "hash": "2896683461355979974"
+      },
+      {
+        "file": "src/app/layout/common/quick-chat/quick-chat.component.css",
+        "hash": "15552884821002952542"
+      },
+      {
+        "file": "src/@fuse/services/confirmation/index.ts",
+        "hash": "8327068781330591863"
+      },
+      {
+        "file": "src/app/modules/auth/unlock-session/unlock-session.component.html",
+        "hash": "3558434610565719879"
+      },
+      {
+        "file": "src/assets/images/avatars/male-13.jpg",
+        "hash": "6052865309401505818"
+      },
+      {
+        "file": "src/app/core/icons/icons.service.ts",
+        "hash": "9125542423431434956"
+      },
+      {
+        "file": "src/app/modules/pages/settings/account/account.component.html",
+        "hash": "12886618738017430976"
+      },
+      {
+        "file": "src/app/core/auth.signal/register/register.component.ts",
+        "hash": "16766150360051414046"
+      },
+      {
+        "file": "src/@fuse/validators/public-api.ts",
+        "hash": "11670583125032599972"
+      },
+      {
+        "file": "http/get_dist.http",
+        "hash": "13926647834604346214"
+      },
+      {
+        "file": "src/app/modules/kanban/kanban-panel.component.html",
+        "hash": "8130168839915072491"
+      },
+      {
+        "file": "src/app/modules/user/user-routing.module.ts",
+        "hash": "7853592558960739223"
+      },
+      {
+        "file": "src/app/modules/accounting/transactions/gl-transactions/context.css",
+        "hash": "1849750133807258446"
+      },
+      {
+        "file": "src/app/modules/help-center/support/support.component.html",
+        "hash": "16294320492054660457"
+      },
+      {
+        "file": "src/app/services/roles.service.ts",
+        "hash": "12242843876729823585"
+      },
+      {
+        "file": "src/app/modules/drag-n-drop/uploader/uploader.component.css",
+        "hash": "14231057862142272389"
+      },
+      {
+        "file": "src/app/modules/admin/academy/list/list.component.ts",
+        "hash": "17892969037553143069"
+      },
+      {
+        "file": "src/app/mock-api/apps/help-center/data.ts",
+        "hash": "15812834085939001489"
+      },
+      {
+        "file": "src/app/modules/accounting/transactions/transaction-main.component.ts",
+        "hash": "16174163580966842826"
+      },
+      {
+        "file": "src/@fuse/components/card/card.component.css.map",
+        "hash": "3981455591133954131"
+      },
+      {
+        "file": "src/app/modules/lightbox/lightbox.module.ts",
+        "hash": "8923643162104079694"
+      },
+      {
+        "file": "src/assets/images/cards/19-640x480.jpg",
+        "hash": "594918782700076020"
+      },
+      {
+        "file": "tsconfig.app.json",
+        "hash": "9016800368484326453"
+      },
+      {
+        "file": "src/app/modules/reporting/handson/handson.report.component.ts",
+        "hash": "457047783599264157"
+      },
+      {
+        "file": "src/assets/images/cards/10-320x200.jpg",
+        "hash": "13333051799892669061"
+      },
+      {
+        "file": "src/app/modules/pages/activities/activities.routes.ts",
+        "hash": "5053337413452477796"
+      },
+      {
+        "file": "src/app/modules/chat/chat.types.ts",
+        "hash": "12475249161388116592"
+      },
+      {
+        "file": "src/app/modules/auth/unlock-session/unlock-session.routes.ts",
+        "hash": "1966532403045346124"
+      },
+      {
+        "file": "src/app/layout/layout.component.css.map",
+        "hash": "10220008173796229125"
+      },
+      {
+        "file": "src/app/modules/chat/chats/chats.component.ts",
+        "hash": "6596814209920146160"
+      },
+      {
+        "file": "src/app/modules/admin/image-card/image-card.component.css",
+        "hash": "3244421341483603138"
+      },
+      {
+        "file": "src/app/modules/help-center/help-center.component.ts",
+        "hash": "2312266337656850951"
+      },
+      {
+        "file": "src/@fuse/services/confirmation/public-api.ts",
+        "hash": "4815675321494223997"
+      },
+      {
+        "file": "src/@fuse/services/config/config.constants.ts",
+        "hash": "12850450129237075415"
+      },
+      {
+        "file": "src/app/modules/pages/coming-soon/split-screen-reversed/coming-soon.component.html",
+        "hash": "15026436541325323043"
+      },
+      {
+        "file": "src/app/modules/auth/sign-up/sign-up.routes.ts",
+        "hash": "10256528253257482156"
+      },
+      {
+        "file": "src/app/modules/budget/budget-wizard.component.ts",
+        "hash": "2894300919962138745"
+      },
+      {
+        "file": "src/assets/images/avatars/female-04.jpg",
+        "hash": "14410245044740612639"
+      },
+      {
+        "file": "src/app/layout/common/quick-chat/quick-chat.component.scss",
+        "hash": "14543726779028603531"
+      },
+      {
+        "file": "src/assets/images/logo/logo-text-on-dark-fuse.svg",
+        "hash": "4715070241406357380"
+      },
+      {
+        "file": "src/app/modules/pages/coming-soon/fullscreen-reversed/coming-soon.component.html",
+        "hash": "6619198019220957605"
+      },
+      {
+        "file": "src/app/modules/documents/file-manager/file-manager.component.html",
+        "hash": "17816966185630879015"
+      },
+      {
+        "file": "src/app/mock-api/dashboards/analytics/data.ts",
+        "hash": "4122203180670715124"
+      },
+      {
+        "file": "src/app/modules/reporting/distributed-ledger/transaction-detail/transaction-detail.component.html",
+        "hash": "11425349179157299750"
+      },
+      {
+        "file": "src/app/modules/reporting/distributed-ledger/distributed-ledger.components.routes.ts",
+        "hash": "9683203643096707471"
+      },
+      {
+        "file": "src/app/modules/file-manager/file-manager-card/evidence-card.component.html",
+        "hash": "5969725566962900209"
+      },
+      {
+        "file": "src/app/modules/accounting/accts/funds/funds.component.ts",
+        "hash": "16175459981123398512"
+      },
+      {
+        "file": "src/app/layout/layouts/vertical/compact/compact.component.html",
+        "hash": "15386385499518847716"
+      },
+      {
+        "file": "src/app/layout/layouts/vertical/classy/classy.component.ts",
+        "hash": "5169008744361299229"
+      },
+      {
+        "file": "src/app/modules/help-center/guides/guide/guide.component.html",
+        "hash": "14658312809358137642"
+      },
+      {
+        "file": "src/app/modules/admin/academy/details/details.component.ts",
+        "hash": "635932374207314722"
+      },
+      {
+        "file": "src/app/modules/accounting/transactions/ap-transactions/ap-listing.component.ts",
+        "hash": "8933353979010817439"
+      },
+      {
+        "file": "src/app/modules/auth/unlock-session/unlock-session.component.ts",
+        "hash": "5287809539589720711"
+      },
+      {
+        "file": "src/app/modules/finance/finance.component.ts",
+        "hash": "5554557865580031518"
+      },
+      {
+        "file": "src/app/layout/common/notifications/notifications.component.ts",
+        "hash": "13973671452670130088"
+      },
+      {
+        "file": "src/app/modules/kanban/types/types.component.ts",
+        "hash": "2247334576621951519"
+      },
+      {
+        "file": "src/app/modules/chat/profile/profile.component.html",
+        "hash": "3465978218716856797"
+      },
+      {
+        "file": "src/assets/images/cards/02-320x200.jpg",
+        "hash": "6998458187084767944"
+      },
+      {
+        "file": "src/@fuse/styles/components/example-viewer.css.map",
+        "hash": "5154080162516004521"
+      },
+      {
+        "file": "src/app/modules/admin/image-maintenance/image-menubar/image-menubar.component.ts",
+        "hash": "255836763477553158"
+      },
+      {
+        "file": "src/app/mock-api/dashboards/finance/data.ts",
+        "hash": "12577589588112988205"
+      },
+      {
+        "file": "src/app/layout/layouts/vertical/dense/dense.component.html",
+        "hash": "17602080757284331576"
+      },
+      {
+        "file": "src/theme/variables.css",
+        "hash": "7527242598942699333"
+      },
+      {
+        "file": "src/app/modules/budget/update/budget-update.component.html",
+        "hash": "5089358942780776456"
+      },
+      {
+        "file": "src/@fuse/components/drawer/public-api.ts",
+        "hash": "18158476698171220068"
+      },
+      {
+        "file": "src/app/services/template.service.ts",
+        "hash": "15590656656307719422"
+      },
+      {
+        "file": "src/app/mock-api/common/messages/data.ts",
+        "hash": "9121303755345931524"
+      },
+      {
+        "file": "src/app/common/common.ts",
+        "hash": "16473094265637871723"
+      },
+      {
+        "file": "src/assets/images/cards/coffee-shop-01-320x200.jpg",
+        "hash": "18209515858254583940"
+      },
+      {
+        "file": "src/app/modules/user/profile/profile.component.html",
+        "hash": "14212244294111760976"
+      },
+      {
+        "file": ".hintrc",
+        "hash": "8671339335642701257"
+      },
+      {
+        "file": "src/app/layout/layout.component.ts",
+        "hash": "334759280391578111"
+      },
+      {
+        "file": "src/app/modules/accounting/tree/tree.component.ts",
+        "hash": "14073923214109823975"
+      },
+      {
+        "file": "src/app/modules/accounting/transactions/thousands.directive.ts",
+        "hash": "17027866766173371475"
+      },
+      {
+        "file": "src/app/modules/budget/budget-landing/budget-landing.component.html",
+        "hash": "3871503572084615821"
+      },
+      {
+        "file": "src/@fuse/tailwind/plugins/icon-size.js",
+        "hash": "3169506424928178491"
+      },
+      {
+        "file": "src/@fuse/styles/overrides/perfect-scrollbar.css.map",
+        "hash": "7047196757400430670"
+      },
+      {
+        "file": "src/app/services/journal-template.store.ts",
+        "hash": "704024537762500347"
+      },
+      {
+        "file": "src/app/mock-api/common/search/api.ts",
+        "hash": "6413650767823616078"
+      },
+      {
+        "file": "src/app/mock-api/apps/scrumboard/data.ts",
+        "hash": "17694150328787582037"
+      },
+      {
+        "file": "src/@fuse/animations/public-api.ts",
+        "hash": "14183030231666904980"
+      },
+      {
+        "file": "src/assets/user/03.jpg",
+        "hash": "17921977142362334030"
+      },
+      {
+        "file": "src/app/shared/interfaces/message.ts",
+        "hash": "11399157664562893338"
+      },
+      {
+        "file": "src/app/services/settings.service.ts",
+        "hash": "17607584811140228648"
+      },
+      {
+        "file": "src/@fuse/styles/tailwind.scss",
+        "hash": "5732241295734755358"
+      },
+      {
+        "file": "src/app/modules/user/user.entity.service.ts",
+        "hash": "16620902314444911127"
+      },
+      {
+        "file": "src/app/modules/user/profile/profile.component.scss",
+        "hash": "1524359900242953350"
+      },
+      {
+        "file": "src/assets/images/cards/sneakers-03-448x560.jpg",
+        "hash": "3660373062885789297"
+      },
+      {
+        "file": "src/assets/fonts/inter/inter.css",
+        "hash": "12320488218080798281"
+      },
+      {
+        "file": "src/app/modules/reporting/distributed-ledger/distributed-ledger.component.html",
+        "hash": "12585249203871591727"
+      },
+      {
+        "file": "src/app/modules/admin/image-maintenance/image-card/image-card.component.ts",
+        "hash": "234162577819312965"
+      },
+      {
+        "file": "src/app/modules/kanban/schedule/schedule.component.ts",
+        "hash": "14026444350905473534"
+      },
+      {
+        "file": "src/app/modules/admin/image-list/image-list.component.ts",
+        "hash": "15156323899610271793"
+      },
+      {
+        "file": "src/app/modules/pages/settings/notifications/notifications.component.ts",
+        "hash": "8221959169786482293"
+      },
+      {
+        "file": "src/@fuse/fuse.provider.ts",
+        "hash": "6167701846343412111"
+      },
+      {
+        "file": "src/@fuse/components/navigation/horizontal/horizontal.component.ts",
+        "hash": "11454289883012892067"
+      },
+      {
+        "file": "src/@fuse/services/loading/loading.interceptor.ts",
+        "hash": "13414125165489605014"
+      },
+      {
+        "file": "src/@fuse/animations/index.ts",
+        "hash": "249972317308509343"
+      },
+      {
+        "file": "src/app/modules/chat/empty-conversation/empty-conversation.component.ts",
+        "hash": "17672829579492467761"
+      },
+      {
+        "file": "src/assets/images/avatars/female-14.jpg",
+        "hash": "7910528046139609890"
+      },
+      {
+        "file": "src/@fuse/components/navigation/horizontal/horizontal.component.scss",
+        "hash": "17548201713856034587"
+      },
+      {
+        "file": "src/@fuse/components/navigation/vertical/vertical.component.css",
+        "hash": "7580478494064145987"
+      },
+      {
+        "file": "src/app/modules/user/user/user.service.spec.ts",
+        "hash": "16054272012419032080"
+      },
+      {
+        "file": "src/app/modules/kanban/kanban-list/kanban-list.component.html",
+        "hash": "3317538593713675736"
+      },
+      {
+        "file": "src/app/logging-interceptor.ts",
+        "hash": "16571105244085822706"
+      },
+      {
+        "file": "src/app/core/auth.signal/register/data-access/register.service.ts",
+        "hash": "3249590071927674744"
+      },
+      {
+        "file": "src/@fuse/components/navigation/vertical/components/aside/aside.component.ts",
+        "hash": "2601087396010827916"
+      },
+      {
+        "file": "src/app/modules/documents/doc-main.component.ts",
+        "hash": "3341120415450506804"
+      },
+      {
+        "file": "src/app/modules/documents/file-manager/list/list.component.html",
+        "hash": "13499657277270464567"
+      },
+      {
+        "file": "src/app/modules/help-center/help-center.component.html",
+        "hash": "12315142129311298785"
+      },
+      {
+        "file": "src/app/modules/accounting/transactions/gl-transactions/journal-update.component.html",
+        "hash": "15748583507898409685"
+      },
+      {
+        "file": "src/@fuse/components/drawer/drawer.component.ts",
+        "hash": "6165848704019303030"
+      },
+      {
+        "file": "src/app/modules/kanban/kanban-list.component.html",
+        "hash": "13627237287956263875"
+      },
+      {
+        "file": "src/app/modules/drag-n-drop/drag-n-drop.component.ts",
+        "hash": "1831499266891145237"
+      },
+      {
+        "file": "src/@fuse/components/navigation/index.ts",
+        "hash": "14895563194875030815"
+      },
+      {
+        "file": "src/app/modules/drag-n-drop/uploader/uploader.component.css.map",
+        "hash": "2318513727356993206"
+      },
+      {
+        "file": "src/app/modules/user/user-controls/lemon-rater/lemon-rater.component.spec.ts",
+        "hash": "1299457968446247916"
+      },
+      {
+        "file": "README.md",
+        "hash": "13016060490900056828"
+      },
+      {
+        "file": "src/assets/images/cards/25-640x480.jpg",
+        "hash": "16943151411863153209"
+      },
+      {
+        "file": "src/app/services/distribution.ledger.store.ts",
+        "hash": "1731137946912566714"
+      },
+      {
+        "file": "src/app/services/error.service.ts",
+        "hash": "17322959965480202089"
+      },
+      {
+        "file": "src/app/modules/accounting/accts/accounts/gl-accts.component.html",
+        "hash": "1667562263872627357"
+      },
+      {
+        "file": "src/app/modules/admin/academy/academy.service.ts",
+        "hash": "2728211969131241804"
+      },
+      {
+        "file": "src/app/modules/help-center/guides/guide/guide.component.ts",
+        "hash": "16165510277319000341"
+      },
+      {
+        "file": "src/assets/images/avatars/male-16.jpg",
+        "hash": "7972518743473855344"
+      },
+      {
+        "file": "src/app/modules/kanban/kanban/kanban.component.ts",
+        "hash": "11465397534854533741"
+      },
+      {
+        "file": "http/jouranal_entry.http",
+        "hash": "2665937804601679386"
+      },
+      {
+        "file": "src/app/modules/pages/error/error-500/error-500.component.ts",
+        "hash": "18324447393007019118"
+      },
+      {
+        "file": "src/app/mock-api/apps/chat/api.ts",
+        "hash": "13338887145542222536"
+      },
+      {
+        "file": "src/app/modules/reporting/handson/handson.component.ts",
+        "hash": "2406589403510515086"
+      },
+      {
+        "file": "src/app/modules/reporting/handson/data.scss",
+        "hash": "15787740328100123042"
+      },
+      {
+        "file": "src/@fuse/lib/mock-api/mock-api.types.ts",
+        "hash": "11639957254454684457"
+      },
+      {
+        "file": "src/app/modules/admin/image-list/image-list.component.html",
+        "hash": "9643377247712758178"
+      },
+      {
+        "file": "src/app/modules/accounting/accts/main/gl.main.component.ts",
+        "hash": "7183189705538433905"
+      },
+      {
+        "file": "src/app/modules/auth/sign-up/sign-up.component.html",
+        "hash": "14129493587809264073"
+      },
+      {
+        "file": "src/app/mock-api/common/auth/api.ts",
+        "hash": "7681258924795260491"
+      },
+      {
+        "file": "src/app/services/dashboard.service.ts",
+        "hash": "1367968748771719705"
+      },
+      {
+        "file": "src/assets/images/avatars/female-13.jpg",
+        "hash": "15258935544676196264"
+      },
+      {
+        "file": "src/app/modules/kanban/kanban/kanban.component.html",
+        "hash": "10616738099291051463"
+      },
+      {
+        "file": "src/assets/user/recovery.svg",
+        "hash": "11303135437604310765"
+      },
+      {
+        "file": "src/app/modules/admin/sales-graph/sales-graph.component.css",
+        "hash": "3306750155449527783"
+      },
+      {
+        "file": "src/@fuse/services/config/index.ts",
+        "hash": "18298392554804514997"
+      },
+      {
+        "file": "src/app/modules/lightbox/lightbox.component.ts",
+        "hash": "4841485339496214427"
+      },
+      {
+        "file": "src/assets/images/avatars/male-06.jpg",
+        "hash": "3225370260940283656"
+      },
+      {
+        "file": "src/app/core/navigation/navigation.service.ts",
+        "hash": "5410768177537929834"
+      },
+      {
+        "file": "src/app/modules/reporting/report.service.ts",
+        "hash": "3908720321692984432"
+      },
+      {
+        "file": "src/app/modules/admin/sales-graph/sales-graph.component.html",
+        "hash": "10859687918480829232"
+      },
+      {
+        "file": "src/assets/images/cards/mansion-01-320x200.jpg",
+        "hash": "16638182910314819503"
+      },
+      {
+        "file": "src/app/modules/pages/coming-soon/modern/coming-soon.component.html",
+        "hash": "11020441928673812256"
+      },
+      {
+        "file": "src/app/modules/admin/image-maintenance/gallery-image-selection/image-selection.component.css",
+        "hash": "13459649963702693988"
+      },
+      {
+        "file": "src/app/core/auth.signal/login/login.component.html",
+        "hash": "5351763883039277551"
+      },
+      {
+        "file": "src/@fuse/components/navigation/navigation.service.ts",
+        "hash": "904574286136829921"
+      },
+      {
+        "file": "src/@fuse/components/navigation/vertical/components/aside/aside.component.html",
+        "hash": "17569107565748038662"
+      },
+      {
+        "file": "src/app/models/imageItem/index.ts",
+        "hash": "17097788947400217429"
+      },
+      {
+        "file": "src/app/mock-api/apps/contacts/data.ts",
+        "hash": "10487181666580744502"
+      },
+      {
+        "file": "src/app/modules/pages/coming-soon/fullscreen-reversed/coming-soon.component.ts",
+        "hash": "3189963887279000982"
+      },
+      {
+        "file": "src/app/modules/pages/invoice/printable/compact/compact.component.html",
+        "hash": "7717954804632513331"
+      },
+      {
+        "file": "src/app/modules/help-center/help-center.routes.ts",
+        "hash": "648303727854845594"
+      },
+      {
+        "file": "src/app/modules/drag-n-drop/loaddnd/dnd.component.scss",
+        "hash": "5554341941483635411"
+      },
+      {
+        "file": "src/@fuse/components/highlight/highlight.component.scss",
+        "hash": "12329089659202747931"
+      },
+      {
+        "file": "src/@fuse/components/navigation/horizontal/components/basic/basic.component.ts",
+        "hash": "11742619042584064962"
+      },
+      {
+        "file": "src/app/modules/accounting/tree/cs-table/cs-table.component.css",
+        "hash": "2304537066383802445"
+      },
+      {
+        "file": "src/assets/icons/material-outline.svg",
+        "hash": "8733277527709835906"
+      },
+      {
+        "file": "src/app/modules/reporting/reporting-menubar/grid-menubar.component.ts",
+        "hash": "11816353868774506361"
+      },
+      {
+        "file": "src/@fuse/components/navigation/vertical/components/spacer/spacer.component.html",
+        "hash": "12645447425785875708"
+      },
+      {
+        "file": "src/styles/tailwind.css.map",
+        "hash": "17025788503363768082"
+      },
+      {
+        "file": "src/app/modules/admin/image-maintenance/image-edit/image-mgt-edit.component.html",
+        "hash": "16708186811105157109"
+      },
+      {
+        "file": "src/app/modules/reporting/trial-balance/trial-balance.component.ts",
+        "hash": "995504194791570964"
+      },
+      {
+        "file": "src/@fuse/styles/overrides/quill.scss",
+        "hash": "16519964366988276100"
+      },
+      {
+        "file": "src/app/modules/admin/image-maintenance/collection-image-selection/collection-image-selection.component.ts",
+        "hash": "573609122017109992"
+      },
+      {
+        "file": "src/@fuse/animations/defaults.ts",
+        "hash": "17504517976022925100"
+      },
+      {
+        "file": "src/styles/vendors.css.map",
+        "hash": "1378815694783033042"
+      },
+      {
+        "file": "src/@fuse/components/navigation/horizontal/components/spacer/spacer.component.html",
+        "hash": "12202996558014187893"
+      },
+      {
+        "file": "src/@fuse/services/media-watcher/media-watcher.service.ts",
+        "hash": "5411918944733878290"
+      },
+      {
+        "file": "src/app/modules/user/user.module.ts",
+        "hash": "6564211841335677020"
+      },
+      {
+        "file": "src/app/modules/reporting/distributed-ledger/report-template-component.ts",
+        "hash": "6615897212208787833"
+      },
+      {
+        "file": "src/styles/vendors.scss",
+        "hash": "3062048551635500301"
+      },
+      {
+        "file": "src/app/mock-api/dashboards/crypto/data.ts",
+        "hash": "802074834561226444"
+      },
+      {
+        "file": "src/app/modules/admin/image-maintenance/image-maintenance-routing.module.ts",
+        "hash": "16061159303363365283"
+      },
+      {
+        "file": "src/app/layout/common/user/user.component.ts",
+        "hash": "15433730793903394659"
+      },
+      {
+        "file": "src/assets/images/avatars/male-08.jpg",
+        "hash": "12187933696361167708"
+      },
+      {
+        "file": "src/app/core/auth.signal/auth.routes.ts",
+        "hash": "2624796959845412549"
+      },
+      {
+        "file": "src/app/modules/auth/register/ui/register-form.component.ts",
+        "hash": "10560987639235216065"
+      },
+      {
+        "file": "src/app/mock-api/dashboards/project/data.ts",
+        "hash": "13378330095413395332"
+      },
+      {
+        "file": "src/app/modules/drag-n-drop/loaddnd/dnd.component.html",
+        "hash": "5606134499480420714"
+      },
+      {
+        "file": "src/app/core/auth.signal/login/login.component.ts",
+        "hash": "9312650035942393826"
+      },
+      {
+        "file": "src/assets/images/cards/product-01-224x256.jpg",
+        "hash": "9806597535872757188"
+      },
+      {
+        "file": "src/app/modules/accounting/tree/datasource.ts",
+        "hash": "1725133049926696187"
+      },
+      {
+        "file": "src/app/modules/pages/profile/profile.component.ts",
+        "hash": "2884157113306161055"
+      },
+      {
+        "file": "src/app/modules/lightbox/lightbox.service.ts",
+        "hash": "11977717229390881609"
+      },
+      {
+        "file": "src/app/layout/common/settings/settings.component.ts",
+        "hash": "5512106319289696114"
+      },
+      {
+        "file": "src/app/modules/drag-n-drop/upload-task/upload-task.component.scss",
+        "hash": "3244421341483603138"
+      },
+      {
+        "file": "src/app/modules/auth/forgot-password/forgot-password.routes.ts",
+        "hash": "17682107816260878908"
+      },
+      {
+        "file": "src/app/modules/analysis/analysis.component.css",
+        "hash": "4254122089933914194"
+      },
+      {
+        "file": "package.json",
+        "hash": "7221589699460597094"
+      },
+      {
+        "file": "src/app/layout/layouts/vertical/futuristic/futuristic.component.html",
+        "hash": "15804151931186556852"
+      },
+      {
+        "file": "src/@fuse/components/navigation/horizontal/components/spacer/spacer.component.ts",
+        "hash": "17091232403509066584"
+      },
+      {
+        "file": "src/app/modules/budget/budget-wizard.component.html",
+        "hash": "13677861086252617972"
+      },
+      {
+        "file": "src/@fuse/services/loading/public-api.ts",
+        "hash": "7922188221456267452"
+      },
+      {
+        "file": "src/app/layout/layouts/horizontal/modern/modern.component.ts",
+        "hash": "12471025793758502906"
+      },
+      {
+        "file": "src/app/services/type.service.ts",
+        "hash": "2560402627079703993"
+      },
+      {
+        "file": "src/@fuse/components/drawer/drawer.types.ts",
+        "hash": "6626177510851414644"
+      },
+      {
+        "file": "src/app/modules/kanban/kanban-list/kanban-list.scss",
+        "hash": "5228106369860787593"
+      },
+      {
+        "file": "src/app/modules/accounting/transactions/ar-transactions/ar-listing.component.ts",
+        "hash": "18053954117902592414"
+      },
+      {
+        "file": "src/assets/images/logo/excel.jpg",
+        "hash": "8425229124550553061"
+      },
+      {
+        "file": "src/app/modules/kanban/kanban.store.ts",
+        "hash": "17473263016479923095"
+      },
+      {
+        "file": "src/app/mock-api/dashboards/finance/api.ts",
+        "hash": "7384336706770484731"
+      },
+      {
+        "file": "src/app/modules/accounting/accts/funds/funds.component.html",
+        "hash": "16955456269894130213"
+      },
+      {
+        "file": "src/@fuse/components/alert/alert.component.html",
+        "hash": "745656951218662989"
+      },
+      {
+        "file": "src/app/modules/auth/auth.service.ts",
+        "hash": "6749100402293759446"
+      },
+      {
+        "file": "src/app/modules/accounting/grid-menubar/grid-menubar.component.ts",
+        "hash": "4135294667390668311"
+      },
+      {
+        "file": "src/assets/fonts/inter/Inter-roman.var.woff2",
+        "hash": "15746750612725855840"
+      },
+      {
+        "file": "src/app/app.component.css",
+        "hash": "18027748587015856191"
+      },
+      {
+        "file": "src/app/services/distribution.ledger.service.ts",
+        "hash": "12509921524425521516"
+      },
+      {
+        "file": "src/app/modules/pages/invoice/printable/compact/compact.routes.ts",
+        "hash": "8513414012946517617"
+      },
+      {
+        "file": "src/app/modules/reporting/distributed-ledger/dist-menubar/grid-menubar.component.css",
+        "hash": "17749146333676018722"
+      },
+      {
+        "file": "src/@fuse/index.ts",
+        "hash": "7719632877505588165"
+      },
+      {
+        "file": "src/app/modules/accounting/transactions/gl-transactions/journal-update.component.ts",
+        "hash": "731254016124207570"
+      },
+      {
+        "file": "src/@fuse/components/highlight/highlight.service.ts",
+        "hash": "10635956573566637782"
+      },
+      {
+        "file": "src/app/modules/chat/chat.routes.ts",
+        "hash": "14836788546267140814"
+      },
+      {
+        "file": "src/assets/images/Noble_Dashboard.jpg",
+        "hash": "10647741445793767140"
+      },
+      {
+        "file": "src/app/mock-api/apps/contacts/api.ts",
+        "hash": "8864754987666939719"
+      },
+      {
+        "file": "src/app/modules/kanban/kanban/kanban-settings.routes.ts",
+        "hash": "6128931874014764860"
+      },
+      {
+        "file": "src/app/modules/auth/auth.enum.ts",
+        "hash": "8471704071376282653"
+      },
+      {
+        "file": "src/app/modules/accounting/accts/accounts/gl-accts.component.ts",
+        "hash": "8147343725795217117"
+      },
+      {
+        "file": "src/app/modules/documents/file-manager/details/details.component.ts",
+        "hash": "9323684357627072100"
+      },
+      {
+        "file": "src/@fuse/components/loading-bar/public-api.ts",
+        "hash": "11814447778896146160"
+      },
+      {
+        "file": "src/@fuse/pipes/find-by-key/public-api.ts",
+        "hash": "15369858498731434379"
+      },
+      {
+        "file": "src/assets/images/logo/nobleledger.jpg",
+        "hash": "8659693672307795803"
+      },
+      {
+        "file": "src/assets/images/avatars/female-19.jpg",
+        "hash": "2575891191376865559"
+      },
+      {
+        "file": "src/app/modules/admin/image-maintenance/gallery-image-selection/image-selection.component.ts",
+        "hash": "1677357692109001749"
+      },
+      {
+        "file": "src/@fuse/tailwind/utils/generate-palette.js",
+        "hash": "8288682428223936919"
+      },
+      {
+        "file": "src/@fuse/components/card/public-api.ts",
+        "hash": "18118095442321375993"
+      },
+      {
+        "file": "src/app/modules/pages/maintenance/maintenance.component.ts",
+        "hash": "10168962225970062717"
+      },
+      {
+        "file": "src/@fuse/services/loading/loading.service.ts",
+        "hash": "16350489565446510445"
+      },
+      {
+        "file": "src/app/modules/admin/dashboard/summary-card.component.ts",
+        "hash": "15834198235558714383"
+      },
+      {
+        "file": "src/assets/images/logo/logo-text-on-dark.png",
+        "hash": "2722116875350492819"
+      },
+      {
+        "file": "src/app/core/auth.signal/login/data-access/login.service.spec.ts",
+        "hash": "3244421341483603138"
+      },
+      {
+        "file": "src/app/mock-api/apps/notes/data.ts",
+        "hash": "9597337695800702570"
+      },
+      {
+        "file": "src/@fuse/components/highlight/public-api.ts",
+        "hash": "7159336497718345753"
+      },
+      {
+        "file": "src/@fuse/components/highlight/highlight.component.css.map",
+        "hash": "11376684594059158927"
+      },
+      {
+        "file": "src/app/modules/drag-n-drop/routes.ts",
+        "hash": "12982047161565891463"
+      },
+      {
+        "file": "src/app/modules/user/user/user.entity.service.ts",
+        "hash": "16620902314444911127"
+      },
+      {
+        "file": "src/@fuse/components/drawer/drawer.service.ts",
+        "hash": "13725859667358637819"
+      },
+      {
+        "file": "src/assets/images/cards/05-320x200.jpg",
+        "hash": "9910348632189693999"
+      },
+      {
+        "file": "src/app/services/scroll.service.ts",
+        "hash": "7235271181233069080"
+      },
+      {
+        "file": "src/@fuse/components/navigation/vertical/vertical.component.html",
+        "hash": "3478746865292998933"
+      },
+      {
+        "file": "src/app/modules/accounting/accts/subtype/subtype.components.routes.ts",
+        "hash": "9777029809957445005"
+      },
+      {
+        "file": "src/@fuse/components/navigation/vertical/styles/appearances/default.css",
+        "hash": "12447662480488324668"
+      },
+      {
+        "file": "src/assets/images/flags/US.svg",
+        "hash": "16467969063938751139"
+      },
+      {
+        "file": "src/@fuse/services/media-watcher/public-api.ts",
+        "hash": "2316354370896676848"
+      },
+      {
+        "file": "src/app/services/messages/messages.component.html",
+        "hash": "9580694168724987874"
+      },
+      {
+        "file": "src/app/modules/documents/file-manager/details/details.component.html",
+        "hash": "1253414148135088292"
+      },
+      {
+        "file": "src/app/core/auth.signal/register/utils/password-matches.spec.ts",
+        "hash": "3244421341483603138"
+      },
+      {
+        "file": "src/app/modules/accounting/accts/generic-table/generic-table.component.ts",
+        "hash": "5866519365516609444"
+      },
+      {
+        "file": "src/app/app.component.ts",
+        "hash": "4048298229569151267"
+      },
+      {
+        "file": "src/app/services/message.service.ts",
+        "hash": "8003802948822525286"
+      },
+      {
+        "file": "src/@fuse/components/drawer/drawer.component.css.map",
+        "hash": "5275005193373464445"
+      },
+      {
+        "file": "src/app/modules/accounting/accts/types/types.component.ts",
+        "hash": "4653739536008627798"
+      },
+      {
+        "file": "src/assets/user/login.svg",
+        "hash": "10009095546213048698"
+      },
+      {
+        "file": "src/app/mock-api/dashboards/crypto/api.ts",
+        "hash": "3158619172608794061"
+      },
+      {
+        "file": "src/app/modules/accounting/tree/table-example/table-basic-example.html",
+        "hash": "15017041350999049448"
+      },
+      {
+        "file": "src/app/modules/admin/image-maintenance/image-maintenance-card/image-maintenance-card.component.ts",
+        "hash": "17013948164237393814"
+      },
+      {
+        "file": "src/app/modules/user/user-controls/lemon-rater/lemon-rater.component.css",
+        "hash": "3731444337794056673"
+      },
+      {
+        "file": "src/app/modules/admin/image-maintenance/products-image-selection/image-selection.component.ts",
+        "hash": "4636589969920347432"
+      },
+      {
+        "file": "src/assets/images/cards/15-640x480.jpg",
+        "hash": "16958344088358492395"
+      },
+      {
+        "file": "src/assets/images/avatars/male-07.jpg",
+        "hash": "8022878812170720282"
+      },
+      {
+        "file": "src/assets/images/cards/23-640x480.jpg",
+        "hash": "10831177667801372403"
+      },
+      {
+        "file": "src/@fuse/components/navigation/vertical/styles/appearances/thin.css.map",
+        "hash": "10887362902332126820"
+      },
+      {
+        "file": "src/inter.css",
+        "hash": "12320488218080798281"
+      },
+      {
+        "file": "src/app/modules/reporting/financial-statement/income-statement-rpt.component.ts",
+        "hash": "18433144444048869010"
+      },
+      {
+        "file": "src/assets/images/cards/34-640x480.jpg",
+        "hash": "7368817414550140775"
+      },
+      {
+        "file": "src/app/modules/admin/dashboard/project.component.html",
+        "hash": "5417356879033974265"
+      },
+      {
+        "file": "src/assets/images/cards/16-640x480.jpg",
+        "hash": "10758226513512693761"
+      },
+      {
+        "file": "src/app/modules/admin/image-maintenance/image-maintenance/image-maintenance.component.html",
+        "hash": "14238071746481705179"
+      },
+      {
+        "file": "src/app/modules/auth/forgot-password/forgot-password.component.ts",
+        "hash": "2965707624405736083"
+      },
+      {
+        "file": "src/app/modules/accounting/transactions/wizard/wizard-entry.component.ts",
+        "hash": "16759095953244426357"
+      },
+      {
+        "file": "src/app/shared/guards/auth.guard.ts",
+        "hash": "12594301187649602874"
+      },
+      {
+        "file": "src/app/modules/accounting/tree/table-example/table-basic-example.css",
+        "hash": "4321470563776116398"
+      },
+      {
+        "file": "src/app/layout/layouts/vertical/classic/classic.component.html",
+        "hash": "14588568239989387155"
+      },
+      {
+        "file": "src/app/layout/layout.component.css",
+        "hash": "12527366008651235086"
+      },
+      {
+        "file": "src/app/modules/reporting/financial-statement/statement-line.component.ts",
+        "hash": "5530614066692506046"
+      },
+      {
+        "file": "src/app/layout/common/notifications/notifications.service.ts",
+        "hash": "15076422892554079346"
+      },
+      {
+        "file": "src/app/modules/reporting/balance-sheet/balance-sheet.component.ts",
+        "hash": "1733436245629319253"
+      },
+      {
+        "file": "src/app/modules/reporting/balance-sheet/balance-sheet.components.routes.ts",
+        "hash": "9047541259111542879"
+      },
+      {
+        "file": "firestore.rules",
+        "hash": "3477072027449606021"
+      },
+      {
+        "file": "src/app/modules/accounting/tree/cs-table/cs-table.component.ts",
+        "hash": "14658011173619126841"
+      },
+      {
+        "file": "src/app/core/auth.signal/register/ui/register-form.component.spec.ts",
+        "hash": "3244421341483603138"
+      },
+      {
+        "file": "src/@fuse/styles/components/input.css.map",
+        "hash": "14332295629349534011"
+      },
+      {
+        "file": "src/app/modules/pages/pricing/table/table.routes.ts",
+        "hash": "16539219944945754065"
+      },
+      {
+        "file": "src/app/modules/user/logout/logout.component.spec.ts",
+        "hash": "9552866484713800950"
+      },
+      {
+        "file": "src/app/modules/admin/image-maintenance/image-maintenance/image-maintenance.component.ts",
+        "hash": "14904840020087700488"
+      },
+      {
+        "file": "src/@fuse/version/version.ts",
+        "hash": "16102215135787164151"
+      },
+      {
+        "file": "src/app/modules/auth/sign-out/sign-out.component.html",
+        "hash": "2246264742586829867"
+      },
+      {
+        "file": "src/app/mock-api/apps/tasks/api.ts",
+        "hash": "10282347441366500154"
+      },
+      {
+        "file": "src/app/modules/auth/reset-password/reset-password.component.html",
+        "hash": "5853695078449308637"
+      },
+      {
+        "file": "src/@fuse/styles/components/example-viewer.css",
+        "hash": "15701938008071691179"
+      },
+      {
+        "file": "src/app/modules/pages/settings/security/security.component.html",
+        "hash": "4819887732762402122"
+      },
+      {
+        "file": "src/app/services/journal.service.ts",
+        "hash": "5060711933923856013"
+      },
+      {
+        "file": "src/app/mock-api/apps/file-manager/api.ts",
+        "hash": "14749927010285144859"
+      },
+      {
+        "file": "src/app/core/auth.signal/register/ui/register-form.component.ts",
+        "hash": "16820055792730570314"
+      },
+      {
+        "file": "src/@fuse/components/alert/alert.component.scss",
+        "hash": "3095060153203127426"
+      },
+      {
+        "file": "src/assets/images/cards/26-640x480.jpg",
+        "hash": "5255101183509419112"
+      },
+      {
+        "file": "src/app/modules/accounting/accts/teams/teams.component.html",
+        "hash": "6939745737737601867"
+      },
+      {
+        "file": "src/assets/images/avatars/female-08.jpg",
+        "hash": "3232723534471436299"
+      },
+      {
+        "file": "src/assets/i18n/tr.json",
+        "hash": "18263242878832834513"
+      },
+      {
+        "file": "src/app/modules/drag-n-drop/upload-task/upload-task.component.css.map",
+        "hash": "9136082494144386920"
+      },
+      {
+        "file": "src/assets/user/signup.svg",
+        "hash": "5385232192944483713"
+      },
+      {
+        "file": ".firebaserc",
+        "hash": "1618723537135510039"
+      },
+      {
+        "file": "src/assets/images/cards/sneakers-02-448x560.jpg",
+        "hash": "15382883164769044270"
+      },
+      {
+        "file": "src/assets/user/01.jpg",
+        "hash": "11618237711979233067"
+      },
+      {
+        "file": "src/app/modules/drag-n-drop/progress/progress.component.css",
+        "hash": "15683575792778617156"
+      },
+      {
+        "file": "src/assets/images/avatars/male-09.jpg",
+        "hash": "11577706816526814561"
+      },
+      {
+        "file": "src/@fuse/components/alert/alert.component.ts",
+        "hash": "1331592146570671433"
+      },
+      {
+        "file": "src/app/modules/finance/finance.component.html",
+        "hash": "14511163237642818303"
+      },
+      {
+        "file": "src/app/modules/reporting/financial-statement/statement-comparison.component.ts",
+        "hash": "6174749938322822292"
+      },
+      {
+        "file": "src/assets/images/cards/31-640x480.jpg",
+        "hash": "11361549014991957670"
+      },
+      {
+        "file": "src/app/core/transloco/transloco.http-loader.ts",
+        "hash": "5529655013339670150"
+      },
+      {
+        "file": "src/app/services/budget.store.ts",
+        "hash": "12391617747210992389"
+      },
+      {
+        "file": "src/app/modules/user/logout/logout.component.ts",
+        "hash": "17086670800665104194"
+      },
+      {
+        "file": "src/app/modules/pages/pricing/table/table.component.html",
+        "hash": "8562024804518113168"
+      },
+      {
+        "file": "syncfusion-license.txt",
+        "hash": "13577929438345109750"
+      },
+      {
+        "file": "src/app/caching-interceptor.ts",
+        "hash": "5741762478859347568"
+      },
+      {
+        "file": "src/assets/images/avatars/female-17.jpg",
+        "hash": "11824709012757370044"
+      },
+      {
+        "file": "src/@fuse/components/card/card.component.ts",
+        "hash": "14546053503072492878"
+      },
+      {
+        "file": "src/assets/images/cards/11-512x512.jpg",
+        "hash": "12203288261256568840"
+      },
+      {
+        "file": "src/app/modules/user/user.ts",
+        "hash": "15760941217970333235"
+      },
+      {
+        "file": "src/app/modules/reporting/distributed-ledger/journal-detail/journal-detail.component.html",
+        "hash": "6994359164405415081"
+      },
+      {
+        "file": "src/@fuse/styles/main.css.map",
+        "hash": "14219710249125452038"
+      },
+      {
+        "file": "src/app/modules/auth/register/data-access/register.service.spec.ts",
+        "hash": "3244421341483603138"
+      },
+      {
+        "file": "src/app/modules/reporting/reporting-menubar/component.css",
+        "hash": "6844455649544807932"
+      },
+      {
+        "file": "src/assets/.gitkeep",
+        "hash": "3244421341483603138"
+      },
+      {
+        "file": "src/@fuse/components/navigation/vertical/styles/appearances/compact.css.map",
+        "hash": "1635144151977633952"
+      },
+      {
+        "file": "src/assets/images/logo/logo.png",
+        "hash": "8659693672307795803"
+      },
+      {
+        "file": "src/@fuse/services/confirmation/confirmation.service.ts",
+        "hash": "12333020835729546481"
+      },
+      {
+        "file": "src/app/modules/reporting/distributed-ledger/dist-menubar/grid-menubar.component.ts",
+        "hash": "7446243495851954483"
+      },
+      {
+        "file": "src/app/modules/auth/confirmation-required/confirmation-required.component.ts",
+        "hash": "370908143282776423"
+      },
+      {
+        "file": "src/app/modules/admin/image-card/image-card.component.html",
+        "hash": "4075496367900467414"
+      },
+      {
+        "file": "src/app/modules/accounting/transactions/wizard/wizard-update.component.html",
+        "hash": "5725007755286692533"
+      },
+      {
+        "file": "src/app/modules/drag-n-drop/drag-n-drop.component.css",
+        "hash": "4554954514526962565"
+      },
+      {
+        "file": "src/app/modules/user/user-controls/field-error/field-error.directive.ts",
+        "hash": "13395396981388675760"
+      },
+      {
+        "file": "src/app/services/journal.store.ts",
+        "hash": "12163755552013337767"
+      },
+      {
+        "file": "src/@fuse/lib/mock-api/mock-api.request-handler.ts",
+        "hash": "6674284169532499283"
+      },
+      {
+        "file": "src/app/layout/layouts/horizontal/enterprise/enterprise.component.html",
+        "hash": "11842660091689307949"
+      },
+      {
+        "file": "src/app/services/funds.store.ts",
+        "hash": "5604391424803957924"
+      },
+      {
+        "file": "src/app/modules/accounting/transactions/gl-transactions/journal-listing.component.ts",
+        "hash": "4480463045757427537"
+      },
+      {
+        "file": "src/@fuse/components/navigation/vertical/components/collapsable/collapsable.component.html",
+        "hash": "9411323636150548019"
+      },
+      {
+        "file": "src/app/modules/reporting/handson/handson.income-st.component.ts",
+        "hash": "9386640554495494552"
+      },
+      {
+        "file": "src/app/modules/landing/landing.component.html",
+        "hash": "9475130993453968792"
+      },
+      {
+        "file": "src/app/shared/data-access/message.service.spec.ts",
+        "hash": "243473399005390240"
+      },
+      {
+        "file": "src/app/modules/budget/budget-landing/budget-landing.component.ts",
+        "hash": "13024136023941205997"
+      },
+      {
+        "file": "src/app/modules/pages/pricing/modern/modern.routes.ts",
+        "hash": "11944150473653764197"
+      },
+      {
+        "file": "src/app/modules/pages/settings/plan-billing/plan-billing.component.ts",
+        "hash": "4947230615472297629"
+      },
+      {
+        "file": "src/app/modules/lightbox/lightbox-overlay.component.spec.ts",
+        "hash": "6879143769235529163"
+      },
+      {
+        "file": "src/@fuse/styles/overrides/quill.css",
+        "hash": "17957396481161267264"
+      },
+      {
+        "file": "src/app/modules/kanban/kanban-panel.components.routes.ts",
+        "hash": "7564079197664331923"
+      },
+      {
+        "file": "src/app/modules/accounting/accts/types/types.component.html",
+        "hash": "11187625746532002140"
+      },
+      {
+        "file": "src/app/layout/layouts/vertical/thin/thin.component.html",
+        "hash": "4673750970418848677"
+      },
+      {
+        "file": "src/app/mock-api/apps/chat/data.ts",
+        "hash": "4410405111202389458"
+      },
+      {
+        "file": "angular.json",
+        "hash": "9043712400059058928"
+      },
+      {
+        "file": "src/app/modules/pages/settings/settings.component.html",
+        "hash": "10337670584291282933"
+      },
+      {
+        "file": "src/@fuse/components/masonry/index.ts",
+        "hash": "3300968124842788052"
+      },
+      {
+        "file": "src/app/modules/admin/image-maintenance/image-menubar/image-menubar.component.html",
+        "hash": "15445659711878375243"
+      },
+      {
+        "file": "src/app/layout/common/shortcuts/shortcuts.types.ts",
+        "hash": "7575542695784269525"
+      },
+      {
+        "file": "storage.rules",
+        "hash": "4650147663467633325"
+      },
+      {
+        "file": "src/app/common/validations.ts",
+        "hash": "4226908230491382722"
+      },
+      {
+        "file": "src/app/layout/layouts/horizontal/modern/modern.component.html",
+        "hash": "16148963508057917342"
+      },
+      {
+        "file": "src/app/services/subtype.service.ts",
+        "hash": "14920699776180904989"
+      },
+      {
+        "file": "src/app/modules/pages/coming-soon/fullscreen/coming-soon.component.html",
+        "hash": "11780732361901949054"
+      },
+      {
+        "file": "src/app/modules/drag-n-drop/loaddnd/dnd.directive.ts",
+        "hash": "2877512686953920038"
+      },
+      {
+        "file": "src/app/modules/pages/activities/activities.component.ts",
+        "hash": "1086371649221994782"
+      },
+      {
+        "file": "src/@fuse/components/navigation/vertical/styles/appearances/dense.css",
+        "hash": "4796551337821207185"
+      },
+      {
+        "file": "src/app/modules/user/profile/data.ts",
+        "hash": "5749886123965722772"
+      },
+      {
+        "file": "src/app/modules/documents/file-manager/file-manager.routes.ts",
+        "hash": "18328370380896274958"
+      },
+      {
+        "file": "src/app/mock-api/dashboards/project/api.ts",
+        "hash": "17392799198582360671"
+      },
+      {
+        "file": "src/styles/styles.css",
+        "hash": "17604214061272694026"
+      },
+      {
+        "file": "src/@fuse/validators/index.ts",
+        "hash": "9061438514407658016"
+      },
+      {
+        "file": "src/app/mock-api/common/notifications/data.ts",
+        "hash": "10997373845442467815"
+      },
+      {
+        "file": "src/app/modules/admin/image-maintenance/gallery-image-selection/image-selection.component.html",
+        "hash": "9669000401495853832"
+      },
+      {
+        "file": "src/app/modules/reporting/spread/data.ts",
+        "hash": "328693268776690414"
+      },
+      {
+        "file": "src/app/modules/admin/finance/finance.component.ts",
+        "hash": "5527513011930912125"
+      },
+      {
+        "file": "src/@fuse/components/navigation/horizontal/horizontal.component.css",
+        "hash": "8831834406112629687"
+      },
+      {
+        "file": "src/@fuse/components/navigation/vertical/components/group/group.component.html",
+        "hash": "1968957577448049039"
+      },
+      {
+        "file": "src/app/modules/pages/settings/notifications/notifications.component.html",
+        "hash": "11005501020244636164"
+      },
+      {
+        "file": "src/app/modules/auth/confirmation-required/confirmation-required.component.html",
+        "hash": "13497933161181408617"
+      },
+      {
+        "file": "src/styles/tailwind.css",
+        "hash": "8404320599147152595"
+      },
+      {
+        "file": "src/app/modules/analysis/analysis.component.html",
+        "hash": "12621348141062275381"
+      },
+      {
+        "file": "src/@fuse/animations/zoom.ts",
+        "hash": "13578958222112294651"
+      },
+      {
+        "file": "src/app/modules/user/user-controls/lemon-rater/lemon-rater.component.html",
+        "hash": "13206552921936351062"
+      },
+      {
+        "file": "src/app/modules/reporting/financial-statement/income-statement-comparison.component.ts",
+        "hash": "17924060879044858536"
+      },
+      {
+        "file": "src/app/modules/user/user/user.service.ts",
+        "hash": "5847482958041005771"
+      },
+      {
+        "file": "src/app/modules/kanban/kanban-list/kanban-list.css.map",
+        "hash": "1088507019611848398"
+      },
+      {
+        "file": "src/@fuse/animations/shake.ts",
+        "hash": "9222498341418615619"
+      },
+      {
+        "file": "src/favicon.ico",
+        "hash": "16214490060721475683"
+      },
+      {
+        "file": "src/app/modules/admin/analytics/analytics.service.ts",
+        "hash": "17142244279814554451"
+      },
+      {
+        "file": "src/app/auth.token.interceptor.ts",
+        "hash": "1622561841846666648"
+      },
+      {
+        "file": "src/assets/icons/noblelanding.svg",
+        "hash": "13946769962091814966"
+      },
+      {
+        "file": "src/assets/images/cards/08-320x200.jpg",
+        "hash": "9855162117169213106"
+      },
+      {
+        "file": "src/app/modules/user/user.service.ts",
+        "hash": "8161381506339574532"
+      },
+      {
+        "file": "src/app/modules/file-manager/file-manager.component.html",
+        "hash": "14044903396231314978"
+      },
+      {
+        "file": "src/app/modules/accounting/transactions/template/journal-template.component.html",
+        "hash": "10305170005917466401"
+      },
+      {
+        "file": "src/assets/images/cards/03-320x200.jpg",
+        "hash": "5615477378142829759"
+      },
+      {
+        "file": "src/app/modules/accounting/accts/roles/roles.component.html",
+        "hash": "7801192006301234915"
+      },
+      {
+        "file": "src/app/modules/chat/new-chat/new-chat.component.ts",
+        "hash": "5584622774348128156"
+      },
+      {
+        "file": "src/app/mock-api/apps/tasks/data.ts",
+        "hash": "15298015952343082386"
+      },
+      {
+        "file": "src/@fuse/services/splash-screen/splash-screen.service.ts",
+        "hash": "2530798578615372239"
+      },
+      {
+        "file": "src/assets/images/cards/avatar-400x400.jpg",
+        "hash": "7876920063915980370"
+      },
+      {
+        "file": "src/app/mock-api/common/user/api.ts",
+        "hash": "7509830112445991865"
+      },
+      {
+        "file": "src/styles/tailwind.scss",
+        "hash": "817701730495649619"
+      },
+      {
+        "file": "src/app/modules/accounting/transactions/journal-update/journal-edit.component.ts",
+        "hash": "15472421776265337726"
+      },
+      {
+        "file": "src/app/modules/help-center/guides/category/category.component.ts",
+        "hash": "2106011007465028704"
+      },
+      {
+        "file": "src/@fuse/components/navigation/horizontal/horizontal.component.html",
+        "hash": "13848056938652123982"
+      },
+      {
+        "file": "src/app/services/image-item-index.service.ts",
+        "hash": "13976292488359220669"
+      },
+      {
+        "file": "src/app/core/auth.signal/register/register.component.spec.ts",
+        "hash": "3244421341483603138"
+      },
+      {
+        "file": "src/@fuse/styles/main.css",
+        "hash": "10693646550483814315"
+      },
+      {
+        "file": "src/assets/images/avatars/male-10.jpg",
+        "hash": "17071245728290368935"
+      },
+      {
+        "file": "src/@fuse/services/confirmation/dialog/dialog.component.ts",
+        "hash": "4138321676308484870"
+      },
+      {
+        "file": "src/app/modules/admin/image-maintenance/image-edit/image-mgt-edit.component.ts",
+        "hash": "5422671968735479532"
+      },
+      {
+        "file": "src/app/common/cache.service.ts",
+        "hash": "1225043671057184796"
+      },
+      {
+        "file": "src/app/modules/admin/analytics/analytics.component.html",
+        "hash": "13487746940079795850"
+      },
+      {
+        "file": "src/@fuse/components/navigation/vertical/vertical.component.ts",
+        "hash": "3443730207755857749"
+      },
+      {
+        "file": "src/app/services/funds.service.ts",
+        "hash": "10908613084094866228"
+      },
+      {
+        "file": "src/assets/images/cards/21-640x480.jpg",
+        "hash": "6805145911276525879"
+      },
+      {
+        "file": "src/app/core/auth/auth.utils.ts",
+        "hash": "3132426309136445756"
+      },
+      {
+        "file": "src/@fuse/components/masonry/public-api.ts",
+        "hash": "8653346882576344210"
+      },
+      {
+        "file": "src/@fuse/styles/themes.scss",
+        "hash": "5777168935340311489"
+      },
+      {
+        "file": "src/assets/icons/material-twotone.svg",
+        "hash": "24036692367393956"
+      },
+      {
+        "file": "src/app/modules/reporting/transaction-analysis/journal.entry.routes.ts",
+        "hash": "8148883908165134250"
+      },
+      {
+        "file": "src/@fuse/components/highlight/highlight.component.css",
+        "hash": "17276573357118796681"
+      },
+      {
+        "file": "src/app/modules/pages/activities/activities.component.html",
+        "hash": "5817537193926476921"
+      },
+      {
+        "file": "src/app/modules/chat/chats/chats.component.html",
+        "hash": "12537684727714502716"
+      },
+      {
+        "file": "src/app/services/messages/messages.component.ts",
+        "hash": "4066355918761510922"
+      },
+      {
+        "file": "src/app/modules/accounting/accts/main/gl.main.components.routes.ts",
+        "hash": "994909480057172594"
+      },
+      {
+        "file": "src/app/modules/user/profile/profile.component.ts",
+        "hash": "9512822187826824763"
+      },
+      {
+        "file": "src/@fuse/components/highlight/highlight.component.html",
+        "hash": "748359093341796036"
+      },
+      {
+        "file": "src/app/modules/reporting/financial-statement/balance-sheet-statement-rpt.component.ts",
+        "hash": "10495148539993889291"
+      },
+      {
+        "file": "src/assets/images/avatars/female-15.jpg",
+        "hash": "670502627418682449"
+      },
+      {
+        "file": "tailwind.config.js",
+        "hash": "7670052756594154965"
+      },
+      {
+        "file": "src/app/modules/admin/image-maintenance/collection-image-selection/collection-image-selection.component.css",
+        "hash": "16521126231331156826"
+      },
+      {
+        "file": "src/@fuse/directives/scrollbar/public-api.ts",
+        "hash": "3691538241287482241"
+      },
+      {
+        "file": "src/@fuse/components/navigation/vertical/components/divider/divider.component.html",
+        "hash": "1253786646344628107"
+      },
+      {
+        "file": "src/app/modules/kanban/kanban-list/kanban-list.css",
+        "hash": "9793671685442412916"
+      },
+      {
+        "file": "src/app/layout/layouts/horizontal/material/material.component.html",
+        "hash": "10143274141987762110"
+      },
+      {
+        "file": "src/app/logging-interceptor.legacy.ts",
+        "hash": "486021477192571872"
+      },
+      {
+        "file": "src/@fuse/styles/user-themes.css",
+        "hash": "7151306730839621876"
+      },
+      {
+        "file": "src/@fuse/lib/mock-api/public-api.ts",
+        "hash": "3920028660959316781"
+      },
+      {
+        "file": "src/app/modules/help-center/help-center.service.ts",
+        "hash": "17443249828957456306"
+      },
+      {
+        "file": "src/app/models/journals/index.ts",
+        "hash": "2438605121490337661"
+      },
+      {
+        "file": "src/app/mock-api/apps/ecommerce/inventory/api.ts",
+        "hash": "3610899513203916672"
+      },
+      {
+        "file": "src/app/modules/documents/file-manager/file-manager.service.ts",
+        "hash": "2387538241781395653"
+      },
+      {
+        "file": "src/@fuse/components/loading-bar/loading-bar.component.css.map",
+        "hash": "13130536671874585491"
+      },
+      {
+        "file": "src/assets/images/cards/sneakers-01-320x200.jpg",
+        "hash": "2968113095848963054"
+      },
+      {
+        "file": "src/app/modules/reporting/trial-balance/trial-balance.component.html",
+        "hash": "36030972266430730"
+      },
+      {
+        "file": "src/app/core/auth.signal/login/ui/login-form.component.ts",
+        "hash": "3806821430687293124"
+      },
+      {
+        "file": "src/app/core/auth/cache.service.ts",
+        "hash": "1225043671057184796"
+      },
+      {
+        "file": "src/@fuse/components/card/card.types.ts",
+        "hash": "16199740661350382903"
+      },
+      {
+        "file": "src/app/modules/chat/conversation/conversation.component.ts",
+        "hash": "12805154575002417719"
+      },
+      {
+        "file": "src/app/services/periods.service.ts",
+        "hash": "12022370456282518821"
+      },
+      {
+        "file": "src/app/mock-api/ui/icons/data.ts",
+        "hash": "14304746503384917505"
+      },
+      {
+        "file": "src/app/modules/kanban/kanban/kanban-menubar/grid-menubar.component.ts",
+        "hash": "8628557882223743823"
+      },
+      {
+        "file": "src/@fuse/directives/scrollbar/index.ts",
+        "hash": "5937759299572495819"
+      },
+      {
+        "file": "src/app/services/budget.service.ts",
+        "hash": "6272141308161711954"
+      },
+      {
+        "file": "src/app/modules/accounting/transactions/gl-transactions/context.scss",
+        "hash": "261817155960925420"
+      },
+      {
+        "file": "src/app/modules/accounting/transactions/journal-update/journal-edit.component.html",
+        "hash": "8758374502300373198"
+      },
+      {
+        "file": "src/app/layout/common/shortcuts/shortcuts.service.ts",
+        "hash": "10070965090382289315"
+      },
+      {
+        "file": "src/app/modules/drag-n-drop/drag-n-drop.component.scss",
+        "hash": "18154232093840717214"
+      },
+      {
+        "file": "src/app/modules/accounting/accts/generic-table/generic-table.component.html",
+        "hash": "5437007361584321230"
+      },
+      {
+        "file": "src/app/modules/budget/thousands.directive.ts",
+        "hash": "17027866766173371475"
+      },
+      {
+        "file": "src/app/core/auth.signal/login/ui/login-form.component.spec.ts",
+        "hash": "3244421341483603138"
+      },
+      {
+        "file": "src/app/modules/drag-n-drop/uploader/uploader.component.ts",
+        "hash": "12746043750529031883"
+      },
+      {
+        "file": "src/app/modules/pages/coming-soon/split-screen-reversed/coming-soon.component.ts",
+        "hash": "4815358457439617837"
+      },
+      {
+        "file": "src/app/modules/drag-n-drop/upload-task/upload-task.component.html",
+        "hash": "10386688870837428826"
+      },
+      {
+        "file": "src/assets/images/avatars/female-06.jpg",
+        "hash": "9011788355660318094"
+      },
+      {
+        "file": "src/app/core/auth.signal/register/utils/password-matches.ts",
+        "hash": "9310506740016637872"
+      },
+      {
+        "file": "src/@fuse/components/navigation/vertical/styles/appearances/dense.scss",
+        "hash": "2759020351441064130"
+      },
+      {
+        "file": "src/app/modules/pages/profile/profile.routes.ts",
+        "hash": "1165377376825928691"
+      },
+      {
+        "file": "src/app/modules/pages/maintenance/maintenance.routes.ts",
+        "hash": "12384416768800733636"
+      },
+      {
+        "file": "src/app/modules/chat/chat.service.ts",
+        "hash": "16882626875279563205"
+      },
+      {
+        "file": "src/@fuse/styles/components/example-viewer.scss",
+        "hash": "1905540112833943435"
+      },
+      {
+        "file": "src/app/modules/accounting/accts/roles/roles.component.ts",
+        "hash": "15729141172182750821"
+      },
+      {
+        "file": "src/@fuse/components/highlight/index.ts",
+        "hash": "13900990071675437096"
+      },
+      {
+        "file": "src/@fuse/services/platform/platform.service.ts",
+        "hash": "16907057393307660770"
+      },
+      {
+        "file": "src/app/layout/layout.component.scss",
+        "hash": "4299228197213911403"
+      },
+      {
+        "file": "src/app/mock-api/apps/mailbox/api.ts",
+        "hash": "769891464615804154"
+      },
+      {
+        "file": "src/app/modules/chat/chat.component.html",
+        "hash": "7535777595828638703"
+      },
+      {
+        "file": "src/app/modules/accounting/transactions/ar-transactions/ar-update.component.ts",
+        "hash": "13290357502784449345"
+      },
+      {
+        "file": "src/app/modules/file-manager/file-manager.component.ts",
+        "hash": "10822084747326608637"
+      },
+      {
+        "file": "src/app/modules/accounting/accts/periods/periods.component.html",
+        "hash": "6927511404739199902"
+      },
+      {
+        "file": "src/app/shared/unility.functions.ts",
+        "hash": "10525337879636763956"
+      },
+      {
+        "file": "src/@fuse/pipes/find-by-key/index.ts",
+        "hash": "8028144741999596047"
+      },
+      {
+        "file": "transloco.config.js",
+        "hash": "13698549947395328263"
+      },
+      {
+        "file": "src/app/modules/auth/register/utils/password-matches.spec.ts",
+        "hash": "3244421341483603138"
+      },
+      {
+        "file": "src/app/core/user/user.service.ts",
+        "hash": "4384164001021294081"
+      },
+      {
+        "file": "src/app/modules/pages/pricing/simple/simple.routes.ts",
+        "hash": "15200854174883632131"
+      },
+      {
+        "file": "src/app/modules/kanban/kanban/kanban.routes.ts",
+        "hash": "315720801688323358"
+      },
+      {
+        "file": "ionic.config.json",
+        "hash": "4914571479384889376"
+      },
+      {
+        "file": "src/app/modules/accounting/transactions/transaction-main.component.html",
+        "hash": "18337439768696709750"
+      },
+      {
+        "file": "src/app/modules/accounting/accts/subtype/subtype.component.html",
+        "hash": "16562764143520638524"
+      },
+      {
+        "file": "src/app/modules/analysis/analysis.component.css.map",
+        "hash": "2442144904296674433"
+      },
+      {
+        "file": "src/app/mock-api/index.ts",
+        "hash": "2280622848734615411"
+      },
+      {
+        "file": "src/app/modules/admin/dashboard/summary-card.component.html",
+        "hash": "5758792093884777495"
+      },
+      {
+        "file": "src/app/modules/budget/budget.entry.routes.ts",
+        "hash": "9294328119649291201"
+      },
+      {
+        "file": "src/app/modules/auth/sign-in/sign-in.component.ts",
+        "hash": "6278539176575888049"
+      },
+      {
+        "file": "src/app/modules/file-manager/file-manager-card/evidence-card.component.ts",
+        "hash": "5764370332141464526"
+      },
+      {
+        "file": ".vscode/launch.json",
+        "hash": "17632881241341713344"
+      },
+      {
+        "file": "src/app/modules/admin/image-maintenance/image-maintenance/image-maintenance.component.css",
+        "hash": "4753737305319903044"
+      },
+      {
+        "file": "src/app/modules/user/user/user.resolve.ts",
+        "hash": "13068659774310727538"
+      },
+      {
+        "file": "src/app/modules/analysis/analysis.component.routes.ts",
+        "hash": "17448285407537435804"
+      },
+      {
+        "file": "src/@fuse/services/splash-screen/public-api.ts",
+        "hash": "411777169198694069"
+      },
+      {
+        "file": "src/styles/vendors.css",
+        "hash": "16087723232942802353"
+      },
+      {
+        "file": "src/app/modules/auth/register/register.component.ts",
+        "hash": "18103093021026904291"
+      },
+      {
+        "file": "src/app/modules/help-center/help-center.type.ts",
+        "hash": "682342760191810447"
+      },
+      {
+        "file": "src/assets/images/cards/06-320x200.jpg",
+        "hash": "18080014414469893298"
+      },
+      {
+        "file": "src/app/services/periods.store.ts",
+        "hash": "10946020368725301793"
+      },
+      {
+        "file": "src/assets/images/avatars/male-02.jpg",
+        "hash": "11611290591264458361"
+      },
+      {
+        "file": "src/@fuse/components/navigation/horizontal/components/divider/divider.component.ts",
+        "hash": "13507660853834080688"
+      },
+      {
+        "file": "src/app/modules/analysis/analysis.component.spec.ts",
+        "hash": "17115292247070942746"
+      },
+      {
+        "file": "src/app/core/user/user.types.ts",
+        "hash": "5632514067673393995"
+      },
+      {
+        "file": "src/app/modules/accounting/accts/gl-accts.routes.ts",
+        "hash": "11919277644058562344"
+      },
+      {
+        "file": "src/app/layout/common/settings/settings.component.html",
+        "hash": "9220278035996585467"
+      },
+      {
+        "file": "src/@fuse/components/drawer/drawer.component.html",
+        "hash": "5324540217999113425"
+      },
+      {
+        "file": "src/@fuse/components/navigation/vertical/styles/appearances/dense.css.map",
+        "hash": "4004656775394412218"
+      },
+      {
+        "file": "src/app/modules/user/profile/profile.component.spec.ts",
+        "hash": "721931474099465727"
+      },
+      {
+        "file": "src/@fuse/components/loading-bar/loading-bar.component.html",
+        "hash": "12952956957940199352"
+      },
+      {
+        "file": "src/@fuse/services/media-watcher/index.ts",
+        "hash": "14460946595848280763"
+      },
+      {
+        "file": "src/app/services/journal-template.service.ts",
+        "hash": "16525626570843757657"
+      },
+      {
+        "file": "src/app/modules/analysis/analysis.component.scss",
+        "hash": "3244421341483603138"
+      },
+      {
+        "file": "src/app/modules/admin/dashboard/project.routes.ts",
+        "hash": "1122983148964796128"
+      },
+      {
+        "file": "src/app/modules/user/user-controls/lemon-rater/lemon-rater.component.scss",
+        "hash": "17445442650361184788"
+      },
+      {
+        "file": "src/assets/images/cards/29-640x480.jpg",
+        "hash": "1937512318176272615"
+      },
+      {
+        "file": "src/@fuse/components/navigation/vertical/styles/appearances/compact.css",
+        "hash": "17901558132831942846"
+      },
+      {
+        "file": "src/assets/images/cards/01-320x200.jpg",
+        "hash": "10586999134741351821"
+      },
+      {
+        "file": "src/app/modules/accounting/transactions/wizard/wizard-entry.component.html",
+        "hash": "6326392943500452246"
+      },
+      {
+        "file": "src/app/modules/auth/sign-in/sign-in.routes.ts",
+        "hash": "9548134892219192280"
+      },
+      {
+        "file": "src/app/modules/drag-n-drop/progress/progress.component.ts",
+        "hash": "11156469966755968693"
+      },
+      {
+        "file": "src/app/modules/accounting/accts/subtype/subtype.component.ts",
+        "hash": "5614915765797400734"
+      },
+      {
+        "file": "src/app/modules/budget/budget-main.component.ts",
+        "hash": "1656810300105604437"
+      },
+      {
+        "file": "src/app/services/material.module.ts",
+        "hash": "1149661831309655705"
+      },
+      {
+        "file": "src/app/modules/admin/sales-graph/sales-graph.component.ts",
+        "hash": "8208754069071312221"
+      },
+      {
+        "file": "src/@fuse/components/masonry/masonry.component.ts",
+        "hash": "12001473633041666853"
+      },
+      {
+        "file": "src/app/modules/pages/coming-soon/split-screen/coming-soon.component.html",
+        "hash": "11540250180658157971"
+      },
+      {
+        "file": "src/@fuse/components/navigation/horizontal/components/divider/divider.component.html",
+        "hash": "12127621390797830952"
+      },
+      {
+        "file": "src/@fuse/components/alert/alert.component.css.map",
+        "hash": "7000470578067224902"
+      },
+      {
+        "file": "src/assets/images/avatars/male-05.jpg",
+        "hash": "5448544201045835310"
+      },
+      {
+        "file": "src/app/modules/pages/settings/settings.routes.ts",
+        "hash": "7170095954677163343"
+      },
+      {
+        "file": "src/app/modules/reporting/reporting-panel.component.html",
+        "hash": "7081334287424090345"
+      },
+      {
+        "file": "src/app/modules/pages/coming-soon/fullscreen/coming-soon.component.ts",
+        "hash": "7401919015283232801"
+      },
+      {
+        "file": "src/app/modules/pages/pricing/single/single.routes.ts",
+        "hash": "2248139743315378744"
+      },
+      {
+        "file": "src/app/app.resolvers.ts",
+        "hash": "11534188711574352025"
+      },
+      {
+        "file": "src/app/common/base-form.class.ts",
+        "hash": "12558233177644310361"
+      },
+      {
+        "file": "src/app/modules/auth/sign-out/sign-out.component.ts",
+        "hash": "16949623592059430892"
+      },
+      {
+        "file": "src/app/layout/layouts/vertical/futuristic/futuristic.component.ts",
+        "hash": "16656993576953915862"
+      },
+      {
+        "file": "src/app/token.service.ts",
+        "hash": "4575464864243435522"
+      },
+      {
+        "file": "src/app/services/journal.resolver.ts",
+        "hash": "14907379600586032013"
+      },
+      {
+        "file": "src/app/models/index.ts",
+        "hash": "16130272543804752034"
+      },
+      {
+        "file": "Makefile",
+        "hash": "10798756980905687239"
+      },
+      {
+        "file": "src/@fuse/services/loading/index.ts",
+        "hash": "5329717474434174164"
+      },
+      {
+        "file": "src/@fuse/components/navigation/navigation.types.ts",
+        "hash": "17452885918092835329"
+      },
+      {
+        "file": "src/@fuse/components/navigation/horizontal/horizontal.component.css.map",
+        "hash": "14697451931300094716"
+      },
+      {
+        "file": "src/assets/images/cards/14-640x480.jpg",
+        "hash": "3599949684496365360"
+      },
+      {
+        "file": "src/@fuse/components/navigation/horizontal/components/branch/branch.component.ts",
+        "hash": "6429985444960549867"
+      },
+      {
+        "file": "src/@fuse/components/drawer/index.ts",
+        "hash": "12376250808539749459"
+      },
+      {
+        "file": "src/assets/images/avatars/male-14.jpg",
+        "hash": "7029590298251665420"
+      },
+      {
+        "file": "src/app/modules/kanban/status/status.component.ts",
+        "hash": "6967637004856832887"
+      },
+      {
+        "file": "src/@fuse/components/card/card.component.scss",
+        "hash": "10244976536620582758"
+      },
+      {
+        "file": "src/@fuse/tailwind/plugins/utilities.js",
+        "hash": "14156620802040291899"
+      },
+      {
+        "file": "src/app/layout/common/notifications/notifications.component.html",
+        "hash": "12621920075015832745"
+      },
+      {
+        "file": "src/app/modules/admin/image-maintenance/products-image-selection/image-selection.component.css",
+        "hash": "13459649963702693988"
+      },
+      {
+        "file": "src/assets/images/cards/coffee-shop-03-320x320.jpg",
+        "hash": "18438012284908272139"
+      },
+      {
+        "file": "src/assets/images/cards/coffee-shop-02-512x512.jpg",
+        "hash": "12286524463814876712"
+      },
+      {
+        "file": "src/@fuse/services/confirmation/confirmation.types.ts",
+        "hash": "9961956562917833114"
+      },
+      {
+        "file": "src/app/modules/auth/register/data-access/register.service.ts",
+        "hash": "3249590071927674744"
+      },
+      {
+        "file": "src/app/modules/pages/settings/settings.component.ts",
+        "hash": "18013141066644246993"
+      },
+      {
+        "file": "src/app/modules/help-center/guides/guides.component.html",
+        "hash": "1179632783235826112"
+      },
+      {
+        "file": "src/app/modules/help-center/faqs/faqs.component.ts",
+        "hash": "8168367468670873933"
+      },
+      {
+        "file": "src/app/modules/pages/error/error-500/error-500.component.html",
+        "hash": "4210102272243419943"
+      },
+      {
+        "file": "src/app/modules/reporting/distributed-ledger/dist-menubar/grid-menubar.component.html",
+        "hash": "16979838125042147908"
+      },
+      {
+        "file": "src/app/services/messages/messages.component.css",
+        "hash": "5939775456176466178"
+      },
+      {
+        "file": "src/assets/images/avatars/male-20.jpg",
+        "hash": "12304948321445020375"
+      },
+      {
+        "file": "src/app/mock-api/apps/file-manager/data.ts",
+        "hash": "5728517733416472311"
+      },
+      {
+        "file": "src/app/app.component.scss",
+        "hash": "16404522680701464459"
+      },
+      {
+        "file": "src/assets/img/logo-text-on-dark.ico",
+        "hash": "16214490060721475683"
+      },
+      {
+        "file": "src/app/modules/admin/image-card/image-card.component.ts",
+        "hash": "5212463198750987434"
+      },
+      {
+        "file": "src/app/modules/kanban/types/types.component.html",
+        "hash": "11458680167716968769"
+      },
+      {
+        "file": "src/@fuse/components/loading-bar/loading-bar.component.scss",
+        "hash": "10505207679953100266"
+      },
+      {
+        "file": "src/app/models/statement-line/index.ts",
+        "hash": "8105877437951032012"
+      },
+      {
+        "file": "src/app/modules/user/view-user/view-user.component.ts",
+        "hash": "12459590621014212243"
+      },
+      {
+        "file": "src/assets/images/avatars/male-17.jpg",
+        "hash": "10309859072344948225"
+      },
+      {
+        "file": "src/@fuse/services/config/config.types.ts",
+        "hash": "16176649381853783728"
+      },
+      {
+        "file": "src/@fuse/styles/overrides/quill.css.map",
+        "hash": "7327465673258089393"
+      },
+      {
+        "file": "src/app/common/common.testing.ts",
+        "hash": "3996754025669781726"
+      },
+      {
+        "file": "src/assets/images/avatars/female-07.jpg",
+        "hash": "189674534090388264"
+      },
+      {
+        "file": "src/@fuse/tailwind/utils/json-to-sass-map.js",
+        "hash": "4394720020796613630"
+      },
+      {
+        "file": "src/@fuse/components/navigation/horizontal/components/basic/basic.component.html",
+        "hash": "6873665407223753115"
+      },
+      {
+        "file": "src/app/services/evidence.service.ts",
+        "hash": "12370779638545066695"
+      },
+      {
+        "file": "src/assets/images/avatars/male-19.jpg",
+        "hash": "1054935309633952207"
+      },
+      {
+        "file": "src/assets/images/cards/13-160x160.jpg",
+        "hash": "15784938804369538966"
+      },
+      {
+        "file": "src/@fuse/components/drawer/drawer.component.css",
+        "hash": "15074877719607960858"
+      },
+      {
+        "file": "src/assets/images/avatars/female-18.jpg",
+        "hash": "7352187020063296970"
+      },
+      {
+        "file": "src/app/modules/chat/new-chat/new-chat.component.html",
+        "hash": "10472306076863522830"
+      },
+      {
+        "file": "src/@fuse/components/fullscreen/fullscreen.types.ts",
+        "hash": "4601165672945913617"
+      },
+      {
+        "file": "src/app/modules/pages/error/error-404/error-404.component.ts",
+        "hash": "6460702822628488708"
+      },
+      {
+        "file": "src/app/services/index.ts",
+        "hash": "6881028465933409163"
+      },
+      {
+        "file": "src/app/modules/drag-n-drop/dropzone.directive.ts",
+        "hash": "10165638361007720542"
+      },
+      {
+        "file": "src/@fuse/directives/scroll-reset/scroll-reset.directive.ts",
+        "hash": "9230573103818534040"
+      },
+      {
+        "file": "src/app/common/ui.service.spec.ts",
+        "hash": "10158305912950273644"
+      },
+      {
+        "file": "src/@fuse/styles/overrides/perfect-scrollbar.css",
+        "hash": "16552175814131323876"
+      },
+      {
+        "file": "src/app/modules/auth/register/ui/register-form.component.spec.ts",
+        "hash": "3244421341483603138"
+      },
+      {
+        "file": "src/app/modules/chat/profile/profile.component.ts",
+        "hash": "14235267037322452588"
+      },
+      {
+        "file": "src/app/layout/layouts/vertical/classic/classic.component.ts",
+        "hash": "10566621147105807085"
+      },
+      {
+        "file": "CREDITS",
+        "hash": "988856757622552209"
+      },
+      {
+        "file": "src/app/mock-api/pages/activities/api.ts",
+        "hash": "12810605920479297270"
+      },
+      {
+        "file": "src/app/modules/reporting/expense/expense-rpt.component.ts",
+        "hash": "2219255541420234100"
+      },
+      {
+        "file": "src/app/layout/common/languages/languages.component.html",
+        "hash": "17415045369975619976"
+      },
+      {
+        "file": "src/@fuse/directives/scroll-reset/index.ts",
+        "hash": "14338229507679220164"
+      },
+      {
+        "file": "src/assets/images/avatars/male-04.jpg",
+        "hash": "13937613583704513345"
+      },
+      {
+        "file": "src/@fuse/components/navigation/public-api.ts",
+        "hash": "14717631356391023056"
+      },
+      {
+        "file": "src/app/modules/accounting/accts/funds/funds.components.routes.ts",
+        "hash": "16379488744821892785"
+      },
+      {
+        "file": "src/app/app.config.ts",
+        "hash": "3937411805993903816"
+      },
+      {
+        "file": "src/app/modules/reporting/distributed-ledger/transaction-detail/transaction-detail.component.ts",
+        "hash": "12833204859277738569"
+      },
+      {
+        "file": "src/app/modules/drag-n-drop/progress/progress.component.css.map",
+        "hash": "515348010982267924"
+      },
+      {
+        "file": "src/app/graphql.module.ts",
+        "hash": "17319974175758951143"
+      },
+      {
+        "file": "src/app/modules/file-manager/file-manager.routes.ts",
+        "hash": "15299621707410316744"
+      },
+      {
+        "file": "src/@fuse/services/config/public-api.ts",
+        "hash": "4108501699500337715"
+      },
+      {
+        "file": "src/app/modules/reporting/handson/MyCustomPlugin.ts",
+        "hash": "1153324410480812986"
+      },
+      {
+        "file": "src/app/modules/kanban/priority/priority.component.ts",
+        "hash": "10904407613499066801"
+      },
+      {
+        "file": "src/app/modules/lightbox/lightbox.css",
+        "hash": "11967145880732022057"
+      },
+      {
+        "file": "src/assets/img/dnd/ic-file.svg",
+        "hash": "15316675193618354040"
+      }
+    ],
+    "projectFileMap": {}
+  }
+}

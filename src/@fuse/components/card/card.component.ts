@@ -1,6 +1,13 @@
 import { BooleanInput, coerceBooleanProperty } from '@angular/cdk/coercion';
-import { } from '@angular/common';
-import { Component, HostBinding, Input, OnChanges, SimpleChanges, ViewEncapsulation } from '@angular/core';
+
+import {
+    Component,
+    HostBinding,
+    Input,
+    OnChanges,
+    SimpleChanges,
+    ViewEncapsulation,
+} from '@angular/core';
 import { fuseAnimations } from '@fuse/animations';
 import { FuseCardFace } from '@fuse/components/card/card.types';
 
@@ -11,7 +18,7 @@ import { FuseCardFace } from '@fuse/components/card/card.types';
     encapsulation: ViewEncapsulation.None,
     animations: fuseAnimations,
     exportAs: 'fuseCard',
-    imports: []
+    imports: [],
 })
 export class FuseCardComponent implements OnChanges {
     /* eslint-disable @typescript-eslint/naming-convention */
@@ -22,12 +29,6 @@ export class FuseCardComponent implements OnChanges {
     @Input() expanded: boolean = false;
     @Input() face: FuseCardFace = 'front';
     @Input() flippable: boolean = false;
-
-    /**
-     * Constructor
-     */
-    constructor() {
-    }
 
     // -----------------------------------------------------------------------------------------------------
     // @ Accessors
@@ -60,13 +61,17 @@ export class FuseCardComponent implements OnChanges {
         // Expanded
         if ('expanded' in changes) {
             // Coerce the value to a boolean
-            this.expanded = coerceBooleanProperty(changes.expanded.currentValue);
+            this.expanded = coerceBooleanProperty(
+                changes.expanded.currentValue
+            );
         }
 
         // Flippable
         if ('flippable' in changes) {
             // Coerce the value to a boolean
-            this.flippable = coerceBooleanProperty(changes.flippable.currentValue);
+            this.flippable = coerceBooleanProperty(
+                changes.flippable.currentValue
+            );
         }
     }
 }

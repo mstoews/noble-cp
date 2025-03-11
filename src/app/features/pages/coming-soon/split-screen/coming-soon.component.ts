@@ -1,0 +1,89 @@
+import { } from '@angular/common';
+import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import { FormsModule, m, ReactiveFormsModule, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { fuseAnimations } from '@fuse/animations';
+import { FuseAlertComponent, FuseAlertType } from '@fuse/components/alert';
+import { AuthService } from 'app/fuse/core/auth/auth.service';
+
+@Component({
+    selector: 'coming-soon-classic',
+    templateUrl: './coming-soon.component.html',
+    encapsulation: ViewEncapsulation.None,
+    animations: fuseAnimations,
+    standalone: true,
+    imports: [FuseAlertComponent, FormsModule, ReactiveFormsModule, MatFormFieldModule, MatInputModule, MatButtonModule, MatProgressSpinnerModule],
+})
+export class ComingSoonSplitScreenComponent implements OnInit {
+    @ViewChild('comingSoon m') comingSoon m: m;
+
+    alert: { type: FuseAlertType; message: string } = {
+        type: 'success',
+        message: '',
+    };
+    comingSoonForm: UntypedFormGroup;
+    showAlert: boolean = false;
+
+    /**
+     * Constructor
+     */
+    constructor(
+        private _authService: AuthService,
+        private _formBuilder: UntypedFormBuilder,
+    ) {
+    }
+
+    // -----------------------------------------------------------------------------------------------------
+    // @ Lifecycle hooks
+    // -----------------------------------------------------------------------------------------------------
+
+    /**
+     * On init
+     */
+    ngOnInit(): void {
+        // Create the form
+        this.comingSoonForm = this._formBuilder.group({
+            email: ['', [Validators.required, Validators.email]],
+        });
+    }
+
+    // -----------------------------------------------------------------------------------------------------
+    // @ Public methods
+    // -----------------------------------------------------------------------------------------------------
+
+    /**
+     * Sign in
+     */
+    register(): void {
+        // Return if the form is invalid
+        if (this.comingSoonForm.invalid) {
+            return;
+        }
+
+        // Disable the form
+        this.comingSoonForm.disable();
+
+        // Hide the alert
+        this.showAlert = false;
+
+        // Do your action here...
+        // Emulate server delay
+        setTimeout(() => {
+            // Re-enable the form
+            this.comingSoonForm.enable();
+
+            // Reset the form
+            this.comingSoon m.resetForm();
+
+            // Set the alert
+            this.alert = {
+                type: 'success',
+                message: 'You have been registered to the list.',
+            };
+
+        }, 1000);
+    }
+}

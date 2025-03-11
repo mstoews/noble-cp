@@ -1,0 +1,77 @@
+
+    <div class="absolute inset-0 flex flex-col min-w-0 overflow-y-auto -px-20" cdkScrollable>
+        <!-- Main -->
+        <div class="flex-auto p-6 sm:p-10">
+            <div class=" border-gray-300 rounded-2xl">
+                @if (dl$ | async; as dist)
+                {
+                            <div class="flex flex-col">
+                            <dist-menubar [inTitle]="'Distributed Ledger Report'"
+                            (notifyParentRefresh)="onRefresh()"
+                            (notifyParentAdd)="onAdd()"
+                            (notifyParentPeriod)="onPeriodChanged($event)"
+                            (notifyParentYear)="onYearChanged($event)"
+                            [currentPeriod]="currentPeriod"
+                            [currentYear]="currentYear" >
+                            </dist-menubar>
+
+                            <ejs-grid  id='grid'                                  
+                                  [dataSource]='dist'   
+                                  [allowPaging]='true' 
+                                  allowSorting='true'                                   
+                                  showColumnMenu='true'
+                                  pageSettings="initialPage"                                 
+                                  [allowFiltering]='false'
+                                  [toolbar]='toolbarOptions'
+                                  [selectionOptions]="selectionOptions"                                                                       
+                                  [filterSettings]='filterSettings'                                        
+                                  [searchSetting]="searchOptions" >
+                                <e-columns>                                
+                                <e-column  field="account" width="130" headerText="Group"></e-column>
+                                <e-column  field="child" headerText="Account" type="string" width="130"></e-column>
+                                <e-column  field="description" headerText="Description" type="string" width="170"></e-column>
+                                <e-column  field="period" width="100" type="string"></e-column>                                
+                                <e-column  field="opening_balance" format='N2' type="number" textAlign="right" width="130" ></e-column>
+                                <e-column  field="debit_balance"   format='N2' textAlign="right"   width="130" ></e-column>
+                                <e-column  field="credit_balance"  format='N2' textAlign="right"  width="130" ></e-column>
+                                <e-column  field="closing_balance" format='N2' textAlign="right" width="130" ></e-column>
+                                <e-column  field="update_date" format="MM-dd-yyyy" type="date" width="100" ></e-column>
+                                </e-columns>
+                                <e-aggregates>
+                                    <e-aggregate>
+                                        <e-columns>
+                                            <e-column field="opening_balance" format="N2" type="sum">
+                                                <ng-template #footerTemplate let-data>{{data.sum}}</ng-template>
+                                            </e-column>                                            
+                                            <e-column field="debit_balance" format="N2" type="sum">
+                                                <ng-template #footerTemplate let-data>{{data.sum}} </ng-template>
+                                            </e-column>                                            
+                                            <e-column field="credit_balance" format="N2" type="sum">
+                                                <ng-template #footerTemplate let-data>{{data.sum}} </ng-template>
+                                            </e-column>                                            
+                                            <e-column field="closing_balance" format="N2" type="sum">
+                                                <ng-template #footerTemplate let-data>{{data.sum}} </ng-template>
+                                            </e-column>                                            
+                                        </e-columns>
+                                    </e-aggregate>                                    
+                                </e-aggregates>
+                            </ejs-grid>                                
+                        </div>
+
+                }
+        </div>
+    </div>
+
+<!--
+    account: string;
+  child: string;
+  period: string;
+  period_year: string;
+  description: string;
+  opening_balance: number;
+  debit_balance: number;
+  credit_balance: number;
+  closing_balance: number;
+  update_date: Date;
+  created_user: string;
+ -->
