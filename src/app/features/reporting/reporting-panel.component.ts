@@ -13,6 +13,7 @@ import { TbGridComponent } from './tb-grid/tb-grid.component';
 import { AppStore, ApplicationService } from "../../services/application.state.service";
 import { GridTemplateComponent } from './grid-template/grid-template.component';
 import { CdkScrollable } from '@angular/cdk/scrolling';
+import { TbPivotComponent } from './tb-grid/tb-pivot.component';
 
 
 
@@ -26,6 +27,7 @@ const mods = [
     DistributedTbComponent,
     TbGridComponent,
     GridTemplateComponent,
+    TbPivotComponent,
     CdkScrollable
     ]
 
@@ -97,6 +99,7 @@ const mods = [
                         <div class="mt-8">
                             @switch (selectedPanel) {
                                 @case ('tb-grid') { <tb-grid></tb-grid>  }
+                                @case ('tb-pivot') { <tb-pivot></tb-pivot>  }
                                 @case ('trial-balance') { <trial-balance></trial-balance>}
                                 @case ('balance-sheet-statement') { <balance-sheet-statement-rpt></balance-sheet-statement-rpt> }
                                 @case ('income-statement') { <income-statement-rpt></income-statement-rpt> }
@@ -214,8 +217,14 @@ export class ReportingPanelComponent {
             {
                 id: 'tb-grid',
                 icon: 'heroicons_outline:document-check',
-                title: 'TB Example Grid',
-                description: 'Distributed trial balance listing including the associated journal entries',
+                title: 'Financial Returns Pivot',
+                description: 'Pivot table of yearly financial data',
+            },
+            {
+                id: 'tb-pivot',
+                icon: 'heroicons_outline:document-check',
+                title: 'Trial Balance Pivot',
+                description: 'Pivot trial balance by account',
             }
         ];
 

@@ -179,7 +179,7 @@ export class DistributedTbComponent implements OnInit, OnDestroy {
   public periodsService = inject(PeriodsService);
   public grid = viewChild<GridComponent>('grid')
   public drawer = viewChild<MatDrawer>('drawer')
-  private router = inject(Router);
+  
 
   public openTradeId = output<Object>();
   public onFocusChanged = output<Object>();

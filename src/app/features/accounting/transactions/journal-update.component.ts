@@ -54,6 +54,7 @@ import {
     IJournalDetailUpdate,
     IJournalHeader,
     IJournalTemplate,
+    IArtifacts,
 } from "app/models/journals";
 
 import { Router, ActivatedRoute, NavigationStart } from "@angular/router";
@@ -298,7 +299,8 @@ const imp = [
                                             Transaction List
                                 </div>
                                     <mat-card class="mat-elevation-z8 h-[calc(100vh-14.2rem)]">                                        
-                                        <ejs-grid id="grid-journal-list" [dataSource]='store.gl()'
+                                        <ejs-grid id="grid-journal-list" 
+                                            [dataSource]='store.gl()'
                                             [selectionSettings]="selectionOptions" 
                                             [allowEditing]='false'
                                             [allowSorting]='true'
@@ -321,16 +323,22 @@ const imp = [
                                                             <span class="text-gray-300 bg-green-700 p-1 rounded-xl">{{data.type}}</span> 
                                                         </div>
                                                     } 
-                                                    @else {
+                                                    @else if (data.type === 'AP'){
                                                         <div>                                                        
                                                             <span class="text-gray-300 bg-blue-800 p-1 rounded-xl">{{data.type}}</span> 
                                                         </div>
                                                     }   
+                                                    @else if (data.type === 'AR'){
+                                                        <div>                                                        
+                                                            <span class="text-gray-300 bg-purple-800 p-1 rounded-xl">{{data.type}}</span> 
+                                                        </div>
+                                                    }
+
                                                 </ng-template>    
                                                 </e-column>
                                                 
                                                 <e-column field='description' headerText='Journal Description'   [visible]='true'></e-column>
-                                                <e-column field='amount'      headerText='Amount' [visible]='false'  textAlign='Right' width='150' format="N2"></e-column>
+                                                <e-column field='amount'      headerText='Amount' [visible]='true'  textAlign='Right' width='150' format="N2"></e-column>
                                                 <e-column field="booked"      headerText="Booked" [visible]='false' width="100" [displayAsCheckBox]='true' type="boolean"></e-column>
                                                 <e-column field="amount"      headerText="Amount" [visible]='false' width="150"  format='N2' textAlign="Right"></e-column>
                                                 <e-column field="period"      headerText="Prd"    [visible]='false' width="100"></e-column>
@@ -870,8 +878,7 @@ export class JournalUpdateComponent
             this.store.loadDetails(data.journal.journal_id);
             this.store.loadArtifactsByJournalId(data.journal.journal_id);
             this.journalHeader = data.journal;
-            this.refreshHeader(this.journalHeader);
-            
+            this.refreshHeader(this.journalHeader);                        
         });
         
         this.bHeaderDirty = false;
@@ -1212,17 +1219,14 @@ export class JournalUpdateComponent
             this.partyList.find((x) => x.party_id === this.journalHeader.party_id)
         );
 
-        this.templateCtrl.setValue(
-            this.templateList.find((x) => x.template_name === this.journalHeader.template_name)
-        );
+        
 
         if (this.journalHeader.template_name != null) {
             this.templateCtrl.setValue(
                 this.templateList.find((x) => x.template_name === this.journalHeader.template_name)
             );
         }
-        this.onChanges();
-
+        
 
         this.partyCtrl.valueChanges.subscribe((value) => {
             //this.bHeaderDirty = true;
@@ -1230,11 +1234,11 @@ export class JournalUpdateComponent
         });
 
         this.templateCtrl.valueChanges.subscribe((value) => {
-            //this.bHeaderDirty = true;
-            this.journalHeader.type = value.journal_type;
-            this.createJournalDetailsFromTemplate(value);
+            this.bHeaderDirty = true;                    
             console.debug('Header is true for changes from template');
         });
+
+        this.onChanges();
 
     }
 
@@ -1548,25 +1552,26 @@ export class JournalUpdateComponent
 
     // Add evidence 
     public onAddEvidence() {
-        const inputs = { ...this.journalForm.value } as IJournalHeader;
+        
         const dialogRef = this.matDialog.open(DndComponent, {
             width: "600px",
-            data: {
-                journal_id: inputs.journal_id,
-                reference_no: inputs.invoice_no,
-                description: this.description,
-            },
+            data: {                
+                journal_id: this.journalHeader.journal_id,
+                reference:  this.journalHeader.invoice_no,
+                description: this.journalHeader.description,       
+                location: '',
+                date_created: new Date().toISOString().split('T')[0],
+                user_created: '@' + this.auth.currentUser.email.split('@')[0],            
+            } as IArtifacts,
         });
 
         dialogRef.afterClosed().subscribe((result: any) => {
             if (result === undefined) {
                 result = { event: "Cancel" };
             }
-
             switch (result.event) {
-                case "Create":
-                    console.debug(result.data);
-                    this.store.loadArtifactsByJournalId(inputs.journal_id);
+                case "Create":                    
+                    this.store.createArtifacts(result.data);
                     break;
                 case "Cancel":
                     break;

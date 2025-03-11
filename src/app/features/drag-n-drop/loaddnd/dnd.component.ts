@@ -14,6 +14,7 @@ import { EvidenceService } from 'app/services/evidence.service';
 import { DateTime } from 'luxon';
 import { MaterialModule } from 'app/services/material.module';
 import { DndDirective } from './dnd.directive';
+import { IArtifacts } from 'app/models/journals';
 
 @Component({
     imports: [
@@ -82,7 +83,7 @@ export class DndComponent implements OnDestroy {
   constructor(
     private fb: UntypedFormBuilder,
     public dialogRef: MatDialogRef<DndComponent>,
-    @Optional() @Inject(MAT_DIALOG_DATA) public imageData: any
+    @Optional() @Inject(MAT_DIALOG_DATA) public imageData: IArtifacts
   ) {
     this.createForm();
   }
@@ -187,27 +188,23 @@ export class DndComponent implements OnDestroy {
       },
       (error) => {
         // Handle unsuccessful uploads
-      },
-      () => {
+      },() => {
+              const updateDate = DateTime.now().toFormat('yyyy-MM-dd');
 
-        const updateDate = DateTime.now().toFormat('yyyy-MM-dd');
-
-        getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-          const update = {
-            "journal_id": this.imageData.journal_id,
-            "reference": this.imageData.reference_no.toString(),
-            "description": this.imageData.description,
-            "location": downloadURL,
-            "user_created": "admin",
-            "date_created": updateDate
-          }
-          console.debug(update);
-          this.evidenceService.createEvidence(update);
-          this.closeDialog();
-        });
-      }
+              getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+                const update = {
+                  journal_id: this.imageData.journal_id,
+                  reference: this.imageData.reference,
+                  description: this.imageData.description,
+                  location: downloadURL,
+                  user_created: this.imageData.user_created,
+                  date_created: updateDate
+                }                                                     
+                return update;
+              });
+            }
     );
-
+  
   }
 
   async onCreate() {

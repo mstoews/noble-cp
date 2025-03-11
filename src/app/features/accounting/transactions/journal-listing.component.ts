@@ -265,7 +265,7 @@ export class JournalEntryComponent implements OnInit, OnDestroy, AfterViewInit {
     journalHeader$ = this.Store.select(selectJournals);
     isJournalLoading$ = this.Store.select(isJournalLoading);
 
-    public groupSettings: { [x: string]: Object } = { showDropArea: false, columns: ['party_id'] };
+    public groupSettings: { [x: string]: Object } = { showDropArea: true, columns: ['party_id'] };
 
     drawer = viewChild<MatDrawer>("drawer");
     grid = viewChild<GridComponent>('grid');

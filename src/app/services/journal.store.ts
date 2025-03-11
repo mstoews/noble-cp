@@ -32,6 +32,7 @@ import { ISubType } from 'app/models/subtypes';
 import { FundsService } from "./funds.service";
 import { ITemplateRender } from '@syncfusion/ej2-grids';
 import { getJournalHeader } from 'app/features/accounting/transactions/state/journal/Journal.Action';
+import { EvidenceService } from './evidence.service';
 
 
 export interface JournalStateInterface {
@@ -79,6 +80,7 @@ export const JournalStore = signalStore(
   })),
   withMethods((state,
     fundsService = inject(FundsService),
+    evidenceService = inject(EvidenceService),
     journalService = inject(JournalService)) => ({
       removeJournalHeader: rxMethod<IJournalHeader>(
         pipe(
@@ -328,14 +330,13 @@ export const JournalStore = signalStore(
           })
         )
       ),
-
       loadArtifactsByJournalId: rxMethod<number>(
         pipe(
           tap(() => patchState(state, { isLoading: true })),
           switchMap((value) => {
-            return journalService.readHttpLoadArtifactsByJournalId(value).pipe(
+            return evidenceService.readById(value).pipe(
               tapResponse({
-                next: (artifacts) => patchState(state, { artifacts: artifacts }),
+                next: (artifacts) => patchState(state, { isLoading: false  }),
                 error: console.error,
                 finalize: () => patchState(state, { isLoading: false }),
               })
@@ -347,12 +348,26 @@ export const JournalStore = signalStore(
         pipe(
           tap(() => patchState(state, { isLoading: true })),
           switchMap((value) => {
-            return journalService.updateHttpArtifacts(value).pipe(
+            return evidenceService.update(value).pipe(
               tapResponse({
-                next: () => {
-                  const updatedArtifacts = state.artifacts().filter((journal) => journal.id !== value.id);
-                  updatedArtifacts.push(value);
-                  patchState(state, { artifacts: updatedArtifacts });
+                next: (evidence) => {
+                  patchState(state, { artifacts : [...state.artifacts(), evidence ]})
+                },
+                error: console.error,
+                finalize: () => patchState(state, { isLoading: false }),
+              })
+            );
+          })
+        )
+      ),
+      createArtifacts: rxMethod<IArtifacts>(
+        pipe(
+          tap(() => patchState(state, { isLoading: true })),
+          switchMap((value) => {
+            return evidenceService.create(value).pipe(
+              tapResponse({
+                next: (artifact) => {
+                  patchState(state, { artifacts: [...state.artifacts(), artifact] });
                 },
                 error: console.error,
                 finalize: () => patchState(state, { isLoading: false }),

@@ -15,10 +15,12 @@ import {
   import { ReportService } from './reports.service';
   import { ITBParams } from 'app/models/journals';
 import { GridSettingsService, IGridSettingsModel } from './grid.settings.service';
+import { IDataSet } from '@syncfusion/ej2-angular-pivotview';
   
   
   export interface ReportStateInterface {
     tb: ITrialBalance[];
+    trialBalance: IDataSet[];
     settings: IGridSettingsModel[];
     isLoading: boolean;
     error: string | null;    
@@ -27,6 +29,7 @@ import { GridSettingsService, IGridSettingsModel } from './grid.settings.service
   export const ReportStore = signalStore( { protectedState: false }, 
      withState<ReportStateInterface>({
       tb: [],
+      trialBalance: [],
       settings: [],
       error: null,
       isLoading: false,
