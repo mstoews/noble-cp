@@ -32,7 +32,7 @@ import { Subject, takeUntil } from 'rxjs';
                                 <!-- Logo -->
                                 <div class="flex items-center justify-center">
                                     <img class="w-8" src="assets/images/logo/nobleledger.jpg" alt="logo">                        
-                                    <span class="font-medium text-secondary">Noble Ledger v0.0.4.11</span>
+                                    <span class="font-medium text-secondary">Noble Ledger v0.0.4.12</span>
                                 </div>                                                            
                             </div>
                             <!-- User -->
@@ -42,7 +42,7 @@ import { Subject, takeUntil } from 'rxjs';
                         <!-- <ng-container fuseVerticalNavigationContentFooter>
                             <div class="flex items-center justify-center">
                                 <img class="w-8" src="assets/images/logo/nobleledger.jpg" alt="logo">
-                                Noble Ledger v0.0.4.11
+                                Noble Ledger v0.0.4.12
                             </div>
                         </ng-container> -->
             </fuse-vertical-navigation>
@@ -78,7 +78,7 @@ import { Subject, takeUntil } from 'rxjs';
                 <!-- Footer -->
                 <div
                     class="relative flex flex-0 items-center justify-start w-full h-14 px-4 md:px-6 z-49 border-t bg-card dark:bg-transparent print:hidden">
-                    <span class="font-medium text-secondary">Noble Ledger v0.0.4.11 &copy; {{currentYear}}</span>
+                    <span class="font-medium text-secondary">Noble Ledger v0.0.4.12 &copy; {{currentYear}}</span>
                 </div>
 
             </div>
@@ -99,7 +99,7 @@ export class ClassicLayoutComponent implements OnInit, OnDestroy {
     private _unsubscribeAll: Subject<any> = new Subject<any>();
     // readonly store = inject(AppStore);
     readonly applicationService = inject(ApplicationService);
-    
+
     /**
      * Constructor
      */

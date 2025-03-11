@@ -43,7 +43,7 @@ import { Subject, takeUntil } from 'rxjs';
                     <!-- Logo -->
                     <div class="flex items-center justify-center">
                         <img class="w-8" src="assets/images/logo/nobleledger.jpg" alt="logo"> 
-                        <span>Noble Ledger v0.0.4.11</span>  
+                        <span>Noble Ledger v0.0.4.12</span>  
                     </div>
                     <!-- Components -->
                     <div class="ml-auto flex items-center">
@@ -158,7 +158,7 @@ export class ClassyLayoutComponent implements OnInit, OnDestroy {
 
     readonly store = inject(AppStore);
     readonly applicationService = inject(ApplicationService);
-    
+
 
     /**
      * Constructor
@@ -197,7 +197,7 @@ export class ClassyLayoutComponent implements OnInit, OnDestroy {
             .subscribe((navigation: Navigation) => {
                 this.navigation = navigation;
             });
-        
+
 
         // Subscribe to media changes
         this._fuseMediaWatcherService.onMediaChange$
