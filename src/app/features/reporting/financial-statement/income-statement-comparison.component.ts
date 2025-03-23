@@ -4,21 +4,21 @@ import { CommonModule } from '@angular/common';
 import { DistributionLedgerService } from 'app/services/distribution.ledger.service';
 
 import { map, Subject } from 'rxjs';
-import { MaterialModule } from 'app/services/material.module';
+import { MaterialModule } from 'app/shared/material.module';
 import { StatementTotalComponent } from './statement-totals.component';
 import html2PDF from 'jspdf-html2canvas'
 import html2canvas from 'html2canvas'
 import jsPDF from 'jspdf';
 import { GridMenubarStandaloneComponent } from 'app/features/accounting/grid-components/grid-menubar.component';
-import { ReportStore } from 'app/services/reports.store';
+import { ReportStore } from 'app/store/reports.store';
 import { AcademyComponent } from "../../admin/academy/academy.component";
 import { StatementComparisonComponent } from './statement-comparison-line-item.component';
-import {CdkMenu, CdkMenuItem, CdkContextMenuTrigger} from '@angular/cdk/menu';
+import { CdkMenu, CdkMenuItem, CdkContextMenuTrigger } from '@angular/cdk/menu';
 
 const imports = [
   CommonModule,
   StatementComparisonComponent,
-  GridMenubarStandaloneComponent, 
+  GridMenubarStandaloneComponent,
   CdkMenu, CdkMenuItem, CdkContextMenuTrigger
 ]
 
@@ -95,7 +95,7 @@ export class IncomeStatementComparisonRptComponent {
     year: this.currentYear(),
   };
 
-  constructor () {
+  constructor() {
     this.store.loadTB(this.periodParams);
     this.store.tb().forEach((item) => {
       console.log(item);
@@ -105,7 +105,7 @@ export class IncomeStatementComparisonRptComponent {
   onChild(e: any) {
     console.log('child clicked', JSON.stringify(e));
   }
-  
+
   onYearChanged(e: any) {
     this.currentYear.set(Number(e));
     this.onRefresh();
@@ -173,7 +173,7 @@ export class IncomeStatementComparisonRptComponent {
   }
 
   ngOnDestroy(): void {
-  
+
   }
 
 }

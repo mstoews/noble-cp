@@ -17,7 +17,7 @@ import {
   hasCustomClaim,
 } from '@angular/fire/auth-guard';
 import { ImageMaintenanceRoutingModule } from './image-maintenance-routing.module';
-import { MaterialModule } from 'app/services/material.module';
+import { MaterialModule } from 'app/shared/material.module';
 import { ThoughtsImageSelectionComponent } from 'app/modules/shop/image-maintenance/thoughts-image-selection/thoughts-image-selection.component';
 import { GalleryLightboxModule } from 'app/modules/shop/image-maintenance/gallery-lightbox/gallery-lighthouse.module';
 
@@ -53,9 +53,9 @@ const routes: Routes = [
     MaterialModule,
     GalleryLightboxModule,
     NgOptimizedImage,
-    
+
     ViewImageItemComponent,
-    
+
   ],
   exports: [
     ImageMaintenanceComponent,
@@ -70,4 +70,4 @@ const routes: Routes = [
     InventoryImageSelectionComponent,
   ],
 })
-export class ImageMaintenanceModule {}
+export class ImageMaintenanceModule { }

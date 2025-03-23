@@ -8,8 +8,9 @@ import { MatInputModule } from '@angular/material/input';
 import { MatOptionModule } from '@angular/material/core';
 import { MatSelectModule } from '@angular/material/select';
 import { TextFieldModule } from '@angular/cdk/text-field';
-import { ApplicationService, AppStore } from 'app/services/application.state.service';
-import { ProfileModel } from 'app/services/application.state.service';
+import { ApplicationService } from 'app/store/main.panel.store';
+import { ApplicationStore } from 'app/store/application.store';
+import { ProfileModel } from 'app/store/main.panel.store';
 import { ToastrService } from 'ngx-toastr';
 
 
@@ -144,41 +145,38 @@ import { ToastrService } from 'ngx-toastr';
     `,
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    providers: [AppStore],
     imports: [FormsModule, ReactiveFormsModule, MatFormFieldModule, MatIconModule, MatInputModule, TextFieldModule, MatSelectModule, MatOptionModule, MatButtonModule]
 })
-export class SettingsAccountComponent implements OnInit
-{
+export class SettingsAccountComponent implements OnInit {
     public accountForm!: FormGroup | any;
     private fb = inject(FormBuilder);
 
-    readonly store = inject(AppStore);
+    readonly store = inject(ApplicationStore);
     readonly applicationService = inject(ApplicationService);
     readonly toast = inject(ToastrService);
-    profile:  ProfileModel;
+    profile: ProfileModel;
 
     /**
      * Constructor
      */
-    constructor()
-    {
-        this.applicationService.getUserId().subscribe((uid) => {   
+    constructor() {
+        this.applicationService.getUserId().subscribe((uid) => {
             this.applicationService.loadProfile(uid).subscribe((profile) => {
                 this.profile = profile;
                 this.patchProfileForm(profile);
             });
-        });        
+        });
 
     }
 
-    public saveProfile() {  
+    public saveProfile() {
 
         let currentDate = new Date().toISOString().split('T')[0];
-        
+
         const account = this.accountForm.getRawValue();
 
         const profile: ProfileModel = {
-            uid: this.store.uid(),            
+            uid: this.store.uid(),
             company: account.company,
             name: account.name,
             userName: account.userName,
@@ -195,8 +193,8 @@ export class SettingsAccountComponent implements OnInit
             created: currentDate,
             updated: currentDate
         }
-        
-        this.updateProfile(profile);  
+
+        this.updateProfile(profile);
         this.toast.success('Profile saved successfully');
     }
 
@@ -206,25 +204,25 @@ export class SettingsAccountComponent implements OnInit
 
     createEmptyForm() {
         this.accountForm = this.fb.group({
-            name    : ['', Validators.required],
+            name: ['', Validators.required],
             userName: ['', Validators.required],
-            title   : ['', Validators.required],
-            company : ['', Validators.required],
-            about   : ['', Validators.required],
-            email   : ['', Validators.email],
-            phone   : ['', Validators.required],
-            country : ['', Validators.required],
+            title: ['', Validators.required],
+            company: ['', Validators.required],
+            about: ['', Validators.required],
+            email: ['', Validators.email],
+            phone: ['', Validators.required],
+            country: ['', Validators.required],
             language: ['', Validators.required]
         });
     }
 
     patchProfileForm(profile: ProfileModel) {
-    if (profile !== undefined) {                                                   
+        if (profile !== undefined) {
             this.accountForm.patchValue(profile);
-       }
-    }   
+        }
+    }
 
-    
+
 
     // -----------------------------------------------------------------------------------------------------
     // @ Lifecycle hooks
@@ -233,10 +231,9 @@ export class SettingsAccountComponent implements OnInit
     /**
      * On init
      */
-    ngOnInit(): void
-    {
+    ngOnInit(): void {
         // Create the form           
         this.createEmptyForm();
-        
+
     }
 }

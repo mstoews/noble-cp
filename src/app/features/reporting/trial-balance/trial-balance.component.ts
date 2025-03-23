@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component, OnInit, ViewChild, inject, AfterViewInit, viewChild } from '@angular/core';
 import { CommonModule, } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { TrialBalanceStore } from 'app/services/distribution.ledger.store';
-import { MaterialModule } from 'app/services/material.module';
+import { TrialBalanceStore } from 'app/store/distribution.ledger.store';
+import { MaterialModule } from 'app/shared/material.module';
 import {
     AggregateService,
     ColumnMenuService,
@@ -50,7 +50,7 @@ const declarations = [
 ];
 
 @Component({
-    
+
     template: `
         <div class="flex flex-col min-w-0 overflow-y-auto overflow-x-auto" cdkScrollable>
         <!-- Main -->

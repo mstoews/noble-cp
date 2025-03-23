@@ -5,7 +5,7 @@ import { fuseAnimations } from '@fuse/animations';
 import { AUTH } from 'app/app.config';
 import { AccountsService } from 'app/services/accounts.service';
 import { JournalService } from 'app/services/journal.service';
-import { MaterialModule } from 'app/services/material.module';
+import { MaterialModule } from 'app/shared/material.module';
 import { NgxMaskDirective, provideNgxMask } from 'ngx-mask';
 import { Observable, ReplaySubject, Subject, Subscription, take, takeUntil } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
@@ -14,7 +14,7 @@ import { MatSelect } from '@angular/material/select';
 import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 import { IDropDownAccounts, IFunds } from 'app/models';
 import { Detail, IJournalTransactions, IJournalDetail, IJournalDetailUpdate, IJournalHeader, IJournalTemplate } from 'app/models/journals';
-import { JournalStore } from 'app/services/journal.store';
+import { JournalStore } from 'app/store/journal.store';
 import { MatStepperModule } from '@angular/material/stepper';
 import { MAT_FORM_FIELD_DEFAULT_OPTIONS, MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -71,7 +71,7 @@ const mods = [
     MatDatepickerModule,
     NgxMatSelectSearchModule,
     MaterialModule,
-    GridModule,   
+    GridModule,
 ]
 
 @Component({
@@ -501,7 +501,7 @@ const mods = [
         ColumnMenuService,
         ResizeService,
         RowDDService,
-        JournalStore
+        JournalService,
     ]
 })
 export class EntryWizardComponent implements OnInit, OnDestroy, AfterViewInit {
@@ -935,7 +935,7 @@ export class EntryWizardComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
 
-    
+
     protected filterCreditAccounts() {
         if (!this.creditAccounts) {
             return;
@@ -1013,6 +1013,7 @@ export class EntryWizardComponent implements OnInit, OnDestroy, AfterViewInit {
     public createJournalDetailsFromTemplate(value: IJournalTemplate) {
         this.transactionType = value.journal_type;
         this.store.loadTemplateDetails(value.journal_no.toString());
+        
     }
 
     refresh() {

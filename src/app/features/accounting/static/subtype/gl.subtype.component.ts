@@ -12,7 +12,7 @@ import { FuseConfirmationService } from '@fuse/services/confirmation';
 import { GridMenubarStandaloneComponent } from '../../grid-components/grid-menubar.component';
 
 import { MatDrawer } from '@angular/material/sidenav';
-import { MaterialModule } from 'app/services/material.module';
+import { MaterialModule } from 'app/shared/material.module';
 import { SubTypeService } from 'app/services/subtype.service';
 import { ISubType } from 'app/models/subtypes';
 import { Observable } from 'rxjs';

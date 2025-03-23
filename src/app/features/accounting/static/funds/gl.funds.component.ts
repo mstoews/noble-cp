@@ -11,7 +11,7 @@ import { MatDrawer } from '@angular/material/sidenav';
 import { CommonModule } from '@angular/common';
 import { FuseConfirmationService } from '@fuse/services/confirmation';
 import { GridMenubarStandaloneComponent } from '../../grid-components/grid-menubar.component';
-import { MaterialModule } from 'app/services/material.module';
+import { MaterialModule } from 'app/shared/material.module';
 import { EditService, FilterService, GridComponent, GridModule, PageService, SortService, ToolbarService } from '@syncfusion/ej2-angular-grids';
 import { GLGridComponent } from "../../grid-components/gl-grid.component";
 
@@ -21,6 +21,7 @@ import { selectFunds } from 'app/features/accounting/static/funds/Funds.Selector
 import { MenuEventArgs, MenuItemModel } from '@syncfusion/ej2-navigations';
 import { Observable } from 'rxjs';
 import { IFunds } from 'app/models';
+import { FundsStore } from './funds.store';
 
 
 const imports = [
@@ -94,11 +95,12 @@ const imports = [
 
         <mat-drawer-container class="flex-col h-full">    
         <ng-container>
-            @if (funds$ | async; as funds ) {
+            <!-- @if (funds$ | async; as funds ) { -->
+             @if (Store.isLoading() === false) {
             <grid-menubar [inTitle]="sTitle" [showNew]=true [showSettings]=false (newRecord)="onAdd()"></grid-menubar>        
             <gl-grid 
                (onUpdateSelection)="onSelection($event)"
-               [data]="funds" 
+               [data]="Store.funds()" 
                [columns]="columns">
             </gl-grid>            
             }
@@ -111,6 +113,7 @@ const imports = [
         FilterService,
         ToolbarService,
         EditService,
+        FundsStore
     ],
 })
 export class FundsComponent implements OnInit {
@@ -121,10 +124,11 @@ export class FundsComponent implements OnInit {
     public formdata: any = {};
     public drawer = viewChild<MatDrawer>('drawer');
 
-    store = inject(Store);
+    Store = inject(FundsStore);
+
     notifyFundUpdate = output();
     bDirty: boolean = false;
-    funds$ = this.store.select(selectFunds);
+    funds$ = this.Store.selected;
 
     public columns = [
         { field: 'fund', headerText: 'Fund', width: 80, textAlign: 'Left' },
@@ -137,7 +141,6 @@ export class FundsComponent implements OnInit {
     ngOnInit() {
         this.createEmptyForm();
         this.onChanges();
-        this.store.dispatch(FundsActions.loadFunds());
     }
 
 
@@ -186,7 +189,7 @@ export class FundsComponent implements OnInit {
             create_user: '@admin',
         } as IFunds;
 
-        this.store.dispatch(FundsActions.addFunds({ funds: rawData }));
+        this.Store.addFund(rawData);
         this.bDirty = false;
         this.closeDrawer();
     }
@@ -217,7 +220,7 @@ export class FundsComponent implements OnInit {
         confirmation.afterClosed().subscribe((result) => {
             // If the confirm button pressed...            
             if (result === 'confirmed') {
-                this.store.dispatch(FundsActions.deleteFunds({ id: data.fund[0] }));
+                this.Store.removeFund(data.fund);
             }
         });
         this.closeDrawer();
@@ -237,8 +240,6 @@ export class FundsComponent implements OnInit {
             create_user: '@admin',
         } as IFunds;
 
-        this.store.dispatch(FundsActions.updateFunds({ funds: rawData }));
-
         this.openDrawer();
     }
 
@@ -253,7 +254,7 @@ export class FundsComponent implements OnInit {
             create_date: updateDate,
             create_user: '@admin'
         } as IFunds;
-        this.store.dispatch(FundsActions.updateFunds({ funds: rawData }));
+        this.Store.updateFund(rawData);
         this.bDirty = false;
         this.closeDrawer();
     }
@@ -358,7 +359,7 @@ export class FundsComponent implements OnInit {
     }
 
     constructor() {
-        
+
     }
 
     grid = viewChild<GridComponent>('grid');

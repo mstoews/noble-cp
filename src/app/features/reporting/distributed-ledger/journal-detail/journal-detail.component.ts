@@ -5,9 +5,9 @@ import { CommonModule } from '@angular/common';
 import { DndComponent } from 'app/features/drag-n-drop/loaddnd/dnd.component';
 import { FuseConfirmationService } from '@fuse/services/confirmation';
 import { MatDialog } from '@angular/material/dialog';
-import { MaterialModule } from 'app/services/material.module';
+import { MaterialModule } from 'app/shared/material.module';
 import { GridModule } from '@syncfusion/ej2-angular-grids';
-import { JournalStore } from 'app/services/journal.store';
+import { JournalStore } from 'app/store/journal.store';
 
 
 const imports = [

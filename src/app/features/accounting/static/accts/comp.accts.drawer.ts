@@ -1,8 +1,8 @@
 import { Component, inject, input, output } from '@angular/core';
 
-import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';  
+import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { IAccounts } from 'app/models';
-import { MaterialModule } from 'app/services/material.module';
+import { MaterialModule } from 'app/shared/material.module';
 import { TypeStore } from 'app/services/type.service';
 
 @Component({
@@ -120,87 +120,87 @@ import { TypeStore } from 'app/services/type.service';
 })
 export class DrawerComponent {
 
-    sTitle = 'Party Maintenance';
-    originalParty: IAccounts;
-    account = input<IAccounts | null>();
-    Update = output<IAccounts>();
-    Add = output<IAccounts>();
-    Delete = output<IAccounts>();
-    Cancel = output();
-    typeStore = inject(TypeStore);
-    
-    bAccountsDirty: boolean = false;
-    private fb = inject(FormBuilder);
-    
-    accountsForm = new FormGroup({
-      account: new FormControl(0,Validators.required),
-      child: new FormControl(0,Validators.required),
-      parent_account: new FormControl(false, Validators.required),
-      description: new FormControl('',Validators.required),
-      acct_type: new FormControl('',Validators.required),
-      comments: new FormControl('',Validators.required)
-    });
-    
-    ngOnInit() {
-      this.accountsForm.valueChanges.subscribe(() => {
-        if (this.accountsForm.dirty === true) {
-          this.bAccountsDirty = true;
-          this.originalParty = this.account();        
-        }
-      });   
-      this.accountsForm.valueChanges.subscribe((value) => {
-        this.bAccountsDirty = true
-      }); 
-    }
+  sTitle = 'Party Maintenance';
+  originalParty: IAccounts;
+  account = input<IAccounts | null>();
+  Update = output<IAccounts>();
+  Add = output<IAccounts>();
+  Delete = output<IAccounts>();
+  Cancel = output();
+  typeStore = inject(TypeStore);
 
-    changeType($event: any) {
-      console.log('Type change: ', $event.value);
-    }
-      
-    ngOnChanges() {
-      if (this.account) {     
-        this.accountsForm.patchValue(this.account());         
+  bAccountsDirty: boolean = false;
+  private fb = inject(FormBuilder);
+
+  accountsForm = new FormGroup({
+    account: new FormControl(0, Validators.required),
+    child: new FormControl(0, Validators.required),
+    parent_account: new FormControl(false, Validators.required),
+    description: new FormControl('', Validators.required),
+    acct_type: new FormControl('', Validators.required),
+    comments: new FormControl('', Validators.required)
+  });
+
+  ngOnInit() {
+    this.accountsForm.valueChanges.subscribe(() => {
+      if (this.accountsForm.dirty === true) {
+        this.bAccountsDirty = true;
+        this.originalParty = this.account();
       }
-    }
-  
-    updateAccount(): IAccounts {
-      const updateDate = new Date().toISOString().split('T')[0];
-      const account = { ...this.accountsForm.value } ;
+    });
+    this.accountsForm.valueChanges.subscribe((value) => {
+      this.bAccountsDirty = true
+    });
+  }
 
-      const rawData = {
-        account: account.account,
-        child: account.child,
-        parent_account: account.parent_account,
-        description: account.description,
-        sub_type: "",
-        acct_type: account.acct_type,
-        comments: account.comments,
-        balance: 0,
-        create_date: updateDate,
-        create_user: this.account().create_user,
-        update_date: updateDate,
-        update_user: this.account().update_user,
-        status: "OPEN",
-      };
-      return rawData;
+  changeType($event: any) {
+    console.log('Type change: ', $event.value);
+  }
+
+  ngOnChanges() {
+    if (this.account) {
+      this.accountsForm.patchValue(this.account());
     }
-  
-    onUpdate() {
-      this.Update.emit(this.updateAccount());
-    }
-  
-    onAdd() {
-      this.Add.emit(this.updateAccount());
-    }
-  
-    onDelete() {
-      this.Delete.emit(this.updateAccount());
-    }
-  
-    onCancel() {
-      this.Cancel.emit();
-    }
-  
+  }
+
+  updateAccount(): IAccounts {
+    const updateDate = new Date().toISOString().split('T')[0];
+    const account = { ...this.accountsForm.value };
+
+    const rawData = {
+      account: account.account,
+      child: account.child,
+      parent_account: account.parent_account,
+      description: account.description,
+      sub_type: "",
+      acct_type: account.acct_type,
+      comments: account.comments,
+      balance: 0,
+      create_date: updateDate,
+      create_user: this.account().create_user,
+      update_date: updateDate,
+      update_user: this.account().update_user,
+      status: "OPEN",
+    };
+    return rawData;
+  }
+
+  onUpdate() {
+    this.Update.emit(this.updateAccount());
+  }
+
+  onAdd() {
+    this.Add.emit(this.updateAccount());
+  }
+
+  onDelete() {
+    this.Delete.emit(this.updateAccount());
+  }
+
+  onCancel() {
+    this.Cancel.emit();
+  }
+
 
 
 }

@@ -8,7 +8,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { Router } from '@angular/router';
 import { UserService } from 'app/fuse/core/user/user.service';
 import { User } from 'app/fuse/core/user/user.types';
-import { ApplicationService, ProfileModel } from 'app/services/application.state.service';
+import { ApplicationService, ProfileModel } from 'app/store/main.panel.store';
 import { Subject, takeUntil } from 'rxjs';
 
 @Component({

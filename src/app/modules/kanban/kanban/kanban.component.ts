@@ -1,12 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { FormsModule, ReactiveFormsModule  } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { CheckBoxAllModule } from '@syncfusion/ej2-angular-buttons';
 import { CommonModule } from '@angular/common';
 
 import { KanbanModule } from '@syncfusion/ej2-angular-kanban';
 import { KanbanTypesComponent } from '../types/types.component';
-import { MaterialModule } from 'app/services/material.module';
+import { MaterialModule } from 'app/shared/material.module';
 import { RouterOutlet } from '@angular/router';
 import { TasksComponent } from '../task/tasks.component';
 import { IKanban } from '../kanban.service';
@@ -33,10 +33,10 @@ const imports = [
 ]
 
 @Component({
-    selector: 'app-tasks',
-    styleUrls: ['../task/tasks.component.scss'],
-    imports: [imports],
-    templateUrl: './kanban.component.html'
+  selector: 'app-tasks',
+  styleUrls: ['../task/tasks.component.scss'],
+  imports: [imports],
+  templateUrl: './kanban.component.html'
 })
 export class KanbanMainComponent implements OnInit {
 

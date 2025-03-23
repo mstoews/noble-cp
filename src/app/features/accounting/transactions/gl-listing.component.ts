@@ -1,8 +1,8 @@
-import { Component,inject} from "@angular/core";
-import { FormsModule,  ReactiveFormsModule} from "@angular/forms";
+import { Component, inject } from "@angular/core";
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { NgxMatSelectSearchModule } from "ngx-mat-select-search";
 import { CommonModule } from "@angular/common";
-import { MaterialModule } from "app/services/material.module";
+import { MaterialModule } from "app/shared/material.module";
 import { JournalEntryComponent } from "./journal-listing.component";
 import { ToastrService } from "ngx-toastr";
 import { GridMenubarStandaloneComponent } from "../grid-components/grid-menubar.component";
@@ -71,19 +71,19 @@ export class GLTransactionListComponent {
   private toast = inject(ToastrService);
   public transType: string = "all";
   public toolbarTitle = "General Ledger Transactions";
-  
+
 
   onNew() {
-    this.toast.success('Add new Journal Entry','Add');
+    this.toast.success('Add new Journal Entry', 'Add');
   }
-  
+
   onTemplate() {
     this.toast.success('Template', 'Template');
   }
-  
+
   onClone() {
     this.toast.success('Template Clone', 'Clone');
-  } 
+  }
 
   openDrawer() {
     this.toast.success('Template');

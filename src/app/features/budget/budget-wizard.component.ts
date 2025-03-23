@@ -6,9 +6,8 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { fuseAnimations } from '@fuse/animations';
 import { AUTH } from 'app/app.config';
 import { AccountsService } from 'app/services/accounts.service';
-import { FundsService } from 'app/services/funds.service';
 import { JournalService } from 'app/services/journal.service';
-import { MaterialModule } from 'app/services/material.module';
+import { MaterialModule } from 'app/shared/material.module';
 import { SubTypeService } from 'app/services/subtype.service';
 import { NgxMaskDirective, NgxMaskPipe, provideNgxMask } from 'ngx-mask';
 import { ReplaySubject, Subject, Subscription, take, takeUntil } from 'rxjs';
@@ -20,6 +19,7 @@ import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 import { IDropDownAccounts } from 'app/models';
 import { filter } from 'lodash';
 import { IJournalDetail, IJournalHeader, ITransactionDate } from 'app/models/journals';
+import { FundsService } from '../accounting/static/funds/funds.service';
 
 
 

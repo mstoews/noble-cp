@@ -10,7 +10,8 @@ import { NavigationService } from 'app/fuse/core/navigation/navigation.service';
 import { Navigation } from 'app/fuse/core/navigation/navigation.types';
 import { SearchComponent } from 'app/fuse/layout/common/search/search.component';
 import { UserComponent } from 'app/fuse/layout/common/user/user.component';
-import { AppStore, ApplicationService, ProfileModel } from 'app/services/application.state.service';
+import { ApplicationService, ProfileModel } from 'app/store/main.panel.store';
+import { ApplicationStore } from 'app/store/application.store';
 import { Subject, takeUntil } from 'rxjs';
 
 @Component({

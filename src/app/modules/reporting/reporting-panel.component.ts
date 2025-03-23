@@ -2,7 +2,7 @@ import { NgClass, NgSwitch, NgSwitchCase } from '@angular/common';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { MatDrawer } from '@angular/material/sidenav';
 import { FuseMediaWatcherService } from '@fuse/services/media-watcher';
-import { MaterialModule } from 'app/services/material.module';
+import { MaterialModule } from 'app/shared/material.module';
 import { Subject, takeUntil } from 'rxjs';
 import { TrialBalanceComponent } from './trial-balance/trial-balance.component';
 import { ExpenseRptComponent } from './expense/expense-rpt.component';

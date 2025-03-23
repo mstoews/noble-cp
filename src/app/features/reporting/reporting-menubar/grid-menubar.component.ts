@@ -1,5 +1,5 @@
 import { Component, OnInit, ChangeDetectionStrategy, output, input } from '@angular/core';
-import { MaterialModule } from 'app/services/material.module';
+import { MaterialModule } from 'app/shared/material.module';
 
 interface IValue {
   value: string;
@@ -12,11 +12,11 @@ var modules = [
 ]
 
 @Component({
-    selector: 'kanban-menubar',
-    templateUrl: './component.html',
-    styleUrls: ['./component.css'],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [modules]
+  selector: 'kanban-menubar',
+  templateUrl: './component.html',
+  styleUrls: ['./component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [modules]
 })
 export class KanbanMenubarComponent implements OnInit {
   notifyParentAdd = output();
@@ -29,10 +29,10 @@ export class KanbanMenubarComponent implements OnInit {
   selected = input();
   public menuItems: IValue[];
 
-  constructor() {    
+  constructor() {
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void { }
 
   onClickUpdate(): void {
     console.debug('Menu bar notification emit refresh');

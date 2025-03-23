@@ -8,7 +8,7 @@ import { DndComponent } from 'app/features/drag-n-drop/loaddnd/dnd.component';
 import { EvidenceService } from 'app/services/evidence.service';
 import { EvidenceCardComponent } from './file-manager-card/evidence-card.component';
 import { GridMenubarStandaloneComponent } from '../accounting/grid-components/grid-menubar.component';
-import { MaterialModule } from 'app/services/material.module';
+import { MaterialModule } from 'app/shared/material.module';
 import { GridModule } from '@syncfusion/ej2-angular-grids';
 
 const imports = [

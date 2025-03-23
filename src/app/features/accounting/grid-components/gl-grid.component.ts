@@ -6,7 +6,7 @@ import { AuthService } from 'app/features/auth/auth.service';
 import { Observable } from 'rxjs';
 import { GridSettingsService, IGridSettingsModel } from 'app/services/grid.settings.service';
 import { ReactiveFormsModule, FormsModule, FormBuilder } from '@angular/forms';
-import { MaterialModule } from 'app/services/material.module';
+import { MaterialModule } from 'app/shared/material.module';
 import { MatDrawer } from '@angular/material/sidenav';
 import { MenuEventArgs, MenuItemModel } from '@syncfusion/ej2-navigations';
 import { ToastrService } from 'ngx-toastr';
@@ -91,7 +91,7 @@ const keyExpr = ["account", "child"];
     ]
 })
 export class GLGridComponent implements OnInit {
-    
+
     gridForm: any;
     public context: any;
     public gridHeight: number;
@@ -133,7 +133,7 @@ export class GLGridComponent implements OnInit {
     public userId: string;
     sTitle: any;
 
-      public animation = {
+    public animation = {
         effect: 'FadeIn',
         duration: 800
     };
@@ -146,7 +146,7 @@ export class GLGridComponent implements OnInit {
     constructor() {
         this.gridHeight = window.innerHeight - 540;
     }
-    
+
     public filterOptions: Object = { type: 'Excel' };
 
     openTrade($event) {

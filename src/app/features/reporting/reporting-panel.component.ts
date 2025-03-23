@@ -2,7 +2,7 @@ import { NgClass } from '@angular/common';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, viewChild, ViewEncapsulation } from '@angular/core';
 import { MatDrawer } from '@angular/material/sidenav';
 import { FuseMediaWatcherService } from '@fuse/services/media-watcher';
-import { MaterialModule } from 'app/services/material.module';
+import { MaterialModule } from 'app/shared/material.module';
 import { Subject, takeUntil } from 'rxjs';
 import { TrialBalanceComponent } from './trial-balance/trial-balance.component';
 import { BalanceSheetStatementRptComponent } from './financial-statement/balance-sheet-statement-rpt.component';
@@ -10,7 +10,8 @@ import { IncomeStatementRptComponent } from './financial-statement/income-statem
 import { IncomeStatementComparisonRptComponent } from './financial-statement/income-statement-comparison.component';
 import { DistributedTbComponent } from './distributed-tb/distributed-tb.component';
 import { TbGridComponent } from './tb-grid/tb-grid.component';
-import { AppStore, ApplicationService } from "../../services/application.state.service";
+import { ApplicationService } from "../../store/main.panel.store";
+import { ApplicationStore } from "../../store/application.store";
 import { GridTemplateComponent } from './grid-template/grid-template.component';
 import { CdkScrollable } from '@angular/cdk/scrolling';
 import { TbPivotComponent } from './tb-grid/tb-pivot.component';
@@ -29,7 +30,7 @@ const mods = [
     GridTemplateComponent,
     TbPivotComponent,
     CdkScrollable
-    ]
+]
 
 @Component({
     selector: 'transaction-main',
@@ -115,19 +116,19 @@ const mods = [
     `,
     styles: ``,
     imports: [mods],
-    providers: [AppStore, ApplicationService],
+    providers: [ApplicationService],
     standalone: true
 })
 export class ReportingPanelComponent {
 
-    
+
     drawer = viewChild<MatDrawer>("drawer");
     drawerMode: 'over' | 'side' = 'side';
     drawerOpened: boolean = true;
     panels: any[] = [];
     selectedPanel: string = 'distributed-tb';
     PANEL_ID = 'reportingPanel';
-    store = inject(AppStore);
+    store = inject(ApplicationStore);
     panelService = inject(ApplicationService);
     private _unsubscribeAll: Subject<any> = new Subject<any>();
 
@@ -151,7 +152,7 @@ export class ReportingPanelComponent {
                 icon: 'heroicons_outline:document-plus',
                 title: 'Distributed Trial Balance',
                 description: 'Tabular summary of trial balance by account',
-            },            
+            },
             {
                 id: 'trial-balance',
                 icon: 'heroicons_outline:document-check',

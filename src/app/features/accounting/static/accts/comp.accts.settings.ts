@@ -1,7 +1,7 @@
 import { Component, input, output } from '@angular/core';
-import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';  
+import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { IAccountSettings } from 'app/models';
-import { MaterialModule } from 'app/services/material.module';
+import { MaterialModule } from 'app/shared/material.module';
 
 
 @Component({
@@ -68,69 +68,69 @@ import { MaterialModule } from 'app/services/material.module';
   `,
   styles: ``
 })
-export class SettingsComponent {  
-    sTitle = 'Account Settings ';
-    originalParty: IAccountSettings;
-    settings = input<IAccountSettings | null>();
-    Update = output<IAccountSettings>();
-    Add = output<IAccountSettings>();
-    Delete = output<IAccountSettings>();
-    Cancel = output();
-    
-    bSettingsDirty: boolean = false;
-    
-    settingsForm = new FormGroup({
-      arc : new FormControl(''),
-      ar:  new FormControl(''),
-      apc:  new FormControl(''),
-      ap:  new FormControl(''),      
-    });
-  
-  
-    ngOnInit() {
-      this.settingsForm.valueChanges.subscribe(() => {
-        if (this.settingsForm.dirty === true) {
-          this.bSettingsDirty = true;
-          this.originalParty = this.settings();        
-        }
-      });    
-    }
-    
-    ngOnChanges() {
-      if (this.settings) {      
-        this.settingsForm.patchValue(this.settings());      
+export class SettingsComponent {
+  sTitle = 'Account Settings ';
+  originalParty: IAccountSettings;
+  settings = input<IAccountSettings | null>();
+  Update = output<IAccountSettings>();
+  Add = output<IAccountSettings>();
+  Delete = output<IAccountSettings>();
+  Cancel = output();
+
+  bSettingsDirty: boolean = false;
+
+  settingsForm = new FormGroup({
+    arc: new FormControl(''),
+    ar: new FormControl(''),
+    apc: new FormControl(''),
+    ap: new FormControl(''),
+  });
+
+
+  ngOnInit() {
+    this.settingsForm.valueChanges.subscribe(() => {
+      if (this.settingsForm.dirty === true) {
+        this.bSettingsDirty = true;
+        this.originalParty = this.settings();
       }
+    });
+  }
+
+  ngOnChanges() {
+    if (this.settings) {
+      this.settingsForm.patchValue(this.settings());
     }
-  
-    updateParty(): IAccountSettings {
-      const updateDate = new Date().toISOString().split('T')[0];
-      const settings = {
-        ar: this.settingsForm.get('ar').value,
-        arc: this.settingsForm.get('arc').value,
-        ap: this.settingsForm.get('ap').value,
-        apc: this.settingsForm.get('apc').value,
-        update_date: updateDate,
-        update_user: '@admin',      
-        create_date: updateDate,
-        create_user: '@admin'
-      } as IAccountSettings;     
-      return settings;
-    }
-  
-    onUpdate() {
-      this.Update.emit(this.updateParty());
-    }
-  
-    onAdd() {
-      this.Add.emit(this.updateParty());
-    }
-  
-    onDelete() {
-      this.Delete.emit(this.updateParty());
-    }
-  
-    onCancel() {
-      this.Cancel.emit();
-    }
+  }
+
+  updateParty(): IAccountSettings {
+    const updateDate = new Date().toISOString().split('T')[0];
+    const settings = {
+      ar: this.settingsForm.get('ar').value,
+      arc: this.settingsForm.get('arc').value,
+      ap: this.settingsForm.get('ap').value,
+      apc: this.settingsForm.get('apc').value,
+      update_date: updateDate,
+      update_user: '@admin',
+      create_date: updateDate,
+      create_user: '@admin'
+    } as IAccountSettings;
+    return settings;
+  }
+
+  onUpdate() {
+    this.Update.emit(this.updateParty());
+  }
+
+  onAdd() {
+    this.Add.emit(this.updateParty());
+  }
+
+  onDelete() {
+    this.Delete.emit(this.updateParty());
+  }
+
+  onCancel() {
+    this.Cancel.emit();
+  }
 
 }

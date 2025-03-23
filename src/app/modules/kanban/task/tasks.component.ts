@@ -8,12 +8,12 @@ import { addClass } from '@syncfusion/ej2-base';
 import { KanbanComponent, ColumnsModel, CardSettingsModel, SwimlaneSettingsModel, CardRenderedEventArgs } from '@syncfusion/ej2-angular-kanban';
 
 import { MatDrawer } from '@angular/material/sidenav';
-import { MaterialModule } from 'app/services/material.module';
+import { MaterialModule } from 'app/shared/material.module';
 import { FuseConfirmationService } from '@fuse/services/confirmation';
 import { provideNativeDateAdapter } from '@angular/material/core';
 import { KanbanMenubarComponent } from '../kanban/kanban-menubar/grid-menubar.component';
 import { AUTH } from 'app/app.config';
-import { IKanban} from '../kanban.service';
+import { IKanban } from '../kanban.service';
 import { KanbanStore } from '../kanban.store';
 import { debounce, defer, from, of, take, timer } from 'rxjs';
 
@@ -35,13 +35,13 @@ const imports = [
 ]
 
 @Component({
-    selector: 'kanban',
-    encapsulation: ViewEncapsulation.None,
-    imports: [imports],
-    templateUrl: './tasks.component.html',
-    styleUrl: './tasks.component.scss',
-    providers: [provideNativeDateAdapter(), KanbanStore],
-    changeDetection: ChangeDetectionStrategy.OnPush
+  selector: 'kanban',
+  encapsulation: ViewEncapsulation.None,
+  imports: [imports],
+  templateUrl: './tasks.component.html',
+  styleUrl: './tasks.component.scss',
+  providers: [provideNativeDateAdapter(), KanbanStore],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TasksComponent implements OnInit {
   @ViewChild('kanbanObj') kanbanObj!: KanbanComponent;
@@ -60,9 +60,9 @@ export class TasksComponent implements OnInit {
   public swimlaneSettings: SwimlaneSettingsModel = { keyField: 'assignee' };
   private _fuseConfirmationService = inject(FuseConfirmationService)
   auth = inject(AUTH);
-  
+
   tk: string
-  
+
   // kanbanService = inject(KanbanService);
   store = inject(KanbanStore);
   user = this.auth.currentUser;
@@ -81,7 +81,7 @@ export class TasksComponent implements OnInit {
     { value: 'Verify', viewValue: 'Verify' },
   ];
 
-  
+
   rag: IValue[] = [
     { value: '#238823', viewValue: 'Green' },
     { value: '#FFBF00', viewValue: 'Amber' },
@@ -186,7 +186,7 @@ export class TasksComponent implements OnInit {
       priority: [priority, Validators.required],
       tags: [task.tags, Validators.required],
       estimate: [task.estimate, Validators.required],
-      assignee: [task.assignee,Validators.required],
+      assignee: [task.assignee, Validators.required],
       rankid: [task.rankid.toString()],
       color: [this.cRAG],
       updatedate: [currentDate],
@@ -324,7 +324,7 @@ export class TasksComponent implements OnInit {
     // this.cType = data;
   }
 
-  OnDragStart(e){
+  OnDragStart(e) {
     console.debug(e);
   }
 
@@ -400,8 +400,8 @@ export class TasksComponent implements OnInit {
     this.closeDrawer();
   }
 
-  
-  
+
+
   OnCardClick(args: CardClickEventArgs): void {
     console.log(args.data);
   }

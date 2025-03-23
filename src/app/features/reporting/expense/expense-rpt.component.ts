@@ -2,7 +2,7 @@ import { Component, Inject, OnDestroy, OnInit, ViewChild, ViewEncapsulation, inj
 import { SpreadsheetComponent, SpreadsheetAllModule } from '@syncfusion/ej2-angular-spreadsheet';
 import { CommonModule } from '@angular/common';
 import { DistMenuStandaloneComponent } from '../distributed-ledger/dist-menubar/grid-menubar.component';
-import { TrialBalanceStore } from 'app/services/distribution.ledger.store';
+import { TrialBalanceStore } from 'app/store/distribution.ledger.store';
 import { UploaderModule } from '@syncfusion/ej2-angular-inputs';
 import { IDistributionLedger } from 'app/models';
 import { DistributionLedgerService } from 'app/services/distribution.ledger.service';
@@ -10,11 +10,11 @@ import { map, Observable, tap } from 'rxjs';
 
 
 @Component({
-    selector: 'expense-rpt',
-    imports: [SpreadsheetAllModule, UploaderModule, CommonModule, DistMenuStandaloneComponent],
-    encapsulation: ViewEncapsulation.None,
-    templateUrl: './expense-rpt.component.html',
-    providers: [TrialBalanceStore]
+  selector: 'expense-rpt',
+  imports: [SpreadsheetAllModule, UploaderModule, CommonModule, DistMenuStandaloneComponent],
+  encapsulation: ViewEncapsulation.None,
+  templateUrl: './expense-rpt.component.html',
+  providers: [TrialBalanceStore]
 })
 
 export class ExpenseRptComponent implements OnInit, OnDestroy {
@@ -27,36 +27,37 @@ export class ExpenseRptComponent implements OnInit, OnDestroy {
   currentPeriod = signal(1);
   currentYear = signal(2024);
 
-  distLedger$ = this.distributionLedgerService.getDistributionReportByPrdAndYear({ period: this.currentPeriod(), period_year: this.currentYear()})
-  
-  tb: IDistributionLedger[] = []; 
-  
+  distLedger$ = this.distributionLedgerService.getDistributionReportByPrdAndYear({ period: this.currentPeriod(), period_year: this.currentYear() })
+
+  tb: IDistributionLedger[] = [];
+
   public openUrl: string = 'https://services.syncfusion.com/angular/production/api/spreadsheet/open';
   public saveUrl: string = 'https://services.syncfusion.com/angular/production/api/spreadsheet/save';
-  public path: Object = {   saveUrl: 'https://services.syncfusion.com/angular/production/api/FileUploader/Save',  
-                            removeUrl: 'https://services.syncfusion.com/angular/production/api/FileUploader/Remove'
+  public path: Object = {
+    saveUrl: 'https://services.syncfusion.com/angular/production/api/FileUploader/Save',
+    removeUrl: 'https://services.syncfusion.com/angular/production/api/FileUploader/Remove'
   };
 
-  public scrollSettings: { 
-    isFinite: true, 
-    enableVirtualization: false, 
-  } 
+  public scrollSettings: {
+    isFinite: true,
+    enableVirtualization: false,
+  }
 
   ngOnDestroy(): void {
-    
+
   }
 
   ngOnInit() {
-    this.distLedger$ = this.distributionLedgerService.getDistributionReportByPrdAndYear({ period: this.currentPeriod(), period_year: this.currentYear()})
+    this.distLedger$ = this.distributionLedgerService.getDistributionReportByPrdAndYear({ period: this.currentPeriod(), period_year: this.currentYear() })
     this.distLedger$.subscribe(data => {
-      this.updateReport(data);    
+      this.updateReport(data);
     });
-    
+
   }
 
   contextMenuBeforeOpen(args: any) {
     if (args.element.id === this.spreadsheetObj!.element.id + '_contextmenu') {
-      this.spreadsheetObj!.addContextMenuItems([{ text: 'Custom Item' }], 'Paste Special', false); 
+      this.spreadsheetObj!.addContextMenuItems([{ text: 'Custom Item' }], 'Paste Special', false);
     }
   }
 
@@ -72,40 +73,39 @@ export class ExpenseRptComponent implements OnInit, OnDestroy {
 
   onRefresh() {
     // this.updateReport(this.store.header());
-    
+
     var param = {
       period: this.currentPeriod(),
       period_year: this.currentYear()
     }
-    this.distLedger$ = this.distributionLedgerService.getDistributionReportByPrdAndYear({ period: this.currentPeriod(), period_year: this.currentYear()})
-    
+    this.distLedger$ = this.distributionLedgerService.getDistributionReportByPrdAndYear({ period: this.currentPeriod(), period_year: this.currentYear() })
+
   }
 
   updateReport(tb: IDistributionLedger[]) {
     if (this.spreadsheetObj) {
-    var i = this.START_DETAIL;
-    var row = 0;
-    tb.forEach(data => {  
-          if (Number(data.child) >= 6000)
-          {
-            this.spreadsheetObj.setValueRowCol(1, data.description,i, 3);
-            this.spreadsheetObj.setValueRowCol(1, data.opening_balance,i, 4);
-            this.spreadsheetObj.setValueRowCol(1, data.closing_balance,i, 5);
-            this.spreadsheetObj.setValueRowCol(1, data.opening_balance + data.closing_balance, i, 6);
-            i++;
-          }      
-    });
+      var i = this.START_DETAIL;
+      var row = 0;
+      tb.forEach(data => {
+        if (Number(data.child) >= 6000) {
+          this.spreadsheetObj.setValueRowCol(1, data.description, i, 3);
+          this.spreadsheetObj.setValueRowCol(1, data.opening_balance, i, 4);
+          this.spreadsheetObj.setValueRowCol(1, data.closing_balance, i, 5);
+          this.spreadsheetObj.setValueRowCol(1, data.opening_balance + data.closing_balance, i, 6);
+          i++;
+        }
+      });
 
-    this.spreadsheetObj.setValueRowCol(1, 'Total', i, 3);
-    this.spreadsheetObj.setValueRowCol(1, 'Opening', 4, 4);      
-    this.spreadsheetObj.setValueRowCol(1, 'Current', 4, 5);
-    this.spreadsheetObj.setValueRowCol(1, 'Change', 4, 6);
+      this.spreadsheetObj.setValueRowCol(1, 'Total', i, 3);
+      this.spreadsheetObj.setValueRowCol(1, 'Opening', 4, 4);
+      this.spreadsheetObj.setValueRowCol(1, 'Current', 4, 5);
+      this.spreadsheetObj.setValueRowCol(1, 'Change', 4, 6);
 
-    row = i - 1  
-    this.spreadsheetObj.updateCell({ formula: `=SUM(D4:D$${row})` }, `D${i}`);
-    this.spreadsheetObj.updateCell({ formula: `=SUM(E4:E$${row})` }, `E${i}`);
-    this.spreadsheetObj.updateCell({ formula: `=SUM(F4:F$${row})` }, `F${i}`);            
-    this.spreadsheetObj.cellFormat({ fontWeight: 'bold', textAlign: 'right', verticalAlign: 'middle', fontSize: '12px' }, `A${i}:G${i}`);      
+      row = i - 1
+      this.spreadsheetObj.updateCell({ formula: `=SUM(D4:D$${row})` }, `D${i}`);
+      this.spreadsheetObj.updateCell({ formula: `=SUM(E4:E$${row})` }, `E${i}`);
+      this.spreadsheetObj.updateCell({ formula: `=SUM(F4:F$${row})` }, `F${i}`);
+      this.spreadsheetObj.cellFormat({ fontWeight: 'bold', textAlign: 'right', verticalAlign: 'middle', fontSize: '12px' }, `A${i}:G${i}`);
     }
   }
 
@@ -134,7 +134,7 @@ export class ExpenseRptComponent implements OnInit, OnDestroy {
     this.spreadsheetObj.cellFormat({ textAlign: 'right' }, 'D4:G300');
     this.spreadsheetObj.cellFormat({ fontWeight: 'bold', textAlign: 'right', verticalAlign: 'middle', fontSize: '12px' }, 'A53:G53');
     this.spreadsheetObj.setValueRowCol(1, updateDate, 3, 1);
-  
+
     this.spreadsheetObj.cellFormat(
       { fontWeight: 'bold', textAlign: 'left' },
       'A2:F2'

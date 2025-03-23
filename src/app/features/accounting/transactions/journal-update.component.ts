@@ -3,10 +3,10 @@ import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, 
 import { of, ReplaySubject, Subject, Subscription, take, takeUntil, timeout } from "rxjs";
 import { CommonModule } from "@angular/common";
 import { DndComponent } from "app/features/drag-n-drop/loaddnd/dnd.component";
-import { FundsService } from "app/services/funds.service";
+
 import { AccountsService } from "app/services/accounts.service";
 import { GridMenubarStandaloneComponent } from "../grid-components/grid-menubar.component";
-import { MaterialModule } from "app/services/material.module";
+
 import { SubTypeService } from "app/services/subtype.service";
 import { MatDialog } from "@angular/material/dialog";
 import { NgxMaskDirective, provideNgxMask } from "ngx-mask";
@@ -55,12 +55,13 @@ import {
     IJournalHeader,
     IJournalTemplate,
     IArtifacts,
+    ITemplateParams,
 } from "app/models/journals";
 
 import { Router, ActivatedRoute, NavigationStart } from "@angular/router";
 import { Location } from "@angular/common";
 import { MatDrawer } from "@angular/material/sidenav";
-import { JournalStore } from "app/services/journal.store";
+
 import { Splitter, SplitterComponent, SplitterModule } from '@syncfusion/ej2-angular-layouts';
 import { EvidenceCardComponent } from "app/features/file-manager/file-manager-card/evidence-card.component";
 import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from "@angular/material/form-field";
@@ -79,6 +80,8 @@ import { FundsActions } from "../static/funds/Funds.Action";
 import { subtypeFeature } from "../static/subtype/sub-type.state";
 import { FundsDropDownComponent } from "../grid-components/drop-down.funds.component";
 import { SubtypeDropDownComponent } from "../grid-components/drop-down.subtype.component";
+import { JournalStore } from "app/store/journal.store";
+import { MaterialModule } from "app/shared/material.module";
 
 
 const imp = [
@@ -95,7 +98,7 @@ const imp = [
     SplitterModule,
     EvidenceCardComponent,
     DropDownAccountComponent,
-    // FundsDropDownComponent,
+
     SubtypeDropDownComponent,    
 ];
 
@@ -881,7 +884,7 @@ export class JournalUpdateComponent
             this.refreshHeader(this.journalHeader);                        
         });
         
-        this.bHeaderDirty = false;
+        
     }
 
 
@@ -1215,7 +1218,7 @@ export class JournalUpdateComponent
         this.searchOptions = { operator: 'contains', ignoreCase: true, ignoreAccent: true };
 
 
-        this.partyCtrl.setValue(
+        this.partyCtrl.setValue(            
             this.partyList.find((x) => x.party_id === this.journalHeader.party_id)
         );
 
@@ -1227,18 +1230,10 @@ export class JournalUpdateComponent
             );
         }
         
-
-        this.partyCtrl.valueChanges.subscribe((value) => {
-            //this.bHeaderDirty = true;
-            console.log('Header is true 2 from party change');
-        });
-
-        this.templateCtrl.valueChanges.subscribe((value) => {
-            this.bHeaderDirty = true;                    
-            console.debug('Header is true for changes from template');
-        });
-
         this.onChanges();
+
+        this.bHeaderDirty = false;
+        console.debug('Header is false now');
 
     }
 
@@ -1367,21 +1362,15 @@ export class JournalUpdateComponent
 
     public onChanges(): void {
 
-        // this.journalForm.controls['description'].valueChanges.subscribe((value) => {            
-        //         this.bHeaderDirty = true;                             
-        // });
+        this.partyCtrl.valueChanges.subscribe((value) => {
+            this.bHeaderDirty = true;
+            console.log('Header is true!! ');
+        });
 
-        // this.journalForm.controls['invoice_no'].valueChanges.subscribe((value) => {            
-        //     this.bHeaderDirty = true;                             
-        // });
-
-        // this.journalForm.controls['debit'].valueChanges.subscribe((value) => {            
-        //     this.bHeaderDirty = true;                             
-        // });
-
-        // this.journalForm.valueChanges.subscribe((value) => {
-        //     this.bHeaderDirty = true;
-        // });
+        this.templateCtrl.valueChanges.subscribe((value) => {
+            this.bHeaderDirty = true;                    
+            console.debug('Header is true !! ');
+        });
 
         this.detailForm.controls['accounts'].valueChanges.subscribe((value) => {
             console.log('Account changed: ', value);
@@ -1395,6 +1384,7 @@ export class JournalUpdateComponent
         this.debitCtrl.valueChanges.subscribe((value) => {
             this.bDetailDirty = true;
         });
+
     }
 
 
@@ -1540,10 +1530,10 @@ export class JournalUpdateComponent
         // Subscribe to the confirmation dialog closed action
         confirmation.afterClosed().subscribe((result) => {
             if (result === "confirmed") {
-                var journalParam = {
-                    child: this.journalHeader.journal_id,
-                    period: this.journalHeader.period,
-                    period_year: this.journalHeader.period_year
+                var journalParam : ITemplateParams = {
+                    journal_id: this.journalHeader.journal_id,
+                    template_description: this.journalHeader.description,
+                    templateType: this.journalHeader.type,
                 };
                 this.store.createJournalTemplate(journalParam);
             }

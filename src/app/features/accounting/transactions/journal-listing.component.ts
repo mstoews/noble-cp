@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, HostListener, OnDestroy, OnInit, ViewEncapsulation, inject, input, viewChild } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { MaterialModule } from 'app/services/material.module';
+import { MaterialModule } from 'app/shared/material.module';
 import { cloneJournal, loadJournalHeaderByPeriod } from 'app/features/accounting/transactions/state/journal/Journal.Action';
 import { Observable } from 'rxjs';
 import { IJournalHeader, IJournalTransactions } from 'app/models/journals';
@@ -122,7 +122,7 @@ const imports = [
                                     (actionBegin)='selectedRow($event)' >
                                     <e-columns>
                                         <e-column field='journal_id' headerText='ID' isPrimaryKey='true' isIdentity='true' visible='true' width='60'></e-column>
-                                        <e-column field='status' headerText='Status' width='70' textAlign='Center'>
+                                        <e-column field='status' headerText='Status' width='50' textAlign='Center'>
                                                 <ng-template #template let-data>                       
                                                     @if(data.status === 'CLOSED') {
                                                         <div>
@@ -140,7 +140,7 @@ const imports = [
 
                                             </e-column>
                                             
-                                            <e-column field='type' headerText='Type' width='60' textAlign='Center'>
+                                            <e-column field='type' headerText='Type' width='50' textAlign='Center'>
                                             <ng-template #template let-data>                       
                                                     @if(data.type === 'GL') {
                                                         <div>

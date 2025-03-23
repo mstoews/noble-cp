@@ -25,18 +25,15 @@ const initialState: AccountState = {
 export class AccountsService {
 
     public httpClient = inject(HttpClient)
-
     private parentAccounts = signal<IAccounts[]>([])
     private dropDownList = signal<IDropDownAccounts[]>([])
     private childrenOfParents = signal<IAccounts[]>([])
 
     public accountList = signal<IAccounts[]>([])
+
     private accountState = signalState(initialState);
-
-
     private baseUrl = environment.baseUrl;
     
-
     // readonly accountList = this.accountState.account;
     readonly isLoading = this.accountState.isLoading;
 
@@ -55,8 +52,8 @@ export class AccountsService {
         return this.httpClient.get<IAccounts[]>(url).pipe(shareReplay({ bufferSize: 1, refCount: true }));
     }
 
-    delete(id: string) {
-        var url = this.baseUrl + '/v1/account_delete/:' + id;
+    delete(child: number) {
+        var url = this.baseUrl + '/v1/account_delete/:' + child.toString();
         return this.httpClient.delete<IAccounts[]>(url).pipe(shareReplay({ bufferSize: 1, refCount: true }));
     }
 

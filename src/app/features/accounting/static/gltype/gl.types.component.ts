@@ -10,7 +10,7 @@ import { CommonModule } from '@angular/common';
 import { FuseConfirmationService } from '@fuse/services/confirmation';
 import { GridMenubarStandaloneComponent } from '../../grid-components/grid-menubar.component';
 import { MatDrawer } from '@angular/material/sidenav';
-import { MaterialModule } from 'app/services/material.module';
+import { MaterialModule } from 'app/shared/material.module';
 import { AggregateService, ColumnMenuService, DialogEditEventArgs, EditService, ExcelExportService, FilterService, GridModule, GroupService, PageService, ResizeService, SaveEventArgs, SortService, ToolbarService } from '@syncfusion/ej2-angular-grids';
 import { IAccounts } from 'app/models';
 import { GLGridComponent } from '../../grid-components/gl-grid.component';
@@ -74,15 +74,15 @@ const imports = [
     providers: [SortService, GroupService, ExcelExportService, PageService, ResizeService, FilterService, ToolbarService, EditService, AggregateService, ColumnMenuService,]
 })
 export class GlTypeComponent implements OnInit {
-    
+
     store = inject(Store);
     bDirty: boolean = false;
     sTitle = 'Financial Statement Mapping';
-    drawer = viewChild<MatDrawer>('drawer'); 
-    toast = inject(ToastrService);   
-    
+    drawer = viewChild<MatDrawer>('drawer');
+    toast = inject(ToastrService);
+
     private fuseConfirmationService = inject(FuseConfirmationService);
-    
+
     isLoading$ = this.store.select(gltypeFeature.selectIsLoading);
     glTypes$ = this.store.select(gltypeFeature.selectGltype);
     selectedTypes$ = this.store.select(gltypeFeature.selectSelectedGLType);
@@ -98,10 +98,10 @@ export class GlTypeComponent implements OnInit {
 
     ngOnInit() {
         this.store.dispatch(glTypePageActions.load());
-        
+
     }
 
-    
+
     onDelete(e: any) {
         console.debug(`onDelete ${JSON.stringify(e)}`);
         const confirmation = this.fuseConfirmationService.open({
@@ -138,23 +138,23 @@ export class GlTypeComponent implements OnInit {
         }
     }
 
-    onSelection(gltype: IGLType) {        
-        this.store.dispatch(glTypePageActions.select(gltype));             
-        this.openDrawer();        
+    onSelection(gltype: IGLType) {
+        this.store.dispatch(glTypePageActions.select(gltype));
+        this.openDrawer();
     }
-    
+
 
     onAdd(gltype: IGLType) {
-            this.store.dispatch(glTypePageActions.add ({ gltype: gltype }));
-            this.toast.success('Mapping Added');
-        }
-    
-    onUpdate(gltype: IGLType) {        
-        this.store.dispatch(glTypePageActions.update({ gltype: gltype }));        
+        this.store.dispatch(glTypePageActions.add({ gltype: gltype }));
+        this.toast.success('Mapping Added');
+    }
+
+    onUpdate(gltype: IGLType) {
+        this.store.dispatch(glTypePageActions.update({ gltype: gltype }));
         this.toast.success('Mapping Updated');
         this.onClose();
     }
-    
+
     onClose() {
         const opened = this.drawer().opened;
         if (opened === true) {

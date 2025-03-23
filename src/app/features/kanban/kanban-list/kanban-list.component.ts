@@ -9,9 +9,10 @@ import { Component, OnInit, ViewChild, inject, viewChild } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { FuseConfirmationService } from "@fuse/services/confirmation";
 import { MatDrawer } from "@angular/material/sidenav";
-import { MaterialModule } from "app/services/material.module";
+import { MaterialModule } from "app/shared/material.module";
 import { KanbanMenubarComponent } from "../kanban/kanban-menubar/grid-menubar.component";
-import {DialogEditEventArgs, GridModule, SaveEventArgs 
+import {
+  DialogEditEventArgs, GridModule, SaveEventArgs
 } from "@syncfusion/ej2-angular-grids";
 import { DropDownListComponent, DropDownListModule } from "@syncfusion/ej2-angular-dropdowns";
 
@@ -95,22 +96,22 @@ export class KanbanListComponent implements OnInit {
   }
 
   columns = [
-  { field : "id"          , headerText: "ID"      , visible: false, width:"100", sortOrder:"asc", isPrimaryKey:"true" },
-  { field : "title"       , headerText: "Title"   , visible: true   },
-  { field : "status"      , headerText: "Status"  , visible: true , width:"120"},
-  { field : "summary"     , headerText: "Summary" , visible: true , width:"200"},
-  { field : "kanban_type" , headerText: "Type"    , visible: true , width:"100"},
-  { field : "priority"    , headerText: "Priority", visible: true , width:"120"},
-  { field : "tags"        , headerText: "Tag"     , visible: true , width:"120"},
-  { field : "estimate"    , headerText: "Estimate", visible: true , width:"130"},
-  { field : "assignee"    , headerText: "Assignee", visible: true , width:"130"},
-  { field : "rankid "     , headerText: "Rank ID" , visible: true , width:"70"},
-  { field : "color"       , headerText: "Color"   , visible: true , width:"70"},
+    { field: "id", headerText: "ID", visible: false, width: "100", sortOrder: "asc", isPrimaryKey: "true" },
+    { field: "title", headerText: "Title", visible: true },
+    { field: "status", headerText: "Status", visible: true, width: "120" },
+    { field: "summary", headerText: "Summary", visible: true, width: "200" },
+    { field: "kanban_type", headerText: "Type", visible: true, width: "100" },
+    { field: "priority", headerText: "Priority", visible: true, width: "120" },
+    { field: "tags", headerText: "Tag", visible: true, width: "120" },
+    { field: "estimate", headerText: "Estimate", visible: true, width: "130" },
+    { field: "assignee", headerText: "Assignee", visible: true, width: "130" },
+    { field: "rankid ", headerText: "Rank ID", visible: true, width: "70" },
+    { field: "color", headerText: "Color", visible: true, width: "70" },
   ];
 
-    
+
   types: IValue[] = [
-    { value: "Add"   , viewValue: "Add" },
+    { value: "Add", viewValue: "Add" },
     { value: "Update", viewValue: "Update" },
     { value: "Delete", viewValue: "Delete" },
     { value: "Verify", viewValue: "Verify" },
@@ -139,7 +140,7 @@ export class KanbanListComponent implements OnInit {
   drawOpen: "open" | "close" = "open";
 
 
-  
+
   public sTitle = "Kanban List";
   public taskGroup!: FormGroup;
   public data$: any;
@@ -286,11 +287,11 @@ export class KanbanListComponent implements OnInit {
   public pageSettings: Object;
   public formatoptions: Object;
   public initialSort: Object;
-  
+
   public editSettings: Object;
   public dropDown: DropDownListComponent;
   public submitClicked: boolean = false;
-  
+
 
   onCreate(e: any) {
     this.createEmptyForm();

@@ -5,7 +5,7 @@ import { DistributionLedgerService } from 'app/services/distribution.ledger.serv
 
 import { StatementLineComponent } from './statement-line.component';
 import { BehaviorSubject, map, Subject, takeUntil } from 'rxjs';
-import { MaterialModule } from 'app/services/material.module';
+import { MaterialModule } from 'app/shared/material.module';
 import { StatementTotalComponent } from './statement-totals.component';
 import html2PDF from 'jspdf-html2canvas';
 import { GridMenubarStandaloneComponent } from 'app/features/accounting/grid-components/grid-menubar.component';
@@ -83,7 +83,7 @@ const imports = [
     
 </div>
   `,
-    providers: []
+  providers: []
 })
 
 export class BalanceSheetStatementRptComponent {

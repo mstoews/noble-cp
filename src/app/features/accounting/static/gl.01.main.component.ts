@@ -6,7 +6,7 @@ import { Subject, takeUntil } from 'rxjs';
 import { FuseMediaWatcherService } from '@fuse/services/media-watcher';
 import { NgClass } from '@angular/common';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, viewChild, ViewEncapsulation } from '@angular/core';
-import { MaterialModule } from 'app/services/material.module';
+import { MaterialModule } from 'app/shared/material.module';
 import { GlSubTypeComponent } from './subtype/gl.subtype.component';
 import { PeriodsComponent } from './periods/gl.periods.component';
 
@@ -14,7 +14,8 @@ import { TeamsComponent } from './team/gl.teams.component';
 import { MatDrawer } from '@angular/material/sidenav';
 import { FundsComponent } from './funds/gl.funds.component';
 import { PartyComponent } from './party/party.component';
-import { AppStore, ApplicationService } from 'app/services/application.state.service';
+import { ApplicationService } from 'app/store/main.panel.store';
+import { ApplicationStore } from 'app/store/application.store';
 import { CdkScrollable } from '@angular/cdk/scrolling';
 import { RolesComponent } from './roles/gl.roles.component';
 
@@ -123,7 +124,7 @@ import { RolesComponent } from './roles/gl.roles.component';
         CdkScrollable
 
     ],
-    providers: [HttpClient, AppStore],
+    providers: [HttpClient],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class GlMainComponent {
@@ -139,7 +140,7 @@ export class GlMainComponent {
     public selectedPanel: string = 'accounts';
     public PANEL_ID = 'referencePanel';
     public appService = inject(ApplicationService);
-    public store = inject(AppStore);
+    public store = inject(ApplicationStore);
 
     constructor() {
         this.appService.getUserId().subscribe((uid) => {

@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { MaterialModule } from 'app/services/material.module';
+import { MaterialModule } from 'app/shared/material.module';
 
-import { JournalStore } from 'app/services/journal.store';
+import { JournalStore } from 'app/store/journal.store';
 import { SummaryCardComponent } from 'app/features/admin/dashboard/summary-card.component';
 import { FuseAlertType } from '@fuse/components/alert';
 import { GridMenubarStandaloneComponent } from '../grid-components/grid-menubar.component';
@@ -15,7 +15,7 @@ const imports = [
     MaterialModule,
     FormsModule,
     SummaryCardComponent,
-    JournalEntryComponent    
+    JournalEntryComponent
 ];
 
 @Component({
@@ -72,7 +72,7 @@ const imports = [
     `,
 })
 export class ARTransactionComponent {
-        
+
     public prd = "1";
     public prd_year = "2024";
 
@@ -85,30 +85,30 @@ export class ARTransactionComponent {
     onReceipts() {
     }
 
-    onRefresh() {        
+    onRefresh() {
     }
-    onAdd() {        
+    onAdd() {
     }
 
     onDeleteSelection() {
-        
+
     }
-    onUpdateSelection() {      
+    onUpdateSelection() {
     }
     openDrawer() {
-        
+
     }
     onPrint() {
-        
+
     }
     exportLX() {
-        
+
     }
     exportPDF() {
-        
+
     }
     exportCSV() {
-        
+
     }
 
 }

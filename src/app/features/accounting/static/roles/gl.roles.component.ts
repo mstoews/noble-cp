@@ -9,9 +9,9 @@ import { Component, OnInit, ViewChild, inject, viewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FuseConfirmationService } from '@fuse/services/confirmation';
 import { MatDrawer } from '@angular/material/sidenav';
-import { MaterialModule } from 'app/services/material.module';
+import { MaterialModule } from 'app/shared/material.module';
 import { IRole, RoleService } from 'app/services/roles.service';
-import { RolesStore } from 'app/services/roles.store';
+import { RolesStore } from 'app/store/roles.store';
 import { GridMenubarStandaloneComponent } from 'app/features/accounting/grid-components/grid-menubar.component';
 import { GLGridComponent } from 'app/features/accounting/grid-components/gl-grid.component';
 

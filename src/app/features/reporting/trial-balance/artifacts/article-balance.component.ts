@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component, OnInit, ViewChild, inject, AfterViewInit, viewChild } from '@angular/core';
 import { CommonModule, } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { TrialBalanceStore } from 'app/services/distribution.ledger.store';
-import { MaterialModule } from 'app/services/material.module';
+import { TrialBalanceStore } from 'app/store/distribution.ledger.store';
+import { MaterialModule } from 'app/shared/material.module';
 import {
     AggregateService,
     ColumnMenuService,
@@ -164,7 +164,7 @@ export class ArticleListingComponent implements OnInit, AfterViewInit {
         ],
         aggregates: [
             {
-                columns: [                    
+                columns: [
                     {
                         type: 'Sum',
                         field: 'debit',

@@ -5,7 +5,7 @@ import { FuseConfirmationService } from "@fuse/services/confirmation";
 import { GridMenubarStandaloneComponent } from "../../grid-components/grid-menubar.component";
 
 import { MatDrawer } from "@angular/material/sidenav";
-import { MaterialModule } from "app/services/material.module";
+import { MaterialModule } from "app/shared/material.module";
 import {
   AggregateService,
   ColumnMenuService,
@@ -23,14 +23,13 @@ import {
 import { IAccounts } from "app/models";
 import { AuthService } from "app/features/auth/auth.service";
 import { GLGridComponent } from "../../grid-components/gl-grid.component";
-import { Store } from "@ngrx/store";
-import { accountsFeature } from "app/features/accounting/static/accts/Accts.state";
-import { accountPageActions } from "app/features/accounting/static/accts/Accts-page.actions";
 import { MenuEventArgs, MenuItemModel } from "@syncfusion/ej2-navigations";
 import { ContextMenuAllModule } from "@syncfusion/ej2-angular-navigations";
 import { ToastrService } from "ngx-toastr";
 import { SettingsComponent } from "./comp.accts.settings";
 import { DrawerComponent } from "./comp.accts.drawer";
+import { AccountsStore } from "app/store/accounts.store";
+import { ApplicationStore } from "app/store/application.store";
 
 const imports = [
   CommonModule,
@@ -55,7 +54,7 @@ const keyExpr = ["account", "child"];
 
   <mat-drawer  class="w-[450px]" #drawer  [opened]="false"  mode="over" position="end" [disableClose]="false" >
           <accts-drawer
-            [account] = "selectedAccount$ | async"
+            [account] = "selectedAccount"
             (Cancel)="onClose()"
             (Update)="onUpdate($event)"
             (Add)="onAdd($event)"
@@ -63,15 +62,15 @@ const keyExpr = ["account", "child"];
           </accts-drawer>
   </mat-drawer>
   
-  @if ((isLoading$ | async) === false) {  
+  @if ( store.isLoading() === false) {  
     <mat-drawer-container id="target" class="flex-col h-screen">        
         <ng-container>
           <div class="border-1 border-gray-500">
-            @if(accounts$ | async; as accounts) {        
+            @if(store.isLoading() === false) {        
               <gl-grid #gl_grid                    
                   (onFocusChanged)="onSelection($event)"  
                   (onUpdateSelection)="selectedRow($event)"  
-                  [data]="accounts"  
+                  [data]="store.accounts()"  
                   [columns]="cols">
               </gl-grid> 
             }            
@@ -115,10 +114,14 @@ export class GlAccountsComponent {
   private _fuseConfirmationService = inject(FuseConfirmationService);
   private auth = inject(AuthService);
 
-  store = inject(Store);
-  accounts$ = this.store.select(accountsFeature.selectAccounts);
-  selectedAccount$ = this.store.select(accountsFeature.selectSelectedAccount);
-  isLoading$ = this.store.select(accountsFeature.selectIsLoading);
+  selectedAccount: IAccounts | null;
+
+  store = inject(AccountsStore);
+
+  // store = inject(Store);
+  // accounts$ = this.store.select(accountsFeature.selectAccounts);
+  // selectedAccount$ = this.store.select(accountsFeature.selectSelectedAccount);
+  // isLoading$ = this.store.select(accountsFeature.selectIsLoading);
   toast = inject(ToastrService);
 
   public selectedItemKeys: any[] = [];
@@ -149,11 +152,13 @@ export class GlAccountsComponent {
   ];
 
   onSelection(account: any) {
-    this.store.dispatch(accountPageActions.select(account.data));
+    // this.store.accounts();
+    // this.store._accountsStore.select 
+    // this.store.dispatch(accountPageActions.select(account.data));
   }
 
   ngOnInit() {
-    this.store.dispatch(accountPageActions.load());
+    this.store.readAccounts;
   }
 
   onOpenSettings() {
@@ -181,7 +186,7 @@ export class GlAccountsComponent {
       update_date: new Date().toISOString().split("T")[0],
       update_user: '@' + this.auth.user().email.split("T")[0],
     };
-    this.store.dispatch(accountPageActions.addAccount({ account: rawData }));
+    //this.store.dispatch(accountPageActions.addAccount({ account: rawData }));
     this.closeEditDrawer();
   }
 
@@ -203,15 +208,15 @@ export class GlAccountsComponent {
 
 
   addAccount(account: IAccounts) {
-    this.store.dispatch(accountPageActions.addAccount({ account }));
+    //this.store.dispatch(accountPageActions.addAccount({ account }));
   }
 
   updateAccount(account: IAccounts) {
-    this.store.dispatch(accountPageActions.updateAccount({ account }));
+    //this.store.dispatch(accountPageActions.updateAccount({ account }));
   }
 
   deleteAccount(child: number) {
-    this.store.dispatch(accountPageActions.deleteAccount({ child }));
+    //this.store.dispatch(accountPageActions.deleteAccount({ child }));
   }
 
 
@@ -240,7 +245,7 @@ export class GlAccountsComponent {
     confirmation.afterClosed().subscribe((result) => {
 
       if (result === "confirmed") {
-        this.store.dispatch(accountPageActions.deleteAccount({ child }));
+        //this.store.dispatch(accountPageActions.deleteAccount({ child }));
       }
     });
     this.closeEditDrawer();

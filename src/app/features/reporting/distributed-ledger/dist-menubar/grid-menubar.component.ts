@@ -3,7 +3,7 @@ import { FormGroup } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatToolbarModule } from '@angular/material/toolbar';
-import { MaterialModule } from 'app/services/material.module';
+import { MaterialModule } from 'app/shared/material.module';
 import { PeriodsService } from 'app/services/periods.service';
 import { Observable } from 'rxjs';
 
@@ -18,11 +18,11 @@ var modules = [
 ]
 
 @Component({
-    selector: 'dist-menubar',
-    templateUrl: './grid-menubar.component.html',
-    styleUrls: ['./grid-menubar.component.css'],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [modules]
+  selector: 'dist-menubar',
+  templateUrl: './grid-menubar.component.html',
+  styleUrls: ['./grid-menubar.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [modules]
 })
 export class DistMenuStandaloneComponent implements OnInit {
   // @Output() notifyParentAdd = new EventEmitter();
@@ -45,7 +45,7 @@ export class DistMenuStandaloneComponent implements OnInit {
     // this.inTitle = 'Account Maintenance';
   }
 
-  onPeriod(prd: number){
+  onPeriod(prd: number) {
     this.notifyParentPeriod.emit(prd.toString());
   }
 
@@ -53,7 +53,7 @@ export class DistMenuStandaloneComponent implements OnInit {
     this.notifyParentYear.emit(year.toString());
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void { }
 
   onClickUpdate(): void {
     console.debug('Menu bar notification emit update');

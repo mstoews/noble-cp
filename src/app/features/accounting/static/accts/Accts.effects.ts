@@ -79,8 +79,7 @@ export class accountEffects {
     this.actions$.pipe(
       ofType(accountPageActions.deleteAccount),
       mergeMap(({ child }) =>
-        this.accountService.delete(child.toString())
-          .pipe(map(() => accountAPIActions.accountDeletedSuccess()))
+        this.accountService.delete(child).pipe(map(() => accountAPIActions.accountDeletedSuccess()))
       ),
       catchError((error) =>
         of(accountAPIActions.accountDeletedFail({ message: error }))

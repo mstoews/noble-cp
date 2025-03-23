@@ -5,6 +5,7 @@ import { ApplicationService } from './services/application.service';
 import { AuthService } from './features/auth/auth.service';
 import { Store } from '@ngrx/store';
 import { getTemplates, loadTemplates } from './features/accounting/transactions/state/template/Template.Action';
+import { ApplicationStore } from './store/application.store';
 
 @Component({
     selector: 'app-root',
@@ -16,6 +17,7 @@ import { getTemplates, loadTemplates } from './features/accounting/transactions/
                 height: 100%;
             }`,
     imports: [RouterOutlet],
+    providers: [ApplicationStore],
     animations: [
         trigger('routerTransition', [
             transition('* <=> *', [
@@ -38,16 +40,12 @@ import { getTemplates, loadTemplates } from './features/accounting/transactions/
 })
 export class AppComponent {
     authService = inject(AuthService);
-    store = inject(Store);
-    templateList$ = this.store.select(getTemplates);     
-
     getState(outlet: any) {
         return outlet.activatedRouteData.state;
     }
     constructor() {
-        this.store.dispatch(loadTemplates());
+
     }
-    
 }
-    
+
 

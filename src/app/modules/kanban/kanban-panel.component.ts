@@ -14,7 +14,7 @@ import {
     ViewChild,
     ViewEncapsulation,
 } from '@angular/core';
-import { MaterialModule } from 'app/services/material.module';
+import { MaterialModule } from 'app/shared/material.module';
 import { TasksComponent } from './task/tasks.component';
 import { KanbanTypesComponent } from './types/types.component';
 import { StatusComponent } from './status/status.component';
@@ -29,15 +29,15 @@ import { TeamsComponent } from '../accounting/accts/teams/teams.component';
     encapsulation: ViewEncapsulation.None,
     imports: [
         MaterialModule,
-        
+
         TasksComponent,
         KanbanTypesComponent,
         StatusComponent,
         KanbanListComponent,
         KanbanPriorityComponent,
-        
+
         TeamsComponent,
-        
+
     ],
     providers: [HttpClient],
     changeDetection: ChangeDetectionStrategy.OnPush

@@ -8,7 +8,7 @@ import { addClass } from '@syncfusion/ej2-base';
 import { ColumnsModel, CardSettingsModel, SwimlaneSettingsModel, CardRenderedEventArgs } from '@syncfusion/ej2-angular-kanban';
 
 import { MatDrawer } from '@angular/material/sidenav';
-import { MaterialModule } from 'app/services/material.module';
+import { MaterialModule } from 'app/shared/material.module';
 import { FuseConfirmationService } from '@fuse/services/confirmation';
 import { provideNativeDateAdapter } from '@angular/material/core';
 import { AUTH } from 'app/app.config';
@@ -23,18 +23,18 @@ const imports = [
   MaterialModule,
   FormsModule,
   ReactiveFormsModule,
-  CommonModule,  
+  CommonModule,
   KanbanModule,
   CheckBoxAllModule,
   GridMenubarStandaloneComponent,
-  KanbanDrawerComponent  
+  KanbanDrawerComponent
 ]
 
 @Component({
-    selector: 'kanban',
-    encapsulation: ViewEncapsulation.None,
-    imports: [imports],
-    template: `
+  selector: 'kanban',
+  encapsulation: ViewEncapsulation.None,
+  imports: [imports],
+  template: `
     <div class="flex flex-col min-w-0 overflow-y-auto bg-transparent" cdkScrollable>
     <mat-drawer class="w-[450px]"  #drawer [opened]="false" mode="push" [position]="'end'"
                 [disableClose]="false">
@@ -121,32 +121,32 @@ const imports = [
       </div>
     </div>
     `,
-    styleUrl: './tasks.component.scss',
-    providers: [provideNativeDateAdapter(), KanbanStore],
-    changeDetection: ChangeDetectionStrategy.OnPush
+  styleUrl: './tasks.component.scss',
+  providers: [provideNativeDateAdapter(), KanbanStore],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TasksComponent implements OnInit {
 
   private _fuseConfirmationService = inject(FuseConfirmationService)
   private drawer = viewChild<MatDrawer>("drawer");
-  
-  
+
+
   public drawOpen: 'open' | 'close' = 'open';
   public taskGroup: FormGroup;
   public sTitle = 'Add Kanban Task';
-  
+
   public currentDate = new Date().toISOString().split('T')[0];
 
   public swimlaneSettings: SwimlaneSettingsModel = { keyField: 'assignee' };
-  public  currentUser = inject(AUTH).currentUser;
+  public currentUser = inject(AUTH).currentUser;
 
-  public selectedTask$! : Observable<IKanban>;
+  public selectedTask$!: Observable<IKanban>;
   store = inject(KanbanStore);
-  
+
   ngOnInit() {
-    this.bAdding = true;    
+    this.bAdding = true;
   }
-  
+
   OnDragStop(e: any): void {
     const d = {
       id: e.data[0].id,
@@ -187,17 +187,17 @@ export class TasksComponent implements OnInit {
       estimatedate: args.data.estimatedate
     } as IKanban;
     this.selectedTask$ = of(kanban);
-    this.drawer().open();    
+    this.drawer().open();
   }
 
   onBack() {
-      throw new Error('Method not implemented.');
+    throw new Error('Method not implemented.');
   }
 
   onCancel() {
     this.drawer().close();
-  }  
-    
+  }
+
   public columns: ColumnsModel[] = [
     { headerText: 'Initial', keyField: 'Open', allowToggle: true },
     { headerText: 'In Progress', keyField: 'InProgress', allowToggle: true },
@@ -213,7 +213,7 @@ export class TasksComponent implements OnInit {
 
   public bAdding?: boolean = true;
 
-  onUpdate(task: IKanban) {    
+  onUpdate(task: IKanban) {
     if (task.id === null || task.id === undefined) {
       this.onAdd(task)
       return
@@ -244,7 +244,7 @@ export class TasksComponent implements OnInit {
 
   }
 
-  onDelete(kanban: IKanban) {    
+  onDelete(kanban: IKanban) {
     const confirmation = this._fuseConfirmationService.open({
       title: `Delete Task: ${kanban.title}`,
       message: 'Are you sure you want to delete this task?',
@@ -276,7 +276,7 @@ export class TasksComponent implements OnInit {
     // this.cType = data;
   }
 
-  OnDragStart(e){
+  OnDragStart(e) {
     console.debug(e);
   }
 
@@ -312,7 +312,7 @@ export class TasksComponent implements OnInit {
 
   // Menu
   onAdd(kanban: IKanban) {
-    this.bAdding = true;    
+    this.bAdding = true;
     this.toggleDrawer();
   }
 
@@ -321,7 +321,7 @@ export class TasksComponent implements OnInit {
     var sub = this.store.addTask(kanban);
     this.toggleDrawer();
   }
-  
+
   OnCardClick(args: CardClickEventArgs): void {
     console.log(args.data);
   }

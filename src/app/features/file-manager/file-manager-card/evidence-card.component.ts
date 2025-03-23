@@ -3,31 +3,31 @@ import { Router } from '@angular/router'
 import { Observable, Subscription } from 'rxjs'
 import { MatSnackBar } from '@angular/material/snack-bar'
 
-import { MaterialModule } from 'app/services/material.module'
+import { MaterialModule } from 'app/shared/material.module'
 import { IArtifacts } from 'app/models/journals'
 
 const imports = [MaterialModule]
-  
+
 @Component({
-    selector: 'evidence-card',
-    imports: [imports],
-    templateUrl: './evidence-card.component.html'
+  selector: 'evidence-card',
+  imports: [imports],
+  templateUrl: './evidence-card.component.html'
 })
 export class EvidenceCardComponent implements OnInit {
 
   readonly evidence = input<IArtifacts>(undefined);
-  
+
   update = output<number>();
-  
+
   loggedIn: boolean = false;
   productId: string;
   sub: Subscription;
   isLoggedIn$: Observable<boolean>;
 
-  private router = inject(Router);  
-    
+  private router = inject(Router);
+
   ngOnInit(): void {
-    console.log('Evidence id: ',this.evidence().id);
+    console.log('Evidence id: ', this.evidence().id);
   }
 
   openEvidenceDetail() {

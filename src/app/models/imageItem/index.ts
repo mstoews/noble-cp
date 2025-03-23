@@ -1,13 +1,9 @@
 import { DocumentReference } from "firebase/firestore";
 
-export interface imageItem {
+export interface ImageItem {
   id: string;
   parentId: string;
   imageSrc: string;
-  imageSrc200?: string;
-  imageSrc400?: string;
-  imageSrc800?: string;
-  largeImageSrc: string;
   imageAlt: string;
   caption: string;
   type: string;
@@ -61,10 +57,9 @@ export type OverviewUpdate = ListUpdate<'overview', string>;
 export type ImageItemUpdate = ListUpdate<'image_item', string>;
 export type ImageItemListUpdate = ImageItemUpdate | OverviewUpdate;
 
-export type ImageItemRef = DocumentReference<imageItem>;
-
-export interface ImageItemSnap extends imageItem {
-    images: imageItem[];
+export type ImageItemRef = DocumentReference<ImageItem>;
+export interface ImageItemSnap extends ImageItem {
+    images: ImageItem[];
 }
 
 

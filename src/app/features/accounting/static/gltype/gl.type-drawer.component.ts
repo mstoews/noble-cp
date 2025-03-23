@@ -1,7 +1,7 @@
-import { Component, inject, input , OnInit, output  } from '@angular/core';
+import { Component, inject, input, OnInit, output } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { IGLType } from 'app/models/types';
-import { MaterialModule } from 'app/services/material.module';
+import { MaterialModule } from 'app/shared/material.module';
 
 @Component({
   selector: 'gltype-drawer',
@@ -75,13 +75,13 @@ export class GLTypeDrawerComponent implements OnInit {
   Add = output<IGLType>();
   Delete = output<IGLType>();
   Cancel = output();
-  
+
   bDirty: boolean = false;
   private fb = inject(FormBuilder);
-  
+
   gltypeForm = new FormGroup({
-    type : new FormControl(''),
-    description:  new FormControl('')    
+    type: new FormControl(''),
+    description: new FormControl('')
   });
 
 
@@ -89,14 +89,14 @@ export class GLTypeDrawerComponent implements OnInit {
     this.gltypeForm.valueChanges.subscribe(() => {
       if (this.gltypeForm.dirty === true) {
         this.bDirty = true;
-        this.originalGLType = this.gltype();        
+        this.originalGLType = this.gltype();
       }
-    });    
+    });
   }
-  
+
   ngOnChanges() {
-    if (this.gltype) {      
-      this.gltypeForm.patchValue(this.gltype());      
+    if (this.gltype) {
+      this.gltypeForm.patchValue(this.gltype());
     }
   }
 
@@ -104,12 +104,12 @@ export class GLTypeDrawerComponent implements OnInit {
     const updateDate = new Date().toISOString().split('T')[0];
     return {
       gltype: this.gltypeForm.value.type,
-      description: this.gltypeForm.value.description,      
+      description: this.gltypeForm.value.description,
       update_date: updateDate,
-      update_user: '@admin',      
+      update_user: '@admin',
       create_date: updateDate,
       create_user: '@admin'
-    } as IGLType;     
+    } as IGLType;
 
   }
 

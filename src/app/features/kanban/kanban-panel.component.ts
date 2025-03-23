@@ -3,10 +3,11 @@ import { Subject, takeUntil } from 'rxjs';
 import { FuseMediaWatcherService } from '@fuse/services/media-watcher';
 import { NgClass } from '@angular/common';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, viewChild, ViewEncapsulation } from '@angular/core';
-import { MaterialModule } from 'app/services/material.module';
+import { MaterialModule } from 'app/shared/material.module';
 
 import { MatDrawer } from '@angular/material/sidenav';
-import { AppStore, ApplicationService } from 'app/services/application.state.service';
+import { ApplicationService } from 'app/store/main.panel.store';
+import { ApplicationStore as AppStore } from 'app/store/application.store';
 import { CdkScrollable } from '@angular/cdk/scrolling';
 import { TeamsComponent } from '../accounting/static/team/gl.teams.component';
 import { TasksComponent } from './task/tasks.component';
@@ -117,7 +118,7 @@ import { ProjectComponent } from './kb.projects.component';
         TeamsComponent,
         ScheduleNobleComponent,
         ProjectComponent
-         
+
 
     ],
     providers: [HttpClient, AppStore],

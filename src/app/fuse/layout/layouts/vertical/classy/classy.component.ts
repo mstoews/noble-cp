@@ -20,7 +20,8 @@ import { QuickChatComponent } from 'app/fuse/layout/common/quick-chat/quick-chat
 import { SearchComponent } from 'app/fuse/layout/common/search/search.component';
 import { ShortcutsComponent } from 'app/fuse/layout/common/shortcuts/shortcuts.component';
 import { UserComponent } from 'app/fuse/layout/common/user/user.component';
-import { ApplicationService, AppStore, ProfileModel } from 'app/services/application.state.service';
+import { ApplicationService, ProfileModel } from 'app/store/main.panel.store';
+import { ApplicationStore } from 'app/store/application.store';
 import { Subject, takeUntil } from 'rxjs';
 
 @Component({
@@ -138,7 +139,7 @@ import { Subject, takeUntil } from 'rxjs';
     `,
     encapsulation: ViewEncapsulation.None,
     selector: 'classy-layout',
-    providers: [AppStore, ApplicationService],
+    providers: [ApplicationService],
     imports: [
         // FuseLoadingBarComponent,
         FuseVerticalNavigationComponent,
@@ -156,7 +157,7 @@ export class ClassyLayoutComponent implements OnInit, OnDestroy {
 
     private _unsubscribeAll: Subject<any> = new Subject<any>();
 
-    readonly store = inject(AppStore);
+    readonly store = inject(ApplicationStore);
     readonly applicationService = inject(ApplicationService);
 
 

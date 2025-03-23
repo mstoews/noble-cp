@@ -1,25 +1,10 @@
-
 import { ImageItemIndex } from 'app/models/imageItem';
-import { Observable, Subscription, map } from 'rxjs';
-import { collectionData, docData } from 'rxfire/firestore';
+import { Observable, Subscription, map, of } from 'rxjs';
 import { Injectable, OnDestroy, inject } from '@angular/core';
 
-import {
-  StorageReference,
-  getDownloadURL,
-  getMetadata,
-  listAll,
-  ref,
-} from 'firebase/storage';
-
-import {
-  doc,
-  DocumentReference,
-  updateDoc,
-  collection,
-  addDoc,
-  deleteDoc,
-} from 'firebase/firestore';
+import { collectionData, docData } from 'rxfire/firestore';
+import { StorageReference, getDownloadURL, getMetadata, listAll, ref } from 'firebase/storage';
+import { doc, DocumentReference, updateDoc, collection, addDoc, deleteDoc } from 'firebase/firestore';
 
 import { FIRESTORE } from 'app/app.config';
 import { STORAGE } from 'app/app.config';
@@ -37,13 +22,9 @@ export class ImageItemIndexService implements OnDestroy {
   hashOriginalIndexMap = new Map<string, ImageItemIndex>();
   hashImageItemMap = new Map<string, ImageItemIndex>();
 
-  //Query
-
-  getAll() {
+  getAll(): Observable<ImageItemIndex[]> {
     const collectionRef = collection(this.firestore, 'originalImageList');
-    return collectionData(collectionRef, { idField: 'id' }) as Observable<
-      ImageItemIndex[]
-    >;
+    return collectionData(collectionRef, { idField: 'id' }) as Observable<ImageItemIndex[] >;
   }
 
   getById(id: string) {
@@ -54,17 +35,12 @@ export class ImageItemIndexService implements OnDestroy {
 
   // Add
   add(imageItemIndex: ImageItemIndex) {
-    return addDoc(
-      collection(this.firestore, 'originalImageList'),
-      imageItemIndex
-    );
+    return addDoc(collection(this.firestore, 'originalImageList'), imageItemIndex );
   }
 
   createOriginalItem(image: ImageItemIndex) {
     this.add(image);
   }
-
-  // Update
 
   update(imageItemIndex: any) {
     const ref = doc(
@@ -80,9 +56,15 @@ export class ImageItemIndexService implements OnDestroy {
   }
 
   // Delete
-  delete(id: string) {
-    const ref = doc(this.firestore, 'originalImageList', id);
-    return deleteDoc(ref);
+  delete(id: number) {
+    const ref = doc(this.firestore, 'originalImageList', id.toString());
+    deleteDoc(ref).then(() => {
+      console.log('Document successfully deleted!');
+    }
+    ).catch((error) => {
+      console.error('Error removing document: ', error);
+    }
+    );
   }
 
   reNumber(type: string) {
@@ -96,12 +78,7 @@ export class ImageItemIndexService implements OnDestroy {
     });
   }
 
-  ngOnDestroy(): void {
-    if (this.sub !== undefined) {
-      this.sub.unsubscribe();
-    }
-  }
-
+  
   async getImagesByType(productId: string) {
     return this.getImageByType(productId);
   }
@@ -257,11 +234,11 @@ export class ImageItemIndexService implements OnDestroy {
               id: '',
             };
             console.debug('Map Size', this.hashImageItemMap.size);
-
             const file = this.hashImageItemMap.get(imageData.fileName);
+
             if (file === undefined || file === null) {
-              //this.setCollectionDescription(imageData);
-              console.debug(`Added ${imageData.fileName}`);
+                this.setCollectionDescription(imageData);
+                console.debug(`Added ${imageData.fileName}`);
             }
           });
         });
@@ -270,48 +247,10 @@ export class ImageItemIndexService implements OnDestroy {
     });
   }
 
-  updateProductItems() {
-    // this.sub = this.inventory.getAll().subscribe((products) => {
-    //   products.forEach((product) => {
-    //     this.getAllImages(product.id).forEach((images) => {
-    //       images.forEach((image) => {
-    //         image.category = 'IN_PRODUCTS';
-    //         this.imageIndexCollections.doc(image.id).update(image);
-    //       });
-    //     });
-    //   });
-    // });
-    // this.getAllImages('IN_COLLECTION').forEach((images) => {
-    //   images.forEach((image) => {
-    //     image.category = 'IN_COLLECTION';
-    //     this.imageIndexCollections.doc(image.id).update(image);
-    //   });
-    // });
-    // this.getAllImages('IN_INVENTORY').forEach((images) => {
-    //   images.forEach((image) => {
-    //     image.category = 'IN_NOT_USED';
-    //     image.type = 'IN_NOT_USED';
-    //     this.imageIndexCollections.doc(image.id).update(image);
-    //   });
-    // });
-    // this.getAllImages('IN_GALLERY').forEach((images) => {
-    //   images.forEach((image) => {
-    //     image.category = 'IN_GALLERY';
-    //     this.imageIndexCollections.doc(image.id).update(image);
-    //   });
-    // });
-    // this.getAllImages('IN_FEATURED').forEach((images) => {
-    //   images.forEach((image) => {
-    //     image.category = 'IN_COLLECTION';
-    //     image.type = 'IN_COLLECTION';
-    //     this.imageIndexCollections.doc(image.id).update(image);
-    //   });
-    // });
-    // this.getAllImages('IN_INVENTORY').forEach((images) => {
-    //   images.forEach((image) => {
-    //     image.category = 'IN_NOT_USED';
-    //     this.imageIndexCollections.doc(image.id).update(image);
-    //   });
-    // });
+  ngOnDestroy(): void {
+    if (this.sub !== undefined) {
+      this.sub.unsubscribe();
+    }
   }
+
 }

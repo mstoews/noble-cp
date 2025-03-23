@@ -3,7 +3,7 @@ import { Component, OnInit, ViewChild, inject, Signal } from '@angular/core';
 
 import { FuseConfirmationService } from '@fuse/services/confirmation';
 import { MatDrawer } from '@angular/material/sidenav';
-import { MaterialModule } from 'app/services/material.module';
+import { MaterialModule } from 'app/shared/material.module';
 
 import { GridMenubarStandaloneComponent } from 'app/features/accounting/grid-components/grid-menubar.component';
 import { CommonModule } from '@angular/common';
@@ -51,7 +51,7 @@ export class StatusComponent implements OnInit {
     public toolbar: string[];
     public editSettings: Object;
     public customerIdRules: Object;
-    
+
     public editparams: Object;
     public submitClicked: boolean = false;
 

@@ -2,7 +2,7 @@ import { Component, inject, OnInit, viewChild } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { GridMenubarStandaloneComponent } from '../grid-components/grid-menubar.component';
-import { MaterialModule } from 'app/services/material.module';
+import { MaterialModule } from 'app/shared/material.module';
 import { AggregateService, ColumnMenuService, ContextMenuService, EditEventArgs, EditService, ExcelExportService, FilterService, GridComponent, GridModule, GroupService, PdfExportService, ResizeService, RowDDService, RowDragEventArgs, SearchService, SortService, ToolbarService } from '@syncfusion/ej2-angular-grids';
 
 import { getDetailTemplates, getTemplates } from './state/template/Template.Selector';
@@ -13,7 +13,7 @@ import { MatDrawer } from '@angular/material/sidenav';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { IJournalDetailTemplate, IJournalTemplate } from 'app/models/journals';
-import { JournalStore } from 'app/services/journal.store';
+// import { JournalStore } from 'app/store/journal.store';
 
 
 const imports = [
@@ -171,27 +171,26 @@ const imports = [
     </mat-drawer-container>
     `,
     providers: [
-            PdfExportService, 
-            ExcelExportService, 
-            SortService,
-            FilterService,
-            ToolbarService,
-            EditService,
-            RowDDService,
-            SearchService,
-            AggregateService,
-            GroupService,
-            RowDDService,
-            ResizeService,
-            ContextMenuService,
-            JournalStore,
-            ColumnMenuService]
+        PdfExportService,
+        ExcelExportService,
+        SortService,
+        FilterService,
+        ToolbarService,
+        EditService,
+        RowDDService,
+        SearchService,
+        AggregateService,
+        GroupService,
+        RowDDService,
+        ResizeService,
+        ContextMenuService,        
+        ColumnMenuService]
 })
 
 export class JournalTemplateComponent implements OnInit {
-    
+
     //private accountService = inject(AccountsService);
-    public Store = inject(JournalStore);
+    // public Store = inject(JournalStore);
     public gridControl = viewChild<GridComponent>("grid");
 
     drawer = viewChild<MatDrawer>('drawer');
@@ -230,75 +229,75 @@ export class JournalTemplateComponent implements OnInit {
 
     keyField: any;
     templateList$ = this.store.select(getTemplates);
-    templateDetailList: Observable <IJournalDetailTemplate[]>;
+    templateDetailList: Observable<IJournalDetailTemplate[]>;
 
     columns = [
-        { field: 'template_ref',  headerText: 'Ref', width: 100, visible: false, textAlign: 'Left', isPrimaryKey: true },
-        { field: 'journal_no',    headerText: 'Original Journal', visible: false, width: 100, textAlign: 'Left' },
+        { field: 'template_ref', headerText: 'Ref', width: 100, visible: false, textAlign: 'Left', isPrimaryKey: true },
+        { field: 'journal_no', headerText: 'Original Journal', visible: false, width: 100, textAlign: 'Left' },
         { field: 'template_name', headerText: 'Name', width: 100, textAlign: 'Left' },
-        { field: 'description',   headerText: 'Description', width: 400, textAlign: 'Left' },
-        { field: 'journal_type',  headerText: 'Journal Type', width: 80, textAlign: 'Left' },
-        { field: 'create_date',   headerText: 'Date', width: 100, textAlign: 'Left' },
-        { field: 'create_user',   headerText: 'User', width: 100, textAlign: 'Left' },
+        { field: 'description', headerText: 'Description', width: 400, textAlign: 'Left' },
+        { field: 'journal_type', headerText: 'Journal Type', width: 80, textAlign: 'Left' },
+        { field: 'create_date', headerText: 'Date', width: 100, textAlign: 'Left' },
+        { field: 'create_user', headerText: 'User', width: 100, textAlign: 'Left' },
 
     ];
 
 
     public actionBegin(args: EditEventArgs): void {
-            if (args.requestType === "beginEdit" || args.requestType === "add") {
-                const data = args.rowData as IJournalTemplate;
-            }
-            if (args.requestType === "save") {
-                
-            }
+        if (args.requestType === "beginEdit" || args.requestType === "add") {
+            const data = args.rowData as IJournalTemplate;
+        }
+        if (args.requestType === "save") {
+
+        }
     }
-    
+
     ngOnInit() {
-            this.createEmptyForm();
-            this.store.dispatch(loadTemplates());
-            this.currentDate = new Date().toISOString().split('T')[0];
-            this.formatoptions = { type: 'dateTime', format: 'M/dd/yyyy' }
-            
-            this.templateForm.valueChanges.subscribe((value) => {
-                this.bHeaderDirty = true;            
-            });   
-            this.bHeaderDirty = false;         
+        this.createEmptyForm();
+        this.store.dispatch(loadTemplates());
+        this.currentDate = new Date().toISOString().split('T')[0];
+        this.formatoptions = { type: 'dateTime', format: 'M/dd/yyyy' }
+
+        this.templateForm.valueChanges.subscribe((value) => {
+            this.bHeaderDirty = true;
+        });
+        this.bHeaderDirty = false;
     }
-        
+
 
     onChangeType(e: any) {
         console.debug('onChangeType')
         this.bHeaderDirty = true;
     }
-    
-    
+
+
     public actionComplete(args: any): void {
-            console.debug("args : ", args.requestType);
-            if (args.requestType === "beginEdit" || args.requestType === "add") {
-                    if (args.requestType === "beginEdit") {
-                } else if 
-                    (args.requestType === "add") {
-                }
+        console.debug("args : ", args.requestType);
+        if (args.requestType === "beginEdit" || args.requestType === "add") {
+            if (args.requestType === "beginEdit") {
+            } else if
+                (args.requestType === "add") {
             }
-     }
-    
-    public rowDrag(args: RowDragEventArgs): void {
-    
-            (args.rows as Element[]).forEach((row: Element) => {
-                row.classList.add("drag-limit");
-            });
         }
-    
+    }
+
+    public rowDrag(args: RowDragEventArgs): void {
+
+        (args.rows as Element[]).forEach((row: Element) => {
+            row.classList.add("drag-limit");
+        });
+    }
+
     public rowDrop(args: RowDragEventArgs): void {
-    
+
         const value = [];
         for (let r = 0; r < (args.rows as Element[]).length; r++) {
-                value.push((args.fromIndex as number) + r);
-            }
+            value.push((args.fromIndex as number) + r);
+        }
         this.gridControl().reorderRows(value, args.dropIndex as number);
-            // this.onSaved(args.data[0]);
+        // this.onSaved(args.data[0]);
     }
-    
+
 
     public onUpdateSelection(e: any) {
 
@@ -311,33 +310,33 @@ export class JournalTemplateComponent implements OnInit {
             create_date: e.create_date,
             create_user: e.create_user
         } as IJournalTemplate;
-        
-        this.templateForm.patchValue(selectedRow);            
+
+        this.templateForm.patchValue(selectedRow);
         this.store.dispatch(loadTemplatesDetails({ ref: e.journal_no }));
         this.templateDetailList = this.store.select(getDetailTemplates);
         this.drawer().toggle();
     }
 
     createEmptyForm() {
-        this.templateForm = this.fb.group({            
-            template_ref:  ['', Validators.required],
-            journal_no:    ['', Validators.required],
+        this.templateForm = this.fb.group({
+            template_ref: ['', Validators.required],
+            journal_no: ['', Validators.required],
             template_name: ['', Validators.required],
-            description:   ['', Validators.required],
-            journal_type:  ['', Validators.required],
-            create_date:   ['', Validators.required],
-            create_user:   ['', Validators.required],            
+            description: ['', Validators.required],
+            journal_type: ['', Validators.required],
+            create_date: ['', Validators.required],
+            create_user: ['', Validators.required],
         });
-        this.bHeaderDirty= false;        
+        this.bHeaderDirty = false;
     }
 
     public loadTemplateDetailsFromTemplate(value: string) {
         // this.transactionType = value.journal_type;
-        this.Store.loadTemplateDetails(value);
+        // this.Store.loadTemplateDetails(value);
     }
 
 
-    
+
     onCellDoubleClicked(e: any) {
         this.bOpenDetail = true;
         // this.openDrawer();
@@ -360,7 +359,7 @@ export class JournalTemplateComponent implements OnInit {
         console.debug('Delete Selection')
     }
 
-    
+
     onDelete(e: any) {
         console.debug('onDelete')
     }

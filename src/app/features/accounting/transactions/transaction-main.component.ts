@@ -10,17 +10,18 @@ import {
 } from '@angular/core';
 import { MatDrawer } from '@angular/material/sidenav';
 import { FuseMediaWatcherService } from '@fuse/services/media-watcher';
-import { MaterialModule } from 'app/services/material.module';
+import { MaterialModule } from 'app/shared/material.module';
 import { Subject, takeUntil } from 'rxjs';
 import { FileManagerComponent } from 'app/features/file-manager/file-manager.component';
 import { EntryWizardComponent } from './wizard-entry.component';
 import { JournalTemplateComponent } from './journal-template.component';
 import { ARTransactionComponent } from './ar-listing.component';
 import { APTransactionComponent } from './ap-listing.component';
-import { AppStore, ApplicationService } from "../../../services/application.state.service";
+import { ApplicationStore } from 'app/store/application.store';
 import { GLTransactionListComponent } from './gl-listing.component';
 import { CdkScrollable } from '@angular/cdk/scrolling';
 import { JournalRouteComponent } from './journal-route.component';
+import { ApplicationService, MainPanelStore } from 'app/store/main.panel.store';
 
 const imports = [
     MaterialModule,
@@ -30,8 +31,8 @@ const imports = [
     JournalTemplateComponent,
     ARTransactionComponent,
     APTransactionComponent,
-    GLTransactionListComponent,    
-    CdkScrollable
+    GLTransactionListComponent,
+    CdkScrollable,
 ]
 
 @Component({
@@ -39,7 +40,7 @@ const imports = [
     imports: [imports],
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    providers: [AppStore],
+    providers: [MainPanelStore],
     template: `
         <div class="flex flex-col w-full min-w-0 sm:absolute sm:inset-0 sm:overflow-x-hidden">
             <mat-drawer-container class="flex-auto sm:h-full">                
@@ -127,8 +128,7 @@ export class TransactionMainComponent implements OnInit, OnDestroy {
     public storedPanel: string;
 
     PANEL_ID = 'transactionsPanel';
-    store = inject(AppStore);
-
+    store = inject(MainPanelStore);
 
     /**
      * Constructor
@@ -137,11 +137,11 @@ export class TransactionMainComponent implements OnInit, OnDestroy {
         private _changeDetectorRef: ChangeDetectorRef,
         private _fuseMediaWatcherService: FuseMediaWatcherService,
     ) {
-        
-        this.panelService.findPanelByName(this.store.uid(), this.PANEL_ID).subscribe((panel) => {                
-                this.selectedPanel = panel.lastPanelOpened;                
+
+        this.panelService.findPanelByName(this.store.uid(), this.PANEL_ID).subscribe((panel) => {
+            this.selectedPanel = panel.lastPanelOpened;
         });
-        
+
     }
 
     // -----------------------------------------------------------------------------------------------------
@@ -152,13 +152,13 @@ export class TransactionMainComponent implements OnInit, OnDestroy {
      * On init
      */
     ngOnInit(): void {
-        
+
         if (this.selectedPanel === '' && this.storedPanel === null || this.selectedPanel === undefined) {
             this.selectedPanel = this.defaultPanel;
         }
 
         this.panels = [
-            
+
             {
                 id: 'entry',
                 icon: 'heroicons_outline:document-plus',
@@ -170,7 +170,7 @@ export class TransactionMainComponent implements OnInit, OnDestroy {
                 icon: 'heroicons_outline:document-check',
                 title: 'Transactions Listing',
                 description: 'Manage your transactions and documentation',
-            },            
+            },
             {
                 id: 'ar',
                 icon: 'mat_outline:money',

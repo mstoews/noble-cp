@@ -12,19 +12,19 @@ import { STORAGE } from 'app/app.config';
 
 import { EvidenceService } from 'app/services/evidence.service';
 import { DateTime } from 'luxon';
-import { MaterialModule } from 'app/services/material.module';
+import { MaterialModule } from 'app/shared/material.module';
 import { DndDirective } from './dnd.directive';
 import { IArtifacts } from 'app/models/journals';
 
 @Component({
-    imports: [
-        CommonModule,
-        ReactiveFormsModule,
-        MaterialModule,
-    ],
-    selector: 'image-dnd',
-    standalone: true,
-    template: `
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    MaterialModule,
+  ],
+  selector: 'image-dnd',
+  standalone: true,
+  template: `
     <div class="bg-slate-50">
         <div class="flex">
           <img class="flex-none w-10 h-10 p-2" src='assets/img/dnd/ic-upload-file.svg' alt="dnd">
@@ -75,7 +75,7 @@ import { IArtifacts } from 'app/models/journals';
         </div>            
 </div>
     `,
-    styleUrls: ['./dnd.component.scss']
+  styleUrls: ['./dnd.component.scss']
 })
 export class DndComponent implements OnDestroy {
   subAllImages: any;
@@ -188,23 +188,23 @@ export class DndComponent implements OnDestroy {
       },
       (error) => {
         // Handle unsuccessful uploads
-      },() => {
-              const updateDate = DateTime.now().toFormat('yyyy-MM-dd');
+      }, () => {
+        const updateDate = DateTime.now().toFormat('yyyy-MM-dd');
 
-              getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-                const update = {
-                  journal_id: this.imageData.journal_id,
-                  reference: this.imageData.reference,
-                  description: this.imageData.description,
-                  location: downloadURL,
-                  user_created: this.imageData.user_created,
-                  date_created: updateDate
-                }                                                     
-                return update;
-              });
-            }
+        getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+          const update = {
+            journal_id: this.imageData.journal_id,
+            reference: this.imageData.reference,
+            description: this.imageData.description,
+            location: downloadURL,
+            user_created: this.imageData.user_created,
+            date_created: updateDate
+          }
+          return update;
+        });
+      }
     );
-  
+
   }
 
   async onCreate() {

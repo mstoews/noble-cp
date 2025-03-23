@@ -11,7 +11,7 @@ import {
 import { NgxMatSelectSearchModule } from "ngx-mat-select-search";
 import { CommonModule } from "@angular/common";
 
-import { MaterialModule } from "app/services/material.module";
+import { MaterialModule } from "app/shared/material.module";
 import {
   EditService,
   GroupService,
@@ -28,10 +28,10 @@ import {
 } from "@syncfusion/ej2-angular-grids";
 
 
-import { JournalStore } from "app/services/journal.store";
+import { JournalStore } from "app/store/journal.store";
 import { SummaryCardComponent } from "../../admin/dashboard/summary-card.component";
 import { JournalEntryComponent } from "./journal-listing.component";
-import { AppStore } from "app/services/application.state.service";
+import { ApplicationStore } from "app/store/application.store";
 import { GridMenubarStandaloneComponent } from "../grid-components/grid-menubar.component";
 
 const imports = [
@@ -41,7 +41,7 @@ const imports = [
   FormsModule,
   NgxMatSelectSearchModule,
   JournalEntryComponent,
-  SummaryCardComponent  
+  SummaryCardComponent
 ];
 
 @Component({
@@ -108,9 +108,9 @@ const imports = [
     ColumnMenuService,
   ]
 })
-export class APTransactionComponent implements OnInit{
+export class APTransactionComponent implements OnInit {
 
-  public store = inject(AppStore);
+  public store = inject(ApplicationStore);
 
   public transType: string = "AP";
   public toolbarTitle = "Accounts Payable Transactions";
@@ -121,35 +121,35 @@ export class APTransactionComponent implements OnInit{
   public ap = signal<number>(0);
   public liabilities = signal<number>(0);
   public operating = signal<number>(0);
-  
-  ngOnInit(): void {  
+
+  ngOnInit(): void {
     this.loadCash();
     this.loadAP();
     this.loadLiability();
   }
 
   loadAP() {
-    var tb = this.store.trialBalance().filter((tb) => tb.child == 3010 );
-    if (tb.length > 0) {
-      console.debug('TrialBalance : ', tb[0].closingBalance);
-      this.ap.set(Math.abs(tb[0].closingBalance));
-    }
+    // var tb = this.store.trialBalance().filter((tb) => tb.child == 3010);
+    // if (tb.length > 0) {
+    //   console.debug('TrialBalance : ', tb[0].closingBalance);
+    //   this.ap.set(Math.abs(tb[0].closingBalance));
+    // }
   }
 
   loadLiability() {
-    var tb = this.store.trialBalance().filter((tb) => tb.child == 3020 );
-    if (tb.length > 0) {
-      console.debug('TrialBalance : ', tb[0].closingBalance);
-      this.liabilities.set(Math.abs(tb[0].closingBalance));
-    }
+    // var tb = this.store.trialBalance().filter((tb) => tb.child == 3020);
+    // if (tb.length > 0) {
+    //   console.debug('TrialBalance : ', tb[0].closingBalance);
+    //   this.liabilities.set(Math.abs(tb[0].closingBalance));
+    // }
   }
 
   loadCash() {
-    var tb = this.store.trialBalance().filter((tb) => tb.child == 1001 );
-    if (tb.length > 0) {
-      console.debug('TrialBalance : ', tb[0].closingBalance);
-      this.cash.set(Math.abs(tb[0].closingBalance));
-    }
+    // var tb = this.store.trialBalance().filter((tb) => tb.child == 1001);
+    // if (tb.length > 0) {
+    //   console.debug('TrialBalance : ', tb[0].closingBalance);
+    //   this.cash.set(Math.abs(tb[0].closingBalance));
+    // }
   }
 
   openDrawer() {
@@ -167,7 +167,7 @@ export class APTransactionComponent implements OnInit{
   onPrint() {
     throw new Error('Method not implemented.');
   }
-  
+
   onRefresh() {
     throw new Error('Method not implemented.');
   }
@@ -185,12 +185,12 @@ export class APTransactionComponent implements OnInit{
   }
   onClone() {
     throw new Error('Method not implemented.');
-    }
+  }
 
   onTemplate() {
     throw new Error('Method not implemented.');
-    }
-     
+  }
+
 }
 
 

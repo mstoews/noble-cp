@@ -2,7 +2,7 @@ import { Component, input, output } from '@angular/core';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { IKanban, IPriority, ITeam, IType } from 'app/models/kanban';
 import { IValue } from 'app/models/types';
-import { MaterialModule } from 'app/services/material.module';
+import { MaterialModule } from 'app/shared/material.module';
 
 @Component({
   selector: 'kanban-drawer',
@@ -122,18 +122,18 @@ import { MaterialModule } from 'app/services/material.module';
   `,
   styles: ``
 })
-export class KanbanDrawerComponent  {  
+export class KanbanDrawerComponent {
 
   sTitle = 'Kanban Task';
   cPriority: string;
   cRAG: string;
   cType: string;
   bDirty = true;
-  
-  tasks = input< IKanban | null>();
-  team = input< ITeam[] | null>();
-  types = input< IType[] | null>();
-  priority = input< IPriority[] | null>();
+
+  tasks = input<IKanban | null>();
+  team = input<ITeam[] | null>();
+  types = input<IType[] | null>();
+  priority = input<IPriority[] | null>();
 
   Update = output<IKanban>();
   Add = output<IKanban>();
@@ -142,51 +142,51 @@ export class KanbanDrawerComponent  {
   Cancel = output();
   CloseDrawer = output();
 
-  taskGroup= new FormGroup({
-    id: new  FormControl(0),
-    title:  new  FormControl('', Validators.required),
-    status: new  FormControl(''),
+  taskGroup = new FormGroup({
+    id: new FormControl(0),
+    title: new FormControl('', Validators.required),
+    status: new FormControl(''),
     summary: new FormControl('', Validators.required),
-    type: new  FormControl(''),
-    priority: new  FormControl('', Validators.required),
-    tags: new  FormControl('', Validators.required),
-    estimate: new  FormControl(0, Validators.required),
-    assignee: new  FormControl('', Validators.required),
-    rankid: new  FormControl(0),
-    color: new  FormControl(''),
-    updatedate: new  FormControl(''),
-    updateuser: new  FormControl('', Validators.required),
-    startdate: new  FormControl('', Validators.required),
-    estimatedate: new  FormControl('', Validators.required)
+    type: new FormControl(''),
+    priority: new FormControl('', Validators.required),
+    tags: new FormControl('', Validators.required),
+    estimate: new FormControl(0, Validators.required),
+    assignee: new FormControl('', Validators.required),
+    rankid: new FormControl(0),
+    color: new FormControl(''),
+    updatedate: new FormControl(''),
+    updateuser: new FormControl('', Validators.required),
+    startdate: new FormControl('', Validators.required),
+    estimatedate: new FormControl('', Validators.required)
   });
-  
+
   rag: IValue[] = [
-      { value: '#238823', viewValue: 'Green' },
-      { value: '#FFBF00', viewValue: 'Amber' },
-      { value: '#D2222D', viewValue: 'Red' },
+    { value: '#238823', viewValue: 'Green' },
+    { value: '#FFBF00', viewValue: 'Amber' },
+    { value: '#D2222D', viewValue: 'Red' },
   ];
-  
+
   ngOnChanges() {
-    if (this.tasks) {     
-      this.taskGroup.patchValue(this.tasks());         
+    if (this.tasks) {
+      this.taskGroup.patchValue(this.tasks());
     }
   }
 
 
   onClose() {
-    this.CloseDrawer.emit();  
+    this.CloseDrawer.emit();
     this.Cancel.emit();
   }
 
   onDelete() {
-    this.Delete.emit(this.updateTasks());  
+    this.Delete.emit(this.updateTasks());
   }
 
   onAdd() {
-    this.Delete.emit(this.updateTasks());  
+    this.Delete.emit(this.updateTasks());
   }
 
-  onUpdate() {    
+  onUpdate() {
     this.Update.emit(this.updateTasks());
   }
 
@@ -195,75 +195,75 @@ export class KanbanDrawerComponent  {
   }
 
   updateTasks(): IKanban {
-        const updateDate = new Date().toISOString().split('T')[0];
-        const data = { ...this.taskGroup.value } ;
-  
-        const kanban = {
-          id: data.id,
-          title: data.title,
-          status: data.status,
-          summary: data.summary,
-          kanban_type: data.type,
-          priority: data.priority,
-          tags: data.tags,
-          estimate: data.estimate,
-          assignee: data.assignee,
-          rankid: data.rankid,
-          color: data.color,
-          className: '',
-          updateuser: data.updateuser,
-          updatedate: updateDate,
-          startdate: data.startdate,
-          estimatedate: data.estimatedate
-        } as unknown as IKanban;
-        return kanban;  
-    }
-    
-  changeType(event: any) {
-    
+    const updateDate = new Date().toISOString().split('T')[0];
+    const data = { ...this.taskGroup.value };
+
+    const kanban = {
+      id: data.id,
+      title: data.title,
+      status: data.status,
+      summary: data.summary,
+      kanban_type: data.type,
+      priority: data.priority,
+      tags: data.tags,
+      estimate: data.estimate,
+      assignee: data.assignee,
+      rankid: data.rankid,
+      color: data.color,
+      className: '',
+      updateuser: data.updateuser,
+      updatedate: updateDate,
+      startdate: data.startdate,
+      estimatedate: data.estimatedate
+    } as unknown as IKanban;
+    return kanban;
   }
 
-    
-  
+  changeType(event: any) {
+
+  }
+
+
+
   createForm(task: IKanban) {
-      this.sTitle = 'Kanban Task - ' + task.id;
-  
-      var currentDate = new Date().toISOString().split('T')[0];
-  
-      const priority = this.assignPriority(task);
-      const taskType = this.assignType(task);
-      const rag = this.assignRag(task);
-  
-      if (task.estimatedate === null) {
-        task.estimatedate = currentDate;
-      }
-  
-      this.taskGroup.patchValue({
-        id: task.id,
-        title: task.title,
-        status: task.status,
-        summary: task.summary,
-        type: taskType,
-        priority: priority,
-        tags: task.tags,
-        estimate: task.estimate,
-        assignee: task.assignee,
-        rankid: task.rankid,
-        color: rag,
-        updatedate: currentDate,
-        updateuser: task.updateuser, 
-        startdate: task.startdate,
-        estimatedate: task.estimatedate, 
-      });
+    this.sTitle = 'Kanban Task - ' + task.id;
+
+    var currentDate = new Date().toISOString().split('T')[0];
+
+    const priority = this.assignPriority(task);
+    const taskType = this.assignType(task);
+    const rag = this.assignRag(task);
+
+    if (task.estimatedate === null) {
+      task.estimatedate = currentDate;
     }
 
-    
+    this.taskGroup.patchValue({
+      id: task.id,
+      title: task.title,
+      status: task.status,
+      summary: task.summary,
+      type: taskType,
+      priority: priority,
+      tags: task.tags,
+      estimate: task.estimate,
+      assignee: task.assignee,
+      rankid: task.rankid,
+      color: rag,
+      updatedate: currentDate,
+      updateuser: task.updateuser,
+      startdate: task.startdate,
+      estimatedate: task.estimatedate,
+    });
+  }
+
+
   public changePriority(e: any) {
 
-  }  
+  }
 
   onAddNew() {
-  
+
     var data = this.taskGroup.getRawValue();
     const startDate = new Date(data.startdate).toISOString().split('T')[0];
     const estimateDate = new Date(data.estimate).toISOString().split('T')[0];
@@ -285,52 +285,52 @@ export class KanbanDrawerComponent  {
       updateuser: "mstoews",
       startdate: startDate
     }
-    
+
     this.onClose();
   }
-  
-  
+
+
   private assignType(task: IKanban): string {
-      if (task.kanban_type !== null && task.kanban_type !== undefined) {
-        const type = this.types().find((x) => x.type === task.kanban_type.toString());
-        if (type === undefined) {
-          this.cType = 'Add';
-        } else {
-          this.cType = type.type;
-        }
-      } else {
+    if (task.kanban_type !== null && task.kanban_type !== undefined) {
+      const type = this.types().find((x) => x.type === task.kanban_type.toString());
+      if (type === undefined) {
         this.cType = 'Add';
-      }
-      return this.cType;
-    }
-  
-  private assignRag(task: IKanban): string {
-      if (task.color !== null && task.color !== undefined) {
-        const rag = this.rag.find((x) => x.value === task.color.toString());
-        if (rag === undefined) {
-          this.cRAG = '#238823';
-        } else {
-          this.cRAG = rag.value;
-        }
       } else {
-        this.cRAG = '#238823';
+        this.cType = type.type;
       }
-      return this.cRAG;
+    } else {
+      this.cType = 'Add';
     }
-  
-    private assignPriority(task: IKanban): string {
-      if (this.priority !== undefined) {
-        const priority = this.priority().find(
-          (x) => x.priority === task.priority.toString()
-        );
-        if (priority !== undefined) {
-          this.cPriority = priority.priority;
-        } else {
-          this.cPriority = 'Normal';
-        }
+    return this.cType;
+  }
+
+  private assignRag(task: IKanban): string {
+    if (task.color !== null && task.color !== undefined) {
+      const rag = this.rag.find((x) => x.value === task.color.toString());
+      if (rag === undefined) {
+        this.cRAG = '#238823';
+      } else {
+        this.cRAG = rag.value;
+      }
+    } else {
+      this.cRAG = '#238823';
+    }
+    return this.cRAG;
+  }
+
+  private assignPriority(task: IKanban): string {
+    if (this.priority !== undefined) {
+      const priority = this.priority().find(
+        (x) => x.priority === task.priority.toString()
+      );
+      if (priority !== undefined) {
+        this.cPriority = priority.priority;
       } else {
         this.cPriority = 'Normal';
       }
-      return this.cPriority
+    } else {
+      this.cPriority = 'Normal';
     }
+    return this.cPriority
+  }
 }

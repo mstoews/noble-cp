@@ -1,7 +1,7 @@
-import { Component, inject, input , OnInit, output  } from '@angular/core';
+import { Component, inject, input, OnInit, output } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { IParty } from 'app/models/party';
-import { MaterialModule } from 'app/services/material.module';
+import { MaterialModule } from 'app/shared/material.module';
 
 @Component({
   selector: 'party-drawer',
@@ -81,14 +81,14 @@ export class PartyDrawerComponent implements OnInit {
   Add = output<IParty>();
   Delete = output<IParty>();
   Cancel = output();
-  
+
   bDirty: boolean = false;
   private fb = inject(FormBuilder);
-  
+
   partyForm = new FormGroup({
-    party_id : new FormControl(''),
-    name:  new FormControl(''),
-    party_type:  new FormControl('')
+    party_id: new FormControl(''),
+    name: new FormControl(''),
+    party_type: new FormControl('')
   });
 
 
@@ -96,14 +96,14 @@ export class PartyDrawerComponent implements OnInit {
     this.partyForm.valueChanges.subscribe(() => {
       if (this.partyForm.dirty === true) {
         this.bDirty = true;
-        this.originalParty = this.party();        
+        this.originalParty = this.party();
       }
-    });    
+    });
   }
-  
+
   ngOnChanges() {
-    if (this.party) {      
-      this.partyForm.patchValue(this.party());      
+    if (this.party) {
+      this.partyForm.patchValue(this.party());
     }
   }
 
@@ -114,10 +114,10 @@ export class PartyDrawerComponent implements OnInit {
       name: this.partyForm.value.name,
       party_type: this.partyForm.value.party_type,
       update_date: updateDate,
-      update_user: '@admin',      
+      update_user: '@admin',
       create_date: updateDate,
       create_user: '@admin'
-    } as IParty;     
+    } as IParty;
     return party;
   }
 

@@ -3,7 +3,7 @@ import { FormGroup } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatToolbarModule } from '@angular/material/toolbar';
-import { MaterialModule } from 'app/services/material.module';
+import { MaterialModule } from 'app/shared/material.module';
 import { Observable } from 'rxjs';
 
 interface IValue {
@@ -17,11 +17,11 @@ var modules = [
 ]
 
 @Component({
-    selector: 'kb-menubar',
-    templateUrl: './component.html',
-    styleUrls: ['./component.css'],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [modules]
+  selector: 'kb-menubar',
+  templateUrl: './component.html',
+  styleUrls: ['./component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [modules]
 })
 export class KanbanMenubarComponent implements OnInit {
   notifyParentAdd = output();
@@ -38,15 +38,15 @@ export class KanbanMenubarComponent implements OnInit {
     //this.inTitle = 'Account Maintenance';
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void { }
 
   onClickUpdate(): void {
-  
+
     this.notifyParentRefresh.emit();
   }
 
   onClickAdd(): void {
-  
+
     this.notifyParentAdd.emit();
   }
 

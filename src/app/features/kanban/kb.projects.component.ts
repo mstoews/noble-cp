@@ -1,9 +1,9 @@
 import { Component, OnInit, inject, viewChild, HostListener } from '@angular/core';
-import { FormControl, FormGroup,  FormsModule,  ReactiveFormsModule,  Validators } from '@angular/forms';
+import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatDrawer } from '@angular/material/sidenav';
 import { CommonModule } from '@angular/common';
 import { FuseConfirmationService } from '@fuse/services/confirmation';
-import { MaterialModule } from 'app/services/material.module';
+import { MaterialModule } from 'app/shared/material.module';
 import { EditService, FilterService, GridComponent, GridModule, PageService, SortService, ToolbarService } from '@syncfusion/ej2-angular-grids';
 import { Store } from '@ngrx/store';
 import { GridMenubarStandaloneComponent } from '../accounting/grid-components/grid-menubar.component';
@@ -135,10 +135,10 @@ export class ProjectComponent implements OnInit {
 
     private confirmation = inject(FuseConfirmationService);
     public sTitle = 'Project Management';
-    
+
     public drawer = viewChild<MatDrawer>('drawer');
     public grid = viewChild<GridComponent>('grid');
-    
+
     // Form Group    
     public bDirty = false;
 
@@ -158,11 +158,11 @@ export class ProjectComponent implements OnInit {
         create_user: new FormControl(''),
     });
 
-    store = inject(Store);    
+    store = inject(Store);
     projects$ = this.store.select(projectFeature.selectProjects);
     isLoading$ = this.store.select(projectFeature.selectIsLoading);
-    selectedTypes$ = this.store.select(projectFeature.selectSelectedProject);   
-    
+    selectedTypes$ = this.store.select(projectFeature.selectSelectedProject);
+
     toast = inject(ToastrService);
 
     public columns = [
@@ -174,10 +174,10 @@ export class ProjectComponent implements OnInit {
         { field: 'create_date', headerText: 'Create Date', width: 80, textAlign: 'Left' },
         { field: 'create_user', headerText: 'Create User', width: 80, textAlign: 'Left' }
     ];
-    
+
     public ngOnInit() {
         this.onChanges();
-        this.store.dispatch(projectsPageActions.load());        
+        this.store.dispatch(projectsPageActions.load());
     }
 
     public onSelection(data: IProjects) {
@@ -189,7 +189,7 @@ export class ProjectComponent implements OnInit {
         this.projectsForm.patchValue({
             project_ref: data.project_ref,
             name: data.name,
-            description: data.description,            
+            description: data.description,
             start_date: startDate,
             forecast_end_date: finishDate,
             create_date: updateDate,
@@ -201,7 +201,7 @@ export class ProjectComponent implements OnInit {
 
     public onChanges(): void {
 
-        this.projectsForm.valueChanges.subscribe(value => {        
+        this.projectsForm.valueChanges.subscribe(value => {
             this.bDirty = true;
             return;
         });
@@ -210,8 +210,8 @@ export class ProjectComponent implements OnInit {
     }
 
 
-    public onAdd() {        
-        const updateDate = new Date().toISOString().split('T')[0];        
+    public onAdd() {
+        const updateDate = new Date().toISOString().split('T')[0];
         const project = this.projectsForm.value;
         const update: IProjects = {
             project_ref: project.project_ref,
@@ -223,7 +223,7 @@ export class ProjectComponent implements OnInit {
             create_user: project.create_user
         }
 
-        this.store.dispatch(projectsPageActions.add({ project: update }));        
+        this.store.dispatch(projectsPageActions.add({ project: update }));
         this.bDirty = false;
         this.toast.success('Project Added', 'Success');
         this.closeDrawer();
@@ -241,13 +241,13 @@ export class ProjectComponent implements OnInit {
 
     public onClone() {
         const project = this.projectsForm.value;
-        
+
     }
 
     public onDelete() {
 
         const data = this.projectsForm.value as IProjects;
-        
+
         const confirmation = this.confirmation.open({
             title: 'Delete Fund?',
             message: `Are you sure you want to delete the fund: ${data.name}`,
@@ -258,7 +258,7 @@ export class ProjectComponent implements OnInit {
             },
         });
 
-        confirmation.afterClosed().subscribe((result) => {            
+        confirmation.afterClosed().subscribe((result) => {
             if (result === 'confirmed') {
                 this.store.dispatch(projectsPageActions.delete({ project: data }));
                 this.toast.success(`Project ${data.name} has been deleted`, 'Success');
@@ -268,9 +268,9 @@ export class ProjectComponent implements OnInit {
     }
 
 
-    public onUpdate() {        
+    public onUpdate() {
         const project = this.projectsForm.value;
-        const updateDate = new Date().toISOString().split('T')[0];        
+        const updateDate = new Date().toISOString().split('T')[0];
         const update: IProjects = {
             project_ref: project.project_ref,
             name: project.name,
@@ -280,7 +280,7 @@ export class ProjectComponent implements OnInit {
             create_date: updateDate,
             create_user: project.create_user
         }
-        this.store.dispatch(projectsPageActions.update ({ project: update }));
+        this.store.dispatch(projectsPageActions.update({ project: update }));
         // this.bDirty = false;
         this.toast.success(`Project ${project.name} has been updated`, 'Success');
         this.closeDrawer();
@@ -305,13 +305,14 @@ export class ProjectComponent implements OnInit {
     }
 
     public menuItems: MenuItemModel[] = [
-        {   id: 'Edit',    text: 'Update Account', iconCss: 'e-icons e-edit-2' },
-        {   id: 'Create',  text: 'Create Account', iconCss: 'e-icons e-circle-add'   },
-        {   id: 'Copy',    text: 'Clone Account',  iconCss: 'e-icons e-copy'   },
-        {   id: 'Delete',  text: 'Deactivate Account', iconCss: 'e-icons e-delete-1' },
-        {   separator: true
+        { id: 'Edit', text: 'Update Account', iconCss: 'e-icons e-edit-2' },
+        { id: 'Create', text: 'Create Account', iconCss: 'e-icons e-circle-add' },
+        { id: 'Copy', text: 'Clone Account', iconCss: 'e-icons e-copy' },
+        { id: 'Delete', text: 'Deactivate Account', iconCss: 'e-icons e-delete-1' },
+        {
+            separator: true
         },
-        {   id: 'Settings',text: 'Settings', iconCss: 'e-icons e-settings' },
+        { id: 'Settings', text: 'Settings', iconCss: 'e-icons e-settings' },
 
     ];
 
@@ -321,7 +322,7 @@ export class ProjectComponent implements OnInit {
             case 'Edit':
                 this.onUpdate();
                 break;
-            case 'Create':                
+            case 'Create':
                 this.onAddNew()
                 break;
             case 'Clone':
@@ -339,7 +340,7 @@ export class ProjectComponent implements OnInit {
     public onOpenSettings() {
         this.toast.info('Settings', 'Not Implemented');
     }
-    
+
     @HostListener("window:exit")
     public exit() {
         if (this.bDirty === true) {

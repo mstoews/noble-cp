@@ -64,7 +64,7 @@ import { periodEffects } from './features/accounting/static/periods/periods.effe
 import { subTypeEffects } from './features/accounting/static/subtype/sub-type.effects';
 
 
-import { ApplicationService } from "./services/application.state.service";
+import { ApplicationService } from "./store/main.panel.store";
 import { kanbanEffects } from './state/kanban-state/kanban/kanban.effects';
 import { partyEffects } from './features/accounting/static/party/party.effects';
 import { accountEffects } from './features/accounting/static/accts/Accts.effects';
@@ -158,7 +158,7 @@ export const appConfig: ApplicationConfig = {
       tpl: TemplateReducer,
       jnl: JournalReducer,
       fnd: FundsReducer,
-      usr: UsersReducer,      
+      usr: UsersReducer,
     }),
 
     provideState(fromPriority.priorityFeature),
@@ -181,7 +181,7 @@ export const appConfig: ApplicationConfig = {
       subTypeEffects,
       glTypeEffects,
       projectEffects,
-    
+
     ]),
     provideRouterStore(),
     provideStoreDevtools({ maxAge: 25 }),

@@ -5,7 +5,7 @@ import { LoginService } from './data-access/login.service';
 
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { ScrollService } from 'app/services/scroll.service';
-import { MaterialModule } from 'app/services/material.module';
+import { MaterialModule } from 'app/shared/material.module';
 import { MatDrawer } from '@angular/material/sidenav';
 import { AuthService } from 'app/features/auth/auth.service';
 

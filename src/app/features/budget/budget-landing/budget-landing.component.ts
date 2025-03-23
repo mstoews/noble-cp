@@ -7,7 +7,7 @@ import { FIRESTORE } from 'app/app.config';
 import { ProjectService } from 'app/features/admin/dashboard/project.service';
 import { SummaryCardComponent } from 'app/features/admin/dashboard/summary-card.component';
 import { AuthService } from 'app/features/auth/auth.service';
-import { MaterialModule } from 'app/services/material.module';
+import { MaterialModule } from 'app/shared/material.module';
 import { ApexOptions, NgApexchartsModule } from 'ng-apexcharts';
 import { Subject, takeUntil } from 'rxjs';
 

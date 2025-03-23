@@ -5,29 +5,29 @@ import { ReportingToolbarComponent } from '../grid-reporting/grid-menubar.compon
 import { DistributionLedgerService } from 'app/services/distribution.ledger.service';
 import { SimpleDialogComponent } from "../../../common/simple-dialog.component";
 import { StatementLineComponent } from './statement-line.component';
-import { map, Subject  } from 'rxjs';
-import { MaterialModule } from 'app/services/material.module';
+import { map, Subject } from 'rxjs';
+import { MaterialModule } from 'app/shared/material.module';
 import { StatementTotalComponent } from './statement-totals.component';
 import html2PDF from 'jspdf-html2canvas'
-import  html2canvas from 'html2canvas'
+import html2canvas from 'html2canvas'
 import jsPDF from 'jspdf';
 
 const imports = [
   CommonModule,
- 
+
   ReportingToolbarComponent,
- 
- 
+
+
   MaterialModule,
   StatementTotalComponent,
-  
+
 ]
 
 @Component({
-    selector: 'income-statement-comparison-rpt',
-    imports: [imports],
-    encapsulation: ViewEncapsulation.None,
-    template: `
+  selector: 'income-statement-comparison-rpt',
+  imports: [imports],
+  encapsulation: ViewEncapsulation.None,
+  template: `
   <div class="flex flex-col min-w-0 overflow-y-auto overflow-x-auto" cdkScrollable >
   <!-- Main -->
   <div id="statement" class="flex-auto p-2 sm:p-10 bg-white">
@@ -88,10 +88,10 @@ const imports = [
 
   </div>
   `,
-    providers: []
+  providers: []
 })
 
-export class IncomeStatementComparisonRptComponent  {
+export class IncomeStatementComparisonRptComponent {
 
   public currentPeriod = signal(1);
   public currentYear = signal(2024);
@@ -108,20 +108,20 @@ export class IncomeStatementComparisonRptComponent  {
     period: this.currentPeriod(),
     period_year: this.currentYear()
   }
-    
-  revenueReport$ = this.distributionService.getDistributionByPrdAndYear(this.params).pipe(map(expense => expense.filter(ex => ex.child > 5000))); 
-  revenue$ = this.revenueReport$.pipe(map(expense => expense.filter(ex => ex.child > 5000 && ex.child < 6000)));    
+
+  revenueReport$ = this.distributionService.getDistributionByPrdAndYear(this.params).pipe(map(expense => expense.filter(ex => ex.child > 5000)));
+  revenue$ = this.revenueReport$.pipe(map(expense => expense.filter(ex => ex.child > 5000 && ex.child < 6000)));
   expense$ = this.revenueReport$.pipe(map(expense => expense.filter(ex => ex.child > 6000)));
-  
-  
+
+
   onYearChanged(e: any) {
     this.currentYear.set(Number(e));
     this.onRefresh();
   }
 
   onRefresh() {
-    this.revenueReport$= this.distributionService.getDistributionByPrdAndYear(this.params).pipe(map(expense => expense.filter(ex => ex.child > 5000))); 
-    this.revenue$ = this.revenueReport$.pipe(map(expense => expense.filter(ex => ex.child > 5000 && ex.child< 6000)));    
+    this.revenueReport$ = this.distributionService.getDistributionByPrdAndYear(this.params).pipe(map(expense => expense.filter(ex => ex.child > 5000)));
+    this.revenue$ = this.revenueReport$.pipe(map(expense => expense.filter(ex => ex.child > 5000 && ex.child < 6000)));
     this.expense$ = this.revenueReport$.pipe(map(expense => expense.filter(ex => ex.child > 6000)));
   }
 
@@ -141,7 +141,7 @@ export class IncomeStatementComparisonRptComponent  {
     this._unsubscribeAll.next(null);
     this._unsubscribeAll.complete();
   }
-  
+
   onExportCSV() {
     let income = document.getElementById('income-statement');
 
@@ -168,8 +168,8 @@ export class IncomeStatementComparisonRptComponent  {
       },
       watermark: undefined,
       autoResize: true,
-      init: function() {},
-      success: function(pdf) {
+      init: function () { },
+      success: function (pdf) {
         var dReportDate = new Date();
         pdf.save(`IncomeStatement${dReportDate}.pdf`);
       }
@@ -179,13 +179,13 @@ export class IncomeStatementComparisonRptComponent  {
 
   onExportExcel() {
     const is: any = document.getElementById('income-statement');
-    html2canvas(is, {scale: 2}).then ((canvas) => {
+    html2canvas(is, { scale: 2 }).then((canvas) => {
       const doc = new jsPDF();
-      doc.addImage(canvas.toDataURL('image/png'), 'PNG', 0, 0, 200, 200);      
+      doc.addImage(canvas.toDataURL('image/png'), 'PNG', 0, 0, 200, 200);
       doc.setFontSize(12);
       doc.save(`IncomeStatement.${this.dReportDate}.pdf`)
     });
-    
+
   }
 }
 

@@ -5,7 +5,7 @@ import { CommonModule } from '@angular/common';
 import { FuseConfirmationService } from '@fuse/services/confirmation';
 
 import { MatDrawer } from '@angular/material/sidenav';
-import { MaterialModule } from 'app/services/material.module';
+import { MaterialModule } from 'app/shared/material.module';
 import { GridMenubarStandaloneComponent } from 'app/features/accounting/grid-components/grid-menubar.component';
 import { Subject, map, takeUntil } from 'rxjs';
 import { KanbanService } from '../kanban.service';
@@ -40,7 +40,7 @@ export class KanbanTypesComponent implements OnInit, OnDestroy {
     public selectedItemKeys: string[] = [];
     private _unsubscribeAll: Subject<any> = new Subject<any>();
 
-   // typesList$ = this.store.types()
+    // typesList$ = this.store.types()
 
     ngOnInit() {
         this.createEmptyForm();

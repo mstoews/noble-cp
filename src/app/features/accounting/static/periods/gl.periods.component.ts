@@ -9,10 +9,10 @@ import {
 import { CommonModule } from '@angular/common';
 import { FuseConfirmationService } from '@fuse/services/confirmation';
 import { MatDrawer } from '@angular/material/sidenav';
-import { MaterialModule } from 'app/services/material.module';
+import { MaterialModule } from 'app/shared/material.module';
 import { GridMenubarStandaloneComponent } from '../../grid-components/grid-menubar.component';
 import { AggregateService, ColumnMenuService, EditService, FilterService, FilterSettingsModel, GridModule, GroupService, PageService, ResizeService, SearchSettingsModel, SelectionSettingsModel, SortService, ToolbarItems, ToolbarService } from '@syncfusion/ej2-angular-grids';
-import { PeriodStore } from 'app/services/periods.store';
+import { PeriodStore } from 'app/store/periods.store';
 import { GLGridComponent } from '../../grid-components/gl-grid.component';
 import { IPeriod } from 'app/models/period';
 import { Store } from '@ngrx/store';

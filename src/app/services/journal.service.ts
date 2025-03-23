@@ -44,7 +44,7 @@ export class JournalService implements OnDestroy {
       shareReplay({ bufferSize: 1, refCount: true }));
   }
 
-  createJournalTemplate(params: IJournalParams) {
+  createJournalTemplate(params: ITemplateParams) {
     var url = this.baseUrl + '/v1/create_journal_template';
     return this.httpClient.post<IJournalTemplate>(url, params).pipe(
       catchError(err => {

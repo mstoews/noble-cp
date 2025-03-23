@@ -2,12 +2,13 @@ import { NgClass, NgSwitch, NgSwitchCase } from '@angular/common';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, OnDestroy, OnInit, viewChild, ViewChild, ViewEncapsulation } from '@angular/core';
 import { MatDrawer } from '@angular/material/sidenav';
 import { FuseMediaWatcherService } from '@fuse/services/media-watcher';
-import { MaterialModule } from 'app/services/material.module';
+import { MaterialModule } from 'app/shared/material.module';
 import { Subject, takeUntil } from 'rxjs';
 import { BudgetWizardComponent } from './budget-wizard.component';
 import { BudgetUpdateComponent } from './update/budget-update.component';
 import { BudgetLandingComponent } from './budget-landing/budget-landing.component';
-import { AppStore, ApplicationService } from 'app/services/application.state.service';
+import { ApplicationService } from 'app/store/main.panel.store';
+import { ApplicationStore } from 'app/store/application.store';
 
 
 const imports = [
@@ -21,7 +22,7 @@ const imports = [
 @Component({
     selector: 'budget-main',
     imports: [imports],
-    providers: [AppStore, ApplicationService],
+    providers: [ApplicationService],
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
     template: `<div class="flex flex-col w-full min-w-0 sm:absolute sm:inset-0 sm:overflow-hidden">
@@ -109,13 +110,13 @@ export class BudgetMainComponent {
     selectedPanel: string = 'budget-landing';
     private _unsubscribeAll: Subject<any> = new Subject<any>();
     PANEL_ID = 'budgetPanel';
-    store = inject(AppStore);
+    store = inject(ApplicationStore);
     panelService = inject(ApplicationService);
 
     constructor(
         private _changeDetectorRef: ChangeDetectorRef,
         private _fuseMediaWatcherService: FuseMediaWatcherService,
-    ) {        
+    ) {
         this.panelService.getUserId().subscribe((uid) => {
             this.panelService.findPanelByName(uid, this.PANEL_ID).subscribe((panel) => {
                 this.selectedPanel = panel.lastPanelOpened;
