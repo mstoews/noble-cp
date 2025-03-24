@@ -7,7 +7,7 @@ import { AccountsService } from 'app/services/accounts.service';
 import { JournalService } from 'app/services/journal.service';
 import { MaterialModule } from 'app/shared/material.module';
 import { NgxMaskDirective, provideNgxMask } from 'ngx-mask';
-import { Observable, ReplaySubject, Subject, Subscription, take, takeUntil } from 'rxjs';
+import { debounceTime, Observable, of, ReplaySubject, Subject, Subscription, take, takeUntil } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { DndComponent } from 'app/features/drag-n-drop/loaddnd/dnd.component';
 import { MatSelect } from '@angular/material/select';
@@ -44,6 +44,9 @@ import { ISubType } from 'app/models/subtypes';
 import { ToastrService } from "ngx-toastr";
 import { Router } from '@angular/router';
 import { TemplateDropDownComponent } from '../grid-components/drop-down.templates.component';
+import { ApplicationStore } from 'app/store/application.store';
+import { toObservable } from '@angular/core/rxjs-interop';
+import { debounce } from 'lodash';
 
 
 interface ITransactionType {
@@ -406,16 +409,6 @@ const mods = [
                                         </e-aggregates>
                                     </ejs-grid>
 
-
-
-
-                                <!-- 
-                                        <button mat-icon-button color="primary" class="bg-gray-200 hover:bg-slate-400 ml-1"
-                                            (click)="onAddEvidence()" matTooltip="Evidence" aria-label="Evidence">
-                                        <span class="e-icons e-text-alternative"></span>
-                                        </button> 
-                                    -->
-
                                 </ng-container>
                                 <div class="flex justify-end mt-8">
                                     <button mat-icon-button color="primary" class="bg-gray-200  hover:bg-slate-400 ml-1"
@@ -524,7 +517,6 @@ export class EntryWizardComponent implements OnInit, OnDestroy, AfterViewInit {
     public transactionType = 'GL';
     public isVerified = false;
 
-
     public journalHeader: IJournalHeader;
 
     public journal_id = 0;
@@ -595,6 +587,8 @@ export class EntryWizardComponent implements OnInit, OnDestroy, AfterViewInit {
 
     private _unsubscribeAll: Subject<any> = new Subject<any>();
 
+    appStore = inject(ApplicationStore);
+
     Store = inject(Store);
     template$: Observable<IJournalTemplate[]>;
     accountsDropdown$: Observable<IDropDownAccounts[]>;
@@ -606,13 +600,14 @@ export class EntryWizardComponent implements OnInit, OnDestroy, AfterViewInit {
     // -----------------------------------------------------------------------------------------------------
 
     ngOnInit(): void {
+        
+        // this.Store.dispatch(loadTemplates());
 
-        this.Store.dispatch(loadTemplates());
-
-        this.Store.select(getTemplates).pipe(takeUntil(this._unsubscribeAll)).subscribe((templates) => {
-            this.templateList = templates;
-            this.templateFilter.next(templates);
-        });
+        // this.Store.select(getTemplates).pipe(takeUntil(this._unsubscribeAll)).subscribe((templates) => {
+        //    this.templateList = templates;
+        //    this.templateFilter.next(templates);
+        // });
+        
 
         this.accountsService.readAccountDropdown().subscribe((accounts) => {
             this.debitAccounts = accounts;
@@ -643,6 +638,9 @@ export class EntryWizardComponent implements OnInit, OnDestroy, AfterViewInit {
             allowAdding: false,
             allowDeleting: false,
         };
+
+        this.templateList = this.appStore.vm().tmp;
+        this.templateFilter.next(this.templateList);
 
         this.createEmptyForms();
         this.onChanges()

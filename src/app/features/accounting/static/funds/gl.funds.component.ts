@@ -21,7 +21,7 @@ import { selectFunds } from 'app/features/accounting/static/funds/Funds.Selector
 import { MenuEventArgs, MenuItemModel } from '@syncfusion/ej2-navigations';
 import { Observable } from 'rxjs';
 import { IFunds } from 'app/models';
-import { FundsStore } from './funds.store';
+import { FundsStore } from '../../../../store/funds.store';
 
 
 const imports = [

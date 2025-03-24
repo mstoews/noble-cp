@@ -47,7 +47,7 @@ const keyExpr = ["account", "child"];
   imports: [imports, DrawerComponent],
   template: `
 
-  <grid-menubar  class="pl-5 pr-5"  [showBack]="false" [inTitle]="'General Ledger Account Maintenance'"/> 
+  
   <mat-drawer class="w-[450px]" #settings [opened]="false" mode="over" position="end"  [disableClose]="false" >
           <settings-drawer></settings-drawer>      
   </mat-drawer>
@@ -64,6 +64,7 @@ const keyExpr = ["account", "child"];
   
   @if ( store.isLoading() === false) {  
     <mat-drawer-container id="target" class="flex-col h-screen">        
+        <grid-menubar [showBack]="false" [inTitle]="'General Ledger Account Maintenance'"/>         
         <ng-container>
           <div class="border-1 border-gray-500">
             @if(store.isLoading() === false) {        

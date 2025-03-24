@@ -87,7 +87,8 @@ export interface TypeStateInterface {
 }
 
 export const TypeStore = signalStore(
-  { protectedState: false }, withState<TypeStateInterface>({
+ { providedIn: 'root' },
+  withState<TypeStateInterface>({
     type: [],
     error: null,
     isLoading: false,

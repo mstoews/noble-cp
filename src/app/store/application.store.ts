@@ -1,4 +1,4 @@
-import { signalStore, withComputed, withMethods, withProps, withState, } from '@ngrx/signals';
+import { signalStore, withComputed, withMethods, withHooks, withProps, withState, } from '@ngrx/signals';
 import { computed, inject } from '@angular/core';
 import { IJournalTemplate } from 'app/models/journals';
 import { IParty } from 'app/models/party';
@@ -9,12 +9,10 @@ import { TemplateStore } from './template.store';
 import { PeriodStore } from './periods.store';
 import { AccountsStore } from './accounts.store';
 import { MainPanelStore, ProfileModel } from './main.panel.store';
+import { FundsStore } from './funds.store';
+import { loadFunds } from 'app/features/accounting/static/funds/Funds.Action';
 
 export interface ApplicationStateInterface {
-  templates: IJournalTemplate[];
-  accounts: IAccounts[];
-  party: IParty[];
-  period: IPeriod[];
   currentPeriod: string;
   currentYear: string;
   isLoading: boolean;
@@ -25,14 +23,10 @@ export interface ApplicationStateInterface {
 
 export const ApplicationStore = signalStore(
   { providedIn: 'root' },
-  withState<ApplicationStateInterface>({
-    templates: [],
-    accounts: [],
-    party: [],
-    period: [],
-    error: null,
+  withState<ApplicationStateInterface>({    
     isLoading: false,
     currentPeriod: '',
+    error: null,
     currentYear: '',
     uid: '',
     profile: null,
@@ -42,10 +36,11 @@ export const ApplicationStore = signalStore(
     _templateStore: inject(TemplateStore),
     _accountsStore: inject(AccountsStore),
     _periodStore: inject(PeriodStore),
+    _fundsStore: inject(FundsStore),  
     _mainPanelStore: inject(MainPanelStore),
 
   })),
-  withMethods((state => ({
+  withMethods((state => ({    
     loadTemplates: state._templateStore.readTemplate,
     loadAccounts: state._accountsStore.readAccounts,
     loadParties: state._partyStore.readParty,
@@ -54,20 +49,31 @@ export const ApplicationStore = signalStore(
     uid: state._mainPanelStore.uid,
     loadProfile: state._mainPanelStore.loadProfile,
     loadPanels: state._mainPanelStore.loadPanels,
+    loadFunds : state._fundsStore.loadFunds,
     setProfile: (profile: ProfileModel) => state._mainPanelStore.setProfile(profile),
   }))),
   withComputed((state) => ({
     vm: computed(() => ({
-      templates: state.templates(),
-      accounts: state.accounts(),
-      party: state.party(),
-      period: state.period(),
+      tmp: state._templateStore.template(),
+      accounts: state._accountsStore.accounts(),
+      party: state._partyStore.party(),
+      periods: state._periodStore.periods(),
       currentPeriod: state.currentPeriod(),
       currentYear: state.currentYear(),
       uid: state.uid(),
       profile: state.profile(),
     }))
   })),
+
+  withHooks({
+      onInit(store) {
+        store.loadFunds();
+        store.loadTemplates();
+        store.loadAccounts();
+        store.loadParties();
+        store.loadPeriod();
+      },
+    })
   
 );
 

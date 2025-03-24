@@ -1,10 +1,8 @@
 import { AfterViewInit, ChangeDetectionStrategy, Component, EventEmitter, HostListener, OnDestroy, OnInit, Output, SimpleChanges, ViewChild, inject, signal, viewChild } from "@angular/core";
 import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from "@angular/forms";
-import { of, ReplaySubject, Subject, Subscription, take, takeUntil, timeout } from "rxjs";
+import { ReplaySubject, Subject, Subscription, take, takeUntil, timeout } from "rxjs";
 import { CommonModule } from "@angular/common";
 import { DndComponent } from "app/features/drag-n-drop/loaddnd/dnd.component";
-
-import { AccountsService } from "app/services/accounts.service";
 import { GridMenubarStandaloneComponent } from "../grid-components/grid-menubar.component";
 
 import { SubTypeService } from "app/services/subtype.service";
@@ -78,7 +76,6 @@ import { Store } from '@ngrx/store';
 import { subTypePageActions } from "../static/subtype/sub-type-page.actions";
 import { FundsActions } from "../static/funds/Funds.Action";
 import { subtypeFeature } from "../static/subtype/sub-type.state";
-import { FundsDropDownComponent } from "../grid-components/drop-down.funds.component";
 import { SubtypeDropDownComponent } from "../grid-components/drop-down.subtype.component";
 import { JournalStore } from "app/store/journal.store";
 import { MaterialModule } from "app/shared/material.module";
@@ -98,7 +95,6 @@ const imp = [
     SplitterModule,
     EvidenceCardComponent,
     DropDownAccountComponent,
-
     SubtypeDropDownComponent,    
 ];
 
@@ -296,7 +292,7 @@ const imp = [
                 
                 <ejs-splitter #splitterInstance id="nested-splitter" (created)='onCreated()' class="h-[calc(100vh-14rem)]" separatorSize=3 width='100%'>
                     <e-panes>
-                        <e-pane min='60px' size='25%' class="w-72">                                        
+                        <e-pane min='60px' size='30%' class="w-72">                                        
                             <ng-template #content>
                                 <div class="text-3xl gap-2 m-1 text-gray-100 p-2 bg-slate-600 rounded-md">
                                             Transaction List
@@ -352,7 +348,6 @@ const imp = [
                                 
                             </ng-template>
                         </e-pane>
-
                         <e-pane>
                             <ng-template #content>
                                 <div id='vertical_splitter' class="vertical_splitter overflow-hidden">                                    
@@ -379,10 +374,7 @@ const imp = [
                                                     @if (templateFilter | async; as templates ) {
                                                         <div class="flex flex-col w-[300px]">
                                                             <mat-form-field class="mt-1 ml-1 mr-1 flex-start">
-
-                                                                <mat-select [formControl]="templateCtrl"
-                                                                    [placeholder]="'Journal Template'" #singleTemplateSelect
-                                                                    required>
+                                                                <mat-select [formControl]="templateCtrl" [placeholder]="'Journal Template'" #singleTemplateSelect required>
                                                                     <mat-option>
                                                                         <ngx-mat-select-search
                                                                             [formControl]="templateFilterCtrl"
@@ -391,12 +383,10 @@ const imp = [
                                                                         </ngx-mat-select-search>
                                                                     </mat-option>
                                                                     @for (template of templates; track template) {
-                                                                    <mat-option
-                                                                        [value]="template">{{template.description}}</mat-option>
+                                                                        <mat-option [value]="template">{{template.description}}</mat-option>
                                                                     }
                                                                 </mat-select>
-                                                                <mat-icon class="icon-size-5" matPrefix
-                                                                    [svgIcon]="'heroicons_solid:document-chart-bar'"></mat-icon>
+                                                                <mat-icon class="icon-size-5" matPrefix [svgIcon]="'heroicons_solid:document-chart-bar'"></mat-icon>
                                                         </mat-form-field>
                                                     </div>
                                                     }
@@ -443,8 +433,7 @@ const imp = [
                                                             @if (partyFilter | async; as parties ) {
                                                             <div class="flex flex-col w-[300px]">
                                                                 <mat-form-field class="mt-1 ml-1 mr-1 flex-start">
-                                                                    <mat-select [formControl]="partyCtrl" placeholder="Party"
-                                                                        #singlePartySelect required>
+                                                                    <mat-select [formControl]="partyCtrl" placeholder="Party" #singlePartySelect required>
                                                                         <mat-option>
                                                                             <ngx-mat-select-search [formControl]="partyFilterCtrl"
                                                                                 [noEntriesFoundLabel]="'No entries found'"
@@ -455,8 +444,7 @@ const imp = [
                                                                         <mat-option [value]="party">{{party.party_id}}</mat-option>
                                                                         }
                                                                     </mat-select>
-                                                                    <mat-icon class="icon-size-5" matPrefix
-                                                                        [svgIcon]="'heroicons_solid:user'"></mat-icon>
+                                                                    <mat-icon class="icon-size-5" matPrefix [svgIcon]="'heroicons_solid:user'"></mat-icon>
                                                                 </mat-form-field>
                                                             </div>
                                                             <mat-form-field class="mt-1 ml-1 mr-1 grow">
@@ -470,24 +458,14 @@ const imp = [
                                                 </section>
                                             </form>
                                             <div mat-dialog-actions class="gap-2 mb-3">
-                                                @if (bHeaderDirty === true) {
-                                                <button mat-icon-button color="primary"
-                                                    class="bg-slate-400 hover:bg-slate-700 ml-1"
-                                                    (click)="onUpdateJournalHeader($event)" matTooltip="Save Transaction"
-                                                    aria-label="hovered over">
-                                                    <span class="e-icons e-save"></span>
-                                                </button>
+                                                @if (bHeaderDirty === true) {                                                
+                                                    <button mat-icon-button color="primary"
+                                                        class="bg-slate-200 hover:bg-slate-400 ml-1"
+                                                        (click)="onUpdateJournalHeader($event)" matTooltip="Save Transaction"
+                                                        aria-label="hovered over">
+                                                        <span class="e-icons e-save"></span>
+                                                    </button>
                                                 }
-                                                
-                                                @if (bHeaderDirty === false) {
-                                                <button mat-icon-button color="primary"
-                                                    class="bg-slate-200 hover:bg-slate-400 ml-1"
-                                                    (click)="onUpdateJournalHeader($event)" matTooltip="Save Transaction"
-                                                    aria-label="hovered over">
-                                                    <span class="e-icons e-save"></span>
-                                                </button>
-                                                }
-
                                                 <button mat-icon-button color="primary"
                                                     class="bg-gray-200 hover:bg-slate-400 ml-1" 
                                                     (click)="onAddEvidence()"
@@ -638,10 +616,8 @@ const imp = [
                                         </div>
                                     </div>
                                 </div>
-                            </ng-template>
-                        
+                            </ng-template>                        
                         </e-pane>
-
                     </e-panes>
                 </ejs-splitter>
             </section>
@@ -807,7 +783,6 @@ export class JournalUpdateComponent
     public partyFilterCtrl: FormControl<string> = new FormControl<string>(null);
     public partyFilter: ReplaySubject<IParty[]> = new ReplaySubject<IParty[]>(1);
 
-    // public Accounts: IDropDownAccounts[] = [];
     public accountsGrid: IDropDownAccountsGridList[] = [];
     public dFields = { text: "child", value: "child" };
 
@@ -846,7 +821,6 @@ export class JournalUpdateComponent
     funds$ = this.Store.select(fromFunds.selectFunds);
     isFundsLoading$ = this.Store.select(fromFunds.isFundsLoading);
 
-
     //subtype$ = this.Store.select(subTypePageActions.loadDropdown);
     
     toast = inject(ToastrService);
@@ -866,7 +840,6 @@ export class JournalUpdateComponent
         debit: new FormControl(0, Validators.required),            
         credit: new FormControl(0, Validators.required),            
         reference: new FormControl('', Validators.required),            
-
     });
 
     ngOnInit(): void {
@@ -878,10 +851,18 @@ export class JournalUpdateComponent
         this.createEmptyForm();
         this.initialDatagrid();                    
         this.activatedRoute.data.subscribe((data) => {
-            this.store.loadDetails(data.journal.journal_id);
+            
+            const journal_id = data.journal[0].journal_id;
+            
+            this.accountList = data.journal[1];
+            this.subtypeList = data.journal[2];                        
+            this.templateList = data.journal[3];
+            this.partyList = data.journal[4];
+            
+            this.store.loadDetails(journal_id);
             this.store.loadArtifactsByJournalId(data.journal.journal_id);
-            this.journalHeader = data.journal;
-            this.refreshHeader(this.journalHeader);                        
+            this.journalHeader = data.journal[0];
+            this.refreshHeader(data.journal[0]);                        
         });
         
         
@@ -1087,17 +1068,17 @@ export class JournalUpdateComponent
     ];
 
     changeFund(e: any) {
-        console.log('change fund: ', e);
+        console.debug('change fund: ', e);
         this.bDetailDirty = true;
     }
 
     changeSubtype(e: any) {
-        console.log('change subtype: ', e);
+        console.debug('change subtype: ', e);
         this.bDetailDirty = true;
     }
 
     changeTemplate(e: any) {
-        console.log('change template: ', e);
+        console.debug('change template: ', e);
         this.bDetailDirty = true;
     }
 
@@ -1161,26 +1142,10 @@ export class JournalUpdateComponent
 
     public ngAfterViewInit() {
 
-        this.templateService.read().pipe(takeUntil(this._onDestroy)).subscribe((templates) => {
-            this.templateList = templates;
-            this.templateFilter.next(this.templateList.slice());
-            if (this.journalHeader.template_name != null) {
-                this.templateCtrl.setValue(
-                    this.templateList.find((x) => x.template_name === this.journalHeader.template_name)
-                );
-            }
-        });
-
-        this.partyService.read().pipe(takeUntil(this._onDestroy)).subscribe((party) => {
-            this.partyList = party;
-            this.partyFilter.next(this.partyList.slice());
-            if (this.journalHeader.template_name != null) {
-                this.partyCtrl.setValue(
-                    this.partyList.find((x) => x.party_id === this.journalHeader.party_id)
-                );
-            }
-        });
-
+        this.templateFilter.next(this.templateList.slice());
+        
+        this.partyFilter.next(this.partyList.slice())        
+        
         if (this.templateFilter && this.singleTemplateSelect() != null)
             this.templateFilter
                 .pipe(take(1), takeUntil(this._onTemplateDestroy))
@@ -1215,20 +1180,8 @@ export class JournalUpdateComponent
                             return a && b && a.child === b.child;
                         };
                 });
+
         this.searchOptions = { operator: 'contains', ignoreCase: true, ignoreAccent: true };
-
-
-        this.partyCtrl.setValue(            
-            this.partyList.find((x) => x.party_id === this.journalHeader.party_id)
-        );
-
-        
-
-        if (this.journalHeader.template_name != null) {
-            this.templateCtrl.setValue(
-                this.templateList.find((x) => x.template_name === this.journalHeader.template_name)
-            );
-        }
         
         this.onChanges();
 
@@ -1249,11 +1202,14 @@ export class JournalUpdateComponent
     }
 
     public onRowSelected(args: RowSelectEventArgs): void {
-        const queryData: any = args.data;
+        const queryData: any = args.data;        
+        // this.store.loadDetails(queryData.journal_id);
+        // this.store.loadArtifactsByJournalId(queryData.journal_id);
+        // this.router.navigate();
+         const urlTree = this.router.createUrlTree(["journals/gl", queryData.journal_id]);
+        // this.router.navigateByUrl(urlTree);
+        
         this.refreshHeader(queryData);
-        this.store.loadDetails(queryData.journal_id);
-        this.store.loadArtifactsByJournalId(queryData.journal_id);
-        this.router.navigate(["journals/gl", queryData.journal_id]);
         this.closeDrawer();
     }
 
@@ -1361,19 +1317,35 @@ export class JournalUpdateComponent
     }
 
     public onChanges(): void {
-
-        this.partyCtrl.valueChanges.subscribe((value) => {
-            this.bHeaderDirty = true;
-            console.log('Header is true!! ');
+        this.partyCtrl.valueChanges.subscribe((value) => {            
+            if (value === undefined) {
+                this.bHeaderDirty = false;
+                console.debug('Header is true!! ', value);
+            }
+            else
+            {
+                this.bHeaderDirty = true;
+                this.journalHeader.party_id = value.party_id;
+                console.debug('Header is false!! ', value);
+            }            
         });
 
         this.templateCtrl.valueChanges.subscribe((value) => {
-            this.bHeaderDirty = true;                    
-            console.debug('Header is true !! ');
+            if (value === undefined) {
+                this.bHeaderDirty = false;
+                console.debug('Header is true!! ', value);
+            }
+            else
+            {
+                
+                this.bHeaderDirty = true;
+                this.journalHeader.type = value.journal_type;
+                console.debug('Header is false!! ', JSON.stringify(value));
+            }            
         });
 
         this.detailForm.controls['accounts'].valueChanges.subscribe((value) => {
-            console.log('Account changed: ', value);
+            console.debug('Account changed: ', value);
             this.bDetailDirty = true;
         });
 
@@ -1384,12 +1356,21 @@ export class JournalUpdateComponent
         this.debitCtrl.valueChanges.subscribe((value) => {
             this.bDetailDirty = true;
         });
-
+        
+        this.journalForm.valueChanges.subscribe( (value) => 
+            {
+                if (value === undefined) {
+                    this.bHeaderDirty = false;
+                    console.debug('Header is true!! ', value);
+                }
+                else
+                {
+                    this.bHeaderDirty = true;
+                    console.debug('Header is false!! ', value);
+                }            
+            }
+        );
     }
-
-
-    
-    
 
     public detailRowDoubleClick(args: SaveEventArgs): void {
         if (args.requestType === "beginEdit" || args.requestType === "add") {
@@ -1441,7 +1422,7 @@ export class JournalUpdateComponent
 
     public saveArtifacts(e: any) {
         this.bHeaderDirty = true;
-        console.log('Header is true 3');
+        console.debug('Header is true 3');
         this.store.updateArtifacts(e);
         this.bHeaderDirty = false;
 
@@ -1455,9 +1436,7 @@ export class JournalUpdateComponent
         this.journalForm.patchValue({
             description: header.description,
             amount: header.amount,
-            transaction_date: header.transaction_date,
-            templateFilterCtrl: header.template_name,
-            partyFilterCtrl: header.party_id,
+            transaction_date: header.transaction_date,            
             invoice_no: header.invoice_no
         });
 
@@ -1465,12 +1444,14 @@ export class JournalUpdateComponent
         this.templateCtrl.setValue(
             this.templateList.find((x) => x.template_name === header.template_name)
         );
+        
+        this.partyCtrl.setValue(
+            this.partyList.find((x) => x.party_id === header.party_id)
+        );
+        
 
-        if (header.party_id !== null || header.party_id !== undefined || header.party_id !== '') {
-            this.partyCtrl.setValue(
-                this.partyList.find((x) => x.party_id === header.party_id)
-            );
-        }
+        this.store.loadDetails(header.journal_id);
+        this.store.loadArtifactsByJournalId(header.journal_id);
 
         this.bHeaderDirty = false;
     }
@@ -1745,7 +1726,7 @@ export class JournalUpdateComponent
     public onHeaderDateChanged(event: any): void {
         this.transactionDate = event.value;
         this.bHeaderDirty = true;
-        console.log('Header is true 4');
+        console.debug('Header is true 4');
     }
 
 
@@ -1754,19 +1735,13 @@ export class JournalUpdateComponent
     // Update journal header
     onUpdateJournalHeader(e: any) {
 
-        // if (this.bHeaderDirty === false) {
-        //     this.toastr.show('Journal Entry Created', 'Failed');
-        //     return;
-        // }
-
         let header = this.journalForm.getRawValue();
-        const dDate = new Date().toISOString().split("T")[0];
         let template = this.templateCtrl.value;
+        var partyId: string = '';
 
         if (template.journal_type !== 'GL') {
-            if (this.partyCtrl !== null || this.partyCtrl !== undefined) {
-                this.partyId = this.partyCtrl.value.party_id;
-            }
+            var party = this.partyCtrl.getRawValue();
+            partyId = this.partyList.find((x) => x.party_id === party.party_id).party_id;            
         }
         else {
             this.partyId = '';
@@ -1787,7 +1762,7 @@ export class JournalUpdateComponent
             transaction_date: header.transaction_date,
             amount: Number(header.amount),
             template_name: template.template_name,
-            party_id: this.partyId,
+            party_id: partyId,
             invoice_no: header.invoice_no
         };
 
