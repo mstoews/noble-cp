@@ -22,6 +22,7 @@ import { GLTransactionListComponent } from './gl-listing.component';
 import { CdkScrollable } from '@angular/cdk/scrolling';
 import { JournalRouteComponent } from './journal-route.component';
 import { ApplicationService, MainPanelStore } from 'app/store/main.panel.store';
+import { ActivatedRoute } from '@angular/router';
 
 const imports = [
     MaterialModule,
@@ -129,6 +130,18 @@ export class TransactionMainComponent implements OnInit, OnDestroy {
 
     PANEL_ID = 'transactionsPanel';
     store = inject(MainPanelStore);
+    private activatedRoute = inject(ActivatedRoute);
+
+
+    accounts: any;
+    journalTypes: any;
+    templates: any;
+    parties: any;
+    subTypes: any;
+    periods: any;
+    user: any;
+    roles: any;
+
 
     /**
      * Constructor
@@ -136,7 +149,8 @@ export class TransactionMainComponent implements OnInit, OnDestroy {
     constructor(
         private _changeDetectorRef: ChangeDetectorRef,
         private _fuseMediaWatcherService: FuseMediaWatcherService,
-    ) {
+    ) 
+    {
 
         this.panelService.findPanelByName(this.store.uid(), this.PANEL_ID).subscribe((panel) => {
             this.selectedPanel = panel.lastPanelOpened;
@@ -153,12 +167,22 @@ export class TransactionMainComponent implements OnInit, OnDestroy {
      */
     ngOnInit(): void {
 
+        this.activatedRoute.data.subscribe((data) => {            
+            this.accounts = data.journal[0];
+            this.journalTypes = data.journal[1];
+            this.templates = data.journal[2];
+            this.parties = data.journal[3];
+            this.subTypes = data.journal[4];
+            this.periods = data.journal[5];
+            this.user = data.journal[6];
+            this.roles = data.journal[7];                        
+        });
+
         if (this.selectedPanel === '' && this.storedPanel === null || this.selectedPanel === undefined) {
             this.selectedPanel = this.defaultPanel;
         }
 
         this.panels = [
-
             {
                 id: 'entry',
                 icon: 'heroicons_outline:document-plus',

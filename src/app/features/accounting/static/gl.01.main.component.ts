@@ -18,6 +18,7 @@ import { ApplicationService } from 'app/store/main.panel.store';
 import { ApplicationStore } from 'app/store/application.store';
 import { CdkScrollable } from '@angular/cdk/scrolling';
 import { RolesComponent } from './roles/gl.roles.component';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
     template: `    
@@ -148,7 +149,6 @@ export class GlMainComponent {
                 this.selectedPanel = panel.lastPanelOpened;
             });
         });
-
     }
 
     ngOnInit(): void {
@@ -202,6 +202,7 @@ export class GlMainComponent {
                 description: 'List of  assignable roles for team members',
             }
         ];
+        
 
         // Subscribe to media changes
         this._fuseMediaWatcherService.onMediaChange$

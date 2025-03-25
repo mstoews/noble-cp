@@ -252,6 +252,7 @@ export class GlAccountsComponent {
     this.closeEditDrawer();
   }
 
+
   onClose() {
     this.closeEditDrawer();
   }

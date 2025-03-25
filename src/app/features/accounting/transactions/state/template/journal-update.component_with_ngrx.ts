@@ -3,7 +3,7 @@ import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } 
 import { ReplaySubject, Subject, Subscription, take, takeUntil } from "rxjs";
 import { CommonModule } from "@angular/common";
 import { DndComponent } from "app/features/drag-n-drop/loaddnd/dnd.component";
-import { GridMenubarStandaloneComponent } from "../grid-components/grid-menubar.component";
+import { GridMenubarStandaloneComponent } from "../../../grid-components/grid-menubar.component";
 import { MaterialModule } from "app/shared/material.module";
 import { MatDialog } from "@angular/material/dialog";
 import { NgxMaskDirective, provideNgxMask } from "ngx-mask";
@@ -16,7 +16,7 @@ import { IDropDownAccounts, IDropDownAccountsGridList, IFunds, IJournalParams } 
 
 import { AUTH } from "app/app.config";
 
-import { loadTemplates } from "../transactions/state/template/Template.Action";
+import { loadTemplates } from "./Template.Action";
 
 import {
     ContextMenuComponent,
@@ -67,20 +67,20 @@ import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from "@angular/material/form-field";
 
 import { ToastrService } from "ngx-toastr";
 import { JournalService } from "app/services/journal.service";
-import { accountsFeature } from "./accts/Accts.state";
-import { accountPageActions } from "./accts/Accts-page.actions";
-import { DropDownAccountComponent } from "../grid-components/drop-down-account.component";
+import { accountsFeature } from "../../../static/accts/Accts.state";
+import { accountPageActions } from "../../../static/accts/Accts-page.actions";
+import { DropDownAccountComponent } from "../../../grid-components/drop-down-account.component";
 import { Store } from '@ngrx/store';
-import { subTypePageActions } from "./subtype/sub-type-page.actions";
-import { FundsActions } from "./funds/Funds.Action";
-import { subtypeFeature } from "./subtype/sub-type.state";
-import { FundsDropDownComponent } from "../grid-components/drop-down.funds.component";
-import { SubtypeDropDownComponent } from "../grid-components/drop-down.subtype.component";
-import { isFundsLoading, selectFunds } from "./funds/Funds.Selector";
-import { PartyDropDownComponent } from "../grid-components/drop-down-party.component";
-import { getTemplates, isTemplateLoading } from "../transactions/state/template/Template.Selector";
-import { partyFeature } from "./party/party.state";
-import { partyPageActions } from "./party/party-page.actions";
+import { subTypePageActions } from "../../../static/subtype/sub-type-page.actions";
+import { FundsActions } from "../../../static/funds/Funds.Action";
+import { subtypeFeature } from "../../../static/subtype/sub-type.state";
+import { FundsDropDownComponent } from "../../../grid-components/drop-down.funds.component";
+import { SubtypeDropDownComponent } from "../../../grid-components/drop-down.subtype.component";
+import { isFundsLoading, selectFunds } from "../../../static/funds/Funds.Selector";
+import { PartyDropDownComponent } from "../../../grid-components/drop-down-party.component";
+import { getTemplates, isTemplateLoading } from "./Template.Selector";
+import { partyFeature } from "../../../static/party/party.state";
+import { partyPageActions } from "../../../static/party/party-page.actions";
 
 import { IParty } from "app/models/party";
 import { MatSelect } from "@angular/material/select";
@@ -715,16 +715,10 @@ export class JournalUpdateComponent_Ngrx implements OnInit, OnDestroy, AfterView
     // create template details only one
     bTemplateDetails = false;
 
-
-
     public animation = {
         effect: 'FadeIn',
         duration: 800
     };
-
-
-    data$: Observable<JournalData>;
-
 
 
     private _location = inject(Location);
@@ -1442,7 +1436,7 @@ export class JournalUpdateComponent_Ngrx implements OnInit, OnDestroy, AfterView
                     period: this.journalHeader().period,
                     period_year: this.journalHeader().period_year
                 };
-                this.store.createJournalTemplate(journalParam);
+                //this.store.createJournalTemplate(journalParam);
             }
         });
     }

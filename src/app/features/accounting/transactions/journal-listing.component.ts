@@ -101,8 +101,8 @@ const imports = [
                             @if(journalHeader$  | async; as journals  ) {                              
                             <ng-container>                     
                                 <ejs-grid #grid id="grid"
-                                    [dataSource]="journals | filterType : transactionType()"
-                                    height="360"                                    
+                                    [dataSource]="journals | filterType : transactionType()"                                    
+                                    [height]='gridHeight'                                   
                                     [allowSorting]='true'                                    
                                     [showColumnMenu]='false'                
                                     [gridLines]="lines"
@@ -459,7 +459,6 @@ export class JournalEntryComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
 
-
     @HostListener('window:resize', ['$event'])
     onResize(event: any) {
         this.adjustHeight();
@@ -471,8 +470,11 @@ export class JournalEntryComponent implements OnInit, OnDestroy, AfterViewInit {
 
     adjustHeight() {
         if (this.grid()) {
-            this.grid().height = (window.innerHeight - 600) + 'px'; // Adjust as needed
+            this.grid().height = (window.innerHeight - 700) + 'px'; // Adjust as needed
         }
     }
+
+    public gridHeight: number;
+
 
 }

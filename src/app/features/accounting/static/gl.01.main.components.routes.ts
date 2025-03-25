@@ -4,6 +4,6 @@ import { GlMainComponent  } from './gl.01.main.component';
 export default [
     {
         path     : '',
-        component: GlMainComponent,
+        component: GlMainComponent,         
     },
 ] as Routes;

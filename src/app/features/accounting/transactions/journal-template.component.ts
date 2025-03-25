@@ -189,25 +189,26 @@ const imports = [
 
 export class JournalTemplateComponent implements OnInit {
 
-    //private accountService = inject(AccountsService);
-    // public Store = inject(JournalStore);
     public gridControl = viewChild<GridComponent>("grid");
 
     drawer = viewChild<MatDrawer>('drawer');
     store = inject(Store);
     fb = inject(FormBuilder);
 
-    // public accounts$ = this.accountService.readChildren(); // retrieves only the child accounts which can be used for booking
+    readonly allowedPageSizes = [10, 20, 'all'];
+    readonly displayModes = [{ text: "Display Mode 'compact'", value: 'compact' }];
+
     public templateForm!: FormGroup;
     public selectedItemKeys: any[] = [];
     public currentDate: string;
     public journal_details: any[];
     public bOpenDetail: boolean = false;
     public bHeaderDirty: boolean = false;
-    readonly allowedPageSizes = [10, 20, 'all'];
+    
     public currentRowData: any;
+    
 
-    readonly displayModes = [{ text: "Display Mode 'compact'", value: 'compact' }];
+    
     public displayMode = 'compact';
     public showPageSizeSelector = true;
     public showInfo = true;

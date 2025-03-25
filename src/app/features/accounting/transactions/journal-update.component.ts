@@ -177,7 +177,6 @@ const imp = [
                                         } 
                                         <!-- Description  -->
 
-
                                         <mat-form-field class="flex-col ml-2 mr-2 mt-1 grow">
                                             <mat-label class="text-md ml-2">Description</mat-label>
                                             <input matInput placeholder="Description" formControlName="description"
@@ -637,7 +636,6 @@ const imp = [
       [items]= 'menuItems'> 
     </ejs-contextmenu> 
     
-
     </div>
     `,
     selector: "gl-journal",
@@ -699,13 +697,9 @@ export class JournalUpdateComponent
    
     private auth = inject(AUTH);
     private activatedRoute = inject(ActivatedRoute);
-    private partyService = inject(PartyService);
-    private templateService = inject(TemplateService);
     private toastr = inject(ToastrService);
     private journalService = inject(JournalService);
-
-
-    public fuseConfirmationService = inject(FuseConfirmationService);
+    public  fuseConfirmationService = inject(FuseConfirmationService);
 
     public matDialog = inject(MatDialog);
     public journalForm!: FormGroup;
@@ -1930,6 +1924,13 @@ export class JournalUpdateComponent
             this.toastr.error(message);
         }
         return;
+    }
+    
+    public gridHeight: number;
+
+    @HostListener('window:resize', ['$event'])
+    onResize(event: any) {
+        this.gridHeight = event.target.innerHeight - 500;
     }
 
 }

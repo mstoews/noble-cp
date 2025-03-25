@@ -6,7 +6,7 @@ import { JournalUpdateComponent } from './journal-update.component';
 export default [
     {
         path: '',
-        component: TransactionMainComponent,
+        component: TransactionMainComponent,        
     },
     {
         path: 'ar/:id',
