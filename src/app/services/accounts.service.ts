@@ -39,6 +39,7 @@ export class AccountsService {
 
     readAccounts() {
         const readUrl = this.baseUrl + '/v1/account_list';
+        httpResource<IAccounts[]>(readUrl).subscribe(
         return this.httpClient.get<IAccounts[]>(readUrl).pipe(shareReplay({ bufferSize: 1, refCount: true }));
     }
 
@@ -219,3 +220,5 @@ export class AccountsService {
 
 
 }
+
+

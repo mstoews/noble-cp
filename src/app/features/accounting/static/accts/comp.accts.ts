@@ -71,7 +71,7 @@ const keyExpr = ["account", "child"];
               <gl-grid #gl_grid                    
                   (onFocusChanged)="onSelection($event)"  
                   (onUpdateSelection)="selectedRow($event)"  
-                  [data]="store.accounts()"  
+                  [data]="store.vm().accounts"  
                   [columns]="cols">
               </gl-grid> 
             }            
@@ -117,7 +117,7 @@ export class GlAccountsComponent {
 
   selectedAccount: IAccounts | null;
 
-  store = inject(AccountsStore);
+  store = inject(ApplicationStore);
 
   // store = inject(Store);
   // accounts$ = this.store.select(accountsFeature.selectAccounts);
@@ -159,7 +159,7 @@ export class GlAccountsComponent {
   }
 
   ngOnInit() {
-    this.store.readAccounts;
+    this.store.loadAccounts();    
   }
 
   onOpenSettings() {
