@@ -12,12 +12,13 @@ import { exhaustMap, pipe, switchMap, tap } from 'rxjs';
 import { computed, inject } from '@angular/core';
 import { tapResponse } from '@ngrx/operators';
 
-import { IAccounts } from 'app/models'
+import { IAccounts, IDropDownAccounts } from 'app/models'
 import { AccountsService } from '../services/accounts.service';
 
 
 export interface AccountsStateInterface {
   accounts: IAccounts[];
+  dropDownAccounts: IDropDownAccounts[];
   isLoading: boolean;
   error: string | null;
 }
@@ -26,6 +27,7 @@ export const AccountsStore = signalStore(
   { providedIn: 'root' },
     withState<AccountsStateInterface>({
     accounts: [],
+    dropDownAccounts: [],
     error: null,
     isLoading: false,
 
@@ -51,6 +53,7 @@ export const AccountsStore = signalStore(
         })
       )
     ),
+    
     addAccounts: rxMethod<IAccounts>(
       pipe(
         switchMap((value) => {
@@ -83,7 +86,20 @@ export const AccountsStore = signalStore(
         })
       )
     ),
-
+    readDropAccounts: rxMethod<void>(
+      pipe(
+        tap(() => patchState(state, { isLoading: true })),
+        exhaustMap(() => {
+          return accountsService.readAccountDropdown().pipe(
+            tapResponse({
+              next: accounts => patchState(state, { dropDownAccounts: accounts }),
+              error: console.error,
+              finalize: () => patchState(state, { isLoading: false }),
+            })
+          );
+        })
+      )
+    ),
     readAccounts: rxMethod<void>(
       pipe(
         tap(() => patchState(state, { isLoading: true })),
@@ -102,6 +118,7 @@ export const AccountsStore = signalStore(
   withHooks({
     onInit(store) {
       store.readAccounts();
+      store.readDropAccounts();
     },
   })
 );

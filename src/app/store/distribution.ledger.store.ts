@@ -25,7 +25,8 @@ export interface DistributionStateInterface {
 }
 
 export const TrialBalanceStore = signalStore(
-  { protectedState: false }, withState<DistributionStateInterface>({
+  { protectedState: false }, 
+    withState<DistributionStateInterface>({
     header: [],
     details: [],
     periodParam: { period: 1, period_year: 2024 },

@@ -6029,7 +6029,7 @@ export class TbGridComponent implements OnInit {
       dataSource: this.getData(),
       rows: [{ name: 'type' }, { name: 'description' }],
       formatSettings: [{ name: 'open', format: 'N2' }, { name: 'close', format: 'N2' }, { name: 'debit', format: 'N2' }, { name: 'credit', format: 'N2' }],
-      expandAll: false,
+      expandAll: true,
       filters: []
     };
 
@@ -6065,7 +6065,7 @@ export class TbGridComponent implements OnInit {
       dataSource: this.getPivotData(),
       rows: [{ name: 'Country' }, { name: 'Products' }],
       formatSettings: [{ name: 'Amount', format: 'C0' }],
-      expandAll: false,
+      expandAll: true,
       filters: []
     };
 

@@ -7,6 +7,7 @@ import { Router } from '@angular/router';
 
 import { ITrialBalance } from 'app/models';
 import { ITBParams } from 'app/models/journals';
+import { IDataSet } from '@syncfusion/ej2-angular-pivotview';
 
 
 @Injectable({
@@ -22,6 +23,11 @@ export class ReportService implements OnDestroy {
   ngDestroy$ = new Subject();
 
   readTbByPeriod(value: ITBParams) {
+    var url = this.baseUrl + '/v1/read_tb_by_period';
+    return this.httpClient.post<ITrialBalance[]>(url, value).pipe(shareReplay({ bufferSize: 1, refCount: true }), retry(2));
+  }
+
+  readPivotDataByPeriod(value: ITBParams) {
     var url = this.baseUrl + '/v1/read_tb_by_period';
     return this.httpClient.post<ITrialBalance[]>(url, value).pipe(shareReplay({ bufferSize: 1, refCount: true }), retry(2));
   }

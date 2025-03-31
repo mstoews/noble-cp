@@ -126,21 +126,18 @@ const imp = [
                                         </div>
                                     </div>
                                     <section class="flex flex-col gap-1">
-                                        <!-- Drop down accounts list -->
+                                        <!-- Drop down accounts list -->                                        
                                         @if ((isLoading$ | async) === false) {
-                                                @if (accounts$ | async; as accounts ) {
-                                                <account-drop-down [dropdownList]="accounts" controlKey="account" label="Account" #accountDropDown></account-drop-down>
-                                                }
-                                        }
-
-
-                                         <!-- Sub Type  -->
-                                        @if((isSubtypeLoading$ | async) === false) {   
-                                            @if (subtypes$ | async; as subtypes) {
-                                            <subtype-drop-down [dropdownList]="subtypes" controlKey="subtype" label="Sub Type" #subtypeDropDown></subtype-drop-down>
+                                            @if ( accounts$ | async; as accounts) {
+                                             <account-drop-down [dropdownList]="accounts" controlKey="account" label="Account" #accountDropDown></account-drop-down>
                                             }
                                         }
-                                        
+                                         
+                                        <!-- Sub Type  -->                                        
+                                        @if (subtypeList.length > 0 ) {
+                                           <subtype-drop-down [dropdownList]="subtypeList" controlKey="subtype" label="Sub Type" #subtypeDropDown></subtype-drop-down>
+                                        }
+                                                                                
                                         <!-- @if (subtypes$ | async; as subtypes) {
                                         <mat-form-field class="flex-col ml-2 mr-2 mt-1 grow ">
                                             <mat-label class="text-md ml-2">Sub Type</mat-label>
@@ -839,29 +836,25 @@ export class JournalUpdateComponent
     ngOnInit(): void {
 
         this.Store.dispatch(accountPageActions.children());            
-        this.Store.dispatch(subTypePageActions.load());
+        // this.Store.dispatch(subTypePageActions.load());
         this.Store.dispatch(FundsActions.loadFunds());
 
         this.createEmptyForm();
         this.initialDatagrid();                    
         this.activatedRoute.data.subscribe((data) => {
             
-            const journal_id = data.journal[0].journal_id;
-            
+            const journal_id = data.journal[0].journal_id;            
+            this.journalHeader = data.journal[0];
             this.accountList = data.journal[1];
             this.subtypeList = data.journal[2];                        
             this.templateList = data.journal[3];
             this.partyList = data.journal[4];
             
             this.store.loadDetails(journal_id);
-            this.store.loadArtifactsByJournalId(data.journal.journal_id);
-            this.journalHeader = data.journal[0];
-            this.refreshHeader(data.journal[0]);                        
-        });
-        
-        
+            this.store.loadArtifactsByJournalId(journal_id);            
+            this.refreshHeader(this.journalHeader);                        
+        });                
     }
-
 
     public menuItems: MenuItemModel[] = [    {
             id: 'edit',

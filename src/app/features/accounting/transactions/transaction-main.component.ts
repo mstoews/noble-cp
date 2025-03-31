@@ -167,16 +167,16 @@ export class TransactionMainComponent implements OnInit, OnDestroy {
      */
     ngOnInit(): void {
 
-        this.activatedRoute.data.subscribe((data) => {            
-            this.accounts = data.journal[0];
-            this.journalTypes = data.journal[1];
-            this.templates = data.journal[2];
-            this.parties = data.journal[3];
-            this.subTypes = data.journal[4];
-            this.periods = data.journal[5];
-            this.user = data.journal[6];
-            this.roles = data.journal[7];                        
-        });
+        // this.activatedRoute.data.subscribe((data) => {            
+        //     this.accounts = data.journal[0];
+        //     this.journalTypes = data.journal[1];
+        //     this.templates = data.journal[2];
+        //     this.parties = data.journal[3];
+        //     this.subTypes = data.journal[4];
+        //     this.periods = data.journal[5];
+        //     this.user = data.journal[6];
+        //     this.roles = data.journal[7];                        
+        // });
 
         if (this.selectedPanel === '' && this.storedPanel === null || this.selectedPanel === undefined) {
             this.selectedPanel = this.defaultPanel;

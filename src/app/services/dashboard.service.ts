@@ -88,7 +88,6 @@ export class DashboardService {
     const messagesCollection = query(
       collection(this.firestore, 'messages'),
       orderBy('created', 'desc'),
-      limit(50)
     );
 
     return collectionData(messagesCollection, { idField: 'id' }).pipe(

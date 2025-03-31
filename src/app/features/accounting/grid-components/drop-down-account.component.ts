@@ -25,7 +25,7 @@ import { ReplaySubject, Subject, take, takeUntil } from 'rxjs';
                 <mat-option [value]="item">{{ item.description }}</mat-option>
               }
             </mat-select>
-        <mat-icon class="icon-size-5 text-green-700" matPrefix  [svgIcon]="'heroicons_solid:document-chart-bar'"></mat-icon>        
+        <mat-icon class="icon-size-5 text-green-700" matSuffix  [svgIcon]="'heroicons_solid:document-chart-bar'"></mat-icon>        
         </mat-form-field>        
       </fieldset>
    }
@@ -60,12 +60,12 @@ export class DropDownAccountComponent implements OnInit, OnDestroy, AfterViewIni
   }
 
   ngOnInit() {
+    
     this.parentFormGroup.addControl(this.controlKey,
       new FormGroup({
         dropdownCtrl: new FormControl(''),
       }))
-     
-      
+          
   }
   ngOnDestroy() {
     this.parentFormGroup.removeControl(this.controlKey);
@@ -74,7 +74,6 @@ export class DropDownAccountComponent implements OnInit, OnDestroy, AfterViewIni
   public ngAfterViewInit() {
 
      this.dropdownFilter.next(this.dropdownList().slice());
-
      this.dropdownFilterCtrl.valueChanges.pipe(takeUntil(this._onDestroyTemplateFilter)).subscribe(() => {
         this.filteredDropdown();
     });

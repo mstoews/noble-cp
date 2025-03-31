@@ -224,8 +224,8 @@ export class ReportingPanelComponent {
             {
                 id: 'tb-pivot',
                 icon: 'heroicons_outline:document-check',
-                title: 'Trial Balance Pivot',
-                description: 'Pivot trial balance by account',
+                title: 'Monthly Results Report',
+                description: 'Pivot trial balance by monthly period',
             }
         ];
 

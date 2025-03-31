@@ -20,7 +20,7 @@ import { IDataSet } from '@syncfusion/ej2-angular-pivotview';
 
 export interface ReportStateInterface {
   tb: ITrialBalance[];
-  trialBalance: IDataSet[];
+  trialBalance: ITrialBalance[];
   settings: IGridSettingsModel[];
   isLoading: boolean;
   error: string | null;
@@ -37,8 +37,7 @@ export const ReportStore = signalStore({ protectedState: false },
   withComputed((state) => ({})),
   withMethods((state,
     reportService = inject(ReportService),
-    settingsService = inject(GridSettingsService),
-  ) => ({
+    settingsService = inject(GridSettingsService), ) => ({
     loadTB: rxMethod<ITBParams>(
       pipe(
         tap(() => patchState(state, { isLoading: true })),
@@ -46,6 +45,19 @@ export const ReportStore = signalStore({ protectedState: false },
           return reportService.readTbByPeriod(value).pipe(
             tapResponse({
               next: (tb) => patchState(state, { tb: tb }),
+              error: console.error,
+              finalize: () => patchState(state, { isLoading: false }),
+            }));
+        }))
+    ),
+
+    readPivotData: rxMethod<ITBParams>(
+      pipe(
+        tap(() => patchState(state, { isLoading: true })),
+        concatMap((value) => {
+          return reportService.readPivotDataByPeriod(value).pipe(
+            tapResponse({
+              next: (tb) => patchState(state, { trialBalance: tb }),
               error: console.error,
               finalize: () => patchState(state, { isLoading: false }),
             }));

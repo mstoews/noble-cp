@@ -4,7 +4,7 @@ import { signalState, patchState } from '@ngrx/signals'
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { tapResponse } from '@ngrx/operators';
 
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, httpResource } from '@angular/common/http';
 import { IDropDownAccounts } from '../models';
 import { environment } from 'environments/environment.prod';
 import { IAccounts} from 'app/models'
@@ -24,7 +24,8 @@ const initialState: AccountState = {
 })
 export class AccountsService {
 
-    public httpClient = inject(HttpClient)
+    public httpClient = inject(HttpClient);
+    
     private parentAccounts = signal<IAccounts[]>([])
     private dropDownList = signal<IDropDownAccounts[]>([])
     private childrenOfParents = signal<IAccounts[]>([])
@@ -38,8 +39,7 @@ export class AccountsService {
     readonly isLoading = this.accountState.isLoading;
 
     readAccounts() {
-        const readUrl = this.baseUrl + '/v1/account_list';
-        httpResource<IAccounts[]>(readUrl).subscribe(
+        const readUrl = this.baseUrl + '/v1/account_list'; 
         return this.httpClient.get<IAccounts[]>(readUrl).pipe(shareReplay({ bufferSize: 1, refCount: true }));
     }
 
@@ -220,5 +220,3 @@ export class AccountsService {
 
 
 }
-
-
