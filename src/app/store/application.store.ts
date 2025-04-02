@@ -54,7 +54,7 @@ export const ApplicationStore = signalStore(
   }))),
   withComputed((state) => ({
     vm: computed(() => ({
-      tmp: state._templateStore.template(),
+      tmp: state._templateStore.tmp(),
       accounts: state._accountsStore.accounts(),
       party: state._partyStore.party(),
       periods: state._periodStore.periods(),

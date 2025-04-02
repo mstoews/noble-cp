@@ -1,0 +1,17 @@
+services:
+  nobleapp:
+    container_name: noble
+    build: .
+    image: noble:v1
+    ports:
+      - "80:80"
+    networks:
+      - app-network
+    expose:
+      - "80"
+    
+networks:
+  app-network:
+    driver: bridge
+  
+    

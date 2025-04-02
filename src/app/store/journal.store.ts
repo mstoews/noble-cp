@@ -25,12 +25,10 @@ import {
 import { JournalService } from '../services/journal.service';
 import { IParty } from 'app/models/party';
 
-import { IAccounts, IFunds, IJournalParams, ITrialBalance } from 'app/models';
+import { IAccounts, IFunds } from 'app/models';
 import { IType } from 'app/models/types';
 import { IPeriod, IPeriodParam } from 'app/models/period';
 import { ISubType } from 'app/models/subtypes';
-import { ITemplateRender } from '@syncfusion/ej2-grids';
-import { getJournalHeader } from 'app/features/accounting/transactions/state/journal/Journal.Action';
 import { FundsService } from 'app/features/accounting/static/funds/funds.service';
 import { EvidenceService } from 'app/services/evidence.service';
 

@@ -176,7 +176,7 @@ export class BudgetLandingComponent implements OnInit {
                 hover: {
                     filter: {
                         type: 'darken',
-                        value: 0.75,
+                        
                     },
                 },
             },
@@ -246,7 +246,7 @@ export class BudgetLandingComponent implements OnInit {
                 hover: {
                     filter: {
                         type: 'darken',
-                        value: 0.75,
+                        
                     },
                 },
             },
