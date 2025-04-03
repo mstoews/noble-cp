@@ -111,9 +111,9 @@ export class GridMenubarStandaloneComponent {
   public prd_year = input<string>();
 
   public showBack = input<boolean>(false);
-  public showExportXL = input<boolean>(true);
-  public showExportPDF = input<boolean>(true);
-  public showExportCSV = input<boolean>(true);
+  public showExportXL = input<boolean>(false);
+  public showExportPDF = input<boolean>(false);
+  public showExportCSV = input<boolean>(false);
   public showPrint = input<boolean>(true);
   public showSettings = input<boolean>(true);
   public showNew = input<boolean>(false);

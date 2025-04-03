@@ -26,12 +26,20 @@ export class TemplateService {
         return this.httpClient.get<IJournalTemplate[]>(url);
     }
 
-    delete(template_id: string) {
+    deleteDetail(template_id: string) {
         const update = {
             template_id: template_id,
         }
-        var url = this.baseUrl + '/v1/delete_template';
+        var url = this.baseUrl + '/v1/delete_detail_template';
         return this.httpClient.post<IJournalDetailTemplate>(url, update).pipe(shareReplay({ bufferSize: 1, refCount: true }))
+    }
+    
+    delete(template_ref: string) {
+        const del = {
+            template_ref: template_ref,
+        }
+        var url = this.baseUrl + '/v1/delete_template';
+        return this.httpClient.post<IJournalTemplate>(url, del).pipe(shareReplay({ bufferSize: 1, refCount: true }))
     }
 
     update(template: IJournalTemplate) {

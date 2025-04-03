@@ -23,6 +23,7 @@ import { CdkScrollable } from '@angular/cdk/scrolling';
 import { JournalRouteComponent } from './journal-route.component';
 import { ApplicationService, MainPanelStore } from 'app/store/main.panel.store';
 import { ActivatedRoute } from '@angular/router';
+import { JournalTemplateUpdateComponent } from './journal-template-update.component';
 
 const imports = [
     MaterialModule,
@@ -34,6 +35,7 @@ const imports = [
     APTransactionComponent,
     GLTransactionListComponent,
     CdkScrollable,
+    JournalTemplateUpdateComponent
 ]
 
 @Component({
@@ -106,6 +108,7 @@ const imports = [
                                 @case ('ar')    { <ar-transactions></ar-transactions>}
                                 @case ('tp')    { <journal-template></journal-template>  }
                                 @case ('at')    { <app-file-manager></app-file-manager>}
+                                @case ('tmp')    { <gl-journal-template></gl-journal-template>}
                             }
                         </div>
                     </div>
@@ -212,6 +215,12 @@ export class TransactionMainComponent implements OnInit, OnDestroy {
                 icon: 'heroicons_outline:document-duplicate',
                 title: 'Templates',
                 description: 'Manage your accounting patterns to automate, reduce effort and provide consistency in accounting',
+            },
+            {
+                id: 'tmp',
+                icon: 'heroicons_outline:document-duplicate',
+                title: 'Templates Management',
+                description: 'Journal booking template management',
             },
             {
                 id: 'at',

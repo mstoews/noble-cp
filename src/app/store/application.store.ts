@@ -1,9 +1,5 @@
 import { signalStore, withComputed, withMethods, withHooks, withProps, withState, } from '@ngrx/signals';
 import { computed, inject } from '@angular/core';
-import { IJournalTemplate } from 'app/models/journals';
-import { IParty } from 'app/models/party';
-import { IAccounts } from 'app/models';
-import { IPeriod } from 'app/models/period';
 import { PartyStore } from './party.store';
 import { TemplateStore } from './template.store';
 import { PeriodStore } from './periods.store';
