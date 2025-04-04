@@ -1,27 +1,19 @@
+import { CommonModule } from '@angular/common';
 import { Component, inject, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { ActivatedRoute, Router, RouterOutlet } from '@angular/router';
 import { FuseFullscreenComponent } from '@fuse/components/fullscreen';
-import { FuseLoadingBarComponent } from '@fuse/components/loading-bar';
-import {
-    FuseNavigationService,
-    FuseVerticalNavigationComponent,
-} from '@fuse/components/navigation';
+import { FuseNavigationService, FuseVerticalNavigationComponent } from '@fuse/components/navigation';
 import { FuseMediaWatcherService } from '@fuse/services/media-watcher';
+import { Common } from '@syncfusion/ej2-angular-pivotview';
 import { NavigationService } from 'app/fuse/core/navigation/navigation.service';
 import { Navigation } from 'app/fuse/core/navigation/navigation.types';
 import { UserService } from 'app/fuse/core/user/user.service';
-import { User } from 'app/fuse/core/user/user.types';
-import { LanguagesComponent } from 'app/fuse/layout/common/languages/languages.component';
-import { MessagesComponent } from 'app/fuse/layout/common/messages/messages.component';
-import { NotificationsComponent } from 'app/fuse/layout/common/notifications/notifications.component';
-import { QuickChatComponent } from 'app/fuse/layout/common/quick-chat/quick-chat.component';
 import { SearchComponent } from 'app/fuse/layout/common/search/search.component';
-import { ShortcutsComponent } from 'app/fuse/layout/common/shortcuts/shortcuts.component';
 import { UserComponent } from 'app/fuse/layout/common/user/user.component';
-import { ApplicationService, ProfileModel } from 'app/store/main.panel.store';
 import { ApplicationStore } from 'app/store/application.store';
+import { ApplicationService } from 'app/store/main.panel.store';
 import { Subject, takeUntil } from 'rxjs';
 
 @Component({
@@ -44,7 +36,7 @@ import { Subject, takeUntil } from 'rxjs';
                     <!-- Logo -->
                     <div class="flex items-center justify-center">
                         <img class="w-8" src="assets/images/logo/nobleledger.jpg" alt="logo"> 
-                        <span>Noble Ledger v0.0.4.13</span>  
+                        <span>Noble Ledger v0.0.4.14</span>  
                     </div>
                     <!-- Components -->
                     <div class="ml-auto flex items-center">
@@ -54,31 +46,32 @@ import { Subject, takeUntil } from 'rxjs';
                 </div>
                 <!-- User -->
                 <div class="flex w-full flex-col items-center p-4">
-                    <div class="relative h-24 w-24">
-                        
-                        @if(store.profile().photoURL !== null && store.profile().photoURL !== undefined && store.profile().photoURL !== '') {
-                                <img
-                                    class="w-full h-full rounded-full"
-                                    [src]="store.profile().photoURL"
-                                    alt="user photo"/>
+                    <div class="relative h-30 w-24">                        
+                        @if ( profile| async; as profile) {
+                            @if( profile.photoURL !== null && profile.photoURL !== undefined && profile.photoURL !== '') 
+                                {
+                                    <img class="w-full h-full rounded-full"
+                                        [src]="profile.photoURL"
+                                        alt="user photo"/>
+                                }
+                                @else {  
+                                                    
+                                    <mat-icon
+                                        class="icon-size-24"
+                                        [svgIcon]="'heroicons_solid:user-circle'">
+                                    </mat-icon>
+                                }                
+                                        
+                                <div class="mt-6 flex w-full flex-col items-center justify-center">
+                                    <div  class="w-full overflow-hidden text-ellipsis whitespace-nowrap text-center font-medium leading-normal"  >
+                                        {{ profile.name}}
+                                    </div>
+                                    <!-- <div  class="text-secondary mt-0.5 w-full overflow-hidden text-ellipsis whitespace-nowrap text-center text-md font-medium leading-normal">
+                                        {{profile.email}}  
+                                    </div> -->
+                                </div>
                             }
-                            @else  {
-                    
-                            <mat-icon
-                                class="icon-size-24"
-                                [svgIcon]="'heroicons_solid:user-circle'">
-                            </mat-icon>
-                        }
-                        
-                    </div>
-                    <div class="mt-6 flex w-full flex-col items-center justify-center">
-                        <div  class="w-full overflow-hidden text-ellipsis whitespace-nowrap text-center font-medium leading-normal"  >
-                            {{store.profile().name}} 
-                        </div>
-                        <div  class="text-secondary mt-0.5 w-full overflow-hidden text-ellipsis whitespace-nowrap text-center text-md font-medium leading-normal">
-                            {{store.profile().email}} 
-                        </div>
-                    </div>
+                    </div>                    
                 </div>
             </ng-container>
             <!-- Navigation footer hook -->
@@ -131,7 +124,7 @@ import { Subject, takeUntil } from 'rxjs';
             <!--<div class="relative flex flex-0 items-center justify-start w-full h-14 px-4 md:px-6 z-49 border-t bg-card dark:bg-transparent print:hidden">
                 <span class="font-medium text-secondary">Fuse &copy; {{currentYear}}</span>
             </div>-->
-</div>
+        </div>
 
 <!-- Quick chat -->
 <!-- <quick-chat #quickChat="quickChat"></quick-chat> -->
@@ -139,9 +132,10 @@ import { Subject, takeUntil } from 'rxjs';
     `,
     encapsulation: ViewEncapsulation.None,
     selector: 'classy-layout',
-    providers: [ApplicationService],
+    providers: [],
     imports: [
         // FuseLoadingBarComponent,
+        CommonModule,
         FuseVerticalNavigationComponent,
         UserComponent,
         MatIconModule,
@@ -156,22 +150,21 @@ export class ClassyLayoutComponent implements OnInit, OnDestroy {
     navigation: Navigation;
 
     private _unsubscribeAll: Subject<any> = new Subject<any>();
-
-    readonly store = inject(ApplicationStore);
-    readonly applicationService = inject(ApplicationService);
-
+    readonly service = inject(ApplicationService);
+    profile = this.service.getProfile();
 
     /**
      * Constructor
      */
     constructor(
-        private _activatedRoute: ActivatedRoute,
-        private _router: Router,
         private _navigationService: NavigationService,
-        private _userService: UserService,
         private _fuseMediaWatcherService: FuseMediaWatcherService,
         private _fuseNavigationService: FuseNavigationService
-    ) { }
+    ) {
+
+
+
+    }
 
     // -----------------------------------------------------------------------------------------------------
     // @ Accessors

@@ -41,9 +41,9 @@ export const ApplicationStore = signalStore(
     loadAccounts: state._accountsStore.readAccounts,
     loadParties: state._partyStore.readParty,
     loadPeriod: state._periodStore.loadPeriods,
-    panels: state._mainPanelStore.panels,
-    uid: state._mainPanelStore.uid,
     loadProfile: state._mainPanelStore.loadProfile,
+    panels: state._mainPanelStore.panels,
+    userID: state._mainPanelStore.uid,    
     loadPanels: state._mainPanelStore.loadPanels,
     loadFunds : state._fundsStore.loadFunds,
     setProfile: (profile: ProfileModel) => state._mainPanelStore.setProfile(profile),
@@ -62,12 +62,15 @@ export const ApplicationStore = signalStore(
   })),
 
   withHooks({
-      onInit(store) {
+      onInit(store) {        
+        const uid = store.userID();        
+        store.loadProfile(uid);
         store.loadFunds();
         store.loadTemplates();
         store.loadAccounts();
         store.loadParties();
         store.loadPeriod();
+        
       },
     })
   

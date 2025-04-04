@@ -9,6 +9,7 @@ import { tapResponse } from '@ngrx/operators';
 import { signalStore, withState, withMethods, patchState, withHooks } from '@ngrx/signals';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { list } from 'rxfire/database';
+import { getUser } from 'app/state/users/Users.Action';
 
 
 export interface ProfileModel {
@@ -67,14 +68,15 @@ export class ApplicationService {
 
   private firestore = inject(FIRESTORE);
   private authService = inject(AuthService);
-  private authUser = this.authService.user;
+  private authUser = this.authService.user();
+  readonly uid = this.authUser.uid;
 
   setPanel(panelState: PanelModel) {
     const ref = setDoc(doc(this.firestore, `users/${panelState.uid}/panels/${panelState.panelName}`), panelState) as any;
     return ref as PanelModel; 
   }
-  
-  
+
+
   updateProfile(profile: ProfileModel) {
     return this.setProfile(profile);
   }
@@ -91,6 +93,9 @@ export class ApplicationService {
     return of(profile);
   }
 
+  getProfile() {   
+   return this.loadProfile(this.uid);
+  }
 
   loadProfile(uid: string) {
     const collectionRef = doc(this.firestore, `users/${uid}`) as any;
@@ -105,7 +110,7 @@ export class ApplicationService {
 
   // get user id  
   public getUserId(): Observable<string> {
-    return of(this.authUser().uid);
+    return of(this.authUser.uid);
   }
 
 

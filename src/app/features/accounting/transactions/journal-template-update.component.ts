@@ -1014,7 +1014,7 @@ export class JournalTemplateUpdateComponent
         );
     }
 
-    public OnDoubleClick(data: IJournalDetailTemplate): void {
+    public OnDetailSelected(data: IJournalDetailTemplate): void {
         this.currentRowData = data;
         const name = this.auth.currentUser.email.split("@")[0];
         const dDate = new Date();
@@ -1115,7 +1115,7 @@ export class JournalTemplateUpdateComponent
     public detailRowDoubleClick(args: SaveEventArgs): void {
         if (args.requestType === "beginEdit" || args.requestType === "add") {
             args.cancel = true;
-            this.OnDoubleClick(args.rowData as IJournalDetailTemplate);
+            this.OnDetailSelected(args.rowData as any);
             this.openDrawer();
         }
         if (args.requestType === "save") {

@@ -25,6 +25,7 @@ import { single, Subject, takeUntil } from 'rxjs';
 import { AuthService } from 'app/features/auth/auth.service';
 import { SummaryCardComponent } from './summary-card.component';
 import { FIRESTORE } from 'app/app.config';
+import { DashboardChartComponent } from "./chart.component";
 
 
 
@@ -34,18 +35,20 @@ import { FIRESTORE } from 'app/app.config';
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
-        TranslocoModule,
-        MatIconModule,
-        MatButtonModule,
-        MatRippleModule,
-        MatMenuModule,
-        MatTabsModule,
-        MatButtonToggleModule,
-        NgApexchartsModule,
-        MatTableModule,
-        CommonModule,
-        SummaryCardComponent
-    ]
+    TranslocoModule,
+    MatIconModule,
+    MatButtonModule,
+    MatRippleModule,
+    MatMenuModule,
+    MatTabsModule,
+    MatButtonToggleModule,
+    NgApexchartsModule,
+    MatTableModule,
+    CommonModule,
+    SummaryCardComponent,
+    DashboardChartComponent,
+
+]
 })
 export class ProjectComponent implements OnInit, OnDestroy {
     chartGithubIssues: ApexOptions = {};
