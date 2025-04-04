@@ -32,7 +32,7 @@ functions:
 .PHONY: start
 start:
 	@echo "start web app"
-	ng serve --watch=true --no-hmr
+	ng serve --watch=false 
 
 
 .PHONY: open

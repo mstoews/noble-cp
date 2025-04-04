@@ -7,7 +7,7 @@ import { AccountsService } from 'app/services/accounts.service';
 import { JournalService } from 'app/services/journal.service';
 import { MaterialModule } from 'app/shared/material.module';
 import { NgxMaskDirective, provideNgxMask } from 'ngx-mask';
-import { debounceTime, Observable, of, ReplaySubject, Subject, Subscription, take, takeUntil } from 'rxjs';
+import { Observable, ReplaySubject, Subject, Subscription, take, takeUntil } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { DndComponent } from 'app/features/drag-n-drop/loaddnd/dnd.component';
 import { MatSelect } from '@angular/material/select';
@@ -34,19 +34,16 @@ import {
     SaveEventArgs, SearchService, SortService, ToolbarService
 } from '@syncfusion/ej2-angular-grids';
 
-import { MatDrawer, MatSidenav, MatSidenavModule } from '@angular/material/sidenav';
+import { MatDrawer, MatSidenavModule } from '@angular/material/sidenav';
 import { MatCardModule } from "@angular/material/card";
 import { MatTabsModule } from "@angular/material/tabs";
 import { Store } from '@ngrx/store';
-import { loadTemplates } from './state/template/Template.Action';
-import { getTemplates } from './state/template/Template.Selector';
 import { ISubType } from 'app/models/subtypes';
 import { ToastrService } from "ngx-toastr";
 import { Router } from '@angular/router';
-import { TemplateDropDownComponent } from '../grid-components/drop-down.templates.component';
 import { ApplicationStore } from 'app/store/application.store';
-import { toObservable } from '@angular/core/rxjs-interop';
-import { debounce } from 'lodash';
+import { getTemplates } from './state/template/Template.Selector';
+import { loadTemplates } from './state/template/Template.Action';
 
 
 interface ITransactionType {
@@ -351,10 +348,10 @@ const mods = [
                                 </section>
 
                                 <div class="flex justify-end">
-                                    <button mat-icon-button color="primary" class="bg-gray-200  hover:bg-slate-400 ml-1" (click)="updateHeaderData()"
+                                    <button mat-flat-button class="bg-blue-700 text-gray-100  hover:bg-slate-100 ml-1" (click)="updateHeaderData()"
                                         [disabled]="verticalStepperStep1.stepControl.pristine || verticalStepperStep1.stepControl.invalid"
                                         type="button" matTooltip="Create Journal" matStepperNext>
-                                        <mat-icon [svgIcon]="'feather:arrow-right'"></mat-icon>
+                                        Next                                            
                                     </button>
                                 </div>
                             </mat-step>
@@ -411,14 +408,14 @@ const mods = [
 
                                 </ng-container>
                                 <div class="flex justify-end mt-8">
-                                    <button mat-icon-button color="primary" class="bg-gray-200  hover:bg-slate-400 ml-1"
+                                    <button mat-flat-button class="bg-blue-700 text-gray-100  hover:bg-slate-400 ml-1"
                                         type="button" matTooltip="Back to Entry" aria-label="Template" matStepperPrevious>
-                                        <mat-icon [svgIcon]="'feather:arrow-left'"></mat-icon>
+                                        Back
                                     </button>
-
-                                    <button mat-icon-button color="primary" class="bg-gray-200  hover:bg-slate-400 ml-1" (click)="onUpdate()"
+                                    
+                                    <button mat-flat-button class="bg-blue-700 text-gray-100   hover:bg-slate-400 ml-1" (click)="onUpdate()"
                                         type="button" matTooltip="Post Transaction" aria-label="Template" matStepperNext>
-                                        <mat-icon [svgIcon]="'feather:arrow-right'"></mat-icon>
+                                        Next
                                     </button>
 
                                 </div>
@@ -601,12 +598,12 @@ export class EntryWizardComponent implements OnInit, OnDestroy, AfterViewInit {
 
     ngOnInit(): void {
         
-        // this.Store.dispatch(loadTemplates());
+        this.Store.dispatch(loadTemplates());
 
-        // this.Store.select(getTemplates).pipe(takeUntil(this._unsubscribeAll)).subscribe((templates) => {
-        //    this.templateList = templates;
-        //    this.templateFilter.next(templates);
-        // });
+        this.Store.select(getTemplates).pipe(takeUntil(this._unsubscribeAll)).subscribe((templates) => {
+            this.templateList = templates;
+            this.templateFilter.next(templates);
+         });
         
 
         this.accountsService.readAccountDropdown().subscribe((accounts) => {

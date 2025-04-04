@@ -93,7 +93,6 @@ const imp = [
     GridModule,
     DropDownListAllModule,
     SplitterModule,
-    EvidenceCardComponent,
     DropDownAccountComponent,
     SubtypeDropDownComponent,    
 ];
@@ -114,178 +113,119 @@ const imp = [
     </div>
 
     <mat-drawer class="w-full md:w-[450px]" #drawer [opened]="false" mode="over" [position]="'end'" [disableClose]="true">
-                    <mat-tab-group>
-                        <mat-tab label="Details">
-                            <mat-card class="">
-                                <form [formGroup]="detailForm">
-                                    <div
-                                        class="flex flex-col w-full filter-article filter-interactive text-gray-700 rounded-lg">
-                                        <div class="text-3xl gap-2 m-1 text-gray-100 p-2 bg-slate-600 rounded-md"
-                                            mat-dialog-title>
-                                            {{ "Journal Update" }}
-                                        </div>
-                                    </div>
-                                    <section class="flex flex-col gap-1">
-                                        <!-- Drop down accounts list -->                                        
-                                        @if ((isLoading$ | async) === false) {
-                                            @if ( accounts$ | async; as accounts) {
-                                             <account-drop-down [dropdownList]="accounts" controlKey="account" label="Account" #accountDropDown></account-drop-down>
-                                            }
-                                        }
-                                         
-                                        <!-- Sub Type  -->                                        
-                                        @if (subtypeList.length > 0 ) {
-                                           <subtype-drop-down [dropdownList]="subtypeList" controlKey="subtype" label="Sub Type" #subtypeDropDown></subtype-drop-down>
-                                        }
-                                                                                
-                                        <!-- @if (subtypes$ | async; as subtypes) {
-                                        <mat-form-field class="flex-col ml-2 mr-2 mt-1 grow ">
-                                            <mat-label class="text-md ml-2">Sub Type</mat-label>
-                                            <mat-select class="text-gray-800" placeholder="Sub Type" formControlName="subtype">
-                                                @for (item of subtypes; track item) {
-                                                <mat-option [value]="item.subtype"> {{ item.subtype }}</mat-option>
-                                                }
-                                            </mat-select>
-                                            <mat-icon class="icon-size-5 text-lime-700" matSuffix
-                                                [svgIcon]="'feather:pen-tool'"></mat-icon>
-                                        </mat-form-field>
-                                        }  -->
-
-                                        <!-- @if((isFundsLoading$ | async) === false) {   
-                                            @if (funds$ | async; as funds) {
-                                            <fund-drop-down [dropdownList]="funds" controlKey="fund" label="Funds" #subFundDropDown></fund-drop-down>
-                                            } 
-                                        } -->
-
-
-                                        
-                                        @if (funds$ | async; as funds) {
-                                        <mat-form-field class="flex-col ml-2 mr-2 mt-1 grow ">
-                                            <mat-label class="text-md ml-2">Funds</mat-label>
-                                            <mat-select class="text-gray-800 dark:text-gray-100"  placeholder="Fund" formControlName="fund">
-                                                @for (item of store.funds(); track item) {
-                                                <mat-option [value]="item.fund"> {{ item.fund }} - {{ item.description }}
-                                                </mat-option>
-                                                }
-                                            </mat-select>
-                                            <mat-icon class="icon-size-5 text-lime-700" matSuffix
-                                                [svgIcon]="'heroicons_solid:briefcase'"></mat-icon>
-                                        </mat-form-field>
-                                        } 
-                                        <!-- Description  -->
-
-                                        <mat-form-field class="flex-col ml-2 mr-2 mt-1 grow">
-                                            <mat-label class="text-md ml-2">Description</mat-label>
-                                            <input matInput placeholder="Description" formControlName="description"
-                                                [placeholder]="'Description'" />
-                                            <mat-icon class="icon-size-5 text-lime-700" matSuffix
-                                                [svgIcon]="'heroicons_solid:calculator'"></mat-icon>
-                                        </mat-form-field>
-
-
-                                        <!-- Reference  -->
-
-
-                                        <mat-form-field class="flex-col grow mr-2 ml-2 mt-1">
-                                            <mat-label class="text-md ml-2">Reference</mat-label>
-                                            <input matInput placeholder="Reference"
-                                                formControlName="reference" [placeholder]="'Reference'" />
-                                            <mat-icon class="icon-size-5 text-lime-700" matSuffix
-                                                [svgIcon]="'heroicons_solid:document'"></mat-icon>
-                                        </mat-form-field>
-
-                                    </section>
-
-                                    <section class="flex flex-col md:flex-row gap-2 mt-1">
-                                        <!-- Debit  -->
-                                        <mat-form-field class="ml-2 mt-1 grow">
-                                            <mat-label class="text-md ml-2">Debits</mat-label>
-                                            <input type="text"  mask="separator.2"
-                                                [leadZero]="true" thousandSeparator="," class="text-right" matInput
-                                                [placeholder]="'Debit'" formControlName="debit" />
-                                            <mat-icon class="icon-size-5 text-lime-700" matPrefix
-                                                [svgIcon]="'heroicons_solid:currency-dollar'"></mat-icon>
-                                        </mat-form-field>
-
-                                        <!-- Credit  -->
-                                        <mat-form-field class="grow mr-2 mt-1">
-                                            <mat-label class="text-md ml-2">Credits</mat-label>
-                                            <input type="text"  mask="separator.2"
-                                                [leadZero]="true" thousandSeparator="," class="text-right" matInput
-                                                [placeholder]="'Credit'" formControlName="credit" />
-                                            <mat-icon class="icon-size-5 text-lime-700" matPrefix
-                                                [svgIcon]="'heroicons_solid:currency-dollar'"></mat-icon>
-                                        </mat-form-field>
-                                    </section>
-                                </form>
-                                <div mat-dialog-actions class="gap-2 mb-3 mt-5">
-                                    @if (bDetailDirty === true) {
-                                        <button mat-icon-button color="primary" class="bg-gray-200 fill-slate-100 hover:bg-slate-400 ml-1"
-                                            (click)="onUpdateJournalDetail()" matTooltip="Update Line Item"
-                                            aria-label="hover over">
-                                            <mat-icon [svgIcon]="'feather:save'"></mat-icon>
-                                        </button>
-                                    }
-
-                                    <button mat-icon-button color="primary" class="bg-slate-200 hover:bg-slate-400 ml-1"
-                                        (click)="onNewLineItem()" matTooltip="Add New Entry" aria-label="hovered over">
-                                        <span class="e-icons e-circle-add"></span>
-                                    </button>                                
-
-                                    <button mat-icon-button color="primary"
-                                        class="bg-gray-200 fill-slate-100 hover:bg-slate-400 ml-1"
-                                        (click)="onDeleteDetail()" matTooltip="Remove Current Line" aria-label="hover over">
-                                        <span class="e-icons e-circle-remove"></span>
-                                    </button>
-
-                                    <button mat-icon-button color="primary"
-                                        class="bg-gray-200 fill-slate-100  hover:bg-slate-400 ml-1" (click)="closeDrawer()"
-                                        matTooltip="Close Edit" aria-label="hovered over">                                    
-                                        <span class="e-icons e-chevron-left"></span>
-                                    </button>
-
-                                </div>
-
-                            </mat-card>
-                        </mat-tab>
-                        <mat-tab label="Artifacts">
-                            <mat-card>
-                                @if (store.artifacts().length > 0) {
-                                <ul>
-                                    <li class="grid grid-cols-1 gap-y-10 gap-x-6 ">
-                                        @for (evidence of store.artifacts(); track evidence.id) {
-                                        <evidence-card [evidence]="evidence"></evidence-card>
-                                        }
-                                    </li>
-                                </ul>
+                <mat-card class="">
+                    <form [formGroup]="detailForm">
+                        <div
+                            class="flex flex-col w-full filter-article filter-interactive text-gray-700 rounded-lg">
+                            <div class="text-3xl gap-2 m-1 text-gray-100 p-2 bg-slate-600 rounded-md"
+                                mat-dialog-title>
+                                {{ "Template Update" }}
+                            </div>
+                        </div>
+                        <section class="flex flex-col gap-1">
+                            <!-- Drop down accounts list -->                                        
+                            @if ((isLoading$ | async) === false) {
+                                @if ( accounts$ | async; as accounts) {
+                                    <account-drop-down [dropdownList]="accounts" controlKey="account" label="Account" #accountDropDown></account-drop-down>
                                 }
-                                <div mat-dialog-actions class="gap-2 mb-3 mt-5">
-                                    @if (bDirty === true) {
-                                    <button mat-icon-button color="warm"
-                                        class="bg-gray-200 fill-slate-100 text-white hover:bg-slate-400 ml-1"
-                                        (click)="onUpdateJournalDetail()" matTooltip="Update Transaction"
-                                        aria-label="hover over">
-                                        <mat-icon [svgIcon]="'feather:save'"></mat-icon>
-                                    </button>
+                            }
+                                
+                            <!-- Sub Type  -->                                        
+                            @if (subtypeList.length > 0 ) {
+                                <subtype-drop-down [dropdownList]="subtypeList" controlKey="subtype" label="Sub Type" #subtypeDropDown></subtype-drop-down>
+                            }
+                                                                    
+                            
+                            @if (funds$ | async; as funds) {
+                            <mat-form-field class="flex-col ml-2 mr-2 mt-1 grow ">
+                                <mat-label class="text-md ml-2">Funds</mat-label>
+                                <mat-select class="text-gray-800 dark:text-gray-100"  placeholder="Fund" formControlName="fund">
+                                    @for (item of store.funds(); track item) {
+                                    <mat-option [value]="item.fund"> {{ item.fund }} - {{ item.description }}
+                                    </mat-option>
                                     }
+                                </mat-select>
+                                <mat-icon class="icon-size-5 text-lime-700" matSuffix
+                                    [svgIcon]="'heroicons_solid:briefcase'"></mat-icon>
+                            </mat-form-field>
+                            } 
 
-                                    <button mat-icon-button color="warn"
-                                        class="bg-gray-200 fill-slate-100 text-white hover:bg-slate-400 ml-1"
-                                        (click)="closeDrawer()" matTooltip="Cancel" aria-label="hovered over">
-                                        <mat-icon [svgIcon]="'mat_outline:close'"></mat-icon>
-                                    </button>
+                            <!-- Name  -->
 
-                                </div>
+                            <mat-form-field class="flex-col ml-2 mr-2 mt-1 grow">
+                                <mat-label class="text-md ml-2">Description</mat-label>
+                                <input matInput placeholder="Name" formControlName="template_name" [placeholder]="'Name'" />
+                                <mat-icon class="icon-size-5 text-lime-700" matSuffix  [svgIcon]="'heroicons_solid:calculator'"></mat-icon>
+                            </mat-form-field>
+                            
+                            <!-- Description  -->
 
-                            </mat-card>
-                        </mat-tab>
-                    </mat-tab-group>
-                </mat-drawer>
+                            <mat-form-field class="flex-col ml-2 mr-2 mt-1 grow">
+                                <mat-label class="text-md ml-2">Description</mat-label>
+                                <input matInput placeholder="Description" formControlName="description"
+                                    [placeholder]="'Description'" />
+                                <mat-icon class="icon-size-5 text-lime-700" matSuffix
+                                    [svgIcon]="'heroicons_solid:calculator'"></mat-icon>
+                            </mat-form-field>
+                            
+
+                        </section>
+
+                        <section class="flex flex-col md:flex-row gap-2 mt-1">
+                            <!-- Debit  -->
+                            <mat-form-field class="ml-2 mt-1 grow">
+                                <mat-label class="text-md ml-2">Debits</mat-label>
+                                <input type="text"  mask="separator.2"
+                                    [leadZero]="true" thousandSeparator="," class="text-right" matInput
+                                    [placeholder]="'Debit'" formControlName="debit" />
+                                <mat-icon class="icon-size-5 text-lime-700" matPrefix
+                                    [svgIcon]="'heroicons_solid:currency-dollar'"></mat-icon>
+                            </mat-form-field>
+
+                            <!-- Credit  -->
+                            <mat-form-field class="grow mr-2 mt-1">
+                                <mat-label class="text-md ml-2">Credits</mat-label>
+                                <input type="text"  mask="separator.2"
+                                    [leadZero]="true" thousandSeparator="," class="text-right" matInput
+                                    [placeholder]="'Credit'" formControlName="credit" />
+                                <mat-icon class="icon-size-5 text-lime-700" matPrefix
+                                    [svgIcon]="'heroicons_solid:currency-dollar'"></mat-icon>
+                            </mat-form-field>
+                        </section>
+                    </form>
+                    <div mat-dialog-actions class="gap-2 mb-3 mt-5">
+                        @if (bDetailDirty === true) {
+                            <button mat-icon-button color="primary" class="bg-gray-200 fill-slate-100 hover:bg-slate-400 ml-1"
+                                (click)="onUpdateJournalDetail()" matTooltip="Update Line Item"
+                                aria-label="hover over">
+                                <mat-icon [svgIcon]="'feather:save'"></mat-icon>
+                            </button>
+                        }
+
+                        <button mat-icon-button color="primary" class="bg-slate-200 hover:bg-slate-400 ml-1"
+                            (click)="onNewLineItem()" matTooltip="Add New Entry" aria-label="hovered over">
+                            <span class="e-icons e-circle-add"></span>
+                        </button>                                
+
+                        <button mat-icon-button color="primary"
+                            class="bg-gray-200 fill-slate-100 hover:bg-slate-400 ml-1"
+                            (click)="onDeleteDetail()" matTooltip="Remove Current Line" aria-label="hover over">
+                            <span class="e-icons e-circle-remove"></span>
+                        </button>
+
+                        <button mat-icon-button color="primary"
+                            class="bg-gray-200 fill-slate-100  hover:bg-slate-400 ml-1" (click)="closeDrawer()"
+                            matTooltip="Close Edit" aria-label="hovered over">                                    
+                            <span class="e-icons e-chevron-left"></span>
+                        </button>
+
+                    </div>
+                </mat-card>
+    </mat-drawer>
 
     @defer (on viewport; on timer(200ms)) {
         <mat-drawer-container id="target" class="control-section default-splitter flex flex-col  h-[calc(100vh-14rem)] ml-5 mr-5 overview-hidden " [hasBackdrop]="'false'">
-            <section class="pane1 overflow-hidden">
-                
+            <section class="pane1 overflow-hidden">                
                 <ejs-splitter #splitterInstance id="nested-splitter" (created)='onCreated()' class="h-[calc(100vh-14rem)]" separatorSize=3 width='100%'>
                     <e-panes>
                         <e-pane min='60px' size='30%' class="w-72">                                        

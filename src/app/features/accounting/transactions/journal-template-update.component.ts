@@ -90,7 +90,7 @@ const imp = [
     DropDownListAllModule,
     SplitterModule,
     DropDownAccountComponent,
-    SubtypeDropDownComponent,    
+    SubtypeDropDownComponent,
 ];
 
 @Component({
@@ -114,170 +114,122 @@ const imp = [
     </div>
 
     <mat-drawer class="w-full md:w-[450px]" #drawer [opened]="false" mode="over" [position]="'end'" [disableClose]="true">
-                    <mat-tab-group>
-                        <mat-tab label="Details">
-                            <mat-card class="">
-                                <form [formGroup]="detailForm">
-                                    <div
-                                        class="flex flex-col w-full filter-article filter-interactive text-gray-700 rounded-lg">
-                                        <div class="text-3xl gap-2 m-1 text-gray-100 p-2 bg-slate-600 rounded-md"
-                                            mat-dialog-title>
-                                            {{ "Journal Update" }}
-                                        </div>
-                                    </div>
-                                    <section class="flex flex-col gap-1">
-                                        <!-- Drop down accounts list -->                                        
-                                        @if ((isLoading$ | async) === false) {
-                                            @if ( accounts$ | async; as accounts) {
-                                             <account-drop-down [dropdownList]="accounts" controlKey="account" label="Account" #accountDropDown></account-drop-down>
-                                            }
-                                        }
-                                         
-                                        <!-- Sub Type  -->                                        
-                                        @if (subtypeList.length > 0 ) {
-                                           <subtype-drop-down [dropdownList]="subtypeList" controlKey="subtype" label="Sub Type" #subtypeDropDown></subtype-drop-down>
-                                        }
-                                                                                
-                                        <!-- @if (subtypes$ | async; as subtypes) {
-                                        <mat-form-field class="flex-col ml-2 mr-2 mt-1 grow ">
-                                            <mat-label class="text-md ml-2">Sub Type</mat-label>
-                                            <mat-select class="text-gray-800" placeholder="Sub Type" formControlName="subtype">
-                                                @for (item of subtypes; track item) {
-                                                <mat-option [value]="item.subtype"> {{ item.subtype }}</mat-option>
-                                                }
-                                            </mat-select>
-                                            <mat-icon class="icon-size-5 text-lime-700" matSuffix
-                                                [svgIcon]="'feather:pen-tool'"></mat-icon>
-                                        </mat-form-field>
-                                        }  -->
+        <mat-card class="">
+            <form [formGroup]="detailForm">
+                <div
+                    class="flex flex-col w-full filter-article filter-interactive text-gray-700 rounded-lg">
+                    <div class="text-3xl gap-2 m-1 text-gray-100 p-2 bg-slate-600 rounded-md"
+                        mat-dialog-title>
+                        {{ "Journal Update" }}
+                    </div>
+                </div>
+                <section class="flex flex-col gap-1">
+                    <!-- Drop down accounts list -->                                        
+                    @if ((isLoading$ | async) === false) {
+                        @if ( accounts$ | async; as accounts) {
+                            <account-drop-down [dropdownList]="accounts" controlKey="account" label="Account" #accountDropDown></account-drop-down>
+                        }
+                    }
+                        
+                    <!-- Sub Type  -->                                        
+                    @if (subtypeList.length > 0 ) {
+                        <subtype-drop-down [dropdownList]="subtypeList" controlKey="subtype" label="Sub Type" #subtypeDropDown></subtype-drop-down>
+                    }
+                                                            
+                    <!-- Funds -->
+                    @if (funds$ | async; as funds) {
+                    <mat-form-field class="flex-col ml-2 mr-2 mt-1 grow ">
+                        <mat-label class="text-md ml-2">Funds</mat-label>
+                        <mat-select class="text-gray-800 dark:text-gray-100"  placeholder="Fund" formControlName="fund">
+                            @for (item of store.funds(); track item) {
+                            <mat-option [value]="item.fund"> {{ item.fund }} - {{ item.description }}
+                            </mat-option>
+                            }
+                        </mat-select>
+                        <mat-icon class="icon-size-5 text-lime-700" matSuffix
+                            [svgIcon]="'heroicons_solid:briefcase'"></mat-icon>
+                    </mat-form-field>
+                    } 
+                    <!-- Description  -->
 
-                                        <!-- @if((isFundsLoading$ | async) === false) {   
-                                            @if (funds$ | async; as funds) {
-                                            <fund-drop-down [dropdownList]="funds" controlKey="fund" label="Funds" #subFundDropDown></fund-drop-down>
-                                            } 
-                                        } -->
-
-
-                                        
-                                        @if (funds$ | async; as funds) {
-                                        <mat-form-field class="flex-col ml-2 mr-2 mt-1 grow ">
-                                            <mat-label class="text-md ml-2">Funds</mat-label>
-                                            <mat-select class="text-gray-800 dark:text-gray-100"  placeholder="Fund" formControlName="fund">
-                                                @for (item of store.funds(); track item) {
-                                                <mat-option [value]="item.fund"> {{ item.fund }} - {{ item.description }}
-                                                </mat-option>
-                                                }
-                                            </mat-select>
-                                            <mat-icon class="icon-size-5 text-lime-700" matSuffix
-                                                [svgIcon]="'heroicons_solid:briefcase'"></mat-icon>
-                                        </mat-form-field>
-                                        } 
-                                        <!-- Description  -->
-
-                                        <mat-form-field class="flex-col ml-2 mr-2 mt-1 grow">
-                                            <mat-label class="text-md ml-2">Description</mat-label>
-                                            <input matInput placeholder="Description" formControlName="description"
-                                                [placeholder]="'Description'" />
-                                            <mat-icon class="icon-size-5 text-lime-700" matSuffix
-                                                [svgIcon]="'heroicons_solid:calculator'"></mat-icon>
-                                        </mat-form-field>
+                    <mat-form-field class="flex-col ml-2 mr-2 mt-1 grow">
+                        <mat-label class="text-md ml-2">Description</mat-label>
+                        <input matInput placeholder="Description" formControlName="description"
+                            [placeholder]="'Description'" />
+                        <mat-icon class="icon-size-5 text-lime-700" matSuffix
+                            [svgIcon]="'heroicons_solid:calculator'"></mat-icon>
+                    </mat-form-field>
 
 
-                                        <!-- Reference  -->
+                    <!-- Reference  -->
+                    <mat-form-field class="flex-col grow mr-2 ml-2 mt-1">
+                        <mat-label class="text-md ml-2">Reference</mat-label>
+                        <input matInput placeholder="Reference"
+                            formControlName="reference" [placeholder]="'Reference'" />
+                        <mat-icon class="icon-size-5 text-lime-700" matSuffix
+                            [svgIcon]="'heroicons_solid:document'"></mat-icon>
+                    </mat-form-field>
 
+                </section>
 
-                                        <mat-form-field class="flex-col grow mr-2 ml-2 mt-1">
-                                            <mat-label class="text-md ml-2">Reference</mat-label>
-                                            <input matInput placeholder="Reference"
-                                                formControlName="reference" [placeholder]="'Reference'" />
-                                            <mat-icon class="icon-size-5 text-lime-700" matSuffix
-                                                [svgIcon]="'heroicons_solid:document'"></mat-icon>
-                                        </mat-form-field>
+                <section class="flex flex-col md:flex-row gap-2 mt-1">
+                    <!-- Debit  -->
+                    <mat-form-field class="ml-2 mt-1 grow">
+                        <mat-label class="text-md ml-2">Debits</mat-label>
+                        <input type="text"  mask="separator.2"
+                            [leadZero]="true" thousandSeparator="," class="text-right" matInput
+                            [placeholder]="'Debit'" formControlName="debit" />
+                        <mat-icon class="icon-size-5 text-lime-700" matPrefix
+                            [svgIcon]="'heroicons_solid:currency-dollar'"></mat-icon>
+                    </mat-form-field>
 
-                                    </section>
+                    <!-- Credit  -->
+                    <mat-form-field class="grow mr-2 mt-1">
+                        <mat-label class="text-md ml-2">Credits</mat-label>
+                        <input type="text"  mask="separator.2"
+                            [leadZero]="true" thousandSeparator="," class="text-right" matInput
+                            [placeholder]="'Credit'" formControlName="credit" />
+                        <mat-icon class="icon-size-5 text-lime-700" matPrefix
+                            [svgIcon]="'heroicons_solid:currency-dollar'"></mat-icon>
+                    </mat-form-field>
+                </section>
+            </form>
+            <div mat-dialog-actions class="gap-2 mb-3 mt-5">
+                @if (bDetailDirty === true) {
+                    <button mat-icon-button color="primary" class="bg-gray-200 fill-slate-100 hover:bg-slate-400 ml-1"
+                        (click)="onUpdateJournalDetail()" matTooltip="Update Line Item"
+                        aria-label="hover over">
+                        <mat-icon [svgIcon]="'feather:save'"></mat-icon>
+                    </button>
+                }
 
-                                    <section class="flex flex-col md:flex-row gap-2 mt-1">
-                                        <!-- Debit  -->
-                                        <mat-form-field class="ml-2 mt-1 grow">
-                                            <mat-label class="text-md ml-2">Debits</mat-label>
-                                            <input type="text"  mask="separator.2"
-                                                [leadZero]="true" thousandSeparator="," class="text-right" matInput
-                                                [placeholder]="'Debit'" formControlName="debit" />
-                                            <mat-icon class="icon-size-5 text-lime-700" matPrefix
-                                                [svgIcon]="'heroicons_solid:currency-dollar'"></mat-icon>
-                                        </mat-form-field>
+                <button mat-icon-button color="primary" class="bg-slate-200 hover:bg-slate-400 ml-1"
+                    (click)="onNewLineItem()" matTooltip="Add New Entry" aria-label="hovered over">
+                    <span class="e-icons e-circle-add"></span>
+                </button>                                
 
-                                        <!-- Credit  -->
-                                        <mat-form-field class="grow mr-2 mt-1">
-                                            <mat-label class="text-md ml-2">Credits</mat-label>
-                                            <input type="text"  mask="separator.2"
-                                                [leadZero]="true" thousandSeparator="," class="text-right" matInput
-                                                [placeholder]="'Credit'" formControlName="credit" />
-                                            <mat-icon class="icon-size-5 text-lime-700" matPrefix
-                                                [svgIcon]="'heroicons_solid:currency-dollar'"></mat-icon>
-                                        </mat-form-field>
-                                    </section>
-                                </form>
-                                <div mat-dialog-actions class="gap-2 mb-3 mt-5">
-                                    @if (bDetailDirty === true) {
-                                        <button mat-icon-button color="primary" class="bg-gray-200 fill-slate-100 hover:bg-slate-400 ml-1"
-                                            (click)="onUpdateJournalDetail()" matTooltip="Update Line Item"
-                                            aria-label="hover over">
-                                            <mat-icon [svgIcon]="'feather:save'"></mat-icon>
-                                        </button>
-                                    }
+                <button mat-icon-button color="primary"
+                    class="bg-gray-200 fill-slate-100 hover:bg-slate-400 ml-1"
+                    (click)="onDeleteDetail()" matTooltip="Remove Current Line" aria-label="hover over">
+                    <span class="e-icons e-circle-remove"></span>
+                </button>
 
-                                    <button mat-icon-button color="primary" class="bg-slate-200 hover:bg-slate-400 ml-1"
-                                        (click)="onNewLineItem()" matTooltip="Add New Entry" aria-label="hovered over">
-                                        <span class="e-icons e-circle-add"></span>
-                                    </button>                                
+                <button mat-icon-button color="primary"
+                    class="bg-gray-200 fill-slate-100  hover:bg-slate-400 ml-1" (click)="closeDrawer()"
+                    matTooltip="Close Edit" aria-label="hovered over">                                    
+                    <span class="e-icons e-chevron-left"></span>
+                </button>
 
-                                    <button mat-icon-button color="primary"
-                                        class="bg-gray-200 fill-slate-100 hover:bg-slate-400 ml-1"
-                                        (click)="onDeleteDetail()" matTooltip="Remove Current Line" aria-label="hover over">
-                                        <span class="e-icons e-circle-remove"></span>
-                                    </button>
+            </div>
 
-                                    <button mat-icon-button color="primary"
-                                        class="bg-gray-200 fill-slate-100  hover:bg-slate-400 ml-1" (click)="closeDrawer()"
-                                        matTooltip="Close Edit" aria-label="hovered over">                                    
-                                        <span class="e-icons e-chevron-left"></span>
-                                    </button>
-
-                                </div>
-
-                            </mat-card>
-                        </mat-tab>
-                        <mat-tab label="Artifacts">
-                            <mat-card>                                
-                                <div mat-dialog-actions class="gap-2 mb-3 mt-5">
-                                    @if (bDirty === true) {
-                                    <button mat-icon-button color="warm"
-                                        class="bg-gray-200 fill-slate-100 text-white hover:bg-slate-400 ml-1"
-                                        (click)="onUpdateJournalDetail()" matTooltip="Update Transaction"
-                                        aria-label="hover over">
-                                        <mat-icon [svgIcon]="'feather:save'"></mat-icon>
-                                    </button>
-                                    }
-
-                                    <button mat-icon-button color="warn"
-                                        class="bg-gray-200 fill-slate-100 text-white hover:bg-slate-400 ml-1"
-                                        (click)="closeDrawer()" matTooltip="Cancel" aria-label="hovered over">
-                                        <mat-icon [svgIcon]="'mat_outline:close'"></mat-icon>
-                                    </button>
-
-                                </div>
-
-                            </mat-card>
-                        </mat-tab>
-                    </mat-tab-group>
-                </mat-drawer>
+        </mat-card>
+    </mat-drawer>
 
     @defer (on viewport; on timer(200ms)) {
-        <mat-drawer-container id="target" class="control-section default-splitter flex flex-col  h-[calc(100vh-14rem)] ml-5 mr-5 overview-hidden " [hasBackdrop]="'false'">
+    <mat-drawer-container id="target" class="control-section default-splitter flex flex-col  h-[calc(100vh-14rem)] ml-5 mr-5 overview-hidden " [hasBackdrop]="'false'">
             <section class="pane1 overflow-hidden">
                 
-                <ejs-splitter #splitterInstance id="nested-splitter" (created)='onCreated()' class="h-[calc(100vh-14rem)]" separatorSize=3 width='100%'>
+                <ejs-splitter #splitterInstance id="nested-splitter" class="h-[calc(100vh-24rem)]" separatorSize=3 width='100%'>
                     <e-panes>
                         <e-pane min='60px' size='30%' class="w-72">                                        
                             <ng-template #content>
@@ -330,274 +282,115 @@ const imp = [
                             </ng-template>
                         </e-pane>
                         <e-pane>
-                            <ng-template #content>
-                                <div id='vertical_splitter' class="vertical_splitter overflow-hidden">                                    
-                                        <div class="content overflow-hidden">
-                                            @if (templateHeader.journal_id > 0) {
-                                                <div class="text-3xl gap-2 m-1 text-gray-100 p-2 bg-slate-600 rounded-md">
-                                                    @if (templateHeader.template_type == 'GL') {
-                                                        General Ledger : {{ templateHeader.journal_id }}
-                                                    } 
-                                                    @if (templateHeader.type == 'AP') {
-                                                        Accounts Payable : {{ templateHeader.journal_id }}
-                                                    }
-                                                    @if (templateHeader.type == 'AR') {
-                                                        Accounts Receivable : {{ templateHeader.journal_id }}
-                                                    }                                                
-                                                </div>
-                                            } @else {
-                                            <div class="text-3xl gap-2 m-1 text-gray-100 p-2 bg-slate-600 rounded-md">
-                                                General Ledger
-                                            </div>
-                                            }
-                                            <form [formGroup]="journalForm">
-                                                <section class="flex flex-col md:flex-row">
-                                                    @if (templateFilter | async; as templates ) {
-                                                        <div class="flex flex-col w-[300px]">
-                                                            <mat-form-field class="mt-1 ml-1 mr-1 flex-start">
-                                                                <mat-select [formControl]="templateCtrl" [placeholder]="'Journal Template'" #singleTemplateSelect required>
-                                                                    <mat-option>
-                                                                        <ngx-mat-select-search
-                                                                            [formControl]="templateFilterCtrl"
-                                                                            [noEntriesFoundLabel]="'No entries found'"
-                                                                            [placeholderLabel]="'Search'">
-                                                                        </ngx-mat-select-search>
-                                                                    </mat-option>
-                                                                    @for (template of templates; track template) {
-                                                                        <mat-option [value]="template">{{template.description}}</mat-option>
-                                                                    }
-                                                                </mat-select>
-                                                                <mat-icon class="icon-size-5" matPrefix [svgIcon]="'heroicons_solid:document-chart-bar'"></mat-icon>
-                                                        </mat-form-field>
-                                                    </div>
-                                                    }
-                                                    <div class="flex flex-col grow">
-                                                        <mat-form-field class="mt-1 ml-1 mr-1 flex-start">
-                                                            <input matInput placeholder="Journal Description"
-                                                                formControlName="description" />
-                                                            <mat-icon class="icon-size-5" matPrefix
-                                                                [svgIcon]="'heroicons_solid:document'"></mat-icon>
-                                                        </mat-form-field>
-                                                    </div>                                                    
-                                                    @if (templateHeader.journal_type == 'GL') {
-                                                        <mat-form-field class="mt-1 ml-1 mr-1 w-[250px]">
-                                                            <input type="text" class="text-left" matInput
-                                                                placeholder="Reference Number" formControlName="invoice_no" />
-                                                            <mat-icon class="icon-size-5" matPrefix
-                                                                [svgIcon]="'heroicons_solid:clipboard-document-check'"></mat-icon>
-                                                        </mat-form-field>
-                                                        }
-                                                        <div class="flex flex-col w-[150px]">
-                                                            <mat-form-field class="mt-1 flex-start mr-1">
-                                                                <input type="text" mask="separator.2" [leadZero]="true"
-                                                                    thousandSeparator="," class="text-right" matInput
-                                                                    placeholder="Amount" formControlName="amount"
-                                                                    [placeholder]="'Transaction Total'" />
-                                                                <mat-icon class="icon-size-5" matPrefix
-                                                                    [svgIcon]="'heroicons_solid:currency-dollar'"></mat-icon>
-                                                            </mat-form-field>
-                                                        </div>
-                                                        <div class="flex flex-col w-[150px]">
-                                                            <mat-form-field class="mt-1 flex-start mr-1">
-                                                                <input matInput (dateChange)="onHeaderDateChanged($event)"
-                                                                    formControlName="transaction_date"
-                                                                    [matDatepicker]="picker" />
-                                                                <mat-datepicker-toggle matIconPrefix
-                                                                    [for]="picker"></mat-datepicker-toggle>
-                                                                <mat-datepicker #picker></mat-datepicker>
-                                                            </mat-form-field>
-                                                        </div>
-                                                    </section>
-
-                                                    <section class="flex flex-col md:flex-row">
-                                                        @if (templateHeader.journal_type != 'GL') {
-                                                            @if (partyFilter | async; as parties ) {
-                                                            <div class="flex flex-col w-[300px]">
-                                                                <mat-form-field class="mt-1 ml-1 mr-1 flex-start">
-                                                                    <mat-select [formControl]="partyCtrl" placeholder="Party" #singlePartySelect required>
-                                                                        <mat-option>
-                                                                            <ngx-mat-select-search [formControl]="partyFilterCtrl"
-                                                                                [noEntriesFoundLabel]="'No entries found'"
-                                                                                [placeholderLabel]="'Search'">
-                                                                            </ngx-mat-select-search>
-                                                                        </mat-option>
-                                                                        @for (party of parties; track party) {
-                                                                        <mat-option [value]="party">{{party.party_id}}</mat-option>
-                                                                        }
-                                                                    </mat-select>
-                                                                    <mat-icon class="icon-size-5" matPrefix [svgIcon]="'heroicons_solid:user'"></mat-icon>
-                                                                </mat-form-field>
-                                                            </div>
-                                                            <mat-form-field class="mt-1 ml-1 mr-1 grow">
-                                                                <input type="text" class="text-left" matInput
-                                                                    placeholder="Reference Number" formControlName="invoice_no" />
-                                                                <mat-icon class="icon-size-5" matPrefix
-                                                                    [svgIcon]="'heroicons_solid:clipboard-document-check'"></mat-icon>
-                                                            </mat-form-field>
-                                                        }
-                                                    }
-                                                </section>
-                                            </form>
-                                            <div mat-dialog-actions class="gap-2 mb-3">
-                                                @if (bHeaderDirty === true) {                                                
-                                                    <button mat-icon-button color="primary"
-                                                        class="bg-slate-200 hover:bg-slate-400 ml-1"
-                                                        (click)="onUpdateJournalHeader($event)" matTooltip="Save Transaction"
-                                                        aria-label="hovered over">
-                                                        <span class="e-icons e-save"></span>
-                                                    </button>
-                                                }
-                                                <button mat-icon-button color="primary"
-                                                    class="bg-gray-200 hover:bg-slate-400 ml-1" 
-                                                    (click)="onAddEvidence()"
-                                                    matTooltip="Evidence" aria-label="Evidence">
-                                                    <span class="e-icons e-text-alternative"></span>
-                                                </button>
-
-
-                                                <button mat-icon-button color="primary"
-                                                    class="bg-slate-200  hover:bg-slate-400 ml-1"
-                                                    (click)="onCloseTransaction()" matTooltip="Lock Transaction"
-                                                    aria-label="complete">
-                                                    <span class="e-icons e-lock"></span>
-                                                </button>
-
-                                                <button mat-icon-button color="primary"
-                                                    class="bg-slate-200 text-gray-100 hover:bg-slate-400 ml-1"
-                                                    (click)="onDelete($event)" matTooltip="Cancel Transaction"
-                                                    aria-label="hovered over">
-                                                    <mat-icon [svgIcon]="'feather:trash-2'"></mat-icon>
-                                                </button>
-
-
-                                            </div>
-                                            @defer () {
-
-                                            <div id="target" class="flex flex-col">
-                                                <div class="text-3xl m-1 text-gray-100 p-2 bg-slate-600 rounded-md">Details</div>
-                                                <div class="flex flex-col h-full ml-1 mr-1 text-gray-800">
-                                                    <ejs-grid class="m-1" 
-                                                        [dataSource]="store.details()" 
-                                                        [allowFiltering]="false" 
-                                                        [gridLines]="'Both'"
-                                                        [allowColumnMenu]="false"
-                                                        [allowSorting]='true'
-                                                        [sortSettings]= 'detailSort'
-                                                        [editSettings]='editSettings' 
-                                                        [allowRowDragAndDrop]='true'
-                                                        [showColumnMenu]='false' 
-                                                        (actionBegin)="detailRowDoubleClick($event)"
-                                                        allowSorting=true>
-                                                        <e-columns>
-                                                            <e-column field='journal_subid' headerText='ID' [visible]='false' isPrimaryKey='true'  width='100'></e-column> 
-                                                            <e-column field='child' headerText='Account'  width='100'></e-column>
-                                                            <e-column field='fund' headerText='Fund' width='90'></e-column>
-                                                            <e-column field='sub_type' headerText='Sub Type' [visible]='true' width='90'></e-column>
-                                                            <e-column field='description' headerText='Description' width='150'></e-column>
-                                                            <e-column field='reference' headerText='Reference' [visible]='true' width=120></e-column>
-                                                            <e-column field='debit' headerText='Debit' textAlign='Right' width='100' format="N2"></e-column>
-                                                            <e-column field='credit' headerText='Credit' textAlign='Right' width='100' format="N2"></e-column>
-                                                        </e-columns>
-                                                        <e-aggregates>
-                                                            <e-aggregate>
-                                                                <e-columns>
-                                                                    <e-column type="Sum" field="debit" format="N2">
-                                                                        <ng-template #footerTemplate
-                                                                            let-data>{{data.Sum}}</ng-template>
-                                                                    </e-column>
-                                                                    <e-column type="Sum" field="credit" format="N2">
-                                                                        <ng-template #footerTemplate
-                                                                            let-data>{{data.Sum}}</ng-template>
-                                                                    </e-column>
-                                                                </e-columns>
-                                                            </e-aggregate>
-                                                        </e-aggregates>
-                                                    </ejs-grid>
-                                                </div>
-                                            </div>
-                                            }
-                                            <!-- Context Menu -->
-                                            
-
-                                            @placeholder (minimum 200ms) {
-                                            <div class="flex justify-center">
-                                                <div>
-                                                    <mat-progress-spinner diameter="60" [value]="value"
-                                                        mode="indeterminate">
-                                                    </mat-progress-spinner>
-                                                </div>
-                                            </div>
-                                            } @loading (minimum 200ms) {
-                                            <div class="flex justify-center">
-                                                <div>
-                                                    <mat-progress-spinner diameter="60" [value]="value"
-                                                        mode="indeterminate">
-                                                    </mat-progress-spinner>
-                                                </div>
-                                            </div>
-                                            }
-
-                                        </div>
+                        <ng-template #content>
+                            <div id='vertical_splitter' class="vertical_splitter overflow-hidden">                                    
                                     
-                                    <div>
-                                        <div class="content overflow-hidden">
-                                            @defer () {
-                                            <div class="text-3xl m-1 text-gray-100 p-2 bg-slate-600 rounded-md">Transaction
-                                                Artifacts
-                                            </div>
-                                            <div class="flex flex-col h-full ml-1 mr-1 text-gray-800">
+                                    <div class="text-3xl gap-2 m-1 text-gray-100 p-2 bg-slate-600 rounded-md">
+                                        Template Editing
+                                    </div>
+                                    
+                                    <form [formGroup]="journalForm">
+                                        <section class="flex flex-col md:flex-row">                                                    
+                                                <div class="flex flex-col grow">
+                                                    <mat-form-field class="mt-1 ml-1 mr-1 flex-start " >
+                                                        <input matInput placeholder="Template Name"
+                                                            formControlName="template_name" />
+                                                        <mat-icon class="icon-size-5" matPrefix
+                                                            [svgIcon]="'heroicons_solid:document'"></mat-icon>
+                                                    </mat-form-field>
+                                                </div>                                                    
+                                                <div class="flex flex-col grow">
+                                                    <mat-form-field class="mt-1 ml-1 mr-1 flex-start">
+                                                        <input matInput placeholder="Journal Description"
+                                                            formControlName="description" />
+                                                        <mat-icon class="icon-size-5" matPrefix
+                                                            [svgIcon]="'heroicons_solid:document'"></mat-icon>
+                                                    </mat-form-field>
+                                                </div>                                                    
+                                                                                                                                                        
+                                        </section>                                                                                                    
+                                    </form>
+                                    <div mat-dialog-actions class="gap-2 mb-3">
+                                        @if (bHeaderDirty === true) {                                                
+                                            <button mat-icon-button color="primary"
+                                                class="bg-slate-200 hover:bg-slate-400 ml-1"
+                                                (click)="onUpdateJournalHeader($event)" matTooltip="Save Transaction"
+                                                aria-label="hovered over">
+                                                <span class="e-icons e-save"></span>
+                                            </button>
+                                        }
+                                        
+                                        <button mat-icon-button color="primary"
+                                            class="bg-gray-200 hover:bg-slate-400 ml-1" 
+                                            (click)="onDelete($event)" matTooltip="Cancel Transaction"
+                                            aria-label="hovered over">
+                                            <mat-icon [svgIcon]="'feather:trash-2'"></mat-icon>
+                                        </button>
 
-                                                <ejs-grid id="grid" #grid [dataSource]="store.artifacts()" [rowHeight]="30"
-                                                    allowEditing='false' [editSettings]='editArtifactSettings'
-                                                    [allowFiltering]='false' [allowRowDragAndDrop]='false'
-                                                    [gridLines]="'Both'" (actionBegin)="actionSelectJournal($event)"
-                                                    (rowDrop)="rowDrop($event)" (rowDrag)="rowDrag($event)">
+                                    </div>
+                                    @defer () {
 
-                                                    <e-columns>
-                                                        <e-column field='id' headerText='ID' [visible]='false'
-                                                            isPrimaryKey='true' width='100'></e-column>
-                                                        <e-column field='description' headerText='Description'
-                                                            width='300'></e-column>
-                                                        <e-column field='location' headerText='Location'
-                                                            [visible]='false'></e-column>
-                                                        <e-column field='reference' headerText='Reference'></e-column>
-
-                                                    </e-columns>
-                                                </ejs-grid>
-
-                                                <ng-template #template let-data>
-                                                    <img [src]="data.location" alt="Noble Ledger v 0.0.1 logo" />
-                                                </ng-template>
-
-                                                <ng-template #buttonTemplate let-data>
-                                                    <button mat-flat-button class="bg-slate-500 text-gray-100"
-                                                        (click)="handleClick(data)">Details
-                                                    </button>
-                                                </ng-template>
-                                            </div>
-                                            }
-                                            @placeholder (minimum 200ms) {
-                                            <div class="flex justify-center">
-                                                <div>
-                                                    <mat-progress-spinner diameter="60" [value]="value"
-                                                        mode="indeterminate">
-                                                    </mat-progress-spinner>
-                                                </div>
-                                            </div>
-                                            } @loading (minimum 200ms) {
-                                            <div class="flex justify-center">
-                                                <div>
-                                                    <mat-progress-spinner diameter="60" [value]="value"
-                                                        mode="indeterminate">
-                                                    </mat-progress-spinner>
-                                                </div>
-                                            </div>
-                                            }
-
+                                    <div id="target" class="flex flex-col">
+                                        <div class="text-3xl m-1 text-gray-100 p-2 bg-slate-600 rounded-md">Details</div>
+                                        <div class="flex flex-col h-full ml-1 mr-1 text-gray-800">
+                                            <ejs-grid class="m-1" 
+                                                [dataSource]="store.tmp_details()" 
+                                                [allowFiltering]="false" 
+                                                [gridLines]="'Both'"
+                                                [allowColumnMenu]="false"
+                                                [allowSorting]='true'
+                                                [sortSettings]= 'detailSort'
+                                                [editSettings]='editSettings' 
+                                                [allowRowDragAndDrop]='true'
+                                                [showColumnMenu]='false' 
+                                                (actionBegin)="detailRowDoubleClick($event)"
+                                                allowSorting=true>
+                                                <e-columns>
+                                                    <e-column field='child'       headerText='Acct' [visible]='true'  width='50'></e-column>
+                                                    <e-column field='description' headerText='Desc' [visible]='true'  width='100'></e-column>
+                                                    <e-column field='sub_type'     headerText='Type' [visible]='true'  width='50'></e-column>
+                                                    <e-column field='fund'        headerText='Fund' [visible]='true'     width='100'></e-column>
+                                                    <e-column field='debit'       headerText='Debit %' [visible]='true' textAlign='Right' format='p2' width='60'></e-column>
+                                                    <e-column field='credit'      headerText='Credit %' [visible]='true' textAlign='Right' format='p2' width='60'></e-column>                                                                                                            
+                                                </e-columns>
+                                                <e-aggregates>
+                                                    <e-aggregate>
+                                                        <e-columns>
+                                                            <e-column type="Sum" field="debit" textAlign='Right' format='p2'>
+                                                                <ng-template #footerTemplate 
+                                                                    let-data>{{data.Sum}}</ng-template>
+                                                            </e-column>
+                                                            <e-column type="Sum" field="credit"  textAlign='Right' format='p2'>
+                                                                <ng-template #footerTemplate
+                                                                    let-data>{{data.Sum}}</ng-template>
+                                                            </e-column>
+                                                        </e-columns>
+                                                    </e-aggregate>
+                                                </e-aggregates>
+                                            </ejs-grid>
                                         </div>
                                     </div>
-                                </div>
-                            </ng-template>                        
+                                    }
+                                    <!-- Context Menu -->                                    
+                                    @placeholder (minimum 200ms) {
+                                    <div class="flex justify-center">
+                                        <div>
+                                            <mat-progress-spinner diameter="60" [value]="value"
+                                                mode="indeterminate">
+                                            </mat-progress-spinner>
+                                        </div>
+                                    </div>
+                                    } @loading (minimum 200ms) {
+                                    <div class="flex justify-center">
+                                        <div>
+                                            <mat-progress-spinner diameter="60" [value]="value"
+                                                mode="indeterminate">
+                                            </mat-progress-spinner>
+                                        </div>
+                                    </div>
+                                    }                                
+                        </div>
+                        </ng-template>                        
                         </e-pane>
                     </e-panes>
                 </ejs-splitter>
@@ -635,7 +428,7 @@ const imp = [
         GroupService,
         RowDDService,
         ResizeService,
-        ContextMenuService,        
+        ContextMenuService,
         ColumnMenuService
     ],
     styles: [
@@ -673,19 +466,18 @@ export class JournalTemplateUpdateComponent
 
     accountDropDown = viewChild<DropDownAccountComponent>("accountDropDown");
     subtypeDropDown = viewChild<SubtypeDropDownComponent>("subtypeDropDown");
-    
+
     private _fuseConfirmationService = inject(FuseConfirmationService);
     private fb = inject(FormBuilder);
-   
+
     private auth = inject(AUTH);
-    private activatedRoute = inject(ActivatedRoute);
     private toastr = inject(ToastrService);
 
-    public  fuseConfirmationService = inject(FuseConfirmationService);
+    public fuseConfirmationService = inject(FuseConfirmationService);
 
     public matDialog = inject(MatDialog);
     public journalForm!: FormGroup;
-    public toolbarTitle: string = "General Ledger Transactions Update";
+
     public bDetailDirty = false;
     public transaction: string = '';
     public transactionDate: Date = new Date();
@@ -716,7 +508,7 @@ export class JournalTemplateUpdateComponent
 
 
     // Internal control variables
-    public currentRowData: IJournalDetailTemplate;    
+    public currentRowData: IJournalDetailTemplate;
     public bHeaderDirty = false;
 
     // Datagrid variables
@@ -770,17 +562,17 @@ export class JournalTemplateUpdateComponent
     public subtypeCtrl: FormControl<string> = new FormControl<string>(null);
     public fundCtrl: FormControl<string> = new FormControl<string>(null);
     public key: number;
-    
+
     public templateHeader: IJournalTemplate;
     public templateDetailSignal = signal<IJournalDetailTemplate[]>(null);
 
-    
+
     protected _onDebitDestroy = new Subject<void>();
     protected _onTemplateDestroy = new Subject<void>();
-    protected _onDestroyDebitAccountFilter = new Subject<void>();    
+    protected _onDestroyDebitAccountFilter = new Subject<void>();
     protected _onDestroy = new Subject<void>();
 
-    columnsToDisplay: string[] = ["journal_id", "description"];
+    columnsToDisplay: string[] = ["template_ref", "description"];
     toolbarOptions = ['Search']
 
     @ViewChild('splitterInstance') splitterObj?: SplitterComponent;
@@ -792,80 +584,80 @@ export class JournalTemplateUpdateComponent
     Store = inject(Store);
     accounts$ = this.Store.select(accountsFeature.selectChildren);
     isLoading$ = this.Store.select(accountsFeature.selectIsLoading);
-    
+
     funds$ = this.Store.select(fromFunds.selectFunds);
     isFundsLoading$ = this.Store.select(fromFunds.isFundsLoading);
 
     //subtype$ = this.Store.select(subTypePageActions.loadDropdown);
-    
+
     toast = inject(ToastrService);
 
     subtypes$ = this.Store.select(subtypeFeature.selectSubtype);
     isSubtypeLoading$ = this.Store.select(subtypeFeature.selectIsLoading);
-        
+
     detailForm = new FormGroup({
-        accounts : new FormGroup({
-            dropdown: new FormControl(0,Validators.required),
+        accounts: new FormGroup({
+            dropdown: new FormControl(0, Validators.required),
         }),
-        subtype : new FormGroup({
-            dropdown: new FormControl('',Validators.required),
+        subtype: new FormGroup({
+            dropdown: new FormControl('', Validators.required),
         }),
-        fund :  new FormControl('',Validators.required),        
-        description: new FormControl('', Validators.required),            
-        debit: new FormControl(0, Validators.required),            
-        credit: new FormControl(0, Validators.required),            
-        reference: new FormControl('', Validators.required),            
+        fund: new FormControl('', Validators.required),
+        description: new FormControl('', Validators.required),
+        debit: new FormControl(0, Validators.required),
+        credit: new FormControl(0, Validators.required),
+        reference: new FormControl('', Validators.required),
     });
 
     ngOnInit(): void {
 
-        this.Store.dispatch(accountPageActions.children());     
-        
+        this.Store.dispatch(accountPageActions.children());
+
         this.store.tmp().forEach((template) => {
             console.debug(template);
         });
 
-        
+
         this.Store.dispatch(FundsActions.loadFunds());
 
         this.createEmptyForm();
-        this.initialDatagrid(); 
-        
-        
+        this.initialDatagrid();
+
+
     }
 
-    public menuItems: MenuItemModel[] = [    {
-            id: 'edit',
-            text: 'Edit Line Item',
-            iconCss: 'e-icons e-edit-2'
-        },
-        {
-            id: 'evidence',
-            text: 'Add Evidence',
-            iconCss: 'e-icons e-file-document'
-        },
-        {
-            id: 'lock',
-            text: 'Lock Transaction',
-            iconCss: 'e-icons e-lock'
-        },
-        {
-            id: 'cancel',
-            text: 'Cancel Transaction',
-            iconCss: 'e-icons e-table-overwrite-cells'
-        },
-        {
-            separator: true
-        },
-        {
-            id: 'back',
-            text: 'Back to Transaction List',
-            iconCss: 'e-icons e-chevron-left'
-        },
+    public menuItems: MenuItemModel[] = [{
+        id: 'edit',
+        text: 'Edit Line Item',
+        iconCss: 'e-icons e-edit-2'
+    },
+    {
+        id: 'evidence',
+        text: 'Add Evidence',
+        iconCss: 'e-icons e-file-document'
+    },
+    {
+        id: 'lock',
+        text: 'Lock Transaction',
+        iconCss: 'e-icons e-lock'
+    },
+    {
+        id: 'cancel',
+        text: 'Cancel Transaction',
+        iconCss: 'e-icons e-table-overwrite-cells'
+    },
+    {
+        separator: true
+    },
+    {
+        id: 'back',
+        text: 'Back to Transaction List',
+        iconCss: 'e-icons e-chevron-left'
+    },
 
     ];
 
-  
+
     public updateHeaderData() {
 
         const updateDate = new Date().toISOString().split('T')[0];
@@ -988,7 +780,7 @@ export class JournalTemplateUpdateComponent
             case 'edit':
                 this.onEdit();
                 break;
-            
+
             case 'lock':
                 this.toastr.success('Transaction locked selected TBD');
                 // this.onClose();
@@ -1064,7 +856,7 @@ export class JournalTemplateUpdateComponent
         }
         this.transactionType = value.journal_type;
         // this.store.loadTemplateDetails(value.journal_no.toString());
-        this.store.readTemplateDetails(value.template_ref.toString());
+        this.store.readTemplateDetails(value.journal_no.toString());
         this.bHeaderDirty = false;
     }
 
@@ -1107,9 +899,9 @@ export class JournalTemplateUpdateComponent
     public ngAfterViewInit() {
 
         this.templateFilter.next(this.templateList.slice());
-        
-        this.partyFilter.next(this.partyList.slice())        
-        
+
+        this.partyFilter.next(this.partyList.slice())
+
         if (this.templateFilter && this.singleTemplateSelect() != null)
             this.templateFilter
                 .pipe(take(1), takeUntil(this._onTemplateDestroy))
@@ -1146,7 +938,7 @@ export class JournalTemplateUpdateComponent
                 });
 
         this.searchOptions = { operator: 'contains', ignoreCase: true, ignoreAccent: true };
-        
+
         this.onChanges();
 
         this.bHeaderDirty = false;
@@ -1166,17 +958,11 @@ export class JournalTemplateUpdateComponent
     }
 
     public onRowSelected(args: RowSelectEventArgs): void {
-        const queryData: any = args.data;        
-        // this.store.loadDetails(queryData.journal_id);
-        // this.store.loadArtifactsByJournalId(queryData.journal_id);
-        // this.router.navigate();
-         const urlTree = this.router.createUrlTree(["journals/gl", queryData.journal_id]);
-        // this.router.navigateByUrl(urlTree);
-        
+        const queryData: any = args.data;
+        this.store.readTemplateDetails(queryData.journal_no.toString());
         this.refreshHeader(queryData);
         this.closeDrawer();
     }
-
 
     initialDatagrid() {
         this.formatoptions = { type: "dateTime", format: "M/dd/yyyy" };
@@ -1193,7 +979,7 @@ export class JournalTemplateUpdateComponent
         };
         this.filterSettings = { type: "CheckBox" };
         this.initialSort = {
-            columns: [{ field: 'journal_id', direction: 'Descending' },]
+            columns: [{ field: 'template_ref', direction: 'Descending' },]
         };
 
         this.detailSort = {
@@ -1203,7 +989,7 @@ export class JournalTemplateUpdateComponent
     }
 
     public onEditJournal(id: number) {
-        this.store.readTemplateDetails(id.toString());        
+        this.store.readTemplateDetails(id.toString());
         this.templateDetailList = this.store.tmp_details().filter((x) => x.template_ref === id.toString());
         this.closeDrawer();
     }
@@ -1228,68 +1014,63 @@ export class JournalTemplateUpdateComponent
         );
     }
 
-    public OnDoubleClick(data: any): void {
+    public OnDoubleClick(data: IJournalDetailTemplate): void {
         this.currentRowData = data;
         const name = this.auth.currentUser.email.split("@")[0];
         const dDate = new Date();
         let currentDate = dDate.toISOString().split("T")[0];
-        
+
         const JournalDetail = {
-            journal_id: data.journal_id,
-            journal_subid: data.journal_subid,
+            template_ref: data.template_ref,
+            journal_no: data.journal_no,
+            journal_sub: data.journal_sub,
+            description: data.description,
             account: data.account,
             child: data.child,
-            child_desc: data.child_desc,
-            description: data.description,
-            create_date: currentDate,
-            create_user: '@' + name,
-            sub_type: data.sub_type,
-            debit: data.debit,
-            credit: data.credit,
-            reference: data.reference,
+            subtype: data.subtype,
             fund: data.fund,
-        } as IJournalDetail;
+            debit: data.debit,
+            credit: data.credit
+        } as IJournalDetailTemplate;
 
         this.updateDetailForm(JournalDetail);
 
     }
 
-    private updateDetailForm(journalDetail: IJournalDetail) {
+    private updateDetailForm(journalDetail: IJournalDetailTemplate) {
         const accountString = journalDetail.child.toString();
-        
-        this.detailForm.patchValue({            
-            description: journalDetail.description, 
+
+        this.detailForm.patchValue({
+            description: journalDetail.description,
             accounts: {
                 dropdown: journalDetail.child
             },
             subtype: {
-                dropdown: journalDetail.sub_type
+                dropdown: journalDetail.subtype
             },
-            fund: journalDetail.fund,            
+            fund: journalDetail.fund,
             debit: journalDetail.debit,
             credit: journalDetail.credit,
-            reference: journalDetail.reference,
-            
+
         });
-        this.bHeaderDirty = false;        
-        
+        this.bHeaderDirty = false;
+
         this.accountDropDown().setDropdownValue(accountString);
-        this.subtypeDropDown().setDropdownValue(journalDetail.sub_type);
+        this.subtypeDropDown().setDropdownValue(journalDetail.subtype);
 
         this.openDrawer();
     }
 
     public onChanges(): void {
-        this.partyCtrl.valueChanges.subscribe((value) => {            
+        this.partyCtrl.valueChanges.subscribe((value) => {
             if (value === undefined) {
                 this.bHeaderDirty = false;
                 console.debug('Header is true!! ', value);
             }
-            else
-            {
-                this.bHeaderDirty = true;                
+            else {
+                this.bHeaderDirty = true;
                 console.debug('Header is false!! ', value);
-            }            
+            }
         });
 
         this.templateCtrl.valueChanges.subscribe((value) => {
@@ -1297,13 +1078,12 @@ export class JournalTemplateUpdateComponent
                 this.bHeaderDirty = false;
                 console.debug('Header is true!! ', value);
             }
-            else
-            {
-                
+            else {
+
                 this.bHeaderDirty = true;
                 this.templateHeader.journal_type = value.journal_type;
                 console.debug('Header is false!! ', JSON.stringify(value));
-            }            
+            }
         });
 
         this.detailForm.controls['accounts'].valueChanges.subscribe((value) => {
@@ -1318,26 +1098,24 @@ export class JournalTemplateUpdateComponent
         this.debitCtrl.valueChanges.subscribe((value) => {
             this.bDetailDirty = true;
         });
-        
-        this.journalForm.valueChanges.subscribe( (value) => 
-            {
-                if (value === undefined) {
-                    this.bHeaderDirty = false;
-                    console.debug('Header is true!! ', value);
-                }
-                else
-                {
-                    this.bHeaderDirty = true;
-                    console.debug('Header is false!! ', value);
-                }            
+
+        this.journalForm.valueChanges.subscribe((value) => {
+            if (value === undefined) {
+                this.bHeaderDirty = false;
+                console.debug('Header is true!! ', value);
             }
+            else {
+                this.bHeaderDirty = true;
+                console.debug('Header is false!! ', value);
+            }
+        }
         );
     }
 
     public detailRowDoubleClick(args: SaveEventArgs): void {
         if (args.requestType === "beginEdit" || args.requestType === "add") {
             args.cancel = true;
-            this.OnDoubleClick(args.rowData);
+            this.OnDoubleClick(args.rowData as IJournalDetailTemplate);
             this.openDrawer();
         }
         if (args.requestType === "save") {
@@ -1384,7 +1162,7 @@ export class JournalTemplateUpdateComponent
 
     public saveArtifacts(e: any) {
         this.bHeaderDirty = true;
-        console.debug('Header is true 3');        
+        console.debug('Header is true 3');
         this.bHeaderDirty = false;
 
     }
@@ -1395,18 +1173,14 @@ export class JournalTemplateUpdateComponent
         this.templateHeader = header;
 
         this.journalForm.patchValue({
-            description: header.description,                        
+            description: header.description,
+            template_name: header.template_name,
         });
 
+        this.store.readTemplateDetails(header.journal_no.toString());
 
-        this.templateCtrl.setValue(
-            this.templateList.find((x) => x.template_name === header.template_name)
-        );
-        
-        
-        this.store.readTemplateDetails(header.template_ref.toString());
-        
         this.bHeaderDirty = false;
+
     }
 
     public onNew(e: any) {
@@ -1449,19 +1223,15 @@ export class JournalTemplateUpdateComponent
     }
 
     // Create template from the current transaction
-    
+
     // Add evidence 
-    
-    
+
+
 
     public createEmptyForm() {
         this.journalForm = this.fb.group({
             description: ["", Validators.required],
-            amount: ["", Validators.required],
-            transaction_date: ["", Validators.required],
-            templateFilterCtrl: ["", Validators.required],
-            partyFilterCtrl: [""],
-            invoice_no: ["", Validators.required],
+            template_name: ["", Validators.required],
         });
 
 
@@ -1476,7 +1246,7 @@ export class JournalTemplateUpdateComponent
         const inputs = { ...this.journalForm.value } as IJournalTemplate
 
         var journalDetail = {
-            journal_id: inputs.template_ref,            
+            journal_id: inputs.template_ref,
         };
 
         const confirmation = this._fuseConfirmationService.open({
@@ -1530,7 +1300,7 @@ export class JournalTemplateUpdateComponent
         });
     }
 
-    public onOpenEmptyDrawer() {        
+    public onOpenEmptyDrawer() {
         this.openDrawer();
     }
 
@@ -1621,7 +1391,7 @@ export class JournalTemplateUpdateComponent
 
         if (template.journal_type !== 'GL') {
             var party = this.partyCtrl.getRawValue();
-            partyId = this.partyList.find((x) => x.party_id === party.party_id).party_id;            
+            partyId = this.partyList.find((x) => x.party_id === party.party_id).party_id;
         }
         else {
             this.partyId = '';
@@ -1718,7 +1488,7 @@ export class JournalTemplateUpdateComponent
         var debit = Number(detail.debit);
         var credit = Number(detail.credit);
         var childAccount = detail.accounts.dropdown;
-        var child_desc = this.store.accounts().find((x) => x.child ===  childAccount.toString()).description;
+        var child_desc = this.store.accounts().find((x) => x.child === childAccount.toString()).description;
         const subtype = this.subtypeDropDown().getDropdownValue();
 
         // Check for correct child accounts coming from the template
@@ -1733,7 +1503,7 @@ export class JournalTemplateUpdateComponent
             template_ref: this.currentRowData.template_ref,
             journal_sub: this.currentRowData.journal_sub,
             account: this.currentRowData.account,
-            
+
             description: detail.description,
             create_date: updateDate,
             create_user: email,
@@ -1743,10 +1513,6 @@ export class JournalTemplateUpdateComponent
             reference: detail.reference,
             fund: detail.fund
         };
-
-        //this.store.updateJournalDetail(journalDetail);
-
-        // this.toastr.success(`Journal details updated:  ${journalDetail.template_ref} - ${journalDetail.journal_sub} `);
 
         this.closeDrawer();
 
@@ -1770,10 +1536,10 @@ export class JournalTemplateUpdateComponent
     @HostListener("window:exit")
     public exitWindow() {
 
-        
+
 
         if (this.bHeaderDirty === false) {
-            
+
 
         } else {
             const confirmation = this.fuseConfirmationService.open({
@@ -1806,7 +1572,7 @@ export class JournalTemplateUpdateComponent
         }
         return;
     }
-    
+
     public gridHeight: number;
 
     @HostListener('window:resize', ['$event'])

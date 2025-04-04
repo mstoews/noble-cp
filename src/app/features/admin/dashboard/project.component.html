@@ -7,22 +7,22 @@
                 <div class="flex flex-auto items-center min-w-0">
                     <div class="flex flex-col min-w-0 ml-2">
                         <div>
-                            <div class="text-3xl font-semibold tracking-tight leading-8 dark:text-gray-100">Financial Position</div>                            
+                            <div class="text-3xl font-semibold tracking-tight leading-8 dark:text-primary-100">Financial Position</div>                            
                         </div>
                     </div>
                 </div>
                 <!-- Actions -->
                 <div class="flex items-center mt-4 sm:mt-0 sm:ml-2 space-x-3">
-                    <button (click)="openDocumentation()" class="bg-primary" mat-flat-button >                        
+                    <button (click)="openDocumentation()" class="bg-primary text-primary-100" mat-flat-button >                        
                         <span class="e-icons e-table-insert-column"></span> 
                         <span class="ml-2">Documentation</span>
                     </button>
-                    <button (click)="openTransactions()" class="bg-primary" mat-flat-button >                        
+                    <button (click)="openTransactions()" class="bg-primary text-primary-100" mat-flat-button >                        
                         <span class="e-icons e-table-insert-column"></span> 
                         <span class="ml-2">Transactions</span>
 
                     </button>
-                    <button (click)="openTasks()" mat-flat-button [color]="'primary'">                        
+                    <button (click)="openTasks()" mat-flat-button class="bg-primary text-primary-100">                        
                         <span class="e-icons e-file-new"></span> 
                         <span class="ml-2">Tasks</span>
                     </button>
