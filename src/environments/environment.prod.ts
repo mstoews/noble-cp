@@ -11,7 +11,7 @@ export const environment = {
   },
   production: true,
   useEmulators: false,  
-  // baseUrl: "https://noble-server-1023314501312.us-east1.run.app/",
+  // baseUrl: "https://noble-server-1023314501312.us-central1.run.app",            
   baseUrl: "http://localhost:8080",
   apiRetryCount: 0
   

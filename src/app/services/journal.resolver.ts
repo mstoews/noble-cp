@@ -3,8 +3,8 @@ import { ResolveFn, ActivatedRouteSnapshot, RouterStateSnapshot } from "@angular
 import { IJournalHeader, IJournalTemplate } from "app/models/journals";
 import { JournalService } from "./journal.service";
 import { combineLatestWith, Observable, of } from "rxjs";
-import { IAccounts, IDropDownAccounts } from "app/models";
-import { IGLType, IType } from "app/models/types";
+import { IDropDownAccounts } from "app/models";
+import { IGLType } from "app/models/types";
 import { SubTypeService } from "./subtype.service";
 import { PartyService } from "./party.service";
 import { IParty } from "app/models/party";

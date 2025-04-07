@@ -75,6 +75,7 @@ import { subtypeFeature } from "../static/subtype/sub-type.state";
 import { SubtypeDropDownComponent } from "../grid-components/drop-down.subtype.component";
 import { MaterialModule } from "app/shared/material.module";
 import { TemplateStore } from "app/store/template.store";
+import { SubTypeService } from "app/services/subtype.service";
 
 
 const imp = [
@@ -113,8 +114,8 @@ const imp = [
         </grid-menubar>
     </div>
 
-    <mat-drawer class="w-full md:w-[450px]" #drawer [opened]="false" mode="over" [position]="'end'" [disableClose]="true">
-        <mat-card class="">
+    <mat-drawer class="w-full md:w-[450px] bg-transparent" #drawer [opened]="false" mode="over" [position]="'end'" [disableClose]="true">
+        <mat-card class="m-2">
             <form [formGroup]="detailForm">
                 <div
                     class="flex flex-col w-full filter-article filter-interactive text-gray-700 rounded-lg">
@@ -131,16 +132,16 @@ const imp = [
                         }
                     }
                         
-                    <!-- Sub Type  -->                                        
-                    @if (subtypeList.length > 0 ) {
-                        <subtype-drop-down [dropdownList]="subtypeList" controlKey="subtype" label="Sub Type" #subtypeDropDown></subtype-drop-down>
-                    }
+                    <!-- Sub Type  -->                                                            
+                    @if (subtype$ | async; as subtypes) {
+                        <subtype-drop-down [dropdownList]="subtypes" controlKey="subtype" label="Account Sub Type" #subtypeDropDown></subtype-drop-down>
+                    }                    
                                                             
                     <!-- Funds -->
                     @if (funds$ | async; as funds) {
                     <mat-form-field class="flex-col ml-2 mr-2 mt-1 grow ">
                         <mat-label class="text-md ml-2">Funds</mat-label>
-                        <mat-select class="text-gray-800 dark:text-gray-100"  placeholder="Fund" formControlName="fund">
+                        <mat-select class="text-gray-800 dark:text-gray-100" placeholder="Fund" formControlName="fund">
                             @for (item of store.funds(); track item) {
                             <mat-option [value]="item.fund"> {{ item.fund }} - {{ item.description }}
                             </mat-option>
@@ -154,21 +155,10 @@ const imp = [
 
                     <mat-form-field class="flex-col ml-2 mr-2 mt-1 grow">
                         <mat-label class="text-md ml-2">Description</mat-label>
-                        <input matInput placeholder="Description" formControlName="description"
-                            [placeholder]="'Description'" />
-                        <mat-icon class="icon-size-5 text-lime-700" matSuffix
-                            [svgIcon]="'heroicons_solid:calculator'"></mat-icon>
+                        <input matInput placeholder="Description" formControlName="description" [placeholder]="'Description'" />
+                        <mat-icon class="icon-size-5 text-lime-700" matSuffix [svgIcon]="'heroicons_solid:calculator'"></mat-icon>
                     </mat-form-field>
-
-
-                    <!-- Reference  -->
-                    <mat-form-field class="flex-col grow mr-2 ml-2 mt-1">
-                        <mat-label class="text-md ml-2">Reference</mat-label>
-                        <input matInput placeholder="Reference"
-                            formControlName="reference" [placeholder]="'Reference'" />
-                        <mat-icon class="icon-size-5 text-lime-700" matSuffix
-                            [svgIcon]="'heroicons_solid:document'"></mat-icon>
-                    </mat-form-field>
+                    
 
                 </section>
 
@@ -236,7 +226,7 @@ const imp = [
                                 <div class="text-3xl gap-2 m-1 text-gray-100 p-2 bg-slate-600 rounded-md">
                                             Template List
                                 </div>
-                                    <mat-card class="mat-elevation-z8 h-[calc(100vh-14.2rem)]">                                        
+                                    <mat-card class="mat-elevation-z8 h-[calc(100vh-14.2rem)] m-2">                                        
                                         <ejs-grid id="grid-journal-list" 
                                             [dataSource]='store.tmp()'
                                             [selectionSettings]="selectionOptions" 
@@ -253,9 +243,9 @@ const imp = [
                                             (rowSelected)="onRowSelected($event)"
                                             [gridLines]="'Both'">
                                             <e-columns>
-                                            <e-column field='template_ref'  headerText='ID' [visible]='true' isPrimaryKey='true' width='80'></e-column>
+                                            <e-column field='template_ref'  headerText='ID' [visible]='true' isPrimaryKey='true' width='70'></e-column>
                                             <!-- <e-column field='template_name'  headerText='Name' [visible]='true' isPrimaryKey='true' width='100'></e-column> -->
-                                            <e-column field="journal_type" headerText="Type"   [visible]='true' width="100" dataType="text" textAlign="Center">
+                                            <e-column field="journal_type" headerText="Type"   [visible]='true' width="80" dataType="text" textAlign="Center">
                                                 <ng-template #template let-data>                       
                                                     @if(data.journal_type === 'GL') {
                                                         <div>                                                        
@@ -289,22 +279,27 @@ const imp = [
                                         Template Editing
                                     </div>
                                     
-                                    <form [formGroup]="journalForm">
+                                    <form [formGroup]="templateHeaderForm">
                                         <section class="flex flex-col md:flex-row">                                                    
-                                                <div class="flex flex-col grow">
+                                                <div class="flex flex-col w-40 grow">
                                                     <mat-form-field class="mt-1 ml-1 mr-1 flex-start " >
-                                                        <input matInput placeholder="Template Name"
-                                                            formControlName="template_name" />
-                                                        <mat-icon class="icon-size-5" matPrefix
-                                                            [svgIcon]="'heroicons_solid:document'"></mat-icon>
+                                                        <mat-label class="text-xl ml-2">Name</mat-label>
+                                                        <input matInput placeholder="Template Name" formControlName="template_name" />
+                                                        <mat-icon class="icon-size-5" matPrefix [svgIcon]="'heroicons_solid:document'"></mat-icon>
                                                     </mat-form-field>
                                                 </div>                                                    
-                                                <div class="flex flex-col grow">
-                                                    <mat-form-field class="mt-1 ml-1 mr-1 flex-start">
-                                                        <input matInput placeholder="Journal Description"
-                                                            formControlName="description" />
-                                                        <mat-icon class="icon-size-5" matPrefix
-                                                            [svgIcon]="'heroicons_solid:document'"></mat-icon>
+                                                <div class="flex flex-col w-40 grow">
+                                                    <mat-form-field class="mt-1 ml-1 mr-1 flex-start " >
+                                                        <mat-label class="text-xl ml-2">Description</mat-label>
+                                                        <input matInput placeholder="Description" formControlName="description" />
+                                                        <mat-icon class="icon-size-5" matPrefix [svgIcon]="'heroicons_solid:document'"></mat-icon>
+                                                    </mat-form-field>
+                                                </div>                                                    
+                                                <div class="flex flex-col w-40 grow">
+                                                    <mat-form-field class="mt-1 ml-1 mr-1 flex-start " >
+                                                        <mat-label class="text-xl ml-2">Transaction Type</mat-label>
+                                                        <input matInput placeholder="Type" formControlName="journal_type" />
+                                                        <mat-icon class="icon-size-5" matPrefix [svgIcon]="'heroicons_solid:document'"></mat-icon>
                                                     </mat-form-field>
                                                 </div>                                                    
                                                                                                                                                         
@@ -476,11 +471,9 @@ export class JournalTemplateUpdateComponent
     public fuseConfirmationService = inject(FuseConfirmationService);
 
     public matDialog = inject(MatDialog);
-    public journalForm!: FormGroup;
+    public templateHeaderForm!: FormGroup;
 
-    public bDetailDirty = false;
-    public transaction: string = '';
-    public transactionDate: Date = new Date();
+    public bDetailDirty = false;    
     public partyId: string = '';
 
     public bDirty = false;
@@ -541,15 +534,6 @@ export class JournalTemplateUpdateComponent
     public transactionType = 'GL';
 
     public templateList: IJournalTemplate[] = [];
-    public templateDetailList: IJournalDetailTemplate[] = [];
-    public templateCtrl: FormControl<IJournalTemplate> = new FormControl<IJournalTemplate>(null);
-    public templateFilterCtrl: FormControl<string> = new FormControl<string>(null);
-    public templateFilter: ReplaySubject<IJournalTemplate[]> = new ReplaySubject<IJournalTemplate[]>(1);
-
-    public partyList: IParty[] = [];
-    public partyCtrl: FormControl<IParty> = new FormControl<IParty>(null);
-    public partyFilterCtrl: FormControl<string> = new FormControl<string>(null);
-    public partyFilter: ReplaySubject<IParty[]> = new ReplaySubject<IParty[]>(1);
 
     public accountsGrid: IDropDownAccountsGridList[] = [];
     public dFields = { text: "child", value: "child" };
@@ -566,7 +550,6 @@ export class JournalTemplateUpdateComponent
     public templateHeader: IJournalTemplate;
     public templateDetailSignal = signal<IJournalDetailTemplate[]>(null);
 
-
     protected _onDebitDestroy = new Subject<void>();
     protected _onTemplateDestroy = new Subject<void>();
     protected _onDestroyDebitAccountFilter = new Subject<void>();
@@ -582,18 +565,18 @@ export class JournalTemplateUpdateComponent
     singlePartySelect = viewChild<MatSelect>("singlePartySelect");
 
     Store = inject(Store);
+    toast = inject(ToastrService);
+    
     accounts$ = this.Store.select(accountsFeature.selectChildren);
     isLoading$ = this.Store.select(accountsFeature.selectIsLoading);
 
     funds$ = this.Store.select(fromFunds.selectFunds);
     isFundsLoading$ = this.Store.select(fromFunds.isFundsLoading);
 
-    //subtype$ = this.Store.select(subTypePageActions.loadDropdown);
+    // subtype$ = this.Store.select(subtypeFeature.selectSubtype);
+    // isSubtypeLoading$ = this.Store.select(subtypeFeature.selectIsLoading);
 
-    toast = inject(ToastrService);
-
-    subtypes$ = this.Store.select(subtypeFeature.selectSubtype);
-    isSubtypeLoading$ = this.Store.select(subtypeFeature.selectIsLoading);
+    subtype$ = inject(SubTypeService).read();
 
     detailForm = new FormGroup({
         accounts: new FormGroup({
@@ -609,20 +592,21 @@ export class JournalTemplateUpdateComponent
         reference: new FormControl('', Validators.required),
     });
 
+    headerTemplateForm = new FormGroup({
+        template_name: new FormControl('', Validators.required),
+        description: new FormControl('', Validators.required),
+        journal_type: new FormControl('', Validators.required),
+    });
+
+    
     ngOnInit(): void {
 
+        
+
         this.Store.dispatch(accountPageActions.children());
-
-        this.store.tmp().forEach((template) => {
-            console.debug(template);
-        });
-
-
-        this.Store.dispatch(FundsActions.loadFunds());
-
+        this.Store.dispatch(FundsActions.loadFunds());                
         this.createEmptyForm();
         this.initialDatagrid();
-
 
     }
 
@@ -658,28 +642,14 @@ export class JournalTemplateUpdateComponent
     ];
 
 
-    public updateHeaderData() {
+    public updateData() {
 
         const updateDate = new Date().toISOString().split('T')[0];
-        const inputs = { ...this.journalForm.value }
+        const inputs = { ...this.templateHeaderForm.value }
         const momentDate = new Date(inputs.step1.transaction_date).toISOString().split('T')[0];
         const email = '@' + this.auth.currentUser?.email.split('@')[0];
-
-        var party: any;
-        var party_id: string;
-
-        const template = this.templateCtrl.value;
-        const template_name = this.templateList.find((x) => x.template_name === template.template_name).template_name;
-
+        
         var journalDetails: IJournalDetail[] = [];
-
-        if (template.journal_type !== 'GL') {
-            party = this.partyCtrl.getRawValue();
-            party_id = this.partyList.find((x) => x.party_id === party.party_id).party_id;
-        }
-        else {
-            party_id = '';
-        }
 
         let count: number = 1;
 
@@ -736,7 +706,7 @@ export class JournalTemplateUpdateComponent
 
     public onUpdate() {
 
-        const inputs = { ...this.journalForm.value }
+        const inputs = { ...this.templateHeaderForm.value }
         if (inputs.step1.amount === 0) {
             return;
         }
@@ -860,63 +830,7 @@ export class JournalTemplateUpdateComponent
         this.bHeaderDirty = false;
     }
 
-    protected filterParty() {
-        if (!this.partyList) {
-            return;
-        }
-        let search = this.partyFilterCtrl.value;
-        if (!search) {
-            this.partyFilter.next(this.partyList.slice());
-            return;
-        } else {
-            search = search.toLowerCase();
-        }
-        this.partyFilter.next(
-            this.partyList.filter(party => party.party_id.toLowerCase().indexOf(search) > -1)
-        );
-    }
-
-
-    protected filterTemplate() {
-        if (!this.store.tmp()) {
-            return;
-        }
-        // get the search keyword
-        let search = this.templateFilterCtrl.value;
-        if (!search) {
-            this.templateFilter.next(this.store.tmp().slice());
-            return;
-        } else {
-            search = search.toLowerCase();
-        }
-        // filter the banks
-        this.templateFilter.next(
-            this.store.tmp().filter(template => template.description.toLowerCase().indexOf(search) > -1)
-        );
-    }
-
-
     public ngAfterViewInit() {
-
-        this.templateFilter.next(this.templateList.slice());
-
-        this.partyFilter.next(this.partyList.slice())
-
-        if (this.templateFilter && this.singleTemplateSelect() != null)
-            this.templateFilter
-                .pipe(take(1), takeUntil(this._onTemplateDestroy))
-                .subscribe(() => {
-                    if (this.singleTemplateSelect() != null || this.singleTemplateSelect() != undefined)
-                        this.singleTemplateSelect().compareWith = (a: IJournalTemplate, b: IJournalTemplate) => a && b && a.template_ref === b.template_ref;
-                });
-
-        if (this.partyFilter && this.singlePartySelect() != null)
-            this.partyFilter
-                .pipe(take(1), takeUntil(this._onTemplateDestroy))
-                .subscribe(() => {
-                    if (this.singlePartySelect() != null || this.singlePartySelect() != undefined)
-                        this.singlePartySelect().compareWith = (a: IParty, b: IParty) => a && b && a.party_id === b.party_id;
-                });
 
         this.debitAccountFilterCtrl.valueChanges
             .pipe(takeUntil(this._onDestroyDebitAccountFilter))
@@ -938,14 +852,11 @@ export class JournalTemplateUpdateComponent
                 });
 
         this.searchOptions = { operator: 'contains', ignoreCase: true, ignoreAccent: true };
-
         this.onChanges();
-
         this.bHeaderDirty = false;
         console.debug('Header is false now');
 
     }
-
 
     public openDrawer() {
         this.bDetailDirty = false;
@@ -972,11 +883,6 @@ export class JournalTemplateUpdateComponent
             allowAdding: false,
             allowDeleting: false,
         };
-        this.editArtifactSettings = {
-            allowEditing: true,
-            allowAdding: false,
-            allowDeleting: false,
-        };
         this.filterSettings = { type: "CheckBox" };
         this.initialSort = {
             columns: [{ field: 'template_ref', direction: 'Descending' },]
@@ -986,12 +892,6 @@ export class JournalTemplateUpdateComponent
             columns: [{ field: 'debit', direction: 'Descending' },]
         };
 
-    }
-
-    public onEditJournal(id: number) {
-        this.store.readTemplateDetails(id.toString());
-        this.templateDetailList = this.store.tmp_details().filter((x) => x.template_ref === id.toString());
-        this.closeDrawer();
     }
 
     protected filterDebitAccounts() {
@@ -1015,11 +915,7 @@ export class JournalTemplateUpdateComponent
     }
 
     public OnDetailSelected(data: IJournalDetailTemplate): void {
-        this.currentRowData = data;
-        const name = this.auth.currentUser.email.split("@")[0];
-        const dDate = new Date();
-        let currentDate = dDate.toISOString().split("T")[0];
-
+        
         const JournalDetail = {
             template_ref: data.template_ref,
             journal_no: data.journal_no,
@@ -1027,7 +923,7 @@ export class JournalTemplateUpdateComponent
             description: data.description,
             account: data.account,
             child: data.child,
-            subtype: data.subtype,
+            sub_type: data.sub_type,
             fund: data.fund,
             debit: data.debit,
             credit: data.credit
@@ -1037,55 +933,41 @@ export class JournalTemplateUpdateComponent
 
     }
 
-    private updateDetailForm(journalDetail: IJournalDetailTemplate) {
-        const accountString = journalDetail.child.toString();
+    private updateDetailForm(journalTemplateDetail: IJournalDetailTemplate) {
+        const accountString = journalTemplateDetail.child.toString();
+        
+        if (journalTemplateDetail.sub_type === undefined || journalTemplateDetail.sub_type === null) {
+            journalTemplateDetail.sub_type = '';
+        }   
 
-        this.detailForm.patchValue({
-            description: journalDetail.description,
-            accounts: {
-                dropdown: journalDetail.child
-            },
-            subtype: {
-                dropdown: journalDetail.subtype
-            },
-            fund: journalDetail.fund,
-            debit: journalDetail.debit,
-            credit: journalDetail.credit,
+        const subtypeString = journalTemplateDetail.sub_type;        
 
+        this.detailForm.patchValue({            
+            // accounts: {
+            //     dropdown: journalDetail.child
+            // },
+            // subtype: {
+            //     dropdown: journalDetail.subtype
+            // },
+            description: journalTemplateDetail.description,
+            fund: journalTemplateDetail.fund,
+            debit: journalTemplateDetail.debit,
+            credit: journalTemplateDetail.credit,
         });
+        
+        if (accountString !== undefined || accountString !== null) {
+            this.accountDropDown().setDropdownValue(accountString);
+        }
+        
+        if (subtypeString !== undefined || subtypeString !== null) {
+            this.subtypeDropDown().setDropdownValue(subtypeString);
+        }
+        
         this.bHeaderDirty = false;
-
-        this.accountDropDown().setDropdownValue(accountString);
-        this.subtypeDropDown().setDropdownValue(journalDetail.subtype);
-
         this.openDrawer();
     }
 
     public onChanges(): void {
-        this.partyCtrl.valueChanges.subscribe((value) => {
-            if (value === undefined) {
-                this.bHeaderDirty = false;
-                console.debug('Header is true!! ', value);
-            }
-            else {
-                this.bHeaderDirty = true;
-                console.debug('Header is false!! ', value);
-            }
-        });
-
-        this.templateCtrl.valueChanges.subscribe((value) => {
-            if (value === undefined) {
-                this.bHeaderDirty = false;
-                console.debug('Header is true!! ', value);
-            }
-            else {
-
-                this.bHeaderDirty = true;
-                this.templateHeader.journal_type = value.journal_type;
-                console.debug('Header is false!! ', JSON.stringify(value));
-            }
-        });
-
         this.detailForm.controls['accounts'].valueChanges.subscribe((value) => {
             console.debug('Account changed: ', value);
             this.bDetailDirty = true;
@@ -1099,7 +981,7 @@ export class JournalTemplateUpdateComponent
             this.bDetailDirty = true;
         });
 
-        this.journalForm.valueChanges.subscribe((value) => {
+        this.templateHeaderForm.valueChanges.subscribe((value) => {
             if (value === undefined) {
                 this.bHeaderDirty = false;
                 console.debug('Header is true!! ', value);
@@ -1172,9 +1054,13 @@ export class JournalTemplateUpdateComponent
 
         this.templateHeader = header;
 
-        this.journalForm.patchValue({
+        this.templateHeaderForm.patchValue({
             description: header.description,
             template_name: header.template_name,
+            journal_type: header.journal_type,
+            create_date: header.create_date,
+            create_user: header.create_user,
+            journal_no: header.journal_no,              
         });
 
         this.store.readTemplateDetails(header.journal_no.toString());
@@ -1229,7 +1115,7 @@ export class JournalTemplateUpdateComponent
 
 
     public createEmptyForm() {
-        this.journalForm = this.fb.group({
+        this.templateHeaderForm = this.fb.group({
             description: ["", Validators.required],
             template_name: ["", Validators.required],
         });
@@ -1243,7 +1129,7 @@ export class JournalTemplateUpdateComponent
     // On delete journal detail
     public onDeleteDetail() {
 
-        const inputs = { ...this.journalForm.value } as IJournalTemplate
+        const inputs = { ...this.templateHeaderForm.value } as IJournalTemplate
 
         var journalDetail = {
             journal_id: inputs.template_ref,
@@ -1273,7 +1159,7 @@ export class JournalTemplateUpdateComponent
 
     // On delete journal detail
     public onDelete(args: any) {
-        const inputs = { ...this.journalForm.value }
+        const inputs = { ...this.templateHeaderForm.value }
         const index = (this.grid as GridComponent).getSelectedRowIndexes();
         const rowData = this.grid.getCurrentViewRecords().at(index[0]) as any;
         var journalDetail = {
@@ -1306,7 +1192,7 @@ export class JournalTemplateUpdateComponent
 
     // add a new line entry
     public onNewLineItem() {
-        const inputs = { ...this.journalForm.value } as IJournalHeader;
+        const inputs = { ...this.templateHeaderForm.value } as IJournalHeader;
         const updateDate = new Date().toISOString().split("T")[0];
         var max = 0;
 
@@ -1367,63 +1253,37 @@ export class JournalTemplateUpdateComponent
     }
 
     journalEntryCleanUp() {
-        const inputs = { ...this.journalForm.value } as IJournalHeader;
+        const inputs = { ...this.templateHeaderForm.value } as IJournalHeader;
         this.detailForm.reset();
         this.debitCtrl.reset();
         //this.store.renumberJournalDetail(inputs.journal_id);
     }
 
-    public onHeaderDateChanged(event: any): void {
-        this.transactionDate = event.value;
-        this.bHeaderDirty = true;
-        console.debug('Header is true 4');
+    public onHeaderDateChanged(event: any): void {        
+        this.bHeaderDirty = true;    
     }
 
-
-    // AIzaSyDi2tojVzbLApe5ddEx_OI5n9JIB5w9S3Y
-
-    // Update journal header
+    // Update template header
     onUpdateJournalHeader(e: any) {
 
-        let header = this.journalForm.getRawValue();
-        let template = this.templateCtrl.value;
-        var partyId: string = '';
+        let header = this.templateHeaderForm.getRawValue();
 
-        if (template.journal_type !== 'GL') {
-            var party = this.partyCtrl.getRawValue();
-            partyId = this.partyList.find((x) => x.party_id === party.party_id).party_id;
-        }
-        else {
-            this.partyId = '';
-        }
-
-        if (this.transactionDate !== undefined) {
-            header.transaction_date = this.transactionDate.toISOString().split("T")[0];
-        }
-
-        // const journalHeaderUpdate: IJournalHeader = {
-        //     journal_id: this.templateHeader.journal_id,
-        //     type: this.templateHeader.type,
-        //     booked: this.templateHeader.booked,
-        //     period: this.templateHeader.period,
-        //     period_year: this.templateHeader.period_year,
-        //     booked_user: this.templateHeader.booked_user,
-        //     description: header.description,
-        //     transaction_date: header.transaction_date,
-        //     amount: Number(header.amount),
-        //     template_name: template.template_name,
-        //     party_id: partyId,
-        //     invoice_no: header.invoice_no
-        // };
-
-        //this.store.updateJournalHeader(journalHeaderUpdate);
+        const journalTemplateHeader = {            
+            journal_no: this.templateHeader.journal_no,
+            description: header.description,
+            template_name: header.template_name,
+            template_ref: this.templateHeader.template_ref,            
+            journal_type: this.templateHeader.journal_type
+        } as IJournalTemplate;
+                
+        this.store.updateTemplate(header);            
         this.toastr.success(`Journal header updated : ${this.templateHeader.template_ref}`);
         this.bHeaderDirty = false;
     }
     // Create or new journal entry
     public onCreate() {
 
-        var header = this.journalForm.getRawValue();
+        var header = this.templateHeaderForm.getRawValue();
         var detail = this.detailForm.getRawValue();
 
         const updateDate = new Date().toISOString().split("T")[0];
@@ -1447,28 +1307,32 @@ export class JournalTemplateUpdateComponent
             return;
         }
 
-        const journalDetail = {
+        const journalTemplateDetail = {
             template_ref: this.currentRowData.template_ref,
+            journal_no: this.currentRowData.journal_no,
             journal_sub: this.currentRowData.journal_sub,
             account: this.currentRowData.account,
             child: detail.accounts.dropdown,
-            child_desc: this.store.accounts().find((x) => x.child === detail.accounts.dropdown.toString()).description,
             description: detail.description,
-            create_date: updateDate,
-            create_user: name,
             sub_type: detail.subtype.dropdown,
             debit: debit,
             credit: credit,
             reference: detail.reference,
             fund: detail.fund,
-        };
+        } as IJournalDetailTemplate;
 
         const templateHeader: any = {
+            journal_no: header.journal_no,
             description: header.description,
-            transaction_date: header.transaction_date,
-            amount: header.amount,
-        };
-
+            template_name: header.template_name,
+            journal_type: header.journal_type,
+            create_date: updateDate,
+            create_user: name,
+        } as IJournalTemplate;
+        
+        this.store.updateTemplate(templateHeader);
+        this.store.updateTemplateDetail(journalTemplateDetail);
+        
         this.toastr.success('Journal details updated');
 
         this.bHeaderDirty = false;
@@ -1556,7 +1420,7 @@ export class JournalTemplateUpdateComponent
             confirmation.afterClosed().subscribe((result) => {
                 if (result === "confirmed") {
                     this.detailForm.reset();
-                    this.journalForm.reset();
+                    this.templateHeaderForm.reset();
                     this._location.back();
                 }
             });

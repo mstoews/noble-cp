@@ -120,11 +120,11 @@ const imports = [
                                     
                 <div mat-dialog-actions>
                         @if (bHeaderDirty == true) {
-                                <button mat-icon-button color="primary" class="hover:bg-slate-400 ml-1"
-                                            (click)="onUpdate()" matTooltip="Save"
-                                            aria-label="hovered over">                                    
-                                        <span class="e-icons e-save"></span>
-                                </button>
+                        <button mat-icon-button color="primary" class="hover:bg-slate-400 ml-1"
+                                    (click)="onUpdate()" matTooltip="Save"
+                                    aria-label="hovered over">                                    
+                                <span class="e-icons e-save"></span>
+                        </button>
                         }
                         
                         <button mat-icon-button color="primary" 
@@ -162,7 +162,7 @@ const imports = [
                 <div class="h-full border-gray-300 rounded-2xl">                                      
                 <div  class="flex flex-1 flex-col" height="400px">   
                     @if (templateList$ | async;  as templates) {        
-                        <gl-grid  (onUpdateSelection)="onUpdateSelection($event)"  [data]="templates"  [columns]="columns"></gl-grid>    
+                        <gl-grid (onUpdateSelection)="onUpdateSelection($event)"  [data]="templates"  [columns]="columns"></gl-grid>    
                     }
                 </div> 
             </div>
@@ -190,7 +190,6 @@ const imports = [
 export class JournalTemplateComponent implements OnInit {
 
     public gridControl = viewChild<GridComponent>("grid");
-
     drawer = viewChild<MatDrawer>('drawer');
     store = inject(Store);
     fb = inject(FormBuilder);
@@ -206,9 +205,6 @@ export class JournalTemplateComponent implements OnInit {
     public bHeaderDirty: boolean = false;
     
     public currentRowData: any;
-    
-
-    
     public displayMode = 'compact';
     public showPageSizeSelector = true;
     public showInfo = true;
@@ -224,8 +220,8 @@ export class JournalTemplateComponent implements OnInit {
         { trans_type: 'GL', description: 'General Ledger' },
         { trans_type: 'AP', description: 'Accounts Payable' },
         { trans_type: 'AR', description: 'Accounts Receivable' },
-        { trans_type: 'INV', description: 'Inventory' },
-        { trans_type: 'AST', description: 'Assets' },
+        { trans_type: 'IV', description: 'Inventory' },
+        { trans_type: 'AS', description: 'Assets' },
     ];
 
     keyField: any;
@@ -233,16 +229,15 @@ export class JournalTemplateComponent implements OnInit {
     templateDetailList: Observable<IJournalDetailTemplate[]>;
 
     columns = [
-        { field: 'template_ref', headerText: 'Ref', width: 100, visible: false, textAlign: 'Left', isPrimaryKey: true },
-        { field: 'journal_no', headerText: 'Original Journal', visible: false, width: 100, textAlign: 'Left' },
+        { field: 'template_ref',  headerText: 'Ref', width: 100, visible: false, textAlign: 'Left', isPrimaryKey: true },
+        { field: 'journal_no',    headerText: 'Original Journal', visible: false, width: 100, textAlign: 'Left' },
         { field: 'template_name', headerText: 'Name', width: 100, textAlign: 'Left' },
-        { field: 'description', headerText: 'Description', width: 400, textAlign: 'Left' },
-        { field: 'journal_type', headerText: 'Journal Type', width: 80, textAlign: 'Left' },
-        { field: 'create_date', headerText: 'Date', width: 100, textAlign: 'Left' },
-        { field: 'create_user', headerText: 'User', width: 100, textAlign: 'Left' },
+        { field: 'description',   headerText: 'Description', width: 400, textAlign: 'Left' },
+        { field: 'journal_type',  headerText: 'Journal Type', width: 80, textAlign: 'Left' },
+        { field: 'create_date',   headerText: 'Date', width: 100, textAlign: 'Left' },
+        { field: 'create_user',   headerText: 'User', width: 100, textAlign: 'Left' },
 
     ];
-
 
     public actionBegin(args: EditEventArgs): void {
         if (args.requestType === "beginEdit" || args.requestType === "add") {
@@ -258,13 +253,11 @@ export class JournalTemplateComponent implements OnInit {
         this.store.dispatch(loadTemplates());
         this.currentDate = new Date().toISOString().split('T')[0];
         this.formatoptions = { type: 'dateTime', format: 'M/dd/yyyy' }
-
         this.templateForm.valueChanges.subscribe((value) => {
             this.bHeaderDirty = true;
         });
         this.bHeaderDirty = false;
     }
-
 
     onChangeType(e: any) {
         console.debug('onChangeType')
@@ -283,7 +276,6 @@ export class JournalTemplateComponent implements OnInit {
     }
 
     public rowDrag(args: RowDragEventArgs): void {
-
         (args.rows as Element[]).forEach((row: Element) => {
             row.classList.add("drag-limit");
         });
@@ -336,16 +328,14 @@ export class JournalTemplateComponent implements OnInit {
         // this.Store.loadTemplateDetails(value);
     }
 
-
-
     onCellDoubleClicked(e: any) {
         this.bOpenDetail = true;
-        // this.openDrawer();
+        this.openDrawer();
     }
 
     onAdd() {
         this.bOpenDetail = true;
-        // this.openDrawer()
+        this.openDrawer()
     }
 
     onRefresh() {
@@ -396,12 +386,19 @@ export class JournalTemplateComponent implements OnInit {
     onEdit() {
         this.bOpenDetail = true;
         // this.refresh(this.hJournal, this.description, this.transaction_date);
-        // this.openDrawer();
+        this.openDrawer();
+    }
+
+    openDrawer() {
+        const opened = this.drawer().opened;
+        if (opened !== true) {
+            this.drawer().toggle();
+        }
+        this.bOpenDetail = true;
     }
 
 
     onFocusedDetailRowChanged(e: any) {
-
         this.currentRowData = e.row.data;
     }
 
@@ -409,23 +406,15 @@ export class JournalTemplateComponent implements OnInit {
         console.debug('onFocusRowChanged :', JSON.stringify(e.row.data))
     }
 
-    // openDrawer() {
-    //     const opened = this.drawer.opened;
-    //     if (opened !== true) {
-    //         this.drawer.toggle();
-    //     } else {
-    //         return;
-    //     }
-    // }
-
-    // closeDrawer() {
-    //     this.bOpenDetail = true;
-    //     const opened = this.drawer.opened;
-    //     if (opened === true) {
-    //         this.drawer.toggle();
-    //     } else {
-    //         return;
-    //     }
-    // }
+    
+    closeDrawer() {
+        this.bOpenDetail = true;
+        const opened = this.drawer().opened;
+        if (opened === true) {
+            this.drawer().toggle();
+        } else {
+            return;
+        }
+    }
 
 }

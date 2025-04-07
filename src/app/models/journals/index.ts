@@ -149,7 +149,7 @@ export interface IJournalDetailTemplate {
   description: string,
   account: number,
   child: number,
-  subtype: string,
+  sub_type: string,
   fund: string,
   debit: number,
   credit: number,

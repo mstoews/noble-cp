@@ -193,6 +193,25 @@ export const TemplateStore = signalStore(
           })
         )
       ),
+
+      // update template
+      updateTemplateDetail: rxMethod<IJournalDetailTemplate>(
+        pipe(
+          tap(() => patchState(state, { isLoading: true })),
+          switchMap((value) => {
+            return templateService.update_details(value).pipe(
+              tapResponse({
+                next: (template) => {
+                  const updatedTemplate = state.tmp_details().filter((template) => template.template_ref !== template.template_ref);
+                  patchState(state, { tmp_details: updatedTemplate });
+                },
+                error: console.error,
+                finalize: () => patchState(state, { isLoading: false }),
+              })
+            );
+          })
+        )
+      ),
       // delete template
       removeFund: rxMethod<string>(
         pipe(

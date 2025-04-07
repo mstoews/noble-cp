@@ -1077,7 +1077,7 @@ export class EntryWizardComponent implements OnInit, OnDestroy, AfterViewInit {
                 description: templateDetail.description,
                 create_date: updateDate,
                 create_user: email,
-                sub_type: templateDetail.subtype,
+                sub_type: templateDetail.sub_type,
                 debit: templateDetail.debit * journalHeader.amount,
                 credit: templateDetail.credit * journalHeader.amount,
                 reference: '',

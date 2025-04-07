@@ -210,12 +210,12 @@ export class TransactionMainComponent implements OnInit, OnDestroy {
                 title: 'Payments',
                 description: 'Pay your bills and manage your accounts payable',
             },
-            {
-                id: 'tp',
-                icon: 'heroicons_outline:document-duplicate',
-                title: 'Templates',
-                description: 'Manage your accounting patterns to automate, reduce effort and provide consistency in accounting',
-            },
+            // {
+            //     id: 'tp',
+            //     icon: 'heroicons_outline:document-duplicate',
+            //     title: 'Templates',
+            //     description: 'Manage your accounting patterns to automate, reduce effort and provide consistency in accounting',
+            // },
             {
                 id: 'tmp',
                 icon: 'heroicons_outline:document-duplicate',
@@ -228,12 +228,12 @@ export class TransactionMainComponent implements OnInit, OnDestroy {
                 title: 'Artifact Management',
                 description: 'Manage the documentation of transactions',
             },
-            {
-                id: 'tree',
-                icon: 'feather:image',
-                title: 'Tree Control Testing',
-                description: 'Test the tree control and drop down lists',
-            },
+            // {
+            //     id: 'tree',
+            //     icon: 'feather:image',
+            //     title: 'Tree Control Testing',
+            //     description: 'Test the tree control and drop down lists',
+            // },
             {
                 id: 'artifact-mgmt',
                 icon: 'heroicons_outline:document-magnifying-glass',
