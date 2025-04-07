@@ -8,12 +8,11 @@ import { loadAccumulationChartTheme } from './theme-color';
   imports: [ChartAllModule, AccumulationChartAllModule],
   template: `
   <style>
-.control-section{
-    margin-top: 100px;
-}
-
-</style>
-<div class="control-section">
+    .control-section{
+        margin-top: 23px;
+    }
+    </style>
+    <div class="control-section bg-gray-200 dark:bg-gray-700 rounded-xl p-4">
     <div>
         <ejs-accumulationchart id="container" #pie style='display:block; width: 92%' [legendSettings]="legendSettings"
             [tooltip]="tooltip" [title]="title" [enableSmartLabels]='enableSmartLabels'
@@ -24,28 +23,29 @@ import { loadAccumulationChartTheme } from './theme-color';
             </e-accumulation-series-collection>
         </ejs-accumulationchart>
     </div>
-</div>
-<style>
-    .control-section {
-        min-height: 450px;
-    }
-</style>
-  ` ,
-  styles: `
-  #chart {
-    max-width: 650px;
-    margin: 35px auto;
-    }
-`
+    </div>
+    <style>
+        .control-section {
+            min-height: 450px;
+        }
+      </style>
+    `,    
+  styles: 
+  `
+    #chart {
+        max-width: 650px;
+        margin: 35px auto;
+        }
+    `
 })
 export class DashboardChartComponent {
 
   public data: Object[] = [
-    { Country : "Water", Population : 505370, Radius : Browser.isDevice ? '110' : "100", text: 'Water'},
-    { Country : "Snow Removal",    Population : 551500, Radius : Browser.isDevice ? '120' :"118.7", text: 'Snow Removal' },
-    { Country : "Security",  Population : 312685 , Radius : '137.5', text: Browser.isDevice ? 'Dominican <br> Republic' :  'Dominican Republic' },
-    { Country : "Power", Population : 350000 , Radius : '124.6', text: 'Cuba'},
-    { Country : "Interest Expense", Population : 301000 , Radius : "150.8", text: 'Egypt'},
+    { Country : "Water", Population : 5070, Radius : Browser.isDevice ? '110' : "100", text: 'Water'},
+    { Country : "Snow Removal",    Population : 500, Radius : Browser.isDevice ? '120' :"118.7", text: 'Snow Removal' },
+    { Country : "Security",  Population : 3685 , Radius : '137.5', text: Browser.isDevice ? 'Dominican <br> Republic' :  'Security' },
+    { Country : "Power", Population : 3500 , Radius : '124.6', text: 'Power'},
+    { Country : "Interest", Population : 300 , Radius : "150.8", text: 'Interest'},
     
 ];
 @ViewChild('pie')
