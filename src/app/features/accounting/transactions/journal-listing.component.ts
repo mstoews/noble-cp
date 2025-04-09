@@ -164,7 +164,7 @@ const imports = [
                                                     </div>                                                                                            
                                                     }   
                                             </ng-template>                                                   
-                                        <e-column field='transaction_date' headerText='Date' width='50' format='M/dd/yyyy' textAlign='Middle'></e-column>
+                                        <e-column field='transaction_date' headerText='Date' width='60' format='M/dd/yyyy' textAlign='Middle'></e-column>
                                         <e-column field="status" headerText="Status" width="60">
                                                 <ng-template #template let-data>                                                                
                                                     @switch (data.status) 
@@ -187,10 +187,10 @@ const imports = [
                                                                 Cleared
                                                             </span>
                                                         }
-                                                        @case ('CLEARED-REVERSED') {
+                                                        @case ('REVERSED') {
                                                             <span class="e-badge flex  text-md  gap-1 items-center w-max bg-transparent">
                                                                 <div class="w-4 h-4 rounded-full bg-red-700"></div>
-                                                                Failed
+                                                                Reversed
                                                             </span>
                                                         }
                                                     }

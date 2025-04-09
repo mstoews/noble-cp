@@ -152,11 +152,11 @@ const imp = [
 
                             <!-- Name  -->
 
-                            <mat-form-field class="flex-col ml-2 mr-2 mt-1 grow">
+                            <!-- <mat-form-field class="flex-col ml-2 mr-2 mt-1 grow">
                                 <mat-label class="text-md ml-2">Description</mat-label>
                                 <input matInput placeholder="Name" formControlName="template_name" [placeholder]="'Name'" />
                                 <mat-icon class="icon-size-5 text-lime-700" matSuffix  [svgIcon]="'heroicons_solid:calculator'"></mat-icon>
-                            </mat-form-field>
+                            </mat-form-field> -->
                             
                             <!-- Description  -->
 
@@ -250,27 +250,38 @@ const imp = [
                                             (rowSelected)="onRowSelected($event)"
                                             [gridLines]="'Both'">
                                             <e-columns>
-                                            <e-column field='journal_id'  headerText='ID' [visible]='true' isPrimaryKey='true' width='80'></e-column>
-                                            <e-column field="type" headerText="Type"   [visible]='true' width="70" dataType="text" textAlign="Center">
-                                                <ng-template #template let-data>                       
-                                                    @if(data.type === 'GL') {
-                                                        <div>                                                        
-                                                            <span class="text-gray-300 bg-green-700 p-1 rounded-xl">{{data.type}}</span> 
-                                                        </div>
-                                                    } 
-                                                    @else if (data.type === 'AP'){
-                                                        <div>                                                        
-                                                            <span class="text-gray-300 bg-blue-800 p-1 rounded-xl">{{data.type}}</span> 
-                                                        </div>
-                                                    }   
-                                                    @else if (data.type === 'AR'){
-                                                        <div>                                                        
-                                                            <span class="text-gray-300 bg-purple-800 p-1 rounded-xl">{{data.type}}</span> 
-                                                        </div>
+                                            <e-column field='journal_id'  headerText='ID' [visible]='false' isPrimaryKey='true' width='80'></e-column>
+                                            <e-column field="type" headerText="ID" width="120">
+                                                <ng-template #template let-data>                                                                
+                                                    @switch (data.type) 
+                                                    {                                    
+                                                        @case ('GL') {                                        
+                                                            <span class="e-badge flex text-md gap-1 items-center w-max bg-transparent">
+                                                                <div class="w-4 h-4  rounded-full bg-green-700"></div>
+                                                                GL - {{data.journal_id}}
+                                                            </span>
+                                                        }
+                                                        @case ('AP') {
+                                                        <span class="e-badge flex text-md  gap-1 items-center w-max bg-transparent">
+                                                            <div class="w-4 h-4 rounded-full bg-blue-700"></div>
+                                                                AP - {{data.journal_id}}
+                                                        </span>
+                                                        }                                    
+                                                        @case ('AR') {
+                                                            <span class="e-badge flex text-md  gap-1 items-center w-max bg-transparent">
+                                                                <div class="w-4 h-4 rounded-full bg-cyan-600"></div>
+                                                                AR - {{data.journal_id}}
+                                                            </span>
+                                                        }
+                                                        @case ('CL') {
+                                                            <span class="e-badge flex  text-md  gap-1 items-center w-max bg-transparent">
+                                                                <div class="w-4 h-4 rounded-full bg-purple-700"></div>
+                                                                CL - {{data.journal_id}}
+                                                            </span>
+                                                        }
                                                     }
-
-                                                </ng-template>    
-                                                </e-column>
+                                                </ng-template>
+                                        </e-column>                                                                
                                                 
                                                 <e-column field='description' headerText='Journal Description'   [visible]='true'></e-column>
                                                 <e-column field='amount'      headerText='Amount' [visible]='true'  textAlign='Right' width='150' format="N2"></e-column>
