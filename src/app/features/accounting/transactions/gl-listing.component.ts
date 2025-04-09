@@ -1,4 +1,4 @@
-import { Component, inject } from "@angular/core";
+import { Component, inject, output, signal, viewChild } from "@angular/core";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { NgxMatSelectSearchModule } from "ngx-mat-select-search";
 import { CommonModule } from "@angular/common";
@@ -22,7 +22,10 @@ const imports = [
   imports: [imports, GridMenubarStandaloneComponent, SummaryCardComponent],
   template: `
     <div id="settings" class="control-section default-splitter flex flex-col overflow-hidden">
-    <grid-menubar class="ml-1 mr-1 w-full" [inTitle]="toolbarTitle"></grid-menubar>
+    <grid-menubar class="ml-1 mr-1 w-full" [inTitle]="toolbarTitle" 
+      (openSettings)=onOpenSettings()
+      (print)=onPrinting()
+    ></grid-menubar>
     <div class="grid grid-row-3 overflow-hidden">
     <div class="flex flex-col min-w-0 overflow-y-auto -px-10" cdkScrollable>
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 w-full min-w-0 overflow-hidden">
@@ -53,7 +56,11 @@ const imports = [
         <div class="grid grid-cols-1 gap-4 w-full min-w-0 border-gray-300 overflow-hidden">
             <ng-container>                    
                 @defer {
-                    <transactions [transactionType]="transType"></transactions>
+                    <transactions #transaction
+                    [transactionType]="transType"   
+                    [openDrawers]="openDrawer"                     
+                    (onCloseDrawer)="onOpenSettings()"                    
+                    ></transactions>
                 }                
                 @placeholder(minimum 200ms) {
                     <div class="flex justify-center items-center">
@@ -71,7 +78,10 @@ export class GLTransactionListComponent {
   private toast = inject(ToastrService);
   public transType: string = "all";
   public toolbarTitle = "General Ledger Transactions";
-
+  
+  transactionGrid = viewChild<JournalEntryComponent>("transaction");
+  
+  public openDrawer = false;
 
   onNew() {
     this.toast.success('Add new Journal Entry', 'Add');
@@ -85,9 +95,13 @@ export class GLTransactionListComponent {
     this.toast.success('Template Clone', 'Clone');
   }
 
-  openDrawer() {
-    this.toast.success('Template');
+  onOpenSettings() {      
+    if (this.openDrawer === false)
+      this.openDrawer = true;
+    else
+      this.openDrawer = false;
   }
+    
   exportLX() {
     this.toast.success('Template');
   }
@@ -97,8 +111,8 @@ export class GLTransactionListComponent {
   exportCSV() {
     this.toast.success('Template');
   }
-  onPrint() {
-    this.toast.success('Template');
+  onPrinting() {
+    this.transactionGrid().onPrint();    
   }
 
   onRefresh() {

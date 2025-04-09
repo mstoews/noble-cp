@@ -24,7 +24,7 @@ const imports = [
     template: `
     <div id="settings" class="control-section default-splitter flex flex-col overflow-hidden">
 
-    <grid-menubar class="ml-1 mr-1 mb-2 w-full" [inTitle]="toolbarTitle"></grid-menubar>
+    <grid-menubar class="ml-1 mr-1 mb-2 w-full" [inTitle]="toolbarTitle" (openSettings)=onOpenSettings()></grid-menubar>
     </div>                
     <div class="flex-auto">
             <div class="flex flex-col min-w-0 overflow-y-auto -px-10" cdkScrollable>
@@ -57,7 +57,10 @@ const imports = [
         <div class="h-full border-gray-300 rounded-2xl">
                 <ng-container>                    
                     @defer {
-                        <transactions [transactionType]="'AR'" ></transactions>
+                        <transactions [transactionType]="'AR'" 
+                            [openDrawers]="openDrawer" 
+                            (onCloseDrawer)="onOpenSettings()"              
+                        ></transactions>
                     }                
                     @placeholder(minimum 200ms) {
                         <div class="flex justify-center items-center">
@@ -76,6 +79,15 @@ export class ARTransactionComponent {
     public prd = "1";
     public prd_year = "2024";
 
+    public openDrawer = false;
+
+    onOpenSettings() {      
+        if (this.openDrawer === false)
+          this.openDrawer = true;
+        else
+          this.openDrawer = false;
+      }
+      
     alert: { type: FuseAlertType; message: string } = {
         type: 'success',
         message: '',
@@ -95,9 +107,8 @@ export class ARTransactionComponent {
     }
     onUpdateSelection() {
     }
-    openDrawer() {
 
-    }
+    
     onPrint() {
 
     }

@@ -49,7 +49,7 @@ const imports = [
   imports: [imports, GridMenubarStandaloneComponent],
   template: `
    <div id="settings" class="control-section default-splitter flex flex-col overflow-hidden">
-    <grid-menubar class="ml-1 mr-1 w-full" [inTitle]="toolbarTitle"></grid-menubar>
+    <grid-menubar class="ml-1 mr-1 w-full" [inTitle]="toolbarTitle" (openSettings)=onOpenSettings()></grid-menubar>
     <div class="grid grid-row-3 overflow-hidden">
     <div class="flex flex-col min-w-0 overflow-y-auto -px-10" cdkScrollable>
       
@@ -79,7 +79,10 @@ const imports = [
                 @defer {
                     <transactions 
                     class="group relative flex flex-col overflow-hidden rounded-lg  pb-2 flex-grow"
-                    [transactionType]="transType">
+                    [transactionType]="transType"
+                    [openDrawers]="openDrawer" 
+                    (onCloseDrawer)="onOpenSettings()"              
+                    >
                     </transactions>
                 }                
                 @placeholder(minimum 200ms) {
@@ -117,6 +120,16 @@ export class APTransactionComponent implements OnInit {
   public prd = 1;
   public prd_year = 2024;
 
+  public openDrawer = false;
+
+  onOpenSettings() {      
+      if (this.openDrawer === false)
+        this.openDrawer = true;
+      else
+        this.openDrawer = false;
+    }
+
+
   public cash = signal<number>(0);
   public ap = signal<number>(0);
   public liabilities = signal<number>(0);
@@ -152,9 +165,6 @@ export class APTransactionComponent implements OnInit {
     // }
   }
 
-  openDrawer() {
-    throw new Error('Method not implemented.');
-  }
   exportLX() {
     throw new Error('Method not implemented.');
   }

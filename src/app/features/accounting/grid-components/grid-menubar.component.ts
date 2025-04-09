@@ -145,6 +145,7 @@ export class GridMenubarStandaloneComponent {
 
   public onPrint() {
     this.print.emit('print');
+    console.debug("onPrint from GridMenubarStandaloneComponent");
   }
 
   public onPDF() {

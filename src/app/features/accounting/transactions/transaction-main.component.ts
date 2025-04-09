@@ -24,7 +24,7 @@ import { JournalRouteComponent } from './journal-route.component';
 import { ApplicationService, MainPanelStore } from 'app/store/main.panel.store';
 import { ActivatedRoute } from '@angular/router';
 import { JournalTemplateUpdateComponent } from './journal-template-update.component';
-import { GLTransactionGridComponent } from './gl-transaction-grid.component';
+import { GLTransactionGridComponent } from './transaction-grid.component';
 
 const imports = [
     MaterialModule,
@@ -232,12 +232,12 @@ export class TransactionMainComponent implements OnInit, OnDestroy {
                 title: 'Artifact Management',
                 description: 'Manage the documentation of transactions',
             },
-            {
-                id: 'grid',
-                icon: 'feather:image',
-                title: 'Example Grid',
-                description: 'Example Grid with templates',
-            },
+            // {
+            //     id: 'grid',
+            //     icon: 'feather:image',
+            //     title: 'Example Grid',
+            //     description: 'Example Grid with templates',
+            // },
             {
                 id: 'artifact-mgmt',
                 icon: 'heroicons_outline:document-magnifying-glass',

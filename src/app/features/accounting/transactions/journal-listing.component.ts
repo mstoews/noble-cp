@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, HostListener, OnDestroy, OnInit, ViewEncapsulation, inject, input, viewChild } from '@angular/core';
+import { AfterViewInit, Component, HostListener, OnChanges, OnDestroy, OnInit, ViewEncapsulation, inject, input, output, viewChild } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { MaterialModule } from 'app/shared/material.module';
@@ -46,7 +46,7 @@ const imports = [
     imports: [imports],
     encapsulation: ViewEncapsulation.None,
     template: `    
-    <mat-drawer class="lg:w-[400px] md:w-full bg-white-100" #drawer [opened]="false" mode="over" [position]="'end'" [disableClose]="false">
+    <mat-drawer class="lg:w-[400px] md:w-full bg-white-100" #drawer [opened]="openDrawers()" mode="over" [position]="'end'" [disableClose]="false">
         <mat-card class="m-2">
             <div class="flex flex-col w-full text-gray-700 filter-article filter-interactive">
                 <div class="h-11 m-2 p-2 text-2xl text-justify text-white bg-slate-700" mat-dialog-title>
@@ -165,20 +165,20 @@ const imports = [
                                                     }   
                                             </ng-template>                                                   
                                         <e-column field='transaction_date' headerText='Date' width='50' format='M/dd/yyyy' textAlign='Middle'></e-column>
-                                        <e-column field="status" headerText="Status" width="50">
+                                        <e-column field="status" headerText="Status" width="60">
                                                 <ng-template #template let-data>                                                                
                                                     @switch (data.status) 
                                                     {                                    
                                                         @case ('CLOSED') {                                        
                                                             <span class="e-badge flex text-md gap-1 items-center w-max bg-transparent">
-                                                                <div class="w-4 h-4  rounded-full bg-blue-700"></div>
-                                                                Closed
+                                                                <div class="w-4 h-4  rounded-full bg-green-700"></div>
+                                                                Completed
                                                             </span>
                                                         }
                                                         @case ('OPEN') {
                                                         <span class="e-badge flex text-md  gap-1 items-center w-max bg-transparent">
-                                                            <div class="w-4 h-4 rounded-full bg-green-700"></div>
-                                                            Pending
+                                                            <div class="w-4 h-4 rounded-full bg-blue-700"></div>
+                                                            Open
                                                         </span>
                                                         }                                    
                                                         @case ('CLEARED') {
@@ -195,8 +195,12 @@ const imports = [
                                                         }
                                                     }
                                                 </ng-template>
-                                        </e-column>                                                                
-                                        <e-column field='period' headerText='Prd' width='50' visible='false'  textAlign='Middle' ></e-column>
+                                        </e-column>                                                                                                        
+                                        <e-column field="status" headerText="Period" width="60">                                                
+                                            <ng-template #template let-data>                                                                
+                                                {{data.period_year}} - {{data.period}}  
+                                            </ng-template>
+                                        </e-column>
                                         <e-column field='amount' headerText='Amount' width='80' format='N2' textAlign='Right'></e-column>
                                         <e-column field='period_year' headerText='Yr' width='100' [visible]='false'></e-column>
                                         <e-column field='create_date' headerText='Updated' width='100' format='M/dd/yyyy' [visible]='false'></e-column>
@@ -255,7 +259,7 @@ const imports = [
     `,
     providers: [providers]
 })
-export class JournalEntryComponent implements OnInit, OnDestroy, AfterViewInit {
+export class JournalEntryComponent implements OnInit, OnDestroy, AfterViewInit  {
 
     public route = inject(Router);
     public store = inject(Store);
@@ -265,6 +269,9 @@ export class JournalEntryComponent implements OnInit, OnDestroy, AfterViewInit {
 
     public periodForm!: FormGroup;
     public transactionType = input('');
+    public openDrawers = input<boolean>(false);
+    public printClicked = input<boolean>(false);
+
 
     public toolbarTitle: string = "Journal Entry";
     public sGridTitle = 'Journal Entry';
@@ -279,6 +286,7 @@ export class JournalEntryComponent implements OnInit, OnDestroy, AfterViewInit {
     public filterSettings: FilterSettingsModel;
     public lines: GridLine;
 
+    
     journalHeader$ = this.store.select(selectJournals);
     isJournalLoading$ = this.store.select(isJournalLoading);
 
@@ -288,6 +296,9 @@ export class JournalEntryComponent implements OnInit, OnDestroy, AfterViewInit {
 
     drawer = viewChild<MatDrawer>("drawer");
     grid = viewChild<GridComponent>('grid');
+
+    onCloseDrawer = output();
+        
 
     sTitle = 'Transaction Listings by Journal Type';
 
@@ -313,6 +324,7 @@ export class JournalEntryComponent implements OnInit, OnDestroy, AfterViewInit {
         this.toolbarOptions = ['Search'];
         this.filterSettings = { type: 'Excel' };
         this.lines = 'Both';
+        this.openDrawer()
 
     }
 
@@ -341,14 +353,12 @@ export class JournalEntryComponent implements OnInit, OnDestroy, AfterViewInit {
         }
     }
 
-    openDrawer() {
-        this.periodForm.patchValue({ period: this.periodParam.period, period_year: this.periodParam.period_year });
-        this.drawer().open();
+    public openDrawer() {        
+        this.periodForm.patchValue({ period: this.periodParam.period, period_year: this.periodParam.period_year });                
     }
 
     closeDrawer() {
-        this.drawer().close();
-
+         this.onCloseDrawer.emit();       
     }
 
     exportLX() {
@@ -360,8 +370,9 @@ export class JournalEntryComponent implements OnInit, OnDestroy, AfterViewInit {
     exportCSV() {
         throw new Error('Method not implemented.');
     }
+    
     onPrint() {
-        throw new Error('Method not implemented.');
+        this.grid().print();    
     }
 
     public dateValidator() {
@@ -390,9 +401,9 @@ export class JournalEntryComponent implements OnInit, OnDestroy, AfterViewInit {
 
     public onUpdate($event: any) {
         var period = this.periodForm.getRawValue();
-        var periodParam = { period: Number(period.period), period_year: Number(period.period_year) };
-        this.toolbarTitle = "Journal Transactions";
+        var periodParam = { period: Number(period.period), period_year: Number(period.period_year) };        
         this.store.dispatch(loadJournalHeaderByPeriod({ period: periodParam }));
+        this.closeDrawer();
     }
 
     public onBooked(booked: boolean) {
