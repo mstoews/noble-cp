@@ -264,7 +264,7 @@ const imp = [
                                                     }
                                                 </ng-template>    
                                                 </e-column>                                                
-                                                <e-column field='description' headerText='Journal Description'   [visible]='true'></e-column>                                            
+                                                <e-column field='template_name' headerText='Journal Description'   [visible]='true'></e-column>                                            
                                             </e-columns>
                                         </ejs-grid>
                                     </mat-card>
@@ -279,7 +279,7 @@ const imp = [
                                         Template Editing
                                     </div>
                                     
-                                    <form [formGroup]="templateHeaderForm">
+                                    <form [formGroup]="headerTemplateForm">
                                         <section class="flex flex-col md:flex-row">                                                    
                                                 <div class="flex flex-col w-40 grow">
                                                     <mat-form-field class="mt-1 ml-1 mr-1 flex-start " >
@@ -471,8 +471,7 @@ export class JournalTemplateUpdateComponent
     public fuseConfirmationService = inject(FuseConfirmationService);
 
     public matDialog = inject(MatDialog);
-    public templateHeaderForm!: FormGroup;
-
+    
     public bDetailDirty = false;    
     public partyId: string = '';
 
@@ -593,21 +592,20 @@ export class JournalTemplateUpdateComponent
     });
 
     headerTemplateForm = new FormGroup({
-        template_name: new FormControl('', Validators.required),
+        template_ref : new FormControl(0, Validators.required),
+        template_name: new FormControl('', Validators.required),        
         description: new FormControl('', Validators.required),
         journal_type: new FormControl('', Validators.required),
+        journal_no: new FormControl(0, Validators.required),            
+        create_date: new FormControl('', Validators.required),
+        create_user: new FormControl('', Validators.required),
     });
 
     
     ngOnInit(): void {
-
-        
-
         this.Store.dispatch(accountPageActions.children());
-        this.Store.dispatch(FundsActions.loadFunds());                
-        this.createEmptyForm();
+        this.Store.dispatch(FundsActions.loadFunds());                        
         this.initialDatagrid();
-
     }
 
     public menuItems: MenuItemModel[] = [{
@@ -645,17 +643,12 @@ export class JournalTemplateUpdateComponent
     public updateData() {
 
         const updateDate = new Date().toISOString().split('T')[0];
-        const inputs = { ...this.templateHeaderForm.value }
-        const momentDate = new Date(inputs.step1.transaction_date).toISOString().split('T')[0];
+        const inputs = { ...this.headerTemplateForm.value }        
         const email = '@' + this.auth.currentUser?.email.split('@')[0];
         
         var journalDetails: IJournalDetail[] = [];
 
         let count: number = 1;
-
-        if (inputs.step1.amount === 0) {
-            return;
-        }
 
         // let templateHeader: IJournalHeader = {
         //     // journal_id: this.journal_id,
@@ -706,10 +699,8 @@ export class JournalTemplateUpdateComponent
 
     public onUpdate() {
 
-        const inputs = { ...this.templateHeaderForm.value }
-        if (inputs.step1.amount === 0) {
-            return;
-        }
+        const inputs = { ...this.headerTemplateForm.value }
+        
         // var detail: Detail[] = this.journalDetailSignal();
         // var journalArray: IJournalTransactions = {
 
@@ -981,7 +972,7 @@ export class JournalTemplateUpdateComponent
             this.bDetailDirty = true;
         });
 
-        this.templateHeaderForm.valueChanges.subscribe((value) => {
+        this.headerTemplateForm.valueChanges.subscribe((value) => {
             if (value === undefined) {
                 this.bHeaderDirty = false;
                 console.debug('Header is true!! ', value);
@@ -1053,8 +1044,8 @@ export class JournalTemplateUpdateComponent
     public refreshHeader(header: IJournalTemplate) {
 
         this.templateHeader = header;
-
-        this.templateHeaderForm.patchValue({
+        
+        this.headerTemplateForm.patchValue({
             description: header.description,
             template_name: header.template_name,
             journal_type: header.journal_type,
@@ -1108,28 +1099,10 @@ export class JournalTemplateUpdateComponent
         });
     }
 
-    // Create template from the current transaction
-
-    // Add evidence 
-
-
-
-    public createEmptyForm() {
-        this.templateHeaderForm = this.fb.group({
-            description: ["", Validators.required],
-            template_name: ["", Validators.required],
-        });
-
-
-        this.bHeaderDirty = false;
-    }
-
-
-
     // On delete journal detail
     public onDeleteDetail() {
 
-        const inputs = { ...this.templateHeaderForm.value } as IJournalTemplate
+        const inputs = { ...this.headerTemplateForm.value } as IJournalTemplate
 
         var journalDetail = {
             journal_id: inputs.template_ref,
@@ -1159,11 +1132,11 @@ export class JournalTemplateUpdateComponent
 
     // On delete journal detail
     public onDelete(args: any) {
-        const inputs = { ...this.templateHeaderForm.value }
+        const inputs = { ...this.headerTemplateForm.value }
         const index = (this.grid as GridComponent).getSelectedRowIndexes();
         const rowData = this.grid.getCurrentViewRecords().at(index[0]) as any;
         var journalDetail = {
-            journal_id: inputs.journal_id,
+            journal_id: inputs.journal_no,
             journal_subid: rowData.journal_subid,
         };
         const confirmation = this._fuseConfirmationService.open({
@@ -1192,7 +1165,7 @@ export class JournalTemplateUpdateComponent
 
     // add a new line entry
     public onNewLineItem() {
-        const inputs = { ...this.templateHeaderForm.value } as IJournalHeader;
+        const inputs = { ...this.headerTemplateForm.value } as IJournalHeader;
         const updateDate = new Date().toISOString().split("T")[0];
         var max = 0;
 
@@ -1253,7 +1226,7 @@ export class JournalTemplateUpdateComponent
     }
 
     journalEntryCleanUp() {
-        const inputs = { ...this.templateHeaderForm.value } as IJournalHeader;
+        const inputs = { ...this.headerTemplateForm.value } as IJournalHeader;
         this.detailForm.reset();
         this.debitCtrl.reset();
         //this.store.renumberJournalDetail(inputs.journal_id);
@@ -1266,7 +1239,7 @@ export class JournalTemplateUpdateComponent
     // Update template header
     onUpdateJournalHeader(e: any) {
 
-        let header = this.templateHeaderForm.getRawValue();
+        let header = this.headerTemplateForm.getRawValue();
 
         const journalTemplateHeader = {            
             journal_no: this.templateHeader.journal_no,
@@ -1283,7 +1256,7 @@ export class JournalTemplateUpdateComponent
     // Create or new journal entry
     public onCreate() {
 
-        var header = this.templateHeaderForm.getRawValue();
+        var header = this.headerTemplateForm.getRawValue();
         var detail = this.detailForm.getRawValue();
 
         const updateDate = new Date().toISOString().split("T")[0];
@@ -1420,7 +1393,7 @@ export class JournalTemplateUpdateComponent
             confirmation.afterClosed().subscribe((result) => {
                 if (result === "confirmed") {
                     this.detailForm.reset();
-                    this.templateHeaderForm.reset();
+                    this.headerTemplateForm.reset();
                     this._location.back();
                 }
             });

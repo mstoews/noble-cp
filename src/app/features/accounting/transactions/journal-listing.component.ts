@@ -3,19 +3,16 @@ import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, 
 import { CommonModule } from '@angular/common';
 import { MaterialModule } from 'app/shared/material.module';
 import { cloneJournal, loadJournalHeaderByPeriod } from 'app/features/accounting/transactions/state/journal/Journal.Action';
-import { Observable } from 'rxjs';
-import { IJournalHeader, IJournalTransactions } from 'app/models/journals';
-import { IPeriodParam } from 'app/models/period';
 import { MatDrawer } from '@angular/material/sidenav';
 import { FilterTypePipe } from 'app/filter-type.pipe';
-import { AggregateService, ColumnMenuService, ContextMenuService, EditService, EditSettingsModel, ExcelExportService, FilterService, FilterSettingsModel, GridComponent, GridLine, GridModule, Group, GroupService, PageService, PdfExportService, ReorderService, ResizeService, RowSelectEventArgs, SearchService, SearchSettingsModel, SelectionSettingsModel, SortService, ToolbarItems, ToolbarService } from '@syncfusion/ej2-angular-grids';
+import { AggregateService, ColumnMenuService, ContextMenuService, EditService, EditSettingsModel, ExcelExportService, FilterService, FilterSettingsModel, GridComponent, GridLine, GridModule, GroupService, PageService, PdfExportService, ReorderService, ResizeService, RowSelectEventArgs, SearchService, SearchSettingsModel, SelectionSettingsModel, SortService, ToolbarItems, ToolbarService } from '@syncfusion/ej2-angular-grids';
 import { DropDownListComponent } from '@syncfusion/ej2-angular-dropdowns';
 import { ToastrService } from 'ngx-toastr';
 import { MenuEventArgs, MenuItemModel } from '@syncfusion/ej2-navigations';
 import { ContextMenuModule } from '@syncfusion/ej2-angular-navigations';
 import { isJournalLoading, selectJournals } from 'app/features/accounting/transactions/state/journal/Journal.Selector';
 import { Router } from '@angular/router';
-import { select, Store } from '@ngrx/store';
+import { Store } from '@ngrx/store';
 
 
 const providers = [
@@ -121,51 +118,41 @@ const imports = [
                                     (rowSelected)='onRowSelected($event)'                                
                                     (actionBegin)='selectedRow($event)' >
                                     <e-columns>
-                                        <e-column field='journal_id' headerText='ID' isPrimaryKey='true' isIdentity='true' visible='true' width='60'></e-column>
-                                        <e-column field='status' headerText='Status' width='50' textAlign='Center'>
-                                                <ng-template #template let-data>                       
-                                                    @if(data.status === 'CLOSED') {
-                                                        <div>
-                                                            <span class="text-green-800 e-icons e-check"></span> 
-                                                        </div>
-                                                    } @else 
-                                                    {                                            
-                                                    <div>
-                                                    <div>
-                                                            <span class="text-gray-100 border-2 p-1  rounded-xl text-sm bg-blue-800">{{data.status}}</span> 
-                                                        </div>
-                                                    </div>                                                                                            
-                                                    }   
-                                                </ng-template>       
-
-                                            </e-column>
-                                            
-                                            <e-column field='type' headerText='Type' width='50' textAlign='Center'>
-                                            <ng-template #template let-data>                       
-                                                    @if(data.type === 'GL') {
-                                                        <div>
-                                                        <span class="text-gray-100 bg-green-700 p-1 rounded-xl ">{{data.type}}</span> 
-                                                        </div>
-                                                    } @else if (data.type === 'AP')
-                                                    {                                            
-                                                        <div>
-                                                            <div>
-                                                            <span class="text-gray-200 bg-blue-700 p-1 rounded-xl">{{data.type}}</span> 
-                                                            </div>
-                                                        </div>                                                                                            
-                                                    }  @else {
-                                                        <div>
-                                                            <div>
-                                                            <span class="text-gray-200 bg-purple-700 p-1 rounded-xl">{{data.type}}</span> 
-                                                            </div>
-                                                        </div>                                                                                            
+                                        <e-column field='journal_id' headerText='ID' isPrimaryKey='true' isIdentity='true' [visible]=false width='40'></e-column>                                            
+                                        <e-column field="type" headerText="ID" width="70">
+                                                <ng-template #template let-data>                                                                
+                                                    @switch (data.type) 
+                                                    {                                    
+                                                        @case ('GL') {                                        
+                                                            <span class="e-badge flex text-md gap-1 items-center w-max bg-transparent">
+                                                                <div class="w-4 h-4  rounded-full bg-green-700"></div>
+                                                                GL - {{data.journal_id}}
+                                                            </span>
+                                                        }
+                                                        @case ('AP') {
+                                                        <span class="e-badge flex text-md  gap-1 items-center w-max bg-transparent">
+                                                            <div class="w-4 h-4 rounded-full bg-blue-700"></div>
+                                                                AP - {{data.journal_id}}
+                                                        </span>
+                                                        }                                    
+                                                        @case ('AR') {
+                                                            <span class="e-badge flex text-md  gap-1 items-center w-max bg-transparent">
+                                                                <div class="w-4 h-4 rounded-full bg-cyan-600"></div>
+                                                                AR - {{data.journal_id}}
+                                                            </span>
+                                                        }
+                                                        @case ('CL') {
+                                                            <span class="e-badge flex  text-md  gap-1 items-center w-max bg-transparent">
+                                                                <div class="w-4 h-4 rounded-full bg-purple-700"></div>
+                                                                CL - {{data.journal_id}}
+                                                            </span>
+                                                        }
                                                     }
-
-                                            </ng-template>       
-                                            </e-column>
-                                            <e-column field='description' headerText='Description' width='200'></e-column>
-                                            <e-column field='booked' headerText='Bk' width='60' [visible]=false ></e-column>
-                                                <ng-template #template let-data>                       
+                                                </ng-template>
+                                        </e-column>                                                                
+                                        <e-column field='description' headerText='Description' width='200'></e-column>
+                                        <e-column field='booked' headerText='Bk' width='60' [visible]=false ></e-column>
+                                            <ng-template #template let-data>                       
                                                     @if(data.booked === 'true') {
                                                         <div>
                                                             <span class="text-green-800 border-2 p-1 rounded-md text-sm bg-gray-100">{{data.booked}}</span>  
@@ -176,15 +163,45 @@ const imports = [
                                                             <span class="text-blue-800 border-2 p-1 rounded-md text-sm bg-gray-100">{{data.booked}}</span>                                                                                    
                                                     </div>                                                                                            
                                                     }   
-                                                </ng-template>       
-                                            
-                                            <e-column field='transaction_date' headerText='Date' width='80' format='M/dd/yyyy'></e-column>
-                                            <e-column field='period' headerText='Prd' width='50' visible='false'></e-column>
-                                            <e-column field='amount' headerText='Amount' width='80' format='N2' textAlign='Right'></e-column>
-                                            <e-column field='period_year' headerText='Yr' width='100' [visible]='false'></e-column>
-                                            <e-column field='create_date' headerText='Updated' width='100' format='M/dd/yyyy' [visible]='false'></e-column>
-                                            <e-column field='create_user' headerText='User' width='100' [visible]='false'></e-column>
-                                            <e-column field='party_id'    headerText='Vendor' width='100' [visible]='true'></e-column>
+                                            </ng-template>                                                   
+                                        <e-column field='transaction_date' headerText='Date' width='50' format='M/dd/yyyy' textAlign='Middle'></e-column>
+                                        <e-column field="status" headerText="Status" width="50">
+                                                <ng-template #template let-data>                                                                
+                                                    @switch (data.status) 
+                                                    {                                    
+                                                        @case ('CLOSED') {                                        
+                                                            <span class="e-badge flex text-md gap-1 items-center w-max bg-transparent">
+                                                                <div class="w-4 h-4  rounded-full bg-blue-700"></div>
+                                                                Closed
+                                                            </span>
+                                                        }
+                                                        @case ('OPEN') {
+                                                        <span class="e-badge flex text-md  gap-1 items-center w-max bg-transparent">
+                                                            <div class="w-4 h-4 rounded-full bg-green-700"></div>
+                                                            Pending
+                                                        </span>
+                                                        }                                    
+                                                        @case ('CLEARED') {
+                                                            <span class="e-badge flex text-md  gap-1 items-center w-max bg-transparent">
+                                                                <div class="w-4 h-4 rounded-full bg-cyan-800"></div>
+                                                                Cleared
+                                                            </span>
+                                                        }
+                                                        @case ('CLEARED-REVERSED') {
+                                                            <span class="e-badge flex  text-md  gap-1 items-center w-max bg-transparent">
+                                                                <div class="w-4 h-4 rounded-full bg-red-700"></div>
+                                                                Failed
+                                                            </span>
+                                                        }
+                                                    }
+                                                </ng-template>
+                                        </e-column>                                                                
+                                        <e-column field='period' headerText='Prd' width='50' visible='false'  textAlign='Middle' ></e-column>
+                                        <e-column field='amount' headerText='Amount' width='80' format='N2' textAlign='Right'></e-column>
+                                        <e-column field='period_year' headerText='Yr' width='100' [visible]='false'></e-column>
+                                        <e-column field='create_date' headerText='Updated' width='100' format='M/dd/yyyy' [visible]='false'></e-column>
+                                        <e-column field='create_user' headerText='User' width='100' [visible]='false'></e-column>
+                                        <e-column field='party_id'    headerText='Vendor' width='100' [visible]='true'></e-column>
                                     </e-columns>
                                     <e-aggregates>
                                             <e-aggregate>
@@ -241,7 +258,7 @@ const imports = [
 export class JournalEntryComponent implements OnInit, OnDestroy, AfterViewInit {
 
     public route = inject(Router);
-    public Store = inject(Store);
+    public store = inject(Store);
     public toast = inject(ToastrService);
     private fb = inject(FormBuilder);
 
@@ -262,10 +279,12 @@ export class JournalEntryComponent implements OnInit, OnDestroy, AfterViewInit {
     public filterSettings: FilterSettingsModel;
     public lines: GridLine;
 
-    journalHeader$ = this.Store.select(selectJournals);
-    isJournalLoading$ = this.Store.select(isJournalLoading);
+    journalHeader$ = this.store.select(selectJournals);
+    isJournalLoading$ = this.store.select(isJournalLoading);
 
-    public groupSettings: { [x: string]: Object } = { showDropArea: true, columns: ['party_id'] };
+    periodParam = { period: 1, period_year: 2024 };
+
+    public groupSettings: { [x: string]: Object } = { showDropArea: true };
 
     drawer = viewChild<MatDrawer>("drawer");
     grid = viewChild<GridComponent>('grid');
@@ -277,9 +296,9 @@ export class JournalEntryComponent implements OnInit, OnDestroy, AfterViewInit {
     collapsed = false;
 
     ngOnInit() {
-        var periodParam = { period: 1, period_year: 2024 };
+       
 
-        this.Store.dispatch(loadJournalHeaderByPeriod({ period: periodParam }));
+        this.store.dispatch(loadJournalHeaderByPeriod({ period: this.periodParam }));
 
         this.toolbarTitle = "Journal Transactions by Period ";
         this.periodForm = this.fb.group({
@@ -302,7 +321,7 @@ export class JournalEntryComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     onClone() {
-        this.Store.dispatch(cloneJournal({ journal_id: this.currentRowData.journal_id }));
+        this.store.dispatch(cloneJournal({ journal_id: this.currentRowData.journal_id }));
         this.toast.success('Journal Entry Cloned : ', this.currentRowData.journal_id);
     }
 
@@ -311,21 +330,19 @@ export class JournalEntryComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     onRowSelected(args: RowSelectEventArgs) {
-        this.currentRowData = args.data; // Handle row selection event
-        console.log(args.data); // Access selected row data
+        this.currentRowData = args.data; // Handle row selection event        
     }
 
     selectedRow(args: any) {
         if (args.requestType === 'beginEdit' || args.requestType === 'add') {
             args.cancel = true;
-            // var data = args.rowData as IJournalHeader;
             this.currentRowData = args.rowData;
             this.route.navigate(['journals/gl', args.rowData.journal_id]);
         }
     }
 
     openDrawer() {
-        // this.periodForm.patchValue({ period: this.periodParam.period, period_year: this.periodParam.period_year });
+        this.periodForm.patchValue({ period: this.periodParam.period, period_year: this.periodParam.period_year });
         this.drawer().open();
     }
 
@@ -375,7 +392,7 @@ export class JournalEntryComponent implements OnInit, OnDestroy, AfterViewInit {
         var period = this.periodForm.getRawValue();
         var periodParam = { period: Number(period.period), period_year: Number(period.period_year) };
         this.toolbarTitle = "Journal Transactions";
-        this.Store.dispatch(loadJournalHeaderByPeriod({ period: periodParam }));
+        this.store.dispatch(loadJournalHeaderByPeriod({ period: periodParam }));
     }
 
     public onBooked(booked: boolean) {

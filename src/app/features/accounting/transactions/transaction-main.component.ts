@@ -24,6 +24,7 @@ import { JournalRouteComponent } from './journal-route.component';
 import { ApplicationService, MainPanelStore } from 'app/store/main.panel.store';
 import { ActivatedRoute } from '@angular/router';
 import { JournalTemplateUpdateComponent } from './journal-template-update.component';
+import { GLTransactionGridComponent } from './gl-transaction-grid.component';
 
 const imports = [
     MaterialModule,
@@ -35,7 +36,9 @@ const imports = [
     APTransactionComponent,
     GLTransactionListComponent,
     CdkScrollable,
-    JournalTemplateUpdateComponent
+    JournalTemplateUpdateComponent,
+    GLTransactionGridComponent
+    
 ]
 
 @Component({
@@ -108,7 +111,8 @@ const imports = [
                                 @case ('ar')    { <ar-transactions></ar-transactions>}
                                 @case ('tp')    { <journal-template></journal-template>  }
                                 @case ('at')    { <app-file-manager></app-file-manager>}
-                                @case ('tmp')    { <gl-journal-template></gl-journal-template>}
+                                @case ('tmp')   { <gl-journal-template></gl-journal-template>}
+                                @case ('grid')  { <gl-grid-transactions></gl-grid-transactions> }
                             }
                         </div>
                     </div>
@@ -228,12 +232,12 @@ export class TransactionMainComponent implements OnInit, OnDestroy {
                 title: 'Artifact Management',
                 description: 'Manage the documentation of transactions',
             },
-            // {
-            //     id: 'tree',
-            //     icon: 'feather:image',
-            //     title: 'Tree Control Testing',
-            //     description: 'Test the tree control and drop down lists',
-            // },
+            {
+                id: 'grid',
+                icon: 'feather:image',
+                title: 'Example Grid',
+                description: 'Example Grid with templates',
+            },
             {
                 id: 'artifact-mgmt',
                 icon: 'heroicons_outline:document-magnifying-glass',
