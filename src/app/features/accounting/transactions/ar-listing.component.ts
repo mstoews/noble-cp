@@ -30,24 +30,24 @@ const imports = [
             <div class="flex flex-col min-w-0 overflow-y-auto -px-10" cdkScrollable>
             <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 w-full min-w-0">
             
-            <div (click)="onReceipts()" class="flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden m-2 hover:cursor-pointer">
+            <div (click)="onReceipts()" class="flex-auto min-h-32 p-6 bg-card shadow rounded-2xl overflow-hidden m-2 hover:cursor-pointer">
                 <summary-card   [mainValue]="150026.00" [caption]="'Receipts'" [title]="'Funds'"
                     [subtitle]="" [subtitle_value]="">
                 </summary-card>
             </div>
             <!-- Overdue -->
-            <div  class="flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden m-2 hover:cursor-pointer">
+            <div  class="flex-auto p-6 bg-card shadow rounded-2xl min-h-32 overflow-hidden m-2 hover:cursor-pointer">
                 <summary-card  (click)="onReceipts()" [mainValue]="24000.00" [caption]="'Outstanding'" [title]="'30 Days'"
                     [subtitle]="''" [subtitle_value]="">
                 </summary-card>
             </div>
-            <div class="flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden m-2 hover:cursor-pointer">
+            <div class="flex-auto p-6 bg-card shadow rounded-2xl min-h-32 overflow-hidden m-2 hover:cursor-pointer">
                 <summary-card  (click)="onReceipts()" [mainValue]="45050.00" [caption]="'Current Receivables'" [title]="'Capital'"
                     [subtitle]="''" [subtitle_value]="">
                 </summary-card>
             </div>
             <!-- Issues -->
-            <div class="flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden m-2 hover:cursor-pointer">
+            <div class="flex-auto p-6 bg-card shadow min-h-32 rounded-2xl overflow-hidden m-2 hover:cursor-pointer">
                 <summary-card  (click)="onReceipts()"  [mainValue]="15000.00" [caption]="'Past Due Receipts'" [title]="'Capital'"
                     [subtitle]="''" [subtitle_value]="">
                 </summary-card>
@@ -92,7 +92,7 @@ export class ARTransactionComponent {
         type: 'success',
         message: '',
     };
-    toolbarTitle = "Accounts Receivable Transactions";
+    toolbarTitle = "Accounts Receivable";
 
     onReceipts() {
     }

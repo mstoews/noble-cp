@@ -31,24 +31,24 @@ const imports = [
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 w-full min-w-0 overflow-hidden">
             
             <div (click)="onReceipts()" class="flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden m-2 hover:cursor-pointer">
-                <summary-card   [mainValue]="150026.00" [caption]="'Receipts'" [title]="'Funds'"
+                <summary-card class="min-h-48" [mainValue]="150026.00" [caption]="'Receipts'" [title]="'Funds'"
                     [subtitle]="" [subtitle_value]="">
                 </summary-card>
             </div>
             <!-- Overdue -->
             <div  class="flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden m-2 hover:cursor-pointer">
-                <summary-card  (click)="onReceipts()" [mainValue]="24000.00" [caption]="'Outstanding'" [title]="'30 Days'"
+                <summary-card class="min-h-32" (click)="onReceipts()" [mainValue]="24000.00" [caption]="'Outstanding'" [title]="'30 Days'"
                     [subtitle]="''" [subtitle_value]="">
                 </summary-card>
             </div>
             <div class="flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden m-2 hover:cursor-pointer">
-                <summary-card  (click)="onReceipts()" [mainValue]="45050.00" [caption]="'Current Receivables'" [title]="'Capital'"
+                <summary-card  class="min-h-32" (click)="onReceipts()" [mainValue]="45050.00" [caption]="'Current Receivables'" [title]="'Capital'"
                     [subtitle]="''" [subtitle_value]="">
                 </summary-card>
             </div>
             <!-- Issues -->
             <div class="flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden m-2 hover:cursor-pointer">
-                <summary-card  (click)="onReceipts()"  [mainValue]="15000.00" [caption]="'Past Due Receipts'" [title]="'Capital'"
+                <summary-card  class="min-h-32" (click)="onReceipts()"  [mainValue]="15000.00" [caption]="'Past Due Receipts'" [title]="'Capital'"
                     [subtitle]="''" [subtitle_value]="">
                 </summary-card>
             </div>
@@ -77,7 +77,7 @@ export class GLTransactionListComponent {
 
   private toast = inject(ToastrService);
   public transType: string = "all";
-  public toolbarTitle = "General Ledger Transactions";
+  public toolbarTitle = "General Ledger";
   
   transactionGrid = viewChild<JournalEntryComponent>("transaction");
   

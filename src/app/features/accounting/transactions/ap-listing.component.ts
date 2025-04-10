@@ -55,19 +55,19 @@ const imports = [
       
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 w-full min-w-0 overflow-hidden">                      
               
-             <div  class="flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden m-2 hover:cursor-pointer">
-                  <summary-card  (click)="onReceipts()" [mainValue]="cash()" [caption]="'Total Cash on Hand'" [title]="'Funds'"[chart]="'donut'"   [subtitle]="">
+             <div  class="flex-auto min-h-32 p-6 bg-card shadow rounded-2xl overflow-hidden m-2 hover:cursor-pointer">
+                  <summary-card (click)="onReceipts()" [mainValue]="cash()" [caption]="'Total Cash on Hand'" [title]="'Funds'"[chart]="'donut'"   [subtitle]="">
                   </summary-card>
               </div>              
-              <div  class="flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden m-2 hover:cursor-pointer">
-                  <summary-card  (click)="onReceipts()" [mainValue]="ap()" [caption]="'Accounts Payable'" [chart]="'chart-legend-right'" [subtitle]="" [subtitle_value]="1256">
+              <div  class="flex-auto min-h-32 p-6 bg-card shadow rounded-2xl overflow-hidden m-2 hover:cursor-pointer">
+                  <summary-card (click)="onReceipts()" [mainValue]="ap()" [caption]="'Accounts Payable'" [chart]="'chart-legend-right'" [subtitle]="" [subtitle_value]="1256">
                   </summary-card>
               </div>
-              <div class="flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden m-2 hover:cursor-pointer">
+              <div class="flex-auto min-h-32 p-6 bg-card shadow rounded-2xl overflow-hidden m-2 hover:cursor-pointer">
                   <summary-card  (click)="onReceipts()" [mainValue]="liabilities()" [chart]="'chart-lines'"[caption]="'Current Liabilities'" [title]="'Liabilities'"[subtitle]="" [subtitle_value]="">
                   </summary-card>
               </div>              
-              <div class="flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden m-2 hover:cursor-pointer">
+              <div class="flex-auto min-h-32 p-6 bg-card shadow rounded-2xl overflow-hidden m-2 hover:cursor-pointer">
                   <summary-card  (click)="onReceipts()"  [mainValue]="5000.00" [caption]="'Past Due Payments'" [title]="'Capital'"[chart]="'chart-insert-column'"[subtitle]="" [subtitle_value]="">
                   </summary-card>
               </div>             
@@ -116,7 +116,7 @@ export class APTransactionComponent implements OnInit {
   public store = inject(ApplicationStore);
 
   public transType: string = "AP";
-  public toolbarTitle = "Accounts Payable Transactions";
+  public toolbarTitle = "Accounts Payable";
   public prd = 1;
   public prd_year = 2024;
 

@@ -13,6 +13,7 @@ import { ContextMenuModule } from '@syncfusion/ej2-angular-navigations';
 import { isJournalLoading, selectJournals } from 'app/features/accounting/transactions/state/journal/Journal.Selector';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
+import { JournalCardComponent } from "./journal-card.component";
 
 
 const providers = [
@@ -29,7 +30,8 @@ const providers = [
     EditService,
     AggregateService,
     ColumnMenuService,
-    SearchService
+    SearchService,
+    JournalCardComponent
 ];
 
 const imports = [
@@ -43,12 +45,12 @@ const imports = [
 ];
 @Component({
     selector: 'transactions',
-    imports: [imports],
+    imports: [imports ],
     encapsulation: ViewEncapsulation.None,
     template: `    
     <mat-drawer class="lg:w-[400px] md:w-full bg-white-100" #drawer [opened]="openDrawers()" mode="over" [position]="'end'" [disableClose]="false">
         <mat-card class="m-2">
-            <div class="flex flex-col w-full text-gray-700 filter-article filter-interactive">
+            <div class="flex flex-col w-full text-gray-700">
                 <div class="h-11 m-2 p-2 text-2xl text-justify text-white bg-slate-700" mat-dialog-title>
                     {{ 'Report Table Save Settings' }}
                 </div>            
@@ -79,7 +81,6 @@ const imports = [
                     <button mat-icon-button color="primary" class="bg-slate-300 hover:bg-slate-400 ml-1" (click)="onUpdate($event)" matTooltip="Edit"
                         aria-label="Button that displays a tooltip when focused or hovered over">
                         <span class="e-icons e-edit-4"></span>
-
                     </button>
 
                     <button mat-icon-button color="primary" class="bg-slate-300 hover:bg-slate-400 ml-1" (click)="closeDrawer()" matTooltip="Close"
@@ -92,9 +93,9 @@ const imports = [
     </mat-drawer> 
     <mat-drawer-container id="target" class="flex flex-col min-w-0 overflow-y-auto -px-10 h-[calc(100vh-21.5rem)] ">    
         <mat-card>
+            @if (isVisible === true) {
             <div class="flex-auto">                    
-                        @defer (on viewport; on timer(300ms)) {
-                            
+                        @defer (on viewport; on timer(300ms)) {                            
                             @if(journalHeader$  | async; as journals  ) {                              
                             <ng-container>                     
                                 <ejs-grid #grid id="grid"
@@ -106,8 +107,7 @@ const imports = [
                                     [allowFiltering]='false'                 
                                     [toolbar]='toolbarOptions'                                             
                                     [editSettings]='editSettings'
-                                    [enablePersistence]='false'
-                                    [enableStickyHeader]='true'
+                                    [enablePersistence]='false'                                    
                                     [allowGrouping]="true"
                                     [allowResizing]='true' 
                                     [allowReordering]='true' 
@@ -119,7 +119,7 @@ const imports = [
                                     (actionBegin)='selectedRow($event)' >
                                     <e-columns>
                                         <e-column field='journal_id' headerText='ID' isPrimaryKey='true' isIdentity='true' [visible]=false width='40'></e-column>                                            
-                                        <e-column field="type" headerText="ID" width="70">
+                                        <e-column field="type" headerText="ID" width="80">
                                                 <ng-template #template let-data>                                                                
                                                     @switch (data.type) 
                                                     {                                    
@@ -150,7 +150,7 @@ const imports = [
                                                     }
                                                 </ng-template>
                                         </e-column>                                                                
-                                        <e-column field='description' headerText='Description' width='200'></e-column>
+                                        <e-column field='description' headerText='Description' width='150'></e-column>
                                         <e-column field='booked' headerText='Bk' width='60' [visible]=false ></e-column>
                                             <ng-template #template let-data>                       
                                                     @if(data.booked === 'true') {
@@ -239,6 +239,30 @@ const imports = [
                             </div>
                         }                                    
             </div>
+            }
+            @else {
+                <div class="flex flex-col justify-center items-center dark:bg-gray-100 bg-slate-500 rounded-md">
+                    @if(journalHeader$  | async; as journals  ) {                                                  
+                            @for (journal of journals; track journal.journal_id) {                                
+                                    <mat-card class="flex-auto m-1 p-2 bg-gray-100 dark:bg-gray-400 shadow rounded-xl dark:text-gray-200 overflow-hidden hover:cursor-pointer">
+                                     <div>Journal : {{journal.journal_id}} -  {{journal.type}} </div>
+                                     <div>Description : {{journal.description}} </div>                                    
+                                        {{journal.transaction_date}}                                    
+                                        {{journal.amount}}
+                                        {{journal.period_year}}
+                                        {{journal.period}}
+                                        {{journal.create_date}}
+                                        {{journal.create_user}}
+                                        {{journal.party_id}}
+                                        {{journal.status}}
+                                        {{journal.booked}}
+                                    </mat-card>
+                                    <journal-card [journalHeader]="journal"></journal-card>   
+                                
+                            }                    
+                    }
+                </div>
+            }
          </mat-card>   
 
          <ejs-contextmenu              
@@ -266,6 +290,8 @@ export class JournalEntryComponent implements OnInit, OnDestroy, AfterViewInit  
     public toast = inject(ToastrService);
     private fb = inject(FormBuilder);
 
+    public isVisible = true;
+
 
     public periodForm!: FormGroup;
     public transactionType = input('');
@@ -273,8 +299,9 @@ export class JournalEntryComponent implements OnInit, OnDestroy, AfterViewInit  
     public printClicked = input<boolean>(false);
 
 
-    public toolbarTitle: string = "Journal Entry";
-    public sGridTitle = 'Journal Entry';
+    public toolbarTitle: string;
+    public sGridTitle: string;
+    
     public formatoptions: Object;
     public initialSort: Object;
     public editSettings: EditSettingsModel;
@@ -296,12 +323,8 @@ export class JournalEntryComponent implements OnInit, OnDestroy, AfterViewInit  
 
     drawer = viewChild<MatDrawer>("drawer");
     grid = viewChild<GridComponent>('grid');
-
     onCloseDrawer = output();
-        
-
-    sTitle = 'Transaction Listings by Journal Type';
-
+    
     currentRowData: any;
     drawOpen: 'open' | 'close' = 'open';
     collapsed = false;
@@ -489,10 +512,27 @@ export class JournalEntryComponent implements OnInit, OnDestroy, AfterViewInit  
 
     @HostListener('window:resize', ['$event'])
     onResize(event: any) {
+        const width = window.innerWidth;
+        if (width < 768) {
+            this.isVisible = false;
+        }
+        else {
+            this.isVisible = true;
+        }
+
         this.adjustHeight();
     }
 
+    
+
     ngAfterViewInit() {
+        const width = window.innerWidth;
+        if (width < 768) {
+            this.isVisible = false;
+        }
+        else {
+            this.isVisible = true;
+        }
         this.adjustHeight();
     }
 
