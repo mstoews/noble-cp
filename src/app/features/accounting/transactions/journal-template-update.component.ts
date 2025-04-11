@@ -334,6 +334,7 @@ const imp = [
                                                 [gridLines]="'Both'"
                                                 [allowColumnMenu]="false"
                                                 [allowSorting]='true'
+                                                [rowHeight]="30"
                                                 [sortSettings]= 'detailSort'
                                                 [editSettings]='editSettings' 
                                                 [allowRowDragAndDrop]='true'
@@ -390,7 +391,7 @@ const imp = [
                     </e-panes>
                 </ejs-splitter>
             </section>
-        </mat-drawer-container>
+    </mat-drawer-container>
     }
     @placeholder(minimum 200ms) {
     <div class="flex justify-center items-center">

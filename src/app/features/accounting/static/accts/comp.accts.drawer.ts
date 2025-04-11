@@ -123,6 +123,8 @@ export class DrawerComponent {
   sTitle = 'Party Maintenance';
   originalParty: IAccounts;
   account = input<IAccounts | null>();
+
+  
   Update = output<IAccounts>();
   Add = output<IAccounts>();
   Delete = output<IAccounts>();

@@ -94,7 +94,7 @@ const imp = [
     DropDownListAllModule,
     SplitterModule,
     DropDownAccountComponent,
-    SubtypeDropDownComponent,    
+    SubtypeDropDownComponent,
 ];
 
 @Component({
@@ -228,12 +228,15 @@ const imp = [
             <section class="pane1 overflow-hidden">                
                 <ejs-splitter #splitterInstance id="nested-splitter" (created)='onCreated()' class="h-[calc(100vh-14rem)]" separatorSize=3 width='100%'>
                     <e-panes>
-                        <e-pane min='60px' size='30%' class="w-72">                                        
-                            <ng-template #content>
-                                <div class="text-3xl gap-2 m-1 text-gray-100 p-2 bg-slate-600 rounded-md">
-                                            Transaction List
+                        <e-pane min='60px' size='30%' class="w-72 relative">                                        
+                            
+                            <ng-template #content>                                
+                                    <mat-card class="mat-elevation-z8 h-[calc(100vh-14.2rem)]">                                                                                
+                                    <div class="text-3xl gap-2 m-1 text-gray-100 p-2 bg-slate-600 rounded-md sticky z-10">
+                                        Transaction List
                                 </div>
-                                    <mat-card class="mat-elevation-z8 h-[calc(100vh-14.2rem)]">                                        
+                        
+                                        <div>
                                         <ejs-grid id="grid-journal-list" 
                                             [dataSource]='store.gl()'
                                             [selectionSettings]="selectionOptions" 
@@ -288,9 +291,21 @@ const imp = [
                                                 <e-column field="booked"      headerText="Booked" [visible]='false' width="100" [displayAsCheckBox]='true' type="boolean"></e-column>
                                                 <e-column field="amount"      headerText="Amount" [visible]='false' width="150"  format='N2' textAlign="Right"></e-column>
                                                 <e-column field="period"      headerText="Prd"    [visible]='false' width="100"></e-column>
-                                                <e-column field="period_year" headerText="Yr"     [visible]='false' width="100"></e-column>
+                                                <e-column field="period_year" headerText="Yr"     [visible]='false' width="100" ></e-column>
                                             </e-columns>
+                                            <e-aggregates>
+                                                <e-aggregate>
+                                                    <e-columns>
+                                                        <e-column type="Sum" field="amount" format="N2"  >
+                                                            <ng-template #footerTemplate let-data><span class="customcss">{{data.Sum}}</span>                                                                
+                                                            </ng-template>
+                                                        </e-column>
+
+                                                    </e-columns>
+                                                </e-aggregate>
+                                            </e-aggregates>
                                         </ejs-grid>
+                                        </div>
                                     </mat-card>
                                 
                             </ng-template>
@@ -447,6 +462,7 @@ const imp = [
                                                         [allowFiltering]="false" 
                                                         [gridLines]="'Both'"
                                                         [allowColumnMenu]="false"
+                                                        [rowHeight]="30"
                                                         [allowSorting]='true'
                                                         [sortSettings]= 'detailSort'
                                                         [editSettings]='editSettings' 
@@ -468,12 +484,10 @@ const imp = [
                                                             <e-aggregate>
                                                                 <e-columns>
                                                                     <e-column type="Sum" field="debit" format="N2">
-                                                                        <ng-template #footerTemplate
-                                                                            let-data>{{data.Sum}}</ng-template>
+                                                                    <ng-template #footerTemplate let-data><span class="customcss">{{data.Sum}}</span> </ng-template>
                                                                     </e-column>
                                                                     <e-column type="Sum" field="credit" format="N2">
-                                                                        <ng-template #footerTemplate
-                                                                            let-data>{{data.Sum}}</ng-template>
+                                                                    <ng-template #footerTemplate let-data><span class="custom_no_paddingcss">{{data.Sum}}</span> </ng-template>
                                                                     </e-column>
                                                                 </e-columns>
                                                             </e-aggregate>
@@ -601,7 +615,7 @@ const imp = [
         GroupService,
         RowDDService,
         ResizeService,
-        ContextMenuService,        
+        ContextMenuService,
         ColumnMenuService
     ],
     styles: [
@@ -639,15 +653,15 @@ export class JournalUpdateComponent
 
     accountDropDown = viewChild<DropDownAccountComponent>("accountDropDown");
     subtypeDropDown = viewChild<SubtypeDropDownComponent>("subtypeDropDown");
-    
+
     private _fuseConfirmationService = inject(FuseConfirmationService);
     private fb = inject(FormBuilder);
-   
+
     private auth = inject(AUTH);
     private activatedRoute = inject(ActivatedRoute);
     private toastr = inject(ToastrService);
     private journalService = inject(JournalService);
-    public  fuseConfirmationService = inject(FuseConfirmationService);
+    public fuseConfirmationService = inject(FuseConfirmationService);
 
     public matDialog = inject(MatDialog);
     public journalForm!: FormGroup;
@@ -682,7 +696,7 @@ export class JournalUpdateComponent
 
 
     // Internal control variables
-    public currentRowData: IJournalDetail;    
+    public currentRowData: IJournalDetail;
     public bHeaderDirty = false;
 
     // Datagrid variables
@@ -736,7 +750,7 @@ export class JournalUpdateComponent
     public subtypeCtrl: FormControl<string> = new FormControl<string>(null);
     public fundCtrl: FormControl<string> = new FormControl<string>(null);
     public key: number;
-    
+
     public journalHeader: IJournalHeader;
     public journalDetailSignal = signal<IJournalDetail[]>(null);
 
@@ -759,86 +773,86 @@ export class JournalUpdateComponent
     Store = inject(Store);
     accounts$ = this.Store.select(accountsFeature.selectChildren);
     isLoading$ = this.Store.select(accountsFeature.selectIsLoading);
-    
+
     funds$ = this.Store.select(fromFunds.selectFunds);
     isFundsLoading$ = this.Store.select(fromFunds.isFundsLoading);
 
     //subtype$ = this.Store.select(subTypePageActions.loadDropdown);
-    
+
     toast = inject(ToastrService);
 
     subtypes$ = this.Store.select(subtypeFeature.selectSubtype);
     isSubtypeLoading$ = this.Store.select(subtypeFeature.selectIsLoading);
-        
+
     detailForm = new FormGroup({
-        accounts : new FormGroup({
-            dropdown: new FormControl(0,Validators.required),
+        accounts: new FormGroup({
+            dropdown: new FormControl(0, Validators.required),
         }),
-        subtype : new FormGroup({
-            dropdown: new FormControl('',Validators.required),
+        subtype: new FormGroup({
+            dropdown: new FormControl('', Validators.required),
         }),
-        fund :  new FormControl('',Validators.required),        
-        description: new FormControl('', Validators.required),            
-        debit: new FormControl(0, Validators.required),            
-        credit: new FormControl(0, Validators.required),            
-        reference: new FormControl('', Validators.required),            
+        fund: new FormControl('', Validators.required),
+        description: new FormControl('', Validators.required),
+        debit: new FormControl(0, Validators.required),
+        credit: new FormControl(0, Validators.required),
+        reference: new FormControl('', Validators.required),
     });
 
     ngOnInit(): void {
 
-        this.Store.dispatch(accountPageActions.children());            
+        this.Store.dispatch(accountPageActions.children());
         // this.Store.dispatch(subTypePageActions.load());
         this.Store.dispatch(FundsActions.loadFunds());
 
         this.createEmptyForm();
-        this.initialDatagrid();                    
+        this.initialDatagrid();
         this.activatedRoute.data.subscribe((data) => {
-            
-            const journal_id = data.journal[0].journal_id;            
+
+            const journal_id = data.journal[0].journal_id;
             this.journalHeader = data.journal[0];
             this.accountList = data.journal[1];
-            this.subtypeList = data.journal[2];                        
+            this.subtypeList = data.journal[2];
             this.templateList = data.journal[3];
             this.partyList = data.journal[4];
-            
+
             this.store.loadDetails(journal_id);
-            this.store.loadArtifactsByJournalId(journal_id);            
-            this.refreshHeader(this.journalHeader);                        
-        });                
+            this.store.loadArtifactsByJournalId(journal_id);
+            this.refreshHeader(this.journalHeader);
+        });
     }
 
-    public menuItems: MenuItemModel[] = [    {
-            id: 'edit',
-            text: 'Edit Line Item',
-            iconCss: 'e-icons e-edit-2'
-        },
-        {
-            id: 'evidence',
-            text: 'Add Evidence',
-            iconCss: 'e-icons e-file-document'
-        },
-        {
-            id: 'lock',
-            text: 'Lock Transaction',
-            iconCss: 'e-icons e-lock'
-        },
-        {
-            id: 'cancel',
-            text: 'Cancel Transaction',
-            iconCss: 'e-icons e-table-overwrite-cells'
-        },
-        {
-            separator: true
-        },
-        {
-            id: 'back',
-            text: 'Back to Transaction List',
-            iconCss: 'e-icons e-chevron-left'
-        },
+    public menuItems: MenuItemModel[] = [{
+        id: 'edit',
+        text: 'Edit Line Item',
+        iconCss: 'e-icons e-edit-2'
+    },
+    {
+        id: 'evidence',
+        text: 'Add Evidence',
+        iconCss: 'e-icons e-file-document'
+    },
+    {
+        id: 'lock',
+        text: 'Lock Transaction',
+        iconCss: 'e-icons e-lock'
+    },
+    {
+        id: 'cancel',
+        text: 'Cancel Transaction',
+        iconCss: 'e-icons e-table-overwrite-cells'
+    },
+    {
+        separator: true
+    },
+    {
+        id: 'back',
+        text: 'Back to Transaction List',
+        iconCss: 'e-icons e-chevron-left'
+    },
 
     ];
 
-  
+
     public updateHeaderData() {
 
         const updateDate = new Date().toISOString().split('T')[0];
@@ -900,7 +914,7 @@ export class JournalUpdateComponent
                 description: templateDetail.description,
                 create_date: updateDate,
                 create_user: email,
-                sub_type : templateDetail.sub_type,               
+                sub_type: templateDetail.sub_type,
                 debit: templateDetail.debit * journalHeader.amount,
                 credit: templateDetail.credit * journalHeader.amount,
                 reference: '',
@@ -1081,9 +1095,9 @@ export class JournalUpdateComponent
     public ngAfterViewInit() {
 
         this.templateFilter.next(this.templateList.slice());
-        
-        this.partyFilter.next(this.partyList.slice())        
-        
+
+        this.partyFilter.next(this.partyList.slice())
+
         if (this.templateFilter && this.singleTemplateSelect() != null)
             this.templateFilter
                 .pipe(take(1), takeUntil(this._onTemplateDestroy))
@@ -1120,7 +1134,7 @@ export class JournalUpdateComponent
                 });
 
         this.searchOptions = { operator: 'contains', ignoreCase: true, ignoreAccent: true };
-        
+
         this.onChanges();
 
         this.bHeaderDirty = false;
@@ -1140,13 +1154,13 @@ export class JournalUpdateComponent
     }
 
     public onRowSelected(args: RowSelectEventArgs): void {
-        const queryData: any = args.data;        
+        const queryData: any = args.data;
         // this.store.loadDetails(queryData.journal_id);
         // this.store.loadArtifactsByJournalId(queryData.journal_id);
         // this.router.navigate();
-         const urlTree = this.router.createUrlTree(["journals/gl", queryData.journal_id]);
+        const urlTree = this.router.createUrlTree(["journals/gl", queryData.journal_id]);
         // this.router.navigateByUrl(urlTree);
-        
+
         this.refreshHeader(queryData);
         this.closeDrawer();
     }
@@ -1208,7 +1222,7 @@ export class JournalUpdateComponent
         const name = this.auth.currentUser.email.split("@")[0];
         const dDate = new Date();
         let currentDate = dDate.toISOString().split("T")[0];
-        
+
         const JournalDetail = {
             journal_id: data.journal_id,
             journal_subid: data.journal_subid,
@@ -1231,23 +1245,23 @@ export class JournalUpdateComponent
 
     private updateDetailForm(journalDetail: IJournalDetail) {
         const accountString = journalDetail.child.toString();
-        
-        this.detailForm.patchValue({            
-            description: journalDetail.description, 
+
+        this.detailForm.patchValue({
+            description: journalDetail.description,
             accounts: {
                 dropdown: journalDetail.child
             },
             subtype: {
                 dropdown: journalDetail.sub_type
             },
-            fund: journalDetail.fund,            
+            fund: journalDetail.fund,
             debit: journalDetail.debit,
             credit: journalDetail.credit,
             reference: journalDetail.reference,
-            
+
         });
-        this.bHeaderDirty = false;        
-        
+        this.bHeaderDirty = false;
+
         this.accountDropDown().setDropdownValue(accountString);
         this.subtypeDropDown().setDropdownValue(journalDetail.sub_type);
 
@@ -1255,17 +1269,16 @@ export class JournalUpdateComponent
     }
 
     public onChanges(): void {
-        this.partyCtrl.valueChanges.subscribe((value) => {            
+        this.partyCtrl.valueChanges.subscribe((value) => {
             if (value === undefined) {
                 this.bHeaderDirty = false;
                 console.debug('Header is true!! ', value);
             }
-            else
-            {
+            else {
                 this.bHeaderDirty = true;
                 this.journalHeader.party_id = value.party_id;
                 console.debug('Header is false!! ', value);
-            }            
+            }
         });
 
         this.templateCtrl.valueChanges.subscribe((value) => {
@@ -1273,13 +1286,12 @@ export class JournalUpdateComponent
                 this.bHeaderDirty = false;
                 console.debug('Header is true!! ', value);
             }
-            else
-            {
-                
+            else {
+
                 this.bHeaderDirty = true;
                 this.journalHeader.type = value.journal_type;
                 console.debug('Header is false!! ', JSON.stringify(value));
-            }            
+            }
         });
 
         this.detailForm.controls['accounts'].valueChanges.subscribe((value) => {
@@ -1294,19 +1306,17 @@ export class JournalUpdateComponent
         this.debitCtrl.valueChanges.subscribe((value) => {
             this.bDetailDirty = true;
         });
-        
-        this.journalForm.valueChanges.subscribe( (value) => 
-            {
-                if (value === undefined) {
-                    this.bHeaderDirty = false;
-                    console.debug('Header is true!! ', value);
-                }
-                else
-                {
-                    this.bHeaderDirty = true;
-                    console.debug('Header is false!! ', value);
-                }            
+
+        this.journalForm.valueChanges.subscribe((value) => {
+            if (value === undefined) {
+                this.bHeaderDirty = false;
+                console.debug('Header is true!! ', value);
             }
+            else {
+                this.bHeaderDirty = true;
+                console.debug('Header is false!! ', value);
+            }
+        }
         );
     }
 
@@ -1374,7 +1384,7 @@ export class JournalUpdateComponent
         this.journalForm.patchValue({
             description: header.description,
             amount: header.amount,
-            transaction_date: header.transaction_date,            
+            transaction_date: header.transaction_date,
             invoice_no: header.invoice_no
         });
 
@@ -1382,11 +1392,11 @@ export class JournalUpdateComponent
         this.templateCtrl.setValue(
             this.templateList.find((x) => x.template_name === header.template_name)
         );
-        
+
         this.partyCtrl.setValue(
             this.partyList.find((x) => x.party_id === header.party_id)
         );
-        
+
 
         this.store.loadDetails(header.journal_id);
         this.store.loadArtifactsByJournalId(header.journal_id);
@@ -1449,7 +1459,7 @@ export class JournalUpdateComponent
         // Subscribe to the confirmation dialog closed action
         confirmation.afterClosed().subscribe((result) => {
             if (result === "confirmed") {
-                var journalParam : ITemplateParams = {
+                var journalParam: ITemplateParams = {
                     journal_id: this.journalHeader.journal_id,
                     template_description: this.journalHeader.description,
                     templateType: this.journalHeader.type,
@@ -1461,16 +1471,16 @@ export class JournalUpdateComponent
 
     // Add evidence 
     public onAddEvidence() {
-        
+
         const dialogRef = this.matDialog.open(DndComponent, {
             width: "600px",
-            data: {                
+            data: {
                 journal_id: this.journalHeader.journal_id,
-                reference:  this.journalHeader.invoice_no,
-                description: this.journalHeader.description,       
+                reference: this.journalHeader.invoice_no,
+                description: this.journalHeader.description,
                 location: '',
                 date_created: new Date().toISOString().split('T')[0],
-                user_created: '@' + this.auth.currentUser.email.split('@')[0],            
+                user_created: '@' + this.auth.currentUser.email.split('@')[0],
             } as IArtifacts,
         });
 
@@ -1479,7 +1489,7 @@ export class JournalUpdateComponent
                 result = { event: "Cancel" };
             }
             switch (result.event) {
-                case "Create":                    
+                case "Create":
                     this.store.createArtifacts(result.data);
                     break;
                 case "Cancel":
@@ -1588,7 +1598,7 @@ export class JournalUpdateComponent
         });
     }
 
-    public onOpenEmptyDrawer() {        
+    public onOpenEmptyDrawer() {
         this.openDrawer();
     }
 
@@ -1679,7 +1689,7 @@ export class JournalUpdateComponent
 
         if (template.journal_type !== 'GL') {
             var party = this.partyCtrl.getRawValue();
-            partyId = this.partyList.find((x) => x.party_id === party.party_id).party_id;            
+            partyId = this.partyList.find((x) => x.party_id === party.party_id).party_id;
         }
         else {
             this.partyId = '';
@@ -1869,7 +1879,7 @@ export class JournalUpdateComponent
         }
         return;
     }
-    
+
     public gridHeight: number;
 
     @HostListener('window:resize', ['$event'])

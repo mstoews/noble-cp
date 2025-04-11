@@ -1,25 +1,40 @@
+import { CommonModule } from '@angular/common';
 import { Component, input } from '@angular/core';
+import { Common } from '@syncfusion/ej2-angular-pivotview';
 import { IJournalHeader } from 'app/models/journals';
 import { MaterialModule } from 'app/shared/material.module';
 
 @Component({
   selector: 'journal-card',
-  imports: [MaterialModule],
+  imports: [MaterialModule, CommonModule],
   template: `
-    <mat-card class="flex-auto p-6 shadow rounded-2xl overflow-hidden m-2 hover:cursor-pointer bg-slate-100 text-gray-700">    
-      <div>{{journalHeader().amount}} - {{journalHeader().journal_id}}</div>
-      <div>{{journalHeader().journal_id}}</div>
-      <div>{{journalHeader().status}}</div>
-      <div>{{journalHeader().description}}</div>
-      <div>{{journalHeader().transaction_date}}</div>            
-   </mat-card>
+    <mat-card class="flex-auto m-2  p-2 bg-gray-200 border-gray-500 dark:bg-gray-400 shadow rounded-xl w-full dark:text-gray-200 overflow-hidden hover:cursor-pointer ">
+      <div>Journal : {{journal().amount}} -  {{journal().type}} </div>
+      <div>Description : {{journal().description}} </div>                                    
+      {{journal().transaction_date}}                                    
+      {{journal().amount}}
+      {{journal().period_year}}
+      {{journal().period}}
+      {{journal().create_date}}
+      {{journal().create_user}}
+      {{journal().party_id}}
+      {{journal().status}}
+      {{journal().booked}}
+    </mat-card>
   `,
   styles: ``
 })
 export class JournalCardComponent {
-  journalHeader = input<IJournalHeader>();
-
+  journal = input<any | null>();
+  
   constructor() {
-    console.debug('JournalCardComponent initialized', this.journalHeader());
+    if (!this.journal() === undefined)
+    {
+      console.error('JournalCardComponent: journal input is null');
+      return;
+    }
+    else {
+      console.log('JournalCardComponent: journal input is set');
+    }    
   }
 }
