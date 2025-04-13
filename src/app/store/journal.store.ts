@@ -96,7 +96,6 @@ export const JournalStore = signalStore(
           })
         )
       ),
-
       loadJournalDetails: rxMethod<number>(
         pipe(
           tap(() => patchState(state, { isLoading: true })),
@@ -111,7 +110,6 @@ export const JournalStore = signalStore(
           })
         )
       ),
-
       createJournalHeader: rxMethod<IJournalHeader>(
         pipe(
           switchMap((value) => {
@@ -170,7 +168,7 @@ export const JournalStore = signalStore(
               })
             );
           })
-        )),
+      )),
       updateJournalHeader: rxMethod<IJournalHeader>(
         pipe(
           switchMap((value) => {
@@ -299,7 +297,6 @@ export const JournalStore = signalStore(
           })
         )
       ),
-
       loadTemplateDetails: rxMethod<string>(
         pipe(
           tap(() => patchState(state, { isLoading: true })),
@@ -469,8 +466,7 @@ export const JournalStore = signalStore(
                 finalize: () => patchState(state, { isLoading: false }),
               })
             );
-          })
-        )
+          }))
       ),
       updateDistributionListing: rxMethod<IPeriodParam>(
         pipe(

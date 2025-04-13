@@ -59,7 +59,12 @@ export class DropDownAccountComponent implements OnInit, OnDestroy, AfterViewIni
     return this.parentContainer.control as FormGroup;
   }
 
-  ngOnInit() {
+/**
+   * Initializes the component by adding a new FormGroup control to the parent FormGroup.
+   * The new FormGroup contains a single FormControl for a dropdown.
+   * 
+   * @throws {Error} Throws an error if the parentFormGroup is not defined.
+   */  ngOnInit() {
     
     this.parentFormGroup.addControl(this.controlKey,
       new FormGroup({

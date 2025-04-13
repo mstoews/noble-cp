@@ -12,8 +12,8 @@ importers:
         specifier: 19.2.3
         version: 19.2.3(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0))
       '@angular/cdk':
-        specifier: 19.2.8
-        version: 19.2.8(@angular/common@19.2.3(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0))(rxjs@7.8.0))(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0))(rxjs@7.8.0)
+        specifier: 19.2.9
+        version: 19.2.9(@angular/common@19.2.3(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0))(rxjs@7.8.0))(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0))(rxjs@7.8.0)
       '@angular/common':
         specifier: 19.2.3
         version: 19.2.3(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0))(rxjs@7.8.0)
@@ -31,10 +31,10 @@ importers:
         version: 19.2.3(@angular/common@19.2.3(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0))(rxjs@7.8.0))(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0))(@angular/platform-browser@19.2.3(@angular/animations@19.2.3(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0)))(@angular/common@19.2.3(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0))(rxjs@7.8.0))(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0)))(rxjs@7.8.0)
       '@angular/material':
         specifier: ^19.2.8
-        version: 19.2.9(@angular/cdk@19.2.8(@angular/common@19.2.3(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0))(rxjs@7.8.0))(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0))(rxjs@7.8.0))(@angular/common@19.2.3(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0))(rxjs@7.8.0))(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0))(@angular/forms@19.2.3(@angular/common@19.2.3(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0))(rxjs@7.8.0))(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0))(@angular/platform-browser@19.2.3(@angular/animations@19.2.3(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0)))(@angular/common@19.2.3(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0))(rxjs@7.8.0))(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0)))(rxjs@7.8.0))(@angular/platform-browser@19.2.3(@angular/animations@19.2.3(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0)))(@angular/common@19.2.3(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0))(rxjs@7.8.0))(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0)))(rxjs@7.8.0)
+        version: 19.2.9(@angular/cdk@19.2.9(@angular/common@19.2.3(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0))(rxjs@7.8.0))(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0))(rxjs@7.8.0))(@angular/common@19.2.3(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0))(rxjs@7.8.0))(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0))(@angular/forms@19.2.3(@angular/common@19.2.3(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0))(rxjs@7.8.0))(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0))(@angular/platform-browser@19.2.3(@angular/animations@19.2.3(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0)))(@angular/common@19.2.3(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0))(rxjs@7.8.0))(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0)))(rxjs@7.8.0))(@angular/platform-browser@19.2.3(@angular/animations@19.2.3(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0)))(@angular/common@19.2.3(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0))(rxjs@7.8.0))(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0)))(rxjs@7.8.0)
       '@angular/material-luxon-adapter':
-        specifier: 19.2.8
-        version: 19.2.8(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0))(@angular/material@19.2.9(@angular/cdk@19.2.8(@angular/common@19.2.3(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0))(rxjs@7.8.0))(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0))(rxjs@7.8.0))(@angular/common@19.2.3(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0))(rxjs@7.8.0))(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0))(@angular/forms@19.2.3(@angular/common@19.2.3(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0))(rxjs@7.8.0))(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0))(@angular/platform-browser@19.2.3(@angular/animations@19.2.3(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0)))(@angular/common@19.2.3(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0))(rxjs@7.8.0))(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0)))(rxjs@7.8.0))(@angular/platform-browser@19.2.3(@angular/animations@19.2.3(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0)))(@angular/common@19.2.3(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0))(rxjs@7.8.0))(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0)))(rxjs@7.8.0))(luxon@3.2.1)
+        specifier: 19.2.9
+        version: 19.2.9(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0))(@angular/material@19.2.9(@angular/cdk@19.2.9(@angular/common@19.2.3(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0))(rxjs@7.8.0))(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0))(rxjs@7.8.0))(@angular/common@19.2.3(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0))(rxjs@7.8.0))(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0))(@angular/forms@19.2.3(@angular/common@19.2.3(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0))(rxjs@7.8.0))(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0))(@angular/platform-browser@19.2.3(@angular/animations@19.2.3(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0)))(@angular/common@19.2.3(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0))(rxjs@7.8.0))(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0)))(rxjs@7.8.0))(@angular/platform-browser@19.2.3(@angular/animations@19.2.3(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0)))(@angular/common@19.2.3(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0))(rxjs@7.8.0))(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0)))(rxjs@7.8.0))(luxon@3.2.1)
       '@angular/platform-browser':
         specifier: 19.2.3
         version: 19.2.3(@angular/animations@19.2.3(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0)))(@angular/common@19.2.3(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0))(rxjs@7.8.0))(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0))
@@ -92,6 +92,9 @@ importers:
       '@syncfusion/ej2-angular-charts':
         specifier: ^28.2.11
         version: 28.2.11
+      '@syncfusion/ej2-angular-documenteditor':
+        specifier: ^29.1.37
+        version: 29.1.37
       '@syncfusion/ej2-angular-dropdowns':
         specifier: 28.1.38
         version: 28.1.38
@@ -116,6 +119,9 @@ importers:
       '@syncfusion/ej2-angular-navigations':
         specifier: 28.1.37
         version: 28.1.37
+      '@syncfusion/ej2-angular-pdfviewer':
+        specifier: ^29.1.37
+        version: 29.1.37
       '@syncfusion/ej2-angular-pivotview':
         specifier: ^28.2.11
         version: 28.2.11
@@ -253,7 +259,7 @@ importers:
         version: 15.2.3(@angular/common@19.2.3(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0))(rxjs@7.8.0))(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0))(@angular/forms@19.2.3(@angular/common@19.2.3(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0))(rxjs@7.8.0))(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0))(@angular/platform-browser@19.2.3(@angular/animations@19.2.3(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0)))(@angular/common@19.2.3(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0))(rxjs@7.8.0))(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0)))(rxjs@7.8.0))
       ngx-mat-select-search:
         specifier: ^7.0.10
-        version: 7.0.10(@angular/material@19.2.9(@angular/cdk@19.2.8(@angular/common@19.2.3(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0))(rxjs@7.8.0))(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0))(rxjs@7.8.0))(@angular/common@19.2.3(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0))(rxjs@7.8.0))(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0))(@angular/forms@19.2.3(@angular/common@19.2.3(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0))(rxjs@7.8.0))(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0))(@angular/platform-browser@19.2.3(@angular/animations@19.2.3(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0)))(@angular/common@19.2.3(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0))(rxjs@7.8.0))(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0)))(rxjs@7.8.0))(@angular/platform-browser@19.2.3(@angular/animations@19.2.3(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0)))(@angular/common@19.2.3(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0))(rxjs@7.8.0))(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0)))(rxjs@7.8.0))
+        version: 7.0.10(@angular/material@19.2.9(@angular/cdk@19.2.9(@angular/common@19.2.3(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0))(rxjs@7.8.0))(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0))(rxjs@7.8.0))(@angular/common@19.2.3(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0))(rxjs@7.8.0))(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0))(@angular/forms@19.2.3(@angular/common@19.2.3(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0))(rxjs@7.8.0))(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0))(@angular/platform-browser@19.2.3(@angular/animations@19.2.3(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0)))(@angular/common@19.2.3(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0))(rxjs@7.8.0))(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0)))(rxjs@7.8.0))(@angular/platform-browser@19.2.3(@angular/animations@19.2.3(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0)))(@angular/common@19.2.3(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0))(rxjs@7.8.0))(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0)))(rxjs@7.8.0))
       ngx-toastr:
         specifier: ^19.0.0
         version: 19.0.0(@angular/common@19.2.3(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0))(rxjs@7.8.0))(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0))(@angular/platform-browser@19.2.3(@angular/animations@19.2.3(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0)))(@angular/common@19.2.3(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0))(rxjs@7.8.0))(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0)))
@@ -499,8 +505,8 @@ packages:
       tailwindcss:
         optional: true
 
-  '@angular/cdk@19.2.8':
-    resolution: {integrity: sha512-ZZqWVYFF80TdjWkk2sc9Pn2luhiYeC78VH3Yjeln4wXMsTGDsvKPBcuOxSxxpJ31saaVBehDjBUuXMqGRj8KuA==}
+  '@angular/cdk@19.2.9':
+    resolution: {integrity: sha512-4If3BjWQPwW/xqRUCL7Mx0dHS0SuZY7Tq/Ocf7liwYTYCmSv8Ew7NqaiPA4RS3FnyUJcZW/UAd231uWI/ZHChg==}
     peerDependencies:
       '@angular/common': ^19.0.0 || ^20.0.0
       '@angular/core': ^19.0.0 || ^20.0.0
@@ -562,11 +568,11 @@ packages:
       '@angular/platform-browser': 19.2.3
       rxjs: ^6.5.3 || ^7.4.0
 
-  '@angular/material-luxon-adapter@19.2.8':
-    resolution: {integrity: sha512-3YgEd83aGRNX3aVMc7c90Bhqo1BivjG7D4cLINB37Dc8Wq8FdywUqX0U6Jw7SZanCl1uAY6HEM6elWuJCNLobw==}
+  '@angular/material-luxon-adapter@19.2.9':
+    resolution: {integrity: sha512-PsnGLq+Dz2H/ujpvKV7eCOf6BFgscCty9MO5mhXpEzI2FVu/TPrNG03NhXiGTxpY/Ar8Q0qUQtQalTDlaofz1A==}
     peerDependencies:
       '@angular/core': ^19.0.0 || ^20.0.0
-      '@angular/material': 19.2.8
+      '@angular/material': 19.2.9
       luxon: ^3.0.0
 
   '@angular/material@19.2.9':
@@ -2993,6 +2999,9 @@ packages:
   '@syncfusion/ej2-angular-base@28.2.5':
     resolution: {integrity: sha512-aECSbaCw8dSJM56ea8G0MUEn/zs2j0SS67deqI2EhjOdzoiVjfTEitEsYFYlXIt2HNl4Kwn4iQFYmYBaZa2JFg==}
 
+  '@syncfusion/ej2-angular-base@29.1.33':
+    resolution: {integrity: sha512-9x/fNmzZiiEL98t0mDrdIyUJZLC+H9h7Uu4kc4Ro44/uIYF/ZJVTxIpYJU1Fl0+F0QnmBakPL5kNpY/gHK1lLg==}
+
   '@syncfusion/ej2-angular-buttons@28.2.7':
     resolution: {integrity: sha512-yJVyPbI1+u5cyAOMcXtd70gG7Vxgu0cFBjqYpkkYem4+anXP+5fCEUwTxqg43vVehj51YLx6aLi1ljgNUXUxaA==}
 
@@ -3001,6 +3010,9 @@ packages:
 
   '@syncfusion/ej2-angular-charts@28.2.11':
     resolution: {integrity: sha512-zkfGNKsXbP0cKgSdZF9e9thMvvpGTCEgM2gk+x7s3GNLuuH6fVody52TV9QAIcz7JRsjv5TLh2x8CmyjlkThhw==}
+
+  '@syncfusion/ej2-angular-documenteditor@29.1.37':
+    resolution: {integrity: sha512-pvihXENAOsVQKNS4rdEq1m3sv/t+TXmRnCdkQqGKJ4IW9nfbQLjlWrUcRmkzZt54WwfkvzjRfhwwFL0U6zjB5w==}
 
   '@syncfusion/ej2-angular-dropdowns@28.1.38':
     resolution: {integrity: sha512-yE0YkxoIkoUU+mrGxI8aTRo2uI/8Qrq6MXtemxF0l7A1OGWJCTMJxvML9/W2otPY6NWD/TO30IIT96Us4LCroQ==}
@@ -3025,6 +3037,9 @@ packages:
 
   '@syncfusion/ej2-angular-navigations@28.1.37':
     resolution: {integrity: sha512-2IM6Y45VW1kyJQprHSrZfI52oUt/HNKVZRAVWd7N3PWEKu4VomnFltY9+vcmVdvO7k+ylTllqnDTnBq5W3OObQ==}
+
+  '@syncfusion/ej2-angular-pdfviewer@29.1.37':
+    resolution: {integrity: sha512-i4a2r/Z+32oMolgXx/0gcqSwFux57bmw1Rmi3rCy+lHO0/MYO/TTV56TvhDcIUPFh4Su2RWAqSo1wqF+8naTAg==}
 
   '@syncfusion/ej2-angular-pivotview@28.2.11':
     resolution: {integrity: sha512-wTAG1+vTTpYqYEYvFxpSVbt7STvP7JDeSPlcxSxPHdO3nyONrGrJjKEm+J+TIhLXL4OfK7JOf1QQ3PX9d+uFAA==}
@@ -3055,11 +3070,18 @@ packages:
     resolution: {integrity: sha512-7PYRBbWkfhnO1rV4jO+364URC28uX/53fPHOe1dIRmlEMZPb5vy3JIPjgcs4CoJei4QtKeOLzMhWtFS7skxscQ==}
     hasBin: true
 
+  '@syncfusion/ej2-base@29.1.36':
+    resolution: {integrity: sha512-XVRrymlbywtzNnxiaf/ByudElO3p7gieJuN2IHcs6FxsQNI60d3A5RdBqEF0znAH/KM0iSiWDFaaP2pqQltiEQ==}
+    hasBin: true
+
   '@syncfusion/ej2-buttons@28.1.37':
     resolution: {integrity: sha512-eAs+nwvQ95qlAYSV9FzSzkvvIJ3T6qa3czwnuTzD/2vrfj/SNwzGfDVSkr1Ufd+EhLRvT4GO0Eqrvjzj0JnCXg==}
 
   '@syncfusion/ej2-buttons@28.2.7':
     resolution: {integrity: sha512-pHWwqvxmc97tNXPaMJpu5iUyZr0RUiIPwbqX9J97lfrt4KqUm6Zzoj9hvMR+ai+gE7cV1KstWrwjUY1H3zYunw==}
+
+  '@syncfusion/ej2-buttons@29.1.34':
+    resolution: {integrity: sha512-zCePhsc7w2OtRwifEzsWFvFgik2ISM03vwGrHbT3IZP5lbs9asrXOJUdxmhvqqH2/Jhv5LT0/oEILx2LclzQtw==}
 
   '@syncfusion/ej2-calendars@28.1.37':
     resolution: {integrity: sha512-oRs89Dx5BUW8vSRuvXzil7O1Q7ew54teryYWSdxFKCK6HEChScZejWnejfWgtvGyJA7GNBKWIflAhUXgBI6D8g==}
@@ -3067,8 +3089,14 @@ packages:
   '@syncfusion/ej2-calendars@28.2.11':
     resolution: {integrity: sha512-gH1ZHXzWNk/rZNRzYSy/mGMoi7mzOcL9IfBTepFeVslAT4obVyLFFVH4YDy0QR70J3SBXKOjVYEFJ1cwwMlAXw==}
 
+  '@syncfusion/ej2-calendars@29.1.35':
+    resolution: {integrity: sha512-7uAAU6YsboaTxAJXHbyv2fSpdCF2kSgluwyiAIgCYISGf8DEjQlQsNdcqSkyu8FkQgKTAzicTj9sBOWiRBJEpg==}
+
   '@syncfusion/ej2-charts@28.2.11':
     resolution: {integrity: sha512-god1zb9Sw+YnSix20PL8oD43gjWdCNjxwRRbZNuQEI+73rorPmkEd60kI2MQnzlSvUvdRHvU7j/M4wrmddTe9w==}
+
+  '@syncfusion/ej2-charts@29.1.35':
+    resolution: {integrity: sha512-CeqmbnBpNAy1FpGENp+F2NkgUHVw19HbQuKYT5L3WSgHJ/y3Ej0hUNWaCkBfxFmN1wvONgChflwc8mY8wnDkIQ==}
 
   '@syncfusion/ej2-circulargauge@28.2.3':
     resolution: {integrity: sha512-PuvDGFLQjzEvK2wDgwI/Sza3LmqyX9tYuzYuxLyrEpCAGdVOImb29DznvwAJdIWvMpN17A17DRq+GXpDfqBTVQ==}
@@ -3079,11 +3107,17 @@ packages:
   '@syncfusion/ej2-compression@28.2.3':
     resolution: {integrity: sha512-OG+qWn2fNT4CtLpBWAif5gvZsrnpPrgEcxNQlT6uQX6ntDHT5IUDHSdvpUypGmJM3cDdcaqK8qygcgWBbj9ceQ==}
 
+  '@syncfusion/ej2-compression@29.1.33':
+    resolution: {integrity: sha512-NVVW988jmjMCuDl07jUyN7fO62Ak34dBZnLkew8/PzC1KqXj4abFvHmNJ+crUDaNq3kPvjR8YrhWDfLzLZGaZA==}
+
   '@syncfusion/ej2-data@28.1.33':
     resolution: {integrity: sha512-LpLHGXh6Bg7ExnJ4o3Zm4ZjUyxkaBxDHwDPC6Hylf+zrSN18sBosUf4fkX4DNa/EW+/Bd5kkHuYXumUOBdRz+Q==}
 
   '@syncfusion/ej2-data@28.2.12':
     resolution: {integrity: sha512-U4M45XfZGdlZXCb0tcsHXY3ihg5OjDJi+KG5TdNj62JknxWXV6UTx0WupztZnuGQ3DsSYyBt7X293de8cG6tcA==}
+
+  '@syncfusion/ej2-data@29.1.33':
+    resolution: {integrity: sha512-dqXJtljDm8fPmLl7kuO3GYuoF8xHtnUE7qwvFWE3VZTvJYWLyG68auf5gNCK47hckMp9zvgWXboTMXMBXpAkrA==}
 
   '@syncfusion/ej2-diagrams@28.2.12':
     resolution: {integrity: sha512-n+v8gMWecV+9jGXP3UBByz5jtMkOp3YzO9v9k6XCM1+MZbGNVuETnbAgrPqSveSrYyeisCD7CFatJIgLg405Xg==}
@@ -3091,8 +3125,14 @@ packages:
   '@syncfusion/ej2-documenteditor@28.2.12':
     resolution: {integrity: sha512-DgbxXt1aCyaO9BdMHZ9CJKDYfskxqwninHwekMUtMdRrc9C3ZXiWU/Pt1z49tA76DZ+RQbHGyq9UAohn1AQt/A==}
 
+  '@syncfusion/ej2-documenteditor@29.1.37':
+    resolution: {integrity: sha512-TouHoYYO4euutOhNeb1iHEBcNI3SW9UeC8RmAzK1Bu8robNcYlRSkc+P9BplKPutNMH4e+iwRU9cW5ZlbH9qjQ==}
+
   '@syncfusion/ej2-drawings@28.2.12':
     resolution: {integrity: sha512-ngOCSA1GhhOJrux8J+Ww0Mx76D5euZshQpqzkmogQVTeM1bPgtPQou9ypdhl97X2R0HujfWZJBnxoVS0YeoakA==}
+
+  '@syncfusion/ej2-drawings@29.1.37':
+    resolution: {integrity: sha512-9dUq2GTjpEVz87SkEA/8kEATw0lxDtmXlazeTGSEOek26q/Ju9humZJv7PcuHqMPZTLLYHI6m6GVmvP8EUPKIA==}
 
   '@syncfusion/ej2-dropdowns@28.1.38':
     resolution: {integrity: sha512-Hd2VtweFK3oT9m8IRcYcAixH/Z+tZD1jv5laxmnFUGkmQsZz68HS/Q1CioiiinJC1nNBIh0q2r8DbvFm3NDGfw==}
@@ -3100,11 +3140,17 @@ packages:
   '@syncfusion/ej2-dropdowns@28.2.12':
     resolution: {integrity: sha512-h1Grme7xelXBBHHDDG4zIKD2IGbcQyoJ0W7c6Wv2CFYr072YbaqU5iC65dNu7sSVLn+Qmapb8ioYFbnzkC+wfQ==}
 
+  '@syncfusion/ej2-dropdowns@29.1.37':
+    resolution: {integrity: sha512-GAkezxiAO9YD3K0XRYLfeFYzRaUySyWVjPysxnzDCGAOAyA0igzZhhCcVgAFGYij/T58f9oim44uK+inAmGk1Q==}
+
   '@syncfusion/ej2-excel-export@28.1.33':
     resolution: {integrity: sha512-7S7ZlMHS0GppSjX7l2ojt+ujx1EchTUQ34VxaWexTP4MHs5XH3cTYd4EuZNuPgPtchiyf1B3J82MfnGwLIBHPg==}
 
   '@syncfusion/ej2-excel-export@28.2.3':
     resolution: {integrity: sha512-DgL6Jg7uKFJKB83EDU0WLMTYpJDCGXsgbJ59ODSHOW+go+3gCBK/A+NJ7eZdacVQ0kAUNhuXRaIyjTemDqK6WA==}
+
+  '@syncfusion/ej2-excel-export@29.1.33':
+    resolution: {integrity: sha512-UOkX00nb45eTii+Y8kwsCn0Jkn+UBRwznF7l9d9MN9aIJ4zCg+AJ88V/SqASA7Y4+qtGR7I1f4b69Wr0uau0Zw==}
 
   '@syncfusion/ej2-file-utils@28.1.33':
     resolution: {integrity: sha512-jQYQgC7Ctbw47T7mIk2aZfxfY5Jz3fXAcQCAGgVMKvj/EJNOW265brorp/Fgfwy7DRF4DofWcEEadknBOds6Mw==}
@@ -3112,8 +3158,14 @@ packages:
   '@syncfusion/ej2-file-utils@28.2.3':
     resolution: {integrity: sha512-5PDcBtUfKy+P9BPVIYisT8DdZ7hNXkF5UWeOgw8rzE9BshBdpIcxRdEyMkRgQfqIHf3E7AWqLxyT87XxUOti2A==}
 
+  '@syncfusion/ej2-file-utils@29.1.33':
+    resolution: {integrity: sha512-RxHWK1Xk3Q1TP9XE93pWxwjheIygeeu6TkGvih8H7MQZUdr+igRYG65ii2OhFBAT26BndU7gtl3Jv5l+eZBNfA==}
+
   '@syncfusion/ej2-filemanager@28.2.11':
     resolution: {integrity: sha512-JbGS3cSpZpYyjgETRa39RjsdosqXTt24DnyyzUGr7L4sHsVj5FVLEFibSCwjrDuI0uzxsde85Z5AcqqcbNjMXg==}
+
+  '@syncfusion/ej2-filemanager@29.1.37':
+    resolution: {integrity: sha512-L9/20W12HoxUsNpXzHl765JrvpnMRuGv62xz7DaT2lA9YdRSl1s+oXn1W0TofFh2QT85yN6tGKoA5yYfKM3C2A==}
 
   '@syncfusion/ej2-gantt@28.2.11':
     resolution: {integrity: sha512-fMTER0MeGaug37DdcSailnkgH3SkaL2cPaZBHVY2AMmhK/H/E3i8J1F2rTH+fO7ymCCDGfUPKOYXTax38SfNSg==}
@@ -3124,6 +3176,9 @@ packages:
   '@syncfusion/ej2-grids@28.2.12':
     resolution: {integrity: sha512-idW0eT/wnRfsjsEpmbYiLuvCMRuUGggQvCdjILO0f9MultOHu04Triqckt6Amp1pXx4ONEhq38rDUJGU/viSCA==}
 
+  '@syncfusion/ej2-grids@29.1.37':
+    resolution: {integrity: sha512-gTziFS45258v0aGzcE/h0bSnwhzuxfR460dMVwh8LuNcuAZjUbM/WnBdWF4gXRRKcTzHtKNvAdg81nnNeHQ8nw==}
+
   '@syncfusion/ej2-heatmap@28.2.3':
     resolution: {integrity: sha512-ib6yx4PSNbJ5kBfnVSN4GtWHIzzdVlIf/95qvSKn4qouBx7A+L1NIHA77VOqCugEblNsG2p+HuXfsSLD1yM0AA==}
 
@@ -3133,17 +3188,26 @@ packages:
   '@syncfusion/ej2-icons@28.2.3':
     resolution: {integrity: sha512-lwDMbygU3y15jLkTCtvFb7dwfEtOVknjajYWnp+wmCJF14ZUwDEBuY1jCcpDcEd6mHkDdS5GFlpifdjZhh9jJA==}
 
+  '@syncfusion/ej2-icons@29.1.33':
+    resolution: {integrity: sha512-kfhXGZ5QQAIkvqGdPXOnZCkPqKnyw0ieK74vfoFXv3UlJKLiSIAbkBxr8xOWn7k+FtlADDkGnOTAtIKUpyHBfQ==}
+
   '@syncfusion/ej2-image-editor@28.2.3':
     resolution: {integrity: sha512-7CYJvzIactbWiD0Q+k89y1xVyDb7MzSzNxjacuqRl+18ckmkvaffZBVoLmK1mwvL8319untJ4K/Ylv5NIocNbg==}
 
   '@syncfusion/ej2-inplace-editor@28.2.3':
     resolution: {integrity: sha512-g0W1hkCOlKBVRxWg6KsPA2wUkV9V/MvMpoDtnT5lmt/XtR++AGKk3HRgf1pLOwi7yg8MVeczF25bxvz0BZKqQQ==}
 
+  '@syncfusion/ej2-inplace-editor@29.1.33':
+    resolution: {integrity: sha512-Tl9fvHg1OMW4KwVkfLDLP3sCHKRRa9RvrK3VyVFCOIMvwcu3iHYn6NyHR3t2FvB5kSpKcxJ0OtUGIXMGP2RmhQ==}
+
   '@syncfusion/ej2-inputs@28.1.37':
     resolution: {integrity: sha512-kFz31y6eZiQ4IaBct+FN4gny1QPibHKT/JjpeR3w5rtKOeA2cPZPqQJbk3isQGJX+Ls4aoTdpaRCQsRnvuKg6w==}
 
   '@syncfusion/ej2-inputs@28.2.11':
     resolution: {integrity: sha512-tyRwpY2w6ulO4IJjBydgWXLQ2QK5EeRBAZ4EIgnnmVX7/uKMQqSzZe6eiCuZrnGHTQzu4rHv1OXtA+wKDA6vmA==}
+
+  '@syncfusion/ej2-inputs@29.1.34':
+    resolution: {integrity: sha512-5okfu95Yqzp1c47wiKcHlJzr6vt4PjADtwoAiVqsgKG8t9o+Gyf3uf2E7Fcu04gJoMXiHT5CNMM6a+fO1zL4Og==}
 
   '@syncfusion/ej2-interactive-chat@28.2.7':
     resolution: {integrity: sha512-rz8L8slGCxIuDgYs7qEIcrGpsLwpXxX77cCeEvfXHujqWR/oDV/9E2+cMoNvd7cqbFKEi9jTOlT3n/tajT7avQ==}
@@ -3160,6 +3224,9 @@ packages:
   '@syncfusion/ej2-layouts@28.2.5':
     resolution: {integrity: sha512-al+ap8vFqULPTcz8gAaf3wvtcQCPNmdXZk8eoh1k60EjtkBMvdlUhDTBnJLPXCmwOQKeg6oX0TrYIlEyM9VqUQ==}
 
+  '@syncfusion/ej2-layouts@29.1.37':
+    resolution: {integrity: sha512-8nIz2FeA3x87lWczJDXYiSW9TGQXDPwuQI79ZM6LABxGhnh7m2JNEDbWu9OFdzg8SCCLIOQl4JJQBRb0iv75aA==}
+
   '@syncfusion/ej2-lineargauge@28.2.3':
     resolution: {integrity: sha512-BbHcxmufFNkBMOwlYTSd1DWEUnJS9+GuUZNX6vqwgak/INbOmw92GNRvvSCrIokfDmqcWKCQjLWz7bAVuyURkg==}
 
@@ -3168,6 +3235,9 @@ packages:
 
   '@syncfusion/ej2-lists@28.2.3':
     resolution: {integrity: sha512-MB9ecuC0A3T6jwY6xIuHu5ZOtFcoNJGGCDWHiLRXH2OQWkeTsiGe0vjG2skTcrl0LXkinRAXo79RU1DaPFDB1Q==}
+
+  '@syncfusion/ej2-lists@29.1.34':
+    resolution: {integrity: sha512-8HbQcyVAKK7XrAbPoMz/0aGwOrCjmbD4c6RY7jnOIGyVRYeB7nZdg+kO4dPr6wXvXORGOgbNRW7Mm4XxbzLBsQ==}
 
   '@syncfusion/ej2-maps@28.2.9':
     resolution: {integrity: sha512-TE+QujZypC5q9HbM1A4xcgTkakvXAFVVRdwKzOOe8wv55mpoSHvX9+8p/fGobmRnhfnuiSS9hREuhhSJNblpYA==}
@@ -3181,14 +3251,23 @@ packages:
   '@syncfusion/ej2-navigations@28.2.12':
     resolution: {integrity: sha512-CxFO3dm2wmTLXa/b/dRjeiAx1ka30mhblLl8UFePqGo/0/a5u1obdiwTQOCAVhUI3sDDMk3gMcmd9mRz4FpaNA==}
 
+  '@syncfusion/ej2-navigations@29.1.37':
+    resolution: {integrity: sha512-N+b+hmqvKZnvDmBbYuhfJQcwc/1hGuBzEH4wZZwbwCFGwUOwZzbhjW7Tw5aytg3zxg//oHj9g2VY+OpWtCtHGQ==}
+
   '@syncfusion/ej2-notifications@28.1.33':
     resolution: {integrity: sha512-GOsC2hPTNETFdxRWN7jo5NspqRBUz/wWNblwkcJUkWqgt6kj3GZnL0XYuhv1XsLFmTvAVh5gXHOCdwHdEUVuug==}
 
   '@syncfusion/ej2-notifications@28.2.3':
     resolution: {integrity: sha512-Nkw3XuH5qw0QKEq3m0hAraPIVRVEYUDJgjQGEJZrKCtQCST1t8EPUAD+DjT63HVpzwXK0LGAFWkZgXLevf75Bw==}
 
+  '@syncfusion/ej2-notifications@29.1.33':
+    resolution: {integrity: sha512-MNKwBHXlDeuvjn+BDeIc77Ei2PGm7egiKnIZoP4A93fxZCetaiqLLUbGOHHJYmvOPuL4OOifNXcKSrhMA6RcrQ==}
+
   '@syncfusion/ej2-office-chart@28.2.3':
     resolution: {integrity: sha512-bHD3HMp6NduVfc9BeWTEd1bCKhYyzRK/M+Rt7po1DZOS2Q1jUQqW5AzKywB+BtQIWolYTxq2gJtjBlscx3yh2w==}
+
+  '@syncfusion/ej2-office-chart@29.1.33':
+    resolution: {integrity: sha512-4iqXPJxL5QECifvY8woMTxuUytv1wqir9ecXmaM65TAt5EjZPqpMNC7pn3prbyGOtUVLHfo2tQE2Z8/FfAauIw==}
 
   '@syncfusion/ej2-pdf-export@28.1.38':
     resolution: {integrity: sha512-mCLRpSn9aF+tuA4rwmg+jPmbw2GZUe6032GL7c91jUViSyTuEp+L2jIQoI7zt19C6n4SEN6NKhcMxbd5OOKpSA==}
@@ -3196,11 +3275,20 @@ packages:
   '@syncfusion/ej2-pdf-export@28.2.3':
     resolution: {integrity: sha512-bYvzVG4NZNhZv0juHJwJ56DfJ+Yc/mS3xJen2YJu6AcumTET1MMTG1IrlFvzLffwGvdDddXVZNgbNkVXJS3Fug==}
 
+  '@syncfusion/ej2-pdf-export@29.1.33':
+    resolution: {integrity: sha512-c8lHwvFSZVMC2HP6YnoVvJ7XvvndBZhlL83gRq+iMQCvkULA4LsIy4QmqkDC4LjY5fgKT3uBr+wDiNwnwDyTng==}
+
   '@syncfusion/ej2-pdf@28.2.11':
     resolution: {integrity: sha512-01HrpLrYe1qTndhB6ADUOkFfDVpAzOIkqQbatRjnaW44UBVfDpgUI/PqR7MnUm/G1JK0fZLIG1u/CgS0Tu1qEA==}
 
+  '@syncfusion/ej2-pdf@29.1.37':
+    resolution: {integrity: sha512-/Rai6L4fzOsBGw+4LF1jnsEN+5NL70DDF4PDVQE5P7riGbqtoQnEQZ+JsXKw0TJRwAA8/DRWv7Qp7bJKjSXc/g==}
+
   '@syncfusion/ej2-pdfviewer@28.2.12':
     resolution: {integrity: sha512-AsCau5RUzqhaRxV9eV9CYcHcueTLJbmRnAnQ9YRyOMZq0u7H9PrZEIZXPLWtqijHuM9VLeR8dTN+ezIa25ovTQ==}
+
+  '@syncfusion/ej2-pdfviewer@29.1.37':
+    resolution: {integrity: sha512-NWsdm6s0YFOO3tr8h2Z5z2SNqVSE8P+zkHPWplv3s/0Oau5RE9Toee2kwL7mYxlsEE3MqGHUD63kNc0H6H+7jg==}
 
   '@syncfusion/ej2-pivotview@28.2.11':
     resolution: {integrity: sha512-mZFxaQFuCRFpqf1UBpkDhc3DOJBaQ37v5Vi6fpxDQ2gl7tvdNNthvxHGTLhuxtdBwbGWmqAnUnEoCXhTITEPvQ==}
@@ -3210,6 +3298,9 @@ packages:
 
   '@syncfusion/ej2-popups@28.2.9':
     resolution: {integrity: sha512-yhqUlhXOAL4WQHjqAFcqjnCxWsflya0uSfHqxkSXdyoaEvAlc0KsKop5nn7HyB1OqLQbSkBH7pn9yJd6QJYYkw==}
+
+  '@syncfusion/ej2-popups@29.1.37':
+    resolution: {integrity: sha512-0LAqQeYVu+eOu21ZXWkjycej4gOgfuR9A2Zm+GsgF+jskvL6ev47hCHg60zjlt9dowHPGJimz2ksKLDulyP64A==}
 
   '@syncfusion/ej2-progressbar@28.2.7':
     resolution: {integrity: sha512-LQbnJGgI5dAXUd6DFJAb5XAO59l9PEyPhll0ADJc7xvrIt1chGhj5BZ/HAOT190mBl4eCJcKzB3CZ9wsQ9wKgA==}
@@ -3223,6 +3314,9 @@ packages:
   '@syncfusion/ej2-richtexteditor@28.2.11':
     resolution: {integrity: sha512-JQW5jrIZvKYH52sce+fwazdVbMDW67JeZyV2KmX2uCHYCo0K2Qq6MR6D7V7gaug81rR7XppLK+1UQ/X6Oo854w==}
 
+  '@syncfusion/ej2-richtexteditor@29.1.37':
+    resolution: {integrity: sha512-fb58/J8aV53r7+zzMMw0VQrkzyzp8CNDw35ayvF0iOMMnN4vulvJF/7HQVq6VhZ6qavU+tFr2kkxytT+HURzgg==}
+
   '@syncfusion/ej2-schedule@28.1.37':
     resolution: {integrity: sha512-2tfL4y8Fz4tMEakimx0OWlOPIxGu+e2Eklz9NUsZZ1mEsLGcoEWnQccyiHY/tQZbW9kGjxBr88s2WCNNZiXhyw==}
 
@@ -3235,11 +3329,17 @@ packages:
   '@syncfusion/ej2-splitbuttons@28.2.3':
     resolution: {integrity: sha512-8PWYWo+kZgV2JfPkqe6riToKO7blxNBFMo083HdbaE2z76gKkB1Eg3JNCJU2NIqlsb8eZX1eBHd6JoUbTEkgow==}
 
+  '@syncfusion/ej2-splitbuttons@29.1.33':
+    resolution: {integrity: sha512-ScZpb7fiBOd/55AkpFZPvcFrTs6MiEkUFtH8vtqrV1G9cmgCJ8zl+6QbJjAtCOsWYEWPA70Qh5JKppMXJWkhGw==}
+
   '@syncfusion/ej2-spreadsheet@28.2.11':
     resolution: {integrity: sha512-6zcunh8++OQL9D92bPNTBgZ33LMHBSXVdtGdJ+4X5hf9yu+nJNxMdu+LJp6jvw4/eK/NMvMwJCkB81I79cY0wg==}
 
   '@syncfusion/ej2-svg-base@28.2.3':
     resolution: {integrity: sha512-G5ZLzumZOuKHiZTtpnadRHMUuqTbq8dwpl8QCMo8zzW+VtmEMNG5+0OAwR1V0tjPTsFFHDGEVFjmAFhVOxZKJA==}
+
+  '@syncfusion/ej2-svg-base@29.1.33':
+    resolution: {integrity: sha512-JvpYhY/8DmSeBPQWWIniqfMn/d0g+TzhMLDQlDiBWS79kIKxi396Lyw94c49MRQkULJzGdysLZJnsxD4k3q9DQ==}
 
   '@syncfusion/ej2-treegrid@28.2.6':
     resolution: {integrity: sha512-yUng1e39ihxnkXB4O58r7PomaAjNoIzETtWzxEYbGQFOb3j0s3r3r1nogsvekFWQNiaUxgt2ZLn4IH0zgpvcCw==}
@@ -8276,7 +8376,7 @@ snapshots:
       - tsx
       - yaml
 
-  '@angular/cdk@19.2.8(@angular/common@19.2.3(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0))(rxjs@7.8.0))(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0))(rxjs@7.8.0)':
+  '@angular/cdk@19.2.9(@angular/common@19.2.3(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0))(rxjs@7.8.0))(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0))(rxjs@7.8.0)':
     dependencies:
       '@angular/common': 19.2.3(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0))(rxjs@7.8.0)
       '@angular/core': 19.2.3(rxjs@7.8.0)(zone.js@0.15.0)
@@ -8365,16 +8465,16 @@ snapshots:
       rxjs: 7.8.0
       tslib: 2.4.1
 
-  ? '@angular/material-luxon-adapter@19.2.8(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0))(@angular/material@19.2.9(@angular/cdk@19.2.8(@angular/common@19.2.3(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0))(rxjs@7.8.0))(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0))(rxjs@7.8.0))(@angular/common@19.2.3(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0))(rxjs@7.8.0))(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0))(@angular/forms@19.2.3(@angular/common@19.2.3(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0))(rxjs@7.8.0))(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0))(@angular/platform-browser@19.2.3(@angular/animations@19.2.3(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0)))(@angular/common@19.2.3(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0))(rxjs@7.8.0))(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0)))(rxjs@7.8.0))(@angular/platform-browser@19.2.3(@angular/animations@19.2.3(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0)))(@angular/common@19.2.3(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0))(rxjs@7.8.0))(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0)))(rxjs@7.8.0))(luxon@3.2.1)'
+  ? '@angular/material-luxon-adapter@19.2.9(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0))(@angular/material@19.2.9(@angular/cdk@19.2.9(@angular/common@19.2.3(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0))(rxjs@7.8.0))(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0))(rxjs@7.8.0))(@angular/common@19.2.3(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0))(rxjs@7.8.0))(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0))(@angular/forms@19.2.3(@angular/common@19.2.3(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0))(rxjs@7.8.0))(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0))(@angular/platform-browser@19.2.3(@angular/animations@19.2.3(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0)))(@angular/common@19.2.3(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0))(rxjs@7.8.0))(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0)))(rxjs@7.8.0))(@angular/platform-browser@19.2.3(@angular/animations@19.2.3(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0)))(@angular/common@19.2.3(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0))(rxjs@7.8.0))(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0)))(rxjs@7.8.0))(luxon@3.2.1)'
   : dependencies:
       '@angular/core': 19.2.3(rxjs@7.8.0)(zone.js@0.15.0)
-      '@angular/material': 19.2.9(@angular/cdk@19.2.8(@angular/common@19.2.3(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0))(rxjs@7.8.0))(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0))(rxjs@7.8.0))(@angular/common@19.2.3(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0))(rxjs@7.8.0))(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0))(@angular/forms@19.2.3(@angular/common@19.2.3(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0))(rxjs@7.8.0))(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0))(@angular/platform-browser@19.2.3(@angular/animations@19.2.3(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0)))(@angular/common@19.2.3(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0))(rxjs@7.8.0))(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0)))(rxjs@7.8.0))(@angular/platform-browser@19.2.3(@angular/animations@19.2.3(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0)))(@angular/common@19.2.3(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0))(rxjs@7.8.0))(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0)))(rxjs@7.8.0)
+      '@angular/material': 19.2.9(@angular/cdk@19.2.9(@angular/common@19.2.3(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0))(rxjs@7.8.0))(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0))(rxjs@7.8.0))(@angular/common@19.2.3(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0))(rxjs@7.8.0))(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0))(@angular/forms@19.2.3(@angular/common@19.2.3(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0))(rxjs@7.8.0))(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0))(@angular/platform-browser@19.2.3(@angular/animations@19.2.3(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0)))(@angular/common@19.2.3(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0))(rxjs@7.8.0))(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0)))(rxjs@7.8.0))(@angular/platform-browser@19.2.3(@angular/animations@19.2.3(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0)))(@angular/common@19.2.3(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0))(rxjs@7.8.0))(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0)))(rxjs@7.8.0)
       luxon: 3.2.1
       tslib: 2.4.1
 
-  '@angular/material@19.2.9(@angular/cdk@19.2.8(@angular/common@19.2.3(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0))(rxjs@7.8.0))(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0))(rxjs@7.8.0))(@angular/common@19.2.3(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0))(rxjs@7.8.0))(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0))(@angular/forms@19.2.3(@angular/common@19.2.3(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0))(rxjs@7.8.0))(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0))(@angular/platform-browser@19.2.3(@angular/animations@19.2.3(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0)))(@angular/common@19.2.3(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0))(rxjs@7.8.0))(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0)))(rxjs@7.8.0))(@angular/platform-browser@19.2.3(@angular/animations@19.2.3(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0)))(@angular/common@19.2.3(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0))(rxjs@7.8.0))(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0)))(rxjs@7.8.0)':
+  '@angular/material@19.2.9(@angular/cdk@19.2.9(@angular/common@19.2.3(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0))(rxjs@7.8.0))(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0))(rxjs@7.8.0))(@angular/common@19.2.3(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0))(rxjs@7.8.0))(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0))(@angular/forms@19.2.3(@angular/common@19.2.3(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0))(rxjs@7.8.0))(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0))(@angular/platform-browser@19.2.3(@angular/animations@19.2.3(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0)))(@angular/common@19.2.3(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0))(rxjs@7.8.0))(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0)))(rxjs@7.8.0))(@angular/platform-browser@19.2.3(@angular/animations@19.2.3(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0)))(@angular/common@19.2.3(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0))(rxjs@7.8.0))(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0)))(rxjs@7.8.0)':
     dependencies:
-      '@angular/cdk': 19.2.8(@angular/common@19.2.3(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0))(rxjs@7.8.0))(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0))(rxjs@7.8.0)
+      '@angular/cdk': 19.2.9(@angular/common@19.2.3(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0))(rxjs@7.8.0))(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0))(rxjs@7.8.0)
       '@angular/common': 19.2.3(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0))(rxjs@7.8.0)
       '@angular/core': 19.2.3(rxjs@7.8.0)(zone.js@0.15.0)
       '@angular/forms': 19.2.3(@angular/common@19.2.3(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0))(rxjs@7.8.0))(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0))(@angular/platform-browser@19.2.3(@angular/animations@19.2.3(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0)))(@angular/common@19.2.3(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0))(rxjs@7.8.0))(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0)))(rxjs@7.8.0)
@@ -11139,6 +11239,11 @@ snapshots:
       '@syncfusion/ej2-base': 28.2.12
       '@syncfusion/ej2-icons': 28.2.3
 
+  '@syncfusion/ej2-angular-base@29.1.33':
+    dependencies:
+      '@syncfusion/ej2-base': 29.1.36
+      '@syncfusion/ej2-icons': 29.1.33
+
   '@syncfusion/ej2-angular-buttons@28.2.7':
     dependencies:
       '@syncfusion/ej2-angular-base': 28.2.5
@@ -11156,6 +11261,12 @@ snapshots:
       '@syncfusion/ej2-angular-base': 28.2.5
       '@syncfusion/ej2-base': 28.2.12
       '@syncfusion/ej2-charts': 28.2.11
+
+  '@syncfusion/ej2-angular-documenteditor@29.1.37':
+    dependencies:
+      '@syncfusion/ej2-angular-base': 29.1.33
+      '@syncfusion/ej2-base': 29.1.36
+      '@syncfusion/ej2-documenteditor': 29.1.37
 
   '@syncfusion/ej2-angular-dropdowns@28.1.38':
     dependencies:
@@ -11204,6 +11315,12 @@ snapshots:
       '@syncfusion/ej2-angular-base': 28.1.33
       '@syncfusion/ej2-base': 28.1.33
       '@syncfusion/ej2-navigations': 28.1.37
+
+  '@syncfusion/ej2-angular-pdfviewer@29.1.37':
+    dependencies:
+      '@syncfusion/ej2-angular-base': 29.1.33
+      '@syncfusion/ej2-base': 29.1.36
+      '@syncfusion/ej2-pdfviewer': 29.1.37
 
   '@syncfusion/ej2-angular-pivotview@28.2.11':
     dependencies:
@@ -11254,6 +11371,10 @@ snapshots:
     dependencies:
       '@syncfusion/ej2-icons': 28.2.3
 
+  '@syncfusion/ej2-base@29.1.36':
+    dependencies:
+      '@syncfusion/ej2-icons': 29.1.33
+
   '@syncfusion/ej2-buttons@28.1.37':
     dependencies:
       '@syncfusion/ej2-base': 28.1.33
@@ -11261,6 +11382,10 @@ snapshots:
   '@syncfusion/ej2-buttons@28.2.7':
     dependencies:
       '@syncfusion/ej2-base': 28.2.12
+
+  '@syncfusion/ej2-buttons@29.1.34':
+    dependencies:
+      '@syncfusion/ej2-base': 29.1.36
 
   '@syncfusion/ej2-calendars@28.1.37':
     dependencies:
@@ -11278,6 +11403,14 @@ snapshots:
       '@syncfusion/ej2-lists': 28.2.3
       '@syncfusion/ej2-popups': 28.2.9
 
+  '@syncfusion/ej2-calendars@29.1.35':
+    dependencies:
+      '@syncfusion/ej2-base': 29.1.36
+      '@syncfusion/ej2-buttons': 29.1.34
+      '@syncfusion/ej2-inputs': 29.1.34
+      '@syncfusion/ej2-lists': 29.1.34
+      '@syncfusion/ej2-popups': 29.1.37
+
   '@syncfusion/ej2-charts@28.2.11':
     dependencies:
       '@syncfusion/ej2-base': 28.2.12
@@ -11287,6 +11420,16 @@ snapshots:
       '@syncfusion/ej2-navigations': 28.2.12
       '@syncfusion/ej2-pdf-export': 28.2.3
       '@syncfusion/ej2-svg-base': 28.2.3
+
+  '@syncfusion/ej2-charts@29.1.35':
+    dependencies:
+      '@syncfusion/ej2-base': 29.1.36
+      '@syncfusion/ej2-calendars': 29.1.35
+      '@syncfusion/ej2-data': 29.1.33
+      '@syncfusion/ej2-excel-export': 29.1.33
+      '@syncfusion/ej2-navigations': 29.1.37
+      '@syncfusion/ej2-pdf-export': 29.1.33
+      '@syncfusion/ej2-svg-base': 29.1.33
 
   '@syncfusion/ej2-circulargauge@28.2.3':
     dependencies:
@@ -11302,6 +11445,10 @@ snapshots:
     dependencies:
       '@syncfusion/ej2-file-utils': 28.2.3
 
+  '@syncfusion/ej2-compression@29.1.33':
+    dependencies:
+      '@syncfusion/ej2-file-utils': 29.1.33
+
   '@syncfusion/ej2-data@28.1.33':
     dependencies:
       '@syncfusion/ej2-base': 28.1.33
@@ -11309,6 +11456,10 @@ snapshots:
   '@syncfusion/ej2-data@28.2.12':
     dependencies:
       '@syncfusion/ej2-base': 28.2.12
+
+  '@syncfusion/ej2-data@29.1.33':
+    dependencies:
+      '@syncfusion/ej2-base': 29.1.36
 
   '@syncfusion/ej2-diagrams@28.2.12':
     dependencies:
@@ -11334,10 +11485,29 @@ snapshots:
       '@syncfusion/ej2-popups': 28.2.9
       '@syncfusion/ej2-splitbuttons': 28.2.3
 
+  '@syncfusion/ej2-documenteditor@29.1.37':
+    dependencies:
+      '@syncfusion/ej2-base': 29.1.36
+      '@syncfusion/ej2-buttons': 29.1.34
+      '@syncfusion/ej2-calendars': 29.1.35
+      '@syncfusion/ej2-compression': 29.1.33
+      '@syncfusion/ej2-dropdowns': 29.1.37
+      '@syncfusion/ej2-file-utils': 29.1.33
+      '@syncfusion/ej2-inputs': 29.1.34
+      '@syncfusion/ej2-navigations': 29.1.37
+      '@syncfusion/ej2-office-chart': 29.1.33
+      '@syncfusion/ej2-popups': 29.1.37
+      '@syncfusion/ej2-splitbuttons': 29.1.33
+
   '@syncfusion/ej2-drawings@28.2.12':
     dependencies:
       '@syncfusion/ej2-base': 28.2.12
       '@syncfusion/ej2-data': 28.2.12
+
+  '@syncfusion/ej2-drawings@29.1.37':
+    dependencies:
+      '@syncfusion/ej2-base': 29.1.36
+      '@syncfusion/ej2-data': 29.1.33
 
   '@syncfusion/ej2-dropdowns@28.1.38':
     dependencies:
@@ -11359,6 +11529,16 @@ snapshots:
       '@syncfusion/ej2-notifications': 28.2.3
       '@syncfusion/ej2-popups': 28.2.9
 
+  '@syncfusion/ej2-dropdowns@29.1.37':
+    dependencies:
+      '@syncfusion/ej2-base': 29.1.36
+      '@syncfusion/ej2-data': 29.1.33
+      '@syncfusion/ej2-inputs': 29.1.34
+      '@syncfusion/ej2-lists': 29.1.34
+      '@syncfusion/ej2-navigations': 29.1.37
+      '@syncfusion/ej2-notifications': 29.1.33
+      '@syncfusion/ej2-popups': 29.1.37
+
   '@syncfusion/ej2-excel-export@28.1.33':
     dependencies:
       '@syncfusion/ej2-base': 28.1.33
@@ -11369,9 +11549,16 @@ snapshots:
       '@syncfusion/ej2-base': 28.2.12
       '@syncfusion/ej2-compression': 28.2.3
 
+  '@syncfusion/ej2-excel-export@29.1.33':
+    dependencies:
+      '@syncfusion/ej2-base': 29.1.36
+      '@syncfusion/ej2-compression': 29.1.33
+
   '@syncfusion/ej2-file-utils@28.1.33': {}
 
   '@syncfusion/ej2-file-utils@28.2.3': {}
+
+  '@syncfusion/ej2-file-utils@29.1.33': {}
 
   '@syncfusion/ej2-filemanager@28.2.11':
     dependencies:
@@ -11385,6 +11572,19 @@ snapshots:
       '@syncfusion/ej2-navigations': 28.2.12
       '@syncfusion/ej2-popups': 28.2.9
       '@syncfusion/ej2-splitbuttons': 28.2.3
+
+  '@syncfusion/ej2-filemanager@29.1.37':
+    dependencies:
+      '@syncfusion/ej2-base': 29.1.36
+      '@syncfusion/ej2-buttons': 29.1.34
+      '@syncfusion/ej2-data': 29.1.33
+      '@syncfusion/ej2-grids': 29.1.37
+      '@syncfusion/ej2-inputs': 29.1.34
+      '@syncfusion/ej2-layouts': 29.1.37
+      '@syncfusion/ej2-lists': 29.1.34
+      '@syncfusion/ej2-navigations': 29.1.37
+      '@syncfusion/ej2-popups': 29.1.37
+      '@syncfusion/ej2-splitbuttons': 29.1.33
 
   '@syncfusion/ej2-gantt@28.2.11':
     dependencies:
@@ -11440,6 +11640,24 @@ snapshots:
       '@syncfusion/ej2-popups': 28.2.9
       '@syncfusion/ej2-splitbuttons': 28.2.3
 
+  '@syncfusion/ej2-grids@29.1.37':
+    dependencies:
+      '@syncfusion/ej2-base': 29.1.36
+      '@syncfusion/ej2-buttons': 29.1.34
+      '@syncfusion/ej2-calendars': 29.1.35
+      '@syncfusion/ej2-compression': 29.1.33
+      '@syncfusion/ej2-data': 29.1.33
+      '@syncfusion/ej2-dropdowns': 29.1.37
+      '@syncfusion/ej2-excel-export': 29.1.33
+      '@syncfusion/ej2-file-utils': 29.1.33
+      '@syncfusion/ej2-inputs': 29.1.34
+      '@syncfusion/ej2-lists': 29.1.34
+      '@syncfusion/ej2-navigations': 29.1.37
+      '@syncfusion/ej2-notifications': 29.1.33
+      '@syncfusion/ej2-pdf-export': 29.1.33
+      '@syncfusion/ej2-popups': 29.1.37
+      '@syncfusion/ej2-splitbuttons': 29.1.33
+
   '@syncfusion/ej2-heatmap@28.2.3':
     dependencies:
       '@syncfusion/ej2-base': 28.2.12
@@ -11452,6 +11670,8 @@ snapshots:
   '@syncfusion/ej2-icons@28.1.33': {}
 
   '@syncfusion/ej2-icons@28.2.3': {}
+
+  '@syncfusion/ej2-icons@29.1.33': {}
 
   '@syncfusion/ej2-image-editor@28.2.3':
     dependencies:
@@ -11478,6 +11698,21 @@ snapshots:
       '@syncfusion/ej2-richtexteditor': 28.2.11
       '@syncfusion/ej2-splitbuttons': 28.2.3
 
+  '@syncfusion/ej2-inplace-editor@29.1.33':
+    dependencies:
+      '@syncfusion/ej2-base': 29.1.36
+      '@syncfusion/ej2-buttons': 29.1.34
+      '@syncfusion/ej2-calendars': 29.1.35
+      '@syncfusion/ej2-data': 29.1.33
+      '@syncfusion/ej2-dropdowns': 29.1.37
+      '@syncfusion/ej2-inputs': 29.1.34
+      '@syncfusion/ej2-lists': 29.1.34
+      '@syncfusion/ej2-navigations': 29.1.37
+      '@syncfusion/ej2-notifications': 29.1.33
+      '@syncfusion/ej2-popups': 29.1.37
+      '@syncfusion/ej2-richtexteditor': 29.1.37
+      '@syncfusion/ej2-splitbuttons': 29.1.33
+
   '@syncfusion/ej2-inputs@28.1.37':
     dependencies:
       '@syncfusion/ej2-base': 28.1.33
@@ -11491,6 +11726,13 @@ snapshots:
       '@syncfusion/ej2-buttons': 28.2.7
       '@syncfusion/ej2-popups': 28.2.9
       '@syncfusion/ej2-splitbuttons': 28.2.3
+
+  '@syncfusion/ej2-inputs@29.1.34':
+    dependencies:
+      '@syncfusion/ej2-base': 29.1.36
+      '@syncfusion/ej2-buttons': 29.1.34
+      '@syncfusion/ej2-popups': 29.1.37
+      '@syncfusion/ej2-splitbuttons': 29.1.33
 
   '@syncfusion/ej2-interactive-chat@28.2.7':
     dependencies:
@@ -11531,6 +11773,10 @@ snapshots:
     dependencies:
       '@syncfusion/ej2-base': 28.2.12
 
+  '@syncfusion/ej2-layouts@29.1.37':
+    dependencies:
+      '@syncfusion/ej2-base': 29.1.36
+
   '@syncfusion/ej2-lineargauge@28.2.3':
     dependencies:
       '@syncfusion/ej2-base': 28.2.12
@@ -11550,6 +11796,13 @@ snapshots:
       '@syncfusion/ej2-buttons': 28.2.7
       '@syncfusion/ej2-data': 28.2.12
       '@syncfusion/ej2-popups': 28.2.9
+
+  '@syncfusion/ej2-lists@29.1.34':
+    dependencies:
+      '@syncfusion/ej2-base': 29.1.36
+      '@syncfusion/ej2-buttons': 29.1.34
+      '@syncfusion/ej2-data': 29.1.33
+      '@syncfusion/ej2-popups': 29.1.37
 
   '@syncfusion/ej2-maps@28.2.9':
     dependencies:
@@ -11584,6 +11837,15 @@ snapshots:
       '@syncfusion/ej2-lists': 28.2.3
       '@syncfusion/ej2-popups': 28.2.9
 
+  '@syncfusion/ej2-navigations@29.1.37':
+    dependencies:
+      '@syncfusion/ej2-base': 29.1.36
+      '@syncfusion/ej2-buttons': 29.1.34
+      '@syncfusion/ej2-data': 29.1.33
+      '@syncfusion/ej2-inputs': 29.1.34
+      '@syncfusion/ej2-lists': 29.1.34
+      '@syncfusion/ej2-popups': 29.1.37
+
   '@syncfusion/ej2-notifications@28.1.33':
     dependencies:
       '@syncfusion/ej2-base': 28.1.33
@@ -11596,9 +11858,19 @@ snapshots:
       '@syncfusion/ej2-buttons': 28.2.7
       '@syncfusion/ej2-popups': 28.2.9
 
+  '@syncfusion/ej2-notifications@29.1.33':
+    dependencies:
+      '@syncfusion/ej2-base': 29.1.36
+      '@syncfusion/ej2-buttons': 29.1.34
+      '@syncfusion/ej2-popups': 29.1.37
+
   '@syncfusion/ej2-office-chart@28.2.3':
     dependencies:
       '@syncfusion/ej2-charts': 28.2.11
+
+  '@syncfusion/ej2-office-chart@29.1.33':
+    dependencies:
+      '@syncfusion/ej2-charts': 29.1.35
 
   '@syncfusion/ej2-pdf-export@28.1.38':
     dependencies:
@@ -11608,10 +11880,19 @@ snapshots:
     dependencies:
       '@syncfusion/ej2-compression': 28.2.3
 
+  '@syncfusion/ej2-pdf-export@29.1.33':
+    dependencies:
+      '@syncfusion/ej2-compression': 29.1.33
+
   '@syncfusion/ej2-pdf@28.2.11':
     dependencies:
       '@syncfusion/ej2-base': 28.2.12
       '@syncfusion/ej2-compression': 28.2.3
+
+  '@syncfusion/ej2-pdf@29.1.37':
+    dependencies:
+      '@syncfusion/ej2-base': 29.1.36
+      '@syncfusion/ej2-compression': 29.1.33
 
   '@syncfusion/ej2-pdfviewer@28.2.12':
     dependencies:
@@ -11627,6 +11908,21 @@ snapshots:
       '@syncfusion/ej2-notifications': 28.2.3
       '@syncfusion/ej2-pdf': 28.2.11
       '@syncfusion/ej2-popups': 28.2.9
+
+  '@syncfusion/ej2-pdfviewer@29.1.37':
+    dependencies:
+      '@syncfusion/ej2-base': 29.1.36
+      '@syncfusion/ej2-buttons': 29.1.34
+      '@syncfusion/ej2-data': 29.1.33
+      '@syncfusion/ej2-drawings': 29.1.37
+      '@syncfusion/ej2-dropdowns': 29.1.37
+      '@syncfusion/ej2-inplace-editor': 29.1.33
+      '@syncfusion/ej2-inputs': 29.1.34
+      '@syncfusion/ej2-lists': 29.1.34
+      '@syncfusion/ej2-navigations': 29.1.37
+      '@syncfusion/ej2-notifications': 29.1.33
+      '@syncfusion/ej2-pdf': 29.1.37
+      '@syncfusion/ej2-popups': 29.1.37
 
   '@syncfusion/ej2-pivotview@28.2.11':
     dependencies:
@@ -11657,6 +11953,11 @@ snapshots:
     dependencies:
       '@syncfusion/ej2-base': 28.2.12
       '@syncfusion/ej2-buttons': 28.2.7
+
+  '@syncfusion/ej2-popups@29.1.37':
+    dependencies:
+      '@syncfusion/ej2-base': 29.1.36
+      '@syncfusion/ej2-buttons': 29.1.34
 
   '@syncfusion/ej2-progressbar@28.2.7':
     dependencies:
@@ -11694,6 +11995,17 @@ snapshots:
       '@syncfusion/ej2-popups': 28.2.9
       '@syncfusion/ej2-splitbuttons': 28.2.3
 
+  '@syncfusion/ej2-richtexteditor@29.1.37':
+    dependencies:
+      '@syncfusion/ej2-base': 29.1.36
+      '@syncfusion/ej2-buttons': 29.1.34
+      '@syncfusion/ej2-dropdowns': 29.1.37
+      '@syncfusion/ej2-filemanager': 29.1.37
+      '@syncfusion/ej2-inputs': 29.1.34
+      '@syncfusion/ej2-navigations': 29.1.37
+      '@syncfusion/ej2-popups': 29.1.37
+      '@syncfusion/ej2-splitbuttons': 29.1.33
+
   '@syncfusion/ej2-schedule@28.1.37':
     dependencies:
       '@syncfusion/ej2-base': 28.1.33
@@ -11730,6 +12042,11 @@ snapshots:
       '@syncfusion/ej2-base': 28.2.12
       '@syncfusion/ej2-popups': 28.2.9
 
+  '@syncfusion/ej2-splitbuttons@29.1.33':
+    dependencies:
+      '@syncfusion/ej2-base': 29.1.36
+      '@syncfusion/ej2-popups': 29.1.37
+
   '@syncfusion/ej2-spreadsheet@28.2.11':
     dependencies:
       '@syncfusion/ej2-base': 28.2.12
@@ -11741,6 +12058,10 @@ snapshots:
   '@syncfusion/ej2-svg-base@28.2.3':
     dependencies:
       '@syncfusion/ej2-base': 28.2.12
+
+  '@syncfusion/ej2-svg-base@29.1.33':
+    dependencies:
+      '@syncfusion/ej2-base': 29.1.36
 
   '@syncfusion/ej2-treegrid@28.2.6':
     dependencies:
@@ -15207,9 +15528,9 @@ snapshots:
       '@angular/forms': 19.2.3(@angular/common@19.2.3(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0))(rxjs@7.8.0))(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0))(@angular/platform-browser@19.2.3(@angular/animations@19.2.3(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0)))(@angular/common@19.2.3(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0))(rxjs@7.8.0))(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0)))(rxjs@7.8.0)
       tslib: 2.4.1
 
-  ? ngx-mat-select-search@7.0.10(@angular/material@19.2.9(@angular/cdk@19.2.8(@angular/common@19.2.3(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0))(rxjs@7.8.0))(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0))(rxjs@7.8.0))(@angular/common@19.2.3(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0))(rxjs@7.8.0))(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0))(@angular/forms@19.2.3(@angular/common@19.2.3(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0))(rxjs@7.8.0))(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0))(@angular/platform-browser@19.2.3(@angular/animations@19.2.3(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0)))(@angular/common@19.2.3(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0))(rxjs@7.8.0))(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0)))(rxjs@7.8.0))(@angular/platform-browser@19.2.3(@angular/animations@19.2.3(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0)))(@angular/common@19.2.3(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0))(rxjs@7.8.0))(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0)))(rxjs@7.8.0))
+  ? ngx-mat-select-search@7.0.10(@angular/material@19.2.9(@angular/cdk@19.2.9(@angular/common@19.2.3(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0))(rxjs@7.8.0))(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0))(rxjs@7.8.0))(@angular/common@19.2.3(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0))(rxjs@7.8.0))(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0))(@angular/forms@19.2.3(@angular/common@19.2.3(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0))(rxjs@7.8.0))(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0))(@angular/platform-browser@19.2.3(@angular/animations@19.2.3(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0)))(@angular/common@19.2.3(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0))(rxjs@7.8.0))(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0)))(rxjs@7.8.0))(@angular/platform-browser@19.2.3(@angular/animations@19.2.3(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0)))(@angular/common@19.2.3(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0))(rxjs@7.8.0))(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0)))(rxjs@7.8.0))
   : dependencies:
-      '@angular/material': 19.2.9(@angular/cdk@19.2.8(@angular/common@19.2.3(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0))(rxjs@7.8.0))(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0))(rxjs@7.8.0))(@angular/common@19.2.3(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0))(rxjs@7.8.0))(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0))(@angular/forms@19.2.3(@angular/common@19.2.3(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0))(rxjs@7.8.0))(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0))(@angular/platform-browser@19.2.3(@angular/animations@19.2.3(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0)))(@angular/common@19.2.3(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0))(rxjs@7.8.0))(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0)))(rxjs@7.8.0))(@angular/platform-browser@19.2.3(@angular/animations@19.2.3(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0)))(@angular/common@19.2.3(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0))(rxjs@7.8.0))(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0)))(rxjs@7.8.0)
+      '@angular/material': 19.2.9(@angular/cdk@19.2.9(@angular/common@19.2.3(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0))(rxjs@7.8.0))(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0))(rxjs@7.8.0))(@angular/common@19.2.3(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0))(rxjs@7.8.0))(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0))(@angular/forms@19.2.3(@angular/common@19.2.3(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0))(rxjs@7.8.0))(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0))(@angular/platform-browser@19.2.3(@angular/animations@19.2.3(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0)))(@angular/common@19.2.3(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0))(rxjs@7.8.0))(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0)))(rxjs@7.8.0))(@angular/platform-browser@19.2.3(@angular/animations@19.2.3(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0)))(@angular/common@19.2.3(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0))(rxjs@7.8.0))(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0)))(rxjs@7.8.0)
       tslib: 2.4.1
 
   ngx-toastr@19.0.0(@angular/common@19.2.3(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0))(rxjs@7.8.0))(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0))(@angular/platform-browser@19.2.3(@angular/animations@19.2.3(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0)))(@angular/common@19.2.3(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0))(rxjs@7.8.0))(@angular/core@19.2.3(rxjs@7.8.0)(zone.js@0.15.0))):

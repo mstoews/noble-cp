@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, inject, viewChild, input, output, HostListener } from '@angular/core';
+import { Component, OnInit, inject, viewChild, output, HostListener } from '@angular/core';
 import {
     FormControl,
     FormGroup,
@@ -15,11 +15,7 @@ import { MaterialModule } from 'app/shared/material.module';
 import { EditService, FilterService, GridComponent, GridModule, PageService, SortService, ToolbarService } from '@syncfusion/ej2-angular-grids';
 import { GLGridComponent } from "../../grid-components/gl-grid.component";
 
-import { Store } from '@ngrx/store';
-import { FundsActions } from 'app/features/accounting/static/funds/Funds.Action';
-import { selectFunds } from 'app/features/accounting/static/funds/Funds.Selector';
 import { MenuEventArgs, MenuItemModel } from '@syncfusion/ej2-navigations';
-import { Observable } from 'rxjs';
 import { IFunds } from 'app/models';
 import { FundsStore } from '../../../../store/funds.store';
 
@@ -48,7 +44,7 @@ const imports = [
                             
                             <div class="flex flex-col grow">
                                 <mat-form-field class="mt-1 ml-1 mr-1 flex-start">
-                                    <mat-label class="ml-2 text-base dark:text-gray-200">Fund</mat-label>
+                                    <mat-label class="ml-2 text-base text-gray-800 dark:text-gray-200">Fund</mat-label>
                                     <input matInput placeholder="Fund" formControlName="fund"/>
                                     <mat-icon class="icon-size-5" matPrefix [svgIcon]="'heroicons_solid:document-check'"></mat-icon>
                                 </mat-form-field>
@@ -56,7 +52,7 @@ const imports = [
                             
                             <div class="flex flex-col grow">
                                 <mat-form-field class="mt-1 ml-1 mr-1 flex-start">
-                                    <mat-label class="ml-2 text-base dark:text-gray-200">Description</mat-label>
+                                    <mat-label class="ml-2 text-base text-gray-800 dark:text-gray-200">Description</mat-label>
                                     <input matInput placeholder="Description" formControlName="description"/>
                                     <mat-icon class="icon-size-5" matPrefix [svgIcon]="'heroicons_solid:document'"></mat-icon>
                                 </mat-form-field>
@@ -74,10 +70,12 @@ const imports = [
                     </button>
                     }
 
-                    <button mat-icon-button color="primary" 
+                    @if (bDirty === false) {
+                        <button mat-icon-button color="primary" 
                             class=" hover:bg-slate-400 ml-1" (click)="onAdd()" matTooltip="New" aria-label="hovered over">                        
                         <span class="e-icons e-circle-add"></span>
-                    </button>
+                        </button>
+                    }
 
                     <button mat-icon-button color="primary" 
                             class=" hover:bg-slate-400 ml-1" (click)="onDelete($event)" matTooltip="Delete" aria-label="hovered over">                        
@@ -97,7 +95,7 @@ const imports = [
         <ng-container>
             <!-- @if (funds$ | async; as funds ) { -->
              @if (Store.isLoading() === false) {
-            <grid-menubar [inTitle]="sTitle" [showNew]=true [showSettings]=false (newRecord)="onAdd()"></grid-menubar>        
+            <grid-menubar [inTitle]="sTitle" [showNew]=true [showSettings]=false (new)="onAddNew()"></grid-menubar>        
             <gl-grid 
                (onUpdateSelection)="onSelection($event)"
                [data]="Store.funds()" 
@@ -124,6 +122,8 @@ export class FundsComponent implements OnInit {
     public formdata: any = {};
     public drawer = viewChild<MatDrawer>('drawer');
 
+    grid = viewChild<GridComponent>('grid');
+
     Store = inject(FundsStore);
 
     notifyFundUpdate = output();
@@ -131,6 +131,7 @@ export class FundsComponent implements OnInit {
     funds$ = this.Store.selected;
 
     public columns = [
+        { field: 'id', headerText: 'id', visible: false, isPrimaryKey: true,   width: 80, textAlign: 'Left' },
         { field: 'fund', headerText: 'Fund', width: 80, textAlign: 'Left' },
         { field: 'description', headerText: 'Description', width: 200, textAlign: 'Left' },
         { field: 'create_date', headerText: 'Create Date', width: 80, textAlign: 'Left' },
@@ -168,8 +169,6 @@ export class FundsComponent implements OnInit {
         });
     }
 
-
-
     public createEmptyForm() {
         this.fundsForm = new FormGroup({
             id: new FormControl(''),
@@ -184,9 +183,7 @@ export class FundsComponent implements OnInit {
         const fund = { ...this.fundsForm.value } as IFunds;
         const rawData = {
             fund: fund.fund,
-            description: fund.description,
-            create_date: updateDate,
-            create_user: '@admin',
+            description: fund.description            
         } as IFunds;
 
         this.Store.addFund(rawData);
@@ -194,9 +191,9 @@ export class FundsComponent implements OnInit {
         this.closeDrawer();
     }
 
-    public onAddNew(e: string) {
+    public onAddNew() {
         this.createEmptyForm();
-        this.openDrawer();
+        this.openDrawer();        
     }
 
     public onCancel() {
@@ -247,13 +244,11 @@ export class FundsComponent implements OnInit {
     public onUpdate() {
         const updateDate = new Date().toISOString().split('T')[0];
         const fund = this.fundsForm.value;
-        const rawData = {
-            id: fund.id[0],
-            fund: fund.fund[0],
-            description: fund.description,
-            create_date: updateDate,
-            create_user: '@admin'
+        const rawData = {            
+            fund: fund.fund,
+            description: fund.description,            
         } as IFunds;
+
         this.Store.updateFund(rawData);
         this.bDirty = false;
         this.closeDrawer();
@@ -358,11 +353,8 @@ export class FundsComponent implements OnInit {
         }
     }
 
-    constructor() {
 
-    }
-
-    grid = viewChild<GridComponent>('grid');
+    
 
     @HostListener('window:resize', ['$event'])
     onResize(event: any) {

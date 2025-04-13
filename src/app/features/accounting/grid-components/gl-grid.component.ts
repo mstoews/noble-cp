@@ -11,6 +11,7 @@ import { MatDrawer } from '@angular/material/sidenav';
 import { MenuEventArgs, MenuItemModel } from '@syncfusion/ej2-navigations';
 import { ToastrService } from 'ngx-toastr';
 import { ContextMenuAllModule } from '@syncfusion/ej2-angular-navigations';
+import { PrintService } from '@syncfusion/ej2-angular-schedule';
 
 const mods = [
     CommonModule,
@@ -24,6 +25,7 @@ const mods = [
 const providers = [
     ReorderService,
     PdfExportService,
+    PrintService,
     ExcelExportService,
     ContextMenuService,
     GroupService,
@@ -59,15 +61,14 @@ const keyExpr = ["account", "child"];
                     [toolbar]='toolbarOptions'                 
                     [filterSettings]='filterOptions'
                     [editSettings]='editSettings'
-                    [allowFiltering]='true'                   
+                    [allowFiltering]='true'                                      
                     [enablePersistence]='false'
                     [enableStickyHeader]='true'
                     [allowGrouping]="true"
                     [allowResizing]='true' 
                     [allowReordering]='true' 
                     [allowExcelExport]='true' 
-                    [allowPdfExport]='true' 
-                    
+                    [allowPdfExport]='true'                     
                     (actionBegin)='actionBegin($event)' 
                     (rowSelected)="rowSelected($event)"              
                     (actionComplete)='actionComplete($event)'>
@@ -126,6 +127,7 @@ export class GLGridComponent implements OnInit {
     public filterSettings: FilterSettingsModel;
 
     public grid = viewChild<GridComponent>('parent_grid');
+    
     public editDrawer = viewChild<MatDrawer>('drawer');
     private fb = inject(FormBuilder);
     public state?: GridComponent;
@@ -177,6 +179,11 @@ export class GLGridComponent implements OnInit {
     onDelete(e: any) {
         this.toast.success('Template');
     }
+
+    onPrint() {
+        this.grid().print();
+    }
+    
 
     onUpdate(e: any) {
         const rawData = {

@@ -108,7 +108,8 @@ const imp = [
             [showExportPDF]="false"
             [showExportCSV]="false"
 
-            (back)="onBack()"  
+            (back)="onBack()"
+            (new)="onNew($event)"  
             (clone)="onClone('GL')"           
             [inTitle]="'Template Management'" >
         </grid-menubar>
@@ -1064,8 +1065,7 @@ export class JournalTemplateUpdateComponent
     public onNew(e: any) {
         const confirmation = this.fuseConfirmationService.open({
             title: "Create New Transaction",
-            message:
-                "Would you like to create a new transaction? ",
+            message: "Would you like to create a new transaction? ",
             actions: {
                 confirm: {
                     label: "New Transaction",
@@ -1075,6 +1075,7 @@ export class JournalTemplateUpdateComponent
 
         confirmation.afterClosed().subscribe((result) => {
             if (result === "confirmed") {
+                this.onOpenEmptyDrawer();
             }
         });
     }

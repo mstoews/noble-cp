@@ -44,6 +44,7 @@ import { Router } from '@angular/router';
 import { ApplicationStore } from 'app/store/application.store';
 import { getTemplates } from './state/template/Template.Selector';
 import { loadTemplates } from './state/template/Template.Action';
+import { TemplateDropDownComponent } from '../grid-components/drop-down.templates.component';
 
 
 interface ITransactionType {
@@ -72,6 +73,7 @@ const mods = [
     NgxMatSelectSearchModule,
     MaterialModule,
     GridModule,
+    TemplateDropDownComponent    
 ]
 
 @Component({
@@ -256,21 +258,19 @@ const mods = [
                 </mat-tab>
             </mat-tab-group>
         </mat-drawer>
-        <mat-drawer-container id="target"
-                class=" control-section default-splitter flex flex-col overflow-auto h-[calc(100vh-14rem)] ml-5 mr-5"
-                [hasBackdrop]="'false'">
+        <mat-drawer-container id="target" class=" control-section default-splitter flex flex-col overflow-auto h-[calc(100vh-14rem)] md:ml-5 md:mr-5" [hasBackdrop]="'false'">
             <div class="flex flex-col flex-auto min-w-0">
                 @defer (on viewport; on timer(5s)) {    
-                    <div class="md:max-w-7xl max-w-4xl">
-                        <form class="p-4 bg-card shadow rounded overflow-hidden" [formGroup]="journalEntryForm">                
+                    <div class="md:max-w-7xl max-w-2xl">
+                        <form class="md:p-4 bg-card shadow rounded overflow-hidden" [formGroup]="journalEntryForm">                
                             <mat-vertical-stepper [linear]="true" #verticalStepper>
                             <mat-step [formGroupName]="'step1'" [stepControl]="journalEntryForm.get('step1')" #verticalStepperStep1>
                                 <ng-template matStepLabel>Transaction Template</ng-template>
-                                <section class="flex flex-col md:flex-col w-[400px] ">
-                                    
-                                        @if (templateFilter | async; as templates ) {
+                                <section class="flex flex-col md:flex-col w-full md:w-3/5 gap-2">                                    
+                                       
+                                       <!-- @if (templateFilter | async; as templates ) {
                                             <mat-form-field class="mt-2">
-                                                <mat-label class="text-md ml-2">Template</mat-label>
+                                                <mat-label class="md:text-md  md:ml-2">Template</mat-label>
                                                 <mat-select [formControl]="templateCtrl" placeholder="Journal Template"
                                                     #singleTemplateSelect required>
                                                     <mat-option>
@@ -285,19 +285,21 @@ const mods = [
                                                 <mat-icon class="icon-size-5" matPrefix
                                                     [svgIcon]="'heroicons_solid:document-chart-bar'"></mat-icon>
                                             </mat-form-field>
-                                        }   
+                                        }    -->
+                                         
                                         
-                                        <!-- @if (templateFilter | async; as templates ) {                                        
-                                            <template-drop-down [dropdownList]="templates" controlKey="template" label="Template" #templateDD></template-drop-down>                                         
-                                        } -->
+                                    @if (templateFilter | async; as templates ) {                                        
+                                        <template-drop-down [dropdownList]="templates" controlKey="template" label="Template" #templateDD></template-drop-down> 
+                                    } 
+                                    
                                 
-                                        <mat-form-field class="flex">
-                                            <mat-label class="text-md ml-2">Invoice/Reference</mat-label>
-                                            <input type="text" class="text-right" matInput [placeholder]="'Reference/Invoice'"
-                                                formControlName="invoice_no" />
-                                            <mat-icon class="icon-size-5" matPrefix
-                                                [svgIcon]="'heroicons_solid:document-chart-bar'"></mat-icon>
-                                        </mat-form-field>    
+                                    <mat-form-field class="flex">
+                                        <mat-label class="text-md ml-2">Invoice/Reference</mat-label>
+                                        <input type="text" class="text-right" matInput [placeholder]="'Reference/Invoice'"
+                                            formControlName="invoice_no" />
+                                        <mat-icon class="icon-size-5" matPrefix
+                                            [svgIcon]="'heroicons_solid:document-chart-bar'"></mat-icon>
+                                    </mat-form-field>    
 
                                     <div class="flex flex-col">
                                         @if (transactionType != 'GL') {
@@ -564,6 +566,8 @@ export class EntryWizardComponent implements OnInit, OnDestroy, AfterViewInit {
 
     drawer = viewChild<MatDrawer>("drawer");
 
+    templateDropDown = viewChild<TemplateDropDownComponent>("templateDD");
+
     @ViewChild("singleDebitSelect", { static: true }) singleDebitSelect: MatSelect;
     @ViewChild("singleCreditSelect", { static: true }) singleCreditSelect: MatSelect;
     @ViewChild("singleTemplateSelect", { static: true }) singleTemplateSelect: MatSelect;
@@ -683,28 +687,17 @@ export class EntryWizardComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     public onChanges(): void {
-        this.debitAccountFilterCtrl.valueChanges.pipe(takeUntil(this._onDestroyDebitAccountFilter))
-            .subscribe(() => {
-                this.filterDebitAccounts();
-            })
+        
+        this.debitAccountFilterCtrl.valueChanges.pipe(takeUntil(this._onDestroyDebitAccountFilter)).subscribe(() => { this.filterDebitAccounts(); });
+        
+        this.creditAccountFilterCtrl.valueChanges.pipe(takeUntil(this._onDestroyCreditAccountFilter)).subscribe(() => { this.filterCreditAccounts(); });
 
-        this.creditAccountFilterCtrl.valueChanges.pipe(takeUntil(this._onDestroyCreditAccountFilter))
-            .subscribe(() => {
-                this.filterCreditAccounts();
-            });
+        this.templateFilterCtrl.valueChanges.pipe(takeUntil(this._onDestroyTemplateFilter)).subscribe(() => { this.filterTemplate(); });
 
-        this.templateFilterCtrl.valueChanges.pipe(takeUntil(this._onDestroyTemplateFilter))
-            .subscribe(() => {
-                this.filterTemplate();
-            });
-
-        this.partyFilterCtrl.valueChanges.pipe(takeUntil(this._onDestroyTemplateFilter))
-            .subscribe(() => {
-                this.filterParty();
-            });
+        this.partyFilterCtrl.valueChanges.pipe(takeUntil(this._onDestroyTemplateFilter)).subscribe(() => { this.filterParty();});
 
         this.journalEntryForm.valueChanges.subscribe((dirty) => {
-            if (this.journalEntryForm.dirty) {
+              if (this.journalEntryForm.dirty) {
                 this.bDirty = true;
             }
         });
@@ -713,9 +706,7 @@ export class EntryWizardComponent implements OnInit, OnDestroy, AfterViewInit {
             this.bDirty = true;
             this.createJournalDetailsFromTemplate(value);
         });
-
     }
-
 
     public onTransTypeClicked(e: any) {
         this.selectedOption = e;

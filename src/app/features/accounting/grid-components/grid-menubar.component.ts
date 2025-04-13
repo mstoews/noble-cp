@@ -32,20 +32,20 @@ let modules = [MatToolbarModule, MatIconModule, MatButtonModule, CommonModule,  
 
       
       @if (showNew()) {
-        <button mat-icon-button  (click)="onNew()" color="primary" class="m-1 bg-gray-200 md:visible" matTooltip="Create New Journal"  aria-label="NEW" >
+        <button mat-icon-button  (click)="onNew()" color="primary" class="m-1 bg-gray-200 md:visible" matTooltip="Add"  aria-label="NEW" >
           <span class="e-icons text-bold e-circle-add"></span>
         </button>
       }  
 
 
       @if (showClone()) {
-        <button mat-icon-button  (click)="onClone()" color="primary" class="m-1 bg-gray-200 md:visible" matTooltip="Clone Current Journal"  aria-label="NEW" >        
+        <button mat-icon-button  (click)="onClone()" color="primary" class="m-1 bg-gray-200 md:visible" matTooltip="Clone"  aria-label="NEW" >        
           <span class="e-icons e-copy"></span>
         </button>
       }  
 
       @if (showTemplate()) {
-        <button mat-icon-button  (click)="onTemplate()" color="primary" class="m-1 bg-gray-200 md:visible" matTooltip="Create Template From Current Journal"  aria-label="NEW" >        
+        <button mat-icon-button  (click)="onTemplate()" color="primary" class="m-1 bg-gray-200 md:visible" matTooltip="Create Template"  aria-label="NEW" >        
           <span class="e-icons e-table-overwrite-cells"></span>
         </button>
       }  
@@ -125,8 +125,7 @@ export class GridMenubarStandaloneComponent {
     this.period.emit('change');
   }
 
-  public onNew() {
-    
+  public onNew() {    
     this.new.emit('add');
   }
 

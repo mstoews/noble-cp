@@ -34,15 +34,12 @@ export class PartyService {
 
   update(party: IParty) {
     var url = this.baseUrl + '/v1/update_party';
-    return this.httpClient.post<IParty[]>(url, party).pipe(shareReplay({ bufferSize: 1, refCount: true }))
+    return this.httpClient.post<IParty>(url, party).pipe(shareReplay({ bufferSize: 1, refCount: true }))
   }
 
-  delete(party_id: string) {
-    const update = {
-      party_id: party_id
-    }
-    var url = this.baseUrl + '/v1/delete_party';
-    return this.httpClient.post<IParty[]>(url, update).pipe(shareReplay({ bufferSize: 1, refCount: true }))
+  delete(party_id: string) {    
+    var url = this.baseUrl + '/v1/delete_party/' + party_id;
+    return this.httpClient.delete(url).pipe(shareReplay({ bufferSize: 1, refCount: true }))
   }
 
 

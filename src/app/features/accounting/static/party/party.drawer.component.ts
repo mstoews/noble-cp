@@ -1,5 +1,5 @@
-import { Component, inject, input, OnInit, output } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { Component, computed, effect, inject, input, OnInit, output } from '@angular/core';
+import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { IParty } from 'app/models/party';
 import { MaterialModule } from 'app/shared/material.module';
 
@@ -14,6 +14,17 @@ import { MaterialModule } from 'app/shared/material.module';
                             <form [formGroup]="partyForm">
                                 <div class="flex flex-col m-1">
                                     
+                                    @if (bDirty() === true) {
+                                    <div class="flex flex-col grow">
+                                        <mat-form-field class="mt-1 ml-1 mr-1 flex-start">
+                                            <mat-label class="ml-2 text-base dark:text-gray-200">Party</mat-label>
+                                            <input matInput placeholder="Party" readonly formControlName="party_id"/>
+                                            <mat-icon class="icon-size-5" matPrefix [svgIcon]="'heroicons_solid:document-check'"></mat-icon>
+                                        </mat-form-field>
+                                    </div> 
+                                    }
+
+                                    @if (bDirty() === false) {
                                     <div class="flex flex-col grow">
                                         <mat-form-field class="mt-1 ml-1 mr-1 flex-start">
                                             <mat-label class="ml-2 text-base dark:text-gray-200">Party</mat-label>
@@ -21,6 +32,7 @@ import { MaterialModule } from 'app/shared/material.module';
                                             <mat-icon class="icon-size-5" matPrefix [svgIcon]="'heroicons_solid:document-check'"></mat-icon>
                                         </mat-form-field>
                                     </div> 
+                                    }
                                     
                                     <div class="flex flex-col grow">
                                         <mat-form-field class="mt-1 ml-1 mr-1 flex-start">
@@ -29,32 +41,38 @@ import { MaterialModule } from 'app/shared/material.module';
                                             <mat-icon class="icon-size-5" matPrefix [svgIcon]="'heroicons_solid:document'"></mat-icon>
                                         </mat-form-field>
                                     </div>
-                                    
-                                    <div class="flex flex-col grow">
-                                        <mat-form-field class="mt-1 ml-1 mr-1 flex-start">
-                                            <mat-label class="ml-2 text-base dark:text-gray-200">Vendor Type</mat-label>
-                                            <input matInput placeholder="Vendor Type" formControlName="party_type"/>
-                                            <mat-icon class="icon-size-5" matPrefix [svgIcon]="'heroicons_solid:document'"></mat-icon>
-                                        </mat-form-field>
-                                    </div>
+                                    <section class="flex flex-col md:flex-row">
+                                      <mat-form-field class="m-1 grow">
+                                        <mat-label class="text-md ml-2">Type</mat-label>
+                                        <mat-select placeholder="Type" formControlName="party_type"  (selectionChange)="changeType($event)">
+                                          @for (item of partyTypes; track item) {
+                                            <mat-option [value]="item.party_type"> {{ item.party_type }}  </mat-option>
+                                          }
+                                        </mat-select>
+                                        <mat-icon class="icon-size-5" matPrefix [svgIcon]="'heroicons_solid:document'"></mat-icon>                                        
+                                      </mat-form-field>
+                                    </section>
+                                                                                          
                                                                         
                                 </div>
                             </form>
                             
                             <div mat-dialog-actions class="flew-row gap-2 mb-3">
-                                @if (bDirty === true) {                                
+                                @if (bDirty() === true) {                                
                                     <button mat-icon-button color="primary" class="bg-slate-200 hover:bg-slate-400 ml-1" (click)="onUpdate()"
                                     matTooltip="Save" aria-label="hovered over">
                                     <span class="e-icons e-save"></span>
                                     </button>
                                 }
+                                @if (bDirty() === false) {                                
                                 <button mat-icon-button color="primary" 
-                                    class=" hover:bg-slate-400 ml-1" (click)="onAdd()" matTooltip="New" aria-label="hovered over">                        
+                                    class=" hover:bg-slate-400 ml-1" (click)="onAdd()" matTooltip="New Party" aria-label="hovered over">                        
                                     <span class="e-icons e-circle-add"></span>
                                 </button>
+                                }
 
                                 <button mat-icon-button color="primary" 
-                                    class=" hover:bg-slate-400 ml-1" (click)="onDelete()" matTooltip="Delete" aria-label="hovered over">                        
+                                    class=" hover:bg-slate-400 ml-1" (click)="onDelete()" matTooltip="Delete Party" aria-label="hovered over">                        
                                     <span class="e-icons e-trash"></span>
                                 </button>
 
@@ -72,18 +90,28 @@ import { MaterialModule } from 'app/shared/material.module';
   `,
   styles: ``
 })
-export class PartyDrawerComponent implements OnInit {
+export class PartyDrawerComponent {
+changeType($event: any) {
+throw new Error('Method not implemented.');
+}
 
   sTitle = 'Party Maintenance';
   originalParty: IParty;
   party = input<IParty | null>();
+  bDirty = input<boolean>(false);  
   Update = output<IParty>();
   Add = output<IParty>();
   Delete = output<IParty>();
   Cancel = output();
 
-  bDirty: boolean = false;
   private fb = inject(FormBuilder);
+
+  partyTypes = [
+    { party_type: 'Vendor' },
+    { party_type: 'Customer' },
+    { party_type: 'Employee' },
+    { party_type: 'Vendor/Customer' },
+  ];
 
   partyForm = new FormGroup({
     party_id: new FormControl(''),
@@ -91,16 +119,13 @@ export class PartyDrawerComponent implements OnInit {
     party_type: new FormControl('')
   });
 
-
-  ngOnInit() {
-    this.partyForm.valueChanges.subscribe(() => {
-      if (this.partyForm.dirty === true) {
-        this.bDirty = true;
-        this.originalParty = this.party();
-      }
+  constructor() {
+    this.partyForm = this.fb.group({
+      party_id: new FormControl('', Validators.required),
+      name: new FormControl('', Validators.required),
+      party_type: new FormControl('', Validators.required)
     });
   }
-
   ngOnChanges() {
     if (this.party) {
       this.partyForm.patchValue(this.party());
@@ -114,6 +139,7 @@ export class PartyDrawerComponent implements OnInit {
       name: this.partyForm.value.name,
       party_type: this.partyForm.value.party_type,
       update_date: updateDate,
+      address_id: 0,
       update_user: '@admin',
       create_date: updateDate,
       create_user: '@admin'

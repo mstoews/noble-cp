@@ -103,14 +103,17 @@ const imports = [
                                     [dataSource]="journals | filterType : transactionType()"                                    
                                     [height]='gridHeight'                                   
                                     [allowSorting]='true'
+                                    enableAdaptiveUI='true'
                                     autoFit= 'true'                                    
                                     [showColumnMenu]='false'                
                                     [gridLines]="lines"
                                     [allowFiltering]='false'                 
                                     [toolbar]='toolbarOptions'                                             
                                     [editSettings]='editSettings'
+                                    [enableStickyHeader]='true'
                                     [enablePersistence]='false'                                    
                                     [allowGrouping]="true"
+                                    rowHeight='30'
                                     [allowResizing]='true' 
                                     [allowReordering]='true' 
                                     [allowExcelExport]='true'
@@ -209,22 +212,23 @@ const imports = [
                                         <e-column field='create_date' headerText='Updated' width='100' format='M/dd/yyyy' [visible]='false'></e-column>
                                         <e-column field='create_user' headerText='User' width='100' [visible]='false'></e-column>
                                         <e-column field='party_id'    headerText='Vendor' width="200" minWidth='120' maxWidth='350' [visible]='true'></e-column>
-                                    </e-columns>
-                                    <e-aggregates>
+                                    </e-columns> 
+                                    
+                                    <e-aggregates>                                            
                                             <e-aggregate>
                                                 <e-columns>
                                                     <e-column type="Sum" field="amount" format="N2">
-                                                        <ng-template #groupFooterTemplate let-data>{{data.Sum}}</ng-template>
-                                                    </e-column>
-                                                </e-columns>
-                                            </e-aggregate>
-                                            <e-aggregate>
-                                                <e-columns>
-                                                    <e-column type="Sum" field="amount" format="N2">
-                                                        <ng-template #footerTemplate let-data>{{data.Sum}}</ng-template>
+                                                    <ng-template #footerTemplate let-data><span class="customcss">{{data.Sum}}</span> </ng-template>
                                                     </e-column>                                                    
                                                 </e-columns>
-                                            </e-aggregate>
+                                            </e-aggregate>                                            
+                                            <e-aggregate>
+                                                <e-columns>
+                                                    <e-column type="Sum" field="amount" format="N2">
+                                                    <ng-template #groupFooterTemplate let-data><span class="customcss">{{data.Sum}}</span> </ng-template>
+                                                    </e-column>                                                    
+                                                </e-columns>
+                                            </e-aggregate>                                            
                                     </e-aggregates>
                                 </ejs-grid>         
                             </ng-container> 

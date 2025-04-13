@@ -20,7 +20,7 @@ const DROPDOWN_TEMPLATE_ASSESSOR: Provider = {
   template: `
   @if (dropdownFilter | async; as items ) {
     <fieldset [formGroupName]="controlKey">                
-        <mat-form-field class="flex flex-col grow ml-2 mr-2 mt-1 ">           
+        <mat-form-field class="flex flex-col grow">           
               <mat-select [formControl]="dropdownCtrl" placeholder="Template" #singleDropdownSelect required>              
                 <mat-option>
                   <ngx-mat-select-search [formControl]="dropdownFilterCtrl" [noEntriesFoundLabel]="'No entries found'" [placeholderLabel]="'Search'">
@@ -32,7 +32,7 @@ const DROPDOWN_TEMPLATE_ASSESSOR: Provider = {
             </mat-select>
         <mat-icon class="icon-size-5 text-green-700" matPrefix  [svgIcon]="'heroicons_solid:document-chart-bar'"></mat-icon>        
         </mat-form-field>        
-      </fieldset>
+    </fieldset>
    }
   `,
   styles: ``,

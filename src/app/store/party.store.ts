@@ -41,7 +41,7 @@ export const PartyStore = signalStore(
           patchState(state, { isLoading: true });
           return partyService.delete(value.party_id).pipe(
             tapResponse({
-              next: (party) => {
+              next: () => {
                 patchState(state, { party: state.party().filter((party) => party.party_id !== value.party_id) });
               },
               error: console.error,
@@ -58,7 +58,7 @@ export const PartyStore = signalStore(
           return partyService.create(value).pipe(
             tapResponse({
               next: (party) => {
-                patchState(state, { party: [...state.party(), party] });
+                patchState(state, { party: [...state.party(), party[0]] });
               },
               error: console.error,
               finalize: () => patchState(state, { isLoading: false }),
@@ -70,18 +70,18 @@ export const PartyStore = signalStore(
     updateParty: rxMethod<IParty>(
       pipe(
         switchMap((value) => {
-          return partyService.update(value).pipe(
+          return partyService.update(value).pipe(            
             tapResponse({
-              next: (party) => {
-                const updatedParty = state.party().filter((party) => party.party_id !== party.party_id);
-                patchState(state, { party: updatedParty });
+              next: pt => {
+                  var updated = state.party().filter((jrn) => jrn.party_id !== pt[0].party_id);
+                  updated.push(pt[0]);
+                  patchState(state, { party: updated });                   
               },
               error: console.error,
               finalize: () => patchState(state, { isLoading: false }),
-            })
-          );
-        })
-      )
+            }));
+        },                            
+      ))
     ),
     readVendor: rxMethod<void>(
       pipe(
@@ -204,7 +204,7 @@ export const VendorStore = signalStore(
           return partyService.update(value).pipe(
             tapResponse({
               next: (party) => {
-                const updatedParty = state.party().filter((party) => party.party_id !== party.party_id);
+                const updatedParty = state.party().filter((party) => party.party_id !== party[0].party_id);
                 patchState(state, { party: updatedParty });
               },
               error: console.error,

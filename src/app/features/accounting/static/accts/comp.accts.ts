@@ -2,7 +2,7 @@ import { Component, inject, viewChild } from "@angular/core";
 import { TypeStore } from "app/services/type.service";
 import { CommonModule } from "@angular/common";
 import { FuseConfirmationService } from "@fuse/services/confirmation";
-import { GridMenubarStandaloneComponent } from "../../grid-components/grid-menubar.component";
+
 
 import { MatDrawer } from "@angular/material/sidenav";
 import { MaterialModule } from "app/shared/material.module";
@@ -30,6 +30,7 @@ import { SettingsComponent } from "./comp.accts.settings";
 import { DrawerComponent } from "./comp.accts.drawer";
 import { AccountsStore } from "app/store/accounts.store";
 import { ApplicationStore } from "app/store/application.store";
+import { GridMenubarStandaloneComponent } from "../../grid-components/grid-menubar.component";
 
 const imports = [
   CommonModule,
