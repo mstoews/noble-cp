@@ -17,14 +17,14 @@ import { EntryWizardComponent } from './wizard-entry.component';
 import { JournalTemplateComponent } from './journal-template.component';
 import { ARTransactionComponent } from './ar-listing.component';
 import { APTransactionComponent } from './ap-listing.component';
-import { ApplicationStore } from 'app/store/application.store';
 import { GLTransactionListComponent } from './gl-listing.component';
 import { CdkScrollable } from '@angular/cdk/scrolling';
-import { JournalRouteComponent } from './journal-route.component';
 import { ApplicationService, MainPanelStore } from 'app/store/main.panel.store';
 import { ActivatedRoute } from '@angular/router';
 import { JournalTemplateUpdateComponent } from './journal-template-update.component';
 import { GLTransactionGridComponent } from './transaction-grid.component';
+import { PdfExportComponent } from '../grid-components/pdf-export.component';
+import { SpreadsheetViewComponent } from '../grid-components/spreadsheet-view.component';
 
 const imports = [
     MaterialModule,
@@ -37,7 +37,10 @@ const imports = [
     GLTransactionListComponent,
     CdkScrollable,
     JournalTemplateUpdateComponent,
-    GLTransactionGridComponent
+    GLTransactionGridComponent,
+    PdfExportComponent,
+    SpreadsheetViewComponent
+
     
 ]
 
@@ -113,6 +116,10 @@ const imports = [
                                 @case ('at')    { <app-file-manager></app-file-manager>}
                                 @case ('tmp')   { <gl-journal-template></gl-journal-template>}
                                 @case ('grid')  { <gl-grid-transactions></gl-grid-transactions> }
+                                @case ('pdf')   { <pdf-export></pdf-export> }
+                                @case ('xls')   { <spreadsheet-view></spreadsheet-view> }
+
+                                
                             }
                         </div>
                     </div>
@@ -174,17 +181,6 @@ export class TransactionMainComponent implements OnInit, OnDestroy {
      */
     ngOnInit(): void {
 
-        // this.activatedRoute.data.subscribe((data) => {            
-        //     this.accounts = data.journal[0];
-        //     this.journalTypes = data.journal[1];
-        //     this.templates = data.journal[2];
-        //     this.parties = data.journal[3];
-        //     this.subTypes = data.journal[4];
-        //     this.periods = data.journal[5];
-        //     this.user = data.journal[6];
-        //     this.roles = data.journal[7];                        
-        // });
-
         if (this.selectedPanel === '' && this.storedPanel === null || this.selectedPanel === undefined) {
             this.selectedPanel = this.defaultPanel;
         }
@@ -214,12 +210,12 @@ export class TransactionMainComponent implements OnInit, OnDestroy {
                 title: 'Payments',
                 description: 'Pay your bills and manage your accounts payable',
             },
-            // {
-            //     id: 'tp',
-            //     icon: 'heroicons_outline:document-duplicate',
-            //     title: 'Templates',
-            //     description: 'Manage your accounting patterns to automate, reduce effort and provide consistency in accounting',
-            // },
+            {
+                id: 'pdf',
+                icon: 'heroicons_outline:document-duplicate',
+                title: 'PDF Export',
+                description: 'Export your transactions to PDF',
+            },
             {
                 id: 'tmp',
                 icon: 'heroicons_outline:document-duplicate',
@@ -232,12 +228,12 @@ export class TransactionMainComponent implements OnInit, OnDestroy {
                 title: 'Artifact Management',
                 description: 'Manage the documentation of transactions',
             },
-            // {
-            //     id: 'grid',
-            //     icon: 'feather:image',
-            //     title: 'Example Grid',
-            //     description: 'Example Grid with templates',
-            // },
+            {
+                id: 'xls',
+                icon: 'feather:image',
+                title: 'Spreadsheet Viewer',
+                description: 'View your transactions in a spreadsheet format',
+            },
             {
                 id: 'artifact-mgmt',
                 icon: 'heroicons_outline:document-magnifying-glass',

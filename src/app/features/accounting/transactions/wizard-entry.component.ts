@@ -73,7 +73,7 @@ const mods = [
     NgxMatSelectSearchModule,
     MaterialModule,
     GridModule,
-    TemplateDropDownComponent    
+   //  TemplateDropDownComponent    
 ]
 
 @Component({
@@ -268,7 +268,7 @@ const mods = [
                                 <ng-template matStepLabel>Transaction Template</ng-template>
                                 <section class="flex flex-col md:flex-col w-full md:w-3/5 gap-2">                                    
                                        
-                                       <!-- @if (templateFilter | async; as templates ) {
+                                       @if (templateFilter | async; as templates ) {
                                             <mat-form-field class="mt-2">
                                                 <mat-label class="md:text-md  md:ml-2">Template</mat-label>
                                                 <mat-select [formControl]="templateCtrl" placeholder="Journal Template"
@@ -285,12 +285,12 @@ const mods = [
                                                 <mat-icon class="icon-size-5" matPrefix
                                                     [svgIcon]="'heroicons_solid:document-chart-bar'"></mat-icon>
                                             </mat-form-field>
-                                        }    -->
+                                    } 
                                          
                                         
-                                    @if (templateFilter | async; as templates ) {                                        
+                                    <!-- @if (templateFilter | async; as templates ) {                                        
                                         <template-drop-down [dropdownList]="templates" controlKey="template" label="Template" #templateDD></template-drop-down> 
-                                    } 
+                                    }  -->
                                     
                                 
                                     <mat-form-field class="flex">
@@ -518,7 +518,7 @@ export class EntryWizardComponent implements OnInit, OnDestroy, AfterViewInit {
 
     public journalHeader: IJournalHeader;
 
-    public journal_id = 0;
+    public journal_id = 1;
     public editSettings: Object;
 
     public message?: string;
@@ -619,7 +619,6 @@ export class EntryWizardComponent implements OnInit, OnDestroy, AfterViewInit {
         });
 
         this.selectedOption = this.types[0].value;
-
         this.currentPeriod = this.store.currentPeriod();
         this.currentYear = this.store.currentYear();
 
@@ -631,8 +630,10 @@ export class EntryWizardComponent implements OnInit, OnDestroy, AfterViewInit {
 
         this.journalService.getLastJournalNo().subscribe(journal_no => {
             this.journal_id = Number(journal_no);
+            
         });
 
+    
 
         this.editSettings = {
             allowEditing: true,

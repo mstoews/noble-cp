@@ -129,8 +129,7 @@ export class GridMenubarStandaloneComponent {
     this.new.emit('add');
   }
 
-  public onClone() {
-    
+  public onClone() {    
     this.clone.emit('clone');
   }
 

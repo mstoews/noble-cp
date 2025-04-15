@@ -89,7 +89,7 @@ const imports = [
 export class BalanceSheetStatementRptComponent {
 
   public currentPeriod = signal(1);
-  public currentYear = signal(2024);
+  public currentYear = signal(2025);
 
   public dReportDate = new Date().toISOString().split('T')[0];
 
@@ -106,7 +106,8 @@ export class BalanceSheetStatementRptComponent {
   balanceSheetReport$ = this.distributionService.getDistributionByPrdAndYear(this.params);
   assets$ = this.balanceSheetReport$.pipe(map(expense => expense.filter(ex => ex.child < 3000)));
   liabilities$ = this.balanceSheetReport$.pipe(map(expense => expense.filter(ex => ex.child >= 3000 && ex.child <= 5000)));
-  revenue$ = this.balanceSheetReport$.pipe(map(expense => expense.filter(ex => ex.child > 5000)));
+  revenue$ = this.balanceSheetReport$.pipe(map(expense => expense.filter(ex => ex.child > 5000 && ex.child < 6000)));
+  expense$ = this.balanceSheetReport$.pipe(map(expense => expense.filter(ex => ex.child >= 6000)));
 
 
   onYearChanged(e: any) {
@@ -118,7 +119,7 @@ export class BalanceSheetStatementRptComponent {
     this.assets$ = this.balanceSheetReport$.pipe(map(expense => expense.filter(ex => ex.child < 3000)));
     this.liabilities$ = this.balanceSheetReport$.pipe(map(expense => expense.filter(ex => ex.child >= 3000 && ex.child <= 5000)));
     this.revenue$ = this.balanceSheetReport$.pipe(map(expense => expense.filter(ex => ex.child > 5000 && ex.child < 6000)));
-    // this.expense$ = this.balanceSheetReport$.pipe(map(expense => expense.filter(ex => ex.child > 6000)));
+    this.expense$ = this.balanceSheetReport$.pipe(map(expense => expense.filter(ex => ex.child > 6000)));
 
   }
 

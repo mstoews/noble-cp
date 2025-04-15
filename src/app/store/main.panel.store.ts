@@ -417,7 +417,7 @@ export const MainPanelStore = signalStore(
       store.loadUid();
       store.loadPanels(store.uid);   
       store.loadProfile(store.uid); 
-      store.loadTrialBalance({periodYear: 2024, period: 1});  
+      store.loadTrialBalance({periodYear: 2025, period: 1});  
     },
   })
 );

@@ -14,7 +14,7 @@ export const ReportResolver: ResolveFn <IReportData> = (
   route: ActivatedRouteSnapshot,
   state: RouterStateSnapshot ) => { 
     var period : { period: number, year: number } = { period: Number(route.queryParamMap.get('period')), year: Number(route.queryParamMap.get('year')) };
-    period = period || { period: 1, year: 2024 };
+    period = period || { period: 1, year: 2025 };
     const reports = inject(ReportService).readPivotDataByPeriod(period);
     return reports as any as Observable<IReportData>;    
 };

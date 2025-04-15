@@ -29,7 +29,7 @@ export const TrialBalanceStore = signalStore(
     withState<DistributionStateInterface>({
     header: [],
     details: [],
-    periodParam: { period: 1, period_year: 2024 },
+    periodParam: { period: 1, period_year: 2025 },
     accountParam: null,
     error: null,
     isLoading: false,

@@ -8,7 +8,7 @@ import { TrialBalanceComponent } from './trial-balance/trial-balance.component';
 import { BalanceSheetStatementRptComponent } from './financial-statement/balance-sheet-statement-rpt.component';
 import { IncomeStatementRptComponent } from './financial-statement/income-statement-rpt.component';
 import { IncomeStatementComparisonRptComponent } from './financial-statement/income-statement-comparison.component';
-import { DistributedTbComponent } from './distributed-tb/distributed-tb.component';
+import { DistributedTbComponent } from './dist-tb/distributed-tb.component';
 import { TbGridComponent } from './tb-grid/tb-grid.component';
 import { ApplicationService } from "../../store/main.panel.store";
 import { ApplicationStore } from "../../store/application.store";
@@ -99,13 +99,13 @@ const mods = [
                     <!-- Load settings panel -->
                         <div class="mt-8">
                             @switch (selectedPanel) {
+                                @case ('dist-tb') { <dist-tb></dist-tb>  }
                                 @case ('tb-grid') { <tb-grid></tb-grid>  }
                                 @case ('tb-pivot') { <tb-pivot></tb-pivot>  }
-                                @case ('trial-balance') { <trial-balance></trial-balance>}
+                                @case ('report-tb') { <report-tb></report-tb>}
                                 @case ('balance-sheet-statement') { <balance-sheet-statement-rpt></balance-sheet-statement-rpt> }
                                 @case ('income-statement') { <income-statement-rpt></income-statement-rpt> }
-                                @case ('income-statement-comparison') {  <income-statement-comparison-rpt></income-statement-comparison-rpt> }
-                                @case ('distributed-tb') { <distributed-tb></distributed-tb>  }
+                                @case ('income-statement-comparison') {  <income-statement-comparison-rpt></income-statement-comparison-rpt> }                                
                                 @case ('grid-template') { <grid-template></grid-template> }
                             }
                         </div>
@@ -126,7 +126,7 @@ export class ReportingPanelComponent {
     drawerMode: 'over' | 'side' = 'side';
     drawerOpened: boolean = true;
     panels: any[] = [];
-    selectedPanel: string = 'distributed-tb';
+    selectedPanel: string = 'dist-tb';
     PANEL_ID = 'reportingPanel';
     store = inject(ApplicationStore);
     panelService = inject(ApplicationService);
@@ -148,13 +148,13 @@ export class ReportingPanelComponent {
 
         this.panels = [
             {
-                id: 'distributed-tb',
+                id: 'dist-tb',
                 icon: 'heroicons_outline:document-plus',
                 title: 'Distributed Trial Balance',
                 description: 'Tabular summary of trial balance by account',
             },
             {
-                id: 'trial-balance',
+                id: 'report-tb',
                 icon: 'heroicons_outline:document-check',
                 title: 'Trial Balance Reporting',
                 description: 'Distributed trial balance listing including the associated journal entries',

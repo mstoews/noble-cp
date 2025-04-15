@@ -89,38 +89,39 @@ import { TypeStore } from 'app/services/type.service';
                 </div>
               </form>
     
-              <div mat-dialog-actions class="gap-2 mb-3">
-                      @if (bAccountsDirty === true) {
-                        <button mat-icon-button color="primary" class="bg-slate-200 hover:bg-slate-400 ml-1" (click)="onUpdateJournalEntry()"
-                          matTooltip="Save" aria-label="hovered over">
-                          <span class="e-icons e-save"></span>
-                        </button>
+                  <div mat-dialog-actions class="gap-2 mb-3">
+                        @if (bAccountsDirty === true) {
+                          <button mat-icon-button color="primary" class="bg-slate-200 hover:bg-slate-400 ml-1" (click)="onUpdateJournalEntry()"
+                            matTooltip="Save" aria-label="hovered over">
+                            <span class="e-icons e-save"></span>
+                          </button>
+                        }
+                        @if (bAccountsDirty === false) {
+                          <button mat-icon-button color="primary" 
+                                  class=" hover:bg-slate-400 ml-1" (click)="onAdd()" matTooltip="New" aria-label="hovered over">                        
+                              <span class="e-icons e-circle-add"></span>
+                          </button>
                         }
     
-                        <button mat-icon-button color="primary" 
-                                class=" hover:bg-slate-400 ml-1" (click)="onAdd()" matTooltip="New" aria-label="hovered over">                        
-                            <span class="e-icons e-circle-add"></span>
-                        </button>
-    
-                        <button mat-icon-button color="primary" 
-                                class=" hover:bg-slate-400 ml-1" (click)="onDelete()" matTooltip="Delete" aria-label="hovered over">                        
-                            <span class="e-icons e-trash"></span>
-                        </button>
-    
-                        <button mat-icon-button color="primary"
-                                class=" hover:bg-slate-400 ml-1"  (click)="onCancel()" matTooltip="Close"
-                                aria-label="hovered over">
-                              <span class="e-icons e-circle-close"></span>
-                        </button>                    
-                </div>
-                </div>
+                          <button mat-icon-button color="primary" 
+                                  class=" hover:bg-slate-400 ml-1" (click)="onDelete()" matTooltip="Delete" aria-label="hovered over">                        
+                              <span class="e-icons e-trash"></span>
+                          </button>
+      
+                          <button mat-icon-button color="primary"
+                                  class=" hover:bg-slate-400 ml-1"  (click)="onCancel()" matTooltip="Close"
+                                  aria-label="hovered over">
+                                <span class="e-icons e-circle-close"></span>
+                          </button>                    
+                  </div>
+              </div>
     </mat-card>
   `,
   styles: ``
 })
 export class DrawerComponent {
 
-  sTitle = 'Party Maintenance';
+  sTitle = 'Account Maintenance';
   originalParty: IAccounts;
   account = input<IAccounts | null>();
 

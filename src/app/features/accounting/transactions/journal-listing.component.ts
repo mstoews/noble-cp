@@ -31,7 +31,7 @@ const providers = [
     AggregateService,
     ColumnMenuService,
     SearchService,
-    
+    JournalCardComponent
 ];
 
 const imports = [
@@ -42,7 +42,6 @@ const imports = [
     GridModule,
     ContextMenuModule,
     FilterTypePipe,
-    JournalCardComponent
 ];
 @Component({
     selector: 'transactions',
@@ -102,30 +101,25 @@ const imports = [
                                 <ejs-grid #grid id="grid"
                                     [dataSource]="journals | filterType : transactionType()"                                    
                                     [height]='gridHeight'                                   
-                                    [allowSorting]='true'
-                                    enableAdaptiveUI='true'
-                                    autoFit= 'true'                                    
+                                    [allowSorting]='true'                                    
                                     [showColumnMenu]='false'                
                                     [gridLines]="lines"
                                     [allowFiltering]='false'                 
                                     [toolbar]='toolbarOptions'                                             
                                     [editSettings]='editSettings'
-                                    [enableStickyHeader]='true'
                                     [enablePersistence]='false'                                    
                                     [allowGrouping]="true"
-                                    rowHeight='30'
                                     [allowResizing]='true' 
                                     [allowReordering]='true' 
                                     [allowExcelExport]='true'
                                     [allowSelection]='true'                                     
                                     [allowPdfExport]='true'            
                                     [groupSettings]='groupSettings' 
-                                    (dataBound)="dataBound($event)"
                                     (rowSelected)='onRowSelected($event)'                                
                                     (actionBegin)='selectedRow($event)' >
                                     <e-columns>
                                         <e-column field='journal_id' headerText='ID' isPrimaryKey='true' isIdentity='true' [visible]=false width='40'></e-column>                                            
-                                        <e-column field="type" headerText="ID" width="120" minWidth='120' maxWidth='200'>
+                                        <e-column field="type" headerText="ID" width="80">
                                                 <ng-template #template let-data>                                                                
                                                     @switch (data.type) 
                                                     {                                    
@@ -156,7 +150,7 @@ const imports = [
                                                     }
                                                 </ng-template>
                                         </e-column>                                                                
-                                        <e-column field='description' headerText='Description' minWidth='200' maxWidth='550'></e-column>
+                                        <e-column field='description' headerText='Description' width='150'></e-column>
                                         <e-column field='booked' headerText='Bk' width='60' [visible]=false ></e-column>
                                             <ng-template #template let-data>                       
                                                     @if(data.booked === 'true') {
@@ -170,8 +164,8 @@ const imports = [
                                                     </div>                                                                                            
                                                     }   
                                             </ng-template>                                                   
-                                        <e-column field='transaction_date' headerText='Date' width="120" minWidth='120' maxWidth='150' format='M/dd/yyyy' textAlign='Middle'></e-column>
-                                        <e-column field="status" headerText="Status" width="120" minWidth='120' maxWidth='150'>
+                                        <e-column field='transaction_date' headerText='Date' width='60' format='M/dd/yyyy' textAlign='Middle'></e-column>
+                                        <e-column field="status" headerText="Status" width="60">
                                                 <ng-template #template let-data>                                                                
                                                     @switch (data.status) 
                                                     {                                    
@@ -202,33 +196,32 @@ const imports = [
                                                     }
                                                 </ng-template>
                                         </e-column>                                                                                                        
-                                        <e-column field="status" headerText="Period" width="120" minWidth='120' maxWidth='150'>                                                
+                                        <e-column field="status" headerText="Period" width="60">                                                
                                             <ng-template #template let-data>                                                                
                                                 {{data.period_year}} - {{data.period}}  
                                             </ng-template>
                                         </e-column>
-                                        <e-column field='amount' headerText='Amount' width="200" minWidth='120' maxWidth='250' format='N2' textAlign='Right'></e-column>
+                                        <e-column field='amount' headerText='Amount' width='80' format='N2' textAlign='Right'></e-column>
                                         <e-column field='period_year' headerText='Yr' width='100' [visible]='false'></e-column>
                                         <e-column field='create_date' headerText='Updated' width='100' format='M/dd/yyyy' [visible]='false'></e-column>
                                         <e-column field='create_user' headerText='User' width='100' [visible]='false'></e-column>
-                                        <e-column field='party_id'    headerText='Vendor' width="200" minWidth='120' maxWidth='350' [visible]='true'></e-column>
-                                    </e-columns> 
-                                    
-                                    <e-aggregates>                                            
+                                        <e-column field='party_id'    headerText='Vendor' width='100' [visible]='true'></e-column>
+                                    </e-columns>
+                                    <e-aggregates>
                                             <e-aggregate>
                                                 <e-columns>
                                                     <e-column type="Sum" field="amount" format="N2">
-                                                    <ng-template #footerTemplate let-data><span class="customcss">{{data.Sum}}</span> </ng-template>
-                                                    </e-column>                                                    
+                                                        <ng-template #groupFooterTemplate let-data>{{data.Sum}}</ng-template>
+                                                    </e-column>
                                                 </e-columns>
-                                            </e-aggregate>                                            
+                                            </e-aggregate>
                                             <e-aggregate>
                                                 <e-columns>
                                                     <e-column type="Sum" field="amount" format="N2">
-                                                    <ng-template #groupFooterTemplate let-data><span class="customcss">{{data.Sum}}</span> </ng-template>
+                                                        <ng-template #footerTemplate let-data>{{data.Sum}}</ng-template>
                                                     </e-column>                                                    
                                                 </e-columns>
-                                            </e-aggregate>                                            
+                                            </e-aggregate>
                                     </e-aggregates>
                                 </ejs-grid>         
                             </ng-container> 
@@ -248,12 +241,10 @@ const imports = [
             </div>
             }
             @else {
-                <div class="flex flex-col justify-center items-center dark:bg-gray-100 bg-slate-200 rounded-md">
+                <div class="flex flex-col justify-center items-center dark:bg-gray-100 bg-slate-500 rounded-md">
                     @if(journalHeader$  | async; as journals  ) {                                                  
                             @for (journal of journals; track journal.journal_id) {                                
-                                <journal-card [journalHeader]="journal"></journal-card>   
-                                    <!-- 
-                                    <mat-card class="flex-auto m-2  p-2 bg-gray-200 border-gray-500 dark:bg-gray-400 shadow rounded-xl dark:text-gray-200 overflow-hidden hover:cursor-pointer w-full">
+                                    <mat-card class="flex-auto m-1 p-2 bg-gray-100 dark:bg-gray-400 shadow rounded-xl dark:text-gray-200 overflow-hidden hover:cursor-pointer">
                                      <div>Journal : {{journal.journal_id}} -  {{journal.type}} </div>
                                      <div>Description : {{journal.description}} </div>                                    
                                         {{journal.transaction_date}}                                    
@@ -265,8 +256,8 @@ const imports = [
                                         {{journal.party_id}}
                                         {{journal.status}}
                                         {{journal.booked}}
-                                    </mat-card> -->
-                                    
+                                    </mat-card>
+                                    <journal-card [journalHeader]="journal"></journal-card>   
                                 
                             }                    
                     }
@@ -326,7 +317,7 @@ export class JournalEntryComponent implements OnInit, OnDestroy, AfterViewInit  
     journalHeader$ = this.store.select(selectJournals);
     isJournalLoading$ = this.store.select(isJournalLoading);
 
-    periodParam = { period: 1, period_year: 2024 };
+    periodParam = { period: 1, period_year: 2025 };
 
     public groupSettings: { [x: string]: Object } = { showDropArea: true };
 
@@ -339,9 +330,8 @@ export class JournalEntryComponent implements OnInit, OnDestroy, AfterViewInit  
     collapsed = false;
 
     ngOnInit() {
-
-        this.isVisible = (window.innerWidth) > 600;
        
+
         this.store.dispatch(loadJournalHeaderByPeriod({ period: this.periodParam }));
 
         this.toolbarTitle = "Journal Transactions by Period ";
@@ -359,11 +349,6 @@ export class JournalEntryComponent implements OnInit, OnDestroy, AfterViewInit  
         this.lines = 'Both';
         this.openDrawer()
 
-    }
-    dataBound(args: any) {
-        if (this.grid().dataSource) {
-            this.grid().autoFitColumns(['description', 'amount', 'transaction_date']);
-        }
     }
 
     onTemplate() {

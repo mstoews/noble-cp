@@ -262,6 +262,18 @@ export interface IAccounts {
   update_user: string;
 }
 
+
+export interface ISettings {
+  id:          number;
+  setting:     string;
+  value:       string;
+  description: string;
+  create_date: string;
+  create_user: string;
+  update_date: string;
+  update_user: string;
+}
+
 export interface IAccountSettings {
   ar: string;
   ap: string;

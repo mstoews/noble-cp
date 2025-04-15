@@ -201,7 +201,7 @@ export class ArticleListingComponent implements OnInit, AfterViewInit {
         this.initialDatagrid();
         var params = {
             period: 1,
-            period_year: 2024
+            period_year: 2025
         }
         this.store.loadHeader(params);
         this.store.loadJournals(params);

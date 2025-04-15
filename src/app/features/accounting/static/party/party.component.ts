@@ -119,6 +119,14 @@ export class PartyComponent  {
         this.openDrawer();
     }
 
+    opPrint() {
+        const pdfExportProperties: PdfExportProperties = {
+            exportType: 'CurrentPage'
+        };
+        (this.grid() as any as GridComponent).pdfExport(pdfExportProperties);
+    }
+    
+
     onAdd(party: IParty) {
         this.store.addParty(party);
         this.closeDrawer();

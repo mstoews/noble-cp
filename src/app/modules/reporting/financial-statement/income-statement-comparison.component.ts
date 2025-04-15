@@ -94,7 +94,7 @@ const imports = [
 export class IncomeStatementComparisonRptComponent {
 
   public currentPeriod = signal(1);
-  public currentYear = signal(2024);
+  public currentYear = signal(2025);
 
   public dReportDate = new Date();
   public reportName = signal('Income Statement Comparison');

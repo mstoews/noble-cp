@@ -31,7 +31,7 @@ export class BalanceSheetComponent {
     refresh() {
         var params = {
             period: 1,
-            period_year: 2024
+            period_year: 2025
         }
         this.store.loadHeader(params);
         this.assets = this.store.header();

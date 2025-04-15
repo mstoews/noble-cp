@@ -72,7 +72,7 @@ export const JournalStore = signalStore(
     error: null,
     isLoading: false,
     currentPeriod: 1,
-    currentYear: 2024,
+    currentYear: 2025,
   }),
   withComputed((state) => ({
   })),

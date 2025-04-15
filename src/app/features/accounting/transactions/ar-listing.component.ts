@@ -77,7 +77,7 @@ const imports = [
 export class ARTransactionComponent {
 
     public prd = "1";
-    public prd_year = "2024";
+    public prd_year = "2025";
 
     public openDrawer = false;
 

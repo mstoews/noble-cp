@@ -89,7 +89,7 @@ const imports = [
 export class IncomeStatementRptComponent {
 
   public currentPeriod = signal(1);
-  public currentYear = signal(2024);
+  public currentYear = signal(2025);
   public dReportDate = new Date().toISOString().split('T')[0];
 
   // public balanceSheetReport! : Observable<IDistributionLedgerReport[]>

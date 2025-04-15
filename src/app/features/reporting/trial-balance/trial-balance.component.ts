@@ -20,8 +20,10 @@ import {
     RowSelectEventArgs, SearchSettingsModel, SelectionSettingsModel, SortService, ToolbarItems, ToolbarService
 } from '@syncfusion/ej2-angular-grids';
 import { DropDownListComponent } from '@syncfusion/ej2-angular-dropdowns';
-import { IJournalSummary } from 'app/models';
+import { IDistributionLedger, IJournalSummary } from 'app/models';
 import { ReportingToolbarComponent } from '../grid-reporting/grid-menubar.component';
+import { utils, writeFile } from 'xlsx';
+import { GridMenubarStandaloneComponent } from "../../accounting/grid-components/grid-menubar.component";
 
 
 const imports = [
@@ -30,7 +32,6 @@ const imports = [
     FormsModule,
     MaterialModule,
     GridModule,
-    ReportingToolbarComponent
 ];
 
 const declarations = [
@@ -50,41 +51,55 @@ const declarations = [
 ];
 
 @Component({
-
+    selector: 'report-tb',
     template: `
         <div class="flex flex-col min-w-0 overflow-y-auto overflow-x-auto" cdkScrollable>
         <!-- Main -->
         <div class="flex-auto p-2 sm:p-10">
             <div class="h-max border-gray-300 rounded-2xl">                
-            <reporting-toolbar 
-                (notifyParentRefresh)="onRefresh()"
-                (notifyExcel)="onExportExcel()" 
-                (notifyCSV)="onExportCSV()">
-            </reporting-toolbar>                
+            <grid-menubar
+                [inTitle]="'Distribution Ledger by Period'" 
+                (openSettings)="openDrawer()" 
+                (onPrint)="onPrint()"                          
+                (exportXL)="exportXL()"
+                (exportPRD)="exportPDF()"
+                (exportCSV)="onExportCSV()"
+                [showPrint]=false
+                [showExportXL]=true
+                [showExportPDF]=false
+                [showExportCSV]=false
+                [showSettings]=true
+                [showBack]=false>
+        </grid-menubar>  
+            
                 @if (store.isLoading() === false) {
                     <ejs-grid #grid id="grid" 
-                        [rowHeight]='30'
-                        (click)="onClickGrid($event)"                        
-                        [dataSource]="store.header()" 
-                        [childGrid]="childDataGrid"
-                        allowPaging='true' 
-                        allowSorting='true'  
-                        showColumnMenu='true' 
-                        allowEditing='false' 
+                        [rowHeight]='30'                        
+                        [allowPaging]='true' 
+                        [allowSorting]='true'  
+                        [showColumnMenu]='true'                         
+                        [allowGrouping]='true'
+                        [allowExcelExport]='true'
+                        [allowPdfExport]='true'
                         [allowFiltering]='true' 
+                        [enablePersistence]='false'
+                        [allowEditing]='false' 
+                        
                         [toolbar]='toolbarOptions' 
                         [selectionOptions]='selectionOptions'  
                         [filterSettings]='filterSettings'
                         [editSettings]='editSettings' 
                         [pageSettings]='pageSettings' 
-                        [searchSetting]='searchOptions'
+                        [searchSetting]='searchOptions'                        
+                        
+                        
                         (rowSelected)="onRowSelected($event)"
                         (actionBegin)="actionBegin($event)" 
-                        [enablePersistence]='true'
-                        [allowGrouping]='true'
-                        [allowExcelExport]='true'
-                        [allowPdfExport]='true'
-                        (load)='onLoad()'>
+                        (load)='onLoad()'
+                        (click)="onClickGrid($event)"                        
+                        [dataSource]="store.header()" 
+                        [childGrid]="childDataGrid"
+                        >
         
                         <e-columns>                            
                             <e-column headerText="Group"    field="account" width="100"></e-column>
@@ -127,11 +142,13 @@ const declarations = [
         </div>
     </div>
     `,
-    selector: 'trial-balance',
-    imports: [imports],
+
+    imports: [imports, GridMenubarStandaloneComponent],
     changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [declarations],
-    styles: ``
+    styles: ` 
+    // .e-gridheader .e-table{ display: none;  } 
+    `
 })
 export class TrialBalanceComponent implements OnInit, AfterViewInit {
 
@@ -151,6 +168,7 @@ export class TrialBalanceComponent implements OnInit, AfterViewInit {
     public searchOptions?: SearchSettingsModel;
     public filterSettings: FilterSettingsModel;
     public childData?: IJournalSummary[] | null;
+
 
     public childDataGrid: GridModule = {
         dataSource: this.childData,
@@ -184,9 +202,7 @@ export class TrialBalanceComponent implements OnInit, AfterViewInit {
         ],
 
     }
-
     initialDatagrid() {
-
         this.formatoptions = { type: 'dateTime', format: 'M/dd/yyyy' }
         this.selectionOptions = { mode: 'Cell' };
         this.editSettings = { allowEditing: false, allowAdding: false, allowDeleting: false };
@@ -203,13 +219,14 @@ export class TrialBalanceComponent implements OnInit, AfterViewInit {
         this.initialDatagrid();
         var params = {
             period: 1,
-            period_year: 2024
+            period_year: 2025
         }
         this.store.loadHeader(params);
         this.store.loadJournals(params);
     }
 
-    onExportExcel() {
+
+    exportPDF() {
         console.log('Excel');
         this.grid()!.excelExport({
             fileName: 'TB-31-01-2024.xlsx', header: {
@@ -227,8 +244,34 @@ export class TrialBalanceComponent implements OnInit, AfterViewInit {
                 ]
             },
         });
-    }
 
+    }
+    exportXL() {
+        console.log('Excel');
+        this.grid()!.excelExport({
+            fileName: 'Trial-Balance-31-01-2024.xlsx', header: {
+                headerRows: 7,
+                rows: [
+                    { cells: [{ colSpan: 4, value: "Company Name", style: { fontColor: '#03396c', fontSize: 20, hAlign: 'Left', bold: true, } }] },
+                    { cells: [{ colSpan: 4, value: "Trial Balance", style: { fontColor: '#03396c', fontSize: 20, hAlign: 'Left', bold: true, } }] },
+                ]
+            },
+            footer: {
+                footerRows: 4,
+                rows: [
+                    { cells: [{ colSpan: 4, value: "", style: { hAlign: 'Center', bold: true } }] },
+                    { cells: [{ colSpan: 4, value: "", style: { hAlign: 'Center', bold: true } }] }
+                ]
+            },
+        });
+
+    }
+    onPrint() {
+        this.grid().print();
+    }
+    openDrawer() {
+
+    }
 
     onExportCSV() {
         console.log('Refresh');
@@ -249,10 +292,12 @@ export class TrialBalanceComponent implements OnInit, AfterViewInit {
 
     }
 
+
+
     ngAfterViewInit(): void {
         this.store.loadJournals({
             period: 1,
-            period_year: 2024
+            period_year: 2025
         });
 
     }

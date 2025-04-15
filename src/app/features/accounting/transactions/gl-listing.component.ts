@@ -56,11 +56,11 @@ const imports = [
         <div class="grid grid-cols-1 gap-4 w-full min-w-0 border-gray-300 overflow-hidden">
             <ng-container>                    
                 @defer {
-                    <transactions #transaction
+                  <transactions #transaction
                     [transactionType]="transType"   
                     [openDrawers]="openDrawer"                     
-                    (onCloseDrawer)="onOpenSettings()"                    
-                    ></transactions>
+                    (onCloseDrawer)="onOpenSettings()">
+                  </transactions>
                 }                
                 @placeholder(minimum 200ms) {
                     <div class="flex justify-center items-center">

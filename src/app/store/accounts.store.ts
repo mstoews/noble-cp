@@ -37,14 +37,14 @@ export const AccountsStore = signalStore(
   })),
   withMethods((state, accountsService = inject(AccountsService)) => ({
 
-    removeAccounts: rxMethod<IAccounts>(
+    removeAccounts: rxMethod<number>(
       pipe(
         switchMap((account) => {
           patchState(state, { isLoading: true });
-          return accountsService.delete(account.child).pipe(
+          return accountsService.delete(account).pipe(
             tapResponse({
               next: (accounts) => {
-                patchState(state, { accounts: state.accounts().filter((accounts) => accounts.child !== accounts.child) });
+                patchState(state, { accounts: state.accounts().filter((accounts) => accounts.child !== account) });
               },
               error: console.error,
               finalize: () => patchState(state, { isLoading: false }),

@@ -46,9 +46,7 @@ const keyExpr = ["account", "child"];
 @Component({
   selector: "glaccounts",
   imports: [imports, DrawerComponent],
-  template: `
-
-  
+  template: `  
   <mat-drawer class="w-[450px]" #settings [opened]="false" mode="over" position="end"  [disableClose]="false" >
           <settings-drawer></settings-drawer>      
   </mat-drawer>
@@ -72,7 +70,7 @@ const keyExpr = ["account", "child"];
               <gl-grid #gl_grid                    
                   (onFocusChanged)="onSelection($event)"  
                   (onUpdateSelection)="selectedRow($event)"  
-                  [data]="store.vm().accounts"  
+                  [data]="store.accounts()"  
                   [columns]="cols">
               </gl-grid> 
             }            
@@ -118,7 +116,7 @@ export class GlAccountsComponent {
 
   selectedAccount: IAccounts | null;
 
-  store = inject(ApplicationStore);
+  store = inject(AccountsStore);
 
   // store = inject(Store);
   // accounts$ = this.store.select(accountsFeature.selectAccounts);
@@ -154,13 +152,11 @@ export class GlAccountsComponent {
   ];
 
   onSelection(account: any) {
-    // this.store.accounts();
-    // this.store._accountsStore.select 
-    // this.store.dispatch(accountPageActions.select(account.data));
+    this.selectedAccount = account;    
   }
 
   ngOnInit() {
-    this.store.loadAccounts();    
+    this.store.readAccounts();    
   }
 
   onOpenSettings() {
@@ -168,8 +164,24 @@ export class GlAccountsComponent {
   }
 
 
-  selectedRow($event) {
-    this.onDoubleClicked($event);
+  selectedRow(account: any) {
+    
+    const rawData = {
+      account: account.account,
+      child: account.child,
+      parent_account: account.parent_account,
+      description: account.description,
+      acct_type: account.acct_type,
+      sub_type: account.sub_type,
+      balance: account.balance,
+      comments: account.comments,
+      create_date: new Date().toISOString().split("T")[0],
+      create_user: '@' + this.auth.user().email.split("T")[0],
+      update_date: new Date().toISOString().split("T")[0],
+      update_user: '@' + this.auth.user().email.split("T")[0],
+    };
+    this.selectedAccount = rawData;    
+    this.onDoubleClicked(rawData);
   }
 
   // CRUD Functions
@@ -188,15 +200,31 @@ export class GlAccountsComponent {
       update_date: new Date().toISOString().split("T")[0],
       update_user: '@' + this.auth.user().email.split("T")[0],
     };
-    //this.store.dispatch(accountPageActions.addAccount({ account: rawData }));
+    this.selectedAccount = rawData;    
+    this.store.addAccounts(rawData);
     this.closeEditDrawer();
   }
 
-  onDoubleClicked(args: any) {
+  onDoubleClicked(account: any) {
     this.bAccountsDirty = false;
-    const type = args.acct_type;
+    const rawData = {
+      account: account.account,
+      child: account.child,
+      parent_account: account.parent_account,
+      description: account.description,
+      acct_type: account.acct_type,
+      sub_type: account.sub_type,
+      balance: account.balance,
+      comments: account.comments,
+      create_date: new Date().toISOString().split("T")[0],
+      create_user: '@' + this.auth.user().email.split("T")[0],
+      update_date: new Date().toISOString().split("T")[0],
+      update_user: '@' + this.auth.user().email.split("T")[0],
+    };
+    const type = account.acct_type;
     var parent: boolean;
-    parent = args.parent_account;
+    parent = account.parent_account;
+    this.selectedAccount = rawData;
     this.openEditDrawer();
   }
 
@@ -210,15 +238,16 @@ export class GlAccountsComponent {
 
 
   addAccount(account: IAccounts) {
-    //this.store.dispatch(accountPageActions.addAccount({ account }));
+    this.store.addAccounts(account);
+    
   }
 
   updateAccount(account: IAccounts) {
-    //this.store.dispatch(accountPageActions.updateAccount({ account }));
+    this.store.updateAccounts(account);    
   }
 
   deleteAccount(child: number) {
-    //this.store.dispatch(accountPageActions.deleteAccount({ child }));
+    this.store.removeAccounts(child);    
   }
 
 
@@ -247,7 +276,7 @@ export class GlAccountsComponent {
     confirmation.afterClosed().subscribe((result) => {
 
       if (result === "confirmed") {
-        //this.store.dispatch(accountPageActions.deleteAccount({ child }));
+        this.store.removeAccounts(child);
       }
     });
     this.closeEditDrawer();

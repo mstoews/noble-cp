@@ -66,6 +66,7 @@
     "@syncfusion/ej2-inputs": "28.1.37",
     "@syncfusion/ej2-navigations": "28.1.37",
     "@syncfusion/ej2-notifications": "28.1.33",
+    "@syncfusion/ej2-pdf-export": "^29.1.33",
     "@syncfusion/ej2-pivotview": "^28.2.11",
     "@syncfusion/ej2-popups": "28.1.38",
     "@syncfusion/ej2-schedule": "28.1.37",
@@ -74,6 +75,7 @@
     "crypto-js": "^4.2.0",
     "ej-angular2": "^20.4.38",
     "exceljs": "^4.4.0",
+    "file-saver": "^2.0.5",
     "file-saver-es": "^2.0.5",
     "firebase": "^10.14.1",
     "firebase-admin": "^12.7.0",
@@ -103,7 +105,7 @@
     "syncfusion-javascript": "^20.4.38",
     "ts-enum-util": "^4.1.0",
     "tslib": "2.4.1",
-    "xlsx": "^0.18.5",
+    "xlsx": "https://cdn.sheetjs.com/xlsx-0.20.3/xlsx-0.20.3.tgz",
     "zone.js": "0.15.0"
   },
   "devDependencies": {

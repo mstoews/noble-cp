@@ -127,7 +127,7 @@ export class TrialBalanceComponent implements OnInit, AfterViewInit {
         this.initialDatagrid();
         var params = {
             period: 1,
-            period_year: 2024
+            period_year: 2025
         }
         this.store.loadHeader(params);
         this.store.loadJournals(params);
@@ -176,7 +176,7 @@ export class TrialBalanceComponent implements OnInit, AfterViewInit {
     ngAfterViewInit(): void {
         this.store.loadJournals({
             period: 1,
-            period_year: 2024
+            period_year: 2025
         });
 
     }

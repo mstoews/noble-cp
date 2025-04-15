@@ -3,7 +3,6 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { GridMenubarStandaloneComponent } from 'app/features/accounting/grid-components/grid-menubar.component';
 import { ReportStore } from 'app/store/reports.store';
 import { ITrialBalance } from 'app/models';
-import { GLGridComponent } from 'app/features/accounting/grid-components/gl-grid.component';
 import { MatButtonModule } from '@angular/material/button';
 import { IGridSettingsModel } from 'app/services/grid.settings.service';
 import { MaterialModule } from 'app/shared/material.module';
@@ -15,8 +14,6 @@ import { IPeriod } from 'app/models/period';
 import { ReplaySubject, Subject, take, takeUntil } from 'rxjs';
 import { MatSelect } from '@angular/material/select';
 import { PeriodsService } from 'app/services/periods.service';
-import { Router } from '@angular/router';
-
 
 
 const mods = [
@@ -32,7 +29,7 @@ const mods = [
   <div class="flex flex-col min-w-0 overflow-y-auto -px-10">
     <div class="flex-auto">
         <div class="h-full border-gray-300">
-            <div class="flex-col">
+        <div class="flex-col">
         <mat-drawer class="lg:w-[450px] md:w-full bg-white-100" #drawer [opened]="false" mode="over" [position]="'end'"
         [disableClose]="false">
         <div class="flex flex-col w-full text-gray-700 filter-article filter-interactive">
@@ -70,21 +67,18 @@ const mods = [
                 </button>
                 <button mat-icon-button color="primary" class="bg-slate-300 hover:bg-slate-400 ml-1" (click)="onUpdate($event)" matTooltip="Edit"
                     aria-label="Button that displays a tooltip when focused or hovered over">
-                    <span class="e-icons e-edit-4"></span>
-                    
+                    <span class="e-icons e-edit-4"></span>                    
                 </button>
                 <button mat-icon-button color="primary" class="bg-slate-300 hover:bg-slate-400 ml-1" (click)="onCreate($event)" matTooltip="Add"
                     aria-label="Button that displays a tooltip when focused or hovered over">
                     <span class="e-icons e-file-new"></span>
                 </button>
                 <button mat-icon-button color="primary" class="bg-slate-300 hover:bg-slate-400 ml-1" (click)="onDelete($event)" matTooltip="Delete"
-                    aria-label="Button that displays a tooltip when focused or hovered over">
-                    
+                    aria-label="Button that displays a tooltip when focused or hovered over">                    
                     <span class="e-icons e-delete-2"></span>
                 </button>
                 <button mat-icon-button color="primary" class="bg-slate-300 hover:bg-slate-400 ml-1" (click)="closeDrawer()" matTooltip="Close"
-                    aria-label="Button that displays a tooltip when focused or hovered over">
-                    
+                    aria-label="Button that displays a tooltip when focused or hovered over">                    
                     <span class="e-icons e-close-6"></span>
                 </button>
             </div>            
@@ -101,41 +95,37 @@ const mods = [
     </mat-drawer> 
     <mat-drawer-container>
                 @defer (on viewport; on timer(5s)) {
-                    <ng-container>                    
-                        
-                        <grid-menubar [inTitle]="'Distribution Ledger'" 
-                          (openSettings)="openDrawer()" 
-                          (onPrint)="onPrint()"                          
-                          (exportXL)="exportLX()"
-                          (exportPRD)="exportPDF()"
-                          (exportCSV)="exportCSV()"
-                          (showPrint)="true"
-                          (showExportXL)="true"
-                          (showExportPDF)="true"
-                          (showExportCSV)="true"
-                          (showSettings)="true"
-                          (showBack)="false" >
+                    <ng-container>                                            
+                        <grid-menubar
+                              [inTitle]="'Distribution Ledger by Period'" 
+                              (openSettings)="openDrawer()" 
+                              (onPrint)="onPrint()"                          
+                              (exportXL)="exportXL()"
+                              (exportPRD)="exportPDF()"
+                              (exportCSV)="exportCSV()"
+                              [showPrint]=false
+                              [showExportXL]=true
+                              [showExportPDF]=false
+                              [showExportCSV]=false
+                              [showSettings]=true
+                              [showBack]=false>
                         </grid-menubar>  
-                          
-                                                                          
+                                                                                                    
                         @if (store.isLoading() === false) 
                         {                            
                             <ejs-grid #grid id="grid" class="mt-2 text-sm"
                                 [rowHeight]='30'
                                 allowSorting='true'
-                                showColumnMenu='true' 
-                                allowEditing='true' 
-                                [gridLines]="'Both'"
+                                showColumnMenu='true'                                 
+                                gridLines="None"
                                 [allowFiltering]='true'                 
                                 [toolbar]='toolbarOptions'                 
                                 [filterSettings]='filterSettings'
                                 [editSettings]='editSettings' 
                                 [pageSettings]='pageSettings'                 
                                 [enableStickyHeader]='true' 
-                                [enablePersistence]='false'
-                                [enableStickyHeader]=true
-                                [allowGrouping]="false"
-                                [allowResizing]='true' 
+                                [enablePersistence]='false'                                
+                                [allowGrouping]="true"                                
                                 [allowReordering]='true' 
                                 [allowExcelExport]='true' 
                                 [allowPdfExport]='true' 
@@ -168,12 +158,19 @@ const mods = [
   </div>
   `,
   imports: [mods],
-  selector: 'distributed-tb',
+  selector: 'dist-tb',
   providers: [ReportStore, ExcelExportService, ContextMenuService, SortService, PageService, ResizeService, FilterService, ToolbarService, EditService, AggregateService, ColumnMenuService],
-
+  styles: `
+  // .e-gridheader .e-table{ display: none;  } 
+  .e-grid .e-altrow {  background-color: #ffffff; }
+  `
+    
 })
 
 export class DistributedTbComponent implements OnInit, OnDestroy {
+onPrint() {
+throw new Error('Method not implemented.');
+}
 
   public store = inject(ReportStore);
   public periodsService = inject(PeriodsService);
@@ -212,6 +209,8 @@ export class DistributedTbComponent implements OnInit, OnDestroy {
   public periodFilter: ReplaySubject<IPeriod[]> = new ReplaySubject<IPeriod[]>(1);
   protected _onPeriodDestroy = new Subject<void>();
   protected _onDestroy = new Subject<void>();
+  public settingsList: IGridSettingsModel[] = [];
+  
   @ViewChild("singlePeriodSelect", { static: true }) singlePeriodSelect!: MatSelect;
 
 
@@ -238,7 +237,7 @@ export class DistributedTbComponent implements OnInit, OnDestroy {
 
   periodParams = {
     period: 1,
-    year: 2024,
+    year: 2025,
   };
 
   protected filterPeriod() {
@@ -267,8 +266,6 @@ export class DistributedTbComponent implements OnInit, OnDestroy {
       // this.router.navigate(['journals/gl', args.rowData]);
     }
   }
-
-
 
   ngOnInit() {
     this.store.loadTB(this.periodParams);
@@ -305,15 +302,13 @@ export class DistributedTbComponent implements OnInit, OnDestroy {
     this.store.loadTB(this.periodParams);
   }
 
-  public settingsList: IGridSettingsModel[] = [];
-
-  exportLX() {
-    const fileName = new Date().toLocaleDateString() + '.xlsx';
+  exportXL() {
+    const fileName = "Dist-TB-" + new Date().toLocaleDateString() + '.xlsx';
     this.grid()!.excelExport({
       fileName: fileName, header: {
         headerRows: 7,
         rows: [
-          { cells: [{ colSpan: 4, value: "Company Name", style: { fontColor: '#03396c', fontSize: 20, hAlign: 'Left', bold: true, } }] },
+          { cells: [{ colSpan: 4, value: "Nobleledger Ltd. ", style: { fontColor: '#03396c', fontSize: 20, hAlign: 'Left', bold: true, } }] },
           { cells: [{ colSpan: 4, value: "Trial Balance", style: { fontColor: '#03396c', fontSize: 20, hAlign: 'Left', bold: true, } }] },
         ]
       },
@@ -358,22 +353,12 @@ export class DistributedTbComponent implements OnInit, OnDestroy {
     });
   }
 
-  onExportExcel() {
-    this.exportLX();
-  }
-
-
-
   resetPersistData() {
     //this.grid().restorePersistData("Reset");
   }
 
   selectedRow($event: ITrialBalance) {
     console.log($event);
-  }
-
-  onPrint() {
-
   }
 
   onUpdate($event: any) {
@@ -390,26 +375,4 @@ export class DistributedTbComponent implements OnInit, OnDestroy {
   }
 
 }
-
-/*
-    "account": 6000,
-    "child": 6160,
-    "account_description": "Amortization of capital asset",
-    "transaction_date": "2024-12-16",
-    "id": "",
-    "trans_type": "TB Summary",
-    "trans_date": "2024-12-16",
-    "type": "",
-    "description": "",
-    "reference": "",
-    "party_id": "",
-    "amount": 0,
-    "opening_balance": 0,
-    "debit_amount": 0,
-    "credit_amount": 0,
-    "close": 0,
-    "net": 0,
-    "pd": 1,
-    "prd_year": 2024
-*/
 
