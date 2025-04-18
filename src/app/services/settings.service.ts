@@ -17,7 +17,7 @@ export class SettingsService {
     return this.httpClient.post<ISettings>(url, setting).pipe(shareReplay({ bufferSize: 1, refCount: true }))
   }
   read() {
-    var url = this.baseUrl + '/v1/read_setting';
+    var url = this.baseUrl + '/v1/read_all_settings';
     return this.httpClient.get<ISettings[]>(url).pipe(shareReplay({ bufferSize: 1, refCount: true }))
   }
 

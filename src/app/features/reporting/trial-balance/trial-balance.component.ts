@@ -76,6 +76,7 @@ const declarations = [
                     <ejs-grid #grid id="grid" 
                         [rowHeight]='30'                        
                         [allowPaging]='true' 
+                        [allowSelection]='false'
                         [allowSorting]='true'  
                         [showColumnMenu]='true'                         
                         [allowGrouping]='true'
@@ -86,7 +87,7 @@ const declarations = [
                         [allowEditing]='false' 
                         
                         [toolbar]='toolbarOptions' 
-                        [selectionOptions]='selectionOptions'  
+                        
                         [filterSettings]='filterSettings'
                         [editSettings]='editSettings' 
                         [pageSettings]='pageSettings' 
@@ -98,7 +99,7 @@ const declarations = [
                         (load)='onLoad()'
                         (click)="onClickGrid($event)"                        
                         [dataSource]="store.header()" 
-                        [childGrid]="childDataGrid"
+                        
                         >
         
                         <e-columns>                            

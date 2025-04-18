@@ -1,4 +1,3 @@
-
 import { GlAccountsComponent } from './accts/comp.accts';
 import { GlTypeComponent } from './gltype/gl.types.component';
 import { HttpClient } from '@angular/common/http';
@@ -9,7 +8,6 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, viewChil
 import { MaterialModule } from 'app/shared/material.module';
 import { GlSubTypeComponent } from './subtype/gl.subtype.component';
 import { PeriodsComponent } from './periods/gl.periods.component';
-
 import { TeamsComponent } from './team/gl.teams.component';
 import { MatDrawer } from '@angular/material/sidenav';
 import { FundsComponent } from './funds/gl.funds.component';
@@ -18,7 +16,8 @@ import { ApplicationService } from 'app/store/main.panel.store';
 import { ApplicationStore } from 'app/store/application.store';
 import { CdkScrollable } from '@angular/cdk/scrolling';
 import { RolesComponent } from './roles/gl.roles.component';
-import { ActivatedRoute } from '@angular/router';
+import { AppSettingsComponent } from './settings/settings.comp';
+
 
 @Component({
     template: `    
@@ -101,6 +100,7 @@ import { ActivatedRoute } from '@angular/router';
                             @case ('periods') { <periods></periods> }
                             @case ('team') { <team></team> }
                             @case ('roles') { <roles></roles> }
+                            @case ('app-settings') { <app-settings></app-settings> }
                         }
                     </div>
                 </div>
@@ -122,8 +122,8 @@ import { ActivatedRoute } from '@angular/router';
         NgClass,
         TeamsComponent,
         GlAccountsComponent,
-        CdkScrollable
-
+        CdkScrollable,
+        AppSettingsComponent
     ],
     providers: [HttpClient],
     changeDetection: ChangeDetectionStrategy.OnPush
@@ -200,6 +200,12 @@ export class GlMainComponent {
                 icon: 'heroicons_outline:user-circle',
                 title: 'Role Definitions',
                 description: 'List of  assignable roles for team members',
+            },
+            {
+                id: 'app-settings',
+                icon: 'heroicons_outline:settings',
+                title: 'Application Settings',
+                description: 'Settings for the application',
             }
         ];
         

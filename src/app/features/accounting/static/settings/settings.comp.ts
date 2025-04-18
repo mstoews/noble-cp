@@ -2,8 +2,6 @@ import { Component, inject, viewChild } from "@angular/core";
 import { TypeStore } from "app/services/type.service";
 import { CommonModule } from "@angular/common";
 import { FuseConfirmationService } from "@fuse/services/confirmation";
-
-
 import { MatDrawer } from "@angular/material/sidenav";
 import { MaterialModule } from "app/shared/material.module";
 import {
@@ -20,17 +18,17 @@ import {
   SortService,
   ToolbarService,
 } from "@syncfusion/ej2-angular-grids";
+
 import { IAccounts, ISettings } from "app/models";
 import { AuthService } from "app/features/auth/auth.service";
 import { GLGridComponent } from "../../grid-components/gl-grid.component";
-import { MenuEventArgs, MenuItemModel } from "@syncfusion/ej2-navigations";
-import { ContextMenuAllModule } from "@syncfusion/ej2-angular-navigations";
+import { ContextMenuAllModule, MenuItemModel } from "@syncfusion/ej2-angular-navigations";
 import { ToastrService } from "ngx-toastr";
-import { SettingsComponent } from "./settings.comp.drawer";
-import { DrawerComponent } from "./settings.drawer";
-import { AccountsStore } from "app/store/accounts.store";
-import { ApplicationStore } from "app/store/application.store";
+import { SettingsDrawerComponent } from "./settings.drawer";
 import { GridMenubarStandaloneComponent } from "../../grid-components/grid-menubar.component";
+import { SettingsStore } from "app/store/settings.store";
+import { I } from "@angular/cdk/a11y-module.d-9e4162d8";
+import { isVisible } from "@syncfusion/ej2-base";
 
 const imports = [
   CommonModule,
@@ -38,27 +36,23 @@ const imports = [
   GridMenubarStandaloneComponent,
   GLGridComponent,
   ContextMenuAllModule,
-  SettingsComponent
+  SettingsDrawerComponent
 ];
 
 const keyExpr = ["account", "child"];
 
 @Component({
-  selector: "glaccounts",
-  imports: [imports, DrawerComponent],
+  selector: "app-settings",
+  imports: [imports],
   template: `  
-  <mat-drawer class="w-[450px]" #settings [opened]="false" mode="over" position="end"  [disableClose]="false" >
-          <settings-drawer></settings-drawer>      
-  </mat-drawer>
-
   <mat-drawer  class="w-[450px]" #drawer  [opened]="false"  mode="over" position="end" [disableClose]="false" >
-          <accts-drawer
-            [account] = "selectedAccount"
+          <setting-drawer
+            [account] = "selectedSetting"
             (Cancel)="onClose()"
             (Update)="onUpdate($event)"
             (Add)="onAdd($event)"
             (Delete)="onDelete($event)">
-          </accts-drawer>
+          </setting-drawer>
   </mat-drawer>
   
   @if ( store.isLoading() === false) {  
@@ -70,7 +64,7 @@ const keyExpr = ["account", "child"];
               <gl-grid #gl_grid                    
                   (onFocusChanged)="onSelection($event)"  
                   (onUpdateSelection)="selectedRow($event)"  
-                  [data]="store.accounts()"  
+                  [data]="store.settings()"  
                   [columns]="cols">
               </gl-grid> 
             }            
@@ -107,38 +101,33 @@ const keyExpr = ["account", "child"];
     `,
   ],
 })
-export class CompanySettingsComponent {
+export class AppSettingsComponent {
 
   public editDrawer = viewChild<MatDrawer>("drawer");
   public settingsDrawer = viewChild<MatDrawer>("settings");
   private _fuseConfirmationService = inject(FuseConfirmationService);
   private auth = inject(AuthService);
 
-  selectedAccount: ISettings | null;
-
-  store = inject(SettingsStore);
-
-  // store = inject(Store);
-  // accounts$ = this.store.select(accountsFeature.selectAccounts);
-  // selectedAccount$ = this.store.select(accountsFeature.selectSelectedAccount);
-  // isLoading$ = this.store.select(accountsFeature.selectIsLoading);
+  selectedSetting: ISettings | null;
+  
+  store = inject(SettingsStore);  
   toast = inject(ToastrService);
 
   public selectedItemKeys: any[] = [];
   public bDirty: boolean = false;
-  public bSettingsDirty: boolean = false;
-  public bAccountsDirty: boolean = false;
+  public bSettingsDirty: boolean = false;  
   private currentRow: Object;
 
 
   public cols = [
-    { field: "account", headerText: "Group", width: 80, textAlign: "Left" },
-    { field: "child", headerText: "Account", width: 80, textAlign: "Left", isPrimaryKey: true, },
-    { field: "acct_type", headerText: "Type", width: 80, textAlign: "Left" },
-    { field: "description", headerText: "Description", width: 200, textAlign: "Left" },
-    { field: "update_date", headerText: "Date", width: 80, textAlign: "Left" },
-    { field: "update_user", headerText: "User", width: 80, textAlign: "Left" },
-    { field: "comments", headerText: "Comment", width: 80, textAlign: "Left" },
+  { field: "id", headerText: "ID", width: 80, textAlign: "Left", isPrimaryKey: true, visible: false },    
+  { field: "setting", headerText: "Setting", width: 80, textAlign: "Left" },
+  { field: "value", headerText: "Value", width: 100, textAlign: "Left" },
+  { field: "description", headerText: "Description", width: 200, textAlign: "Left" },
+  { field: "create_date", headText: "Create Date", width: 100, textAlign: "Left", visible: false },
+  { field: "create_user", headText: "Create User", width: 100, textAlign: "Left", visible: false },
+  { field: "update_date", headText: "Update Date", width: 80, textAlign: "Left", visible: false },
+  { field: "update_user", headText: "Update User", width: 100, textAlign: "Left", visible: false },    
   ];
 
 
@@ -151,80 +140,41 @@ export class CompanySettingsComponent {
     { id: 'back', text: 'Back to Transaction List', iconCss: 'e-icons e-chevron-left' },
   ];
 
-  onSelection(account: any) {
-    this.selectedAccount = account;    
+  onSelection(setting: any) {
+    this.selectedSetting = setting;    
   }
 
   ngOnInit() {
-    this.store.readAccounts();    
+    this.store.readSettings();    
   }
 
   onOpenSettings() {
     this.settingsDrawer().open();
   }
-
-
-  selectedRow(account: any) {
-    
+  selectedRow(setting: ISettings) {    
     const rawData = {
-      account: account.account,
-      child: account.child,
-      parent_account: account.parent_account,
-      description: account.description,
-      acct_type: account.acct_type,
-      sub_type: account.sub_type,
-      balance: account.balance,
-      comments: account.comments,
-      create_date: new Date().toISOString().split("T")[0],
-      create_user: '@' + this.auth.user().email.split("T")[0],
-      update_date: new Date().toISOString().split("T")[0],
-      update_user: '@' + this.auth.user().email.split("T")[0],
+      id : setting.id,
+      setting: setting.setting,
+      value: setting.value,
+      description: setting.description,
+      create_date: setting.create_date,
+      create_user: setting.create_user,
+      update_date: setting.update_date,
+      update_user: setting.update_user,      
+      
     };
-    this.selectedAccount = rawData;    
+    this.selectedSetting = rawData;    
     this.onDoubleClicked(rawData);
   }
 
   // CRUD Functions
-  onCreate(account: IAccounts) {
-    const rawData = {
-      account: account.account,
-      child: account.child,
-      parent_account: account.parent_account,
-      description: account.description,
-      acct_type: account.acct_type,
-      sub_type: account.sub_type,
-      balance: account.balance,
-      comments: account.comments,
-      create_date: new Date().toISOString().split("T")[0],
-      create_user: '@' + this.auth.user().email.split("T")[0],
-      update_date: new Date().toISOString().split("T")[0],
-      update_user: '@' + this.auth.user().email.split("T")[0],
-    };
-    this.selectedAccount = rawData;    
-    this.store.addAccounts(rawData);
+  onCreate(settings: ISettings) {      
+    this.store.addSetting(settings);
     this.closeEditDrawer();
   }
 
-  onDoubleClicked(account: any) {
-    this.bAccountsDirty = false;
-    const rawData = {
-      account: account.account,
-      child: account.child,
-      parent_account: account.parent_account,
-      description: account.description,
-      acct_type: account.acct_type,
-      sub_type: account.sub_type,
-      balance: account.balance,
-      comments: account.comments,
-      create_date: new Date().toISOString().split("T")[0],
-      create_user: '@' + this.auth.user().email.split("T")[0],
-      update_date: new Date().toISOString().split("T")[0],
-      update_user: '@' + this.auth.user().email.split("T")[0],
-    };
-    const type = account.acct_type;
-    var parent: boolean;
-    parent = account.parent_account;
-    this.selectedAccount = rawData;
+  onDoubleClicked(settings: ISettings) {    
+    this.selectedSetting = settings;
     this.openEditDrawer();
   }
 
@@ -237,19 +187,14 @@ export class CompanySettingsComponent {
   }
 
 
-  addAccount(account: IAccounts) {
-    this.store.addAccounts(account);
-    
+
+  updateAccount(setting: ISettings) {
+    this.store.updateSetting(setting);    
   }
 
-  updateAccount(account: IAccounts) {
-    this.store.updateAccounts(account);    
+  deleteAccount(setting: ISettings) {
+    this.store.removeSetting(setting);
   }
-
-  deleteAccount(child: number) {
-    this.store.removeAccounts(child);    
-  }
-
 
   onUpdate(account: IAccounts) {
     const dDate = new Date();
@@ -264,7 +209,7 @@ export class CompanySettingsComponent {
   onDelete(e: any) {
     const child = e.child;
     const confirmation = this._fuseConfirmationService.open({
-      title: `Delete  Account: ${e.account} Child: ${child}`,
+      title: `Delete  Settings: ${e.account} Child: ${child}`,
       message: "Are you sure you want to delete this account? ",
       actions: {
         confirm: {
@@ -276,7 +221,7 @@ export class CompanySettingsComponent {
     confirmation.afterClosed().subscribe((result) => {
 
       if (result === "confirmed") {
-        this.store.removeAccounts(child);
+        this.deleteAccount(child);
       }
     });
     this.closeEditDrawer();

@@ -1,12 +1,11 @@
 import { Component, inject, input, output } from '@angular/core';
-
 import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { IAccounts } from 'app/models';
 import { MaterialModule } from 'app/shared/material.module';
 import { TypeStore } from 'app/services/type.service';
 
 @Component({
-  selector: 'accts-drawer',
+  selector: 'setting-drawer',
   imports: [MaterialModule, ReactiveFormsModule, FormsModule],
   template: `
     <mat-card class="m-2">
@@ -123,9 +122,8 @@ export class SettingsDrawerComponent {
 
   sTitle = 'Account Maintenance';
   originalParty: IAccounts;
-  account = input<IAccounts | null>();
-
   
+  account = input<IAccounts | null>();  
   Update = output<IAccounts>();
   Add = output<IAccounts>();
   Delete = output<IAccounts>();

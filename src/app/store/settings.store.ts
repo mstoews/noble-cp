@@ -2,7 +2,7 @@ import { inject } from "@angular/core";
 import { tapResponse } from "@ngrx/operators";
 import { signalStore, withState, withMethods, patchState, withHooks } from "@ngrx/signals";
 import { rxMethod } from "@ngrx/signals/rxjs-interop";
-import { SettingsService } from "@services/settings.service";
+import { SettingsService } from "app/services/settings.service";
 import { pipe, switchMap, tap, exhaustMap } from "rxjs";
 import { ISettings } from "app/models";
 
@@ -13,12 +13,14 @@ export interface SettingStateInterface {
 }
 
 export const SettingsStore = signalStore(
-  { protectedState: false }, withState<SettingStateInterface>({
+  { providedIn: 'root' }, withState<SettingStateInterface>({
     settings: [],
     error: null,
     isLoading: false,
   }),
-  withMethods((state, settingService = inject(SettingsService)) => ({
+  withMethods((state, 
+    settingService = inject(SettingsService)) => ({
+    
     removeSetting: rxMethod<ISettings>(
       pipe(
         switchMap((value) => {
