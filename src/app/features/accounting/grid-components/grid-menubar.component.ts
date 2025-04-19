@@ -1,21 +1,32 @@
-import { CommonModule } from "@angular/common";
+import { CommonModule   } from "@angular/common";
 import {
   Component,
   ChangeDetectionStrategy,
   output,
   input,
   inject,
+  OnInit,
+  AfterViewInit
 } from "@angular/core";
 import { MatButtonModule } from "@angular/material/button";
 import { MatIconModule } from "@angular/material/icon";
 import { MatToolbarModule } from "@angular/material/toolbar";
 import { MatTooltipModule } from "@angular/material/tooltip";
 import { ToastrService } from "ngx-toastr";
+import { IPeriod, IPeriodParam } from "app/models/period";
+import { Store } from '@ngrx/store';
+import { periodsFeature } from 'app/features/accounting/static/periods/periods.state';
+import { periodsPageActions } from 'app/features/accounting/static/periods/periods-page.actions';
+import { FormControl, FormGroup } from "@angular/forms";
+import { MatMenuModule } from '@angular/material/menu';
+import { MatSelectChange, MatSelectModule } from '@angular/material/select';
+import { map } from "rxjs";
+import { SettingsService } from "app/services/settings.service";
 
-let modules = [MatToolbarModule, MatIconModule, MatButtonModule, CommonModule,  MatTooltipModule];
+let modules = [MatToolbarModule, MatIconModule, MatButtonModule, CommonModule,  MatTooltipModule, MatSelectModule, MatMenuModule ];
 
 @Component({
-    standalone: true,
+    standalone: true,    
     selector: "grid-menubar",
     styles: [
         ` ::ng-deep.mat-menu-panel {
@@ -26,11 +37,30 @@ let modules = [MatToolbarModule, MatIconModule, MatButtonModule, CommonModule,  
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [modules],
     template: `
-    <mat-toolbar class="text-white font-sans bg-gray-500 text-2xl rounded-lg">  {{ inTitle() }} {{ prd() }}  {{prd_year()}}
+    <mat-toolbar class="text-white font-sans bg-gray-500 text-2xl rounded-lg">  {{ inTitle() }} 
+      
+      @if ((isLoading$ | async) === false)  {
+        @if(periods$ | async; as periods) {   
+          <!-- <button mat-icon-button [matMenuTriggerFor]="menu" color="primary"  class="m-1 bg-gray-200 md:visible" matTooltip="Periods"  >
+          <span class="e-icons text-bold e-timeline-agenda"></span>
+          </button> -->
+          <!-- <mat-menu #menu="matMenu">
+            @for ( period of periods; track period) {
+              <button mat-menu-item (selectionChange)="onSelectionChange($event)" [value]="period.description">{{ period.description }}</button>
+            }        
+          </mat-menu>       -->
+          <mat-select class="w-40 text-2xl ml-10" (selectionChange)="onSelectionChange($event)">
+          @for ( period of periods; track period) {
+             <mat-option [value]="period.description">
+                {{ period.description }}
+             </mat-option>
+          }
+          </mat-select>
+        }                    
+      }  
 
       <span class="flex-1"></span>
 
-      
       @if (showNew()) {
         <button mat-icon-button  (click)="onNew()" color="primary" class="m-1 bg-gray-200 md:visible" matTooltip="Add"  aria-label="NEW" >
           <span class="e-icons text-bold e-circle-add"></span>
@@ -91,9 +121,10 @@ let modules = [MatToolbarModule, MatIconModule, MatButtonModule, CommonModule,  
 })
 
 
-export class GridMenubarStandaloneComponent {
+export class GridMenubarStandaloneComponent implements OnInit, AfterViewInit  {
 
   private toast = inject(ToastrService);  
+  private settingsService = inject(SettingsService);
 
   public exportXL = output<string>();
   public exportPRD = output<string>();
@@ -109,6 +140,11 @@ export class GridMenubarStandaloneComponent {
   public inTitle = input<string>("General Ledger Transactions");
   public prd = input<string>();
   public prd_year = input<string>();
+  public periods = input<IPeriod[]>();
+
+  menuForm = new FormGroup({    
+    subtype: new FormControl('')    
+  });
 
   public showBack = input<boolean>(false);
   public showExportXL = input<boolean>(false);
@@ -121,8 +157,31 @@ export class GridMenubarStandaloneComponent {
   public showTemplate = input<boolean>(false);
   public period = output<string>();
 
-  public changePeriod() {    
-    this.period.emit('change');
+  store = inject(Store);
+  periods$ = this.store.select(periodsFeature.selectPeriods).pipe(
+    map((periods) => periods.filter((period) => period.status === 'OPEN')),    
+    map((periods) => periods.slice(0, 12)) // Limit to 12 items
+  );
+
+  selectedPeriods$ = this.store.select(periodsFeature.selectSelectedPeriod);
+  isLoading$ = this.store.select(periodsFeature.selectIsLoading);
+
+  currentPeriod = 'January 2025';
+
+  ngOnInit() {    
+      this.store.dispatch(periodsPageActions.load()); 
+  }
+
+  ngAfterViewInit() {
+    this.periods$.subscribe((periods) => {
+      if (periods.length > 0) {
+         this.currentPeriod = periods[0].description; 
+      }
+    });
+  }
+  public onSelectionChange(event:  MatSelectChange) {            
+    this.toast.success('Period Updated : ' + event.value, 'Success' );
+    this.period.emit('changed period ' + event.value);
   }
 
   public onNew() {    

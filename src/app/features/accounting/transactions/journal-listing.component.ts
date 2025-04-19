@@ -319,18 +319,9 @@ export class JournalEntryComponent implements AfterViewInit  {
         var year =  this.journalStore.currentYear();
         var period = this.journalStore.currentPeriod();
 
-        year = 2025;
-        period = 1;
-
         this.periodParam = { period: period, period_year: year };
        
         this.store.dispatch(loadJournalHeaderByPeriod({ period: this.periodParam }));
-
-        this.journalHeader$.subscribe((res) => {
-            if (res) {
-                console.debug('Journals Loaded', res);
-            }
-        });
 
         this.toolbarTitle = "Journal Transactions by Period ";
         this.periodForm = this.fb.group({
@@ -345,7 +336,7 @@ export class JournalEntryComponent implements AfterViewInit  {
         this.toolbarOptions = ['Search'];
         this.filterSettings = { type: 'Excel' };
         this.lines = 'Both';
-        // this.openDrawer()
+        this.onPatchFlyout();
 
     }
 
@@ -374,7 +365,7 @@ export class JournalEntryComponent implements AfterViewInit  {
         }
     }
 
-    public openDrawer() {        
+    public onPatchFlyout() {        
         this.periodForm.patchValue({ period: this.periodParam.period, period_year: this.periodParam.period_year });                
     }
 
@@ -492,7 +483,7 @@ export class JournalEntryComponent implements AfterViewInit  {
                 this.onTemplate();
                 break;
             case 'Settings':
-                this.openDrawer();
+                this.drawer().toggle();
                 break;
         }
     }

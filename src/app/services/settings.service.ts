@@ -27,6 +27,7 @@ export class SettingsService {
     return this.httpClient.get<ISettings[]>(url).pipe(shareReplay({ bufferSize: 1, refCount: true }))
   }
 
+  
   delete(setting: ISettings) {
     var url = this.baseUrl + '/v1/delete_setting';
     return this.httpClient.post<ISettings[]>(url, setting).pipe(shareReplay({ bufferSize: 1, refCount: true }))

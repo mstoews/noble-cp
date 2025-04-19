@@ -12,13 +12,12 @@ import { MatDrawer } from '@angular/material/sidenav';
 import { MaterialModule } from 'app/shared/material.module';
 import { GridMenubarStandaloneComponent } from '../../grid-components/grid-menubar.component';
 import { AggregateService, ColumnMenuService, EditService, FilterService, FilterSettingsModel, GridModule, GroupService, PageService, ResizeService, SearchSettingsModel, SelectionSettingsModel, SortService, ToolbarItems, ToolbarService } from '@syncfusion/ej2-angular-grids';
-import { PeriodStore } from 'app/store/periods.store';
 import { GLGridComponent } from '../../grid-components/gl-grid.component';
 import { IPeriod } from 'app/models/period';
 import { Store } from '@ngrx/store';
 import { periodsPageActions } from 'app/features/accounting/static/periods/periods-page.actions';
 import { periodsFeature } from 'app/features/accounting/static/periods/periods.state';
-import { toSignal } from '@angular/core/rxjs-interop';
+
 
 const imports = [
     CommonModule,
@@ -142,7 +141,7 @@ const imports = [
             </mat-drawer-container>
         </div>
     `,
-    providers: [PeriodStore, SortService, GroupService, PageService, ResizeService, FilterService, ToolbarService, EditService, AggregateService, ColumnMenuService,]
+    providers: [SortService, GroupService, PageService, ResizeService, FilterService, ToolbarService, EditService, AggregateService, ColumnMenuService,]
 })
 export class PeriodsComponent implements OnInit {
 
@@ -227,9 +226,10 @@ export class PeriodsComponent implements OnInit {
             create_date: periods.create_date,
             create_user: periods.create_user,
             update_date: createDate,
-            update_user: '@admin'
+            update_user: '@admin',
+            status: periods.status
         };
-        this.store.dispatch(periodsPageActions.updatePeriod({ period: rawData }));
+       this.store.dispatch(periodsPageActions.updatePeriod({ period: rawData }));
     }
 
 
@@ -300,7 +300,8 @@ export class PeriodsComponent implements OnInit {
             create_date: periods.create_date,
             create_user: periods.create_user,
             update_date: updateDate,
-            update_user: '@admin'
+            update_user: '@admin',
+            status: periods.status
         };
 
         this.store.dispatch(periodsPageActions.updatePeriod({ period: rawData }));

@@ -1,4 +1,4 @@
-export interface IPeriod {
+export interface IPeriod {  
   id: number,
   period : number,
   period_year: number,
@@ -8,7 +8,8 @@ export interface IPeriod {
   create_date: string,
   create_user: string,
   update_date: string,
-  update_user: string
+  update_user: string,
+  status: string, 
 }
 
 export interface IPeriodParam {

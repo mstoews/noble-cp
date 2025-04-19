@@ -5,6 +5,7 @@ import { JournalService } from 'app/services/journal.service';
 
 @Component({
   selector: 'journal-route',
+  providers: [JournalService],
   imports: [MatProgressSpinner],
   template: `
       <div id="settings" class="w-full control-section default-splitter flex flex-col overflow-hidden">    
@@ -18,13 +19,13 @@ import { JournalService } from 'app/services/journal.service';
 })
 export class JournalRouteComponent {
   router = inject(Router);
-  journalServer = inject(JournalService);
+  journalService = inject(JournalService);
   constructor() {
     
     var journal_id = 1;
     // this.router.navigate(["journals/gl", journal_id]);
 
-    this.journalServer.getLastJournalNo().subscribe((journal_no) => {
+    this.journalService.getLastJournalNo().subscribe((journal_no) => {
       console.log(journal_no);
       journal_id = journal_no-1;
       this.router.navigate(["journals/gl", journal_id]);
