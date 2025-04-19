@@ -31,7 +31,7 @@ import { IPeriod, IPeriodParam } from 'app/models/period';
 import { ISubType } from 'app/models/subtypes';
 import { FundsService } from 'app/features/accounting/static/funds/funds.service';
 import { EvidenceService } from 'app/services/evidence.service';
-
+import { SettingsService } from 'app/services/settings.service';
 
 export interface JournalStateInterface {
   currentJournal: IJournalHeader;
@@ -71,13 +71,15 @@ export const JournalStore = signalStore(
     artifacts: [],
     error: null,
     isLoading: false,
-    currentPeriod: 1,
-    currentYear: 2025,
+    currentPeriod: 0,
+    currentYear: 0,
   }),
   withComputed((state) => ({
   })),
   withMethods((state,
+    
     fundsService = inject(FundsService),
+    settingsService = inject(SettingsService),
     evidenceService = inject(EvidenceService),
     journalService = inject(JournalService)) => ({
       removeJournalHeader: rxMethod<IJournalHeader>(
@@ -185,7 +187,7 @@ export const JournalStore = signalStore(
             );
           })
         )
-      ),
+      ),      
       updateJournalDetail: rxMethod<IJournalDetail>(
         pipe(
           tap(() => patchState(state, { isLoading: true })),
@@ -491,7 +493,7 @@ export const JournalStore = signalStore(
       store.loadFunds();
       store.loadPeriod('Period');
       store.loadYear('Year');
-      store.loadMaxJournal();
+      store.loadMaxJournal();      
     },
   }))
 

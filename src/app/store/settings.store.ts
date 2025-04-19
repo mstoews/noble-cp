@@ -68,7 +68,7 @@ export const SettingsStore = signalStore(
           );
         })
       )
-    ),
+    ),    
     readSettings: rxMethod<void>(
       pipe(
         tap(() => patchState(state, { isLoading: true })),
@@ -84,6 +84,8 @@ export const SettingsStore = signalStore(
       )
     ),
   })),
+  
+  
   withHooks({
     onInit(store) {
       store.readSettings();

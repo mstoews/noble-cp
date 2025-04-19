@@ -192,7 +192,7 @@
   "cli": {
     "analytics": false,
     "cache": {
-      "enabled": true
+      "enabled": false
     }
   }
 }

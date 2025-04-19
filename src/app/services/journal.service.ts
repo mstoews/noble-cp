@@ -37,13 +37,22 @@ export class JournalService implements OnDestroy {
     var url = this.baseUrl + '/v1/read_journal_template';
     return this.httpClient.get<IJournalTemplate[]>(url).pipe(
       catchError(err => {
-        const message = "Failed to connect to server for templates ...";
+        const message = "Failed to read journals templates ...";
         this.ShowAlert(message, 'failed');
         return throwError(() => new Error(`${JSON.stringify(err)}`));
       }),
       shareReplay({ bufferSize: 1, refCount: true }));
   }
 
+  updateCurrentPeriod(period: IPeriodParam) {
+    var url = this.baseUrl + '/v1/update_current_period';
+    return this.httpClient.post<IPeriodParam>(url, period).pipe(
+      catchError(err => {const message = "Failed to read journals templates ...";
+        this.ShowAlert(message, 'failed');
+        return throwError(() => new Error(`${JSON.stringify(err)}`));
+      }),
+      shareReplay({ bufferSize: 1, refCount: true }))
+  }
   createJournalTemplate(params: ITemplateParams) {
     var url = this.baseUrl + '/v1/create_journal_template';
     return this.httpClient.post<IJournalTemplate>(url, params).pipe(

@@ -117,8 +117,8 @@ export class APTransactionComponent implements OnInit {
 
   public transType: string = "AP";
   public toolbarTitle = "Accounts Payable";
-  public prd = 1;
-  public prd_year = 2025;
+  public prd = 0;
+  public prd_year = 0;
 
   public openDrawer = false;
 

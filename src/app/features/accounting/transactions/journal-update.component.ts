@@ -135,7 +135,7 @@ const imp = [
                                 <subtype-drop-down [dropdownList]="subtypeList" controlKey="subtype" label="Sub Type" #subtypeDropDown></subtype-drop-down>
                             }
                                                                     
-                            
+                            <!-- Funds  -->                                        
                             @if (funds$ | async; as funds) {
                             <mat-form-field class="flex-col ml-2 mr-2 mt-1 grow ">
                                 <mat-label class="text-md ml-2">Funds</mat-label>
@@ -150,22 +150,21 @@ const imp = [
                             </mat-form-field>
                             } 
 
-                            <!-- Name  -->
+                            <!-- Reference  -->
 
-                            <!-- <mat-form-field class="flex-col ml-2 mr-2 mt-1 grow">
-                                <mat-label class="text-md ml-2">Description</mat-label>
-                                <input matInput placeholder="Name" formControlName="template_name" [placeholder]="'Name'" />
+                            <mat-form-field class="flex-col ml-2 mr-2 mt-1 grow">
+                                <mat-label class="text-md ml-2">Reference</mat-label>
+                                <input matInput placeholder="Reference" formControlName="reference" [placeholder]="'Reference'" />
                                 <mat-icon class="icon-size-5 text-lime-700" matSuffix  [svgIcon]="'heroicons_solid:calculator'"></mat-icon>
-                            </mat-form-field> -->
+                            </mat-form-field> 
+                            
                             
                             <!-- Description  -->
 
                             <mat-form-field class="flex-col ml-2 mr-2 mt-1 grow">
                                 <mat-label class="text-md ml-2">Description</mat-label>
-                                <input matInput placeholder="Description" formControlName="description"
-                                    [placeholder]="'Description'" />
-                                <mat-icon class="icon-size-5 text-lime-700" matSuffix
-                                    [svgIcon]="'heroicons_solid:calculator'"></mat-icon>
+                                <input matInput placeholder="Description" formControlName="description" [placeholder]="'Description'" />
+                                <mat-icon class="icon-size-5 text-lime-700" matSuffix [svgIcon]="'heroicons_solid:calculator'"></mat-icon>
                             </mat-form-field>
                             
 
@@ -646,8 +645,7 @@ const imp = [
     ],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class JournalUpdateComponent
-    implements OnInit, OnDestroy, AfterViewInit {
+export class JournalUpdateComponent implements OnInit, OnDestroy, AfterViewInit {
 
     @Output() notifyDrawerClose: EventEmitter<any> = new EventEmitter();
 
@@ -661,7 +659,7 @@ export class JournalUpdateComponent
     private activatedRoute = inject(ActivatedRoute);
     private toastr = inject(ToastrService);
     private journalService = inject(JournalService);
-    public fuseConfirmationService = inject(FuseConfirmationService);
+    public  fuseConfirmationService = inject(FuseConfirmationService);
 
     public matDialog = inject(MatDialog);
     public journalForm!: FormGroup;
@@ -771,16 +769,13 @@ export class JournalUpdateComponent
     singlePartySelect = viewChild<MatSelect>("singlePartySelect");
 
     Store = inject(Store);
+    toast = inject(ToastrService);
+    
     accounts$ = this.Store.select(accountsFeature.selectChildren);
     isLoading$ = this.Store.select(accountsFeature.selectIsLoading);
 
     funds$ = this.Store.select(fromFunds.selectFunds);
     isFundsLoading$ = this.Store.select(fromFunds.isFundsLoading);
-
-    //subtype$ = this.Store.select(subTypePageActions.loadDropdown);
-
-    toast = inject(ToastrService);
-
     subtypes$ = this.Store.select(subtypeFeature.selectSubtype);
     isSubtypeLoading$ = this.Store.select(subtypeFeature.selectIsLoading);
 

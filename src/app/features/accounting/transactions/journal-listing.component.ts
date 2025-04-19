@@ -14,6 +14,9 @@ import { isJournalLoading, selectJournals } from 'app/features/accounting/transa
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { JournalCardComponent } from "./journal-card.component";
+import { JournalStore } from 'app/store/journal.store';
+import { IPeriodParam } from 'app/models/period';
+import { SettingsService } from 'app/services/settings.service';
 
 
 const providers = [
@@ -92,11 +95,11 @@ const imports = [
         </mat-card>
     </mat-drawer> 
     <mat-drawer-container id="target" class="flex flex-col min-w-0 overflow-y-auto -px-10 h-[calc(100vh-21.5rem)] ">    
-        <mat-card>
-            @if (isVisible === true) {
+        <mat-card>            
             <div class="flex-auto">                    
-                        @defer (on viewport; on timer(300ms)) {                            
-                            @if(journalHeader$  | async; as journals  ) {                              
+                        
+                        @if(journalHeader$  | async; as journals  ) {  
+
                             <ng-container>                     
                                 <ejs-grid #grid id="grid"
                                     [dataSource]="journals | filterType : transactionType()"                                    
@@ -227,43 +230,22 @@ const imports = [
                             </ng-container> 
                             
                             }
-                            @else {
+                        @else {
                             <div class="flex justify-center items-center">
                                 <mat-spinner></mat-spinner>
                             </div>
-                            }
-                        }
+                        } 
+                        
+                        <!-- @else  {
                         @placeholder(minimum 200ms) {
                             <div class="flex justify-center items-center">
                             <mat-spinner></mat-spinner>
                             </div>
-                        }                                    
+                        }       
+                    }                              -->
             </div>
-            }
-            @else {
-                <div class="flex flex-col justify-center items-center dark:bg-gray-100 bg-slate-500 rounded-md">
-                    @if(journalHeader$  | async; as journals  ) {                                                  
-                            @for (journal of journals; track journal.journal_id) {                                
-                                    <mat-card class="flex-auto m-1 p-2 bg-gray-100 dark:bg-gray-400 shadow rounded-xl dark:text-gray-200 overflow-hidden hover:cursor-pointer">
-                                     <div>Journal : {{journal.journal_id}} -  {{journal.type}} </div>
-                                     <div>Description : {{journal.description}} </div>                                    
-                                        {{journal.transaction_date}}                                    
-                                        {{journal.amount}}
-                                        {{journal.period_year}}
-                                        {{journal.period}}
-                                        {{journal.create_date}}
-                                        {{journal.create_user}}
-                                        {{journal.party_id}}
-                                        {{journal.status}}
-                                        {{journal.booked}}
-                                    </mat-card>
-                                    <journal-card [journalHeader]="journal"></journal-card>   
-                                
-                            }                    
-                    }
-                </div>
-            }
-         </mat-card>   
+        </mat-card>       
+         
 
          <ejs-contextmenu              
              target='#target' 
@@ -283,15 +265,17 @@ const imports = [
     `,
     providers: [providers]
 })
-export class JournalEntryComponent implements OnInit, OnDestroy, AfterViewInit  {
+export class JournalEntryComponent implements AfterViewInit  {
 
     public route = inject(Router);
     public store = inject(Store);
     public toast = inject(ToastrService);
+    public journalStore = inject(JournalStore);
+    public settingsService = inject(SettingsService);
+    
     private fb = inject(FormBuilder);
 
     public isVisible = true;
-
 
     public periodForm!: FormGroup;
     public transactionType = input('');
@@ -317,6 +301,7 @@ export class JournalEntryComponent implements OnInit, OnDestroy, AfterViewInit  
     journalHeader$ = this.store.select(selectJournals);
     isJournalLoading$ = this.store.select(isJournalLoading);
 
+    
     periodParam = { period: 1, period_year: 2025 };
 
     public groupSettings: { [x: string]: Object } = { showDropArea: true };
@@ -330,14 +315,27 @@ export class JournalEntryComponent implements OnInit, OnDestroy, AfterViewInit  
     collapsed = false;
 
     ngOnInit() {
-       
 
+        var year =  this.journalStore.currentYear();
+        var period = this.journalStore.currentPeriod();
+
+        year = 2025;
+        period = 1;
+
+        this.periodParam = { period: period, period_year: year };
+       
         this.store.dispatch(loadJournalHeaderByPeriod({ period: this.periodParam }));
+
+        this.journalHeader$.subscribe((res) => {
+            if (res) {
+                console.debug('Journals Loaded', res);
+            }
+        });
 
         this.toolbarTitle = "Journal Transactions by Period ";
         this.periodForm = this.fb.group({
-            period: ['', Validators.required],
-            period_year: ['', Validators.required],
+            period: [period.toString(), Validators.required],
+            period_year: [year.toString(), Validators.required],
         });
 
         this.formatoptions = { type: 'dateTime', format: 'M/dd/yyyy' }
@@ -347,7 +345,7 @@ export class JournalEntryComponent implements OnInit, OnDestroy, AfterViewInit  
         this.toolbarOptions = ['Search'];
         this.filterSettings = { type: 'Excel' };
         this.lines = 'Both';
-        this.openDrawer()
+        // this.openDrawer()
 
     }
 
@@ -421,24 +419,14 @@ export class JournalEntryComponent implements OnInit, OnDestroy, AfterViewInit  
     public onDelete(e: any) {
         console.debug('onDelete')
     }
-
     public onUpdate($event: any) {
         var period = this.periodForm.getRawValue();
-        var periodParam = { period: Number(period.period), period_year: Number(period.period_year) };        
-        this.store.dispatch(loadJournalHeaderByPeriod({ period: periodParam }));
+        var periodPrm = { period: period.period(), period_year: period.period_year()} as IPeriodParam; 
+        this.settingsService.updateCurrentPeriod(periodPrm).subscribe((res) => {
+            this.toast.success('Period Updated : ' + periodPrm.period + ' - ' + periodPrm.period_year);
+        });
+        this.store.dispatch(loadJournalHeaderByPeriod({ period: periodPrm }));
         this.closeDrawer();
-    }
-
-    public onBooked(booked: boolean) {
-
-    }
-
-    updateBooked() {
-
-    }
-
-    ngOnDestroy() {
-
     }
 
     journalColumns = [

@@ -4,6 +4,7 @@ import { environment } from 'environments/environment.prod';
 import { IGridSettingsModel } from './grid.settings.service';
 import { ISettings } from 'app/models';
 import { shareReplay } from 'rxjs';
+import { IPeriodParam } from 'app/models/period';
 
 @Injectable({
   providedIn: 'root'
@@ -21,8 +22,8 @@ export class SettingsService {
     return this.httpClient.get<ISettings[]>(url).pipe(shareReplay({ bufferSize: 1, refCount: true }))
   }
 
-  read_by_id() {
-    var url = this.baseUrl + '/v1/read_setting_by_id';
+  read_by_value(value: string) {
+    var url = this.baseUrl + '/v1/read_settings_value_by_id/:' + value;
     return this.httpClient.get<ISettings[]>(url).pipe(shareReplay({ bufferSize: 1, refCount: true }))
   }
 
@@ -35,6 +36,16 @@ export class SettingsService {
     var url = this.baseUrl + '/v1/update_setting';
     return this.httpClient.post<ISettings[]>(url, setting).pipe(shareReplay({ bufferSize: 1, refCount: true }))
   }
+
+  updateCurrentPeriod(prdParm: IPeriodParam ) {
+    const prd = {
+      period: prdParm.period,
+      year: prdParm.period_year
+    }
+    var url = this.baseUrl + '/v1/update_current_period';
+    return this.httpClient.post<IPeriodParam>(url, prd).pipe(shareReplay({ bufferSize: 1, refCount: true }))
+  }
+
 }
 
 

@@ -23,7 +23,6 @@ import { ApplicationService, MainPanelStore } from 'app/store/main.panel.store';
 import { ActivatedRoute } from '@angular/router';
 import { JournalTemplateUpdateComponent } from './journal-template-update.component';
 import { GLTransactionGridComponent } from './transaction-grid.component';
-import { PdfExportComponent } from '../grid-components/pdf-export.component';
 import { SpreadsheetViewComponent } from '../grid-components/spreadsheet-view.component';
 
 const imports = [
@@ -38,7 +37,7 @@ const imports = [
     CdkScrollable,
     JournalTemplateUpdateComponent,
     GLTransactionGridComponent,
-    PdfExportComponent,
+    
     SpreadsheetViewComponent
 
     
@@ -115,8 +114,7 @@ const imports = [
                                 @case ('tp')    { <journal-template></journal-template>  }
                                 @case ('at')    { <app-file-manager></app-file-manager>}
                                 @case ('tmp')   { <gl-journal-template></gl-journal-template>}
-                                @case ('grid')  { <gl-grid-transactions></gl-grid-transactions> }
-                                @case ('pdf')   { <pdf-export></pdf-export> }
+                                @case ('grid')  { <gl-grid-transactions></gl-grid-transactions> }            
                                 @case ('xls')   { <spreadsheet-view></spreadsheet-view> }
 
                                 
@@ -210,12 +208,7 @@ export class TransactionMainComponent implements OnInit, OnDestroy {
                 title: 'Payments',
                 description: 'Pay your bills and manage your accounts payable',
             },
-            {
-                id: 'pdf',
-                icon: 'heroicons_outline:document-duplicate',
-                title: 'PDF Export',
-                description: 'Export your transactions to PDF',
-            },
+            
             {
                 id: 'tmp',
                 icon: 'heroicons_outline:document-duplicate',
