@@ -17,17 +17,24 @@ export class SettingsService {
     var url = this.baseUrl + '/v1/create_setting';
     return this.httpClient.post<ISettings>(url, setting).pipe(shareReplay({ bufferSize: 1, refCount: true }))
   }
+
+  update_current_period(period_description : string) {
+    var url = this.baseUrl + '/v1/update_period_by_description';
+    const period_param = {
+      description: period_description
+    }
+    return this.httpClient.post<string>(url, period_param).pipe(shareReplay({ bufferSize: 1, refCount: true }))
+  }
   read() {
     var url = this.baseUrl + '/v1/read_all_settings';
     return this.httpClient.get<ISettings[]>(url).pipe(shareReplay({ bufferSize: 1, refCount: true }))
   }
 
   read_by_value(value: string) {
-    var url = this.baseUrl + '/v1/read_settings_value_by_id/:' + value;
-    return this.httpClient.get<ISettings[]>(url).pipe(shareReplay({ bufferSize: 1, refCount: true }))
+    var url = this.baseUrl + '/v1/read_settings_value_by_id/' + value;
+    return this.httpClient.get<string>(url).pipe(shareReplay({ bufferSize: 1, refCount: true }))
   }
 
-  
   delete(setting: ISettings) {
     var url = this.baseUrl + '/v1/delete_setting';
     return this.httpClient.post<ISettings[]>(url, setting).pipe(shareReplay({ bufferSize: 1, refCount: true }))

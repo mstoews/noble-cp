@@ -1,6 +1,6 @@
 {
   "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
-  "version": 1,  
+  "version": 1,
   "newProjectRoot": "projects",
   "projects": {
     "nobleledger": {
@@ -59,7 +59,7 @@
               "rgbcolor",
               "core-js",
               "jspdf-autotable",
-              "raf"              
+              "raf"
             ],
             "assets": [
               "src/assets",
@@ -82,7 +82,8 @@
               "src/@fuse/styles/main.scss",
               "src/styles/styles.scss",
               "src/styles/tailwind.scss",
-              "node_modules/ngx-toastr/toastr.css"
+              "node_modules/ngx-toastr/toastr.css",
+              "./node_modules/@syncfusion/ej2-material-theme/styles/material.css"
             ],
             "scripts": []
           },
@@ -114,9 +115,9 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-             "proxyConfig": "src/proxy.conf.json",
-             "prebundle": false
-           },
+            "proxyConfig": "src/proxy.conf.json",
+            "prebundle": false
+          },
           "configurations": {
             "production": {
               "buildTarget": "nobleledger:build:production",
@@ -151,7 +152,8 @@
             ],
             "styles": [
               "@angular/material/prebuilt-themes/deeppurple-amber.css",
-              "src/styles/styles.scss"
+              "src/styles/styles.scss",
+              "./node_modules/@syncfusion/ej2-material-theme/styles/material.css"
             ],
             "scripts": []
           }
@@ -197,4 +199,3 @@
     }
   }
 }
-

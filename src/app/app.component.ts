@@ -1,5 +1,6 @@
 import { trigger, transition, query, style, group, animate } from '@angular/animations';
 import { Component, inject } from '@angular/core';
+import { KanbanModule } from '@syncfusion/ej2-angular-kanban';
 import { RouterOutlet } from '@angular/router';
 import { ApplicationService } from './services/application.service';
 import { AuthService } from './features/auth/auth.service';
@@ -16,7 +17,7 @@ import { ApplicationStore } from './store/application.store';
                 width: 100%;
                 height: 100%;
             }`,
-    imports: [RouterOutlet],
+    imports: [KanbanModule, RouterOutlet],
     providers: [ApplicationStore],
     animations: [
         trigger('routerTransition', [

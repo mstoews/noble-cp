@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { AfterViewInit, Component, Input, OnDestroy, OnInit, inject, input, viewChild } from '@angular/core';
-import { ControlContainer, FormControl, FormGroup, ReactiveFormsModule} from '@angular/forms';
+import { AfterViewInit, Component, Input, OnDestroy, OnInit, forwardRef, inject, input, viewChild } from '@angular/core';
+import { ControlContainer, ControlValueAccessor, FormControl, FormGroup, NG_VALUE_ACCESSOR, ReactiveFormsModule} from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSelect, MatSelectModule } from '@angular/material/select';
 import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
@@ -34,16 +34,43 @@ import { IPeriod } from 'app/models/period';
   viewProviders: [
     {
         provide: ControlContainer,
-        useFactory: () => inject(ControlContainer, { skipSelf: true })
-    }
+        useFactory: () => inject(ControlContainer, { skipSelf: true }),
+
+    },
+    {
+      provide: NG_VALUE_ACCESSOR,
+      useExisting: forwardRef(() => PeriodsDropDownComponent),
+      multi: true,
+    },
   ],
 })
-export class PeriodsDropDownComponent implements OnInit, OnDestroy, AfterViewInit {
+export class PeriodsDropDownComponent implements OnInit, OnDestroy, AfterViewInit, ControlValueAccessor {
+
+  value: string;
+
+  onChange = (value: string) => {};
+  onTouched = () => {};
+
+  writeValue(value: string): void {
+    this.value = value;
+    this.onChange(value);
+  }
+
+  registerOnChange(fn: any): void {
+    this.onChange = fn;
+  }
+
+  registerOnTouched(fn: any): void {
+    this.onTouched = fn;
+  }
+
   protected _onDestroyTemplateFilter = new Subject<void>();
   protected _onTemplateDestroy = new Subject<void>();
 
   @Input({ required: true }) controlKey = '';
   @Input() label = '';
+
+
   
   parentContainer = inject(ControlContainer);  
     

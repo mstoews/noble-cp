@@ -22,12 +22,12 @@ const imports = [
   imports: [imports, GridMenubarStandaloneComponent, SummaryCardComponent],
   template: `
     <div id="settings" class="control-section default-splitter flex flex-col overflow-hidden">
-    <grid-menubar class="ml-1 mr-1 w-full" [inTitle]="toolbarTitle" 
-      (openSettings)=onOpenSettings()
-      (print)=onPrinting()
-    ></grid-menubar>
-    <div class="grid grid-row-3 overflow-hidden">
-    <div class="flex flex-col min-w-0 overflow-y-auto -px-10" cdkScrollable>
+      <grid-menubar class="ml-1 mr-1 w-full" [inTitle]="toolbarTitle" 
+        (openSettings)=onOpenSettings()
+        (print)=onPrinting()
+      ></grid-menubar>
+      <div class="grid grid-row-3 overflow-hidden">
+      <div class="flex flex-col min-w-0 overflow-y-auto -px-10" cdkScrollable>
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 w-full min-w-0 overflow-hidden">
             
             <div (click)="onReceipts()" class="flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden m-2 hover:cursor-pointer">

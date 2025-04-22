@@ -25,7 +25,7 @@ export class LemonRaterComponent implements ControlValueAccessor, AfterViewInit 
   @ViewChild('displayText', { static: false }) displayTextRef!: ElementRef
   disabled = false
 
-  private internalValue!: number
+  private internalValue!: number 
   get value() {
     return this.internalValue
   }
@@ -90,7 +90,6 @@ export class LemonRaterComponent implements ControlValueAccessor, AfterViewInit 
     if (value) {
       text = this.ratings.find((i) => i.value === value)?.text || ''
     }
-
     return text
   }
 }

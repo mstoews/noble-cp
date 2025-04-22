@@ -114,7 +114,8 @@
     "ts-enum-util": "^4.1.0",
     "tslib": "2.4.1",
     "xlsx": "https://cdn.sheetjs.com/xlsx-0.20.3/xlsx-0.20.3.tgz",
-    "zone.js": "0.15.0"
+    "zone.js": "0.15.0",
+    "@syncfusion/ej2-material-theme": "~29.1.37"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "19.2.4",

@@ -121,7 +121,7 @@ const imports = [
       </div>
     </div>
     `,
-  styleUrl: './tasks.component.scss',
+  styleUrl: './tasks.component.css',
   providers: [provideNativeDateAdapter(), KanbanStore],
   changeDetection: ChangeDetectionStrategy.OnPush
 })

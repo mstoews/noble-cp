@@ -6,10 +6,12 @@ import { of } from 'rxjs';
 import { PeriodsService } from 'app/services/periods.service';
 import { periodsPageActions } from './periods-page.actions';
 import { periodsAPIActions } from './periods.actions';
+import { SettingsService } from 'app/services/settings.service';
 
 export class periodEffects {
   actions$ = inject(Actions);
   periodService = inject(PeriodsService);
+  settingsService = inject(SettingsService);
 
 
   loadPeriods$ = createEffect(() =>
@@ -27,6 +29,23 @@ export class periodEffects {
       )
     )
   );
+
+  current$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(periodsPageActions.current),
+      concatMap(() =>
+        this.settingsService.read_by_value('CurrentPeriod').pipe(
+          map((current) => periodsAPIActions.loadCurrentPeriod({ 
+              current: current 
+            } ) ),
+          catchError((error) =>
+            of(periodsAPIActions.loadPeriodsFailure({ error }))
+          )
+        )
+      )
+    )
+  );
+
 
   addPeriod$ = createEffect(() =>
     this.actions$.pipe(

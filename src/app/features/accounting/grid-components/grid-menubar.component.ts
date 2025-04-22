@@ -6,7 +6,8 @@ import {
   input,
   inject,
   OnInit,
-  AfterViewInit
+  AfterViewInit,
+  viewChild
 } from "@angular/core";
 import { MatButtonModule } from "@angular/material/button";
 import { MatIconModule } from "@angular/material/icon";
@@ -19,11 +20,12 @@ import { periodsFeature } from 'app/features/accounting/static/periods/periods.s
 import { periodsPageActions } from 'app/features/accounting/static/periods/periods-page.actions';
 import { FormControl, FormGroup } from "@angular/forms";
 import { MatMenuModule } from '@angular/material/menu';
-import { MatSelectChange, MatSelectModule } from '@angular/material/select';
-import { map } from "rxjs";
+import { MatSelect, MatSelectChange, MatSelectModule } from '@angular/material/select';
+import { map, Observable } from "rxjs";
 import { SettingsService } from "app/services/settings.service";
+import { PeriodsDropDownComponent } from "./drop-down.periods.component";
 
-let modules = [MatToolbarModule, MatIconModule, MatButtonModule, CommonModule,  MatTooltipModule, MatSelectModule, MatMenuModule ];
+let modules = [MatToolbarModule, MatIconModule, MatButtonModule, CommonModule,  MatTooltipModule, MatSelectModule, MatMenuModule];
 
 @Component({
     standalone: true,    
@@ -38,28 +40,25 @@ let modules = [MatToolbarModule, MatIconModule, MatButtonModule, CommonModule,  
     imports: [modules],
     template: `
     <mat-toolbar class="text-white font-sans bg-gray-500 text-2xl rounded-lg">  {{ inTitle() }} 
+
+
+    <span class="flex-1"></span>
       
       @if ((isLoading$ | async) === false)  {
-        @if(periods$ | async; as periods) {   
-          <!-- <button mat-icon-button [matMenuTriggerFor]="menu" color="primary"  class="m-1 bg-gray-200 md:visible" matTooltip="Periods"  >
-          <span class="e-icons text-bold e-timeline-agenda"></span>
-          </button> -->
-          <!-- <mat-menu #menu="matMenu">
-            @for ( period of periods; track period) {
-              <button mat-menu-item (selectionChange)="onSelectionChange($event)" [value]="period.description">{{ period.description }}</button>
-            }        
-          </mat-menu>       -->
-          <mat-select class="w-40 text-2xl ml-10" (selectionChange)="onSelectionChange($event)">
-          @for ( period of periods; track period) {
-             <mat-option [value]="period.description">
-                {{ period.description }}
-             </mat-option>
-          }
-          </mat-select>
+        @if(periods$ | async; as periods) { 
+          <mat-form-field class="w-50 text-2xl mt-5 ml-15 rounded-lg bg-transparent">              
+            <mat-select [value]="current_period"  [formControl]="selectControl" #periodDropdownSelection (selectionChange)="onSelectionChange($event)">
+              @for ( period of periods; track period) {
+                <mat-option [value]="period.description">
+                    {{ period.description }}
+                </mat-option>
+              }              
+            </mat-select>            
+            <!-- <mat-icon class="icon-size-7" color="primary" matSuffix  [svgIcon]="'heroicons_solid:calendar-days'"  matTooltip="Period"  ></mat-icon> -->
+          </mat-form-field>
         }                    
-      }  
-
-      <span class="flex-1"></span>
+      }
+            
 
       @if (showNew()) {
         <button mat-icon-button  (click)="onNew()" color="primary" class="m-1 bg-gray-200 md:visible" matTooltip="Add"  aria-label="NEW" >
@@ -124,7 +123,8 @@ let modules = [MatToolbarModule, MatIconModule, MatButtonModule, CommonModule,  
 export class GridMenubarStandaloneComponent implements OnInit, AfterViewInit  {
 
   private toast = inject(ToastrService);  
-  private settingsService = inject(SettingsService);
+  private settingsService = inject(SettingsService);  
+  public store = inject(Store);
 
   public exportXL = output<string>();
   public exportPRD = output<string>();
@@ -157,30 +157,44 @@ export class GridMenubarStandaloneComponent implements OnInit, AfterViewInit  {
   public showTemplate = input<boolean>(false);
   public period = output<string>();
 
-  store = inject(Store);
+  public selectedPeriod = output<string>();
+  
   periods$ = this.store.select(periodsFeature.selectPeriods).pipe(
     map((periods) => periods.filter((period) => period.status === 'OPEN')),    
     map((periods) => periods.slice(0, 12)) // Limit to 12 items
   );
-
+  
   selectedPeriods$ = this.store.select(periodsFeature.selectSelectedPeriod);
   isLoading$ = this.store.select(periodsFeature.selectIsLoading);
 
-  currentPeriod = 'January 2025';
+  currentPeriod$!:  Observable<string>
+  current_period: string = '';
+
+  public periodDropdownSelect = viewChild<MatSelect>("periodDropdownSelection");
 
   ngOnInit() {    
-      this.store.dispatch(periodsPageActions.load()); 
+      this.store.dispatch(periodsPageActions.load());       
+      this.currentPeriod$ = this.settingsService.read_by_value('CurrentPeriod');      
   }
-
   ngAfterViewInit() {
-    this.periods$.subscribe((periods) => {
-      if (periods.length > 0) {
-         this.currentPeriod = periods[0].description; 
+    this.currentPeriod$.subscribe((current) => {
+      this.current_period = current;
+      this.selectedPeriod.emit(current);
+      if (this.current_period === undefined || this.current_period === null) {
+        this.periodDropdownSelect().value = this.current_period;
       }
+    });    
+
+    this.periodDropdownSelect().valueChange.subscribe((value) => {
+      this.current_period = value;
     });
   }
-  public onSelectionChange(event:  MatSelectChange) {            
-    this.toast.success('Period Updated : ' + event.value, 'Success' );
+  public onSelectionChange(event:  MatSelectChange) {                
+    this.current_period = event.value;    
+    this.settingsService.update_current_period(event.value).subscribe((response) => {
+      this.toast.success('Period Updated : ' + event.value, 'Success' );
+      this.store.dispatch(periodsPageActions.current());      
+    });
     this.period.emit('changed period ' + event.value);
   }
 

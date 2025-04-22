@@ -144,16 +144,16 @@ const imports = [
     providers: [SortService, GroupService, PageService, ResizeService, FilterService, ToolbarService, EditService, AggregateService, ColumnMenuService,]
 })
 export class PeriodsComponent implements OnInit {
-
-    public data: any;
+    
+    public periodsForm!: FormGroup;
+    public bDirty: boolean = false;
+    
+    public sTitle = 'General Ledger Periods';
+    public drawer = viewChild<MatDrawer>("drawer");    
     private _fuseConfirmationService = inject(FuseConfirmationService);
     private fb = inject(FormBuilder);
-    public sTitle = 'General Ledger Periods';
-    public drawer = viewChild<MatDrawer>("drawer");
-    periodsForm!: FormGroup;
-    bDirty: any;
-
     store = inject(Store);
+    
     periods$ = this.store.select(periodsFeature.selectPeriods);
     selectedPeriods$ = this.store.select(periodsFeature.selectSelectedPeriod);
     isLoading$ = this.store.select(periodsFeature.selectIsLoading);
@@ -204,7 +204,6 @@ export class PeriodsComponent implements OnInit {
         this.openDrawer();
         this.selectPeriod(period);
         this.selectedPeriods$.subscribe((period) => {
-
         });
     }
 

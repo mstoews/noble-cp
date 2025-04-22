@@ -5,6 +5,7 @@ export const periodsAPIActions = createActionGroup({
   source: 'Periods API',
   events: {
     'Load Periods Success': props<{ periods: IPeriod[] }>(),
+    'Load Current Period': props<{ current: string }>(),
     'Load Periods Failure': props<{ error: string }>(),
     'Period Deleted Success': props<{ id: number }>(),
     'Period Added Success': props<{ period: IPeriod }>(),
