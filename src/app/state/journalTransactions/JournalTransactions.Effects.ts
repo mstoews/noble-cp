@@ -15,7 +15,7 @@ export class journalTransactionEffects {
     this.actions.pipe(
       ofType(JournalActions.loadJournal),
       exhaustMap((action) => {
-        return this.journalService.readJournalTransactions(action.period).pipe(
+        return this.journalService.readJournalTransactionsByPeriod(action.period).pipe(
           map((data) => JournalActions.loadJournalSuccess({ transactions: data })),
           catchError((error) => of(JournalActions.loadJournalFailure({ error })))
         );

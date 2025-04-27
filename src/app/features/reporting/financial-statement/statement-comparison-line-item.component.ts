@@ -11,7 +11,7 @@ import { AcademyComponent } from "../../admin/academy/academy.component";
           <div class="">
           <section class="grid grid-cols-1 text-sm">              
                 @if (item().trans_type == 'TB Summary') {                    
-                  <div class="grid grid-cols-12 gap-2 border-t border-gray-700 mt-2 bg-gray-100">      
+                  <div class="grid grid-cols-12 gap-2 border-gray-700 mt-2 ">      
                     <div (click)="onChild($event)" class="col-start-1 text-bold text-gray-900">{{item().child}}</div>
                     <div class="col-start-2 col-end-5 text-gray-900 text-bold text-sm">  {{item().account_description}}</div>
                     <div class="col-start-5 text-gray-900 text-right  text-sm">  {{item().opening_balance | number: '1.2-2'}}</div>

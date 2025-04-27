@@ -1,4 +1,4 @@
-import { Component, inject, output, signal, viewChild } from "@angular/core";
+import { Component, inject, input, output, signal, viewChild } from "@angular/core";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { NgxMatSelectSearchModule } from "ngx-mat-select-search";
 import { CommonModule } from "@angular/common";
@@ -7,6 +7,7 @@ import { JournalEntryComponent } from "./journal-listing.component";
 import { ToastrService } from "ngx-toastr";
 import { GridMenubarStandaloneComponent } from "../grid-components/grid-menubar.component";
 import { SummaryCardComponent } from "../../admin/dashboard/summary-card.component";
+import { ApplicationStore } from "app/store/application.store";
 
 const imports = [
   CommonModule,
@@ -15,23 +16,25 @@ const imports = [
   FormsModule,
   NgxMatSelectSearchModule,
   JournalEntryComponent,
+  GridMenubarStandaloneComponent, 
+  SummaryCardComponent
 ];
 
 @Component({
   selector: "gl-transactions-list",
-  imports: [imports, GridMenubarStandaloneComponent, SummaryCardComponent],
+  imports: [imports] ,
   template: `
     <div id="settings" class="control-section default-splitter flex flex-col overflow-hidden">
-      <grid-menubar class="ml-1 mr-1 w-full" [inTitle]="toolbarTitle" 
+      <grid-menubar #menubar id="menubar" class="ml-1 mr-1 w-full" [inTitle]="toolbarTitle" 
         (openSettings)=onOpenSettings()
-        (print)=onPrinting()
+        (print)=onPrinting()        
       ></grid-menubar>
       <div class="grid grid-row-3 overflow-hidden">
       <div class="flex flex-col min-w-0 overflow-y-auto -px-10" cdkScrollable>
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 w-full min-w-0 overflow-hidden">
             
             <div (click)="onReceipts()" class="flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden m-2 hover:cursor-pointer">
-                <summary-card class="min-h-48" [mainValue]="150026.00" [caption]="'Receipts'" [title]="'Funds'"
+                <summary-card class="min-h-48" [mainValue]="150026.00" [caption]="'Receipts'" [title]="'Funds'" [chart]="'1'"
                     [subtitle]="" [subtitle_value]="">
                 </summary-card>
             </div>
@@ -57,7 +60,7 @@ const imports = [
             <ng-container>                    
                 @defer {
                   <transactions #transaction
-                    [transactionType]="transType"   
+                    [transactionType]="transtype()"                     
                     [openDrawers]="openDrawer"                     
                     (onCloseDrawer)="onOpenSettings()">
                   </transactions>
@@ -75,11 +78,14 @@ const imports = [
 })
 export class GLTransactionListComponent {
 
-  private toast = inject(ToastrService);
-  public transType: string = "all";
+  transtype = input("all");
+
+  private toast = inject(ToastrService);  
   public toolbarTitle = "General Ledger";
-  
+  public store = inject(ApplicationStore);
+
   transactionGrid = viewChild<JournalEntryComponent>("transaction");
+  menubar = viewChild<GridMenubarStandaloneComponent>("menubar");
   
   public openDrawer = false;
 

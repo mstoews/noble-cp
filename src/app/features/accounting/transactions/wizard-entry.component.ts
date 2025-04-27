@@ -42,8 +42,8 @@ import { ISubType } from 'app/models/subtypes';
 import { ToastrService } from "ngx-toastr";
 import { Router } from '@angular/router';
 import { ApplicationStore } from 'app/store/application.store';
-import { getTemplates } from './state/template/Template.Selector';
-import { loadTemplates } from './state/template/Template.Action';
+import { getTemplates } from 'app/state/template/Template.Selector';
+import { loadTemplates } from 'app/state/template/Template.Action';
 import { TemplateDropDownComponent } from '../grid-components/drop-down.templates.component';
 import { GridMenubarStandaloneComponent } from "../grid-components/grid-menubar.component";
 
@@ -111,7 +111,7 @@ const mods = [
                                                 <mat-icon class="icon-size-5" matPrefix
                                                     [svgIcon]="'heroicons_solid:document-chart-bar'"></mat-icon>
                                             </mat-form-field>
-                                    } 
+                                        } 
                                          
                                         
                                     <!-- @if (templateFilter | async; as templates ) {                                        
@@ -501,13 +501,6 @@ const mods = [
     ]
 })
 export class EntryWizardComponent implements OnInit, OnDestroy, AfterViewInit {
-onOpenSettings() {
-throw new Error('Method not implemented.');
-}
-onPrinting() {
-throw new Error('Method not implemented.');
-}
-
     private journalService = inject(JournalService);
     private accountsService = inject(AccountsService);
     private formBuilder = inject(FormBuilder);
@@ -696,6 +689,9 @@ throw new Error('Method not implemented.');
         });
 
     }
+
+    onOpenSettings() {}
+    onPrinting() {}
 
     public onChanges(): void {
         
@@ -1023,8 +1019,6 @@ throw new Error('Method not implemented.');
         const inputs = { ...this.journalEntryForm.value }
         const momentDate = new Date(inputs.step1.transaction_date).toISOString().split('T')[0];
         const email = '@' + this.auth.currentUser?.email.split('@')[0];
-
-
 
         var party: any;
         var party_id: string;

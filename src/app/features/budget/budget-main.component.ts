@@ -7,7 +7,7 @@ import { Subject, takeUntil } from 'rxjs';
 import { BudgetWizardComponent } from './budget-wizard.component';
 import { BudgetUpdateComponent } from './update/budget-update.component';
 import { BudgetLandingComponent } from './budget-landing/budget-landing.component';
-import { ApplicationService } from 'app/store/main.panel.store';
+import { AppService } from 'app/store/main.panel.store';
 import { ApplicationStore } from 'app/store/application.store';
 
 
@@ -22,7 +22,7 @@ const imports = [
 @Component({
     selector: 'budget-main',
     imports: [imports],
-    providers: [ApplicationService],
+    providers: [AppService],
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
     template: `<div class="flex flex-col w-full min-w-0 sm:absolute sm:inset-0 sm:overflow-hidden">
@@ -111,7 +111,7 @@ export class BudgetMainComponent {
     private _unsubscribeAll: Subject<any> = new Subject<any>();
     PANEL_ID = 'budgetPanel';
     store = inject(ApplicationStore);
-    panelService = inject(ApplicationService);
+    panelService = inject(AppService);
 
     constructor(
         private _changeDetectorRef: ChangeDetectorRef,

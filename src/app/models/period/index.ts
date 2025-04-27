@@ -12,6 +12,11 @@ export interface IPeriod {
   status: string, 
 }
 
+export interface ICurrentPeriod {
+  year: number,
+  period: number,
+  description: string,
+}
 export interface IPeriodParam {
   period: number,
   period_year: number

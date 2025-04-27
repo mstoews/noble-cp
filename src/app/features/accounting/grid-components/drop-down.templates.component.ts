@@ -78,15 +78,21 @@ export class TemplateDropDownComponent implements OnInit, OnDestroy, AfterViewIn
   public dropdownFilter: ReplaySubject<IJournalTemplate[]> = new ReplaySubject<IJournalTemplate[]>(null);
   public singleDropdownSelect = viewChild<MatSelect>("singleDropdownSelect");
 
+  private destroy$ = new Subject<void>();
+
   get parentFormGroup() {
     return this.parentContainer.control as FormGroup;
   }
-
+  bDirty = false;
   ngOnInit() {
     this.parentFormGroup.addControl(this.controlKey,
       new FormGroup({
         dropdownCtrl: new FormControl(''),
       }))
+
+      this.dropdownFilterCtrl.valueChanges.pipe(takeUntil(this.destroy$)).subscribe(() => {
+        this.bDirty = true;
+      });       
   }
   ngOnDestroy() {
     this.parentFormGroup.removeControl(this.controlKey);

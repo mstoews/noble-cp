@@ -64,7 +64,7 @@ export interface TbData {
 @Injectable({
   providedIn: 'root'
 })
-export class ApplicationService {
+export class AppService {
 
   private firestore = inject(FIRESTORE);
   private authService = inject(AuthService);
@@ -219,7 +219,7 @@ export const MainPanelStore = signalStore(
     error: null,
     isLoading: false,
   }),
-  withMethods((state, applicationService = inject(ApplicationService)) => ({
+  withMethods((state, applicationService = inject(AppService)) => ({
     loadUid: rxMethod<void>(
       pipe(
         tap(() => patchState(state, { isLoading: true })),

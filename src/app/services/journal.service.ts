@@ -3,7 +3,7 @@ import { Injectable, OnDestroy, inject } from '@angular/core';
 import { Observable, TimeoutError, catchError, debounce, debounceTime, distinctUntilChanged, interval, retry, shareReplay, take, takeUntil, tap, throwError, timeout, timer } from 'rxjs';
 import { environment } from 'environments/environment.prod';
 import { ToastrService } from "ngx-toastr";
-import { IPeriod } from 'app/models/period';
+import { ICurrentPeriod, IPeriod } from 'app/models/period';
 import { IAccounts } from 'app/models';
 import { IJournalParams } from 'app/models';
 import { IPeriodParam } from 'app/models/period';
@@ -55,9 +55,22 @@ export class JournalService implements OnDestroy {
   }
   createJournalTemplate(params: ITemplateParams) {
     var url = this.baseUrl + '/v1/create_journal_template';
+    this.nocache(url);
     return this.httpClient.post<IJournalTemplate>(url, params).pipe(
       catchError(err => {
         const message = "Failed to connect to server for templates ...";
+        this.ShowAlert(message, 'failed');
+        return throwError(() => new Error(`${JSON.stringify(err)}`));
+      }),
+      shareReplay({ bufferSize: 1, refCount: true }));
+  }
+
+  getCurrentPeriod() {
+    var url = this.baseUrl + '/v1/get_current_period';
+    this.nocache(url);
+    return this.httpClient.get<ICurrentPeriod[]>(url).pipe(
+      catchError(err => {
+        const message = "Failed to read current period ...";
         this.ShowAlert(message, 'failed');
         return throwError(() => new Error(`${JSON.stringify(err)}`));
       }),
@@ -79,6 +92,7 @@ export class JournalService implements OnDestroy {
 
   createJournal(params: IJournalTransactions) {
     var url = this.baseUrl + '/v1/create_journal';
+    this.nocache(url);
     return this.httpClient.post<IJournalTransactions>(url, params).pipe(
       catchError(err => {
         if (err.status === 200) {
@@ -92,8 +106,18 @@ export class JournalService implements OnDestroy {
       shareReplay({ bufferSize: 1, refCount: true }));
   }
 
+  readJournalHeaderByPeriod(params: IPeriodParam): Observable<IJournalHeader[]> {
+    var url = this.baseUrl + '/v1/read_journals_header_by_period';
+    return this.httpClient.post<IJournalHeader[]>(url, params).pipe(
+      catchError(err => {
+        this.ShowAlert("Failed to read journal entry ...", 'failed');
+        return throwError(() => new Error(`${JSON.stringify(err)}`));
+      }),
+      shareReplay({ bufferSize: 1, refCount: true }));
+  }
+
   
-  readJournalTransactions(params: IPeriodParam): Observable<IJournalTransactions[]> {
+  readJournalTransactionsByPeriod(params: IPeriodParam): Observable<IJournalTransactions[]> {
     var url = this.baseUrl + '/v1/read_journals_by_period';
     return this.httpClient.post<IJournalTransactions[]>(url, params).pipe(
       catchError(err => {
@@ -138,6 +162,7 @@ export class JournalService implements OnDestroy {
   
   getLastJournalNo(): Observable<number> {
     var url = this.baseUrl + '/v1/read_last_journal_no';
+    this.nocache(url);
     return this.httpClient.get<number>(url).pipe(
       debounce(() => interval(2000)),
       catchError(err => {
@@ -150,6 +175,7 @@ export class JournalService implements OnDestroy {
 
   readPeriodFromTransactionDate(transaction_date: ITransactionDate): any {
     var url = this.baseUrl + '/v1/read_period_from_transaction';
+    this.nocache(url);
     this.httpClient.post<IPeriod>(url, transaction_date).pipe(
       catchError(err => {
         const message = "Failed to connect to server for periods ...";
@@ -161,6 +187,7 @@ export class JournalService implements OnDestroy {
 
   getJournalHeaderById(journal_id: number) {
     var url = this.baseUrl + '/v1/read_journal_header_by_id';
+    this.nocache(url);
     return this.httpClient.post<IJournalHeader>(url,
       {
         journal_id: journal_id,
@@ -177,6 +204,7 @@ export class JournalService implements OnDestroy {
 
   reNumberJournalDetail(journal_id: number) {
     var url = this.baseUrl + '/v1/renumber_journal_details';
+    this.nocache(url);
     const update = {
       journal_id: journal_id
     }
@@ -203,6 +231,7 @@ export class JournalService implements OnDestroy {
 
   getHttpJournalDetails(journal_id: number) {    
     var url = this.baseUrl + '/v1/get_journal_detail/' + journal_id;
+    this.nocache(url);
     return this.httpClient.get<IJournalDetail[]>(url).pipe(
       catchError(err => {
         const message = "Failed to connect to server for journal details ...";
@@ -214,6 +243,8 @@ export class JournalService implements OnDestroy {
 
   getJournalHeaderByPeriod(period: IPeriodParam) {
     var url = this.baseUrl + '/v1/read_journal_header_by_period';
+    // the session storage is removed to always allow the caching not be to used    
+    this.nocache(url);
     return this.httpClient.post<IJournalHeader[]>(url, period).pipe(
       catchError(err => {
         const message = "Failed to connect to server for journal header ...";
@@ -236,6 +267,7 @@ export class JournalService implements OnDestroy {
 
   readHttpJournalHeader() {
     var url = this.baseUrl + '/v1/read_journal_header';
+    this.nocache(url);
     return this.httpClient.get<IJournalHeader[]>(url).pipe(
       catchError(err => {
         const message = "Failed to connect to server for journal header ...";
@@ -247,7 +279,10 @@ export class JournalService implements OnDestroy {
 
 
   // read_tb_by_period
-
+  nocache(url : string) {
+    const cacheKey = url;
+    sessionStorage.removeItem(cacheKey);
+  }
 
   getJournalAccountsByPeriod(period: number, periodYear: number, child: number) {
     var url = this.baseUrl + '/v1/read_journal_by_account';
@@ -294,6 +329,7 @@ export class JournalService implements OnDestroy {
 
   getJournalDetailByPeriod(period: number, period_year: number) {
     var url = this.baseUrl + '/v1/read_journal_header_by_id/';
+    this.nocache(url);
     return this.httpClient.post<IJournalDetail[]>(url, {
       period: period,
       period_year: period_year
@@ -315,6 +351,7 @@ export class JournalService implements OnDestroy {
 
   updateJournalHeader(header: IJournalHeader) {
     let url = this.baseUrl + '/v1/update_journal_header';
+    this.nocache(url);
     let journalHeaderUpdate: IJournalHeader = {
       journal_id: header.journal_id,
       booked_user: header.booked_user,
@@ -351,6 +388,7 @@ export class JournalService implements OnDestroy {
 
   createJournalFullHeader(header: IJournalHeader) {
     let url = this.baseUrl + '/v1/create_full_journal_header';
+    this.nocache(url);
     let journalHeader: IJournalHeader = {
       "journal_id": header.journal_id,
       "description": header.description,
@@ -373,33 +411,38 @@ export class JournalService implements OnDestroy {
 
   createHttpJournalDetail(detail: IJournalDetail) {
     let url = this.baseUrl + '/v1/create_journal_detail';
+    this.nocache(url);
     return this.httpClient.post<IJournalDetail>(url, detail).pipe(
       shareReplay({ bufferSize: 1, refCount: true }));
   }
 
   cloneJournalById(journal_id: number) {
     let url = this.baseUrl + '/v1/clone_journal_entry';
+    this.nocache(url);
     return this.httpClient.post<IJournalHeader>(url, { journal_id: journal_id }).pipe(
       shareReplay({ bufferSize: 1, refCount: true }));
   }
 
   createTemplateById(journalTemplate: ITemplateParams) {
     let url = this.baseUrl + '/v1/create_journal';
+    this.nocache(url);
     return this.httpClient.post<IJournalHeader>(url, journalTemplate).pipe(
       shareReplay({ bufferSize: 1, refCount: true }));
   }
 
 
   updateJournalDetail(detail: IJournalDetail) {
-    var url = this.baseUrl + '/v1/update_journal_detail';
-    return this.httpClient.post<IJournalDetail>(url, detail).pipe(shareReplay(1));
+    this.nocache(url);
+    var url = this.baseUrl + '/v1/update_journal_detail';    
+    return this.httpClient.post<IJournalDetail>(url, detail).pipe(shareReplay({ bufferSize: 1, refCount: true }));
   }
 
 
   deleteHttpJournalDetail(journal: IJournalDetailDelete) {
     var url = this.baseUrl + '/v1/delete_journal_details';
+    this.nocache(url);
     return this.httpClient.post<IJournalDetailDelete>(url, journal).pipe(
-      shareReplay({ bufferSize: 1, refCount: true }));;;
+      shareReplay({ bufferSize: 1, refCount: true }));
   }
 
 
@@ -423,7 +466,24 @@ export class JournalService implements OnDestroy {
 
   getSettings(value: string) {
     var url = this.baseUrl + '/v1/read_settings_value_by_id/' + value;
+    this.nocache(url);
     return this.httpClient.get<string>(url).pipe(shareReplay(1));
+  }
+
+  // POST http://localhost:8080/v1/read_period_by_description
+  getPeriodByDescription(description: string) {
+    var url = this.baseUrl + '/v1/read_period_by_description/'
+    const period_param  = {
+      description: description
+    }
+    this.nocache(url);
+    return this.httpClient.post<ICurrentPeriod>(url, period_param).pipe(
+      catchError(err => {
+        const message = "Failed to retrieve periods ...";
+        this.ShowAlert(message, 'failed');
+        return throwError(() => new Error(`${JSON.stringify(err)}`));
+      }),
+      shareReplay({ bufferSize: 1, refCount: true }));
   }
 
   private handleError(error: HttpErrorResponse) {

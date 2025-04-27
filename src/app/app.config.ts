@@ -1,5 +1,5 @@
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
-import { ApplicationConfig, provideAppInitializer } from '@angular/core';
+import { ApplicationConfig, provideAppInitializer, provideExperimentalCheckNoChangesForDebug, provideExperimentalZonelessChangeDetection } from '@angular/core';
 import { LuxonDateAdapter } from '@angular/material-luxon-adapter';
 import { DateAdapter, MAT_DATE_FORMATS } from '@angular/material/core';
 import { provideAnimations } from '@angular/platform-browser/animations';
@@ -43,14 +43,15 @@ import { getAuth, connectAuthEmulator } from 'firebase/auth';
 import { initializeApp } from 'firebase/app';
 import { loggingInterceptor } from "./logging-interceptor";
 import { retryInterceptor } from "./retry-interceptor";
+import { jsonCachingInterceptor } from "./caching-interceptor";
 
 
-import { JournalReducer } from './features/accounting/transactions/state/journal/Journal.Reducer';
+import { JournalReducer } from './state/journal/Journal.Reducer';
 import { UsersReducer } from './state/users/Users.Reducer';
 
 // Effects 
 
-import { journalHeaderEffects } from './features/accounting/transactions/state/journal/Journal.Effects';
+import { journalHeaderEffects } from './state/journal/Journal.Effects';
 import { journalTransactionEffects } from './state/journalTransactions/JournalTransactions.Effects';
 
 import { userEffects } from './state/users/Users.Effects';
@@ -64,16 +65,15 @@ import { periodEffects } from './features/accounting/static/periods/periods.effe
 import { subTypeEffects } from './features/accounting/static/subtype/sub-type.effects';
 
 
-import { ApplicationService } from "./store/main.panel.store";
+import { AppService } from "./store/main.panel.store";
 import { kanbanEffects } from './state/kanban-state/kanban/kanban.effects';
 import { partyEffects } from './features/accounting/static/party/party.effects';
 import { accountEffects } from './features/accounting/static/accts/Accts.effects';
 import { glTypeEffects } from './features/accounting/static/gltype/gltype.effects';
 import { projectEffects } from './state/kanban-state/projects/projects.effects';
-import { TemplateReducer } from './features/accounting/transactions/state/template/Template.Reducer';
+import { TemplateReducer } from 'app/state/template/Template.Reducer';
 import { fundsEffects } from './features/accounting/static/funds/Funds.Effects';
-
-import { templateEffects } from './features/accounting/transactions/state/template/Template.Effects';
+import { templateEffects } from 'app/state/template/Template.Effects';
 
 
 const app = initializeApp(environment.firebase);
@@ -119,13 +119,14 @@ export const AUTH = new InjectionToken('Firebase auth', {
 });
 
 const CoreProviders = [
-  provideHttpClient(withInterceptors([authTokenInterceptor, retryInterceptor])),
+  provideHttpClient(withInterceptors([authTokenInterceptor, retryInterceptor, loggingInterceptor])),
 ];
 
 
 export const appConfig: ApplicationConfig = {
   providers: [
-    ApplicationService,
+    AppService,
+    provideExperimentalZonelessChangeDetection(),
     provideAnimations(),
     provideAppInitializer(() => {
       console.log('App initialized');

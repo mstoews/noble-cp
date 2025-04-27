@@ -21,7 +21,7 @@ import { Router } from '@angular/router';
 import { TranslocoModule } from '@ngneat/transloco';
 import { ProjectService } from './project.service';
 import { ApexOptions, NgApexchartsModule } from 'ng-apexcharts';
-import { single, Subject, takeUntil } from 'rxjs';
+import { Subject, takeUntil } from 'rxjs';
 import { AuthService } from 'app/features/auth/auth.service';
 import { SummaryCardComponent } from './summary-card.component';
 import { FIRESTORE } from 'app/app.config';
@@ -64,6 +64,7 @@ export class ProjectComponent implements OnInit, OnDestroy {
     private _router = inject(Router);
     private _projectService = inject(ProjectService);
 
+    
     netRevenue = input(0);
     special = input(8000);
     reserve = input(84000);

@@ -14,7 +14,7 @@ import { MatIconModule } from "@angular/material/icon";
 import { MatToolbarModule } from "@angular/material/toolbar";
 import { MatTooltipModule } from "@angular/material/tooltip";
 import { ToastrService } from "ngx-toastr";
-import { IPeriod, IPeriodParam } from "app/models/period";
+import { ICurrentPeriod, IPeriod, IPeriodParam } from "app/models/period";
 import { Store } from '@ngrx/store';
 import { periodsFeature } from 'app/features/accounting/static/periods/periods.state';
 import { periodsPageActions } from 'app/features/accounting/static/periods/periods-page.actions';
@@ -44,6 +44,7 @@ let modules = [MatToolbarModule, MatIconModule, MatButtonModule, CommonModule,  
 
     <span class="flex-1"></span>
       
+      @if (showPeriod()) {  
       @if ((isLoading$ | async) === false)  {
         @if(periods$ | async; as periods) { 
           <mat-form-field class="w-50 text-2xl mt-5 ml-15 rounded-lg bg-transparent">              
@@ -58,6 +59,7 @@ let modules = [MatToolbarModule, MatIconModule, MatButtonModule, CommonModule,  
           </mat-form-field>
         }                    
       }
+    }
             
 
       @if (showNew()) {
@@ -136,6 +138,7 @@ export class GridMenubarStandaloneComponent implements OnInit, AfterViewInit  {
   public clone = output<string>();
   public template = output<string>();
   public onCopy = output<string>();
+  public currentPeriod = output<string>();
 
   public inTitle = input<string>("General Ledger Transactions");
   public prd = input<string>();
@@ -147,6 +150,7 @@ export class GridMenubarStandaloneComponent implements OnInit, AfterViewInit  {
   });
 
   public showBack = input<boolean>(false);
+  public showPeriod = input<boolean>(true);
   public showExportXL = input<boolean>(false);
   public showExportPDF = input<boolean>(false);
   public showExportCSV = input<boolean>(false);
@@ -175,6 +179,7 @@ export class GridMenubarStandaloneComponent implements OnInit, AfterViewInit  {
   ngOnInit() {    
       this.store.dispatch(periodsPageActions.load());       
       this.currentPeriod$ = this.settingsService.read_by_value('CurrentPeriod');      
+      
   }
   ngAfterViewInit() {
     this.currentPeriod$.subscribe((current) => {
@@ -182,12 +187,10 @@ export class GridMenubarStandaloneComponent implements OnInit, AfterViewInit  {
       this.selectedPeriod.emit(current);
       if (this.current_period === undefined || this.current_period === null) {
         this.periodDropdownSelect().value = this.current_period;
+        this.currentPeriod.emit(this.current_period);
       }
     });    
-
-    this.periodDropdownSelect().valueChange.subscribe((value) => {
-      this.current_period = value;
-    });
+    
   }
   public onSelectionChange(event:  MatSelectChange) {                
     this.current_period = event.value;    

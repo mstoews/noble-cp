@@ -20,29 +20,29 @@ const imports = [
 ]
 
 @Component({
-    selector: 'income-statement-rpt',
-    imports: [imports],
-    encapsulation: ViewEncapsulation.None,
-    template: `
+  selector: 'income-statement-rpt',
+  imports: [imports],
+  encapsulation: ViewEncapsulation.None,
+  template: `
   <div class="flex flex-col min-w-0 overflow-y-auto overflow-x-auto" cdkScrollable >
   <!-- Main -->
   <div id="statement" class="flex-auto p-2 sm:p-10 bg-white">
       <div class="h-max border-gray-300 rounded-2xl">   
-        <grid-menubar></grid-menubar>             
+        <grid-menubar (print)="onPrint()"></grid-menubar>             
           
       </div>
-      <div id="income-statement" class="pl-20 pt-2 pb-14 mat-elevation-z8 mt-4 bg-white font-gray-900">
+      <div id="income-statement" class="pl-20 pt-2 pb-14 mat-elevation-z8 mt-4 bg-white font-gray-900 p-2">
 
-          <div class="text-gray-800 text-2xl mt-3">Noble Ledger Ltd.</div>
-          <div class="text-gray-800  text-2xl mt-1">Income Statement</div>
+          <div class="text-gray-800 text-2xl mt-3">{{sCompanyName}}</div>
+          <div class="text-gray-800  text-2xl mt-1">Income Statement Details</div>
           <div class="text-gray-800  text-2xl mt-1">Reporting Date : {{dReportDate}}</div>
           
           <section class="grid grid-cols-1 mt-10 ">      
-          <div class="grid grid-cols-12 gap-2">
-            <div class="col-start-5  text-gray-700 text-right">Opening</div>
-            <div class="col-start-7  text-gray-700 text-right">Debit</div>
-            <div class="col-start-9  text-gray-700 text-right">Credit</div>
-            <div class="col-start-11 text-gray-700 text-right">Closing</div>            
+          <div class="grid grid-cols-12 gap-2 bg-slate-400 p-2 rounded-lg">
+            <div class="col-start-5  text-gray-700 text-bold text-right">Opening</div>
+            <div class="col-start-7  text-gray-700 text-bold text-right">Debit</div>
+            <div class="col-start-9  text-gray-700 text-bold text-right">Credit</div>
+            <div class="col-start-11 text-gray-700 text-bold text-right">Closing</div>            
           </div>
         </section>
             
@@ -54,7 +54,7 @@ const imports = [
                 }              
             }
             @if (revenue$ | async; as data) {
-              <statement-line-totals class=" font-gray-800" [item]=data></statement-line-totals>
+              <statement-line-totals class=" font-gray-900 bg-slate-400 rounded-lg mt-1 mb-1" [header]="'Revenue Total'" [item]=data></statement-line-totals>
             }
             
           </div>                    
@@ -67,15 +67,16 @@ const imports = [
                 }              
             }
             @if (expense$ | async; as data) {
-              <statement-line-totals class=" font-gray-800" [item]=data></statement-line-totals>
+              <statement-line-totals class="font-gray-900 bg-slate-400 rounded-lg" [header]="'Expense Total'" [item]=data></statement-line-totals>
             }
-            
+           <br>
+            @if (revenueReport$ | async; as data) {
+              <statement-line-totals class="font-gray-900 bg-slate-400 rounded-lg" [header]="'Grand Total'" [item]=data></statement-line-totals>
+            }            
           </div>                    
           
           <!-- Totals -->
-          @if (revenueReport$ | async; as totals) {
-              <statement-line-totals class=" font-gray-800" [item]=totals></statement-line-totals>
-          }
+          
         
       </div>
   
@@ -83,7 +84,7 @@ const imports = [
     
   </div>    
   `,
-    providers: []
+  providers: []
 })
 
 export class IncomeStatementRptComponent {
@@ -96,6 +97,10 @@ export class IncomeStatementRptComponent {
   public distributionService = inject(DistributionLedgerService)
 
   private _unsubscribeAll: Subject<any> = new Subject<any>();
+
+  
+
+  sCompanyName = "Noble Ledger Ltd."
 
   params = {
     period: this.currentPeriod(),
@@ -136,7 +141,7 @@ export class IncomeStatementRptComponent {
     this._unsubscribeAll.complete();
   }
 
-  onExportCSV() {
+  onExportPDF() {
     let income = document.getElementById('income-statement');
 
     html2PDF(income, {
@@ -150,7 +155,7 @@ export class IncomeStatementRptComponent {
         imageTimeout: 15000,
         logging: true,
         useCORS: false,
-        scale: 2
+        scale: 3
       },
       imageType: 'image/jpeg',
       imageQuality: 1,
@@ -165,22 +170,26 @@ export class IncomeStatementRptComponent {
       init: function () { },
       success: function (pdf) {
         var dReportDate = new Date();
-        pdf.save(`IncomeStatement${dReportDate}.pdf`);
+        pdf.save(`IncomeStatementDetails${dReportDate}.pdf`);
       }
     });
 
   }
 
-  onExportExcel() {
-    const is: any = document.getElementById('income-statement');
-    html2canvas(is, { scale: 2 }).then((canvas) => {
-      const doc = new jsPDF();
-      doc.addImage(canvas.toDataURL('image/png'), 'PNG', 0, 0, 200, 200);
-      doc.setFontSize(12);
-      doc.save(`IncomeStatement.${this.dReportDate}.pdf`)
-    });
-
+  onPrint() {
+    this.onExportPDF();    
   }
+    
+  // onExportExcel() {
+  //   const is: any = document.getElementById('income-statement');
+  //   html2canvas(is, { scale: 2 }).then((canvas) => {
+  //     const doc = new jsPDF();
+  //     doc.addImage(canvas.toDataURL('image/png'), 'PNG', 0, 0, 200, 200);
+  //     doc.setFontSize(10);
+  //     doc.save(`IncomeStatementDetails.${this.dReportDate}.pdf`)
+  //   });
+
+  // }
 }
 
 

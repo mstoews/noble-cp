@@ -5,8 +5,8 @@ import { GridMenubarStandaloneComponent } from '../grid-components/grid-menubar.
 import { MaterialModule } from 'app/shared/material.module';
 import { AggregateService, ColumnMenuService, ContextMenuService, EditEventArgs, EditService, ExcelExportService, FilterService, GridComponent, GridModule, GroupService, PdfExportService, ResizeService, RowDDService, RowDragEventArgs, SearchService, SortService, ToolbarService } from '@syncfusion/ej2-angular-grids';
 
-import { getDetailTemplates, getTemplates } from './state/template/Template.Selector';
-import { loadTemplates, loadTemplatesDetails } from './state/template/Template.Action';
+import { getDetailTemplates, getTemplates } from 'app/state/template/Template.Selector';
+import { loadTemplates, loadTemplatesDetails } from 'app/state/template/Template.Action';
 
 import { GLGridComponent } from '../grid-components/gl-grid.component';
 import { MatDrawer } from '@angular/material/sidenav';

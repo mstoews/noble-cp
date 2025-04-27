@@ -15,12 +15,13 @@ const imports = [
     MaterialModule,
     FormsModule,
     SummaryCardComponent,
-    JournalEntryComponent
+    JournalEntryComponent,
+    GridMenubarStandaloneComponent
 ];
 
 @Component({
     selector: 'ar-transactions',
-    imports: [imports, GridMenubarStandaloneComponent],
+    imports: [imports],
     template: `
     <div id="settings" class="control-section default-splitter flex flex-col overflow-hidden">
 
@@ -57,7 +58,7 @@ const imports = [
         <div class="h-full border-gray-300 rounded-2xl">
                 <ng-container>                    
                     @defer {
-                        <transactions [transactionType]="'AR'" 
+                        <transactions [transactionType]="transactionType" 
                             [openDrawers]="openDrawer" 
                             (onCloseDrawer)="onOpenSettings()"              
                         ></transactions>
@@ -76,6 +77,7 @@ const imports = [
 })
 export class ARTransactionComponent {
 
+    public transactionType = "AR";
     
     public prd = "";
     public prd_year = "";

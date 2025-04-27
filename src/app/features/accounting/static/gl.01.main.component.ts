@@ -12,7 +12,7 @@ import { TeamsComponent } from './team/gl.teams.component';
 import { MatDrawer } from '@angular/material/sidenav';
 import { FundsComponent } from './funds/gl.funds.component';
 import { PartyComponent } from './party/party.component';
-import { ApplicationService } from 'app/store/main.panel.store';
+import { AppService } from 'app/store/main.panel.store';
 import { ApplicationStore } from 'app/store/application.store';
 import { CdkScrollable } from '@angular/cdk/scrolling';
 import { RolesComponent } from './roles/gl.roles.component';
@@ -140,7 +140,7 @@ export class GlMainComponent {
     public panels: any[] = [];
     public selectedPanel: string = 'accounts';
     public PANEL_ID = 'referencePanel';
-    public appService = inject(ApplicationService);
+    public appService = inject(AppService);
     public store = inject(ApplicationStore);
 
     constructor() {

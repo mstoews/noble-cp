@@ -2,10 +2,7 @@ import { trigger, transition, query, style, group, animate } from '@angular/anim
 import { Component, inject } from '@angular/core';
 import { KanbanModule } from '@syncfusion/ej2-angular-kanban';
 import { RouterOutlet } from '@angular/router';
-import { ApplicationService } from './services/application.service';
 import { AuthService } from './features/auth/auth.service';
-import { Store } from '@ngrx/store';
-import { getTemplates, loadTemplates } from './features/accounting/transactions/state/template/Template.Action';
 import { ApplicationStore } from './store/application.store';
 
 @Component({

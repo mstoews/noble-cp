@@ -19,7 +19,7 @@ import { ARTransactionComponent } from './ar-listing.component';
 import { APTransactionComponent } from './ap-listing.component';
 import { GLTransactionListComponent } from './gl-listing.component';
 import { CdkScrollable } from '@angular/cdk/scrolling';
-import { ApplicationService, MainPanelStore } from 'app/store/main.panel.store';
+import { AppService, MainPanelStore } from 'app/store/main.panel.store';
 import { ActivatedRoute } from '@angular/router';
 import { JournalTemplateUpdateComponent } from './journal-template-update.component';
 import { GLTransactionGridComponent } from './transaction-grid.component';
@@ -136,7 +136,7 @@ export class TransactionMainComponent implements OnInit, OnDestroy {
     defaultPanel = "listing";
     private _unsubscribeAll: Subject<any> = new Subject<any>();
     public lastPanelOpened = signal<string>("");
-    public panelService = inject(ApplicationService);
+    public panelService = inject(AppService);
     selectedPanel: string = 'entry';
     public storedPanel: string;
 

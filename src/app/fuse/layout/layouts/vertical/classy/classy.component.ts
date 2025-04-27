@@ -13,7 +13,7 @@ import { UserService } from 'app/fuse/core/user/user.service';
 import { SearchComponent } from 'app/fuse/layout/common/search/search.component';
 import { UserComponent } from 'app/fuse/layout/common/user/user.component';
 import { ApplicationStore } from 'app/store/application.store';
-import { ApplicationService } from 'app/store/main.panel.store';
+import { AppService } from 'app/store/main.panel.store';
 import { Subject, takeUntil } from 'rxjs';
 
 @Component({
@@ -36,7 +36,7 @@ import { Subject, takeUntil } from 'rxjs';
                     <!-- Logo -->
                     <div class="flex items-center justify-center">
                         <img class="w-8" src="assets/images/logo/nobleledger.jpg" alt="logo"> 
-                        <span>Noble Ledger v0.0.4.17</span>  
+                        <span>Noble Ledger v0.0.4.18</span>  
                     </div>
                     <!-- Components -->
                     <div class="ml-auto flex items-center">
@@ -150,7 +150,7 @@ export class ClassyLayoutComponent implements OnInit, OnDestroy {
     navigation: Navigation;
 
     private _unsubscribeAll: Subject<any> = new Subject<any>();
-    readonly service = inject(ApplicationService);
+    readonly service = inject(AppService);
     profile = this.service.getProfile();
 
     /**

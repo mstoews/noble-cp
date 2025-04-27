@@ -1,5 +1,5 @@
 import { inject, Injectable } from '@angular/core';
-import { filter, first, map, Observable } from 'rxjs';
+import { filter, first, map, Observable, share, shareReplay } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 export interface IGridSettingsModel {
@@ -46,7 +46,7 @@ export class GridSettingsService {
   }
   
   readUserId(userId: string): Observable<IGridSettingsModel[]> {    
-    return this.readAll().pipe(map((images) => images.filter((filter) => filter.userId === userId)) );
+    return this.readAll().pipe(map((images) => images.filter((filter) => filter.userId === userId)) ).pipe(shareReplay(1));
   }
 
   readSettingsName(settingsName: string): Observable<IGridSettingsModel[]> {    

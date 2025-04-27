@@ -1,23 +1,13 @@
 import { inject } from "@angular/core";
 import { ResolveFn, ActivatedRouteSnapshot, RouterStateSnapshot } from "@angular/router";
-import { IJournalHeader, IJournalTemplate } from "app/models/journals";
 import { JournalService } from "./journal.service";
-import { combineLatestWith, Observable, of } from "rxjs";
-import { IDropDownAccounts } from "app/models";
-import { IGLType } from "app/models/types";
+import { combineLatestWith, Observable } from "rxjs";
 import { SubTypeService } from "./subtype.service";
 import { PartyService } from "./party.service";
-import { IParty } from "app/models/party";
 import { AccountsService } from "./accounts.service";
 import { TemplateService } from "./template.service";
 
-interface IJournalData {
-  journalHeader:IJournalHeader;
-  accounts: IDropDownAccounts[];
-  journalTypes: IGLType[];
-  templates: IJournalTemplate[];  
-  parties: IParty[];
-}
+import { IJournalData } from "app/models/journals";
 
 export const JournalResolver: ResolveFn <IJournalData> = (
   route: ActivatedRouteSnapshot,
@@ -28,7 +18,8 @@ export const JournalResolver: ResolveFn <IJournalData> = (
       inject(AccountsService).readChildren(),
       inject(SubTypeService).read(),
       inject(TemplateService).read(),      
-      inject(PartyService).read()
+      inject(PartyService).read(),
+      inject(JournalService).getHttpJournalDetails(Number(route.paramMap.get('id')))
      ]
   )) as any as Observable<IJournalData>;    
 };

@@ -10,7 +10,7 @@ import { NavigationService } from 'app/fuse/core/navigation/navigation.service';
 import { Navigation } from 'app/fuse/core/navigation/navigation.types';
 import { SearchComponent } from 'app/fuse/layout/common/search/search.component';
 import { UserComponent } from 'app/fuse/layout/common/user/user.component';
-import { ApplicationService, ProfileModel } from 'app/store/main.panel.store';
+import { AppService, ProfileModel } from 'app/store/main.panel.store';
 import { ApplicationStore } from 'app/store/application.store';
 import { Subject, takeUntil } from 'rxjs';
 
@@ -33,7 +33,7 @@ import { Subject, takeUntil } from 'rxjs';
                                 <!-- Logo -->
                                 <div class="flex items-center justify-center">
                                     <img class="w-8" src="assets/images/logo/nobleledger.jpg" alt="logo">                        
-                                    <span class="font-medium text-secondary">Noble Ledger v0.0.4.17</span>
+                                    <span class="font-medium text-secondary">Noble Ledger v0.0.4.18</span>
                                 </div>                                                            
                             </div>
                             <!-- User -->
@@ -43,7 +43,7 @@ import { Subject, takeUntil } from 'rxjs';
                         <!-- <ng-container fuseVerticalNavigationContentFooter>
                             <div class="flex items-center justify-center">
                                 <img class="w-8" src="assets/images/logo/nobleledger.jpg" alt="logo">
-                                Noble Ledger v0.0.4.17
+                                Noble Ledger v0.0.4.18
                             </div>
                         </ng-container> -->
             </fuse-vertical-navigation>
@@ -79,7 +79,7 @@ import { Subject, takeUntil } from 'rxjs';
                 <!-- Footer -->
                 <div
                     class="relative flex flex-0 items-center justify-start w-full h-14 px-4 md:px-6 z-49 border-t bg-card dark:bg-transparent print:hidden">
-                    <span class="font-medium text-secondary">Noble Ledger v0.0.4.17 &copy; {{currentYear}}</span>
+                    <span class="font-medium text-secondary">Noble Ledger v0.0.4.18 &copy; {{currentYear}}</span>
                 </div>
 
             </div>
@@ -99,7 +99,7 @@ export class ClassicLayoutComponent implements OnInit, OnDestroy {
     navigation: Navigation;
     private _unsubscribeAll: Subject<any> = new Subject<any>();
     // readonly store = inject(AppStore);
-    readonly applicationService = inject(ApplicationService);
+    readonly applicationService = inject(AppService);
 
     /**
      * Constructor

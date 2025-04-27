@@ -97,10 +97,9 @@ export class TbPivotComponent implements OnInit {
 
     const periodParams = {
       period: 1,
-      year: 2024,
+      year: 2025,
     };
 
-    this.store.readPivotData(periodParams);
     
     this.dataSrcSettings = {
       dataSource: this.getData(),
@@ -120,7 +119,7 @@ export class TbPivotComponent implements OnInit {
   }
 
   getData(): IDataSet[] {
-    let data = this.store.trialBalance() as any as IDataSet[];
+    let data = this.store.tb() as any as IDataSet[];
     let pivotData: IDataSet[] = data;
     return pivotData;
   }
@@ -3307,7 +3306,7 @@ export class TbPivotComponent implements OnInit {
   //       "trans_type": "Transaction",
   //       "trans_date": "2025-03-11",
   //       "type": "Current Assets",
-  //       "description": "Descripition",
+  //       "description": "Description",
   //       "reference": "#Reference",
   //       "party_id": "",
   //       "amount": 1500,
@@ -8011,7 +8010,7 @@ export class TbPivotComponent implements OnInit {
   //       "trans_type": "Transaction",
   //       "trans_date": "2025-03-11",
   //       "type": "Expense",
-  //       "description": "Descripition",
+  //       "description": "Description",
   //       "reference": "#Reference",
   //       "party_id": "",
   //       "amount": 3200,

@@ -6,7 +6,7 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, viewChil
 import { MaterialModule } from 'app/shared/material.module';
 
 import { MatDrawer } from '@angular/material/sidenav';
-import { ApplicationService } from 'app/store/main.panel.store';
+import { AppService } from 'app/store/main.panel.store';
 import { ApplicationStore as AppStore } from 'app/store/application.store';
 import { CdkScrollable } from '@angular/cdk/scrolling';
 import { TeamsComponent } from '../accounting/static/team/gl.teams.component';
@@ -137,7 +137,7 @@ export class KanbanPanelComponent {
     public panels: any[] = [];
     public selectedPanel: string = 'kanban';
     public PANEL_ID = 'kanban';
-    public appService = inject(ApplicationService);
+    public appService = inject(AppService);
     public store = inject(AppStore);
 
     constructor() {

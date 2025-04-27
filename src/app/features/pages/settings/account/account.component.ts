@@ -8,7 +8,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatOptionModule } from '@angular/material/core';
 import { MatSelectModule } from '@angular/material/select';
 import { TextFieldModule } from '@angular/cdk/text-field';
-import { ApplicationService } from 'app/store/main.panel.store';
+import { AppService } from 'app/store/main.panel.store';
 import { ApplicationStore } from 'app/store/application.store';
 import { ProfileModel } from 'app/store/main.panel.store';
 import { ToastrService } from 'ngx-toastr';
@@ -152,7 +152,7 @@ export class SettingsAccountComponent implements OnInit {
     private fb = inject(FormBuilder);
 
     readonly store = inject(ApplicationStore);
-    readonly applicationService = inject(ApplicationService);
+    readonly applicationService = inject(AppService);
     readonly toast = inject(ToastrService);
     profile: ProfileModel;
 

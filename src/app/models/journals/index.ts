@@ -1,9 +1,22 @@
+import { IDropDownAccounts, IFunds } from "..";
+import { IParty } from "../party";
+import { IGLType } from "../types";
 
 
 export interface IJournalDetailDelete {
   journal_id: number,
   journal_subid: number
 
+}
+
+export interface IJournalData {
+  journalHeader:IJournalHeader;
+  accounts: IDropDownAccounts[];
+  journalTypes: IGLType[];
+  templates: IJournalTemplate[];  
+  funds?: IFunds[];
+  parties: IParty[];
+  journalDetails?: IJournalDetail[];
 }
 
 export interface IJournalHeader {

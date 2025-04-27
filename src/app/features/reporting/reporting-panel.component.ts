@@ -9,8 +9,8 @@ import { BalanceSheetStatementRptComponent } from './financial-statement/balance
 import { IncomeStatementRptComponent } from './financial-statement/income-statement-rpt.component';
 import { IncomeStatementComparisonRptComponent } from './financial-statement/income-statement-comparison.component';
 import { DistributedTbComponent } from './dist-tb/distributed-tb.component';
-import { TbGridComponent } from './tb-grid/tb-grid.component';
-import { ApplicationService } from "../../store/main.panel.store";
+import { TbGridComponent } from './tb-grid/tb-pivot-table.component';
+import { AppService } from "../../store/main.panel.store";
 import { ApplicationStore } from "../../store/application.store";
 import { GridTemplateComponent } from './grid-template/grid-template.component';
 import { CdkScrollable } from '@angular/cdk/scrolling';
@@ -116,7 +116,7 @@ const mods = [
     `,
     styles: ``,
     imports: [mods],
-    providers: [ApplicationService],
+    providers: [AppService],
     standalone: true
 })
 export class ReportingPanelComponent {
@@ -129,7 +129,7 @@ export class ReportingPanelComponent {
     selectedPanel: string = 'dist-tb';
     PANEL_ID = 'reportingPanel';
     store = inject(ApplicationStore);
-    panelService = inject(ApplicationService);
+    panelService = inject(AppService);
     private _unsubscribeAll: Subject<any> = new Subject<any>();
 
     constructor(
@@ -209,24 +209,24 @@ export class ReportingPanelComponent {
                 title: 'Reconciliation Reporting',
                 description: 'Bank, expense and financial reconciliation reporting',
             },
-            {
-                id: 'grid-template',
-                icon: 'feather:image',
-                title: 'Grid Template ',
-                description: 'Example of using a html in grid',
-            },
-            {
-                id: 'tb-grid',
-                icon: 'heroicons_outline:document-check',
-                title: 'Financial Returns Pivot',
-                description: 'Pivot table of yearly financial data',
-            },
-            {
-                id: 'tb-pivot',
-                icon: 'heroicons_outline:document-check',
-                title: 'Monthly Results Report',
-                description: 'Pivot trial balance by monthly period',
-            }
+            // {
+            //     id: 'grid-template',
+            //     icon: 'feather:image',
+            //     title: 'Grid Template ',
+            //     description: 'Example of using a html in grid',
+            // },
+            // {
+            //     id: 'tb-grid',
+            //     icon: 'heroicons_outline:document-check',
+            //     title: 'Financial Returns Pivot',
+            //     description: 'Pivot table of yearly financial data',
+            // },
+            // {
+            //     id: 'tb-pivot',
+            //     icon: 'heroicons_outline:document-check',
+            //     title: 'Monthly Results Report',
+            //     description: 'Pivot trial balance by monthly period',
+            // }
         ];
 
         // Subscribe to media changes

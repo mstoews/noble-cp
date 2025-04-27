@@ -1,8 +1,8 @@
-import { AfterViewInit, Component, HostListener, OnChanges, OnDestroy, OnInit, ViewEncapsulation, inject, input, output, viewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, HostListener, OnChanges, OnDestroy, OnInit, ViewEncapsulation, inject, input, output, viewChild } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { MaterialModule } from 'app/shared/material.module';
-import { cloneJournal, loadJournalHeaderByPeriod } from 'app/features/accounting/transactions/state/journal/Journal.Action';
+import { cloneJournal, loadJournalHeaderByPeriod } from 'app/state/journal/Journal.Action';
 import { MatDrawer } from '@angular/material/sidenav';
 import { FilterTypePipe } from 'app/filter-type.pipe';
 import { AggregateService, ColumnMenuService, ContextMenuService, EditService, EditSettingsModel, ExcelExportService, FilterService, FilterSettingsModel, GridComponent, GridLine, GridModule, GroupService, PageService, PdfExportService, ReorderService, ResizeService, RowSelectEventArgs, SearchService, SearchSettingsModel, SelectionSettingsModel, SortService, ToolbarItems, ToolbarService } from '@syncfusion/ej2-angular-grids';
@@ -10,13 +10,15 @@ import { DropDownListComponent } from '@syncfusion/ej2-angular-dropdowns';
 import { ToastrService } from 'ngx-toastr';
 import { MenuEventArgs, MenuItemModel } from '@syncfusion/ej2-navigations';
 import { ContextMenuModule } from '@syncfusion/ej2-angular-navigations';
-import { isJournalLoading, selectJournals } from 'app/features/accounting/transactions/state/journal/Journal.Selector';
+import { isJournalLoading, selectJournals } from 'app/state/journal/Journal.Selector';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { JournalCardComponent } from "./journal-card.component";
 import { JournalStore } from 'app/store/journal.store';
 import { IPeriodParam } from 'app/models/period';
 import { SettingsService } from 'app/services/settings.service';
+import { GridMenubarStandaloneComponent } from '../grid-components/grid-menubar.component';
+import { toSignal } from '@angular/core/rxjs-interop';
 
 
 const providers = [
@@ -48,7 +50,8 @@ const imports = [
 ];
 @Component({
     selector: 'transactions',
-    imports: [imports ],
+    imports: [imports],
+    changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     template: `    
     <mat-drawer class="lg:w-[400px] md:w-full bg-white-100" #drawer [opened]="openDrawers()" mode="over" [position]="'end'" [disableClose]="false">
@@ -98,12 +101,12 @@ const imports = [
         <mat-card>            
             <div class="flex-auto">                    
                         
-                        @if(journalHeader$  | async; as journals  ) {  
-
+                        @if(journalHeader()) { 
                             <ng-container>                     
                                 <ejs-grid #grid id="grid"
-                                    [dataSource]="journals | filterType : transactionType()"                                    
-                                    [height]='gridHeight'                                   
+                                    [dataSource]="journalHeader() | filterType : transactionType()"                                    
+                                    [height]='gridHeight' 
+                                    [rowHeight]='30'                                  
                                     [allowSorting]='true'                                    
                                     [showColumnMenu]='false'                
                                     [gridLines]="lines"
@@ -180,7 +183,7 @@ const imports = [
                                                         }
                                                         @case ('OPEN') {
                                                         <span class="e-badge flex text-md  gap-1 items-center w-max bg-transparent">
-                                                            <div class="w-4 h-4 rounded-full bg-blue-700"></div>
+                                                            <div class="w-4 h-4 rounded-full bg-amber-500"></div>
                                                             Open
                                                         </span>
                                                         }                                    
@@ -265,14 +268,15 @@ const imports = [
     `,
     providers: [providers]
 })
-export class JournalEntryComponent implements AfterViewInit  {
+export class JournalEntryComponent implements AfterViewInit {
 
     public route = inject(Router);
     public store = inject(Store);
     public toast = inject(ToastrService);
     public journalStore = inject(JournalStore);
     public settingsService = inject(SettingsService);
-    
+    public changeDetectorRef = inject(ChangeDetectorRef);
+
     private fb = inject(FormBuilder);
 
     public isVisible = true;
@@ -281,11 +285,12 @@ export class JournalEntryComponent implements AfterViewInit  {
     public transactionType = input('');
     public openDrawers = input<boolean>(false);
     public printClicked = input<boolean>(false);
+    public currentPeriod = input<string>(null)
 
 
     public toolbarTitle: string;
     public sGridTitle: string;
-    
+
     public formatoptions: Object;
     public initialSort: Object;
     public editSettings: EditSettingsModel;
@@ -297,30 +302,35 @@ export class JournalEntryComponent implements AfterViewInit  {
     public filterSettings: FilterSettingsModel;
     public lines: GridLine;
 
-    
+
     journalHeader$ = this.store.select(selectJournals);
+
+    journalHeader = toSignal(this.journalHeader$, { initialValue: [] });
+
     isJournalLoading$ = this.store.select(isJournalLoading);
 
-    
+
     periodParam = { period: 1, period_year: 2025 };
 
     public groupSettings: { [x: string]: Object } = { showDropArea: true };
 
     drawer = viewChild<MatDrawer>("drawer");
     grid = viewChild<GridComponent>('grid');
+    toolbar = viewChild<GridMenubarStandaloneComponent>('toolbar');
     onCloseDrawer = output();
-    
+
     currentRowData: any;
     drawOpen: 'open' | 'close' = 'open';
     collapsed = false;
 
     ngOnInit() {
 
-        var year =  this.journalStore.currentYear();
+        var year = this.journalStore.currentYear();
         var period = this.journalStore.currentPeriod();
+        var currentPeriod = this.journalStore.prd();
 
-        this.periodParam = { period: period, period_year: year };
-       
+        this.periodParam = { period: currentPeriod.period, period_year: currentPeriod.year };
+
         this.store.dispatch(loadJournalHeaderByPeriod({ period: this.periodParam }));
 
         this.toolbarTitle = "Journal Transactions by Period ";
@@ -336,7 +346,7 @@ export class JournalEntryComponent implements AfterViewInit  {
         this.toolbarOptions = ['Search'];
         this.filterSettings = { type: 'Excel' };
         this.lines = 'Both';
-        this.onPatchFlyout();
+        this.changeDetectorRef.markForCheck();
 
     }
 
@@ -365,12 +375,8 @@ export class JournalEntryComponent implements AfterViewInit  {
         }
     }
 
-    public onPatchFlyout() {        
-        this.periodForm.patchValue({ period: this.periodParam.period, period_year: this.periodParam.period_year });                
-    }
-
     closeDrawer() {
-         this.onCloseDrawer.emit();       
+        this.onCloseDrawer.emit();
     }
 
     exportLX() {
@@ -382,9 +388,9 @@ export class JournalEntryComponent implements AfterViewInit  {
     exportCSV() {
         throw new Error('Method not implemented.');
     }
-    
+
     onPrint() {
-        this.grid().print();    
+        this.grid().print();
     }
 
     public dateValidator() {
@@ -412,7 +418,7 @@ export class JournalEntryComponent implements AfterViewInit  {
     }
     public onUpdate($event: any) {
         var period = this.periodForm.getRawValue();
-        var periodPrm = { period: period.period(), period_year: period.period_year()} as IPeriodParam; 
+        var periodPrm = { period: period.period(), period_year: period.period_year() } as IPeriodParam;
         this.settingsService.updateCurrentPeriod(periodPrm).subscribe((res) => {
             this.toast.success('Period Updated : ' + periodPrm.period + ' - ' + periodPrm.period_year);
         });
@@ -502,7 +508,7 @@ export class JournalEntryComponent implements AfterViewInit  {
         this.adjustHeight();
     }
 
-    
+
 
     ngAfterViewInit() {
         const width = window.innerWidth;

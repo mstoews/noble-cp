@@ -38,21 +38,21 @@
                         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 w-full min-w-0">
                             <!-- Summary -->
                             <div class="flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden mat-elevation-z8">                                
-                                <summary-card [mainValue]=special() [caption]="'Special Assessment'" [title]="'Funds'" [chart]="'chart-legend'" [subtitle]="" [subtitle_value]="">
+                                <summary-card [mainValue]=special() [caption]="'Special Assessment'" [title]="'Funds'" [chart]="'1'" [subtitle]="" [subtitle_value]="">
                                 </summary-card>
                             </div>
                             <!-- Overdue -->
                             <div class="flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden">
-                                <summary-card [mainValue]=reserve() [caption]="'Reserve Fund'" [title]="'Reserve'" [chart]="'chart-legend'"  [subtitle]="''" [subtitle_value]="">
+                                <summary-card [mainValue]=reserve() [caption]="'Reserve Fund'" [title]="'Reserve'" [chart]="'2'"  [subtitle]="''" [subtitle_value]="">
                                 </summary-card>
                             </div>
                             <div class="flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden">
-                                <summary-card [mainValue]=capital() [caption]="'Capital Assets'" [title]="'Capital'" [chart]="'chart-legend'"  [subtitle]="''" [subtitle_value]="">
+                                <summary-card [mainValue]=capital() [caption]="'Capital Assets'" [title]="'Capital'" [chart]="'3'"  [subtitle]="''" [subtitle_value]="">
                                 </summary-card>
                             </div>
                             <!-- Issues -->
                             <div class="flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden">
-                                <summary-card [mainValue]=operations() [caption]="caption" [title]="caption" [chart]="'chart-insert-column'"  [subtitle]="''" [subtitle_value]="">
+                                <summary-card [mainValue]=operations() [caption]="caption" [title]="caption" [chart]="'4'"  [subtitle]="''" [subtitle_value]="">
                                 </summary-card>
                             </div>
                             <!-- Features -->

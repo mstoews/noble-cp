@@ -1,9 +1,10 @@
-import { Component, OnInit, ViewChild, inject, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, ViewChild, inject, viewChild } from '@angular/core';
 import {
     FormBuilder,
     FormGroup,
     FormsModule,
     ReactiveFormsModule,
+    Validators,
 } from '@angular/forms';
 
 import { CommonModule } from '@angular/common';
@@ -30,6 +31,7 @@ const imports = [
 
 @Component({
     selector: 'periods',
+    changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [imports],
     template: `
         <div class="h-[calc(100vh)-100px]">
@@ -152,24 +154,30 @@ export class PeriodsComponent implements OnInit {
     public drawer = viewChild<MatDrawer>("drawer");    
     private _fuseConfirmationService = inject(FuseConfirmationService);
     private fb = inject(FormBuilder);
+    public changeDetectorRef = inject(ChangeDetectorRef);
     store = inject(Store);
     
     periods$ = this.store.select(periodsFeature.selectPeriods);
     selectedPeriods$ = this.store.select(periodsFeature.selectSelectedPeriod);
     isLoading$ = this.store.select(periodsFeature.selectIsLoading);
 
+    ngOnInit() {
+        this.createEmptyForm();
+        this.store.dispatch(periodsPageActions.load());        
+        this.triggerChangeDetection()
+        this.onChanges();
+    }
+
+    triggerChangeDetection() {
+        this.changeDetectorRef.markForCheck(); // Manually triggers change detection
+    }
+    
     selectPeriod(period: any) {
         var pd = {
             ...period,
             id: period.period_id
         }
         this.store.dispatch(periodsPageActions.select(pd));
-    }
-
-    ngOnInit() {
-        this.createEmptyForm();
-        this.store.dispatch(periodsPageActions.load());
-        this.onChanges();
     }
 
     onClose() {
@@ -254,16 +262,16 @@ export class PeriodsComponent implements OnInit {
 
     createEmptyForm() {
         this.periodsForm = this.fb.group({
-            id: [''],
-            period: [''],
-            period_year: [''],
-            start_date: [''],
-            end_date: [''],
-            description: [''],
-            create_date: [''],
-            create_user: [''],
-            update_date: [''],
-            update_user: [''],
+            id: ['', Validators.required],
+            period: ['', Validators.required],
+            period_year: ['', Validators.required],
+            start_date: ['', Validators.required],
+            end_date: ['', Validators.required],
+            description: ['', Validators.required],
+            create_date: ['', Validators.required],
+            create_user: ['', Validators.required],
+            update_date: ['', Validators.required],
+            update_user: ['', Validators.required],
         });
     }
 

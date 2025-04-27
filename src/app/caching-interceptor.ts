@@ -8,19 +8,21 @@ export const jsonCachingInterceptor: HttpInterceptorFn = (req: HttpRequest<unkno
     // Ignore requests that are not for JSON
     if (req.responseType !== 'json') return next(req);
 
-    // Return our cached JSON if we have some
-    const cacheEntry: HttpResponse<any> | undefined = IN_MEMORY_CACHE[req.url]
-    if (cacheEntry) {
-        console.log("[JSONCachingInterceptor] => Returning cached response!");
-        return of(cacheEntry);
+    const cache = sessionStorage.getItem(req.url);
+    if (cache) {    
+        const cacheEntry: HttpResponse<any> | undefined = IN_MEMORY_CACHE[req.url]        
+        if (cacheEntry) {                    
+            return of(cacheEntry);
+        }
     }
 
     // Otherwise make the request!
     return next(req).pipe(
         tap(httpEvent => {
-            // Make sure we cache the response
+            // Make sure we cache the response            
             if (httpEvent instanceof HttpResponse) {
                 IN_MEMORY_CACHE[req.url] = httpEvent;
+                sessionStorage.setItem(req.url, req.url);
             }
         })
     );

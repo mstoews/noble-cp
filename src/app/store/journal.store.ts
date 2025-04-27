@@ -27,7 +27,7 @@ import { IParty } from 'app/models/party';
 
 import { IAccounts, IFunds } from 'app/models';
 import { IType } from 'app/models/types';
-import { IPeriod, IPeriodParam } from 'app/models/period';
+import { ICurrentPeriod, IPeriod, IPeriodParam } from 'app/models/period';
 import { ISubType } from 'app/models/subtypes';
 import { FundsService } from 'app/features/accounting/static/funds/funds.service';
 import { EvidenceService } from 'app/services/evidence.service';
@@ -50,6 +50,7 @@ export interface JournalStateInterface {
   currentPeriod: number;
   currentYear: number;
   isLoading: boolean;
+  prd: ICurrentPeriod;
   error: string | null;
 }
 
@@ -71,8 +72,10 @@ export const JournalStore = signalStore(
     artifacts: [],
     error: null,
     isLoading: false,
+    prd: null,
     currentPeriod: 0,
     currentYear: 0,
+
   }),
   withComputed((state) => ({
   })),
@@ -271,6 +274,20 @@ export const JournalStore = signalStore(
           })
         )
       ),
+      loadCurrentPeriod: rxMethod<void>(
+        pipe(
+          tap(() => patchState(state, { isLoading: true })),
+          switchMap((value) => {
+            return journalService.getCurrentPeriod().pipe(
+              tapResponse({
+                next: (period) => patchState(state, { prd: period[0] }),
+                error: console.error,
+                finalize: () => patchState(state, { isLoading: false }),
+              })
+            );
+          })
+        )
+      ),
       loadFunds: rxMethod<void>(
         pipe(
           tap(() => patchState(state, { isLoading: true })),
@@ -318,6 +335,21 @@ export const JournalStore = signalStore(
           tap(() => patchState(state, { isLoading: true })),
           exhaustMap(() => {
             return journalService.readHttpJournalHeader().pipe(
+              tapResponse({
+                next: (journal) => patchState(state, { gl: journal }),
+                error: console.error,
+                finalize: () => patchState(state, { isLoading: false }),
+              })
+            );
+          })
+        )
+      ),
+
+      loadJournalsByPeriod: rxMethod<IPeriodParam>(
+        pipe(
+          tap(() => patchState(state, { isLoading: true })),
+          switchMap((value) => {
+            return journalService.readJournalHeaderByPeriod(value).pipe(
               tapResponse({
                 next: (journal) => patchState(state, { gl: journal }),
                 error: console.error,
@@ -487,12 +519,13 @@ export const JournalStore = signalStore(
     })),
   withHooks(store => ({
     onInit: () => {
-      store.loadTemplates();
-      store.loadJournals();
+      store.loadCurrentPeriod();
+      store.loadJournals
+      store.loadTemplates();      
       store.loadAccounts();
       store.loadFunds();
       store.loadPeriod('Period');
-      store.loadYear('Year');
+      store.loadYear('Year');            
       store.loadMaxJournal();      
     },
   }))

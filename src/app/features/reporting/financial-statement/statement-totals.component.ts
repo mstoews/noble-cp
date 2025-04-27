@@ -8,19 +8,20 @@ import { IDistributionLedger, IDistributionLedgerRpt } from 'app/models';
     imports: [CommonModule],
     template: `
   
-  <div class="grid grid-cols-12 gap-2 mt-1">
-            <div class="col-start-1"></div>
-            <div class="col-start-2 col-span-3  text-gray-700  text-right mt-2"> Total</div>
-            <div class="col-start-5 text-right  text-gray-700  border-t-2 border-gray-700  mt-2">  {{totals.opening_balance | number: '1.2-2'}}</div>
-            <div class="col-start-7 text-right  text-gray-700  border-t-2 border-gray-700 mt-2">  {{totals.debit_balance | number: '1.2-2'}}</div>
-            <div class="col-start-9 text-right  text-gray-700  border-t-2 border-gray-700 mt-2">  {{totals.credit_balance | number: '1.2-2'}}</div>
-            <div class="col-start-11 text-right text-gray-700  border-t-2 border-gray-700 mt-2">  {{totals.closing_balance | number: '1.2-2'}}</div>            
+  
+  <div class="grid grid-cols-12 gap-2">  
+            <div class="col-start-2  text-bold col-span-3"> {{header()}} </div>
+            <div class="col-start-5  text-bold text-right"> {{totals.opening_balance | number: '1.2-2'}}</div>
+            <div class="col-start-7  text-bold text-right"> {{totals.debit_balance   | number: '1.2-2'}}</div>
+            <div class="col-start-9  text-bold text-right"> {{totals.credit_balance  | number: '1.2-2'}}</div>
+            <div class="col-start-11 text-bold text-right"> {{totals.closing_balance | number: '1.2-2'}}</div>            
   </div>
 
   `
 })
 export class StatementTotalComponent implements OnInit{
   readonly item = input.required<IDistributionLedger[]>(); 
+  readonly header = input<string>('Total');
   
   itemTotals!: IDistributionLedgerRpt;
   totals: IDistributionLedgerRpt;

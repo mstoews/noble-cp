@@ -44,6 +44,8 @@ export class DropDownAccountComponent implements OnInit, OnDestroy, AfterViewIni
 
   @Input({ required: true }) controlKey = '';
   @Input() label = '';
+
+  private destroy$ = new Subject<void>();
   
   parentContainer = inject(ControlContainer);  
     
@@ -54,24 +56,24 @@ export class DropDownAccountComponent implements OnInit, OnDestroy, AfterViewIni
   public dropdownFilter: ReplaySubject<IDropDownAccounts[]> = new ReplaySubject<IDropDownAccounts[]>(null);
   public singleDropdownSelect = viewChild<MatSelect>("singleDropdownSelection");
   
-  
+  bDirty = false;
+
   get parentFormGroup() {
     return this.parentContainer.control as FormGroup;
   }
 
-/**
-   * Initializes the component by adding a new FormGroup control to the parent FormGroup.
-   * The new FormGroup contains a single FormControl for a dropdown.
-   * 
-   * @throws {Error} Throws an error if the parentFormGroup is not defined.
-   */  ngOnInit() {
+  
+  ngOnInit() {
     
     this.parentFormGroup.addControl(this.controlKey,
       new FormGroup({
         dropdownCtrl: new FormControl(''),
       }))
-          
-  }
+
+      this.dropdownFilterCtrl.valueChanges.pipe(takeUntil(this.destroy$)).subscribe(() => {
+        this.bDirty = true;
+      });       
+  }  
   ngOnDestroy() {
     this.parentFormGroup.removeControl(this.controlKey);
   }
@@ -122,6 +124,10 @@ export class DropDownAccountComponent implements OnInit, OnDestroy, AfterViewIni
       this.dropdownCtrl.setValue(update);
     else 
       this.dropdownCtrl.setValue(this.dropdownList()[0])
-  }
+   }
+
+    getDropdownValue() {
+      return this.dropdownCtrl.value;
+    }
 
 }

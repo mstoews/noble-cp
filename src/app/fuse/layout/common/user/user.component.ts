@@ -8,7 +8,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { Router } from '@angular/router';
 import { UserService } from 'app/fuse/core/user/user.service';
 import { User } from 'app/fuse/core/user/user.types';
-import { ApplicationService, ProfileModel } from 'app/store/main.panel.store';
+import { AppService, ProfileModel } from 'app/store/main.panel.store';
 import { Subject, takeUntil } from 'rxjs';
 
 @Component({
@@ -17,7 +17,7 @@ import { Subject, takeUntil } from 'rxjs';
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
     exportAs: 'user',
-    providers: [ApplicationService],
+    providers: [AppService],
     imports: [MatButtonModule, MatMenuModule, MatIconModule, MatDividerModule]
 })
 export class UserComponent implements OnInit, OnDestroy {
@@ -25,7 +25,7 @@ export class UserComponent implements OnInit, OnDestroy {
     static ngAcceptInputType_showAvatar: BooleanInput;
     /* eslint-enable @typescript-eslint/naming-convention */
 
-    applicationService = inject(ApplicationService);
+    applicationService = inject(AppService);
 
     readonly showAvatar = input<boolean>(true);
     user: User;

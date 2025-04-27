@@ -1,13 +1,16 @@
 import {
   Component,
   inject,
+  input,
   OnInit,
   signal,
+  viewChild,
 } from "@angular/core";
 import {
   FormsModule,
   ReactiveFormsModule,
 } from "@angular/forms";
+
 import { NgxMatSelectSearchModule } from "ngx-mat-select-search";
 import { CommonModule } from "@angular/common";
 
@@ -31,8 +34,12 @@ import {
 import { JournalStore } from "app/store/journal.store";
 import { SummaryCardComponent } from "../../admin/dashboard/summary-card.component";
 import { JournalEntryComponent } from "./journal-listing.component";
-import { ApplicationStore } from "app/store/application.store";
 import { GridMenubarStandaloneComponent } from "../grid-components/grid-menubar.component";
+import { ToastrService } from "ngx-toastr";
+
+import { AppService } from "app/store/main.panel.store";
+import { map } from "rxjs";
+import { ApplicationStore } from "app/store/application.store";
 
 const imports = [
   CommonModule,
@@ -41,49 +48,54 @@ const imports = [
   FormsModule,
   NgxMatSelectSearchModule,
   JournalEntryComponent,
-  SummaryCardComponent
+  GridMenubarStandaloneComponent, 
+  SummaryCardComponent,
+  JournalEntryComponent
 ];
-
 @Component({
   selector: "ap-transactions",
-  imports: [imports, GridMenubarStandaloneComponent],
+  imports: [imports, ],
   template: `
    <div id="settings" class="control-section default-splitter flex flex-col overflow-hidden">
-    <grid-menubar class="ml-1 mr-1 w-full" [inTitle]="toolbarTitle" (openSettings)=onOpenSettings()></grid-menubar>
-    <div class="grid grid-row-3 overflow-hidden">
-    <div class="flex flex-col min-w-0 overflow-y-auto -px-10" cdkScrollable>
-      
-        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 w-full min-w-0 overflow-hidden">                      
-              
-             <div  class="flex-auto min-h-32 p-6 bg-card shadow rounded-2xl overflow-hidden m-2 hover:cursor-pointer">
-                  <summary-card (click)="onReceipts()" [mainValue]="cash()" [caption]="'Total Cash on Hand'" [title]="'Funds'"[chart]="'donut'"   [subtitle]="">
-                  </summary-card>
-              </div>              
-              <div  class="flex-auto min-h-32 p-6 bg-card shadow rounded-2xl overflow-hidden m-2 hover:cursor-pointer">
-                  <summary-card (click)="onReceipts()" [mainValue]="ap()" [caption]="'Accounts Payable'" [chart]="'chart-legend-right'" [subtitle]="" [subtitle_value]="1256">
-                  </summary-card>
-              </div>
-              <div class="flex-auto min-h-32 p-6 bg-card shadow rounded-2xl overflow-hidden m-2 hover:cursor-pointer">
-                  <summary-card  (click)="onReceipts()" [mainValue]="liabilities()" [chart]="'chart-lines'"[caption]="'Current Liabilities'" [title]="'Liabilities'"[subtitle]="" [subtitle_value]="">
-                  </summary-card>
-              </div>              
-              <div class="flex-auto min-h-32 p-6 bg-card shadow rounded-2xl overflow-hidden m-2 hover:cursor-pointer">
-                  <summary-card  (click)="onReceipts()"  [mainValue]="5000.00" [caption]="'Past Due Payments'" [title]="'Capital'"[chart]="'chart-insert-column'"[subtitle]="" [subtitle_value]="">
-                  </summary-card>
-              </div>             
+      <grid-menubar #menubar id="menubar" class="ml-1 mr-1 w-full" [inTitle]="toolbarTitle" 
+        (openSettings)=onOpenSettings()
+        (print)=onPrinting()        
+      ></grid-menubar>
+      <div class="grid grid-row-3 overflow-hidden">
+      <div class="flex flex-col min-w-0 overflow-y-auto -px-10" cdkScrollable>
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 w-full min-w-0 overflow-hidden">
             
-          </div>
-          
-        <div class="grid grid-cols-1 gap-4 h-full w-full min-w-0 border-gray-300 overflow-hidden">
+            <div (click)="onReceipts()" class="flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden m-2 hover:cursor-pointer">
+                <summary-card class="min-h-48" [mainValue]="150026.00" [caption]="'Receipts'" [title]="'Funds'" [chart]="'1'"
+                    [subtitle]="" [subtitle_value]="">
+                </summary-card>
+            </div>
+            <!-- Overdue -->
+            <div  class="flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden m-2 hover:cursor-pointer">
+                <summary-card class="min-h-32" (click)="onReceipts()" [mainValue]="24000.00" [caption]="'Outstanding'" [title]="'30 Days'"
+                    [subtitle]="''" [subtitle_value]="">
+                </summary-card>
+            </div>
+            <div class="flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden m-2 hover:cursor-pointer">
+                <summary-card  class="min-h-32" (click)="onReceipts()" [mainValue]="45050.00" [caption]="'Current Receivables'" [title]="'Capital'"
+                    [subtitle]="''" [subtitle_value]="">
+                </summary-card>
+            </div>
+            <!-- Issues -->
+            <div class="flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden m-2 hover:cursor-pointer">
+                <summary-card  class="min-h-32" (click)="onReceipts()"  [mainValue]="15000.00" [caption]="'Past Due Receipts'" [title]="'Capital'"
+                    [subtitle]="''" [subtitle_value]="">
+                </summary-card>
+            </div>
+        </div>
+        <div class="grid grid-cols-1 gap-4 w-full min-w-0 border-gray-300 overflow-hidden">
             <ng-container>                    
                 @defer {
-                    <transactions 
-                    class="group relative flex flex-col overflow-hidden rounded-lg  pb-2 flex-grow"
-                    [transactionType]="transType"
-                    [openDrawers]="openDrawer" 
-                    (onCloseDrawer)="onOpenSettings()"              
-                    >
-                    </transactions>
+                  <transactions #transaction
+                    [transactionType]="transactionType"                     
+                    [openDrawers]="openDrawer"                     
+                    (onCloseDrawer)="onOpenSettings()">
+                  </transactions>
                 }                
                 @placeholder(minimum 200ms) {
                     <div class="flex justify-center items-center">
@@ -92,10 +104,9 @@ const imports = [
                 }
             </ng-container>                                          
         </div>    
-    </div>        
+    </div>                
   `,
   providers: [
-    JournalStore,
     ResizeService,
     SortService,
     ReorderService,
@@ -111,96 +122,65 @@ const imports = [
     ColumnMenuService,
   ]
 })
-export class APTransactionComponent implements OnInit {
+export class APTransactionComponent {
 
-  public store = inject(ApplicationStore);
+  private toast = inject(ToastrService);
 
-  public transType: string = "AP";
-  public toolbarTitle = "Accounts Payable";
-  public prd = 0;
-  public prd_year = 0;
+  public transactionType = "AP";
+  // public applicationService = inject(AppService);
+
+  public toolbarTitle = "Accounts Payable Transactions";
+
+  transactionGrid = viewChild<JournalEntryComponent>("transaction");
+  menubar = viewChild<GridMenubarStandaloneComponent>("menubar");
 
   public openDrawer = false;
 
-  onOpenSettings() {      
-      if (this.openDrawer === false)
-        this.openDrawer = true;
-      else
-        this.openDrawer = false;
-    }
-
-
-  public cash = signal<number>(0);
-  public ap = signal<number>(0);
-  public liabilities = signal<number>(0);
-  public operating = signal<number>(0);
-
-  ngOnInit(): void {
-    this.loadCash();
-    this.loadAP();
-    this.loadLiability();
-  }
-
-  loadAP() {
-    // var tb = this.store.trialBalance().filter((tb) => tb.child == 3010);
-    // if (tb.length > 0) {
-    //   console.debug('TrialBalance : ', tb[0].closingBalance);
-    //   this.ap.set(Math.abs(tb[0].closingBalance));
-    // }
-  }
-
-  loadLiability() {
-    // var tb = this.store.trialBalance().filter((tb) => tb.child == 3020);
-    // if (tb.length > 0) {
-    //   console.debug('TrialBalance : ', tb[0].closingBalance);
-    //   this.liabilities.set(Math.abs(tb[0].closingBalance));
-    // }
-  }
-
-  loadCash() {
-    // var tb = this.store.trialBalance().filter((tb) => tb.child == 1001);
-    // if (tb.length > 0) {
-    //   console.debug('TrialBalance : ', tb[0].closingBalance);
-    //   this.cash.set(Math.abs(tb[0].closingBalance));
-    // }
-  }
-
-  exportLX() {
-    throw new Error('Method not implemented.');
-  }
-  exportPDF() {
-    throw new Error('Method not implemented.');
-  }
-  exportCSV() {
-    throw new Error('Method not implemented.');
-  }
-  onPrint() {
-    throw new Error('Method not implemented.');
-  }
-
-  onRefresh() {
-    throw new Error('Method not implemented.');
-  }
-  onAdd() {
-    throw new Error('Method not implemented.');
-  }
-  onDeleteSelection() {
-    throw new Error('Method not implemented.');
-  }
-  onUpdateSelection() {
-    throw new Error('Method not implemented.');
-  }
-  onReceipts() {
-    throw new Error('Method not implemented.');
-  }
-  onClone() {
-    throw new Error('Method not implemented.');
+  onNew() {
+    this.toast.success('Add new Journal Entry', 'Add');
   }
 
   onTemplate() {
-    throw new Error('Method not implemented.');
+    this.toast.success('Template', 'Template');
   }
 
+  onClone() {
+    this.toast.success('Template Clone', 'Clone');
+  }
+
+  onOpenSettings() {
+    if (this.openDrawer === false)
+      this.openDrawer = true;
+    else
+      this.openDrawer = false;
+  }
+
+  exportLX() {
+    this.toast.success('Template');
+  }
+  exportPDF() {
+    this.toast.success('Template');
+  }
+  exportCSV() {
+    this.toast.success('Template');
+  }
+  onPrinting() {
+    this.transactionGrid().onPrint();
+  }
+
+  onRefresh() {
+    this.toast.success('Template');
+  }
+  onDeleteSelection() {
+    this.toast.success('Template');
+  }
+  onUpdateSelection() {
+    this.toast.success('Template');
+  }
+  onReceipts() {
+    this.toast.success('Template');
+  }
 }
+
 
 
