@@ -225,7 +225,7 @@ export class PeriodsComponent implements OnInit {
         const periods = { ...this.periodsForm.value } as IPeriod;
         const rawData = {
             id: periods.id,
-            period: periods.period,
+            period_id: periods.period_id,
             period_year: periods.period_year,
             start_date: periods.start_date,
             end_date: periods.end_date,
@@ -299,7 +299,7 @@ export class PeriodsComponent implements OnInit {
         const periods = { ...this.periodsForm.value } as IPeriod;
         const rawData = {
             id: periods.id,
-            period: periods.period,
+            period_id: periods.period_id,
             period_year: periods.period_year,
             start_date: periods.start_date,
             end_date: periods.end_date,

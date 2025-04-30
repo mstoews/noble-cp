@@ -46,7 +46,7 @@ export interface JournalStateInterface {
   period: IPeriod[];
   sub_type: ISubType[];
   funds: IFunds[];
-  artifacts: IArtifacts[];
+  artifacts: IArtifacts[];  
   currentPeriod: number;
   currentYear: number;
   isLoading: boolean;
@@ -56,7 +56,7 @@ export interface JournalStateInterface {
 
 export const JournalStore = signalStore(
   { providedIn: 'root' },
-  withState<JournalStateInterface>({
+    withState<JournalStateInterface>({
     currentJournal: null,
     maxJournal: 0,
     gl: [],
@@ -288,6 +288,7 @@ export const JournalStore = signalStore(
           })
         )
       ),
+
       loadFunds: rxMethod<void>(
         pipe(
           tap(() => patchState(state, { isLoading: true })),
@@ -349,7 +350,7 @@ export const JournalStore = signalStore(
         pipe(
           tap(() => patchState(state, { isLoading: true })),
           switchMap((value) => {
-            return journalService.readJournalHeaderByPeriod(value).pipe(
+            return journalService.getJournalHeaderByPeriod(value).pipe(
               tapResponse({
                 next: (journal) => patchState(state, { gl: journal }),
                 error: console.error,
@@ -519,13 +520,11 @@ export const JournalStore = signalStore(
     })),
   withHooks(store => ({
     onInit: () => {
-      store.loadCurrentPeriod();
-      store.loadJournals
       store.loadTemplates();      
       store.loadAccounts();
       store.loadFunds();
       store.loadPeriod('Period');
-      store.loadYear('Year');            
+      store.loadYear('Year');
       store.loadMaxJournal();      
     },
   }))

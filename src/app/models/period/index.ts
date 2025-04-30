@@ -1,6 +1,6 @@
 export interface IPeriod {  
   id: number,
-  period : number,
+  period_id : number,
   period_year: number,
   start_date: Date, 
   end_date:  Date,
@@ -13,8 +13,8 @@ export interface IPeriod {
 }
 
 export interface ICurrentPeriod {
-  year: number,
-  period: number,
+  period_year: number,
+  period_id: number,
   description: string,
 }
 export interface IPeriodParam {

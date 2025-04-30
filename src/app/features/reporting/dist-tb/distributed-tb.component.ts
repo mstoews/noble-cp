@@ -254,7 +254,7 @@ throw new Error('Method not implemented.');
     }
     // filter the banks
     this.periodFilter.next(
-      this.periodList.filter(period => period.period.toString().toLowerCase().indexOf(search) > -1)
+      this.periodList.filter(period => period.period_id.toString().toLowerCase().indexOf(search) > -1)
     );
   }
 
@@ -278,7 +278,7 @@ throw new Error('Method not implemented.');
     if (this.periodFilter)
       this.periodFilter.pipe(take(1), takeUntil(this._onPeriodDestroy)).subscribe(() => {
         if (this.singlePeriodSelect != null || this.singlePeriodSelect != undefined)
-          this.singlePeriodSelect.compareWith = (a: IPeriod, b: IPeriod) => a && b && a.period === b.period;
+          this.singlePeriodSelect.compareWith = (a: IPeriod, b: IPeriod) => a && b && a.period_id === b.period_id;
       });
 
     this.createEmptyForm();

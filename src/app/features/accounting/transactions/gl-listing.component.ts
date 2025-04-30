@@ -1,4 +1,4 @@
-import { Component, inject, input, output, signal, viewChild } from "@angular/core";
+import { Component, inject, input, OnInit, output, signal, viewChild } from "@angular/core";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { NgxMatSelectSearchModule } from "ngx-mat-select-search";
 import { CommonModule } from "@angular/common";
@@ -7,7 +7,10 @@ import { JournalEntryComponent } from "./journal-listing.component";
 import { ToastrService } from "ngx-toastr";
 import { GridMenubarStandaloneComponent } from "../grid-components/grid-menubar.component";
 import { SummaryCardComponent } from "../../admin/dashboard/summary-card.component";
-import { ApplicationStore } from "app/store/application.store";
+import { PeriodStore } from "app/store/periods.store";
+import { ActivatedRoute } from "@angular/router";
+import { take } from "rxjs";
+import { JournalStore } from "app/store/journal.store";
 
 const imports = [
   CommonModule,
@@ -24,13 +27,19 @@ const imports = [
   selector: "gl-transactions-list",
   imports: [imports] ,
   template: `
-    <div id="settings" class="control-section default-splitter flex flex-col overflow-hidden">
-      <grid-menubar #menubar id="menubar" class="ml-1 mr-1 w-full" [inTitle]="toolbarTitle" 
+
+    <grid-menubar #menubar id="menubar" class="ml-1 mr-1 w-full " 
+        [inTitle]="toolbarTitle" 
+        (period)="onPeriod($event)"
         (openSettings)=onOpenSettings()
-        (print)=onPrinting()        
-      ></grid-menubar>
+        (print)=onPrinting()>
+      </grid-menubar>
+
+    <div id="settings" class="control-section default-splitter flex flex-col overflow-hidden">
+      
+       
       <div class="grid grid-row-3 overflow-hidden">
-      <div class="flex flex-col min-w-0 overflow-y-auto -px-10" cdkScrollable>
+       <div class="flex flex-col min-w-0 overflow-y-auto -px-10" cdkScrollable>
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 w-full min-w-0 overflow-hidden">
             
             <div (click)="onReceipts()" class="flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden m-2 hover:cursor-pointer">
@@ -60,7 +69,9 @@ const imports = [
             <ng-container>                    
                 @defer {
                   <transactions #transaction
-                    [transactionType]="transtype()"                     
+                    [transactionType]="transtype()"
+                    [currentPrd]="currentPeriod()"
+                    [activePeriods]="activePeriods"  
                     [openDrawers]="openDrawer"                     
                     (onCloseDrawer)="onOpenSettings()">
                   </transactions>
@@ -76,23 +87,54 @@ const imports = [
 `,
 
 })
-export class GLTransactionListComponent {
+export class GLTransactionListComponent implements OnInit {
+
+  private activatedRoute = inject(ActivatedRoute);
 
   transtype = input("all");
 
-  private toast = inject(ToastrService);  
-  public toolbarTitle = "General Ledger";
-  public store = inject(ApplicationStore);
+  currentPeriod = signal('');
+
+  private toast = inject(ToastrService); 
+  private periodStore = inject(PeriodStore);
+
+  activePeriods = this.periodStore.activePeriods();
+  toolbarTitle = "General Ledger";
 
   transactionGrid = viewChild<JournalEntryComponent>("transaction");
   menubar = viewChild<GridMenubarStandaloneComponent>("menubar");
+  journalStore = inject(JournalStore);
+  
+  journalHeader: any;
+  accountList: any;
+  subtypeList: any;
+  templateList: any;
+  partyList: any;
+  
+  ngOnInit() {  
+    this.activatedRoute.data.pipe(take(1)).subscribe((data) => {
+               this.journalStore.loadJournals();                        
+               this.journalHeader = data.journal[0];
+               this.accountList = data.journal[1];
+               this.subtypeList = data.journal[2];
+               this.templateList = data.journal[3];
+               this.partyList = data.journal[4];            
+               // this.refreshJournalForm(this.journalHeader);
+           });
+  }
   
   public openDrawer = false;
+
+  onPeriod(event: any) {
+    this.currentPeriod.set(event);
+    this.toast.success(event, 'Period changed to: ');
+    this.transactionGrid().updateTransactionPeriod(event);
+  }
 
   onNew() {
     this.toast.success('Add new Journal Entry', 'Add');
   }
-
+  
   onTemplate() {
     this.toast.success('Template', 'Template');
   }

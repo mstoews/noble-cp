@@ -57,7 +57,9 @@ const imports = [
   imports: [imports, ],
   template: `
    <div id="settings" class="control-section default-splitter flex flex-col overflow-hidden">
-      <grid-menubar #menubar id="menubar" class="ml-1 mr-1 w-full" [inTitle]="toolbarTitle" 
+      <grid-menubar #menubar id="menubar" class="ml-1 mr-1 w-full" 
+        [inTitle]="toolbarTitle" 
+        [showPeriod]="false"
         (openSettings)=onOpenSettings()
         (print)=onPrinting()        
       ></grid-menubar>

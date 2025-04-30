@@ -1,11 +1,10 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable, OnDestroy, inject } from '@angular/core';
-import { Observable, TimeoutError, catchError, debounce, debounceTime, distinctUntilChanged, interval, retry, shareReplay, take, takeUntil, tap, throwError, timeout, timer } from 'rxjs';
+import { Observable, TimeoutError, catchError, debounce, debounceTime, distinctUntilChanged, interval, shareReplay, throwError, timer } from 'rxjs';
 import { environment } from 'environments/environment.prod';
 import { ToastrService } from "ngx-toastr";
 import { ICurrentPeriod, IPeriod } from 'app/models/period';
 import { IAccounts } from 'app/models';
-import { IJournalParams } from 'app/models';
 import { IPeriodParam } from 'app/models/period';
 
 import {
@@ -14,7 +13,6 @@ import {
   IJournalDetail,
   IJournalDetailDelete,
   IJournalDetailTemplate,
-  IJournalDetailUpdate,
   IJournalHeader,
   IJournalTemplate,
   IReadJournalDetailsParams,
@@ -69,6 +67,7 @@ export class JournalService implements OnDestroy {
     var url = this.baseUrl + '/v1/get_current_period';
     this.nocache(url);
     return this.httpClient.get<ICurrentPeriod[]>(url).pipe(
+      debounce(() => timer(2000)),
       catchError(err => {
         const message = "Failed to read current period ...";
         this.ShowAlert(message, 'failed');
@@ -107,7 +106,7 @@ export class JournalService implements OnDestroy {
   }
 
   readJournalHeaderByPeriod(params: IPeriodParam): Observable<IJournalHeader[]> {
-    var url = this.baseUrl + '/v1/read_journals_header_by_period';
+    var url = this.baseUrl + '/v1/read_journals_by_period';
     return this.httpClient.post<IJournalHeader[]>(url, params).pipe(
       catchError(err => {
         this.ShowAlert("Failed to read journal entry ...", 'failed');

@@ -82,7 +82,11 @@ const mods = [
     imports: [mods, GridMenubarStandaloneComponent],
     template: `
         
-        <grid-menubar class="ml-1 mr-1 w-full" [inTitle]="'Journal Entry'"  (openSettings)=onOpenSettings()  (print)=onPrinting() ></grid-menubar>
+        <grid-menubar class="ml-1 mr-1 w-full"               
+              [inTitle]="'Journal Entry'"  
+              (openSettings)=onOpenSettings() 
+              (print)=onPrinting()>
+        </grid-menubar>
         
         <mat-drawer-container id="target" class="control-section default-splitter flex flex-col overflow-auto h-[calc(100vh-14rem)] md:ml-5 md:mr-5" [hasBackdrop]="'false'">
             <div class="flex flex-col flex-auto min-w-0">
@@ -190,7 +194,6 @@ const mods = [
                                 @if (journalHeader) {
 
                                 <ng-container>
-
                                     <div class="text-3xl gap-2 m-1 text-gray-100 p-2 bg-slate-600 rounded-md">
                                         Journal Details
                                     </div>

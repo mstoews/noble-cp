@@ -17,19 +17,19 @@ export const defaultNavigation: FuseNavigationItem[] = [
                 icon: 'mat_outline:insights',
                 link: '/projects',
             },
-            // {
-            //     id: 'finance',
-            //     title: 'Finance',
-            //     type: 'basic',
-            //     icon: 'heroicons_outline:currency-dollar',
-            //     link: '/finance',
-            // },        
             {
                 id: 'accounts.journals',
                 title: 'Transactions',
                 type: 'basic',
                 icon: 'heroicons_outline:banknotes',
                 link: '/journals',
+            },
+            {
+                id: 'accounts.list-journals',
+                title: 'Transaction List',
+                type: 'basic',
+                icon: 'heroicons_outline:banknotes',
+                link: '/list-journals',
             },
             {
                 id: 'accounts.edit-journals',

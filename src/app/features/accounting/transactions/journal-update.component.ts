@@ -1454,7 +1454,7 @@ export class JournalUpdateComponent implements OnInit, OnDestroy, AfterViewInit 
         };
 
         const confirmation = this._fuseConfirmationService.open({
-            title: `Delete  transaction detail item : ${journalDetail.journal_id}-${journalDetail.journal_subid} `,
+            title: `Delete transaction detail item: ${journalDetail.journal_id}-${journalDetail.journal_subid} `,
             message: "Are you sure you want to delete this line entry? ",
             actions: {
                 confirm: {
@@ -1510,8 +1510,9 @@ export class JournalUpdateComponent implements OnInit, OnDestroy, AfterViewInit 
     }
 
     // add a new line entry
-    public onNewLineItem() {
-        const inputs = { ...this.journalForm.value } as IJournalHeader;
+    public onNewLineItem() 
+    {
+        
         const updateDate = new Date().toISOString().split("T")[0];
         var max = 0;
 
@@ -1521,7 +1522,7 @@ export class JournalUpdateComponent implements OnInit, OnDestroy, AfterViewInit 
             }
         });
 
-        if (inputs.journal_id === 0) {
+        if (this.currentRowData.journal_id === 0) {
             return;
         }
 
@@ -1537,12 +1538,12 @@ export class JournalUpdateComponent implements OnInit, OnDestroy, AfterViewInit 
             max = max + 1;
         }
 
-        var debit = Number(detail.debit);
-        var credit = Number(detail.credit);
-        var childAccount = this.debitCtrl.getRawValue();
-        var sub_type = this.subtypeCtrl.value;
-        var fund = this.fundCtrl.value;
-        var child_desc = this.journalStore.accounts().find((x) => x.child === Number(childAccount.child)).description;
+        const debit = Number(detail.debit);
+        const credit = Number(detail.credit);
+        const childAccount = this.debitCtrl.getRawValue();
+        const sub_type = this.subtypeCtrl.value;
+        const fund = this.fundCtrl.value;
+        const child_desc = this.journalStore.accounts().find((x) => x.child === Number(childAccount.child)).description;
 
 
         if (debit > 0 && credit > 0) {

@@ -185,9 +185,6 @@ export class AppSettingsComponent {
   onCancel() {
     this.editDrawer().toggle();
   }
-
-
-
   updateAccount(setting: ISettings) {
     this.store.updateSetting(setting);    
   }

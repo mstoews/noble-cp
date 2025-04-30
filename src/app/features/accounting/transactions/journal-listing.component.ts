@@ -1,8 +1,7 @@
-import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, HostListener, OnChanges, OnDestroy, OnInit, ViewEncapsulation, inject, input, output, viewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, HostListener, ViewEncapsulation, inject, input, output, viewChild } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { MaterialModule } from 'app/shared/material.module';
-import { cloneJournal, loadJournalHeaderByPeriod } from 'app/state/journal/Journal.Action';
 import { MatDrawer } from '@angular/material/sidenav';
 import { FilterTypePipe } from 'app/filter-type.pipe';
 import { AggregateService, ColumnMenuService, ContextMenuService, EditService, EditSettingsModel, ExcelExportService, FilterService, FilterSettingsModel, GridComponent, GridLine, GridModule, GroupService, PageService, PdfExportService, ReorderService, ResizeService, RowSelectEventArgs, SearchService, SearchSettingsModel, SelectionSettingsModel, SortService, ToolbarItems, ToolbarService } from '@syncfusion/ej2-angular-grids';
@@ -10,15 +9,15 @@ import { DropDownListComponent } from '@syncfusion/ej2-angular-dropdowns';
 import { ToastrService } from 'ngx-toastr';
 import { MenuEventArgs, MenuItemModel } from '@syncfusion/ej2-navigations';
 import { ContextMenuModule } from '@syncfusion/ej2-angular-navigations';
-import { isJournalLoading, selectJournals } from 'app/state/journal/Journal.Selector';
 import { Router } from '@angular/router';
-import { Store } from '@ngrx/store';
 import { JournalCardComponent } from "./journal-card.component";
 import { JournalStore } from 'app/store/journal.store';
-import { IPeriodParam } from 'app/models/period';
+import { ICurrentPeriod, IPeriodParam } from 'app/models/period';
 import { SettingsService } from 'app/services/settings.service';
 import { GridMenubarStandaloneComponent } from '../grid-components/grid-menubar.component';
-import { toSignal } from '@angular/core/rxjs-interop';
+import { JournalService } from 'app/services/journal.service';
+import { PeriodStore } from 'app/store/periods.store';
+import { titleSettings } from '@syncfusion/ej2-charts';
 
 
 const providers = [
@@ -101,10 +100,10 @@ const imports = [
         <mat-card>            
             <div class="flex-auto">                    
                         
-                        @if(journalHeader()) { 
+                        @if(journalStore.isLoading() === false) { 
                             <ng-container>                     
                                 <ejs-grid #grid id="grid"
-                                    [dataSource]="journalHeader() | filterType : transactionType()"                                    
+                                    [dataSource]="journalStore.gl() | filterType : transactionType()"                                    
                                     [height]='gridHeight' 
                                     [rowHeight]='30'                                  
                                     [allowSorting]='true'                                    
@@ -268,14 +267,18 @@ const imports = [
     `,
     providers: [providers]
 })
+
+
 export class JournalEntryComponent implements AfterViewInit {
 
     public route = inject(Router);
-    public store = inject(Store);
+
     public toast = inject(ToastrService);
     public journalStore = inject(JournalStore);
+    public journalService = inject(JournalService);
     public settingsService = inject(SettingsService);
     public changeDetectorRef = inject(ChangeDetectorRef);
+    public periodStore = inject(PeriodStore);
 
     private fb = inject(FormBuilder);
 
@@ -283,10 +286,10 @@ export class JournalEntryComponent implements AfterViewInit {
 
     public periodForm!: FormGroup;
     public transactionType = input('');
+    public activePeriods = input<ICurrentPeriod[]>(null);
     public openDrawers = input<boolean>(false);
     public printClicked = input<boolean>(false);
-    public currentPeriod = input<string>(null)
-
+    public currentPrd = input<string>(null)
 
     public toolbarTitle: string;
     public sGridTitle: string;
@@ -301,18 +304,12 @@ export class JournalEntryComponent implements AfterViewInit {
     public searchOptions?: SearchSettingsModel;
     public filterSettings: FilterSettingsModel;
     public lines: GridLine;
-
-
-    journalHeader$ = this.store.select(selectJournals);
-
-    journalHeader = toSignal(this.journalHeader$, { initialValue: [] });
-
-    isJournalLoading$ = this.store.select(isJournalLoading);
-
-
-    periodParam = { period: 1, period_year: 2025 };
+    
+    public periodParam: IPeriodParam;
 
     public groupSettings: { [x: string]: Object } = { showDropArea: true };
+    
+    // periods$ = this.store.select(periodsFeature.selectPeriods);
 
     drawer = viewChild<MatDrawer>("drawer");
     grid = viewChild<GridComponent>('grid');
@@ -322,23 +319,32 @@ export class JournalEntryComponent implements AfterViewInit {
     currentRowData: any;
     drawOpen: 'open' | 'close' = 'open';
     collapsed = false;
+    updateTransactionPeriod(currentPeriod: string) {
+
+        const current = this.activePeriods().filter((period) => period.description === currentPeriod)
+        if (current.length === 0) {
+            this.toast.error('No period found');
+            return;
+        }
+
+        var param = { period: current[0].period_id, period_year: current[0].period_year }
+        this.journalStore.loadJournalsByPeriod(param);
+        
+    }
 
     ngOnInit() {
 
-        var year = this.journalStore.currentYear();
-        var period = this.journalStore.currentPeriod();
-        var currentPeriod = this.journalStore.prd();
-
-        this.periodParam = { period: currentPeriod.period, period_year: currentPeriod.year };
-
-        this.store.dispatch(loadJournalHeaderByPeriod({ period: this.periodParam }));
-
-        this.toolbarTitle = "Journal Transactions by Period ";
-        this.periodForm = this.fb.group({
-            period: [period.toString(), Validators.required],
-            period_year: [year.toString(), Validators.required],
+                
+        const period = this.activePeriods().filter((period) => {
+            period.description === period.description
         });
-
+            
+        period.forEach((prd) => {
+            var param = { period: prd.period_id, period_year: prd.period_year }
+            this.journalStore.loadJournalsByPeriod(param);
+        });
+                
+        this.toolbarTitle = "Journal Transactions by Period ";        
         this.formatoptions = { type: 'dateTime', format: 'M/dd/yyyy' }
         this.selectionOptions = { mode: 'Row', type: 'Single' };
         this.editSettings = { allowEditing: true, allowAdding: false, allowDeleting: false };
@@ -355,7 +361,7 @@ export class JournalEntryComponent implements AfterViewInit {
     }
 
     onClone() {
-        this.store.dispatch(cloneJournal({ journal_id: this.currentRowData.journal_id }));
+        // this.store.dispatch(cloneJournal({ journal_id: this.currentRowData.journal_id }));
         this.toast.success('Journal Entry Cloned : ', this.currentRowData.journal_id);
     }
 
@@ -374,19 +380,18 @@ export class JournalEntryComponent implements AfterViewInit {
             this.route.navigate(['journals/gl', args.rowData.journal_id]);
         }
     }
-
     closeDrawer() {
         this.onCloseDrawer.emit();
     }
 
     exportLX() {
-        throw new Error('Method not implemented.');
+        this.grid().excelExport
     }
     exportPDF() {
-        throw new Error('Method not implemented.');
+        this.grid().pdfExport();
     }
     exportCSV() {
-        throw new Error('Method not implemented.');
+        this.grid().csvExport
     }
 
     onPrint() {
@@ -421,8 +426,8 @@ export class JournalEntryComponent implements AfterViewInit {
         var periodPrm = { period: period.period(), period_year: period.period_year() } as IPeriodParam;
         this.settingsService.updateCurrentPeriod(periodPrm).subscribe((res) => {
             this.toast.success('Period Updated : ' + periodPrm.period + ' - ' + periodPrm.period_year);
-        });
-        this.store.dispatch(loadJournalHeaderByPeriod({ period: periodPrm }));
+        });        
+        this.journalStore.loadJournalsByPeriod(periodPrm);
         this.closeDrawer();
     }
 

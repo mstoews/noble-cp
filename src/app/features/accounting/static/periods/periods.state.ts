@@ -21,7 +21,7 @@ const reducer = createReducer(
   initialState,
   on(periodsPageActions.load, (state) => ({ ...state, isLoading: true })),
   on(periodsPageActions.current, (state) => ({ ...state, currentPeriod: state.currentPeriod })),
-  on(periodsPageActions.select, (state, { period }) => ({ ...state, selectedId: period })),  
+  on(periodsPageActions.select, (state, { period_id }) => ({ ...state, selectedId: period_id })),  
   on(periodsPageActions.deletePeriod, (state) => ({ ...state, isLoading: true })),
   on(periodsPageActions.addPeriod, (state) => ({ ...state, isLoading: true })),
   on(periodsPageActions.updatePeriod, (state) => ({ ...state, isLoading: true })),
@@ -42,7 +42,7 @@ export const periodsFeature = createFeature({
     selectSelectedPeriod: createSelector(
       selectSelectedId,
       selectPeriods,
-      (selectedId, period) => period.find((s) => s.period === selectedId)
+      (selectedId, period) => period.find((s) => s.period_id === selectedId)
     )
   })
 })

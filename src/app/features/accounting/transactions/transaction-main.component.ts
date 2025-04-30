@@ -24,6 +24,7 @@ import { ActivatedRoute } from '@angular/router';
 import { JournalTemplateUpdateComponent } from './journal-template-update.component';
 import { GLTransactionGridComponent } from './transaction-grid.component';
 import { SpreadsheetViewComponent } from '../grid-components/spreadsheet-view.component';
+import { PeriodStore } from 'app/store/periods.store';
 
 const imports = [
     MaterialModule,
@@ -31,9 +32,6 @@ const imports = [
     FileManagerComponent,
     EntryWizardComponent,
     JournalTemplateComponent,
-    ARTransactionComponent,
-    APTransactionComponent,
-    GLTransactionListComponent,
     CdkScrollable,
     JournalTemplateUpdateComponent,
     GLTransactionGridComponent,
@@ -107,17 +105,12 @@ const imports = [
                         <!-- Load settings panel -->
                         <div class="mt-8">
                             @switch (selectedPanel) {
-                                @case ('entry') { <entry-wizard></entry-wizard>}                                                                
-                                @case ('gl')    { <gl-transactions-list></gl-transactions-list>  }                                
-                                @case ('ap')    { <ap-transactions></ap-transactions>}
-                                @case ('ar')    { <ar-transactions></ar-transactions>}
-                                @case ('tp')    { <journal-template></journal-template>  }
+                                @case ('entry') { <entry-wizard></entry-wizard>}  
+                                @case ('tp')    { <journal-template></journal-template>  } 
                                 @case ('at')    { <app-file-manager></app-file-manager>}
                                 @case ('tmp')   { <gl-journal-template></gl-journal-template>}
                                 @case ('grid')  { <gl-grid-transactions></gl-grid-transactions> }            
-                                @case ('xls')   { <spreadsheet-view></spreadsheet-view> }
-
-                                
+                                @case ('xls')   { <spreadsheet-view></spreadsheet-view> }                                
                             }
                         </div>
                     </div>
@@ -137,6 +130,7 @@ export class TransactionMainComponent implements OnInit, OnDestroy {
     private _unsubscribeAll: Subject<any> = new Subject<any>();
     public lastPanelOpened = signal<string>("");
     public panelService = inject(AppService);
+    public periodStore = inject(PeriodStore);
     selectedPanel: string = 'entry';
     public storedPanel: string;
 
@@ -162,12 +156,10 @@ export class TransactionMainComponent implements OnInit, OnDestroy {
         private _changeDetectorRef: ChangeDetectorRef,
         private _fuseMediaWatcherService: FuseMediaWatcherService,
     ) 
-    {
-
+     {
         this.panelService.findPanelByName(this.store.uid(), this.PANEL_ID).subscribe((panel) => {
-            this.selectedPanel = panel.lastPanelOpened;
+                this.selectedPanel = panel.lastPanelOpened;
         });
-
     }
 
     // -----------------------------------------------------------------------------------------------------
@@ -190,24 +182,24 @@ export class TransactionMainComponent implements OnInit, OnDestroy {
                 title: 'Transaction Wizard',
                 description: 'Create transactions and append digital artifacts for each transaction',
             },
-            {
-                id: 'gl',
-                icon: 'heroicons_outline:document-check',
-                title: 'Transactions Listing',
-                description: 'Manage your transactions and documentation',
-            },
-            {
-                id: 'ar',
-                icon: 'mat_outline:money',
-                title: 'Receipts and Receivables',
-                description: 'Record your receipts and manage your accounts receivable',
-            },
-            {
-                id: 'ap',
-                icon: 'mat_outline:shop',
-                title: 'Payments',
-                description: 'Pay your bills and manage your accounts payable',
-            },
+            // {
+            //     id: 'gl',
+            //     icon: 'heroicons_outline:document-check',
+            //     title: 'Transactions Listing',
+            //     description: 'Manage your transactions and documentation',
+            // },
+            // {
+            //     id: 'ar',
+            //     icon: 'mat_outline:money',
+            //     title: 'Receipts and Receivables',
+            //     description: 'Record your receipts and manage your accounts receivable',
+            // },
+            // {
+            //     id: 'ap',
+            //     icon: 'mat_outline:shop',
+            //     title: 'Payments',
+            //     description: 'Pay your bills and manage your accounts payable',
+            // },
             
             {
                 id: 'tmp',
