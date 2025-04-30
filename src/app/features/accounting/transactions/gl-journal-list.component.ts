@@ -17,6 +17,7 @@ import { SettingsService } from 'app/services/settings.service';
 import { GridMenubarStandaloneComponent } from '../grid-components/grid-menubar.component';
 import { PeriodStore } from 'app/store/periods.store';
 import { SummaryCardComponent } from "../../admin/dashboard/summary-card.component";
+import { take } from 'rxjs';
 
 
 const providers = [
@@ -313,6 +314,12 @@ export class GLJournalListComponent implements AfterViewInit {
     currentRowData: any;
     drawOpen: 'open' | 'close' = 'open';
     collapsed = false;
+    activatedRoute: any;
+    journalHeader: any;
+    accountList: any;
+    subtypeList: any;
+    templateList: any;
+    partyList: any;
     updateTransactionPeriod(currentPeriod: string) {
 
         const current = this.activePeriods().filter((period) => period.description === currentPeriod)
@@ -328,6 +335,17 @@ export class GLJournalListComponent implements AfterViewInit {
 
     ngOnInit() {
 
+        this.activatedRoute.data.pipe(take(1)).subscribe((data) => {
+            this.journalStore.loadJournals();                        
+            this.journalHeader = data.journal[0];
+            this.accountList = data.journal[1];
+            this.subtypeList = data.journal[2];
+            this.templateList = data.journal[3];
+            this.partyList = data.journal[4];            
+            this.refreshJournalForm(this.journalHeader);
+        });
+        
+
         var param = { period: 1, period_year: 2025 }
 
         this.journalStore.loadJournalsByPeriod(param);
@@ -341,6 +359,9 @@ export class GLJournalListComponent implements AfterViewInit {
         this.filterSettings = { type: 'Excel' };
         this.lines = 'Both';
         this.toast.info('Loading Journals');               
+    }
+    refreshJournalForm(journalHeader: any) {
+        throw new Error('Method not implemented.');
     }
 
     onTemplate() {

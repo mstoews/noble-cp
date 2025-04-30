@@ -3,8 +3,8 @@ import { ResolveFn, ActivatedRouteSnapshot, RouterStateSnapshot } from "@angular
 import { IJournalHeader, IJournalTemplate } from "app/models/journals";
 import { JournalService } from "./journal.service";
 
-import { combineLatestWith, Observable, of } from "rxjs";
-import { IAccounts, IDropDownAccounts } from "app/models";
+import { combineLatestWith, Observable, of, take } from "rxjs";
+import { IDropDownAccounts } from "app/models";
 import { IGLType } from "app/models/types";
 import { PartyService } from "./party.service";
 import { AccountsService } from "./accounts.service";
@@ -23,7 +23,7 @@ interface IJournalData {
 export const JournalEditResolver: ResolveFn <IJournalData> = (
   route: ActivatedRouteSnapshot,
   state: RouterStateSnapshot ) => { 
-    return inject(JournalService).getLastJournalNo().subscribe(
+    return inject(JournalService).getLastJournalNo().pipe(take(1)).subscribe(
       (journalNo) => {        
           inject(JournalService).getJournalHeaderById(journalNo).pipe(combineLatestWith([
           inject(AccountsService).readChildren(),

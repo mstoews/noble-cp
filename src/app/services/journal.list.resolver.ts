@@ -12,14 +12,14 @@ import { IJournalData } from "app/models/journals";
 export const JournalListResolver: ResolveFn <IJournalData> = (
   route: ActivatedRouteSnapshot,
   state: RouterStateSnapshot ) => { 
-    const currentPeriod = inject(JournalService).getCurrentPeriod().pipe(take(1));
-    return currentPeriod.pipe(combineLatestWith(
-      [ 
-      inject(AccountsService).readChildren(),
-      inject(SubTypeService).read(),
-      inject(TemplateService).read(),      
-      inject(PartyService).read(),
-      inject(PeriodsService).getActivePeriods()      
-     ]
-  )) as any;    
+    return inject(JournalService).getCurrentPeriod().pipe(take(1)).subscribe(
+          (CurrentPeriod) => { [       
+              inject(AccountsService).readChildren(),
+              inject(SubTypeService).read(),
+              inject(TemplateService).read(),          
+              inject(PartyService).read()
+             ]
+             } 
+          ) as any as Observable<IJournalData>;
+    
 };
