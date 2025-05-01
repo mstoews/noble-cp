@@ -27,7 +27,7 @@ import { IParty } from 'app/models/party';
 
 import { IAccounts, IFunds } from 'app/models';
 import { IType } from 'app/models/types';
-import { ICurrentPeriod, IPeriod, IPeriodParam } from 'app/models/period';
+import { ICurrentPeriod, ICurrentPeriodParam, IPeriod, IPeriodParam } from 'app/models/period';
 import { ISubType } from 'app/models/subtypes';
 import { FundsService } from 'app/features/accounting/static/funds/funds.service';
 import { EvidenceService } from 'app/services/evidence.service';
@@ -351,6 +351,21 @@ export const JournalStore = signalStore(
           tap(() => patchState(state, { isLoading: true })),
           switchMap((value) => {
             return journalService.getJournalHeaderByPeriod(value).pipe(
+              tapResponse({
+                next: (journal) => patchState(state, { gl: journal }),
+                error: console.error,
+                finalize: () => patchState(state, { isLoading: false }),
+              })
+            );
+          })
+        )
+      ),
+      
+      getJournalListByPeriod: rxMethod<ICurrentPeriodParam>(
+        pipe(
+          tap(() => patchState(state, { isLoading: true })),
+          switchMap((value) => {
+            return journalService.getJournalListByPeriod(value).pipe(
               tapResponse({
                 next: (journal) => patchState(state, { gl: journal }),
                 error: console.error,

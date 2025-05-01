@@ -1,13 +1,7 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
-  "baseUrl": "src",
-    "paths": {      
-      "@services/*": ["app/services/*"],
-      "@features/*": ["app/features/*"],
-      "@state/*": ["app/state/*"],
-      "@store/*": ["app/store/*"]  
-     },
+  "baseUrl": "src",    
     "outDir": "./dist",
     "sourceMap": true,
     "esModuleInterop": true,

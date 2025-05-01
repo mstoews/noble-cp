@@ -9,6 +9,7 @@ import { ICurrentPeriod } from "app/models/period";
 import { FormControl, FormGroup } from "@angular/forms";
 import { MatMenuModule } from '@angular/material/menu';
 import { MatSelect, MatSelectChange, MatSelectModule } from '@angular/material/select';
+import { PeriodStore } from "app/store/periods.store";
 
 
 let modules = [MatToolbarModule, MatIconModule, MatButtonModule, CommonModule, MatTooltipModule, MatSelectModule, MatMenuModule];
@@ -36,21 +37,19 @@ let modules = [MatToolbarModule, MatIconModule, MatButtonModule, CommonModule, M
 
   imports: [modules],
   template: `
-    <mat-toolbar class="text-white font-sans bg-gray-500 text-2xl rounded-lg">  {{ inTitle() }} 
+    <mat-toolbar class="text-white font-sans bg-gray-500 text-2xl rounded-lg mr-5">  {{ inTitle() }} 
     <span class="flex-1"></span>      
-      @if (showPeriod() === true) {  
-        @if (periodStore.isLoading() === false )  {          
-            <mat-form-field class="rounded-lg w-[200px] mt-5">              
-              <mat-select [formControl]="selectControl" #periodDropdownSelection (selectionChange)="onSelectionChange($event)">
-                @for ( period of periods() ; track period.description ) {
-                  <mat-option [value]="period.description">
-                      {{ period.description }}
-                  </mat-option>
-                 }             
-            </mat-select>                        
-            </mat-form-field>                              
-          }
-      }
+      
+    <mat-form-field class="rounded-lg w-[200px] mt-5">              
+              <mat-select [value]="_currentPeriod" #periodDropdownSelection (selectionChange)="onSelectionChange($event)">
+                  @for ( period of _currentActivePeriods ; track period.description ) {
+                    <mat-option [value]="period.description">
+                        {{ period.description }}
+                    </mat-option>
+                  }             
+              </mat-select>                        
+    </mat-form-field>  
+      
       
       @if (showNew()) {
         <button mat-icon-button  (click)="onNew()" color="primary" class="m-1 bg-gray-200 md:visible" matTooltip="Add"  aria-label="NEW" >
@@ -129,33 +128,44 @@ export class GridMenubarStandaloneComponent implements OnInit {
   
   periods = input<ICurrentPeriod[]>();
 
-  showBack = input<boolean>(false);
-  showPeriod = input<boolean>(false);
-  showExportXL = input<boolean>(false);
+  showBack = input<boolean>(true);
+  showPeriod = input<boolean>(true);
+  showExportXL = input<boolean>(true);
   showExportPDF = input<boolean>(false);
   showExportCSV = input<boolean>(false);
-  showPrint = input<boolean>(false);
+  showPrint = input<boolean>(true);
   showSettings = input<boolean>(false);
   showNew = input<boolean>(false);
   showClone = input<boolean>(false);
   showTemplate = input<boolean>(false);
+  
   period = output<string>();
   selectedPeriod = output<string>();
 
+  periodStore = inject(PeriodStore);
+  periodsDropdown = viewChild<MatSelect>("periodDropdownSelection");
+  
+  _currentPeriod: string;
 
-  menuForm = new FormGroup({
-    subtype: new FormControl('')
-  });
+
+  _currentActivePeriods : ICurrentPeriod[];
+
 
   periodDropdownSelect = viewChild<MatSelect>("periodDropdownSelection");
 
   ngOnInit() {        
-    // this.selectedPeriod.emit(this.currentPrd);
+    var _currentActivePeriods = localStorage.getItem('activePeriod');
+    
+    if (_currentActivePeriods) {
+      this._currentActivePeriods = JSON.parse(_currentActivePeriods) as ICurrentPeriod[];
+    } 
+    this._currentPeriod = localStorage.getItem('currentPeriod');    
   }
   public onSelectionChange(event: MatSelectChange) {
-    // this.currentPrd = event.value as string;    
-    // this.periodStore.updateCurrentPeriod(this.currentPrd);        
-    // this.period.emit(this.currentPrd);
+     var currentPrd = event.value as string;    
+     localStorage.setItem('currentPeriod', currentPrd);
+     this.periodStore.updateCurrentPeriod(currentPrd);        
+     this.period.emit(currentPrd);
   }
 
   public onNew() {

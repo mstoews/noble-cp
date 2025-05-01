@@ -20,13 +20,9 @@ import { JournalService } from 'app/services/journal.service';
 export class JournalRouteComponent {
   router = inject(Router);
   journalService = inject(JournalService);
-  constructor() {
-    
-    var journal_id = 1;
-    // this.router.navigate(["journals/gl", journal_id]);
-
-    this.journalService.getLastJournalNo().subscribe((journal_no) => {
-      console.log(journal_no);
+  constructor() {    
+    var journal_id = 1;    
+    this.journalService.getLastJournalNo().subscribe((journal_no) => {      
       journal_id = journal_no-1;
       this.router.navigate(["journals/gl", journal_id]);
     });

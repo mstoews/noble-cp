@@ -98,6 +98,7 @@ const imp = [
             class="pl-5 pr-5"            
             [showBack]="true" 
             (print)="onPrint()"
+            (period)="onPeriod($event)"
             (back)="onBack()"  
             (clone)="onClone('GL')"           
             [inTitle]="'General Ledger Transactions Update'" 
@@ -639,7 +640,7 @@ export class JournalUpdateComponent implements OnInit, OnDestroy, AfterViewInit 
     subtypeDropDown = viewChild<SubtypeDropDownComponent>("subtypeDropDown");
 
     private _fuseConfirmationService = inject(FuseConfirmationService);
-    private fb = inject(FormBuilder);
+    
     
     private readonly destroyJournalForm$ = new Subject<void>();
     private readonly destroyDetailForm$ = new Subject<void>();
@@ -647,7 +648,7 @@ export class JournalUpdateComponent implements OnInit, OnDestroy, AfterViewInit 
     private auth = inject(AUTH);
     private activatedRoute = inject(ActivatedRoute);
     private toastr = inject(ToastrService);
-    private journalService = inject(JournalService);
+
     public fuseConfirmationService = inject(FuseConfirmationService);
     public matDialog = inject(MatDialog);
     
@@ -747,6 +748,8 @@ export class JournalUpdateComponent implements OnInit, OnDestroy, AfterViewInit 
     protected _onDestroyCreditAccountFilter = new Subject<void>();
     protected _onDestroy = new Subject<void>();
 
+    public changeDetectorRef = inject(ChangeDetectorRef);
+
     columnsToDisplay: string[] = ["journal_id", "description"];
     toolbarOptions = ['Search']
 
@@ -795,16 +798,30 @@ export class JournalUpdateComponent implements OnInit, OnDestroy, AfterViewInit 
     });
 
     journalData: IJournalHeader | undefined;
+
+    currentPeriod = '';
+
+    onPeriod(event: any) {
+        this.currentPeriod = event;
+        localStorage.setItem('currentPeriod', this.currentPeriod);        
+        this.journalStore.getJournalListByPeriod({current_period: this.currentPeriod})
+        this.toast.info(event, 'Period changed to: ');
+        this.changeDetectorRef.detectChanges();
+    }
     ngOnInit(): void {
+
+        this.initialDatagrid();
+
+        var currentPeriod = localStorage.getItem('currentPeriod');        
+        if (currentPeriod === null) {
+            currentPeriod = 'January 2025';
+        }
 
         this.ngrxStore.dispatch(accountPageActions.children());
         this.ngrxStore.dispatch(FundsActions.loadFunds());
 
-        this.initialDatagrid();
-
-
-        this.activatedRoute.data.pipe(take(1)).subscribe((data) => {
-            this.journalStore.loadJournals();                        
+        this.activatedRoute.data.pipe(take(1)).subscribe((data) => {            
+            this.journalStore.getJournalListByPeriod({current_period: currentPeriod})
             this.journalHeader = data.journal[0];
             this.accountList = data.journal[1];
             this.subtypeList = data.journal[2];

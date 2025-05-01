@@ -1,4 +1,4 @@
-import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, HostListener, ViewEncapsulation, inject, input, output, viewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, HostListener, OnInit, ViewEncapsulation, inject, input, output, viewChild } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { MaterialModule } from 'app/shared/material.module';
@@ -57,10 +57,11 @@ const imports = [
     <div class="sm:hide md:visible ml-5 mr-5">
         <grid-menubar class="pl-5 pr-5"            
             [showBack]="true"             
-            [showPeriod]="false"
+            [showPeriod]="true"
             (print)="onPrint()"
             (back)="onBack()"  
-            (clone)="onClone()"           
+            (clone)="onClone()"  
+            (period)="onPeriod($event)"         
             [inTitle]="'General Ledger Transactions Update'" 
             [prd]="journalStore.currentPeriod()"
             [prd_year]="journalStore.currentYear()">
@@ -70,32 +71,31 @@ const imports = [
     <div id="settings" class="control-section default-splitter flex flex-col overflow-hidden">    
       <div class="grid grid-row-3 overflow-hidden">
         <div class="flex flex-col min-w-0 overflow-y-auto -px-10" cdkScrollable>
-          <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 w-full min-w-0 overflow-hidden ml-3 mr-3">
-            <div (click)="onReceipts()" class="flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden m-2 hover:cursor-pointer">
-                  <summary-card class="min-h-48" [mainValue]="150026.00" [caption]="'Receipts'" [title]="'Funds'" [chart]="'1'"
-                      [subtitle]="" [subtitle_value]="">
+          <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-2 w-full min-w-400 overflow-hidden ml-3 mr-3">
+            
+              <div  class="flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden m-2 hover:cursor-pointer">
+                  <summary-card (click)="onReceipts()" class="min-h-48" [mainValue]="1526.00" [caption]="'Receipts'" [title]="'Funds'" [chart]="'1'"
+                  [subtitle]="currentPeriod" [subtitle_value]="">
                   </summary-card>
               </div>
               
               <div  class="flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden m-2 hover:cursor-pointer">
                   <summary-card class="min-h-32" (click)="onReceipts()" [mainValue]="24000.00" [caption]="'Outstanding'" [title]="'30 Days'"
-                      [subtitle]="''" [subtitle_value]="">
+                  [subtitle]="currentPeriod" [subtitle_value]="" [chart]="'4'">
                   </summary-card>
               </div>
               <div class="flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden m-2 hover:cursor-pointer">
                   <summary-card  class="min-h-32" (click)="onReceipts()" [mainValue]="45050.00" [caption]="'Current Receivables'" [title]="'Capital'"
-                      [subtitle]="''" [subtitle_value]="">
+                  [subtitle]="currentPeriod" [subtitle_value]="" [chart]="'5'">
                   </summary-card>
               </div>
               
               <div class="flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden m-2 hover:cursor-pointer">
                   <summary-card  class="min-h-32" (click)="onReceipts()"  [mainValue]="15000.00" [caption]="'Past Due Receipts'" [title]="'Capital'"
-                      [subtitle]="''" [subtitle_value]="">
+                      [subtitle]="currentPeriod" [subtitle_value]="" [chart]="'3'">
                   </summary-card>
               </div>
           </div>
-          <div class="grid grid-cols-1 gap-4 w-full min-w-0 border-gray-300 overflow-hidden">
-        </div> 
       
           <mat-drawer-container id="target" class="flex flex-col min-w-0 overflow-y-auto -px-10 h-[calc(100vh-21.5rem)] mr-4 ml-4">     
            <mat-card>            
@@ -239,7 +239,7 @@ const imports = [
                             } 
                                                     
                 </div>
-            </mat-card>       
+           </mat-card>       
             
             <ejs-contextmenu              
                 target='#target' 
@@ -247,7 +247,6 @@ const imports = [
                 [animationSettings]='animation'
                 [items]= 'menuItems'> 
             </ejs-contextmenu> 
-
           </mat-drawer-container>
           
         </div>
@@ -265,7 +264,7 @@ const imports = [
 })
 
 
-export class GLJournalListComponent implements AfterViewInit {
+export class GLJournalListComponent implements OnInit {
 
     public route = inject(Router);
     public toast = inject(ToastrService);
@@ -301,7 +300,7 @@ export class GLJournalListComponent implements AfterViewInit {
     public lines: GridLine;
     
     public periodParam: IPeriodParam;
-
+    public gridHeight: number;
     public groupSettings: { [x: string]: Object } = { showDropArea: true };
     
     // periods$ = this.store.select(periodsFeature.selectPeriods);
@@ -320,35 +319,29 @@ export class GLJournalListComponent implements AfterViewInit {
     subtypeList: any;
     templateList: any;
     partyList: any;
+    currentPeriod: any; 
     updateTransactionPeriod(currentPeriod: string) {
 
         const current = this.activePeriods().filter((period) => period.description === currentPeriod)
         if (current.length === 0) {
             this.toast.error('No period found');
             return;
-        }
-
-        var param = { period: current[0].period_id, period_year: current[0].period_year }
-        this.journalStore.loadJournalsByPeriod(param);
+        }        
+        
+        
+        
         
     }
 
     ngOnInit() {
-
-        this.activatedRoute.data.pipe(take(1)).subscribe((data) => {
-            this.journalStore.loadJournals();                        
-            this.journalHeader = data.journal[0];
-            this.accountList = data.journal[1];
-            this.subtypeList = data.journal[2];
-            this.templateList = data.journal[3];
-            this.partyList = data.journal[4];            
-            this.refreshJournalForm(this.journalHeader);
-        });
         
-
-        var param = { period: 1, period_year: 2025 }
-
-        this.journalStore.loadJournalsByPeriod(param);
+        var currentPeriod = localStorage.getItem('currentPeriod');        
+        if (currentPeriod === null) {
+            currentPeriod = 'January 2025';
+        }
+        this.journalStore.getJournalListByPeriod({current_period: currentPeriod})                
+        this.currentPeriod = currentPeriod;        
+        localStorage.setItem('openPeriods', JSON.stringify(this.periodStore.activePeriods()));
                                         
         this.toolbarTitle = "Journal Transactions by Period ";        
         this.formatoptions = { type: 'dateTime', format: 'M/dd/yyyy' }
@@ -364,17 +357,27 @@ export class GLJournalListComponent implements AfterViewInit {
         throw new Error('Method not implemented.');
     }
 
+    onPeriod(event: any) {
+        this.currentPeriod = event;
+        localStorage.setItem('currentPeriod', this.currentPeriod);
+        this.journalStore.getJournalListByPeriod({current_period: event})                
+        this.journalStore.getJournalListByPeriod({current_period: this.currentPeriod})
+        this.toast.info(event, 'Period changed to: ');
+        this.changeDetectorRef.detectChanges();
+        
+    }
+
     onTemplate() {
-        this.toast.success('Template');
+        this.toast.info('Template');
     }
 
     onClone() {
         // this.store.dispatch(cloneJournal({ journal_id: this.currentRowData.journal_id }));
-        this.toast.success('Journal Entry Cloned : ', this.currentRowData.journal_id);
+        this.toast.info('Journal Entry Cloned : ', this.currentRowData.journal_id);
     }
 
     onAdd() {
-        this.toast.success('Add');
+        this.toast.info('Add');
     }
 
     onRowSelected(args: RowSelectEventArgs) {
@@ -521,8 +524,6 @@ export class GLJournalListComponent implements AfterViewInit {
         this.adjustHeight();
     }
 
-
-
     ngAfterViewInit() {
         const width = window.innerWidth;
         if (width < 768) {
@@ -540,25 +541,23 @@ export class GLJournalListComponent implements AfterViewInit {
         }
     }
 
-    public gridHeight: number;
+    
 
-
-    onBack() {
-      throw new Error('Method not implemented.');
+      onBack() {
+        throw new Error('Method not implemented.');
       }
       onReceipts() {
-      throw new Error('Method not implemented.');
+        throw new Error('Method not implemented.');
       }
-      onPeriod($event: any) {
-      throw new Error('Method not implemented.');
-      }
+    
       onOpenSettings() {
-      throw new Error('Method not implemented.');
+        throw new Error('Method not implemented.');
       }
       onPrinting() {
-      throw new Error('Method not implemented.');
+        throw new Error('Method not implemented.');
       }
-      
-
-
+    
 }
+
+
+

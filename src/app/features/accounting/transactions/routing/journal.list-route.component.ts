@@ -17,8 +17,8 @@ import { Router } from '@angular/router';
 })
 export class JournalListRouteComponent {
   router = inject(Router);
-  constructor() {      
-    this.router.navigate(["journals/list"]);      
+  constructor() {          
+    this.router.navigate(["journals/list", "gl"]);
   }
 
 }

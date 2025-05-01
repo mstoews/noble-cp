@@ -129,19 +129,23 @@ export const appRoutes: Route[] = [
                 path: 'journals',
                 canActivate: [isAuthenticatedGuard()],
                 loadChildren: () =>
-                    import(
-                        'app/features/accounting/transactions/journal.entry.routes'
-                    ),
+                    import('app/features/accounting/transactions/routing/journal.entry.routes'),
+            },
+
+            {
+                path: 'new-journals',
+                canActivate: [isAuthenticatedGuard()],
+                loadChildren: () => import('app/features/accounting/transactions/routing/journal.new.entry.routes'),                                         
             },
             {
                 path: 'list-journals',
                 canActivate: [isAuthenticatedGuard()],
-                loadChildren: () => import( 'app/features/accounting/transactions/list-journal.entry.routes' ),
+                loadChildren: () => import('app/features/accounting/transactions/routing/journal.list.entry.routes'),
             },
             {
                 path: 'edit-journals',
                 canActivate: [isAuthenticatedGuard()],
-                loadChildren: () =>  import( 'app/features/accounting/transactions/edit-journal.entry.routes' ),
+                loadChildren: () => import('app/features/accounting/transactions/routing/journal.edit.entry.routes'),
             },
             {
                 path: 'analytics',

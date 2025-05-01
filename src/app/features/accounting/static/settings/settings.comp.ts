@@ -27,7 +27,6 @@ import { ToastrService } from "ngx-toastr";
 import { SettingsDrawerComponent } from "./settings.drawer";
 import { GridMenubarStandaloneComponent } from "../../grid-components/grid-menubar.component";
 import { SettingsStore } from "app/store/settings.store";
-import { I } from "@angular/cdk/a11y-module.d-9e4162d8";
 import { isVisible } from "@syncfusion/ej2-base";
 
 const imports = [

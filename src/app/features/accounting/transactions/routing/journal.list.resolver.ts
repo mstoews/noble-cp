@@ -1,0 +1,18 @@
+import { inject } from "@angular/core";
+import { ResolveFn, ActivatedRouteSnapshot, RouterStateSnapshot } from "@angular/router";
+import { JournalService } from "app/services/journal.service";
+import { combineLatestWith, Observable, take } from "rxjs";
+import { PartyService } from "app/services/party.service";
+import { AccountsService } from "app/services/accounts.service";
+
+export const JournalListResolver: ResolveFn<any> = (
+  route: ActivatedRouteSnapshot,
+  state: RouterStateSnapshot) => {
+  return inject(JournalService).getCurrentPeriod().pipe(take(1)).subscribe(
+    (Period) => {
+        inject(AccountsService).readChildren().pipe(combineLatestWith([
+        inject(PartyService).read()
+      ]
+      ))
+    }) as any;
+};

@@ -9,7 +9,6 @@ import { GridMenubarStandaloneComponent } from "../grid-components/grid-menubar.
 import { SummaryCardComponent } from "../../admin/dashboard/summary-card.component";
 import { PeriodStore } from "app/store/periods.store";
 import { ActivatedRoute } from "@angular/router";
-import { take } from "rxjs";
 import { JournalStore } from "app/store/journal.store";
 
 const imports = [
@@ -112,15 +111,7 @@ export class GLTransactionListComponent implements OnInit {
   partyList: any;
   
   ngOnInit() {  
-    this.activatedRoute.data.pipe(take(1)).subscribe((data) => {
-               this.journalStore.loadJournals();                        
-               this.journalHeader = data.journal[0];
-               this.accountList = data.journal[1];
-               this.subtypeList = data.journal[2];
-               this.templateList = data.journal[3];
-               this.partyList = data.journal[4];            
-               // this.refreshJournalForm(this.journalHeader);
-           });
+   
   }
   
   public openDrawer = false;

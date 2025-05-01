@@ -18,26 +18,58 @@ export const defaultNavigation: FuseNavigationItem[] = [
                 link: '/projects',
             },
             {
-                id: 'accounts.journals',
-                title: 'Transactions',
-                type: 'basic',
-                icon: 'heroicons_outline:banknotes',
-                link: '/journals',
-            },
-            {
-                id: 'accounts.list-journals',
-                title: 'Transaction List',
-                type: 'basic',
-                icon: 'heroicons_outline:banknotes',
-                link: '/list-journals',
-            },
-            {
-                id: 'accounts.edit-journals',
-                title: 'Edit Transactions',
-                type: 'basic',
-                icon: 'heroicons_outline:currency-dollar',
-                link: '/edit-journals',
-            },                        
+                id: 'navigation-features.level.0',
+                title: 'Journal Management',
+                icon: 'heroicons_outline:check-circle',
+                type: 'collapsable',
+                    children: [
+                        {
+                            id: 'accounts.wizard-journals',
+                            title: 'New Transactions',
+                            type: 'basic',
+                            icon: 'heroicons_outline:banknotes',
+                            link: '/new-journals',
+                        },
+                        
+                        {
+                            id: 'accounts.list-journals',
+                            title: 'Open  Transactions',
+                            type: 'basic',
+                            icon: 'heroicons_outline:banknotes',
+                            link: '/list-journals',
+                        },
+                        {
+                            id: 'accounts.ap-journals',
+                            title: 'Accounts Payable',
+                            type: 'basic',
+                            icon: 'heroicons_outline:banknotes',
+                            link: '/list-journals',
+                        },
+                        {
+                            id: 'accounts.ar-journals',
+                            title: 'Accounts Receivable',
+                            type: 'basic',
+                            icon: 'heroicons_outline:banknotes',
+                            link: '/list-journals',
+                        },
+
+                        {
+                            id: 'accounts.edit-journals',
+                            title: 'Edit Transactions',
+                            type: 'basic',
+                            icon: 'heroicons_outline:currency-dollar',
+                            link: '/edit-journals',
+                        },                        
+                        {
+                            id: 'accounts.journals',
+                            title: 'Settings',
+                            type: 'basic',
+                            icon: 'heroicons_outline:banknotes',
+                            link: '/journals',
+                        },
+                    ],
+        
+            },            
             {
                 id: 'budgeting',
                 title: 'Budget Analysis',

@@ -8,7 +8,7 @@ import {
 } from '@ngrx/signals';
 
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
-import { exhaustMap, pipe, switchMap, tap } from 'rxjs';
+import { debounceTime, exhaustMap, pipe, switchMap, tap } from 'rxjs';
 import { computed, inject } from '@angular/core';
 import { tapResponse } from '@ngrx/operators';
 import { PeriodsService } from '../services/periods.service';
@@ -66,6 +66,7 @@ export const PeriodStore = signalStore(
             tapResponse({
               next: (period) => {
                 patchState(state, { currentPeriod: period });
+                localStorage.setItem('currentPeriod', period);
               },
               error: console.error,
               finalize: () => patchState(state, { isLoading: false }),
@@ -80,8 +81,12 @@ export const PeriodStore = signalStore(
         tap(() => patchState(state, { isLoading: true })),
         switchMap(() => {
           return periodService.getActivePeriods().pipe(
+            debounceTime(3000),
             tapResponse({
-              next: (period) => patchState(state, { activePeriods: period }),
+              next: (period) => patchState(state, 
+                { 
+                  activePeriods: period
+                 }),                
               error: console.error,
               finalize: () => patchState(state, { isLoading: false }),
             })

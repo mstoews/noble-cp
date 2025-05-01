@@ -19,6 +19,7 @@ export interface IJournalData {
   journalDetails?: IJournalDetail[];
 }
 
+
 export interface IJournalHeader {
   journal_id?: number,
   description: string,
@@ -29,6 +30,7 @@ export interface IJournalHeader {
   create_user?: string,
   period: number,
   period_year: number,
+  current_period?: string,
   transaction_date: string,
   status?: string,
   type: string,

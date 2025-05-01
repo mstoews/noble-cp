@@ -176,12 +176,12 @@ export class TransactionMainComponent implements OnInit, OnDestroy {
         }
 
         this.panels = [
-            {
-                id: 'entry',
-                icon: 'heroicons_outline:document-plus',
-                title: 'Transaction Wizard',
-                description: 'Create transactions and append digital artifacts for each transaction',
-            },
+            // {
+            //     id: 'entry',
+            //     icon: 'heroicons_outline:document-plus',
+            //     title: 'Transaction Wizard',
+            //     description: 'Create transactions and append digital artifacts for each transaction',
+            // },
             // {
             //     id: 'gl',
             //     icon: 'heroicons_outline:document-check',

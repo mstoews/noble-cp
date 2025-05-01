@@ -26,6 +26,7 @@ import { AuthService } from 'app/features/auth/auth.service';
 import { SummaryCardComponent } from './summary-card.component';
 import { FIRESTORE } from 'app/app.config';
 import { DashboardChartComponent } from "./chart.component";
+import { PeriodStore } from 'app/store/periods.store';
 
 
 
@@ -63,8 +64,10 @@ export class ProjectComponent implements OnInit, OnDestroy {
     authService = inject(AuthService);
     private _router = inject(Router);
     private _projectService = inject(ProjectService);
+    private _periodStore = inject(PeriodStore);
 
-    
+    ref = this._periodStore.loadActivePeriods();
+            
     netRevenue = input(0);
     special = input(8000);
     reserve = input(84000);
@@ -106,6 +109,11 @@ export class ProjectComponent implements OnInit, OnDestroy {
                 this._router.navigate(['auth/login']);
             }
         });
+
+        if (this._periodStore.activePeriods().length > 0){
+           localStorage.setItem('activePeriod', JSON.stringify(this._periodStore.activePeriods()));
+        }
+    
     }
 
     openTasks() {

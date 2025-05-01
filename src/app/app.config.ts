@@ -43,7 +43,6 @@ import { getAuth, connectAuthEmulator } from 'firebase/auth';
 import { initializeApp } from 'firebase/app';
 import { loggingInterceptor } from "./logging-interceptor";
 import { retryInterceptor } from "./retry-interceptor";
-import { jsonCachingInterceptor } from "./caching-interceptor";
 
 
 import { JournalReducer } from './state/journal/Journal.Reducer';
@@ -52,14 +51,13 @@ import { UsersReducer } from './state/users/Users.Reducer';
 // Effects 
 
 import { journalHeaderEffects } from './state/journal/Journal.Effects';
-import { journalTransactionEffects } from './state/journalTransactions/JournalTransactions.Effects';
 
-import { userEffects } from './state/users/Users.Effects';
+
 import { provideRouterStore } from '@ngrx/router-store';
 import { FundsReducer } from './features/accounting/static/funds/Funds.Reducer';
 
 
-import { UserService } from './services/user.service';
+
 
 import { periodEffects } from './features/accounting/static/periods/periods.effects';
 import { subTypeEffects } from './features/accounting/static/subtype/sub-type.effects';
