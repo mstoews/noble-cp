@@ -27,7 +27,7 @@ export const defaultNavigation: FuseNavigationItem[] = [
                             id: 'accounts.wizard-journals',
                             title: 'New Transactions',
                             type: 'basic',
-                            icon: 'heroicons_outline:banknotes',
+                            icon: 'heroicons_outline:document-plus',
                             link: '/new-journals',
                         },
                         
@@ -35,22 +35,22 @@ export const defaultNavigation: FuseNavigationItem[] = [
                             id: 'accounts.list-journals',
                             title: 'Open  Transactions',
                             type: 'basic',
-                            icon: 'heroicons_outline:banknotes',
+                            icon: 'heroicons_outline:document-check',
                             link: '/list-journals',
                         },
                         {
                             id: 'accounts.ap-journals',
                             title: 'Accounts Payable',
                             type: 'basic',
-                            icon: 'heroicons_outline:banknotes',
-                            link: '/list-journals',
+                            icon: 'mat_outline:sell',
+                            link: '/ap-journals',
                         },
                         {
                             id: 'accounts.ar-journals',
                             title: 'Accounts Receivable',
                             type: 'basic',
-                            icon: 'heroicons_outline:banknotes',
-                            link: '/list-journals',
+                            icon: 'mat_outline:shopping_basket',
+                            link: '/ar-journals',
                         },
 
                         {
@@ -151,18 +151,18 @@ export const defaultNavigation: FuseNavigationItem[] = [
                         },
                         {
                             id: 'help-center',
-                            title: 'Help Center',
+                            title: 'Blog',
                             type: 'basic',
                             icon: 'mat_outline:help_center',
-                            link: '/help',
+                            link: '/blog',
                         },
 
                         {
                             id: 'accounting.learning',
-                            title: 'Learning',
+                            title: 'Documentation',
                             type: 'basic',
                             icon: 'heroicons_outline:academic-cap',
-                            link: '/learning',
+                            link: '/documentation',
                         },
                     ],
         

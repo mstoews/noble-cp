@@ -1,16 +1,17 @@
 import { inject } from "@angular/core";
 import { ResolveFn, ActivatedRouteSnapshot, RouterStateSnapshot } from "@angular/router";
-import { IJournalHeader, IJournalTemplate } from "app/models/journals";
-import { JournalService } from "../../../../services/journal.service";
-
 import { combineLatestWith, Observable, of, take } from "rxjs";
-import { IDropDownAccounts } from "app/models";
-import { IGLType } from "app/models/types";
-import { PartyService } from "../../../../services/party.service";
-import { AccountsService } from "../../../../services/accounts.service";
+
+import { PartyService } from "app/services/party.service";
+import { AccountsService } from "app/services/accounts.service";
+import { TemplateService } from "app/services/template.service";
+import { SubTypeService } from "app/services/subtype.service";
+import { JournalService } from "app/services/journal.service";
+
 import { IParty } from "app/models/party";
-import { TemplateService } from "../../../../services/template.service";
-import { SubTypeService } from "../../../../services/subtype.service";
+import { IGLType } from "app/models/types";
+import { IJournalHeader, IJournalTemplate } from "app/models/journals";
+import { IDropDownAccounts } from "app/models";
 
 interface IJournalData {
   journalNo: string;
@@ -21,19 +22,23 @@ interface IJournalData {
   parties: IParty[];
 }
 
-export const JournalEditResolver: ResolveFn<IJournalData> = (
-  
+export const JournalEditResolver: ResolveFn<IJournalData> = (  
   route: ActivatedRouteSnapshot,
   state: RouterStateSnapshot) => {
-  const journalStore = inject(JournalService);
-  return journalStore.getLastJournalNo().pipe(take(1)).subscribe(
+  const journalService = inject(JournalService);
+  const partyService = inject(PartyService);
+  const accountsService = inject(AccountsService);
+  const subtypeService = inject(SubTypeService);
+  const templateService = inject(TemplateService);
+  return journalService.getLastJournalNo().pipe(take(1)).subscribe(
     (journalNo) => {
-        journalStore.getJournalHeaderById(journalNo).pipe(combineLatestWith([
-        inject(AccountsService).readChildren(),
-        inject(SubTypeService).read(),
-        inject(TemplateService).read(),
-        inject(PartyService).read()
-      ]
+        journalService.getJournalHeaderById(journalNo).pipe(combineLatestWith(
+        [
+        accountsService.readChildren(),
+        subtypeService.read(),
+        templateService.read(),
+        partyService.read()
+       ]
       ))
-    }) as any as Observable<IJournalData>;
+    }) as any;
 }; 

@@ -143,6 +143,16 @@ export const appRoutes: Route[] = [
                 loadChildren: () => import('app/features/accounting/transactions/routing/journal.list.entry.routes'),
             },
             {
+                path: 'ar-journals',
+                canActivate: [isAuthenticatedGuard()],
+                loadChildren: () => import('app/features/accounting/transactions/routing/journal.ar.entry.routes'),
+            },
+            {
+                path: 'ap-journals',
+                canActivate: [isAuthenticatedGuard()],
+                loadChildren: () => import('app/features/accounting/transactions/routing/journal.ap.entry.routes'),
+            },
+            {
                 path: 'edit-journals',
                 canActivate: [isAuthenticatedGuard()],
                 loadChildren: () => import('app/features/accounting/transactions/routing/journal.edit.entry.routes'),
@@ -197,17 +207,24 @@ export const appRoutes: Route[] = [
                     import('app/features/budget/budget.entry.routes'),
             },
 
-            {
-                path: 'learning',
-                canActivate: [isAuthenticatedGuard()],
-                loadChildren: () =>
-                    import('app/features/admin/academy/academy.routes'),
-            },
+            // {
+            //     path: 'blog',
+            //     canActivate: [  isAuthenticatedGuard()],
+                
+                
+                                
+            // },
+            // {
+            //     path: 'documentation',
+            //     canActivate: [  isAuthenticatedGuard()],
+                
+                                
+            // },
             {
                 path: 'glaccts',
                 canActivate: [isAuthenticatedGuard()],
-                loadChildren: () =>
-                    import('app/features/accounting/static/gl.01.main.components.routes'),
+                loadChildren: () => import('app/features/accounting/static/gl.01.main.components.routes'),
+            
             },
             {
                 path: 'settings',

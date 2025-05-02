@@ -35,8 +35,7 @@ const imports = [
       </grid-menubar>
 
     <div id="settings" class="control-section default-splitter flex flex-col overflow-hidden">
-      
-       
+             
       <div class="grid grid-row-3 overflow-hidden">
        <div class="flex flex-col min-w-0 overflow-y-auto -px-10" cdkScrollable>
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 w-full min-w-0 overflow-hidden">

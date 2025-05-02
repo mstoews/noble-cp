@@ -27,7 +27,7 @@ import { ToastrService } from "ngx-toastr";
 import { SettingsDrawerComponent } from "./settings.drawer";
 import { GridMenubarStandaloneComponent } from "../../grid-components/grid-menubar.component";
 import { SettingsStore } from "app/store/settings.store";
-import { isVisible } from "@syncfusion/ej2-base";
+
 
 const imports = [
   CommonModule,

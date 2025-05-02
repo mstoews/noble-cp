@@ -298,7 +298,8 @@ const imp = [
                         </e-pane>
                         <e-pane>
                             <ng-template #content>
-                                <div id='vertical_splitter' class="vertical_splitter overflow-hidden">                                    
+                                <div id='vertical_splitter' class="vertical_splitter overflow-hidden">
+                                    <mat-card class="mat-elevation-z8 h-[calc(100vh-14.2rem)]">
                                         <div class="content overflow-hidden">
                                             @if (journalHeader.journal_id > 0) {
                                                 <div class="text-3xl gap-2 m-1 text-gray-100 p-2 bg-slate-600 rounded-md">
@@ -505,63 +506,64 @@ const imp = [
 
                                         </div>
                                     
-                                    <div>
-                                        <div class="content overflow-hidden">
-                                            @defer () {
-                                            <div class="text-3xl m-1 text-gray-100 p-2 bg-slate-600 rounded-md">Transaction
-                                                Artifacts
-                                            </div>
-                                            <div class="flex flex-col h-full ml-1 mr-1 text-gray-800">
-
-                                                <ejs-grid id="grid" #grid [dataSource]="journalStore.artifacts()" [rowHeight]="30"
-                                                    allowEditing='false' [editSettings]='editArtifactSettings'
-                                                    [allowFiltering]='false' [allowRowDragAndDrop]='false'
-                                                    [gridLines]="'Both'" (actionBegin)="actionSelectJournal($event)"
-                                                    (rowDrop)="rowDrop($event)" (rowDrag)="rowDrag($event)">
-
-                                                    <e-columns>
-                                                        <e-column field='id' headerText='ID' [visible]='false'
-                                                            isPrimaryKey='true' width='100'></e-column>
-                                                        <e-column field='description' headerText='Description'
-                                                            width='300'></e-column>
-                                                        <e-column field='location' headerText='Location'
-                                                            [visible]='false'></e-column>
-                                                        <e-column field='reference' headerText='Reference'></e-column>
-
-                                                    </e-columns>
-                                                </ejs-grid>
-
-                                                <ng-template #template let-data>
-                                                    <img [src]="data.location" alt="Noble Ledger v 0.0.1 logo" />
-                                                </ng-template>
-
-                                                <ng-template #buttonTemplate let-data>
-                                                    <button mat-flat-button class="bg-slate-500 text-gray-100"
-                                                        (click)="handleClick(data)">Details
-                                                    </button>
-                                                </ng-template>
-                                            </div>
-                                            }
-                                            @placeholder (minimum 200ms) {
-                                            <div class="flex justify-center">
-                                                <div>
-                                                    <mat-progress-spinner diameter="60" [value]="value"
-                                                        mode="indeterminate">
-                                                    </mat-progress-spinner>
+                                        <div>
+                                            <div class="content overflow-hidden">
+                                                @defer () {
+                                                <div class="text-3xl m-1 text-gray-100 p-2 bg-slate-600 rounded-md">Transaction
+                                                    Artifacts
                                                 </div>
-                                            </div>
-                                            } @loading (minimum 200ms) {
-                                            <div class="flex justify-center">
-                                                <div>
-                                                    <mat-progress-spinner diameter="60" [value]="value"
-                                                        mode="indeterminate">
-                                                    </mat-progress-spinner>
-                                                </div>
-                                            </div>
-                                            }
+                                                <div class="flex flex-col h-full ml-1 mr-1 text-gray-800">
 
+                                                    <ejs-grid id="grid" #grid [dataSource]="journalStore.artifacts()" [rowHeight]="30"
+                                                        allowEditing='false' [editSettings]='editArtifactSettings'
+                                                        [allowFiltering]='false' [allowRowDragAndDrop]='false'
+                                                        [gridLines]="'Both'" (actionBegin)="actionSelectJournal($event)"
+                                                        (rowDrop)="rowDrop($event)" (rowDrag)="rowDrag($event)">
+
+                                                        <e-columns>
+                                                            <e-column field='id' headerText='ID' [visible]='false'
+                                                                isPrimaryKey='true' width='100'></e-column>
+                                                            <e-column field='description' headerText='Description'
+                                                                width='300'></e-column>
+                                                            <e-column field='location' headerText='Location'
+                                                                [visible]='false'></e-column>
+                                                            <e-column field='reference' headerText='Reference'></e-column>
+
+                                                        </e-columns>
+                                                    </ejs-grid>
+
+                                                    <ng-template #template let-data>
+                                                        <img [src]="data.location" alt="Noble Ledger v 0.0.1 logo" />
+                                                    </ng-template>
+
+                                                    <ng-template #buttonTemplate let-data>
+                                                        <button mat-flat-button class="bg-slate-500 text-gray-100"
+                                                            (click)="handleClick(data)">Details
+                                                        </button>
+                                                    </ng-template>
+                                                </div>
+                                                }
+                                                @placeholder (minimum 200ms) {
+                                                <div class="flex justify-center">
+                                                    <div>
+                                                        <mat-progress-spinner diameter="60" [value]="value"
+                                                            mode="indeterminate">
+                                                        </mat-progress-spinner>
+                                                    </div>
+                                                </div>
+                                                } @loading (minimum 200ms) {
+                                                <div class="flex justify-center">
+                                                    <div>
+                                                        <mat-progress-spinner diameter="60" [value]="value"
+                                                            mode="indeterminate">
+                                                        </mat-progress-spinner>
+                                                    </div>
+                                                </div>
+                                                }
+
+                                            </div>
                                         </div>
-                                    </div>
+                                    </mat-card>
                                 </div>
                             </ng-template>                        
                         </e-pane>
@@ -821,7 +823,7 @@ export class JournalUpdateComponent implements OnInit, OnDestroy, AfterViewInit 
         this.ngrxStore.dispatch(FundsActions.loadFunds());
 
         this.activatedRoute.data.pipe(take(1)).subscribe((data) => {            
-            this.journalStore.getJournalListByPeriod({current_period: currentPeriod})
+            this.journalStore.getOpenJournalListByPeriod({current_period: currentPeriod})
             this.journalHeader = data.journal[0];
             this.accountList = data.journal[1];
             this.subtypeList = data.journal[2];

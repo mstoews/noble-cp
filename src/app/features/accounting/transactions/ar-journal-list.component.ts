@@ -48,7 +48,7 @@ const imports = [
     FilterTypePipe,
 ];
 @Component({
-    selector: 'gl-journal-list',
+    selector: 'ar-journal-list',
     imports: [imports, GridMenubarStandaloneComponent, SummaryCardComponent],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
@@ -62,7 +62,7 @@ const imports = [
             (back)="onBack()"  
             (clone)="onClone()"  
             (period)="onPeriod($event)"         
-            [inTitle]="'General Ledger Transactions Update'" 
+            [inTitle]="'Account Receivable Update'" 
             [prd]="journalStore.currentPeriod()"
             [prd_year]="journalStore.currentYear()">
         </grid-menubar>
@@ -264,7 +264,7 @@ const imports = [
 })
 
 
-export class GLJournalListComponent implements OnInit {
+export class ARJournalListComponent implements OnInit {
 
     public route = inject(Router);
     public toast = inject(ToastrService);
@@ -327,7 +327,10 @@ export class GLJournalListComponent implements OnInit {
             this.toast.error('No period found');
             return;
         }        
-                
+        
+        
+        
+        
     }
 
     ngOnInit() {
@@ -335,7 +338,6 @@ export class GLJournalListComponent implements OnInit {
         var currentPeriod = localStorage.getItem('currentPeriod');        
         if (currentPeriod === null) {
             currentPeriod = 'January 2025';
-            this.toast.info('No period found, defaulting to January 2025');
         }
         this.journalStore.getJournalListByPeriod({current_period: currentPeriod})                
         this.currentPeriod = currentPeriod;        
@@ -382,16 +384,10 @@ export class GLJournalListComponent implements OnInit {
         this.currentRowData = args.data; // Handle row selection event        
     }
 
-    selectedRow(args: any) {        
+    selectedRow(args: any) {
         if (args.requestType === 'beginEdit' || args.requestType === 'add') {
             args.cancel = true;
             this.currentRowData = args.rowData;
-
-            if (this.currentRowData.status === 'CLOSED' || this.currentRowData.status === 'CLEARED') {
-                this.toast.info('Cannot edit a closed or cleared transaction');
-                return;
-            }
-
             this.route.navigate(['journals/gl', args.rowData.journal_id]);
         }
     }

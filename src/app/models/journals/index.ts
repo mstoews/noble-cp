@@ -57,9 +57,10 @@ export interface IJournalTransactions {
   invoice_no: string
   party_id: string
   subtype: string
+  status: string
   details: Details
+ 
 }
-
 export interface Details {
   detail: Detail[]
 }

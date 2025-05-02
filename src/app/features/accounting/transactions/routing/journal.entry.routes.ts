@@ -5,6 +5,8 @@ import { JournalUpdateComponent } from '../journal-update.component';
 import { JournalListResolver } from 'app/features/accounting/transactions/routing/journal.list.resolver';
 import { GLJournalListComponent } from '../gl-journal-list.component';
 import { EntryWizardComponent } from '../wizard-entry.component';
+import { ARJournalListComponent } from '../ar-journal-list.component';
+import { APJournalListComponent } from '../ap-journal-list.component';
 
 export default [
     {
@@ -22,13 +24,13 @@ export default [
         resolve: { journal: JournalListResolver },
     },
     {
-        path: 'ar/:id',        
-        component: JournalUpdateComponent,
+        path: 'ar',        
+        component: ARJournalListComponent,
         resolve: { journal: JournalResolver },
     },
     {
-        path: 'ap/:id',        
-        component: JournalUpdateComponent,
+        path: 'ap',        
+        component: APJournalListComponent,
         resolve: { journal: JournalResolver },
     },
     {

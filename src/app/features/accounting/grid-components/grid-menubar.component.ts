@@ -19,17 +19,17 @@ let modules = [MatToolbarModule, MatIconModule, MatButtonModule, CommonModule, M
   selector: "grid-menubar",
   styles: [` 
       :host ::ng-deep .mdc-text-field--outlined ng-deep.mdc-notched-outline__leading {        
-        border-color: #33beff  !important;
+        border-color: #ffffff  !important;
         color: red !important;
       }
       
       :host ::ng-deep .mdc-text-field--outlined ng-deep.mdc-notched-outline__notch {        
-        border-color: #33beff  !important;
+        border-color: #ffffff  !important;
         color: red !important;
       }
       
       :host ::ng-deep .mdc-text-field--outlined ng-deep.mdc-notched-outline__trailing {        
-        border-color: #33beff  !important;
+        border-color: #ffffff  !important;
         color: red !important;
       }
     `,

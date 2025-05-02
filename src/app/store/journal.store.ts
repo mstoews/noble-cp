@@ -37,6 +37,7 @@ export interface JournalStateInterface {
   currentJournal: IJournalHeader;
   maxJournal: number | null;
   gl: IJournalHeader[];
+  open_transactions: IJournalHeader[];
   details: IJournalDetail[];
   templates: IJournalTemplate[];
   templateDetails: IJournalDetailTemplate[];
@@ -60,6 +61,7 @@ export const JournalStore = signalStore(
     currentJournal: null,
     maxJournal: 0,
     gl: [],
+    open_transactions: [],
     details: [],
     accounts: [],
     account_type: [],
@@ -351,8 +353,23 @@ export const JournalStore = signalStore(
           tap(() => patchState(state, { isLoading: true })),
           switchMap((value) => {
             return journalService.getJournalHeaderByPeriod(value).pipe(
-              tapResponse({
-                next: (journal) => patchState(state, { gl: journal }),
+              tapResponse({                
+                next: (journal) => patchState(state, { gl: journal.filter((jrn) => jrn.status === 'OPEN') }),
+                error: console.error,
+                finalize: () => patchState(state, { isLoading: false }),
+              })
+            );
+          })
+        )
+      ),
+      
+      loadOpenJournalsByPeriod: rxMethod<IPeriodParam>(
+        pipe(
+          tap(() => patchState(state, { isLoading: true })),
+          switchMap((value) => {
+            return journalService.getJournalHeaderByPeriod(value).pipe(
+              tapResponse({                
+                next: (journal) => patchState(state, { open_transactions: journal.filter((jrn) => jrn.status === 'OPEN') }),
                 error: console.error,
                 finalize: () => patchState(state, { isLoading: false }),
               })
@@ -368,6 +385,21 @@ export const JournalStore = signalStore(
             return journalService.getJournalListByPeriod(value).pipe(
               tapResponse({
                 next: (journal) => patchState(state, { gl: journal }),
+                error: console.error,
+                finalize: () => patchState(state, { isLoading: false }),
+              })
+            );
+          })
+        )
+      ),
+
+      getOpenJournalListByPeriod: rxMethod<ICurrentPeriodParam>(
+        pipe(
+          tap(() => patchState(state, { isLoading: true })),
+          switchMap((value) => {
+            return journalService.getJournalListByPeriod(value).pipe(
+              tapResponse({
+                next: (journal) => patchState(state, { gl: journal.filter((jrn) => jrn.status === 'OPEN') }),
                 error: console.error,
                 finalize: () => patchState(state, { isLoading: false }),
               })

@@ -5,13 +5,16 @@ import { combineLatestWith, Observable, take } from "rxjs";
 import { PartyService } from "app/services/party.service";
 import { AccountsService } from "app/services/accounts.service";
 
-export const JournalListResolver: ResolveFn<any> = (
+export const JournalListResolver: ResolveFn<any> = (  
   route: ActivatedRouteSnapshot,
   state: RouterStateSnapshot) => {
-  return inject(JournalService).getCurrentPeriod().pipe(take(1)).subscribe(
+  const accountService = inject(AccountsService);
+  const partyService = inject(PartyService);
+  const journalService = inject(JournalService);
+  return journalService.getCurrentPeriod().pipe(take(1)).subscribe(  
     (Period) => {
-        inject(AccountsService).readChildren().pipe(combineLatestWith([
-        inject(PartyService).read()
+        accountService.readChildren().pipe(combineLatestWith([
+        partyService.read()
       ]
       ))
     }) as any;

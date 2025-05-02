@@ -185,16 +185,15 @@ export class JournalService implements OnDestroy {
   }
 
   getJournalHeaderById(journal_id: number) {
-    var url = this.baseUrl + '/v1/read_journal_header_by_id';
-    this.nocache(url);
+    var url = this.baseUrl + '/v1/read_journal_header_by_id';    
     return this.httpClient.post<IJournalHeader>(url,
       {
         journal_id: journal_id,
-        status: "CLOSED"
+        status: "OPEN"
       },
     ).pipe(
       catchError(err => {
-        const message = "Failed to connect to server journal header ...";
+        const message = "Journal is not open  ...";
         this.ShowAlert(message, 'failed');
         return throwError(() => new Error(`${JSON.stringify(err)}`));
       }),
