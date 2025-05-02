@@ -75,7 +75,7 @@ const declarations = [
                 @if (store.isLoading() === false) {
                     <ejs-grid #grid id="grid" 
                         [rowHeight]='30'                        
-                        [allowPaging]='true' 
+                        [allowPaging]='false' 
                         [allowSelection]='false'
                         [allowSorting]='true'  
                         [showColumnMenu]='true'                         
