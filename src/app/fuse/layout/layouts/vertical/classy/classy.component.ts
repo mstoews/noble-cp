@@ -36,7 +36,7 @@ import { Subject, takeUntil } from 'rxjs';
                     <!-- Logo -->
                     <div class="flex items-center justify-center">
                         <img class="w-8" src="assets/images/logo/nobleledger.jpg" alt="logo"> 
-                        <span>Noble Ledger v0.0.4.18</span>  
+                        <span>Noble Ledger v0.0.4.19</span>  
                     </div>
                     <!-- Components -->
                     <div class="ml-auto flex items-center">
