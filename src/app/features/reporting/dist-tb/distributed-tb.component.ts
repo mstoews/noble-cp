@@ -8,12 +8,14 @@ import { IGridSettingsModel } from 'app/services/grid.settings.service';
 import { MaterialModule } from 'app/shared/material.module';
 import { MatDrawer } from '@angular/material/sidenav';
 import { FormBuilder, FormControl } from '@angular/forms';
-import { AggregateService, ColumnMenuService, ContextMenuItem, ContextMenuService, EditService, EditSettingsModel, ExcelExportService, FilterService, FilterSettingsModel, GridComponent, GridModule, PageService, ResizeService, SaveEventArgs, SearchSettingsModel, SelectionSettingsModel, SortService, ToolbarItems, ToolbarService } from '@syncfusion/ej2-angular-grids';
+import { AggregateService, ColumnMenuService, ContextMenuItem, ContextMenuService, EditService, EditSettingsModel, ExcelExportService, FilterService, FilterSettingsModel, GridComponent, GridModule, GroupService, PageService, PdfExport, PdfExportService, Reorder, ReorderService, ResizeService, SaveEventArgs, SearchSettingsModel, SelectionSettingsModel, SortService, ToolbarItems, ToolbarService } from '@syncfusion/ej2-angular-grids';
 import { DropDownListComponent } from '@syncfusion/ej2-angular-dropdowns';
 import { ICurrentPeriod, IPeriod } from 'app/models/period';
 import { ReplaySubject, Subject, take, takeUntil } from 'rxjs';
 import { MatSelect } from '@angular/material/select';
 import { PeriodsService } from 'app/services/periods.service';
+
+import { WorkSheet, utils, writeFile } from 'xlsx';
 
 
 const mods = [
@@ -130,8 +132,7 @@ const mods = [
                                 (actionBegin)='actionBegin($event)' 
                                 (actionComplete)='actionComplete($event)'                                 
                                 [dataSource]="store.tb()"
-                                [rowHeight]='30'>
-                                
+                                [rowHeight]='30'>                                
                                 <e-columns>                                     
                                       <e-column field='trans_type' headerText='Account' width='140' [visible]=true>
                                                   <ng-template #template let-data>                                                                
@@ -235,7 +236,7 @@ const mods = [
   `,
   imports: [mods],
   selector: 'dist-tb',
-  providers: [ReportStore, ExcelExportService, ContextMenuService, SortService, PageService, ResizeService, FilterService, ToolbarService, EditService, AggregateService, ColumnMenuService],
+  providers: [ReportStore, PdfExportService,  ReorderService, GroupService, ExcelExportService, ContextMenuService, SortService, PageService, ResizeService, FilterService, ToolbarService, EditService, AggregateService, ColumnMenuService],
   styles: `
   // .e-gridheader .e-table{ display: none;  } 
   .e-grid .e-altrow {  background-color: #ffffff; }
@@ -289,29 +290,6 @@ throw new Error('Method not implemented.');
   
   @ViewChild("singlePeriodSelect", { static: true }) singlePeriodSelect!: MatSelect;
 
-
-  columns = [
-    
-    { field: 'account', headerText: 'Grp', visible: false, width: 90 },
-    { field: 'child', headerText: 'Acct', visible: true, isPrimaryKey: true, isIdentity: true, width: 90 },
-    { field: 'id', headerText: 'ID', visible: true, width: 50 },
-    { field: 'account_description', headerText: 'Description', visible: false, width: 100, displayAsCheckbox: true },
-    { field: 'trans_type', headerText: 'Tr Type', visible: true, width: 100, displayAsCheckbox: true },
-    { field: 'trans_date', headerText: 'Tr Date', visible: false, width: 80, type: Date, displayAsCheckbox: true },
-    { field: 'amount', headerText: 'Amount', visible: false, width: 100, format: 'N2', textAlign: 'Right' },
-    { field: 'description', headerText: 'Transaction Description', width: 200 },
-    { field: 'reference', headerText: 'Reference', width: 100, visible: false },
-    { field: 'party_id', headerText: 'Party', width: 100, visible: false },
-    { field: 'amount', headerText: 'Amount', width: 80, format: 'N2', textAlign: 'Right' },
-    { field: 'opening_balance', headerText: 'Open', width: 80, format: 'N2', textAlign: 'Right' },
-    { field: 'debit_amount', headerText: 'Debit', width: 80, format: 'N2', textAlign: 'Right' },
-    { field: 'credit_amount', headerText: 'Credit', width: 80, format: 'N2', textAlign: 'Right' },
-    { field: 'close', headerText: 'Closing', width: 80, format: 'N2', textAlign: 'Right' },
-    { field: 'net', headerText: 'Net', width: 80, format: 'N2', textAlign: 'Right' },
-    { field: 'pd', headerText: 'Prd', visible: false, width: 100 },
-    { field: 'prd_year', headerText: 'Yr', visible: false, width: 100 }
-  ];
-
   periodParams = {
     period: 1,
     year: 2025,
@@ -337,7 +315,6 @@ throw new Error('Method not implemented.');
 
   
   onPeriod(e: string) {
-  
   
           console.debug("Period : ", e);
           
@@ -404,24 +381,24 @@ throw new Error('Method not implemented.');
     this.store.loadTB(this.periodParams);
   }
 
+
+  exportToExcelFormat() { 
+    
+
+    const worksheet = utils.json_to_sheet(this.store.tb());
+    const workbook = utils.book_new();
+    utils.book_append_sheet(workbook, worksheet, "Trial Balance");
+    
+  
+    /* calculate column width */
+    //const max_width = this.store.tb().reduce((w, r) => Math.max(w, r.name.length), 10);
+    //worksheet["!cols"] = [ { wch: max_width } ];
+    const fileName = "Dist-TB-" + new Date().toLocaleDateString() + '.xlsx';    
+    writeFile(workbook, fileName, { compression: true });
+  }
+
   exportXL() {
-    const fileName = "Dist-TB-" + new Date().toLocaleDateString() + '.xlsx';
-    this.grid()!.excelExport({
-      fileName: fileName, header: {
-        headerRows: 7,
-        rows: [
-          { cells: [{ colSpan: 4, value: "Nobleledger Ltd. ", style: { fontColor: '#03396c', fontSize: 20, hAlign: 'Left', bold: true, } }] },
-          { cells: [{ colSpan: 4, value: "Trial Balance", style: { fontColor: '#03396c', fontSize: 20, hAlign: 'Left', bold: true, } }] },
-        ]
-      },
-      footer: {
-        footerRows: 4,
-        rows: [
-          { cells: [{ colSpan: 4, value: "", style: { hAlign: 'Center', bold: true } }] },
-          { cells: [{ colSpan: 4, value: "", style: { hAlign: 'Center', bold: true } }] }
-        ]
-      },
-    });
+    this.exportToExcelFormat();
   }
 
   exportPDF() {
