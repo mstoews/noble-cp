@@ -10,7 +10,7 @@ import { MatDrawer } from '@angular/material/sidenav';
 import { FormBuilder, FormControl } from '@angular/forms';
 import { AggregateService, ColumnMenuService, ContextMenuItem, ContextMenuService, EditService, EditSettingsModel, ExcelExportService, FilterService, FilterSettingsModel, GridComponent, GridModule, PageService, ResizeService, SaveEventArgs, SearchSettingsModel, SelectionSettingsModel, SortService, ToolbarItems, ToolbarService } from '@syncfusion/ej2-angular-grids';
 import { DropDownListComponent } from '@syncfusion/ej2-angular-dropdowns';
-import { IPeriod } from 'app/models/period';
+import { ICurrentPeriod, IPeriod } from 'app/models/period';
 import { ReplaySubject, Subject, take, takeUntil } from 'rxjs';
 import { MatSelect } from '@angular/material/select';
 import { PeriodsService } from 'app/services/periods.service';
@@ -335,9 +335,36 @@ throw new Error('Method not implemented.');
     );
   }
 
-  onPeriod($event: any) {
-      console.debug($event);
-  }
+  
+  onPeriod(e: string) {
+  
+  
+          console.debug("Period : ", e);
+          
+          var prd: ICurrentPeriod[] = [];
+  
+          var currentPeriod = localStorage.getItem('currentPeriod');        
+          if (currentPeriod === null) {
+              currentPeriod = 'January 2025';
+          }
+  
+          var activePeriods: ICurrentPeriod[] = [];
+  
+          var _currentActivePeriods = localStorage.getItem('activePeriod');
+              
+          if (_currentActivePeriods) {
+                activePeriods = JSON.parse(_currentActivePeriods) as ICurrentPeriod[];
+          }         
+  
+          if (activePeriods.length > 0) {
+              prd = activePeriods.filter((period) =>  period.description === currentPeriod); 
+              if (prd.length > 0) {
+                  this.periodParams.period = prd[0].period_id;
+                  this.periodParams.year = prd[0].period_year;
+              }
+              this.store.loadTB(this.periodParams);
+          }          
+    }
   actionBegin(args: SaveEventArgs): void {
     console.debug('args : ', args.requestType);
 
@@ -349,7 +376,6 @@ throw new Error('Method not implemented.');
 
   ngOnInit() {
     this.store.loadTB(this.periodParams);
-
     this.periodsService.read().pipe(takeUntil(this._onDestroy)).subscribe((period) => {
       this.periodList = period;
       this.periodFilter.next(this.periodList.slice());
