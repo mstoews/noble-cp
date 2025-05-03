@@ -95,10 +95,11 @@ const mods = [
     </mat-drawer> 
     <mat-drawer-container>
                 @defer (on viewport; on timer(5s)) {
-                    <ng-container>                                            
+                    
                         <grid-menubar
                               [inTitle]="'Distribution Ledger by Period'" 
-                              (openSettings)="openDrawer()" 
+                              (openSettings)="openDrawer()"
+                              (period)=onPeriod($event) 
                               (onPrint)="onPrint()"                          
                               (exportXL)="exportXL()"
                               (exportPRD)="exportPDF()"
@@ -111,20 +112,16 @@ const mods = [
                               [showBack]=false>
                         </grid-menubar>  
                                                                                                     
-                        @if (store.isLoading() === false) 
+                        @if (store.isLoading() === false)                           
                         {                            
-                            <ejs-grid #grid id="grid" class="mt-2 text-sm"
-                                [rowHeight]='30'
+                            <ejs-grid #grid id="grid" class="mt-2 text-sm"                                
+                                gridLines="Both"
                                 allowSorting='true'
-                                showColumnMenu='true'                                 
-                                gridLines="None"
-                                [allowFiltering]='true'                 
-                                [toolbar]='toolbarOptions'                 
-                                [filterSettings]='filterSettings'
-                                [editSettings]='editSettings' 
-                                [pageSettings]='pageSettings'                 
-                                [enableStickyHeader]='true' 
+                                allowResizing='true'
+                                showColumnMenu='true'                                                                 
+                                [allowFiltering]='false'                 
                                 [enablePersistence]='false'                                
+                                [enableStickyHeader]='true'                                 
                                 [allowGrouping]="true"                                
                                 [allowReordering]='true' 
                                 [allowExcelExport]='true' 
@@ -132,8 +129,89 @@ const mods = [
                                 [contextMenuItems]="contextMenuItems" 
                                 (actionBegin)='actionBegin($event)' 
                                 (actionComplete)='actionComplete($event)'                                 
-                                [dataSource]="store.tb()" 
-                                [columns]="columns">
+                                [dataSource]="store.tb()"
+                                [rowHeight]='30'>
+                                
+                                <e-columns>                                     
+                                      <e-column field='trans_type' headerText='Account' width='140' [visible]=true>
+                                                  <ng-template #template let-data>                                                                
+                                                          @switch (data.trans_type) 
+                                                          {                                    
+                                                              @case ('TB Summary') {                                        
+                                                                  <span class="e-badge flex text-md gap-1 items-center w-max bg-transparent">
+                                                                      {{data.description}}
+                                                                  </span>
+                                                              }
+                                                              @case ('Transaction') {
+                                                                <span class="e-badge flex text-md  gap-1 items-center w-max bg-transparent"> 
+                                                                </span>                                                            
+                                                          }
+                                                        }
+                                                      </ng-template>
+                                      </e-column> 
+                                      <e-column field='account' headerText='Grp' width='90' [visible]=false>
+                                              <ng-template #template let-data>                                                                
+                                                  @switch (data.trans_type) 
+                                                  {                                    
+                                                      @case ('TB Summary') {                                        
+                                                            <span class="e-badge flex text-md gap-1 items-center w-max bg-transparent">                                                                                                                                      
+                                                              {{data.account}}                                                                    
+                                                          </span>
+                                                      }
+                                                      @case ('Transaction') {
+                                                      <span class="e-badge flex text-md  gap-1 items-center w-max bg-transparent">                                                
+                                                      </span>                                                            
+                                                  }
+                                                }
+                                              </ng-template>
+                                      </e-column>
+                                      <e-column field='child' headerText='Acct' width='60' [visible]=true  isPrimaryKey=true isIdentity=true>
+                                      <ng-template #template let-data>                                                                
+                                                  @switch (data.trans_type) 
+                                                  {                                    
+                                                      @case ('TB Summary') {                                        
+                                                        <span class="e-badge flex text-md gap-1 items-center w-max bg-transparent">                                                                                                                                      
+                                                              {{data.child}}                                                                    
+                                                        </span>
+                                                      }
+                                                      @case ('Transaction') {
+                                                      <span class="e-badge flex text-md  gap-1 items-center w-max bg-transparent">                                                
+                                                      </span>                                                            
+                                                  }
+                                                }
+                                              </ng-template>
+                                      </e-column>
+                                      <e-column field='id' headerText='Transaction' width='50' [visible]=true textAlign='Right'> 
+                                        <ng-template #template let-data>                                                                
+                                                    @switch (data.trans_type) 
+                                                    {                                    
+                                                        @case ('TB Summary') {                                        
+                                                          <span class="e-badge flex text-md gap-1 items-center w-max bg-transparent">                                                                                                                                                                                                    
+                                                          </span>
+                                                        }
+                                                        @case ('Transaction') {
+                                                          <span class="e-badge flex text-md  gap-1 items-center w-max bg-transparent">                                                
+                                                              {{data.id}} - {{data.description}} 
+                                                          </span>                                                            
+                                                        }
+                                                  }
+                                        </ng-template>
+                                      </e-column>
+                                      <e-column field='account_description' headerText='Description'width='100' [visible]=false></e-column>                                     
+                                      <e-column field='trans_date'          headerText='Tr Date'    width='80'  [visible]=false type='Date' displayAsCheckbox=true></e-column> 
+                                      <e-column field='amount'              headerText='Amount'     width='100' [visible]=false format='N2' textAlign='Right'> </e-column>
+                                      <e-column field='description'         headerText='Trans Desc' width='200' [visible]=false> </e-column>
+                                      <e-column field='reference'           headerText='Reference'  width='100' [visible]=false> </e-column>
+                                      <e-column field='party_id'            headerText='Party'      width='100' [visible]=false> </e-column>                                    
+                                      <e-column field='opening_balance'     headerText='Open'       width='80'  [visible]=true  format='N2' textAlign='Right'> </e-column>
+                                      <e-column field='debit_amount'        headerText='Debit'      width='80'  [visible]=true  format='N2' textAlign='Right'> </e-column>
+                                      <e-column field='credit_amount'       headerText='Credit'     width='80'  [visible]=true  format='N2' textAlign='Right'> </e-column>
+                                      <e-column field='close'               headerText='Closing'    width='80'  [visible]=true  format='N2' textAlign='Right'> </e-column>
+                                      <e-column field='net'                 headerText='Net'        width='80'  [visible]=true  format='N2' textAlign='Right'> </e-column>
+                                      <e-column field='pd'                  headerText='Prd'        width='100' [visible]=false > </e-column>
+                                      <e-column field='prd_year'            headerText='Yr'         width='100' [visible]=false ></e-column>                                                                                                             
+                                
+                                </e-columns>
                             </ejs-grid>                        
                         }
                            @else
@@ -142,8 +220,6 @@ const mods = [
                                 <mat-spinner></mat-spinner>
                             </div>
                         }                
-                    
-                    </ng-container> 
                   
                 }
                 @placeholder(minimum 1000ms) {
@@ -163,8 +239,7 @@ const mods = [
   styles: `
   // .e-gridheader .e-table{ display: none;  } 
   .e-grid .e-altrow {  background-color: #ffffff; }
-  `
-    
+  `    
 })
 
 export class DistributedTbComponent implements OnInit, OnDestroy {
@@ -174,6 +249,7 @@ throw new Error('Method not implemented.');
 
   public store = inject(ReportStore);
   public periodsService = inject(PeriodsService);
+  private fb = inject(FormBuilder);
   public grid = viewChild<GridComponent>('grid')
   public drawer = viewChild<MatDrawer>('drawer')
 
@@ -191,7 +267,7 @@ throw new Error('Method not implemented.');
   public dropDown: DropDownListComponent;
   public submitClicked: boolean = false;
   public selectionOptions?: SelectionSettingsModel;
-  public toolbarOptions?: ToolbarItems[];
+
   public searchOptions?: SearchSettingsModel;
   public filterSettings: FilterSettingsModel;
   public sTitle: any;
@@ -200,7 +276,7 @@ throw new Error('Method not implemented.');
   public state?: GridComponent;
   public message?: string;
   public userId: string;
-  private fb = inject(FormBuilder);
+  
 
   // drop down list selection for periods
   public periodList: IPeriod[] = [];
@@ -215,9 +291,10 @@ throw new Error('Method not implemented.');
 
 
   columns = [
-    { field: 'id', headerText: 'ID', visible: true, width: 50 },
+    
     { field: 'account', headerText: 'Grp', visible: false, width: 90 },
     { field: 'child', headerText: 'Acct', visible: true, isPrimaryKey: true, isIdentity: true, width: 90 },
+    { field: 'id', headerText: 'ID', visible: true, width: 50 },
     { field: 'account_description', headerText: 'Description', visible: false, width: 100, displayAsCheckbox: true },
     { field: 'trans_type', headerText: 'Tr Type', visible: true, width: 100, displayAsCheckbox: true },
     { field: 'trans_date', headerText: 'Tr Date', visible: false, width: 80, type: Date, displayAsCheckbox: true },
@@ -258,6 +335,9 @@ throw new Error('Method not implemented.');
     );
   }
 
+  onPeriod($event: any) {
+      console.debug($event);
+  }
   actionBegin(args: SaveEventArgs): void {
     console.debug('args : ', args.requestType);
 
@@ -280,11 +360,8 @@ throw new Error('Method not implemented.');
         if (this.singlePeriodSelect != null || this.singlePeriodSelect != undefined)
           this.singlePeriodSelect.compareWith = (a: IPeriod, b: IPeriod) => a && b && a.period_id === b.period_id;
       });
-
     this.createEmptyForm();
-
   }
-
 
   createEmptyForm() {
     this.gridForm = this.fb.group({
@@ -292,7 +369,6 @@ throw new Error('Method not implemented.');
       description: [''],
     });
   }
-
 
   ngOnDestroy(): void {
     // this.setPersistData();

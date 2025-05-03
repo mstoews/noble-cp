@@ -84,34 +84,28 @@ const declarations = [
                         [allowPdfExport]='true'
                         [allowFiltering]='true' 
                         [enablePersistence]='false'
-                        [allowEditing]='false' 
-                        
-                        [toolbar]='toolbarOptions' 
-                        
+                        [allowEditing]='false'                         
+                        [toolbar]='toolbarOptions'                         
                         [filterSettings]='filterSettings'
                         [editSettings]='editSettings' 
                         [pageSettings]='pageSettings' 
-                        [searchSetting]='searchOptions'                        
-                        
-                        
+                        [searchSetting]='searchOptions'                                                                        
                         (rowSelected)="onRowSelected($event)"
                         (actionBegin)="actionBegin($event)" 
                         (load)='onLoad()'
                         (click)="onClickGrid($event)"                        
-                        [dataSource]="store.header()" 
-                        
-                        >
+                        [dataSource]="store.header()"  >
         
                         <e-columns>                            
-                            <e-column headerText="Group"    field="account" width="100"></e-column>
-                            <e-column headerText="Account"  field="child" isPrimaryKey='true'  width="100" ></e-column>                            
-                            <e-column headerText="Prd"      field="period" width="100" ></e-column>
-                            <e-column headerText="Year"     field="period_year" width="100" ></e-column>
-                            <e-column headerText="Description" field="description" width="200" ></e-column>
-                            <e-column headerText="Open"     textAlign="Right" format="N2" field="opening_balance" width="100" ></e-column>
-                            <e-column headerText="Debit"    textAlign="Right" format="N2" field="debit_balance" width="100" ></e-column>
-                            <e-column headerText="Credit"   textAlign="Right" format="N2" field="credit_balance" width="100" ></e-column>
-                            <e-column headerText="Closing"  textAlign="Right" format="N2" field="closing_balance" width="100" ></e-column>
+                            <e-column headerText="Group"        field="account" width="100"></e-column>
+                            <e-column headerText="Account"      field="child" isPrimaryKey='true'  width="100" ></e-column>                            
+                            <e-column headerText="Prd"          field="period" width="100" ></e-column>
+                            <e-column headerText="Year"         field="period_year" width="100" ></e-column>
+                            <e-column headerText="Description"  field="description" width="200" ></e-column>
+                            <e-column headerText="Open"         field="opening_balance" textAlign="Right" format="N2" width="100" ></e-column>
+                            <e-column headerText="Debit"        field="debit_balance"   textAlign="Right" format="N2" width="100" ></e-column>
+                            <e-column headerText="Credit"       field="credit_balance"  textAlign="Right" format="N2" width="100" ></e-column>
+                            <e-column headerText="Closing"      field="closing_balance" textAlign="Right" format="N2" width="100" ></e-column>
                             <e-aggregates>
                                 <e-aggregate>
                                     <e-columns>

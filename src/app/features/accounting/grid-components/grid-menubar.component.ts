@@ -40,7 +40,7 @@ let modules = [MatToolbarModule, MatIconModule, MatButtonModule, CommonModule, M
     <mat-toolbar class="text-white font-sans bg-gray-500 text-2xl rounded-lg mr-5">  {{ inTitle() }} 
     <span class="flex-1"></span>      
       
-    <mat-form-field class="rounded-lg w-[200px] mt-5">              
+    <mat-form-field class="rounded-lg w-[200px] mt-5 mr-10">              
               <mat-select [value]="_currentPeriod" #periodDropdownSelection (selectionChange)="onSelectionChange($event)">
                   @for ( period of _currentActivePeriods ; track period.description ) {
                     <mat-option [value]="period.description">

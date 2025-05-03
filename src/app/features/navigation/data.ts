@@ -64,7 +64,7 @@ export const defaultNavigation: FuseNavigationItem[] = [
                             id: 'accounts.journals',
                             title: 'Settings',
                             type: 'basic',
-                            icon: 'heroicons_outline:banknotes',
+                            icon: 'mat_outline:admin_panel_settings',
                             link: '/journals',
                         },
                     ],

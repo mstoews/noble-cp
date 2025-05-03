@@ -123,8 +123,8 @@ const imports = [
                                         (rowSelected)='onRowSelected($event)'                                
                                         (actionBegin)='selectedRow($event)' >
                                         <e-columns>
-                                            <e-column field='journal_id' headerText='ID' isPrimaryKey='true' isIdentity='true' [visible]=false width='40'></e-column>                                            
-                                            <e-column field="type" headerText="ID" width="80">
+                                            <e-column field='journal_id' headerText='ID' isPrimaryKey='true' isIdentity='true' [visible]=false width='40'></e-column> 
+                                            <e-column field="type" headerText="ID" width="60" textAlign='Center'>
                                                     <ng-template #template let-data>                                                                
                                                         @switch (data.type) 
                                                         {                                    
@@ -155,6 +155,37 @@ const imports = [
                                                         }
                                                     </ng-template>
                                             </e-column>                                                                
+                                            <e-column field="status" headerText="St" width="60" textAlign='Left'>
+                                                    <ng-template #template let-data>                                                                
+                                                        @switch (data.status) 
+                                                        {                                    
+                                                            @case ('CLOSED') {                                        
+                                                                <span class="e-badge flex text-md gap-1 items-center w-max bg-transparent">                                                                    
+                                                                <div class="w-4 h-4 rounded-full bg-blue-800" matTooltip="Closed"></div>                                                                
+                                                                    Closed
+                                                                </span>
+                                                            }
+                                                            @case ('OPEN') {
+                                                            <span class="e-badge flex text-md  gap-1 items-center w-max bg-transparent">
+                                                                <div class="w-4 h-4 rounded-full bg-green-500" matTooltip="Open"></div>
+                                                                    Open
+                                                            </span>
+                                                            }                                    
+                                                            @case ('CLEARED') {
+                                                                <span class="e-badge flex text-md  gap-1 items-center w-max bg-transparent">
+                                                                    <div class="w-4 h-4 rounded-full bg-purple-800" matTooltip="Cleared"></div>
+                                                                    Cleared
+                                                                </span>
+                                                            }
+                                                            @case ('REVERSED') {
+                                                                <span class="e-badge flex  text-md  gap-1 items-center w-max bg-transparent">
+                                                                    <div class="w-4 h-4 rounded-full bg-red-700" matTooltip="Reversed"></div>                                                                
+                                                                    Reversed
+                                                                </span>
+                                                            }
+                                                        }
+                                                    </ng-template>
+                                            </e-column>                                                                                                        
                                             <e-column field='description' headerText='Description' width='150'></e-column>
                                             <e-column field='booked' headerText='Bk' width='60' [visible]=false ></e-column>
                                                 <ng-template #template let-data>                       
@@ -170,37 +201,7 @@ const imports = [
                                                         }   
                                                 </ng-template>                                                   
                                             <e-column field='transaction_date' headerText='Date' width='60' format='M/dd/yyyy' textAlign='Middle'></e-column>
-                                            <e-column field="status" headerText="Status" width="60">
-                                                    <ng-template #template let-data>                                                                
-                                                        @switch (data.status) 
-                                                        {                                    
-                                                            @case ('CLOSED') {                                        
-                                                                <span class="e-badge flex text-md gap-1 items-center w-max bg-transparent">
-                                                                    <div class="w-4 h-4  rounded-full bg-green-700"></div>
-                                                                    Completed
-                                                                </span>
-                                                            }
-                                                            @case ('OPEN') {
-                                                            <span class="e-badge flex text-md  gap-1 items-center w-max bg-transparent">
-                                                                <div class="w-4 h-4 rounded-full bg-amber-500"></div>
-                                                                Open
-                                                            </span>
-                                                            }                                    
-                                                            @case ('CLEARED') {
-                                                                <span class="e-badge flex text-md  gap-1 items-center w-max bg-transparent">
-                                                                    <div class="w-4 h-4 rounded-full bg-cyan-800"></div>
-                                                                    Cleared
-                                                                </span>
-                                                            }
-                                                            @case ('REVERSED') {
-                                                                <span class="e-badge flex  text-md  gap-1 items-center w-max bg-transparent">
-                                                                    <div class="w-4 h-4 rounded-full bg-red-700"></div>
-                                                                    Reversed
-                                                                </span>
-                                                            }
-                                                        }
-                                                    </ng-template>
-                                            </e-column>                                                                                                        
+                                            
                                             <e-column field="status" headerText="Period" width="60">                                                
                                                 <ng-template #template let-data>                                                                
                                                     {{data.period_year}} - {{data.period}}  
@@ -215,15 +216,15 @@ const imports = [
                                         <e-aggregates>
                                                 <e-aggregate>
                                                     <e-columns>
-                                                        <e-column type="Sum" field="amount" format="N2">
-                                                            <ng-template #groupFooterTemplate let-data>{{data.Sum}}</ng-template>
+                                                        <e-column type="Sum" field="amount" class="customcss" format="N2">
+                                                            <ng-template #groupFooterTemplate let-data >{{data.Sum}}</ng-template>
                                                         </e-column>
                                                     </e-columns>
                                                 </e-aggregate>
                                                 <e-aggregate>
                                                     <e-columns>
-                                                        <e-column type="Sum" field="amount" format="N2">
-                                                            <ng-template #footerTemplate let-data>{{data.Sum}}</ng-template>
+                                                        <e-column type="Sum" field="amount" format="N2" class="customcss">
+                                                            <ng-template #footerTemplate let-data >{{data.Sum}}</ng-template>
                                                         </e-column>                                                    
                                                     </e-columns>
                                                 </e-aggregate>
@@ -541,7 +542,7 @@ export class GLJournalListComponent implements OnInit {
 
     adjustHeight() {
         if (this.grid()) {
-            this.grid().height = (window.innerHeight - 700) + 'px'; // Adjust as needed
+            this.grid().height = (window.innerHeight - 550) + 'px'; // Adjust as needed
         }
     }
 

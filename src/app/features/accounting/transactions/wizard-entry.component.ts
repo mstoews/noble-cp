@@ -83,7 +83,7 @@ const mods = [
     selector: 'entry-wizard',
     imports: [mods, GridMenubarStandaloneComponent],
     template: `        
-    <div id="target" class="flex flex-col w-full filter-article filter-interactive bg-gray-100 rounded-lg m-10">
+    <div id="target" class="flex flex-col w-full filter-article filter-interactive rounded-lg m-10">
         <div class="sm:hide md:visible ml-5 mr-5">
             <grid-menubar class="pl-5 pr-5"            
                     [inTitle]="'Journal Entry'"  
@@ -92,8 +92,8 @@ const mods = [
                     (print)=onPrinting()>            
             </grid-menubar>
         </div>
-        <div class="flex flex-col md:flex-row gap-2 bg-gray-100">     
-            <mat-card class="w-full bg-white rounded-lg ml-5 mr-5 mt-2 mb-2">                                
+        <div class="flex flex-col md:flex-row gap-2">     
+            <mat-card class="w-full rounded-lg ml-5 mr-5 mt-2 mb-2">                                
                 <div id="settings" class="flex flex-col overflow-hidden mt-10">                     
                     <mat-drawer-container id="target" 
                             class="flex flex-col h-[calc(100vh-14rem)] md:ml-30 md:mr-30" [hasBackdrop]="'false'">
@@ -226,7 +226,7 @@ const mods = [
                                                 @if (journalHeader) {
 
                                                 <ng-container>
-                                                    <div class="text-3xl gap-2 m-1 text-gray-100 p-2 bg-slate-600 rounded-md">
+                                                    <div class="text-3xl gap-2 m-1 p-2 bg-slate-600 rounded-md">
                                                         Journal Details
                                                     </div>
                                                 
