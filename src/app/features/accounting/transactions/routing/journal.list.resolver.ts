@@ -7,15 +7,8 @@ import { AccountsService } from "app/services/accounts.service";
 
 export const JournalListResolver: ResolveFn<any> = (  
   route: ActivatedRouteSnapshot,
-  state: RouterStateSnapshot) => {
-  const accountService = inject(AccountsService);
-  const partyService = inject(PartyService);
+  state: RouterStateSnapshot) => {  
   const journalService = inject(JournalService);
-  return journalService.getCurrentPeriod().pipe(take(1)).subscribe(  
-    (Period) => {
-        accountService.readChildren().pipe(combineLatestWith([
-        partyService.read()
-      ]
-      ))
-    }) as any;
+  const journalHeader = journalService.getJournalHeaderById(Number(route.paramMap.get('id')));  
+  return journalService.getCurrentPeriod().pipe(take(1)).subscribe() as any;
 };

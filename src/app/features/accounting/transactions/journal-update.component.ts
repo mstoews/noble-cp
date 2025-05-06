@@ -1324,7 +1324,7 @@ export class JournalUpdateComponent implements OnInit, OnDestroy, AfterViewInit 
 
     public refreshJournalForm(header: IJournalHeader) {
 
-        this.journalHeader = header;
+        
 
         this.journalForm.patchValue({
             description: header.description,

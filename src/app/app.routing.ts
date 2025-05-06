@@ -140,7 +140,7 @@ export const appRoutes: Route[] = [
             {
                 path: 'list-journals',
                 canActivate: [isAuthenticatedGuard()],
-                loadChildren: () => import('app/features/accounting/transactions/routing/journal.list.entry.routes'),
+                loadChildren: () => import('app/features/accounting/transactions/routing/journal.gl.entry.routes'),
             },
             {
                 path: 'ar-journals',

@@ -35,10 +35,10 @@ const imports = [
     CdkScrollable,
     JournalTemplateUpdateComponent,
     GLTransactionGridComponent,
-    
+
     SpreadsheetViewComponent
 
-    
+
 ]
 
 @Component({
@@ -56,7 +56,7 @@ const imports = [
                         <div class="flex items-center justify-between m-8 mr-6 sm:my-10">
                             <!-- Title -->
                             <div class="text-4xl font-extrabold tracking-tight leading-none">
-                                Transactions
+                                Journals
                             </div>
                             <!-- Close button -->
                             <div class="lg:hidden">
@@ -155,10 +155,9 @@ export class TransactionMainComponent implements OnInit, OnDestroy {
     constructor(
         private _changeDetectorRef: ChangeDetectorRef,
         private _fuseMediaWatcherService: FuseMediaWatcherService,
-    ) 
-     {
+    ) {
         this.panelService.findPanelByName(this.store.uid(), this.PANEL_ID).subscribe((panel) => {
-                this.selectedPanel = panel.lastPanelOpened;
+            this.selectedPanel = panel.lastPanelOpened;
         });
     }
 
@@ -185,7 +184,7 @@ export class TransactionMainComponent implements OnInit, OnDestroy {
             // {
             //     id: 'gl',
             //     icon: 'heroicons_outline:document-check',
-            //     title: 'Transactions Listing',
+            //     title: 'Journals Listing',
             //     description: 'Manage your transactions and documentation',
             // },
             // {
@@ -200,7 +199,7 @@ export class TransactionMainComponent implements OnInit, OnDestroy {
             //     title: 'Payments',
             //     description: 'Pay your bills and manage your accounts payable',
             // },
-            
+
             {
                 id: 'tmp',
                 icon: 'heroicons_outline:document-duplicate',
@@ -213,12 +212,12 @@ export class TransactionMainComponent implements OnInit, OnDestroy {
                 title: 'Artifact Management',
                 description: 'Manage the documentation of transactions',
             },
-            {
-                id: 'xls',
-                icon: 'feather:image',
-                title: 'Spreadsheet Viewer',
-                description: 'View your transactions in a spreadsheet format',
-            },
+            // {
+            //     id: 'xls',
+            //     icon: 'feather:image',
+            //     title: 'Spreadsheet Viewer',
+            //     description: 'View your transactions in a spreadsheet format',
+            // },
             {
                 id: 'artifact-mgmt',
                 icon: 'heroicons_outline:document-magnifying-glass',

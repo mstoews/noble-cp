@@ -1,12 +1,10 @@
 import { Routes } from '@angular/router';
-import { JournalListRouteComponent } from './journal.list-route.component';
-import { JournalEditResolver } from 'app/features/accounting/transactions/routing/journal.edit.resolver';
+import { APJournalListComponent } from '../ap-journal-list.component';
 
 export default [
     {
         path: '',
-        component: JournalListRouteComponent,
-        resolve: { journal: JournalEditResolver },
+        component: APJournalListComponent,        
     },
 
 ] as Routes;

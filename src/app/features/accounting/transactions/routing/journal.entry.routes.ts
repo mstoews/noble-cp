@@ -19,9 +19,8 @@ export default [
         resolve: { journal: JournalListResolver },
     },
     {
-        path: 'list/:id',
-        component: GLJournalListComponent,
-        resolve: { journal: JournalListResolver },
+        path: 'list',
+        component: GLJournalListComponent,        
     },
     {
         path: 'ar',        

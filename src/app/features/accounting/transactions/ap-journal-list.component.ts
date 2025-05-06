@@ -216,14 +216,14 @@ const imports = [
                                                 <e-aggregate>
                                                     <e-columns>
                                                         <e-column type="Sum" field="amount" format="N2">
-                                                            <ng-template #groupFooterTemplate let-data>{{data.Sum}}</ng-template>
+                                                            <ng-template class="customcss" #groupFooterTemplate let-data>{{data.Sum}}</ng-template>
                                                         </e-column>
                                                     </e-columns>
                                                 </e-aggregate>
                                                 <e-aggregate>
                                                     <e-columns>
                                                         <e-column type="Sum" field="amount" format="N2">
-                                                            <ng-template #footerTemplate let-data>{{data.Sum}}</ng-template>
+                                                            <ng-template #footerTemplate class="customcss" let-data>{{data.Sum}}</ng-template>
                                                         </e-column>                                                    
                                                     </e-columns>
                                                 </e-aggregate>
@@ -326,23 +326,24 @@ export class APJournalListComponent implements OnInit {
         if (current.length === 0) {
             this.toast.error('No period found');
             return;
-        }        
-        
-        
-        
-        
+        }                
     }
 
     ngOnInit() {
-        
-        var currentPeriod = localStorage.getItem('currentPeriod');        
-        if (currentPeriod === null) {
-            currentPeriod = 'January 2025';
+   
+        this.currentPeriod = localStorage.getItem('currentPeriod');                        
+        if (this.currentPeriod === null) {
+            this.currentPeriod = localStorage.getItem('defaultPeriod');            
+            this.toast.info('No period found, defaulting ' + this.currentPeriod);
         }
-        this.journalStore.getJournalListByPeriod({current_period: currentPeriod})                
-        this.currentPeriod = currentPeriod;        
-        localStorage.setItem('openPeriods', JSON.stringify(this.periodStore.activePeriods()));
-                                        
+        this.journalStore.getJournalAPOpenListByPeriod({current_period: this.currentPeriod})                        
+        this.initGrid()
+    }
+    refreshJournalForm(journalHeader: any) {
+        throw new Error('Method not implemented.');
+    }
+
+    initGrid() {
         this.toolbarTitle = "Journal Transactions by Period ";        
         this.formatoptions = { type: 'dateTime', format: 'M/dd/yyyy' }
         this.selectionOptions = { mode: 'Row', type: 'Single' };
@@ -351,10 +352,6 @@ export class APJournalListComponent implements OnInit {
         this.toolbarOptions = ['Search'];
         this.filterSettings = { type: 'Excel' };
         this.lines = 'Both';
-        this.toast.info('Loading Journals');               
-    }
-    refreshJournalForm(journalHeader: any) {
-        throw new Error('Method not implemented.');
     }
 
     onPeriod(event: any) {

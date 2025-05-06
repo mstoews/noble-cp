@@ -17,7 +17,7 @@ import { JournalService } from 'app/services/journal.service';
 
   styles: ``
 })
-export class JournalRouteComponent {
+export class JournalEditRouteComponent {
   router = inject(Router);
   journalService = inject(JournalService);
   constructor() {    

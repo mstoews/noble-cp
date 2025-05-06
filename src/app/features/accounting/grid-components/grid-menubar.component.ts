@@ -122,10 +122,10 @@ export class GridMenubarStandaloneComponent implements OnInit {
   clone = output<string>();
   template = output<string>();
   onCopy = output<string>();
-  inTitle = input<string>("General Ledger Transactions");
+  inTitle = input<string>("General Ledger Journals");
   prd = input<string>();
   prd_year = input<string>();
-  
+
   periods = input<ICurrentPeriod[]>();
 
   showBack = input<boolean>(true);
@@ -138,34 +138,34 @@ export class GridMenubarStandaloneComponent implements OnInit {
   showNew = input<boolean>(false);
   showClone = input<boolean>(false);
   showTemplate = input<boolean>(false);
-  
+
   period = output<string>();
   selectedPeriod = output<string>();
 
   periodStore = inject(PeriodStore);
   periodsDropdown = viewChild<MatSelect>("periodDropdownSelection");
-  
+
   _currentPeriod: string;
 
 
-  _currentActivePeriods : ICurrentPeriod[];
+  _currentActivePeriods: ICurrentPeriod[];
 
 
   periodDropdownSelect = viewChild<MatSelect>("periodDropdownSelection");
 
-  ngOnInit() {        
+  ngOnInit() {
     var _currentActivePeriods = localStorage.getItem('activePeriod');
-    
+
     if (_currentActivePeriods) {
       this._currentActivePeriods = JSON.parse(_currentActivePeriods) as ICurrentPeriod[];
-    } 
-    this._currentPeriod = localStorage.getItem('currentPeriod');    
+    }
+    this._currentPeriod = localStorage.getItem('currentPeriod');
   }
   public onSelectionChange(event: MatSelectChange) {
-     var currentPrd = event.value as string;    
-     localStorage.setItem('currentPeriod', currentPrd);
-     this.periodStore.updateCurrentPeriod(currentPrd);        
-     this.period.emit(currentPrd);
+    var currentPrd = event.value as string;
+    localStorage.setItem('currentPeriod', currentPrd);
+    this.periodStore.updateCurrentPeriod(currentPrd);
+    this.period.emit(currentPrd);
   }
 
   public onNew() {

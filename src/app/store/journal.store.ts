@@ -268,7 +268,7 @@ export const JournalStore = signalStore(
           switchMap((value) => {
             return journalService.getHttpJournalDetails(value).pipe(
               tapResponse({
-                next: (journal) => patchState(state, { details: journal }),
+                next: (details) => patchState(state, { details: details }),
                 error: console.error,
                 finalize: () => patchState(state, { isLoading: false }),
               })
@@ -392,6 +392,37 @@ export const JournalStore = signalStore(
           })
         )
       ),
+
+      getJournalAPOpenListByPeriod: rxMethod<ICurrentPeriodParam>(
+        pipe(
+          tap(() => patchState(state, { isLoading: true })),
+          switchMap((value) => {
+            return journalService.getJournalAPOpenListByPeriod(value).pipe(
+              tapResponse({
+                next: (journal) => patchState(state, { gl: journal }),
+                error: console.error,
+                finalize: () => patchState(state, { isLoading: false }),
+              })
+            );
+          })
+        )
+      ),
+
+      getJournalAROpenListByPeriod: rxMethod<ICurrentPeriodParam>(
+        pipe(
+          tap(() => patchState(state, { isLoading: true })),
+          switchMap((value) => {
+            return journalService.getJournalAROpenListByPeriod(value).pipe(
+              tapResponse({
+                next: (journal) => patchState(state, { gl: journal }),
+                error: console.error,
+                finalize: () => patchState(state, { isLoading: false }),
+              })
+            );
+          })
+        )
+      ),
+
 
       getOpenJournalListByPeriod: rxMethod<ICurrentPeriodParam>(
         pipe(

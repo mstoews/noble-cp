@@ -62,7 +62,7 @@ const imports = [
             (back)="onBack()"  
             (clone)="onClone()"  
             (period)="onPeriod($event)"         
-            [inTitle]="'General Ledger Transactions Update'" 
+            [inTitle]="'General Ledger Journals Update'" 
             [prd]="journalStore.currentPeriod()"
             [prd_year]="journalStore.currentYear()">
         </grid-menubar>
@@ -155,7 +155,7 @@ const imports = [
                                                         }
                                                     </ng-template>
                                             </e-column>                                                                
-                                            <e-column field="status" headerText="St" width="60" textAlign='Left'>
+                                            <e-column field="status" headerText="Status" width="60" textAlign='Left'>
                                                     <ng-template #template let-data>                                                                
                                                         @switch (data.status) 
                                                         {                                    
@@ -270,7 +270,7 @@ export class GLJournalListComponent implements OnInit {
     public route = inject(Router);
     public toast = inject(ToastrService);
     public journalStore = inject(JournalStore);
-    
+
     public settingsService = inject(SettingsService);
     public changeDetectorRef = inject(ChangeDetectorRef);
     public periodStore = inject(PeriodStore);
@@ -299,11 +299,11 @@ export class GLJournalListComponent implements OnInit {
     public searchOptions?: SearchSettingsModel;
     public filterSettings: FilterSettingsModel;
     public lines: GridLine;
-    
+
     public periodParam: IPeriodParam;
     public gridHeight: number;
     public groupSettings: { [x: string]: Object } = { showDropArea: true };
-    
+
     // periods$ = this.store.select(periodsFeature.selectPeriods);
 
     drawer = viewChild<MatDrawer>("drawer");
@@ -320,29 +320,34 @@ export class GLJournalListComponent implements OnInit {
     subtypeList: any;
     templateList: any;
     partyList: any;
-    currentPeriod: any; 
+    currentPeriod: any;
     updateTransactionPeriod(currentPeriod: string) {
 
         const current = this.activePeriods().filter((period) => period.description === currentPeriod)
         if (current.length === 0) {
             this.toast.error('No period found');
             return;
-        }        
-                
+        }
+
     }
 
     ngOnInit() {
-        
-        var currentPeriod = localStorage.getItem('currentPeriod');        
-        if (currentPeriod === null) {
-            currentPeriod = 'January 2025';
-            this.toast.info('No period found, defaulting to January 2025');
+
+        this.currentPeriod = localStorage.getItem('currentPeriod');
+        if (this.currentPeriod === null) {
+            this.currentPeriod = localStorage.getItem('defaultPeriod');
+            this.toast.info('No period found, defaulting ' + this.currentPeriod);
         }
-        this.journalStore.getJournalListByPeriod({current_period: currentPeriod})                
-        this.currentPeriod = currentPeriod;        
-        localStorage.setItem('openPeriods', JSON.stringify(this.periodStore.activePeriods()));
-                                        
-        this.toolbarTitle = "Journal Transactions by Period ";        
+        this.journalStore.getJournalListByPeriod({ current_period: this.currentPeriod })
+        // localStorage.setItem('openPeriods', JSON.stringify(this.periodStore.activePeriods()));
+        this.initGrid()
+    }
+    refreshJournalForm(journalHeader: any) {
+        throw new Error('Method not implemented.');
+    }
+
+    initGrid() {
+        this.toolbarTitle = "Journal Transactions by Period ";
         this.formatoptions = { type: 'dateTime', format: 'M/dd/yyyy' }
         this.selectionOptions = { mode: 'Row', type: 'Single' };
         this.editSettings = { allowEditing: true, allowAdding: false, allowDeleting: false };
@@ -350,20 +355,16 @@ export class GLJournalListComponent implements OnInit {
         this.toolbarOptions = ['Search'];
         this.filterSettings = { type: 'Excel' };
         this.lines = 'Both';
-        this.toast.info('Loading Journals');               
-    }
-    refreshJournalForm(journalHeader: any) {
-        throw new Error('Method not implemented.');
     }
 
     onPeriod(event: any) {
         this.currentPeriod = event;
         localStorage.setItem('currentPeriod', this.currentPeriod);
-        this.journalStore.getJournalListByPeriod({current_period: event})                
-        this.journalStore.getJournalListByPeriod({current_period: this.currentPeriod})
+        this.journalStore.getJournalListByPeriod({ current_period: event })
+        this.journalStore.getJournalListByPeriod({ current_period: this.currentPeriod })
         this.toast.info(event, 'Period changed to: ');
         this.changeDetectorRef.detectChanges();
-        
+
     }
 
     onTemplate() {
@@ -383,7 +384,7 @@ export class GLJournalListComponent implements OnInit {
         this.currentRowData = args.data; // Handle row selection event        
     }
 
-    selectedRow(args: any) {        
+    selectedRow(args: any) {
         if (args.requestType === 'beginEdit' || args.requestType === 'add') {
             args.cancel = true;
             this.currentRowData = args.rowData;
@@ -546,22 +547,22 @@ export class GLJournalListComponent implements OnInit {
         }
     }
 
-    
 
-      onBack() {
+
+    onBack() {
         throw new Error('Method not implemented.');
-      }
-      onReceipts() {
+    }
+    onReceipts() {
         throw new Error('Method not implemented.');
-      }
-    
-      onOpenSettings() {
+    }
+
+    onOpenSettings() {
         throw new Error('Method not implemented.');
-      }
-      onPrinting() {
+    }
+    onPrinting() {
         throw new Error('Method not implemented.');
-      }
-    
+    }
+
 }
 
 

@@ -22,62 +22,62 @@ export const defaultNavigation: FuseNavigationItem[] = [
                 title: 'Journal Management',
                 icon: 'heroicons_outline:check-circle',
                 type: 'collapsable',
-                    children: [
-                        {
-                            id: 'accounts.wizard-journals',
-                            title: 'New Transactions',
-                            type: 'basic',
-                            icon: 'heroicons_outline:document-plus',
-                            link: '/new-journals',
-                        },
-                        
-                        {
-                            id: 'accounts.list-journals',
-                            title: 'Open  Transactions',
-                            type: 'basic',
-                            icon: 'heroicons_outline:document-check',
-                            link: '/list-journals',
-                        },
-                        {
-                            id: 'accounts.ap-journals',
-                            title: 'Accounts Payable',
-                            type: 'basic',
-                            icon: 'mat_outline:sell',
-                            link: '/ap-journals',
-                        },
-                        {
-                            id: 'accounts.ar-journals',
-                            title: 'Accounts Receivable',
-                            type: 'basic',
-                            icon: 'mat_outline:shopping_basket',
-                            link: '/ar-journals',
-                        },
+                children: [
+                    {
+                        id: 'accounts.wizard-journals',
+                        title: 'New Journal',
+                        type: 'basic',
+                        icon: 'heroicons_outline:document-plus',
+                        link: '/new-journals',
+                    },
 
-                        {
-                            id: 'accounts.edit-journals',
-                            title: 'Edit Transactions',
-                            type: 'basic',
-                            icon: 'heroicons_outline:currency-dollar',
-                            link: '/edit-journals',
-                        },                        
-                        {
-                            id: 'accounts.journals',
-                            title: 'Settings',
-                            type: 'basic',
-                            icon: 'mat_outline:admin_panel_settings',
-                            link: '/journals',
-                        },
-                    ],
-        
-            },            
+                    {
+                        id: 'accounts.list-journals',
+                        title: 'Journals',
+                        type: 'basic',
+                        icon: 'heroicons_outline:document-check',
+                        link: '/list-journals',
+                    },
+                    {
+                        id: 'accounts.ap-journals',
+                        title: 'Accounts Payable',
+                        type: 'basic',
+                        icon: 'mat_outline:sell',
+                        link: '/ap-journals',
+                    },
+                    {
+                        id: 'accounts.ar-journals',
+                        title: 'Accounts Receivable',
+                        type: 'basic',
+                        icon: 'mat_outline:shopping_basket',
+                        link: '/ar-journals',
+                    },
+
+                    {
+                        id: 'accounts.edit-journals',
+                        title: 'Edit Journal',
+                        type: 'basic',
+                        icon: 'heroicons_outline:currency-dollar',
+                        link: '/edit-journals',
+                    },
+                    {
+                        id: 'accounts.journals',
+                        title: 'Settings',
+                        type: 'basic',
+                        icon: 'mat_outline:admin_panel_settings',
+                        link: '/journals',
+                    },
+                ],
+
+            },
             {
                 id: 'budgeting',
                 title: 'Budget Analysis',
                 type: 'basic',
                 icon: 'heroicons_outline:calculator',
                 link: '/budget',
-            },        
-            
+            },
+
             {
                 id: 'accounting.reporting',
                 title: 'Financial Reporting',
@@ -91,7 +91,7 @@ export const defaultNavigation: FuseNavigationItem[] = [
                 type: 'basic',
                 icon: 'mat_outline:task',
                 link: '/kanban',
-            },        
+            },
 
         ]
     },
@@ -133,7 +133,7 @@ export const defaultNavigation: FuseNavigationItem[] = [
         id: 'support',
         title: 'Support',
         subtitle: 'Documentation and Help Center',
-        type: 'group',        
+        type: 'group',
         icon: 'heroicons_outline:bars-3',
         children: [
             {
@@ -141,31 +141,31 @@ export const defaultNavigation: FuseNavigationItem[] = [
                 title: 'Support',
                 icon: 'heroicons_outline:check-circle',
                 type: 'collapsable',
-                    children: [
-                        {
-                            id: 'chat',
-                            title: 'Chat',
-                            type: 'basic',
-                            icon: 'mat_outline:chat',
-                            link: '/chat',
-                        },
-                        {
-                            id: 'help-center',
-                            title: 'Blog',
-                            type: 'basic',
-                            icon: 'mat_outline:help_center',
-                            link: '/blog',
-                        },
+                children: [
+                    {
+                        id: 'chat',
+                        title: 'Chat',
+                        type: 'basic',
+                        icon: 'mat_outline:chat',
+                        link: '/chat',
+                    },
+                    {
+                        id: 'help-center',
+                        title: 'Blog',
+                        type: 'basic',
+                        icon: 'mat_outline:help_center',
+                        link: '/blog',
+                    },
 
-                        {
-                            id: 'accounting.learning',
-                            title: 'Documentation',
-                            type: 'basic',
-                            icon: 'heroicons_outline:academic-cap',
-                            link: '/documentation',
-                        },
-                    ],
-        
+                    {
+                        id: 'accounting.learning',
+                        title: 'Documentation',
+                        type: 'basic',
+                        icon: 'heroicons_outline:academic-cap',
+                        link: '/documentation',
+                    },
+                ],
+
             },
         ],
     },
@@ -196,26 +196,26 @@ export const compactNavigation: FuseNavigationItem[] = [
             // },        
             {
                 id: 'accounts.journals',
-                title: 'Transactions',
+                title: 'Journals',
                 type: 'basic',
                 icon: 'heroicons_outline:banknotes',
                 link: '/journals',
-            },            
+            },
             {
                 id: 'accounts.edit-journals',
-                title: 'Edit Transactions',
+                title: 'Edit Journals',
                 type: 'basic',
                 icon: 'heroicons_outline:currency-dollar',
                 link: '/edit-journals',
-            },                        
+            },
             {
                 id: 'budgeting',
                 title: 'Budget Analysis',
                 type: 'basic',
                 icon: 'heroicons_outline:calculator',
                 link: '/budget',
-            },        
-            
+            },
+
             {
                 id: 'accounting.reporting',
                 title: 'Financial Reporting',
@@ -229,7 +229,7 @@ export const compactNavigation: FuseNavigationItem[] = [
                 type: 'basic',
                 icon: 'mat_outline:task',
                 link: '/kanban',
-            },        
+            },
 
         ]
     },
