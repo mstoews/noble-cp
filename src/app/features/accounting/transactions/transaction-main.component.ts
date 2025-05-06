@@ -126,7 +126,7 @@ export class TransactionMainComponent implements OnInit, OnDestroy {
     drawerMode: 'over' | 'side' = 'side';
     drawerOpened: boolean = true;
     panels: any[] = [];
-    defaultPanel = "listing";
+    defaultPanel = "tmp";
     private _unsubscribeAll: Subject<any> = new Subject<any>();
     public lastPanelOpened = signal<string>("");
     public panelService = inject(AppService);
@@ -175,12 +175,12 @@ export class TransactionMainComponent implements OnInit, OnDestroy {
         }
 
         this.panels = [
-            // {
-            //     id: 'entry',
-            //     icon: 'heroicons_outline:document-plus',
-            //     title: 'Transaction Wizard',
-            //     description: 'Create transactions and append digital artifacts for each transaction',
-            // },
+             {
+                 id: 'entry',
+                 icon: 'heroicons_outline:document-plus',
+                 title: 'Transaction Wizard',
+                 description: 'Create transactions and append digital artifacts for each transaction',
+             },
             // {
             //     id: 'gl',
             //     icon: 'heroicons_outline:document-check',

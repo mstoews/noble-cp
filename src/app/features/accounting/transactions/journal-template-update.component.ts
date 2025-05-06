@@ -186,13 +186,13 @@ const imp = [
                 </section>
             </form>
             <div mat-dialog-actions class="gap-2 mb-3 mt-5">
-                @if (bDetailDirty === true) {
-                    <button mat-icon-button color="primary" class="bg-gray-200 fill-slate-100 hover:bg-slate-400 ml-1"
-                        (click)="onUpdateJournalDetail()" matTooltip="Update Line Item"
-                        aria-label="hover over">
-                        <mat-icon [svgIcon]="'feather:save'"></mat-icon>
-                    </button>
-                }
+                
+                <button mat-icon-button color="primary" class="bg-gray-200 fill-slate-100 hover:bg-slate-400 ml-1"
+                    (click)="onUpdateJournalDetail()" matTooltip="Update Line Item"
+                    aria-label="hover over">
+                    <mat-icon [svgIcon]="'feather:save'"></mat-icon>
+                </button>
+                
 
                 <button mat-icon-button color="primary" class="bg-slate-200 hover:bg-slate-400 ml-1"
                     (click)="onNewLineItem()" matTooltip="Add New Entry" aria-label="hovered over">
@@ -493,7 +493,7 @@ export class JournalTemplateUpdateComponent
 
     private _location = inject(Location);
     private router = inject(Router);
-    public store = inject(TemplateStore);
+    public templateStore = inject(TemplateStore);
 
     public contextmenu: ContextMenuComponent;
     public value = 0;
@@ -650,7 +650,11 @@ export class JournalTemplateUpdateComponent
         
         var journalDetails: IJournalDetail[] = [];
 
+        
+
         let count: number = 1;
+
+        this.
 
         // let templateHeader: IJournalHeader = {
         //     // journal_id: this.journal_id,
@@ -819,7 +823,7 @@ export class JournalTemplateUpdateComponent
         }
         this.transactionType = value.journal_type;
         // this.store.loadTemplateDetails(value.journal_no.toString());
-        this.store.readTemplateDetails(value.journal_no.toString());
+        this.templateStore.readTemplateDetails(value.journal_no.toString());
         this.bHeaderDirty = false;
     }
 
@@ -863,7 +867,7 @@ export class JournalTemplateUpdateComponent
 
     public onRowSelected(args: RowSelectEventArgs): void {
         const queryData: any = args.data;
-        this.store.readTemplateDetails(queryData.journal_no.toString());
+        this.templateStore.readTemplateDetails(queryData.journal_no.toString());
         this.refreshHeader(queryData);
         this.closeDrawer();
     }
@@ -1056,7 +1060,7 @@ export class JournalTemplateUpdateComponent
             journal_no: header.journal_no,              
         });
 
-        this.store.readTemplateDetails(header.journal_no.toString());
+        this.templateStore.readTemplateDetails(header.journal_no.toString());
 
         this.bHeaderDirty = false;
 
@@ -1171,7 +1175,7 @@ export class JournalTemplateUpdateComponent
         const updateDate = new Date().toISOString().split("T")[0];
         var max = 0;
 
-        this.store.tmp_details().forEach((details) => {
+        this.templateStore.tmp_details().forEach((details) => {
             if (details.journal_sub > max) {
                 max = details.journal_sub;
             }
@@ -1198,7 +1202,7 @@ export class JournalTemplateUpdateComponent
         var childAccount = this.debitCtrl.getRawValue();
         var sub_type = this.subtypeCtrl.value;
         var fund = this.fundCtrl.value;
-        var child_desc = this.store.accounts().find((x) => x.child === childAccount.child).description;
+        var child_desc = this.templateStore.accounts().find((x) => x.child === childAccount.child).description;
 
 
         if (debit > 0 && credit > 0) {
@@ -1251,7 +1255,7 @@ export class JournalTemplateUpdateComponent
             journal_type: this.templateHeader.journal_type
         } as IJournalTemplate;
                 
-        this.store.updateTemplate(header);            
+        this.templateStore.updateTemplate(header);            
         this.toastr.success(`Journal header updated : ${this.templateHeader.template_ref}`);
         this.bHeaderDirty = false;
     }
@@ -1305,8 +1309,8 @@ export class JournalTemplateUpdateComponent
             create_user: name,
         } as IJournalTemplate;
         
-        this.store.updateTemplate(templateHeader);
-        this.store.updateTemplateDetail(journalTemplateDetail);
+        this.templateStore.updateTemplate(templateHeader);
+        this.templateStore.updateTemplateDetail(journalTemplateDetail);
         
         this.toastr.success('Journal details updated');
 
@@ -1327,7 +1331,7 @@ export class JournalTemplateUpdateComponent
         var debit = Number(detail.debit);
         var credit = Number(detail.credit);
         var childAccount = detail.accounts.dropdown;
-        var child_desc = this.store.accounts().find((x) => x.child === childAccount.toString()).description;
+        var child_desc = this.templateStore.accounts().find((x) => x.child === childAccount.toString()).description;
         const subtype = this.subtypeDropDown().getDropdownValue();
 
         // Check for correct child accounts coming from the template
