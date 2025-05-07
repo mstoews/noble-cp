@@ -94,7 +94,7 @@ const imports = [
         <mat-drawer-container class="flex-col h-full">    
         <ng-container>
             @if (images$ | async; as images ) {
-            <grid-menubar [inTitle]="sTitle" [showNew]=true [showSettings]=false (newRecord)="onAdd()"></grid-menubar>        
+            <grid-menubar [showPeriod]="false"  [inTitle]="sTitle" [showNew]=true [showSettings]=false (newRecord)="onAdd()"></grid-menubar>        
             <gl-grid 
                (onUpdateSelection)="onSelection($event)"
                [data]="images" 
@@ -192,9 +192,10 @@ export class ImagesComponent implements OnInit {
             ranking: data.ranking,
             description: data.description,
             size: data.size,
+            
         } as ImageItem;
 
-        this.store.dispatch(ImageActions.addImage({ images: rawData }));
+        // this.store.dispatch(ImageActions.addImage({ images: rawData }));
         this.bDirty = false;
         this.closeDrawer();
     }
@@ -237,7 +238,7 @@ export class ImagesComponent implements OnInit {
         const dDate = new Date();
         const updateDate = dDate.toISOString().split('T')[0];
         this.bDirty = false;
-        this.store.dispatch(ImageActions.updateImage({ images: data }));
+        //this.store.dispatch(ImageActions.updateImage({ images: data }));
         this.openDrawer();
     }
 

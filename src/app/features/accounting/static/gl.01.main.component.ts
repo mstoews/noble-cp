@@ -173,7 +173,7 @@ export class GlMainComponent {
             },
             {
                 id: 'party',
-                icon: 'heroicons_outline:document-text',
+                icon: 'heroicons_outline:user-circle',
                 title: 'Customer and Vendor Party',
                 description: 'Customer and vendor party definitions',
             },

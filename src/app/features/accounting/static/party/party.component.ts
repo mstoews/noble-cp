@@ -40,7 +40,7 @@ const imports = [
               (Delete)="onDelete($event)">
             </party-drawer>                 
         </mat-drawer>
-        <grid-menubar [inTitle]="sTitle" [showNew]=true (new)="onAddNew()" (print)="onPrint()" [showSettings]="false"/>
+        <grid-menubar [showPeriod]="false"  [inTitle]="sTitle" [showNew]=true (new)="onAddNew()" (print)="onPrint()" [showSettings]="false"/>
           <mat-drawer-container class="flex-col h-screen">                
                 <ng-container>
                     <div class="border-1 border-gray-500">                                                              

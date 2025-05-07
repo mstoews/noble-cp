@@ -54,205 +54,204 @@ const imports = [
     encapsulation: ViewEncapsulation.None,
     template: `    
     <div id="target" class="flex flex-col w-full filter-article filter-interactive text-gray-700 ">
-    <div class="sm:hide md:visible ml-5 mr-5">
-        <grid-menubar class="pl-5 pr-5"            
-            [showBack]="true"             
-            [showPeriod]="true"
-            (print)="onPrint()"
-            (back)="onBack()"  
-            (clone)="onClone()"  
-            (period)="onPeriod($event)"         
-            [inTitle]="'General Ledger Journals Update'" 
-            [prd]="journalStore.currentPeriod()"
-            [prd_year]="journalStore.currentYear()">
-        </grid-menubar>
-     </div>
-
-    <div id="settings" class="control-section default-splitter flex flex-col overflow-hidden">    
-      <div class="grid grid-row-3 overflow-hidden">
-        <div class="flex flex-col min-w-0 overflow-y-auto -px-10" cdkScrollable>
-          <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-2 w-full min-w-400 overflow-hidden ml-3 mr-3">
-            
-              <div  class="flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden m-2 hover:cursor-pointer">
-                  <summary-card (click)="onReceipts()" class="min-h-48" [mainValue]="1526.00" [caption]="'Receipts'" [title]="'Funds'" [chart]="'1'"
-                  [subtitle]="currentPeriod" [subtitle_value]="">
-                  </summary-card>
-              </div>
-              
-              <div  class="flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden m-2 hover:cursor-pointer">
-                  <summary-card class="min-h-32" (click)="onReceipts()" [mainValue]="24000.00" [caption]="'Outstanding'" [title]="'30 Days'"
-                  [subtitle]="currentPeriod" [subtitle_value]="" [chart]="'4'">
-                  </summary-card>
-              </div>
-              <div class="flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden m-2 hover:cursor-pointer">
-                  <summary-card  class="min-h-32" (click)="onReceipts()" [mainValue]="45050.00" [caption]="'Current Receivables'" [title]="'Capital'"
-                  [subtitle]="currentPeriod" [subtitle_value]="" [chart]="'5'">
-                  </summary-card>
-              </div>
-              
-              <div class="flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden m-2 hover:cursor-pointer">
-                  <summary-card  class="min-h-32" (click)="onReceipts()"  [mainValue]="15000.00" [caption]="'Past Due Receipts'" [title]="'Capital'"
-                      [subtitle]="currentPeriod" [subtitle_value]="" [chart]="'3'">
-                  </summary-card>
-              </div>
-          </div>
-      
-          <mat-drawer-container id="target" class="flex flex-col min-w-0 overflow-y-auto -px-10 h-[calc(100vh-21.5rem)] mr-4 ml-4">     
-           <mat-card>            
-                <div class="flex-auto">                                            
-                            @if(journalStore.isLoading() === false) { 
-                                <ng-container>                     
-                                    <ejs-grid #grid id="grid"
-                                        [dataSource]="journalStore.gl() | filterType : transactionType()"                                    
-                                        [height]='gridHeight' 
-                                        [rowHeight]='30'                                  
-                                        [allowSorting]='true'                                    
-                                        [showColumnMenu]='false'                
-                                        [gridLines]="lines"
-                                        [allowFiltering]='false'                 
-                                        [toolbar]='toolbarOptions'                                             
-                                        [editSettings]='editSettings'
-                                        [enablePersistence]='false'                                    
-                                        [allowGrouping]="true"
-                                        [allowResizing]='true' 
-                                        [allowReordering]='true' 
-                                        [allowExcelExport]='true'
-                                        [allowSelection]='true'                                     
-                                        [allowPdfExport]='true'            
-                                        [groupSettings]='groupSettings' 
-                                        (rowSelected)='onRowSelected($event)'                                
-                                        (actionBegin)='selectedRow($event)' >
-                                        <e-columns>
-                                            <e-column field='journal_id' headerText='ID' isPrimaryKey='true' isIdentity='true' [visible]=false width='40'></e-column> 
-                                            <e-column field="type" headerText="ID" width="60" textAlign='Center'>
-                                                    <ng-template #template let-data>                                                                
-                                                        @switch (data.type) 
-                                                        {                                    
-                                                            @case ('GL') {                                        
-                                                                <span class="e-badge flex text-md gap-1 items-center w-max bg-transparent">
-                                                                    <div class="w-4 h-4  rounded-full bg-green-700"></div>
-                                                                    GL - {{data.journal_id}}
-                                                                </span>
-                                                            }
-                                                            @case ('AP') {
-                                                            <span class="e-badge flex text-md  gap-1 items-center w-max bg-transparent">
-                                                                <div class="w-4 h-4 rounded-full bg-blue-700"></div>
-                                                                    AP - {{data.journal_id}}
-                                                            </span>
-                                                            }                                    
-                                                            @case ('AR') {
-                                                                <span class="e-badge flex text-md  gap-1 items-center w-max bg-transparent">
-                                                                    <div class="w-4 h-4 rounded-full bg-cyan-600"></div>
-                                                                    AR - {{data.journal_id}}
-                                                                </span>
-                                                            }
-                                                            @case ('CL') {
-                                                                <span class="e-badge flex  text-md  gap-1 items-center w-max bg-transparent">
-                                                                    <div class="w-4 h-4 rounded-full bg-purple-700"></div>
-                                                                    CL - {{data.journal_id}}
-                                                                </span>
-                                                            }
-                                                        }
-                                                    </ng-template>
-                                            </e-column>                                                                
-                                            <e-column field="status" headerText="Status" width="60" textAlign='Left'>
-                                                    <ng-template #template let-data>                                                                
-                                                        @switch (data.status) 
-                                                        {                                    
-                                                            @case ('CLOSED') {                                        
-                                                                <span class="e-badge flex text-md gap-1 items-center w-max bg-transparent">                                                                    
-                                                                <div class="w-4 h-4 rounded-full bg-blue-800" matTooltip="Closed"></div>                                                                
-                                                                    Closed
-                                                                </span>
-                                                            }
-                                                            @case ('OPEN') {
-                                                            <span class="e-badge flex text-md  gap-1 items-center w-max bg-transparent">
-                                                                <div class="w-4 h-4 rounded-full bg-green-500" matTooltip="Open"></div>
-                                                                    Open
-                                                            </span>
-                                                            }                                    
-                                                            @case ('CLEARED') {
-                                                                <span class="e-badge flex text-md  gap-1 items-center w-max bg-transparent">
-                                                                    <div class="w-4 h-4 rounded-full bg-purple-800" matTooltip="Cleared"></div>
-                                                                    Cleared
-                                                                </span>
-                                                            }
-                                                            @case ('REVERSED') {
-                                                                <span class="e-badge flex  text-md  gap-1 items-center w-max bg-transparent">
-                                                                    <div class="w-4 h-4 rounded-full bg-red-700" matTooltip="Reversed"></div>                                                                
-                                                                    Reversed
-                                                                </span>
-                                                            }
-                                                        }
-                                                    </ng-template>
-                                            </e-column>                                                                                                        
-                                            <e-column field='description' headerText='Description' width='150'></e-column>
-                                            <e-column field='booked' headerText='Bk' width='60' [visible]=false ></e-column>
-                                                <ng-template #template let-data>                       
-                                                        @if(data.booked === 'true') {
-                                                            <div>
-                                                                <span class="text-green-800 border-2 p-1 rounded-md text-sm bg-gray-100">{{data.booked}}</span>  
-                                                            </div>
-                                                        } @else 
-                                                        {                                            
-                                                        <div>                                    
-                                                                <span class="text-blue-800 border-2 p-1 rounded-md text-sm bg-gray-100">{{data.booked}}</span>                                                                                    
-                                                        </div>                                                                                            
-                                                        }   
-                                                </ng-template>                                                   
-                                            <e-column field='transaction_date' headerText='Date' width='60' format='M/dd/yyyy' textAlign='Middle'></e-column>
-                                            
-                                            <e-column field="status" headerText="Period" width="60">                                                
-                                                <ng-template #template let-data>                                                                
-                                                    {{data.period_year}} - {{data.period}}  
-                                                </ng-template>
-                                            </e-column>
-                                            <e-column field='amount' headerText='Amount' width='80' format='N2' textAlign='Right'></e-column>
-                                            <e-column field='period_year' headerText='Yr' width='100' [visible]='false'></e-column>
-                                            <e-column field='create_date' headerText='Updated' width='100' format='M/dd/yyyy' [visible]='false'></e-column>
-                                            <e-column field='create_user' headerText='User' width='100' [visible]='false'></e-column>
-                                            <e-column field='party_id'    headerText='Vendor' width='100' [visible]='true'></e-column>
-                                        </e-columns>
-                                        <e-aggregates>
-                                                <e-aggregate>
-                                                    <e-columns>
-                                                        <e-column type="Sum" field="amount" class="customcss" format="N2">
-                                                            <ng-template #groupFooterTemplate let-data >{{data.Sum}}</ng-template>
-                                                        </e-column>
-                                                    </e-columns>
-                                                </e-aggregate>
-                                                <e-aggregate>
-                                                    <e-columns>
-                                                        <e-column type="Sum" field="amount" format="N2" class="customcss">
-                                                            <ng-template #footerTemplate let-data >{{data.Sum}}</ng-template>
-                                                        </e-column>                                                    
-                                                    </e-columns>
-                                                </e-aggregate>
-                                        </e-aggregates>
-                                    </ejs-grid>         
-                                </ng-container> 
-                                
-                                }
-                            @else {
-                                <div class="flex justify-center items-center">
-                                    <mat-spinner></mat-spinner>
-                                </div>
-                            } 
-                                                    
-                </div>
-           </mat-card>       
-            
-            <ejs-contextmenu              
-                target='#target' 
-                (select)="itemSelect($event)"
-                [animationSettings]='animation'
-                [items]= 'menuItems'> 
-            </ejs-contextmenu> 
-          </mat-drawer-container>
-          
-        </div>
-      </div>
+        <div class="sm:hide md:visible ml-5 mr-5">
+            <grid-menubar class="pl-5 pr-5"            
+                [showBack]="true"             
+                [showPeriod]="true"
+                (print)="onPrint()"
+                (back)="onBack()"  
+                (clone)="onClone()"  
+                (period)="onPeriod($event)"         
+                [inTitle]="'General Ledger Journals Update'" 
+                [prd]="journalStore.currentPeriod()"
+                [prd_year]="journalStore.currentYear()">
+            </grid-menubar>
     </div>
+
+        <div class="flex-auto border-t -mt-px pt-4 sm:pt-6">
+            <div class="w-full max-w-screen-xl mx-auto m-4">
+                <!-- Tabs -->                    
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 w-full min-w-0">
+                    <!-- Summary -->
+                    <div class="flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden m-2">                                
+                    <summary-card (click)="onReceipts()" class="min-h-30" [mainValue]="1526.00" [caption]="'Receipts'" [title]="'Funds'" [chart]="'1'" [subtitle]="currentPeriod" [subtitle_value]="">                  </summary-card>
+                    </div>
+                    <!-- Overdue -->
+                    <div class="flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden m-2">
+                    <summary-card class="min-h-32" (click)="onReceipts()" [mainValue]="24000.00" [caption]="'Outstanding'" [title]="'30 Days'"
+                    [subtitle]="currentPeriod" [subtitle_value]="" [chart]="'4'">
+                    </summary-card> 
+                    </div>
+                    <div class="flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden m-2">
+                    <summary-card  class="min-h-32" (click)="onReceipts()" [mainValue]="45050.00" [caption]="'Current Receivables'" [title]="'Capital'"
+                    [subtitle]="currentPeriod" [subtitle_value]="" [chart]="'5'">
+                    </summary-card> 
+                    </div>
+                    <!-- Issues -->
+                    <div class="flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden m-2">
+                    <summary-card  class="min-h-32" (click)="onReceipts()"  [mainValue]="15000.00" [caption]="'Past Due Receipts'" [title]="'Capital'"
+                        [subtitle]="currentPeriod" [subtitle_value]="" [chart]="'3'">
+                    </summary-card> 
+                    </div>
+                </div>
+            </div>
+        
+        </div>   
+
+        <mat-drawer-container id="target" class="flex flex-col min-w-0 overflow-y-auto -px-10 h-[calc(100vh-21.5rem)] mr-4 ml-4">     
+            <mat-card>            
+                    <div class="flex-auto">                                            
+                                @if(journalStore.isLoading() === false) { 
+                                    <ng-container>                     
+                                        <ejs-grid #grid id="grid"
+                                            [dataSource]="journalStore.gl() | filterType : transactionType()"                                    
+                                            [height]='gridHeight' 
+                                            [rowHeight]='30'                                  
+                                            [allowSorting]='true'                                    
+                                            [showColumnMenu]='false'                
+                                            [gridLines]="lines"
+                                            [allowFiltering]='false'                 
+                                            [toolbar]='toolbarOptions'                                             
+                                            [editSettings]='editSettings'
+                                            [enablePersistence]='false'                                    
+                                            [allowGrouping]="true"
+                                            [allowResizing]='true' 
+                                            [allowReordering]='true' 
+                                            [allowExcelExport]='true'
+                                            [allowSelection]='true'                                     
+                                            [allowPdfExport]='true'            
+                                            [groupSettings]='groupSettings' 
+                                            (rowSelected)='onRowSelected($event)'                                
+                                            (actionBegin)='selectedRow($event)' >
+                                            <e-columns>
+                                                <e-column field='journal_id' headerText='ID' isPrimaryKey='true' isIdentity='true' [visible]=false width='40'></e-column> 
+                                                <e-column field="type" headerText="ID" width="60" textAlign='Center'>
+                                                        <ng-template #template let-data>                                                                
+                                                            @switch (data.type) 
+                                                            {                                    
+                                                                @case ('GL') {                                        
+                                                                    <span class="e-badge flex text-md gap-1 items-center w-max bg-transparent">
+                                                                        <div class="w-4 h-4  rounded-full bg-green-700"></div>
+                                                                        GL - {{data.journal_id}}
+                                                                    </span>
+                                                                }
+                                                                @case ('AP') {
+                                                                <span class="e-badge flex text-md  gap-1 items-center w-max bg-transparent">
+                                                                    <div class="w-4 h-4 rounded-full bg-blue-700"></div>
+                                                                        AP - {{data.journal_id}}
+                                                                </span>
+                                                                }                                    
+                                                                @case ('AR') {
+                                                                    <span class="e-badge flex text-md  gap-1 items-center w-max bg-transparent">
+                                                                        <div class="w-4 h-4 rounded-full bg-cyan-600"></div>
+                                                                        AR - {{data.journal_id}}
+                                                                    </span>
+                                                                }
+                                                                @case ('CL') {
+                                                                    <span class="e-badge flex  text-md  gap-1 items-center w-max bg-transparent">
+                                                                        <div class="w-4 h-4 rounded-full bg-purple-700"></div>
+                                                                        CL - {{data.journal_id}}
+                                                                    </span>
+                                                                }
+                                                            }
+                                                        </ng-template>
+                                                </e-column>                                                                
+                                                <e-column field="status" headerText="Status" width="60" textAlign='Left'>
+                                                        <ng-template #template let-data>                                                                
+                                                            @switch (data.status) 
+                                                            {                                    
+                                                                @case ('CLOSED') {                                        
+                                                                    <span class="e-badge flex text-md gap-1 items-center w-max bg-transparent">                                                                    
+                                                                    <div class="w-4 h-4 rounded-full bg-blue-800" matTooltip="Closed"></div>                                                                
+                                                                        Closed
+                                                                    </span>
+                                                                }
+                                                                @case ('OPEN') {
+                                                                <span class="e-badge flex text-md  gap-1 items-center w-max bg-transparent">
+                                                                    <div class="w-4 h-4 rounded-full bg-green-500" matTooltip="Open"></div>
+                                                                        Open
+                                                                </span>
+                                                                }                                    
+                                                                @case ('CLEARED') {
+                                                                    <span class="e-badge flex text-md  gap-1 items-center w-max bg-transparent">
+                                                                        <div class="w-4 h-4 rounded-full bg-purple-800" matTooltip="Cleared"></div>
+                                                                        Cleared
+                                                                    </span>
+                                                                }
+                                                                @case ('REVERSED') {
+                                                                    <span class="e-badge flex  text-md  gap-1 items-center w-max bg-transparent">
+                                                                        <div class="w-4 h-4 rounded-full bg-red-700" matTooltip="Reversed"></div>                                                                
+                                                                        Reversed
+                                                                    </span>
+                                                                }
+                                                            }
+                                                        </ng-template>
+                                                </e-column>                                                                                                        
+                                                <e-column field='description' headerText='Description' width='150'></e-column>
+                                                <e-column field='booked' headerText='Bk' width='60' [visible]=false ></e-column>
+                                                    <ng-template #template let-data>                       
+                                                            @if(data.booked === 'true') {
+                                                                <div>
+                                                                    <span class="text-green-800 border-2 p-1 rounded-md text-sm bg-gray-100">{{data.booked}}</span>  
+                                                                </div>
+                                                            } @else 
+                                                            {                                            
+                                                            <div>                                    
+                                                                    <span class="text-blue-800 border-2 p-1 rounded-md text-sm bg-gray-100">{{data.booked}}</span>                                                                                    
+                                                            </div>                                                                                            
+                                                            }   
+                                                    </ng-template>                                                   
+                                                <e-column field='transaction_date' headerText='Date' width='60' format='M/dd/yyyy' textAlign='Middle'></e-column>
+                                                
+                                                <e-column field="status" headerText="Period" width="60">                                                
+                                                    <ng-template #template let-data>                                                                
+                                                        {{data.period_year}} - {{data.period}}  
+                                                    </ng-template>
+                                                </e-column>
+                                                <e-column field='amount' headerText='Amount' width='80' format='N2' textAlign='Right'></e-column>
+                                                <e-column field='period_year' headerText='Yr' width='100' [visible]='false'></e-column>
+                                                <e-column field='create_date' headerText='Updated' width='100' format='M/dd/yyyy' [visible]='false'></e-column>
+                                                <e-column field='create_user' headerText='User' width='100' [visible]='false'></e-column>
+                                                <e-column field='party_id'    headerText='Vendor' width='100' [visible]='true'></e-column>
+                                            </e-columns>
+                                            <e-aggregates>
+                                                    <e-aggregate>
+                                                        <e-columns>
+                                                            <e-column type="Sum" field="amount" class="customcss" format="N2">
+                                                                <ng-template #groupFooterTemplate let-data >{{data.Sum}}</ng-template>
+                                                            </e-column>
+                                                        </e-columns>
+                                                    </e-aggregate>
+                                                    <e-aggregate>
+                                                        <e-columns>
+                                                            <e-column type="Sum" field="amount" format="N2" class="customcss">
+                                                                <ng-template #footerTemplate let-data >{{data.Sum}}</ng-template>
+                                                            </e-column>                                                    
+                                                        </e-columns>
+                                                    </e-aggregate>
+                                            </e-aggregates>
+                                        </ejs-grid>         
+                                    </ng-container> 
+                                    
+                                    }
+                                @else {
+                                    <div class="flex justify-center items-center">
+                                        <mat-spinner></mat-spinner>
+                                    </div>
+                                } 
+                                                        
+                    </div>
+            </mat-card>                       
+                <ejs-contextmenu              
+                    target='#target' 
+                    (select)="itemSelect($event)"
+                    [animationSettings]='animation'
+                    [items]= 'menuItems'> 
+                </ejs-contextmenu> 
+        </mat-drawer-container>          
+      
+    </div>
+    
     `,
     styles: `
      .custom-css {  
@@ -270,7 +269,7 @@ export class GLJournalListComponent implements OnInit {
     public route = inject(Router);
     public toast = inject(ToastrService);
     public journalStore = inject(JournalStore);
-
+    
     public settingsService = inject(SettingsService);
     public changeDetectorRef = inject(ChangeDetectorRef);
     public periodStore = inject(PeriodStore);
@@ -299,11 +298,11 @@ export class GLJournalListComponent implements OnInit {
     public searchOptions?: SearchSettingsModel;
     public filterSettings: FilterSettingsModel;
     public lines: GridLine;
-
+    
     public periodParam: IPeriodParam;
     public gridHeight: number;
     public groupSettings: { [x: string]: Object } = { showDropArea: true };
-
+    
     // periods$ = this.store.select(periodsFeature.selectPeriods);
 
     drawer = viewChild<MatDrawer>("drawer");
@@ -320,25 +319,25 @@ export class GLJournalListComponent implements OnInit {
     subtypeList: any;
     templateList: any;
     partyList: any;
-    currentPeriod: any;
+    currentPeriod: any; 
     updateTransactionPeriod(currentPeriod: string) {
 
         const current = this.activePeriods().filter((period) => period.description === currentPeriod)
         if (current.length === 0) {
             this.toast.error('No period found');
             return;
-        }
-
+        }        
+                
     }
 
     ngOnInit() {
-
-        this.currentPeriod = localStorage.getItem('currentPeriod');
+   
+        this.currentPeriod = localStorage.getItem('currentPeriod');                        
         if (this.currentPeriod === null) {
-            this.currentPeriod = localStorage.getItem('defaultPeriod');
+            this.currentPeriod = localStorage.getItem('defaultPeriod');            
             this.toast.info('No period found, defaulting ' + this.currentPeriod);
         }
-        this.journalStore.getJournalListByPeriod({ current_period: this.currentPeriod })
+        this.journalStore.getJournalListByPeriod({current_period: this.currentPeriod})                        
         // localStorage.setItem('openPeriods', JSON.stringify(this.periodStore.activePeriods()));
         this.initGrid()
     }
@@ -347,7 +346,7 @@ export class GLJournalListComponent implements OnInit {
     }
 
     initGrid() {
-        this.toolbarTitle = "Journal Transactions by Period ";
+        this.toolbarTitle = "Journal Transactions by Period ";        
         this.formatoptions = { type: 'dateTime', format: 'M/dd/yyyy' }
         this.selectionOptions = { mode: 'Row', type: 'Single' };
         this.editSettings = { allowEditing: true, allowAdding: false, allowDeleting: false };
@@ -360,11 +359,11 @@ export class GLJournalListComponent implements OnInit {
     onPeriod(event: any) {
         this.currentPeriod = event;
         localStorage.setItem('currentPeriod', this.currentPeriod);
-        this.journalStore.getJournalListByPeriod({ current_period: event })
-        this.journalStore.getJournalListByPeriod({ current_period: this.currentPeriod })
+        this.journalStore.getJournalListByPeriod({current_period: event})                
+        this.journalStore.getJournalListByPeriod({current_period: this.currentPeriod})
         this.toast.info(event, 'Period changed to: ');
         this.changeDetectorRef.detectChanges();
-
+        
     }
 
     onTemplate() {
@@ -384,7 +383,7 @@ export class GLJournalListComponent implements OnInit {
         this.currentRowData = args.data; // Handle row selection event        
     }
 
-    selectedRow(args: any) {
+    selectedRow(args: any) {        
         if (args.requestType === 'beginEdit' || args.requestType === 'add') {
             args.cancel = true;
             this.currentRowData = args.rowData;
@@ -547,22 +546,22 @@ export class GLJournalListComponent implements OnInit {
         }
     }
 
+    
 
-
-    onBack() {
+      onBack() {
         throw new Error('Method not implemented.');
-    }
-    onReceipts() {
+      }
+      onReceipts() {
         throw new Error('Method not implemented.');
-    }
-
-    onOpenSettings() {
+      }
+    
+      onOpenSettings() {
         throw new Error('Method not implemented.');
-    }
-    onPrinting() {
+      }
+      onPrinting() {
         throw new Error('Method not implemented.');
-    }
-
+      }
+    
 }
 
 

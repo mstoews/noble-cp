@@ -148,6 +148,7 @@ interface IValue {
     <mat-drawer-container class="flex-col">        
         <ng-container>
             <grid-menubar 
+                [showPeriod]="false"
                 [inTitle]="'Team Members'"
                 (notifyParentRefresh)="onRefresh()" 
                 (notifyParentAdd)="onAdd()"
@@ -178,13 +179,6 @@ interface IValue {
     providers: [TeamStore, SortService, GroupService, PageService, ResizeService, FilterService, ToolbarService, EditService, AggregateService, ColumnMenuService]
 })
 export class TeamsComponent implements OnInit {
-
-    @ViewChild('drawer') drawer!: MatDrawer;
-
-    ngOnInit() {
-        this.initialDatagrid()
-        this.createEmptyForm();
-    }
 
 
     private fuseConfirmationService = inject(FuseConfirmationService);
@@ -223,6 +217,13 @@ export class TeamsComponent implements OnInit {
     public searchOptions?: SearchSettingsModel;
     public filterSettings: FilterSettingsModel;
 
+
+    @ViewChild('drawer') drawer!: MatDrawer;
+
+    ngOnInit() {
+        this.initialDatagrid()
+        this.createEmptyForm();
+    }
 
     initialDatagrid() {
         // this.pageSettings = { pageCount: 10 };        

@@ -34,7 +34,7 @@ const imports = [
 
 @Component({
     template: `
-    <grid-menubar [inTitle]="sTitle"> </grid-menubar>                         
+    <grid-menubar [showPeriod]="false"  [inTitle]="sTitle"> </grid-menubar>                         
      
     
      <mat-drawer-container class="flex-col h-screen">    

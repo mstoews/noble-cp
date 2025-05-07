@@ -17,7 +17,7 @@ import { GLGridComponent } from "../../grid-components/gl-grid.component";
 
 import { MenuEventArgs, MenuItemModel } from '@syncfusion/ej2-navigations';
 import { IFunds } from 'app/models';
-import { FundsStore } from '../../../../store/funds.store';
+import { FundsStore } from 'app/store/funds.store';
 
 
 const imports = [
@@ -94,11 +94,11 @@ const imports = [
         <mat-drawer-container class="flex-col h-full">    
         <ng-container>
             <!-- @if (funds$ | async; as funds ) { -->
-             @if (Store.isLoading() === false) {
-            <grid-menubar [inTitle]="sTitle" [showNew]=true [showSettings]=false (new)="onAddNew()"></grid-menubar>        
+             @if (fundStore.isLoading() === false) {
+            <grid-menubar [showPeriod]="false"   [inTitle]="sTitle" [showNew]=true [showSettings]=false (new)="onAddNew()"></grid-menubar>        
             <gl-grid 
                (onUpdateSelection)="onSelection($event)"
-               [data]="Store.funds()" 
+               [data]="fundStore.funds()" 
                [columns]="columns">
             </gl-grid>            
             }
@@ -110,8 +110,7 @@ const imports = [
         PageService,
         FilterService,
         ToolbarService,
-        EditService,
-        FundsStore
+        EditService        
     ],
 })
 export class FundsComponent implements OnInit {
@@ -124,11 +123,11 @@ export class FundsComponent implements OnInit {
 
     grid = viewChild<GridComponent>('grid');
 
-    Store = inject(FundsStore);
+    fundStore = inject(FundsStore);
 
     notifyFundUpdate = output();
     bDirty: boolean = false;
-    funds$ = this.Store.selected;
+    // funds$ = this.fundStore.selected;
 
     public columns = [
         { field: 'id', headerText: 'id', visible: false, isPrimaryKey: true,   width: 80, textAlign: 'Left' },
@@ -186,7 +185,7 @@ export class FundsComponent implements OnInit {
             description: fund.description            
         } as IFunds;
 
-        this.Store.addFund(rawData);
+        this.fundStore.addFund(rawData);
         this.bDirty = false;
         this.closeDrawer();
     }
@@ -217,7 +216,7 @@ export class FundsComponent implements OnInit {
         confirmation.afterClosed().subscribe((result) => {
             // If the confirm button pressed...            
             if (result === 'confirmed') {
-                this.Store.removeFund(data.fund);
+                this.fundStore.removeFund(data.fund);
             }
         });
         this.closeDrawer();
@@ -249,7 +248,7 @@ export class FundsComponent implements OnInit {
             description: fund.description,            
         } as IFunds;
 
-        this.Store.updateFund(rawData);
+        this.fundStore.updateFund(rawData);
         this.bDirty = false;
         this.closeDrawer();
     }

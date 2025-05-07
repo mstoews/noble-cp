@@ -63,7 +63,7 @@ const keyExpr = ["account", "child"];
   
   @if ( store.isLoading() === false) {  
     <mat-drawer-container id="target" class="flex-col h-screen">        
-        <grid-menubar [showBack]="false" [inTitle]="'General Ledger Account Maintenance'"/>         
+        <grid-menubar [showPeriod]="false" [showBack]="false" [inTitle]="'General Ledger Account Maintenance'"/>         
         <ng-container>
           <div class="border-1 border-gray-500">
             @if(store.isLoading() === false) {        

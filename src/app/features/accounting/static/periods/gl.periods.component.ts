@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, ViewChild, inject, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, HostListener, OnInit, ViewChild, inject, viewChild } from '@angular/core';
 import {
     FormBuilder,
     FormGroup,
@@ -12,12 +12,13 @@ import { FuseConfirmationService } from '@fuse/services/confirmation';
 import { MatDrawer } from '@angular/material/sidenav';
 import { MaterialModule } from 'app/shared/material.module';
 import { GridMenubarStandaloneComponent } from '../../grid-components/grid-menubar.component';
-import { AggregateService, ColumnMenuService, EditService, FilterService, FilterSettingsModel, GridModule, GroupService, PageService, ResizeService, SearchSettingsModel, SelectionSettingsModel, SortService, ToolbarItems, ToolbarService } from '@syncfusion/ej2-angular-grids';
+import { AggregateService, ColumnMenuService, EditService, FilterService, FilterSettingsModel, GridComponent, GridModule, GroupService, PageService, ResizeService, SearchSettingsModel, SelectionSettingsModel, SortService, ToolbarItems, ToolbarService } from '@syncfusion/ej2-angular-grids';
 import { GLGridComponent } from '../../grid-components/gl-grid.component';
 import { IPeriod } from 'app/models/period';
 import { Store } from '@ngrx/store';
 import { periodsPageActions } from 'app/features/accounting/static/periods/periods-page.actions';
 import { periodsFeature } from 'app/features/accounting/static/periods/periods.state';
+import { PeriodStore } from 'app/store/periods.store';
 
 
 const imports = [
@@ -25,13 +26,13 @@ const imports = [
     MaterialModule,
     ReactiveFormsModule,
     FormsModule,
+    // GridMenubarStandaloneComponent,
     GridMenubarStandaloneComponent,
     GLGridComponent
 ];
 
 @Component({
     selector: 'periods',
-    changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [imports],
     template: `
         <div class="h-[calc(100vh)-100px]">
@@ -116,30 +117,23 @@ const imports = [
                     </div>
                   </mat-card>    
             </mat-drawer>
-            <mat-drawer-container class="flex-col">
-                
-                 <ng-container>
-                    <grid-menubar [inTitle]="sTitle" (onCreate)="onCreate($event)">                                        
-                    
-                     </grid-menubar>                         
-                     
-                     @if ((isLoading$ | async) === false)  {
-                        @if(periods$ | async; as periods) {                          
-                            <gl-grid                             
+            <mat-drawer-container class="flex-col">            
+                <grid-menubar [showPeriod]="false"  [inTitle]="sTitle" (onCreate)="onCreate($event)"> </grid-menubar>                         
+                 <ng-container>                                         
+                        @if (periodStore.isLoading()  === false) {
+                            <gl-grid   
+                                                      
                                 (onUpdateSelection)="onSelection($event)"
-                                [data]="periods" 
+                                [data]="periodStore.periods()"
                                 [columns]="columns">
                             </gl-grid>                        
-                         }
-                        @else
-                            {
+                        }
+                        @else {
                             <div class="fixed z-[1050] -translate-x-2/4 -translate-y-2/4 left-2/4 top-2/4">
                                 <mat-spinner></mat-spinner>
                             </div>
-                            }
-                    }
-            
-                </ng-container> 
+                        }            
+                 </ng-container>             
             </mat-drawer-container>
         </div>
     `,
@@ -147,37 +141,26 @@ const imports = [
 })
 export class PeriodsComponent implements OnInit {
     
-    public periodsForm!: FormGroup;
-    public bDirty: boolean = false;
-    
-    public sTitle = 'General Ledger Periods';
-    public drawer = viewChild<MatDrawer>("drawer");    
-    private _fuseConfirmationService = inject(FuseConfirmationService);
+    public  periodsForm!: FormGroup;
+    public  bDirty: boolean = false;    
+    public  sTitle = 'General Ledger Periods';
+    public  drawer = viewChild<MatDrawer>("drawer");            
+    public  grid = viewChild<GridComponent>('grid');    
+    public  periodStore = inject(PeriodStore);
+    private fuseConfirmationService = inject(FuseConfirmationService);
     private fb = inject(FormBuilder);
-    public changeDetectorRef = inject(ChangeDetectorRef);
-    store = inject(Store);
     
-    periods$ = this.store.select(periodsFeature.selectPeriods);
-    selectedPeriods$ = this.store.select(periodsFeature.selectSelectedPeriod);
-    isLoading$ = this.store.select(periodsFeature.selectIsLoading);
-
     ngOnInit() {
-        this.createEmptyForm();
-        this.store.dispatch(periodsPageActions.load());        
-        this.triggerChangeDetection()
+        this.createEmptyForm();        
         this.onChanges();
     }
 
-    triggerChangeDetection() {
-        this.changeDetectorRef.markForCheck(); // Manually triggers change detection
-    }
-    
     selectPeriod(period: any) {
         var pd = {
             ...period,
             id: period.period_id
         }
-        this.store.dispatch(periodsPageActions.select(pd));
+        this.periodStore.selected = pd;
     }
 
     onClose() {
@@ -210,9 +193,7 @@ export class PeriodsComponent implements OnInit {
     onSelection(period: IPeriod) {
         this.periodsForm.patchValue(period);
         this.openDrawer();
-        this.selectPeriod(period);
-        this.selectedPeriods$.subscribe((period) => {
-        });
+        this.selectPeriod(period);        
     }
 
     onCancel() {
@@ -236,13 +217,13 @@ export class PeriodsComponent implements OnInit {
             update_user: '@admin',
             status: periods.status
         };
-       this.store.dispatch(periodsPageActions.updatePeriod({ period: rawData }));
+       this.periodStore.updatePeriod(rawData)
     }
 
 
     onDelete(e: any) {
         console.debug(`onDelete ${JSON.stringify(e)}`);
-        const confirmation = this._fuseConfirmationService.open({
+        const confirmation = this.fuseConfirmationService.open({
             title: 'Delete period?',
             message: 'Are you sure you want to delete this type? ',
             actions: {
@@ -254,7 +235,7 @@ export class PeriodsComponent implements OnInit {
 
         confirmation.afterClosed().subscribe((result) => {
             if (result === 'confirmed') {
-                this.store.dispatch(periodsPageActions.deletePeriod({ id: e.id }));
+                this.periodStore.removePeriod(e.id)
             }
         });
         this.closeDrawer();
@@ -310,13 +291,22 @@ export class PeriodsComponent implements OnInit {
             update_user: '@admin',
             status: periods.status
         };
-
-        this.store.dispatch(periodsPageActions.updatePeriod({ period: rawData }));
-
+        this.periodStore.updatePeriod(rawData);
         this.closeDrawer();
     }
+    @HostListener('window:resize', ['$event'])
+    onResize(event: any) {
+        this.adjustHeight();
+    }
 
+    ngAfterViewInit() {
+        this.adjustHeight();
+    }
 
-
+    adjustHeight() {
+        if (this.grid()) {
+            this.grid().height = (window.innerHeight - 450) + 'px'; // Adjust as needed
+        }
+    }
 
 }

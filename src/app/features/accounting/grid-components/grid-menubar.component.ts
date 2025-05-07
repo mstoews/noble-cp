@@ -39,8 +39,9 @@ let modules = [MatToolbarModule, MatIconModule, MatButtonModule, CommonModule, M
   template: `
     <mat-toolbar class="text-white font-sans bg-gray-500 text-2xl rounded-lg mr-5">  {{ inTitle() }} 
     <span class="flex-1"></span>      
-      
-    <mat-form-field class="rounded-lg w-[200px] mt-5 mr-10">              
+    
+    @if (showPeriod()) {
+      <mat-form-field class="rounded-lg w-[200px] mt-5 mr-10">              
               <mat-select [value]="_currentPeriod" #periodDropdownSelection (selectionChange)="onSelectionChange($event)">
                   @for ( period of _currentActivePeriods ; track period.description ) {
                     <mat-option [value]="period.description">
@@ -48,24 +49,37 @@ let modules = [MatToolbarModule, MatIconModule, MatButtonModule, CommonModule, M
                     </mat-option>
                   }             
               </mat-select>                        
-    </mat-form-field>  
+      </mat-form-field>  
+      }
+    
       
+      @if (showSave()) {
+        <button mat-icon-button  (click)="onSave()" color="primary" class="m-1 bg-gray-200 md:visible" matTooltip="Save"  aria-label="Save" >
+          <span class="e-icons text-bold e-save"></span>
+        </button>
+      }
       
       @if (showNew()) {
-        <button mat-icon-button  (click)="onNew()" color="primary" class="m-1 bg-gray-200 md:visible" matTooltip="Add"  aria-label="NEW" >
+        <button mat-icon-button  (click)="onNew()" color="primary" class="m-1 bg-gray-200 md:visible" matTooltip="Add"  aria-label="Add" >
           <span class="e-icons text-bold e-circle-add"></span>
         </button>
-      }  
+      }
+      
+      @if (showDelete()) {
+        <button mat-icon-button  (click)="onDelete()" color="primary" class="m-1 bg-gray-200 md:visible" matTooltip="Delete"  aria-label="Delete" >          
+          <mat-icon [svgIcon]="'feather:trash-2'"></mat-icon>
+        </button>
+      }
 
 
       @if (showClone()) {
-        <button mat-icon-button  (click)="onClone()" color="primary" class="m-1 bg-gray-200 md:visible" matTooltip="Clone"  aria-label="NEW" >        
+        <button mat-icon-button  (click)="onClone()" color="primary" class="m-1 bg-gray-200 md:visible" matTooltip="Clone"  aria-label="Clone" >        
           <span class="e-icons e-copy"></span>
         </button>
       }  
 
       @if (showTemplate()) {
-        <button mat-icon-button  (click)="onTemplate()" color="primary" class="m-1 bg-gray-200 md:visible" matTooltip="Create Template"  aria-label="NEW" >        
+        <button mat-icon-button  (click)="onTemplate()" color="primary" class="m-1 bg-gray-200 md:visible" matTooltip="Create Template"  aria-label="Create" >        
           <span class="e-icons e-table-overwrite-cells"></span>
         </button>
       }  
@@ -120,6 +134,8 @@ export class GridMenubarStandaloneComponent implements OnInit {
   back = output<string>();
   new = output<string>();
   clone = output<string>();
+  delete = output<string>();
+  save = output<string>();
   template = output<string>();
   onCopy = output<string>();
   inTitle = input<string>("General Ledger Journals");
@@ -138,6 +154,8 @@ export class GridMenubarStandaloneComponent implements OnInit {
   showNew = input<boolean>(false);
   showClone = input<boolean>(false);
   showTemplate = input<boolean>(false);
+  showDelete = input<boolean>(false);
+  showSave = input<boolean>(false);
 
   period = output<string>();
   selectedPeriod = output<string>();
@@ -176,6 +194,9 @@ export class GridMenubarStandaloneComponent implements OnInit {
     this.clone.emit('clone');
   }
 
+  public onSave() {
+    this.save.emit('save');
+  }
   public onTemplate() {
     this.template.emit('template');
   }
@@ -191,6 +212,10 @@ export class GridMenubarStandaloneComponent implements OnInit {
 
   public onPDF() {
     this.exportPRD.emit('pdf');
+  }
+
+  public onDelete() {
+    this.delete.emit('delete');
   }
 
   public onXL() {

@@ -92,12 +92,13 @@ const imports = [
             <ng-container>                                 
                     @if ((isLoading$ | async) === false) {
                         @if(subtypes$ | async; as subtypes) {                              
-                            <grid-menubar [inTitle]="sTitle" [showNew]=true [showSettings]=false (newRecord)="onAddNew()"></grid-menubar>        
+                            <grid-menubar [showPeriod]="false" [inTitle]="sTitle" [showNew]=true [showSettings]=false (newRecord)="onAddNew()"></grid-menubar>        
                                 <gl-grid 
-                                (onUpdateSelection)="onUpdateSelection($event)"
-                                [data]="subtypes" 
-                                [columns]="columns">
-                            </gl-grid>                            
+                                    
+                                    (onUpdateSelection)="onUpdateSelection($event)"
+                                    [data]="subtypes" 
+                                    [columns]="columns">
+                                </gl-grid>                            
                         }
                     @else
                         {

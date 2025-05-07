@@ -1,8 +1,7 @@
-import { AfterViewInit, ChangeDetectionStrategy, Component, EventEmitter, HostListener, OnDestroy, OnInit, Output, SimpleChanges, ViewChild, inject, signal, viewChild } from "@angular/core";
-import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from "@angular/forms";
-import { ReplaySubject, Subject, Subscription, take, takeUntil, timeout } from "rxjs";
+import { AfterViewInit, ChangeDetectionStrategy, Component, EventEmitter, HostListener, OnDestroy, OnInit, Output, ViewChild, inject, signal, viewChild } from "@angular/core";
+import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from "@angular/forms";
+import { ReplaySubject, Subject, Subscription, take, takeUntil } from "rxjs";
 import { CommonModule } from "@angular/common";
-import { DndComponent } from "app/features/drag-n-drop/loaddnd/dnd.component";
 import { GridMenubarStandaloneComponent } from "../grid-components/grid-menubar.component";
 
 import { MatDialog } from "@angular/material/dialog";
@@ -13,8 +12,9 @@ import { DropDownListAllModule } from "@syncfusion/ej2-angular-dropdowns";
 import { AUTH } from "app/app.config";
 import { MatSelect } from "@angular/material/select";
 import { NgxMatSelectSearchModule } from "ngx-mat-select-search";
-import { IDropDown, IDropDownAccounts, IDropDownAccountsGridList, IFunds, IJournalParams } from "app/models";
+import { IDropDown, IDropDownAccounts, IDropDownAccountsGridList } from "app/models";
 import * as fromFunds from "app/features/accounting/static/funds/Funds.Selector";
+import * as fromTemplates from "app/state/template/Template.Selector";
 
 import {
     ContextMenuComponent,
@@ -44,25 +44,17 @@ import {
 } from "@syncfusion/ej2-angular-grids";
 
 import {
-    Detail,
-    IJournalTransactions,
-    IJournalDetail,
     IJournalDetailTemplate,
-    IJournalDetailUpdate,
     IJournalHeader,
     IJournalTemplate,
-    IArtifacts,
-    ITemplateParams,
 } from "app/models/journals";
 
-import { Router, ActivatedRoute, NavigationStart } from "@angular/router";
+import { Router } from "@angular/router";
 import { Location } from "@angular/common";
 import { MatDrawer } from "@angular/material/sidenav";
 
 import { Splitter, SplitterComponent, SplitterModule } from '@syncfusion/ej2-angular-layouts';
-import { EvidenceCardComponent } from "app/features/file-manager/file-manager-card/evidence-card.component";
 import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from "@angular/material/form-field";
-import { IParty } from "../../../models/party";
 import { ISubType } from "app/models/subtypes";
 import { ToastrService } from "ngx-toastr";
 
@@ -75,7 +67,7 @@ import { subtypeFeature } from "../static/subtype/sub-type.state";
 import { SubtypeDropDownComponent } from "../grid-components/drop-down.subtype.component";
 import { MaterialModule } from "app/shared/material.module";
 import { TemplateStore } from "app/store/template.store";
-import { SubTypeService } from "app/services/subtype.service";
+import * as templateActions from 'app/state/template/Template.Action';
 
 
 const imp = [
@@ -99,19 +91,22 @@ const imp = [
     <div id="target" class="flex flex-col w-full filter-article filter-interactive text-gray-700 ">
     <div class="sm:hide md:visible ml-5 mr-5">
         <grid-menubar 
-            class="pl-5 pr-5"            
+            class="pl-5 pr-5" 
+            [showPeriod]="false"           
             [showBack]="false" 
             [showClone]="true"            
+            [showSave]="true"
             [showNew]="true"
+            [showDelete]="true"
             [showPrint]="false"
             [showExportXL]="false"
             [showExportPDF]="false"
             [showExportCSV]="false"
-
+            (save)="onSave()"
             (back)="onBack()"
             (new)="onNew($event)"  
             (clone)="onClone('GL')"           
-            [inTitle]="'Template Management'" >
+            [inTitle]="'Journal Template'" >
         </grid-menubar>
     </div>
 
@@ -143,7 +138,7 @@ const imp = [
                     <mat-form-field class="flex-col ml-2 mr-2 mt-1 grow ">
                         <mat-label class="text-md ml-2">Funds</mat-label>
                         <mat-select class="text-gray-800 dark:text-gray-100" placeholder="Fund" formControlName="fund">
-                            @for (item of store.funds(); track item) {
+                            @for (item of funds; track item) {
                             <mat-option [value]="item.fund"> {{ item.fund }} - {{ item.description }}
                             </mat-option>
                             }
@@ -217,7 +212,7 @@ const imp = [
     </mat-drawer>
 
     @defer (on viewport; on timer(200ms)) {
-    <mat-drawer-container id="target" class="control-section default-splitter flex flex-col  h-[calc(100vh-14rem)] ml-5 mr-5 overview-hidden " [hasBackdrop]="'false'">
+    <mat-drawer-container id="target" class="control-section default-splitter flex flex-col h-[calc(100vh-14rem)] ml-5 mr-5 overview-hidden " [hasBackdrop]="'false'">
             <section class="pane1 overflow-hidden">
                 
                 <ejs-splitter #splitterInstance id="nested-splitter" class="h-[calc(100vh-24rem)]" separatorSize=3 width='100%'>
@@ -225,51 +220,71 @@ const imp = [
                         <e-pane min='60px' size='30%' class="w-72">                                        
                             <ng-template #content>
                                 <div class="text-3xl gap-2 m-1 text-gray-100 p-2 bg-slate-600 rounded-md">
-                                            Template List
-                                </div>
-                                    <mat-card class="mat-elevation-z8 h-[calc(100vh-14.2rem)] m-2">                                        
-                                        <ejs-grid id="grid-journal-list" 
-                                            [dataSource]='store.tmp()'
-                                            [selectionSettings]="selectionOptions" 
-                                            [allowEditing]='false'
-                                            [allowSorting]='true'
-                                            [sortSettings]='initialSort'  
-                                            [searchSetting]="searchOptions" 
-                                            [allowFiltering]='false' 
-                                            [rowHeight]="30"
-                                            [showColumnMenu]='false'                
-                                            [enableStickyHeader]=true 
-                                            [toolbar]='toolbarOptions' 
-                                            [allowSorting]='true'                                            
-                                            (rowSelected)="onRowSelected($event)"
-                                            [gridLines]="'Both'">
-                                            <e-columns>
-                                            <e-column field='template_ref'  headerText='ID' [visible]='true' isPrimaryKey='true' width='70'></e-column>
-                                            <!-- <e-column field='template_name'  headerText='Name' [visible]='true' isPrimaryKey='true' width='100'></e-column> -->
-                                            <e-column field="journal_type" headerText="Type"   [visible]='true' width="80" dataType="text" textAlign="Center">
-                                                <ng-template #template let-data>                       
-                                                    @if(data.journal_type === 'GL') {
-                                                        <div>                                                        
-                                                            <span class="text-gray-300 bg-green-700 p-1 rounded-xl">{{data.journal_type}}</span> 
-                                                        </div>
-                                                    } 
-                                                    @else if (data.journal_type === 'AP'){
-                                                        <div>                                                        
-                                                            <span class="text-gray-300 bg-blue-800 p-1 rounded-xl">{{data.journal_type}}</span> 
-                                                        </div>
-                                                    }   
-                                                    @else if (data.journal_type === 'AR'){
-                                                        <div>                                                        
-                                                            <span class="text-gray-300 bg-purple-800 p-1 rounded-xl">{{data.journal_type}}</span> 
-                                                        </div>
-                                                    }
-                                                </ng-template>    
-                                                </e-column>                                                
-                                                <e-column field='template_name' headerText='Journal Description'   [visible]='true'></e-column>                                            
-                                            </e-columns>
-                                        </ejs-grid>
-                                    </mat-card>
-                                
+                                            Templates
+                                </div>                               
+                                    <!-- @if((isTemplateLoading$ | async) === false) { -->
+                                        @if(templates$ | async; as templates) {
+                                            <mat-card class="mat-elevation-z8 h-[calc(100vh-14.2rem)] m-2">                                        
+                                                <ejs-grid id="grid-journal-list" 
+                                                    [dataSource]='templates'
+                                                    [selectionSettings]="selectionOptions" 
+                                                    [allowEditing]='false'
+                                                    [allowSorting]='true'
+                                                    [sortSettings]='initialSort'  
+                                                    [searchSetting]="searchOptions" 
+                                                    [allowFiltering]='false' 
+                                                    [rowHeight]="30"
+                                                    [showColumnMenu]='false'                
+                                                    [enableStickyHeader]=true 
+                                                    [toolbar]='toolbarOptions' 
+                                                    [allowSorting]='true'                                            
+                                                    (rowSelected)="onRowSelected($event)"
+                                                    [gridLines]="'Both'">
+                                                    <e-columns>
+                                                    <e-column field='template_ref'  headerText='ID' [visible]='false' isPrimaryKey='true' width='70'></e-column>                                                    
+                                                    <e-column field="journal_type" headerText="Type"   [visible]='true' width="80" dataType="text" textAlign="Center">
+                                                        <ng-template #template let-data>                       
+                                                            @if(data.journal_type === 'GL') {
+                                                                <div>                                                        
+                                                                    <span class="text-gray-300 bg-green-700 p-1 rounded-xl">{{data.journal_type}}</span> 
+                                                                </div>
+                                                            } 
+                                                            @else if (data.journal_type === 'AP'){
+                                                                <div>                                                        
+                                                                    <span class="text-gray-300 bg-blue-800 p-1 rounded-xl">{{data.journal_type}}</span> 
+                                                                </div>
+                                                            }   
+                                                            @else if (data.journal_type === 'AR'){
+                                                                <div>                                                        
+                                                                    <span class="text-gray-300 bg-purple-800 p-1 rounded-xl">{{data.journal_type}}</span> 
+                                                                </div>
+                                                            }
+                                                        </ng-template>    
+                                                        </e-column>                                                
+                                                        <e-column field='description' headerText='Description'   [visible]='true'></e-column>                                            
+                                                    </e-columns>
+                                                </ejs-grid>
+                                            </mat-card>
+                                        }
+                                        <!-- @else {
+                                            <div class="flex justify-center">
+                                                <div>
+                                                    <mat-progress-spinner diameter="60" [value]="value"
+                                                        mode="indeterminate">
+                                                    </mat-progress-spinner>
+                                                </div>
+                                            </div>
+                                        }
+                                    @else {
+                                        <div class="flex justify-center">
+                                            <div>
+                                                <mat-progress-spinner diameter="60" [value]="value"
+                                                    mode="indeterminate">
+                                                </mat-progress-spinner>
+                                            </div>
+                                        </div>
+                                    } -->
+
                             </ng-template>
                         </e-pane>
                         <e-pane>
@@ -283,30 +298,30 @@ const imp = [
                                     <form [formGroup]="headerTemplateForm">
                                         <section class="flex flex-col md:flex-row">                                                    
                                                 <div class="flex flex-col w-40 grow">
-                                                    <mat-form-field class="mt-1 ml-1 mr-1 flex-start " >
-                                                        <mat-label class="text-xl ml-2">Name</mat-label>
+                                                    <mat-label class="text-md ml-2">Name*</mat-label>
+                                                    <mat-form-field class="mt-1 ml-1 mr-1 flex-start " >                                                        
                                                         <input matInput placeholder="Template Name" formControlName="template_name" />
-                                                        <mat-icon class="icon-size-5" matPrefix [svgIcon]="'heroicons_solid:document'"></mat-icon>
+                                                        <mat-icon class="icon-size-5 text-green-800" matPrefix [svgIcon]="'heroicons_solid:document-check'"></mat-icon>
                                                     </mat-form-field>
                                                 </div>                                                    
                                                 <div class="flex flex-col w-40 grow">
-                                                    <mat-form-field class="mt-1 ml-1 mr-1 flex-start " >
-                                                        <mat-label class="text-xl ml-2">Description</mat-label>
+                                                    <mat-label class="text-md ml-2">Description*</mat-label>
+                                                    <mat-form-field class="mt-1 ml-1 mr-1 flex-start " >                                                        
                                                         <input matInput placeholder="Description" formControlName="description" />
-                                                        <mat-icon class="icon-size-5" matPrefix [svgIcon]="'heroicons_solid:document'"></mat-icon>
+                                                        <mat-icon class="icon-size-5 text-green-800" matPrefix [svgIcon]="'heroicons_solid:clipboard-document-list'"></mat-icon>
                                                     </mat-form-field>
                                                 </div>                                                    
                                                 <div class="flex flex-col w-40 grow">
-                                                    <mat-form-field class="mt-1 ml-1 mr-1 flex-start " >
-                                                        <mat-label class="text-xl ml-2">Transaction Type</mat-label>
+                                                    <mat-label class="text-md ml-2">Transaction Type*</mat-label>
+                                                    <mat-form-field class="mt-1 ml-1 mr-1 flex-start " >                                                        
                                                         <input matInput placeholder="Type" formControlName="journal_type" />
-                                                        <mat-icon class="icon-size-5" matPrefix [svgIcon]="'heroicons_solid:document'"></mat-icon>
+                                                        <mat-icon class="icon-size-5 text-green-800" matPrefix [svgIcon]="'heroicons_solid:document-duplicate'"></mat-icon>
                                                     </mat-form-field>
                                                 </div>                                                    
                                                                                                                                                         
                                         </section>                                                                                                    
                                     </form>
-                                    <div mat-dialog-actions class="gap-2 mb-3">
+                                    <!-- <div mat-dialog-actions class="gap-2 mb-3">
                                         @if (bHeaderDirty === true) {                                                
                                             <button mat-icon-button color="primary"
                                                 class="bg-slate-200 hover:bg-slate-400 ml-1"
@@ -323,14 +338,15 @@ const imp = [
                                             <mat-icon [svgIcon]="'feather:trash-2'"></mat-icon>
                                         </button>
 
-                                    </div>
+                                    </div> -->
                                     @defer () {
 
                                     <div id="target" class="flex flex-col">
+                                        
                                         <div class="text-3xl m-1 text-gray-100 p-2 bg-slate-600 rounded-md">Details</div>
                                         <div class="flex flex-col h-full ml-1 mr-1 text-gray-800">
                                             <ejs-grid class="m-1" 
-                                                [dataSource]="store.tmp_details()" 
+                                                [dataSource]="templateStore.tmp_details()" 
                                                 [allowFiltering]="false" 
                                                 [gridLines]="'Both'"
                                                 [allowColumnMenu]="false"
@@ -343,7 +359,7 @@ const imp = [
                                                 (actionBegin)="detailRowDoubleClick($event)"
                                                 allowSorting=true>
                                                 <e-columns>
-                                                    <e-column field='child'       headerText='Acct' [visible]='true'  width='50'></e-column>
+                                                    <e-column field='child'       headerText='Acct' [visible]='true'  width='50' isPrimaryKey='true'></e-column>
                                                     <e-column field='description' headerText='Desc' [visible]='true'  width='100'></e-column>
                                                     <e-column field='sub_type'     headerText='Type' [visible]='true'  width='50'></e-column>
                                                     <e-column field='fund'        headerText='Fund' [visible]='true'     width='100'></e-column>
@@ -465,8 +481,7 @@ export class JournalTemplateUpdateComponent
     subtypeDropDown = viewChild<SubtypeDropDownComponent>("subtypeDropDown");
 
     private _fuseConfirmationService = inject(FuseConfirmationService);
-    private fb = inject(FormBuilder);
-
+    
     private auth = inject(AUTH);
     private toastr = inject(ToastrService);
 
@@ -479,11 +494,9 @@ export class JournalTemplateUpdateComponent
 
     public bDirty = false;
 
-    // create template details only one
-    bTemplateDetails = false;
+    public bTemplateDetails = false;
 
     drawer = viewChild<MatDrawer>("drawer");
-
 
     public animation = {
         effect: 'FadeIn',
@@ -535,7 +548,6 @@ export class JournalTemplateUpdateComponent
     public transactionType = 'GL';
 
     public templateList: IJournalTemplate[] = [];
-
     public accountsGrid: IDropDownAccountsGridList[] = [];
     public dFields = { text: "child", value: "child" };
 
@@ -568,17 +580,36 @@ export class JournalTemplateUpdateComponent
     Store = inject(Store);
     toast = inject(ToastrService);
     
+    
     accounts$ = this.Store.select(accountsFeature.selectChildren);
     isLoading$ = this.Store.select(accountsFeature.selectIsLoading);
 
     funds$ = this.Store.select(fromFunds.selectFunds);
     isFundsLoading$ = this.Store.select(fromFunds.isFundsLoading);
 
-    // subtype$ = this.Store.select(subtypeFeature.selectSubtype);
-    // isSubtypeLoading$ = this.Store.select(subtypeFeature.selectIsLoading);
+    subtype$ = this.Store.select(subtypeFeature.selectSubtype);
+    isSubtypeLoading$ = this.Store.select(subtypeFeature.selectIsLoading);
 
-    subtype$ = inject(SubTypeService).read();
+    templates$ = this.Store.select(fromTemplates.getTemplates);
+    isTemplatesLoading$ = this.Store.select(fromTemplates.isTemplateLoading);
 
+    ngOnInit(): void {
+        this.Store.dispatch(accountPageActions.children());
+        this.Store.dispatch(FundsActions.loadFunds());                        
+        this.Store.dispatch(templateActions.TemplateActions.loadTemplates());
+
+        this.isTemplatesLoading$.subscribe((loading) => {
+            this.bTemplateDetails = loading;
+        });
+        
+        this.initialDatagrid();
+    }
+
+    onSave() {
+        this.onUpdate();
+    }
+
+        
     detailForm = new FormGroup({
         accounts: new FormGroup({
             dropdown: new FormControl(0, Validators.required),
@@ -604,11 +635,6 @@ export class JournalTemplateUpdateComponent
     });
 
     
-    ngOnInit(): void {
-        this.Store.dispatch(accountPageActions.children());
-        this.Store.dispatch(FundsActions.loadFunds());                        
-        this.initialDatagrid();
-    }
 
     public menuItems: MenuItemModel[] = [{
         id: 'edit',
@@ -622,7 +648,7 @@ export class JournalTemplateUpdateComponent
     },
     {
         id: 'lock',
-        text: 'Lock Transaction',
+        text: 'Close Transaction',
         iconCss: 'e-icons e-lock'
     },
     {
@@ -648,13 +674,9 @@ export class JournalTemplateUpdateComponent
         const inputs = { ...this.headerTemplateForm.value }        
         const email = '@' + this.auth.currentUser?.email.split('@')[0];
         
-        var journalDetails: IJournalDetail[] = [];
-
-        
-
+        var journalDetails: IJournalDetailTemplate[] = [];
         let count: number = 1;
 
-        this.
 
         // let templateHeader: IJournalHeader = {
         //     // journal_id: this.journal_id,
@@ -736,10 +758,6 @@ export class JournalTemplateUpdateComponent
         this.toastr.success('Transaction saved');
     }
 
-    public onSaved(args: any) {
-        this.toastr.success('Transaction saved', args);
-    }
-
 
     public itemSelect(args: MenuEventArgs): void {
 
@@ -749,7 +767,7 @@ export class JournalTemplateUpdateComponent
                 break;
 
             case 'lock':
-                this.toastr.success('Transaction locked selected TBD');
+                this.toastr.success('Transaction closed selected TBD');
                 // this.onClose();
                 break;
             case 'cancel':
@@ -821,8 +839,7 @@ export class JournalTemplateUpdateComponent
         if (value === null || value === undefined) {
             return;
         }
-        this.transactionType = value.journal_type;
-        // this.store.loadTemplateDetails(value.journal_no.toString());
+        this.transactionType = value.journal_type;        
         this.templateStore.readTemplateDetails(value.journal_no.toString());
         this.bHeaderDirty = false;
     }
@@ -913,7 +930,7 @@ export class JournalTemplateUpdateComponent
 
     public OnDetailSelected(data: IJournalDetailTemplate): void {
         
-        const JournalDetail = {
+        const JournalTemplateDetail = {
             template_ref: data.template_ref,
             journal_no: data.journal_no,
             journal_sub: data.journal_sub,
@@ -926,7 +943,7 @@ export class JournalTemplateUpdateComponent
             credit: data.credit
         } as IJournalDetailTemplate;
 
-        this.updateDetailForm(JournalDetail);
+        this.updateDetailForm(JournalTemplateDetail);
 
     }
 
@@ -940,12 +957,6 @@ export class JournalTemplateUpdateComponent
         const subtypeString = journalTemplateDetail.sub_type;        
 
         this.detailForm.patchValue({            
-            // accounts: {
-            //     dropdown: journalDetail.child
-            // },
-            // subtype: {
-            //     dropdown: journalDetail.subtype
-            // },
             description: journalTemplateDetail.description,
             fund: journalTemplateDetail.fund,
             debit: journalTemplateDetail.debit,
@@ -998,13 +1009,13 @@ export class JournalTemplateUpdateComponent
             this.openDrawer();
         }
         if (args.requestType === "save") {
-            this.onSaved(args.data);
+            this.onSave();
         }
     }
 
     public actionSelectJournal(args: SaveEventArgs): void {
         if (args.requestType === "beginEdit" || args.requestType === "add") {
-            const data = args.rowData as IJournalHeader;
+            const data = args.rowData as IJournalTemplate;
         }
         if (args.requestType === "save") {
             this.saveArtifacts(args.data);
@@ -1022,21 +1033,18 @@ export class JournalTemplateUpdateComponent
     }
 
     public rowDrag(args: RowDragEventArgs): void {
-
         (args.rows as Element[]).forEach((row: Element) => {
             row.classList.add("drag-limit");
         });
     }
 
     public rowDrop(args: RowDragEventArgs): void {
-
         const value = [];
         for (let r = 0; r < (args.rows as Element[]).length; r++) {
             value.push((args.fromIndex as number) + r);
         }
-
         this.gridControl().reorderRows(value, args.dropIndex as number);
-        this.onSaved(args.data[0]);
+        this.onSave();
     }
 
     public saveArtifacts(e: any) {
@@ -1068,20 +1076,32 @@ export class JournalTemplateUpdateComponent
 
     public onNew(e: any) {
         const confirmation = this.fuseConfirmationService.open({
-            title: "Create New Transaction",
-            message: "Would you like to create a new transaction? ",
+            title: "Create New Template",
+            message:
+                "Would you like to create a new template? ",
             actions: {
                 confirm: {
-                    label: "New Transaction",
+                    label: "Template",
                 },
             },
         });
 
         confirmation.afterClosed().subscribe((result) => {
             if (result === "confirmed") {
-                this.onOpenEmptyDrawer();
+                this.bHeaderDirty = false;
+                const header = this.headerTemplateForm.getRawValue();
+                this.templateHeader = {
+                    template_ref: header.template_ref,
+                    description: header.description,
+                    template_name: header.template_name,
+                    journal_type: header.journal_type,
+                    create_date: new Date().toISOString().split("T")[0],
+                    create_user: this.auth.currentUser.email.split("@")[0],
+                } as IJournalTemplate;
+                this.templateStore.addTemplate(this.templateHeader);
+                this.toastr.success("New Template Created", "Success");
             }
-        });
+        });        
     }
 
     public onClone(e: any) {
@@ -1124,7 +1144,6 @@ export class JournalTemplateUpdateComponent
             },
         });
 
-        // Subscribe to the confirmation dialog closed action
         var sub = confirmation.afterClosed().subscribe((result) => {
             // If the confirm button pressed...
             if (result === "confirmed") {
@@ -1132,8 +1151,6 @@ export class JournalTemplateUpdateComponent
                 this.closeDrawer();
             }
         });
-
-
     }
 
     // On delete journal detail

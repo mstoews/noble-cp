@@ -7,6 +7,7 @@ const templateReducer = createReducer(  templateState,
         return {
             ...state,
             list: action.list,
+            isLoading : false,
             error: null,
         }
     }),
@@ -14,6 +15,7 @@ const templateReducer = createReducer(  templateState,
         return {
             ...state,
             list: [],
+            isLoading : false,
             error: action.error,
         }
     }),
@@ -21,6 +23,7 @@ const templateReducer = createReducer(  templateState,
         return {
             ...state,
             detail: action.detail,
+            isLoading : false,
             error: null,
         }
     }),
@@ -28,6 +31,7 @@ const templateReducer = createReducer(  templateState,
         return {
             ...state,
             detail: [],
+            isLoading : false,
             error: null,
         }
     }),

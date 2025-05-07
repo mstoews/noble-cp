@@ -87,6 +87,7 @@ const imports = [
         <ng-container>
             @if (store.isLoading() === false ) {
                 <grid-menubar 
+                    [showPeriod]="false"
                     [inTitle]="'Role Maintenance'"
                     (notifyParentRefresh)="onRefresh()" 
                     (notifyParentAdd)="onAdd()"
