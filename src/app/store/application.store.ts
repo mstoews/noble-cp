@@ -6,7 +6,7 @@ import { PeriodStore } from './periods.store';
 import { AccountsStore } from './accounts.store';
 import { MainPanelStore, ProfileModel } from './main.panel.store';
 import { FundsStore } from './funds.store';
-import { loadFunds } from 'app/features/accounting/static/funds/Funds.Action';
+
 
 export interface ApplicationStateInterface {
   currentPeriod: string;
@@ -19,7 +19,7 @@ export interface ApplicationStateInterface {
 
 export const ApplicationStore = signalStore(
   { providedIn: 'root' },
-  withState<ApplicationStateInterface>({    
+  withState<ApplicationStateInterface>({
     isLoading: false,
     currentPeriod: '',
     error: null,
@@ -32,20 +32,20 @@ export const ApplicationStore = signalStore(
     _templateStore: inject(TemplateStore),
     _accountsStore: inject(AccountsStore),
     _periodStore: inject(PeriodStore),
-    _fundsStore: inject(FundsStore),  
+    _fundsStore: inject(FundsStore),
     _mainPanelStore: inject(MainPanelStore),
 
   })),
-  withMethods((state => ({    
+  withMethods((state => ({
     loadTemplates: state._templateStore.readTemplate,
     loadAccounts: state._accountsStore.readAccounts,
     loadParties: state._partyStore.readParty,
     loadPeriod: state._periodStore.loadPeriods,
     loadProfile: state._mainPanelStore.loadProfile,
     panels: state._mainPanelStore.panels,
-    userID: state._mainPanelStore.uid,    
+    userID: state._mainPanelStore.uid,
     loadPanels: state._mainPanelStore.loadPanels,
-    loadFunds : state._fundsStore.loadFunds,
+    loadFunds: state._fundsStore.loadFunds,
     setProfile: (profile: ProfileModel) => state._mainPanelStore.setProfile(profile),
   }))),
   withComputed((state) => ({
@@ -58,22 +58,20 @@ export const ApplicationStore = signalStore(
       currentYear: state.currentYear(),
       uid: state.uid(),
       profile: state.profile(),
+
     }))
   })),
 
   withHooks({
-      onInit(store) {        
-        const uid = store.userID();        
-        store.loadProfile(uid);
-        store.loadFunds();
-        store.loadTemplates();
-        store.loadAccounts();
-        store.loadParties();
-        store.loadPeriod();
-        
-      },
-    })
-  
+    onInit(store) {
+      const uid = store.userID();
+      store.loadProfile(uid);
+      store.loadPanels(uid);
+      store.loadAccounts();
+      store.loadParties();
+      store.loadPeriod();
+
+    },
+  })
+
 );
-
-
