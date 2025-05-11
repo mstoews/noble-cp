@@ -17,6 +17,10 @@ import { ApplicationStore } from 'app/store/application.store';
 import { CdkScrollable } from '@angular/cdk/scrolling';
 import { RolesComponent } from './roles/gl.roles.component';
 import { AppSettingsComponent } from './settings/settings.comp';
+import { SpreadsheetViewComponent } from '../grid-components/spreadsheet-view.component';
+import { JournalTemplateUpdateComponent } from '../transactions/journal-template-update.component';
+import { JournalTemplateComponent } from '../transactions/journal-template.component';
+import { GLTransactionGridComponent } from '../transactions/transaction-grid.component';
 
 
 @Component({
@@ -46,12 +50,10 @@ import { AppSettingsComponent } from './settings/settings.comp';
                                     'hover:bg-gray-100 dark:hover:bg-hover': !selectedPanel || selectedPanel !== panel.id, 'bg-primary-50 dark:bg-hover':
                                         selectedPanel && selectedPanel === panel.id
                                 }" (click)="goToPanel(panel.id)">
-                            <mat-icon [ngClass]="{
+                            <mat-icon class="text-green-800" [ngClass]="{
                                         'text-hint':
                                             !selectedPanel ||
-                                            selectedPanel !== panel.id,
-                                        'text-primary dark:text-primary-500':
-                                            selectedPanel && selectedPanel === panel.id
+                                            selectedPanel !== panel.id, 'text-primary dark:text-primary-500': selectedPanel && selectedPanel === panel.id
                                     }" [svgIcon]="panel.icon"></mat-icon>
                             <div class="ml-3">
                                 <div class="font-medium leading-6" [ngClass]="{
@@ -101,6 +103,11 @@ import { AppSettingsComponent } from './settings/settings.comp';
                             @case ('team') { <team></team> }
                             @case ('roles') { <roles></roles> }
                             @case ('app-settings') { <app-settings></app-settings> }
+                            @case ('tp')    { <journal-template></journal-template>  } 
+                            @case ('at')    { <app-file-manager></app-file-manager>}
+                            @case ('tmp')   { <gl-journal-template></gl-journal-template>}
+                            @case ('grid')  { <gl-grid-transactions></gl-grid-transactions> }            
+                            @case ('xls')   { <spreadsheet-view></spreadsheet-view> }       
                         }
                     </div>
                 </div>
@@ -123,7 +130,11 @@ import { AppSettingsComponent } from './settings/settings.comp';
         TeamsComponent,
         GlAccountsComponent,
         CdkScrollable,
-        AppSettingsComponent
+        AppSettingsComponent,
+        JournalTemplateComponent,
+        JournalTemplateUpdateComponent,
+        GLTransactionGridComponent,
+        SpreadsheetViewComponent
     ],
     providers: [HttpClient],
     changeDetection: ChangeDetectionStrategy.OnPush
@@ -203,12 +214,38 @@ export class GlMainComponent {
             },
             {
                 id: 'app-settings',
-                icon: 'heroicons_outline:settings',
+                icon: 'mat_outline:app_settings_alt',
                 title: 'Application Settings',
                 description: 'Settings for the application',
+            },
+            {
+                id: 'entry',
+                icon: 'heroicons_outline:document-plus',
+                title: 'Transaction Wizard',
+                description: 'Create transactions and append digital artifacts for each transaction',
+            },
+
+            {
+                id: 'tmp',
+                icon: 'heroicons_outline:document-duplicate',
+                title: 'Templates Management',
+                description: 'Journal booking template management',
+            },
+            {
+                id: 'at',
+                icon: 'heroicons_outline:document-arrow-up',
+                title: 'Artifact Management',
+                description: 'Manage the documentation of transactions',
+            },
+
+            {
+                id: 'artifact-mgmt',
+                icon: 'heroicons_outline:document-magnifying-glass',
+                title: 'Artifact by Transaction',
+                description: 'List of transactions with assigned artifacts',
             }
         ];
-        
+
 
         // Subscribe to media changes
         this._fuseMediaWatcherService.onMediaChange$

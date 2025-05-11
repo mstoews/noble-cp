@@ -1,5 +1,5 @@
 import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, HostListener, OnDestroy, OnInit, Output, ViewChild, inject, signal, viewChild } from "@angular/core";
-import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from "@angular/forms";
+import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from "@angular/forms";
 import { ReplaySubject, Subject, Subscription, take, takeUntil } from "rxjs";
 import { CommonModule } from "@angular/common";
 import { DndComponent } from "app/features/drag-n-drop/loaddnd/dnd.component";
@@ -60,7 +60,6 @@ import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from "@angular/material/form-field";
 import { IParty } from "../../../models/party";
 import { ISubType } from "app/models/subtypes";
 import { ToastrService } from "ngx-toastr";
-import { JournalService } from "app/services/journal.service";
 import { accountsFeature } from "../static/accts/Accts.state";
 import { accountPageActions } from "../static/accts/Accts-page.actions";
 import { DropDownAccountComponent } from "../grid-components/drop-down-account.component";
@@ -151,7 +150,7 @@ const imp = [
                             
                             <!-- Description  -->
 
-                            <mat-form-field class="flex-col ml-2 mr-2 mt-1 grow">
+                            <mat-form-field class="flex-col ml-2 mr-2 mt-1 w-[200px]">
                                 <mat-label class="text-md ml-2">Description</mat-label>
                                 <input matInput placeholder="Description" formControlName="description" [placeholder]="'Description'" />
                                 <mat-icon class="icon-size-5 text-lime-700" matSuffix [svgIcon]="'heroicons_solid:calculator'"></mat-icon>
@@ -296,9 +295,9 @@ const imp = [
                             </mat-card>                                
                             </ng-template>
                         </e-pane>
-                        <e-pane>
+                        <e-pane>                            
                             <ng-template #content>
-                                <div id='vertical_splitter' class="vertical_splitter overflow-hidden">
+                                <div id='vertical_splitter' #vertical_splitter class="vertical_splitter overflow-hidden">
                                     <mat-card class="mat-elevation-z8 h-[calc(100vh-14.2rem)]">
                                         <div class="content overflow-hidden">
                                             @if (journalHeader.journal_id > 0) {
@@ -375,9 +374,9 @@ const imp = [
                                                                 <mat-datepicker #picker></mat-datepicker>
                                                             </mat-form-field>
                                                         </div>
-                                                    </section>
+                                                </section>
 
-                                                    <section class="flex flex-col md:flex-row">
+                                                <section class="flex flex-col md:flex-row">
                                                         @if (journalHeader.type != 'GL') {
                                                             @if (partyFilter | async; as parties ) {
                                                             <div class="flex flex-col w-[300px]">
@@ -565,8 +564,8 @@ const imp = [
                                         </div>
                                     </mat-card>
                                 </div>
-                            </ng-template>                        
-                        </e-pane>
+                            </ng-template>
+                        </e-pane>                                                
                     </e-panes>
                 </ejs-splitter>
             </section>
@@ -837,8 +836,8 @@ export class JournalUpdateComponent implements OnInit, OnDestroy, AfterViewInit 
                 this.bHeaderDirty = false;                
             }
             else {
-                this.bHeaderDirty = true;                
-                console.debug('Header form : ', JSON.stringify(value));                
+                this.bHeaderDirty = true; 
+                this.changeDetectorRef.detectChanges();                
             }
         });
 
@@ -879,8 +878,8 @@ export class JournalUpdateComponent implements OnInit, OnDestroy, AfterViewInit 
         });
 
         this.bHeaderDirty = false;                
-        this.bDetailDirty = false;      
-
+        this.bDetailDirty = false;   
+        
     }
 
     public menuItems: MenuItemModel[] = 
@@ -1324,15 +1323,13 @@ export class JournalUpdateComponent implements OnInit, OnDestroy, AfterViewInit 
 
     public refreshJournalForm(header: IJournalHeader) {
 
-        
-
+        this.journalHeader = header;
         this.journalForm.patchValue({
             description: header.description,
             amount: header.amount,
             transaction_date: header.transaction_date,
             invoice_no: header.invoice_no
         });
-
 
         this.templateCtrl.setValue(
             this.templateList.find((x) => x.template_name === header.template_name)
@@ -1605,7 +1602,7 @@ export class JournalUpdateComponent implements OnInit, OnDestroy, AfterViewInit 
     }
 
     onUpdateJournalHeader(e: any) {
-
+        
         let header = this.journalForm.getRawValue();
         let template = this.templateCtrl.value;
         var partyId: string = '';

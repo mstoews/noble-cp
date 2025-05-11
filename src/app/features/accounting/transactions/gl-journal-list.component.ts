@@ -17,8 +17,6 @@ import { SettingsService } from 'app/services/settings.service';
 import { GridMenubarStandaloneComponent } from '../grid-components/grid-menubar.component';
 import { PeriodStore } from 'app/store/periods.store';
 import { SummaryCardComponent } from "../../admin/dashboard/summary-card.component";
-import { take } from 'rxjs';
-
 
 const providers = [
     ReorderService,
@@ -66,7 +64,7 @@ const imports = [
                 [prd]="journalStore.currentPeriod()"
                 [prd_year]="journalStore.currentYear()">
             </grid-menubar>
-    </div>
+        </div>
 
         <div class="flex-auto border-t -mt-px pt-4 sm:pt-6">
             <div class="w-full max-w-screen-xl mx-auto m-4">
@@ -98,7 +96,7 @@ const imports = [
         
         </div>   
 
-        <mat-drawer-container id="target" class="flex flex-col min-w-0 overflow-y-auto -px-10 h-[calc(100vh-21.5rem)] mr-4 ml-4">     
+        <mat-drawer-container id="target" class="flex flex-col min-w-0 overflow-y-auto -px-10 h-[calc(100vh-30rem)] mr-4 ml-4">     
             <mat-card>            
                     <div class="flex-auto">                                            
                                 @if(journalStore.isLoading() === false) { 
@@ -264,7 +262,7 @@ const imports = [
 })
 
 
-export class GLJournalListComponent implements OnInit {
+export class GLJournalListComponent implements OnInit, AfterViewInit {
 
     public route = inject(Router);
     public toast = inject(ToastrService);

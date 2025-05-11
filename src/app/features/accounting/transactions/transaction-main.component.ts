@@ -15,9 +15,6 @@ import { Subject, takeUntil } from 'rxjs';
 import { FileManagerComponent } from 'app/features/file-manager/file-manager.component';
 import { EntryWizardComponent } from './wizard-entry.component';
 import { JournalTemplateComponent } from './journal-template.component';
-import { ARTransactionComponent } from './ar-listing.component';
-import { APTransactionComponent } from './ap-listing.component';
-import { GLTransactionListComponent } from './gl-listing.component';
 import { CdkScrollable } from '@angular/cdk/scrolling';
 import { AppService, MainPanelStore } from 'app/store/main.panel.store';
 import { ActivatedRoute } from '@angular/router';
@@ -35,7 +32,6 @@ const imports = [
     CdkScrollable,
     JournalTemplateUpdateComponent,
     GLTransactionGridComponent,
-
     SpreadsheetViewComponent
 
 
@@ -175,12 +171,12 @@ export class TransactionMainComponent implements OnInit, OnDestroy {
         }
 
         this.panels = [
-             {
-                 id: 'entry',
-                 icon: 'heroicons_outline:document-plus',
-                 title: 'Transaction Wizard',
-                 description: 'Create transactions and append digital artifacts for each transaction',
-             },
+            {
+                id: 'entry',
+                icon: 'heroicons_outline:document-plus',
+                title: 'Transaction Wizard',
+                description: 'Create transactions and append digital artifacts for each transaction',
+            },
             // {
             //     id: 'gl',
             //     icon: 'heroicons_outline:document-check',

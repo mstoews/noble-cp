@@ -1,5 +1,5 @@
 import { Component, inject, viewChild } from "@angular/core";
-import { TypeStore } from "app/services/type.service";
+
 import { CommonModule } from "@angular/common";
 import { FuseConfirmationService } from "@fuse/services/confirmation";
 
@@ -84,7 +84,7 @@ const keyExpr = ["account", "child"];
   }
   `,
   providers: [
-    TypeStore,
+
     ExcelExportService,
     ContextMenuService,
     ReorderService,
@@ -156,7 +156,8 @@ export class GlAccountsComponent {
   }
 
   ngOnInit() {
-    this.store.readAccounts();    
+    if (this.store.isLoaded() === false ) 
+      this.store.readAccounts(); 
   }
 
   onOpenSettings() {

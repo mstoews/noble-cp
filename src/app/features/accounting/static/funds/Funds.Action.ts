@@ -3,7 +3,7 @@ import { IDropDown, IFunds } from "app/models";
 
 export const LOAD_FUNDS = '[funds] getall';
 export const LOAD_FUNDS_SUCCESS = '[funds] getall success';
-export const LOAD_FUNDS_FAILURE = '[funds] getall failure'; 
+export const LOAD_FUNDS_FAILURE = '[funds] getall failure';
 
 export const LOAD_FUNDS_DROPDOWN = '[funds] getall dropdown';
 export const LOAD_FUNDS_DROPDOWN_SUCCESS = '[funds] getall dropdown success';
@@ -58,6 +58,5 @@ export const FundsActions = {
     loadFundsDropdownSuccess,
     loadFundsDropdownFailure
 };
-
 
 

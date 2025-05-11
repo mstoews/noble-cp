@@ -1,9 +1,10 @@
 import { trigger, transition, query, style, group, animate } from '@angular/animations';
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { KanbanModule } from '@syncfusion/ej2-angular-kanban';
 import { RouterOutlet } from '@angular/router';
 import { AuthService } from './features/auth/auth.service';
 import { ApplicationStore } from './store/application.store';
+
 
 @Component({
     selector: 'app-root',
@@ -36,8 +37,9 @@ import { ApplicationStore } from './store/application.store';
         ]),
     ]
 })
-export class AppComponent {
+export class AppComponent  {
     authService = inject(AuthService);
+   
     getState(outlet: any) {
         return outlet.activatedRouteData.state;
     }

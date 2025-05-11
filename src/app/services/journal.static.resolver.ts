@@ -21,7 +21,7 @@ import { AccountsService } from "./accounts.service";
 interface IJournalData {
   accounts: IAccounts[];
   funds: IFunds[];
-  journalTypes: IGLType[];
+  // journalTypes: IGLType[];
   templates: IJournalTemplate[];  
   parties: IParty[];
   subTypes: IType[];
@@ -34,7 +34,7 @@ export const StaticResolver: ResolveFn <IJournalData> = (
   state: RouterStateSnapshot ) => {     
     return inject(AccountsService).readAccounts().pipe(combineLatestWith([       
       inject(FundsService).read(),
-      inject(TypeService).read(),
+      // inject(TypeService).read(),
       inject(TemplateService).read(), 
       inject(PartyService).read(),
       inject(PeriodsService).read()      

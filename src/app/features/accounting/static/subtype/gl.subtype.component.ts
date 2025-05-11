@@ -15,7 +15,7 @@ import { MatDrawer } from '@angular/material/sidenav';
 import { MaterialModule } from 'app/shared/material.module';
 import { SubTypeService } from 'app/services/subtype.service';
 import { ISubType } from 'app/models/subtypes';
-import { Observable } from 'rxjs';
+import { Observable, take } from 'rxjs';
 import { Store } from '@ngrx/store';
 
 import { subTypePageActions } from 'app/features/accounting/static/subtype/sub-type-page.actions';
@@ -130,6 +130,7 @@ export class GlSubTypeComponent implements OnInit {
     subtypes$ = this.Store.select(subtypeFeature.selectSubtype);
     selectedSubtypes$ = this.Store.select(subtypeFeature.selectSelectedSubtype);
     isLoading$ = this.Store.select(subtypeFeature.selectIsLoading);
+    isLoaded$ = this.Store.select(subtypeFeature.selectIsLoaded);
 
     columns = [
         { field: 'subtype', headerText: 'Sub Types ', width: 100, textAlign: 'Left', isPrimaryKey: true },
@@ -165,8 +166,11 @@ export class GlSubTypeComponent implements OnInit {
 
     ngOnInit() {
         this.createEmptyForm();
-        this.Store.dispatch(subTypePageActions.load());
-
+        this.isLoaded$.pipe(take(1)).subscribe((loaded) => {
+            if (loaded === false) {
+                this.Store.dispatch(subTypePageActions.load());
+            }
+        });        
     }
 
 

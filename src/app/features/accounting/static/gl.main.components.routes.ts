@@ -1,5 +1,5 @@
 import { Routes } from '@angular/router';
-import { GlMainComponent  } from './gl.01.main.component';
+import { GlMainComponent  } from './gl.main.component';
 
 export default [
     {

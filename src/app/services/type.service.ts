@@ -32,8 +32,6 @@ export class TypeService {
 
   error$ = new Subject<string>();
 
-  public typeList = signal<IGLType[]>([])
-
   create(t: IGLType) {
     var url = this.baseUrl + '/v1/type_create';
     t.create_date = new Date().toISOString().split('T')[0];
@@ -53,7 +51,7 @@ export class TypeService {
 
   // Update
   update(t: IGLType) {
-    var url = this.baseUrl + '/v1/type_create';
+    var url = this.baseUrl + '/v1/type_update';
 
     var data: IGLType = {
       gltype: t.gltype,
@@ -73,7 +71,7 @@ export class TypeService {
     var data = {
       type: id
     }
-    var url = this.baseUrl + '/v1/type_list';
+    var url = this.baseUrl + '/v1/type_delete';
     return this.httpClient.post<IGLType[]>(url, data).pipe(
       shareReplay({ bufferSize: 1, refCount: true }))
   }

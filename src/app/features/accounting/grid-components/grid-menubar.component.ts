@@ -175,14 +175,35 @@ export class GridMenubarStandaloneComponent implements OnInit {
     var _currentActivePeriods = localStorage.getItem('activePeriod');
 
     if (_currentActivePeriods) {
-      this._currentActivePeriods = JSON.parse(_currentActivePeriods) as ICurrentPeriod[];
+      this._currentActivePeriods = JSON.parse(_currentActivePeriods) as ICurrentPeriod[];      
     }
+
     this._currentPeriod = localStorage.getItem('currentPeriod');
+    
+    this.loadPeriods();    
+        
   }
+
+
+  public loadPeriods () {
+    if (this.periodStore.isActiveLoaded() === false)
+      this.periodStore.loadActivePeriods();
+    
+    
+    if (this.periodStore.isLoaded() === false) {
+      this.periodStore.loadPeriods();
+    }
+    
+    if (this.periodStore.currentPeriod() === '') {
+      this.periodStore.loadCurrentPeriod();
+    }   
+  }
+
   public onSelectionChange(event: MatSelectChange) {
     var currentPrd = event.value as string;
     localStorage.setItem('currentPeriod', currentPrd);
-    this.periodStore.updateCurrentPeriod(currentPrd);
+    
+    
     this.period.emit(currentPrd);
   }
 

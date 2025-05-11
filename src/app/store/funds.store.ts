@@ -8,6 +8,7 @@ import { IFunds } from 'app/models';
 export interface FundStateInterface {
   funds: IFunds[];
   isLoading: boolean;
+  isLoaded: boolean;
   error: string | null;
 }
 
@@ -15,6 +16,7 @@ export const FundsStore = signalStore(
   { providedIn: 'root' },
   withState<FundStateInterface>({
     funds: [],
+    isLoaded: false,
     error: null,
     isLoading: false,
   }),
@@ -79,7 +81,7 @@ export const FundsStore = signalStore(
             tapResponse({
               next: fund => patchState(state, { funds: fund }),
               error: console.error,
-              finalize: () => patchState(state, { isLoading: false }),
+              finalize: () => patchState(state, { isLoading: false, isLoaded: true }),
             })
           );
         })
@@ -89,7 +91,9 @@ export const FundsStore = signalStore(
 
   withHooks({
     onInit(store) {
-      store.loadFunds();
+      if (!store.isLoaded() === false) {
+        store.loadFunds();
+      }
     },
   })
 );

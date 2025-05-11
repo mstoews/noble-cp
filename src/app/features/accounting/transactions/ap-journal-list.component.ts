@@ -97,7 +97,7 @@ const imports = [
               </div>
           </div>
       
-          <mat-drawer-container id="target" class="flex flex-col min-w-0 overflow-y-auto -px-10 h-[calc(100vh-21.5rem)] mr-4 ml-4">     
+          <mat-drawer-container id="target" class="flex flex-col min-w-0 overflow-y-auto -px-10 h-[calc(100vh-30rem)] mr-4 ml-4">     
            <mat-card>            
                 <div class="flex-auto">                                            
                             @if(journalStore.isLoading() === false) { 
@@ -264,7 +264,7 @@ const imports = [
 })
 
 
-export class APJournalListComponent implements OnInit {
+export class APJournalListComponent implements OnInit,  AfterViewInit {
 
     public route = inject(Router);
     public toast = inject(ToastrService);

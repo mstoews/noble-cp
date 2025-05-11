@@ -66,7 +66,7 @@ export class ProjectComponent implements OnInit, OnDestroy {
     private _projectService = inject(ProjectService);
     private _periodStore = inject(PeriodStore);
 
-    ref = this._periodStore.loadActivePeriods();
+    
             
     netRevenue = input(0);
     special = input(8000);
@@ -104,12 +104,15 @@ export class ProjectComponent implements OnInit, OnDestroy {
 
 
     constructor() {
+        
+        this._periodStore.loadActivePeriods();
+
         effect(() => {
             if (!this.authService.user()) {
                 this._router.navigate(['auth/login']);
             }
         });
-
+        
         if (this._periodStore.activePeriods().length > 0){
            localStorage.setItem('activePeriod', JSON.stringify(this._periodStore.activePeriods()));
         }

@@ -8,6 +8,7 @@ export interface State {
   subtypeDropdown: ISubtypeDropDown[];
   subtype: ISubType[];
   isLoading: boolean;
+  isLoaded: boolean;
   selectedId: string | null;
 }
 
@@ -15,6 +16,7 @@ export const initialState: State = {
   subtypeDropdown: [],
   subtype: [],
   isLoading: false,
+  isLoaded: false,
   selectedId: null,
 };
 
@@ -33,6 +35,7 @@ const reducer = createReducer(
     ...state,
     subtype,
     isLoading: false,
+    isLoaded: true,
   })),
 
   on(subTypeAPIActions.subTypeLoadFailure, (state) => ({
@@ -48,6 +51,7 @@ const reducer = createReducer(
     ...state,
     subtypeDropdown: subtype,
     isLoading: false,
+    isLoaded: true,
   }) ),
 
   on(subTypeAPIActions.subTypeDropdownFailure, (state) => ({

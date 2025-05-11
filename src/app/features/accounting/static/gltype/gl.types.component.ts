@@ -16,7 +16,7 @@ import { IAccounts } from 'app/models';
 import { GLGridComponent } from '../../grid-components/gl-grid.component';
 import { Store } from '@ngrx/store';
 import { IGLType } from 'app/models/types';
-import { Observable } from 'rxjs';
+import { Observable, Subject, take, takeUntil } from 'rxjs';
 import { glTypePageActions } from 'app/features/accounting/static/gltype/gltype.page.actions';
 import { gltypeFeature } from 'app/features/accounting/static/gltype/gltype.state';
 import { GLTypeDrawerComponent } from './gl.type-drawer.component';
@@ -38,23 +38,22 @@ const imports = [
      
     
      <mat-drawer-container class="flex-col h-screen">    
-    
-        <ng-container>
-        @if ((isLoading$ | async) === false)  {
-            @if(glTypes$ | async; as glTypes) {                          
-                <gl-grid                             
-                    (onUpdateSelection)="onSelection($event)"
-                    [data]="glTypes" 
-                    [columns]="columns">
-                </gl-grid>                        
+        <ng-container>         
+            @if ((isLoading$ | async) === false)  {
+                @if(glTypes$ | async; as glTypes) {                          
+                    <gl-grid                             
+                        (onUpdateSelection)="onSelection($event)"
+                        [data]="glTypes" 
+                        [columns]="columns">
+                    </gl-grid>                        
+                    }
+                @else
+                    {
+                    <div class="flex justify-center items-center mt-20">
+                        <mat-spinner></mat-spinner>
+                    </div>
                 }
-            @else
-                {
-                <div class="flex justify-center items-center mt-20">
-                    <mat-spinner></mat-spinner>
-                </div>
-            }
-        }                                              
+            }                                              
         </ng-container> 
     
         <mat-drawer class="lg:w-[400px] h-screen md:w-full bg-white-100" #drawer [opened]="false" mode="over" [position]="'end'" [disableClose]="false">         
@@ -75,15 +74,19 @@ const imports = [
 })
 export class GlTypeComponent implements OnInit {
 
+    protected onDestroyLoading = new Subject<void>();
+    
     store = inject(Store);
     bDirty: boolean = false;
     sTitle = 'Financial Statement Mapping';
     drawer = viewChild<MatDrawer>('drawer');
     toast = inject(ToastrService);
+    
 
     private fuseConfirmationService = inject(FuseConfirmationService);
 
     isLoading$ = this.store.select(gltypeFeature.selectIsLoading);
+    isLoaded$ = this.store.select(gltypeFeature.selectIsLoaded);
     glTypes$ = this.store.select(gltypeFeature.selectGltype);
     selectedTypes$ = this.store.select(gltypeFeature.selectSelectedGLType);
 
@@ -95,12 +98,15 @@ export class GlTypeComponent implements OnInit {
         { field: 'update_date', headerText: 'Update Date', width: '100', textAlign: 'Left' },
         { field: 'update_user', headerText: 'Update User', width: '100', textAlign: 'Left' },
     ];
-
+    
+    
     ngOnInit() {
-        this.store.dispatch(glTypePageActions.load());
-
+        this.isLoaded$.pipe(take(1), takeUntil(this.onDestroyLoading)).subscribe((loaded) => {
+            if (loaded === false) {
+                this.store.dispatch(glTypePageActions.load());
+            }   
+        });
     }
-
 
     onDelete(e: any) {
         console.debug(`onDelete ${JSON.stringify(e)}`);

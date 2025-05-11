@@ -5,21 +5,26 @@ import { NotificationsService } from 'app/fuse/layout/common/notifications/notif
 import { QuickChatService } from 'app/fuse/layout/common/quick-chat/quick-chat.service';
 import { ShortcutsService } from 'app/fuse/layout/common/shortcuts/shortcuts.service';
 import { forkJoin } from 'rxjs';
+import { PeriodStore } from './store/periods.store';
 
 export const initialDataResolver = () =>
 {
-    //const messagesService = inject(MessagesService);
-    const navigationService = inject(NavigationService);
-    //const notificationsService = inject(NotificationsService);
-    //const quickChatService = inject(QuickChatService);
-    //const shortcutsService = inject(ShortcutsService);
-
+    
+        const navigationService = inject(NavigationService);
+        const periodsStore = inject(PeriodStore);
+    
+        if (periodsStore.isActiveLoaded() === false) {
+            periodsStore.loadActivePeriods();
+        }
+        if (periodsStore.currentPeriod() === '') {
+            periodsStore.loadCurrentPeriod();        
+        }
+        if (periodsStore.isLoaded() === false) {
+             periodsStore.loadPeriods();            
+        }
+    
     // Fork join multiple API endpoint calls to wait all of them to finish
     return forkJoin([
         navigationService.get(),
-        //messagesService.getAll(),
-        //notificationsService.getAll(),
-        //quickChatService.getChats(),
-        //shortcutsService.getAll(),
     ]);
 };

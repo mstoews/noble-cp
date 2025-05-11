@@ -1,20 +1,23 @@
 import { inject } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { catchError, map, concatMap } from 'rxjs/operators';
+import { catchError, map, concatMap, withLatestFrom, filter, switchMap } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { TypeService } from 'app/services/type.service';
 import { glTypePageActions } from './gltype.page.actions';
 import { glTypeAPIActions } from './gltype.actions';
-
+import { Store } from '@ngrx/store';
+import { take } from 'lodash';
 
 export class glTypeEffects {
+
+  store = inject(Store);
 
   loadType = createEffect((
     actions$ = inject(Actions),
     gltypeService = inject(TypeService)) => {
     return actions$.pipe(
-      ofType(glTypePageActions.load),
-      concatMap(() =>
+      ofType(glTypePageActions.load),            
+      switchMap(() =>
         gltypeService.read().pipe(
           map((gltype) =>
             glTypeAPIActions.loadGLTypeSuccess({ gltype })
@@ -58,11 +61,12 @@ export class glTypeEffects {
   });
 
 
+
   deleteType = createEffect((
     actions$ = inject(Actions),
     gltypeService = inject(TypeService)) => {
     return actions$.pipe(
-      ofType(glTypePageActions.delete),
+      ofType(glTypePageActions.delete),            
       concatMap(({ gltype }) =>
         gltypeService.delete(gltype).pipe(
           map(() => glTypeAPIActions.gLTypeDeletedSuccess({ gltype })),

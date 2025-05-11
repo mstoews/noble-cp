@@ -33,7 +33,7 @@ export const defaultNavigation: FuseNavigationItem[] = [
 
                     {
                         id: 'accounts.list-journals',
-                        title: 'Journals',
+                        title: 'List Journals',
                         type: 'basic',
                         icon: 'heroicons_outline:document-check',
                         link: '/list-journals',
@@ -60,13 +60,7 @@ export const defaultNavigation: FuseNavigationItem[] = [
                         icon: 'heroicons_outline:currency-dollar',
                         link: '/edit-journals',
                     },
-                    {
-                        id: 'accounts.journals',
-                        title: 'Settings',
-                        type: 'basic',
-                        icon: 'mat_outline:settings_suggest',
-                        link: '/journals',
-                    },
+
                 ],
 
             },

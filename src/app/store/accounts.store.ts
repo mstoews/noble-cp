@@ -20,6 +20,7 @@ export interface AccountsStateInterface {
   accounts: IAccounts[];
   dropDownAccounts: IDropDownAccounts[];
   isLoading: boolean;
+  isLoaded: boolean;
   error: string | null;
 }
 
@@ -30,6 +31,7 @@ export const AccountsStore = signalStore(
     dropDownAccounts: [],
     error: null,
     isLoading: false,
+    isLoaded: false,
 
   }),
   withComputed((state) => ({
@@ -108,7 +110,7 @@ export const AccountsStore = signalStore(
             tapResponse({
               next: accounts => patchState(state, { accounts: accounts }),
               error: console.error,
-              finalize: () => patchState(state, { isLoading: false }),
+              finalize: () => patchState(state, { isLoading: false, isLoaded: true }),
             })
           );
         })

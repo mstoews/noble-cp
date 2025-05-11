@@ -278,10 +278,7 @@ export class JournalEntryComponent implements AfterViewInit {
     public journalService = inject(JournalService);
     public settingsService = inject(SettingsService);
     public changeDetectorRef = inject(ChangeDetectorRef);
-    public periodStore = inject(PeriodStore);
-
-    private fb = inject(FormBuilder);
-
+    
     public isVisible = true;
 
     public periodForm!: FormGroup;

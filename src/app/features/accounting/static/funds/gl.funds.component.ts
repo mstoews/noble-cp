@@ -139,6 +139,9 @@ export class FundsComponent implements OnInit {
 
 
     ngOnInit() {
+        if (this.fundStore.isLoaded() === false) {
+            this.fundStore.loadFunds();
+        }
         this.createEmptyForm();
         this.onChanges();
     }

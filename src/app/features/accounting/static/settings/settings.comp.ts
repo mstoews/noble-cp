@@ -1,5 +1,4 @@
 import { Component, inject, viewChild } from "@angular/core";
-import { TypeStore } from "app/services/type.service";
 import { CommonModule } from "@angular/common";
 import { FuseConfirmationService } from "@fuse/services/confirmation";
 import { MatDrawer } from "@angular/material/sidenav";
@@ -76,8 +75,7 @@ const keyExpr = ["account", "child"];
     </div>
   }
   `,
-  providers: [
-    TypeStore,
+  providers: [    
     ExcelExportService,
     ContextMenuService,
     ReorderService,

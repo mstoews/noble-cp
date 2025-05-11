@@ -21,6 +21,8 @@ export interface PeriodStateInterface {
   activePeriods: ICurrentPeriod[] | null;
   currentPeriod: string;
   isLoading: boolean;
+  isLoaded: boolean;
+  isActiveLoaded: boolean;
   error: string | null;
 }
 
@@ -32,6 +34,8 @@ export const PeriodStore = signalStore(
     error: null,
     currentPeriod: '',
     isLoading: false,
+    isLoaded: false,
+    isActiveLoaded: false,
   }),
   withComputed((state) => ({
     selected: computed(() => state.periods().filter((t) => state.periods()[t.period_id])),
@@ -69,7 +73,7 @@ export const PeriodStore = signalStore(
                 localStorage.setItem('currentPeriod', period);
               },
               error: console.error,
-              finalize: () => patchState(state, { isLoading: false }),
+              finalize: () => patchState(state, { isLoading: false  }),
             })
           );
         })
@@ -80,15 +84,14 @@ export const PeriodStore = signalStore(
       pipe(
         tap(() => patchState(state, { isLoading: true })),
         switchMap(() => {
-          return periodService.getActivePeriods().pipe(
-            debounceTime(3000),
+          return periodService.getActivePeriods().pipe(            
             tapResponse({
               next: (period) => patchState(state, 
                 { 
                   activePeriods: period
                  }),                
               error: console.error,
-              finalize: () => patchState(state, { isLoading: false }),
+              finalize: () => patchState(state, { isLoading: false, isActiveLoaded: true }),
             })
           );
         })
@@ -153,7 +156,7 @@ export const PeriodStore = signalStore(
             tapResponse({
               next: (period) => patchState(state, { periods: period }),
               error: console.error,
-              finalize: () => patchState(state, { isLoading: false }),
+              finalize: () => patchState(state, { isLoading: false, isLoaded: true }),
             })
           );
         })

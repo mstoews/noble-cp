@@ -151,10 +151,28 @@ export class PeriodsComponent implements OnInit {
     private fb = inject(FormBuilder);
     
     ngOnInit() {
+        this.loadPeriods();
         this.createEmptyForm();        
         this.onChanges();
     }
 
+    public loadPeriods () {
+        if (this.periodStore.isActiveLoaded() === false)
+          this.periodStore.loadActivePeriods();
+        
+        
+        if (this.periodStore.isLoaded() === false) {
+          this.periodStore.loadPeriods();
+        }
+        
+        if (this.periodStore.currentPeriod() === '') {
+          this.periodStore.loadCurrentPeriod();
+        }   
+    }
+    
+
+
+    
     selectPeriod(period: any) {
         var pd = {
             ...period,

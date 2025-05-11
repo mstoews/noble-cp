@@ -58,7 +58,7 @@ export const ApplicationStore = signalStore(
       currentYear: state.currentYear(),
       uid: state.uid(),
       profile: state.profile(),
-
+      
     }))
   })),
 
@@ -66,11 +66,7 @@ export const ApplicationStore = signalStore(
     onInit(store) {
       const uid = store.userID();
       store.loadProfile(uid);
-      store.loadPanels(uid);
-      store.loadAccounts();
-      store.loadParties();
-      store.loadPeriod();
-
+      store.loadPanels(uid);            
     },
   })
 
