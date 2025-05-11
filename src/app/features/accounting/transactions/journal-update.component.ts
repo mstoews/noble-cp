@@ -1,7 +1,7 @@
-import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, HostListener, OnDestroy, OnInit, Output, ViewChild, inject, signal, viewChild } from "@angular/core";
+import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, HostListener, OnDestroy, OnInit, Output, ViewChild, ViewEncapsulation, inject, signal, viewChild } from "@angular/core";
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from "@angular/forms";
 import { ReplaySubject, Subject, Subscription, take, takeUntil } from "rxjs";
-import { CommonModule } from "@angular/common";
+import { CommonModule, NgTemplateOutlet } from "@angular/common";
 import { DndComponent } from "app/features/drag-n-drop/loaddnd/dnd.component";
 import { GridMenubarStandaloneComponent } from "../grid-components/grid-menubar.component";
 
@@ -87,6 +87,7 @@ const imp = [
     SplitterModule,
     DropDownAccountComponent,
     SubtypeDropDownComponent,
+    NgTemplateOutlet
 ];
 
 @Component({
@@ -216,9 +217,10 @@ const imp = [
             <section class="pane1 overflow-hidden">                
                 <ejs-splitter #splitterInstance id="nested-splitter" (created)='onCreated()' class="h-[calc(100vh-14rem)]" separatorSize=3 width='100%'>
                     <e-panes>
-                        <e-pane min='60px' size='30%' class="w-72 relative">                                                                    
+                        <e-pane [collapsible]='true' min='60px' size='30%' class="w-72 relative">                                                                    
                             <ng-template #content>                                
-                            <mat-card class="mat-elevation-z8 h-[calc(100vh-14.2rem)]">                                                                                
+                            <mat-card class="mat-elevation-z8 h-[calc(100vh-14.2rem)]">
+
                                     <div class="text-3xl gap-2 m-1 text-gray-100 p-2 bg-slate-600 rounded-md sticky z-10">
                                         Transaction List
                                     </div>                        
@@ -295,196 +297,270 @@ const imp = [
                             </mat-card>                                
                             </ng-template>
                         </e-pane>
-                        <e-pane>                            
-                            <ng-template #content>
-                                <div id='vertical_splitter' #vertical_splitter class="vertical_splitter overflow-hidden">
-                                    <mat-card class="mat-elevation-z8 h-[calc(100vh-14.2rem)]">
-                                        <div class="content overflow-hidden">
-                                            @if (journalHeader.journal_id > 0) {
-                                                <div class="text-3xl gap-2 m-1 text-gray-100 p-2 bg-slate-600 rounded-md">
-                                                    @if (journalHeader.type == 'GL') {
-                                                        General Ledger : {{ journalHeader.journal_id }}
-                                                    } 
-                                                    @if (journalHeader.type == 'AP') {
-                                                        Accounts Payable : {{ journalHeader.journal_id }}
-                                                    }
-                                                    @if (journalHeader.type == 'AR') {
-                                                        Accounts Receivable : {{ journalHeader.journal_id }}
-                                                    }                                                
-                                                </div>
-                                            } @else {
-                                            <div class="text-3xl gap-2 m-1 text-gray-100 p-2 bg-slate-600 rounded-md">
-                                                General Ledger
+                        <e-pane [collapsible]='true'>
+                        <ng-template #content>
+                            <ng-container *ngTemplateOutlet="template_form"></ng-container>
+                            </ng-template>
+            </e-pane>
+                    </e-panes>
+                </ejs-splitter>
+            </section>
+        </mat-drawer-container>
+
+        
+    }
+    @placeholder(minimum 200ms) {
+    <div class="flex justify-center items-center">
+        <mat-spinner></mat-spinner>
+    </div>
+    }    
+
+    <ejs-contextmenu 
+      #contextmenu id='contextmenu'             
+      target='#target' 
+      (select)="itemSelect($event)"
+      [animationSettings]='animation'
+      [items]= 'menuItems'> 
+    </ejs-contextmenu> 
+    
+    </div>
+
+    <ng-template #template_form>
+        <div class="content" style="height: 100%">
+            <ejs-splitter id='vertical_splitter' separatorSize=3 orientation="Vertical" #vertical_splitter class="vertical_splitter overflow-hidden">
+                <e-panes>
+                    <e-pane [collapsible]='true'>
+                        <ng-template #content>
+                            
+                                <div class="content overflow-hidden">
+                                    @if (journalHeader.journal_id > 0) {
+                                        <div class="text-3xl gap-2 m-1 text-gray-100 p-2 bg-slate-600 rounded-md">
+                                            @if (journalHeader.type == 'GL') {
+                                                General Ledger : {{ journalHeader.journal_id }}
+                                            } 
+                                            @if (journalHeader.type == 'AP') {
+                                                Accounts Payable : {{ journalHeader.journal_id }}
+                                            }
+                                            @if (journalHeader.type == 'AR') {
+                                                Accounts Receivable : {{ journalHeader.journal_id }}
+                                            }                                                
+                                        </div>
+                                    } @else {
+                                    <div class="text-3xl gap-2 m-1 text-gray-100 p-2 bg-slate-600 rounded-md">
+                                        General Ledger
+                                    </div>
+                                    }
+                                    <form [formGroup]="journalForm">
+                                        <section class="flex flex-col md:flex-row">
+                                            @if (templateFilter | async; as templates ) {
+                                            <div class="flex flex-col w-[300px]">
+                                                <mat-form-field class="mt-1 ml-1 mr-1 flex-start">
+                                                        <mat-select [formControl]="templateCtrl" [placeholder]="'Journal Template'" #singleTemplateSelect required>
+                                                            <mat-option>
+                                                                <ngx-mat-select-search
+                                                                    [formControl]="templateFilterCtrl"
+                                                                    [noEntriesFoundLabel]="'No entries found'"
+                                                                    [placeholderLabel]="'Search'">
+                                                                </ngx-mat-select-search>
+                                                            </mat-option>
+                                                            @for (template of templates; track template) {
+                                                                <mat-option [value]="template">{{template.description}}</mat-option>
+                                                            }
+                                                        </mat-select>
+                                                        <mat-icon class="icon-size-5" matPrefix [svgIcon]="'heroicons_solid:document-chart-bar'"></mat-icon>
+                                                </mat-form-field>
                                             </div>
                                             }
-                                            <form [formGroup]="journalForm">
-                                                <section class="flex flex-col md:flex-row">
-                                                    @if (templateFilter | async; as templates ) {
+                                            <div class="flex flex-col grow">
+                                                <mat-form-field class="mt-1 ml-1 mr-1 flex-start">
+                                                    <input matInput placeholder="Journal Description"
+                                                        formControlName="description" />
+                                                    <mat-icon class="icon-size-5" matPrefix
+                                                        [svgIcon]="'heroicons_solid:document'"></mat-icon>
+                                                </mat-form-field>
+                                            </div>                                                    
+                                            @if (journalHeader.type == 'GL') {
+                                                <mat-form-field class="mt-1 ml-1 mr-1 w-[250px]">
+                                                    <input type="text" class="text-left" matInput
+                                                        placeholder="Reference Number" formControlName="invoice_no" />
+                                                    <mat-icon class="icon-size-5" matPrefix
+                                                        [svgIcon]="'heroicons_solid:clipboard-document-check'"></mat-icon>
+                                                </mat-form-field>
+                                                }
+                                                <div class="flex flex-col w-[150px]">
+                                                    <mat-form-field class="mt-1 flex-start mr-1">
+                                                        <input type="text" mask="separator.2" [leadZero]="true"
+                                                            thousandSeparator="," class="text-right" matInput
+                                                            placeholder="Amount" formControlName="amount"
+                                                            [placeholder]="'Transaction Total'" />
+                                                        <mat-icon class="icon-size-5" matPrefix
+                                                            [svgIcon]="'heroicons_solid:currency-dollar'"></mat-icon>
+                                                    </mat-form-field>
+                                                </div>
+                                                <div class="flex flex-col w-[150px]">
+                                                    <mat-form-field class="mt-1 flex-start mr-1">
+                                                        <input matInput (dateChange)="onHeaderDateChanged($event)"
+                                                            formControlName="transaction_date"
+                                                            [matDatepicker]="picker" />
+                                                        <mat-datepicker-toggle matIconPrefix
+                                                            [for]="picker"></mat-datepicker-toggle>
+                                                        <mat-datepicker #picker></mat-datepicker>
+                                                    </mat-form-field>
+                                                </div>
+                                        </section>
+
+                                        <section class="flex flex-col md:flex-row">
+                                                @if (journalHeader.type != 'GL') {
+                                                    @if (partyFilter | async; as parties ) {
                                                     <div class="flex flex-col w-[300px]">
                                                         <mat-form-field class="mt-1 ml-1 mr-1 flex-start">
-                                                                <mat-select [formControl]="templateCtrl" [placeholder]="'Journal Template'" #singleTemplateSelect required>
-                                                                    <mat-option>
-                                                                        <ngx-mat-select-search
-                                                                            [formControl]="templateFilterCtrl"
-                                                                            [noEntriesFoundLabel]="'No entries found'"
-                                                                            [placeholderLabel]="'Search'">
-                                                                        </ngx-mat-select-search>
-                                                                    </mat-option>
-                                                                    @for (template of templates; track template) {
-                                                                        <mat-option [value]="template">{{template.description}}</mat-option>
-                                                                    }
-                                                                </mat-select>
-                                                                <mat-icon class="icon-size-5" matPrefix [svgIcon]="'heroicons_solid:document-chart-bar'"></mat-icon>
+                                                            <mat-select [formControl]="partyCtrl" placeholder="Party" #singlePartySelect required>
+                                                                <mat-option>
+                                                                    <ngx-mat-select-search [formControl]="partyFilterCtrl"
+                                                                        [noEntriesFoundLabel]="'No entries found'"
+                                                                        [placeholderLabel]="'Search'">
+                                                                    </ngx-mat-select-search>
+                                                                </mat-option>
+                                                                @for (party of parties; track party) {
+                                                                <mat-option [value]="party">{{party.party_id}}</mat-option>
+                                                                }
+                                                            </mat-select>
+                                                            <mat-icon class="icon-size-5" matPrefix [svgIcon]="'heroicons_solid:user'"></mat-icon>
                                                         </mat-form-field>
                                                     </div>
-                                                    }
-                                                    <div class="flex flex-col grow">
-                                                        <mat-form-field class="mt-1 ml-1 mr-1 flex-start">
-                                                            <input matInput placeholder="Journal Description"
-                                                                formControlName="description" />
-                                                            <mat-icon class="icon-size-5" matPrefix
-                                                                [svgIcon]="'heroicons_solid:document'"></mat-icon>
-                                                        </mat-form-field>
-                                                    </div>                                                    
-                                                    @if (journalHeader.type == 'GL') {
-                                                        <mat-form-field class="mt-1 ml-1 mr-1 w-[250px]">
-                                                            <input type="text" class="text-left" matInput
-                                                                placeholder="Reference Number" formControlName="invoice_no" />
-                                                            <mat-icon class="icon-size-5" matPrefix
-                                                                [svgIcon]="'heroicons_solid:clipboard-document-check'"></mat-icon>
-                                                        </mat-form-field>
-                                                        }
-                                                        <div class="flex flex-col w-[150px]">
-                                                            <mat-form-field class="mt-1 flex-start mr-1">
-                                                                <input type="text" mask="separator.2" [leadZero]="true"
-                                                                    thousandSeparator="," class="text-right" matInput
-                                                                    placeholder="Amount" formControlName="amount"
-                                                                    [placeholder]="'Transaction Total'" />
-                                                                <mat-icon class="icon-size-5" matPrefix
-                                                                    [svgIcon]="'heroicons_solid:currency-dollar'"></mat-icon>
-                                                            </mat-form-field>
-                                                        </div>
-                                                        <div class="flex flex-col w-[150px]">
-                                                            <mat-form-field class="mt-1 flex-start mr-1">
-                                                                <input matInput (dateChange)="onHeaderDateChanged($event)"
-                                                                    formControlName="transaction_date"
-                                                                    [matDatepicker]="picker" />
-                                                                <mat-datepicker-toggle matIconPrefix
-                                                                    [for]="picker"></mat-datepicker-toggle>
-                                                                <mat-datepicker #picker></mat-datepicker>
-                                                            </mat-form-field>
-                                                        </div>
-                                                </section>
-
-                                                <section class="flex flex-col md:flex-row">
-                                                        @if (journalHeader.type != 'GL') {
-                                                            @if (partyFilter | async; as parties ) {
-                                                            <div class="flex flex-col w-[300px]">
-                                                                <mat-form-field class="mt-1 ml-1 mr-1 flex-start">
-                                                                    <mat-select [formControl]="partyCtrl" placeholder="Party" #singlePartySelect required>
-                                                                        <mat-option>
-                                                                            <ngx-mat-select-search [formControl]="partyFilterCtrl"
-                                                                                [noEntriesFoundLabel]="'No entries found'"
-                                                                                [placeholderLabel]="'Search'">
-                                                                            </ngx-mat-select-search>
-                                                                        </mat-option>
-                                                                        @for (party of parties; track party) {
-                                                                        <mat-option [value]="party">{{party.party_id}}</mat-option>
-                                                                        }
-                                                                    </mat-select>
-                                                                    <mat-icon class="icon-size-5" matPrefix [svgIcon]="'heroicons_solid:user'"></mat-icon>
-                                                                </mat-form-field>
-                                                            </div>
-                                                            <mat-form-field class="mt-1 ml-1 mr-1 grow">
-                                                                <input type="text" class="text-left" matInput
-                                                                    placeholder="Reference Number" formControlName="invoice_no" />
-                                                                <mat-icon class="icon-size-5" matPrefix
-                                                                    [svgIcon]="'heroicons_solid:clipboard-document-check'"></mat-icon>
-                                                            </mat-form-field>
-                                                        }
-                                                    }
-                                                </section>
-                                            </form>
-                                            <div mat-dialog-actions class="gap-2 mb-3">
-                                                @if (bHeaderDirty === true) {                                                
-                                                    <button mat-icon-button color="primary"
-                                                        class="bg-slate-200 hover:bg-slate-400 ml-1"
-                                                        (click)="onUpdateJournalHeader($event)" matTooltip="Save Transaction"
-                                                        aria-label="hovered over">
-                                                        <span class="e-icons e-save"></span>
-                                                    </button>
+                                                    <mat-form-field class="mt-1 ml-1 mr-1 grow">
+                                                        <input type="text" class="text-left" matInput
+                                                            placeholder="Reference Number" formControlName="invoice_no" />
+                                                        <mat-icon class="icon-size-5" matPrefix
+                                                            [svgIcon]="'heroicons_solid:clipboard-document-check'"></mat-icon>
+                                                    </mat-form-field>
                                                 }
-                                                <button mat-icon-button color="primary"
-                                                    class="bg-gray-200 hover:bg-slate-400 ml-1" 
-                                                    (click)="onAddEvidence()"
-                                                    matTooltip="Evidence" aria-label="Evidence">
-                                                    <span class="e-icons e-text-alternative"></span>
-                                                </button>
+                                            }
+                                        </section>
+                                    </form>
+                                    <div mat-dialog-actions class="gap-2 mb-3">
+                                        @if (bHeaderDirty === true) {                                                
+                                            <button mat-icon-button color="primary"
+                                                class="bg-slate-200 hover:bg-slate-400 ml-1"
+                                                (click)="onUpdateJournalHeader($event)" matTooltip="Save Transaction"
+                                                aria-label="hovered over">
+                                                <span class="e-icons e-save"></span>
+                                            </button>
+                                        }
+                                        <button mat-icon-button color="primary"
+                                            class="bg-gray-200 hover:bg-slate-400 ml-1" 
+                                            (click)="onAddEvidence()"
+                                            matTooltip="Evidence" aria-label="Evidence">
+                                            <span class="e-icons e-text-alternative"></span>
+                                        </button>
 
 
-                                                <button mat-icon-button color="primary"
-                                                    class="bg-slate-200  hover:bg-slate-400 ml-1"
-                                                    (click)="onCloseTransaction()" matTooltip="Lock Transaction"
-                                                    aria-label="complete">
-                                                    <span class="e-icons e-lock"></span>
-                                                </button>
+                                        <button mat-icon-button color="primary"
+                                            class="bg-slate-200  hover:bg-slate-400 ml-1"
+                                            (click)="onCloseTransaction()" matTooltip="Lock Transaction"
+                                            aria-label="complete">
+                                            <span class="e-icons e-lock"></span>
+                                        </button>
 
-                                                <button mat-icon-button color="primary"
-                                                    class="bg-slate-200 text-gray-100 hover:bg-slate-400 ml-1"
-                                                    (click)="onDelete($event)" matTooltip="Cancel Transaction"
-                                                    aria-label="hovered over">
-                                                    <mat-icon [svgIcon]="'feather:trash-2'"></mat-icon>
-                                                </button>
+                                        <button mat-icon-button color="primary"
+                                            class="bg-slate-200 text-gray-100 hover:bg-slate-400 ml-1"
+                                            (click)="onDelete($event)" matTooltip="Cancel Transaction"
+                                            aria-label="hovered over">
+                                            <mat-icon [svgIcon]="'feather:trash-2'"></mat-icon>
+                                        </button>
 
 
-                                            </div>
-                                            @defer () {
+                                    </div>
+                                    
 
-                                            <div id="target" class="flex flex-col">
-                                                <div class="text-3xl m-1 text-gray-100 p-2 bg-slate-600 rounded-md">Details</div>
-                                                <div class="flex flex-col h-full ml-1 mr-1 text-gray-800">
-                                                    <ejs-grid class="m-1" 
-                                                        [dataSource]="journalStore.details()" 
-                                                        [allowFiltering]="false" 
-                                                        [gridLines]="'Both'"
-                                                        [allowColumnMenu]="false"
-                                                        [rowHeight]="30"
-                                                        [allowSorting]='true'
-                                                        [sortSettings]= 'detailSort'
-                                                        [editSettings]='editSettings' 
-                                                        [allowRowDragAndDrop]='true'
-                                                        [showColumnMenu]='false' 
-                                                        (actionBegin)="detailRowDoubleClick($event)"
-                                                        allowSorting=true>
+                                    <div id="target" class="flex flex-col">
+                                        <div class="text-3xl m-1 text-gray-100 p-2 bg-slate-600 rounded-md">Details</div>
+                                        <div class="flex flex-col h-full ml-1 mr-1 text-gray-800">
+                                            <ejs-grid class="m-1" 
+                                                [dataSource]="journalStore.details()" 
+                                                [allowFiltering]="false" 
+                                                [gridLines]="'Both'"
+                                                [allowColumnMenu]="false"
+                                                [rowHeight]="30"
+                                                [allowSorting]='true'
+                                                [sortSettings]= 'detailSort'
+                                                [editSettings]='editSettings' 
+                                                [allowRowDragAndDrop]='true'
+                                                [showColumnMenu]='false' 
+                                                (actionBegin)="detailRowDoubleClick($event)"
+                                                allowSorting=true>
+                                                <e-columns>
+                                                    <e-column field='journal_subid' headerText='ID' [visible]='false' isPrimaryKey='true'  width='100'></e-column> 
+                                                    <e-column field='child' headerText='Account'  width='100'></e-column>
+                                                    <e-column field='fund' headerText='Fund' width='90'></e-column>
+                                                    <e-column field='sub_type' headerText='Sub Type' [visible]='true' width='90'></e-column>
+                                                    <e-column field='description' headerText='Description' width='150'></e-column>
+                                                    <e-column field='reference' headerText='Reference' [visible]='true' width=120></e-column>
+                                                    <e-column field='debit' headerText='Debit' textAlign='Right' width='100' format="N2"></e-column>
+                                                    <e-column field='credit' headerText='Credit' textAlign='Right' width='100' format="N2"></e-column>
+                                                </e-columns>
+                                                <e-aggregates>
+                                                    <e-aggregate>
                                                         <e-columns>
-                                                            <e-column field='journal_subid' headerText='ID' [visible]='false' isPrimaryKey='true'  width='100'></e-column> 
-                                                            <e-column field='child' headerText='Account'  width='100'></e-column>
-                                                            <e-column field='fund' headerText='Fund' width='90'></e-column>
-                                                            <e-column field='sub_type' headerText='Sub Type' [visible]='true' width='90'></e-column>
-                                                            <e-column field='description' headerText='Description' width='150'></e-column>
-                                                            <e-column field='reference' headerText='Reference' [visible]='true' width=120></e-column>
-                                                            <e-column field='debit' headerText='Debit' textAlign='Right' width='100' format="N2"></e-column>
-                                                            <e-column field='credit' headerText='Credit' textAlign='Right' width='100' format="N2"></e-column>
+                                                            <e-column type="Sum" field="debit" format="N2">
+                                                            <ng-template #footerTemplate let-data><span class="customcss">{{data.Sum}}</span> </ng-template>
+                                                            </e-column>
+                                                            <e-column type="Sum" field="credit" format="N2">
+                                                            <ng-template #footerTemplate let-data><span class="custom_no_paddingcss">{{data.Sum}}</span> </ng-template>
+                                                            </e-column>
                                                         </e-columns>
-                                                        <e-aggregates>
-                                                            <e-aggregate>
-                                                                <e-columns>
-                                                                    <e-column type="Sum" field="debit" format="N2">
-                                                                    <ng-template #footerTemplate let-data><span class="customcss">{{data.Sum}}</span> </ng-template>
-                                                                    </e-column>
-                                                                    <e-column type="Sum" field="credit" format="N2">
-                                                                    <ng-template #footerTemplate let-data><span class="custom_no_paddingcss">{{data.Sum}}</span> </ng-template>
-                                                                    </e-column>
-                                                                </e-columns>
-                                                            </e-aggregate>
-                                                        </e-aggregates>
-                                                    </ejs-grid>
-                                                </div>
+                                                    </e-aggregate>
+                                                </e-aggregates>
+                                            </ejs-grid>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Context Menu -->
+                                    
+                                </div>
+                            
+                         </ng-template>
+                        </e-pane>
+                    <e-pane size='30%' collapsible='true' min='60px'>
+                          <ng-template #content>      
+                            
+                               <div>
+                                        <div class="content overflow-hidden">
+                                            @defer () {
+                                            <div class="text-3xl m-1 text-gray-100 p-2 bg-slate-600 rounded-md">Transaction
+                                                Artifacts
+                                            </div>
+                                            <div class="flex flex-col h-full ml-1 mr-1 text-gray-800">
+
+                                                <ejs-grid id="grid" #grid [dataSource]="journalStore.artifacts()" [rowHeight]="30"
+                                                    allowEditing='false' [editSettings]='editArtifactSettings'
+                                                    [allowFiltering]='false' [allowRowDragAndDrop]='false'
+                                                    [gridLines]="'Both'" (actionBegin)="actionSelectJournal($event)"
+                                                    (rowDrop)="rowDrop($event)" (rowDrag)="rowDrag($event)">
+
+                                                    <e-columns>
+                                                        <e-column field='id' headerText='ID' [visible]='false'
+                                                            isPrimaryKey='true' width='100'></e-column>
+                                                        <e-column field='description' headerText='Description'
+                                                            width='300'></e-column>
+                                                        <e-column field='location' headerText='Location'
+                                                            [visible]='false'></e-column>
+                                                        <e-column field='reference' headerText='Reference'></e-column>
+
+                                                    </e-columns>
+                                                </ejs-grid>
+
+                                                <ng-template #template let-data>
+                                                    <img [src]="data.location" alt="Noble Ledger v 0.0.1 logo" />
+                                                </ng-template>
+
+                                                <ng-template #buttonTemplate let-data>
+                                                    <button mat-flat-button class="bg-slate-500 text-gray-100"
+                                                        (click)="handleClick(data)">Details
+                                                    </button>
+                                                </ng-template>
                                             </div>
                                             }
-                                            <!-- Context Menu -->
-                                            
-
                                             @placeholder (minimum 200ms) {
                                             <div class="flex justify-center">
                                                 <div>
@@ -504,92 +580,19 @@ const imp = [
                                             }
 
                                         </div>
-                                    
-                                        <div>
-                                            <div class="content overflow-hidden">
-                                                @defer () {
-                                                <div class="text-3xl m-1 text-gray-100 p-2 bg-slate-600 rounded-md">Transaction
-                                                    Artifacts
-                                                </div>
-                                                <div class="flex flex-col h-full ml-1 mr-1 text-gray-800">
-
-                                                    <ejs-grid id="grid" #grid [dataSource]="journalStore.artifacts()" [rowHeight]="30"
-                                                        allowEditing='false' [editSettings]='editArtifactSettings'
-                                                        [allowFiltering]='false' [allowRowDragAndDrop]='false'
-                                                        [gridLines]="'Both'" (actionBegin)="actionSelectJournal($event)"
-                                                        (rowDrop)="rowDrop($event)" (rowDrag)="rowDrag($event)">
-
-                                                        <e-columns>
-                                                            <e-column field='id' headerText='ID' [visible]='false'
-                                                                isPrimaryKey='true' width='100'></e-column>
-                                                            <e-column field='description' headerText='Description'
-                                                                width='300'></e-column>
-                                                            <e-column field='location' headerText='Location'
-                                                                [visible]='false'></e-column>
-                                                            <e-column field='reference' headerText='Reference'></e-column>
-
-                                                        </e-columns>
-                                                    </ejs-grid>
-
-                                                    <ng-template #template let-data>
-                                                        <img [src]="data.location" alt="Noble Ledger v 0.0.1 logo" />
-                                                    </ng-template>
-
-                                                    <ng-template #buttonTemplate let-data>
-                                                        <button mat-flat-button class="bg-slate-500 text-gray-100"
-                                                            (click)="handleClick(data)">Details
-                                                        </button>
-                                                    </ng-template>
-                                                </div>
-                                                }
-                                                @placeholder (minimum 200ms) {
-                                                <div class="flex justify-center">
-                                                    <div>
-                                                        <mat-progress-spinner diameter="60" [value]="value"
-                                                            mode="indeterminate">
-                                                        </mat-progress-spinner>
-                                                    </div>
-                                                </div>
-                                                } @loading (minimum 200ms) {
-                                                <div class="flex justify-center">
-                                                    <div>
-                                                        <mat-progress-spinner diameter="60" [value]="value"
-                                                            mode="indeterminate">
-                                                        </mat-progress-spinner>
-                                                    </div>
-                                                </div>
-                                                }
-
-                                            </div>
-                                        </div>
-                                    </mat-card>
-                                </div>
-                            </ng-template>
-                        </e-pane>                                                
+                               </div>
+                            
+                        </ng-template>
+                    </e-pane>
                     </e-panes>
-                </ejs-splitter>
-            </section>
-        </mat-drawer-container>
-    }
-    @placeholder(minimum 200ms) {
-    <div class="flex justify-center items-center">
-        <mat-spinner></mat-spinner>
-    </div>
-    }    
+            </ejs-splitter>                   
+        </div>                   
+    </ng-template>
 
-    <ejs-contextmenu 
-      #contextmenu id='contextmenu'             
-      target='#target' 
-      (select)="itemSelect($event)"
-      [animationSettings]='animation'
-      [items]= 'menuItems'> 
-    </ejs-contextmenu> 
-    
-    </div>
     `,
     selector: "gl-journal",
     imports: [imp],
-
+    encapsulation: ViewEncapsulation.None,    
     providers: [
         { provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: { appearance: 'outline' } },
         provideNgxMask(),

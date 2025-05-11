@@ -54,50 +54,51 @@ const imports = [
     encapsulation: ViewEncapsulation.None,
     template: `    
     <div id="target" class="flex flex-col w-full filter-article filter-interactive text-gray-700 ">
-    <div class="sm:hide md:visible ml-5 mr-5">
-        <grid-menubar class="pl-5 pr-5"            
-            [showBack]="true"             
-            [showPeriod]="true"
-            (print)="onPrint()"
-            (back)="onBack()"  
-            (clone)="onClone()"  
-            (period)="onPeriod($event)"         
-            [inTitle]="'Account Receivable Update'" 
-            [prd]="journalStore.currentPeriod()"
-            [prd_year]="journalStore.currentYear()">
-        </grid-menubar>
-     </div>
+        <div class="sm:hide md:visible ml-5 mr-5">
+            <grid-menubar class="pl-5 pr-5"            
+                [showBack]="true"             
+                [showPeriod]="true"
+                (print)="onPrint()"
+                (back)="onBack()"  
+                (clone)="onClone()"  
+                (period)="onPeriod($event)"         
+                [inTitle]="'Account Receivable Update'" 
+                [prd]="journalStore.currentPeriod()"
+                [prd_year]="journalStore.currentYear()">
+            </grid-menubar>
+        </div>
 
-    <div id="settings" class="control-section default-splitter flex flex-col overflow-hidden">    
-      <div class="grid grid-row-3 overflow-hidden">
-        <div class="flex flex-col min-w-0 overflow-y-auto -px-10" cdkScrollable>
-          <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-2 w-full min-w-400 overflow-hidden ml-3 mr-3">
+        <div class="flex-auto border-t -mt-px pt-4 sm:pt-6">
+                <div class="w-full max-w-screen-xl mx-auto m-4">
+                    <!-- Tabs -->                    
+                    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 w-full min-w-0">
+                        <!-- Summary -->
+                        <div class="flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden m-2">                                
+                        <summary-card (click)="onReceipts()" class="min-h-30" [mainValue]="1526.00" [caption]="'Receipts'" [title]="'Funds'" [chart]="'1'" [subtitle]="currentPeriod" [subtitle_value]="">                  </summary-card>
+                        </div>
+                        <!-- Overdue -->
+                        <div class="flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden m-2">
+                        <summary-card class="min-h-32" (click)="onReceipts()" [mainValue]="24000.00" [caption]="'Outstanding'" [title]="'30 Days'"
+                        [subtitle]="currentPeriod" [subtitle_value]="" [chart]="'4'">
+                        </summary-card> 
+                        </div>
+                        <div class="flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden m-2">
+                        <summary-card  class="min-h-32" (click)="onReceipts()" [mainValue]="45050.00" [caption]="'Current Receivables'" [title]="'Capital'"
+                        [subtitle]="currentPeriod" [subtitle_value]="" [chart]="'5'">
+                        </summary-card> 
+                        </div>
+                        <!-- Issues -->
+                        <div class="flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden m-2">
+                        <summary-card  class="min-h-32" (click)="onReceipts()"  [mainValue]="15000.00" [caption]="'Past Due Receipts'" [title]="'Capital'"
+                            [subtitle]="currentPeriod" [subtitle_value]="" [chart]="'3'">
+                        </summary-card> 
+                        </div>
+                    </div>
+                </div>
             
-              <div  class="flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden m-2 hover:cursor-pointer">
-                  <summary-card (click)="onReceipts()" class="min-h-48" [mainValue]="1526.00" [caption]="'Receipts'" [title]="'Funds'" [chart]="'1'"
-                  [subtitle]="currentPeriod" [subtitle_value]="">
-                  </summary-card>
-              </div>
-              
-              <div  class="flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden m-2 hover:cursor-pointer">
-                  <summary-card class="min-h-32" (click)="onReceipts()" [mainValue]="24000.00" [caption]="'Outstanding'" [title]="'30 Days'"
-                  [subtitle]="currentPeriod" [subtitle_value]="" [chart]="'4'">
-                  </summary-card>
-              </div>
-              <div class="flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden m-2 hover:cursor-pointer">
-                  <summary-card  class="min-h-32" (click)="onReceipts()" [mainValue]="45050.00" [caption]="'Current Receivables'" [title]="'Capital'"
-                  [subtitle]="currentPeriod" [subtitle_value]="" [chart]="'5'">
-                  </summary-card>
-              </div>
-              
-              <div class="flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden m-2 hover:cursor-pointer">
-                  <summary-card  class="min-h-32" (click)="onReceipts()"  [mainValue]="15000.00" [caption]="'Past Due Receipts'" [title]="'Capital'"
-                      [subtitle]="currentPeriod" [subtitle_value]="" [chart]="'3'">
-                  </summary-card>
-              </div>
-          </div>
-      
-          <mat-drawer-container id="target" class="flex flex-col min-w-0 overflow-y-auto -px-10 h-[calc(100vh-30rem)] mr-4 ml-4">     
+        </div>   
+ 
+        <mat-drawer-container id="target" class="flex flex-col min-w-0 overflow-y-auto -px-10 h-[calc(100vh-30rem)] mr-4 ml-4">     
            <mat-card>            
                 <div class="flex-auto">                                            
                             @if(journalStore.isLoading() === false) { 
@@ -247,11 +248,11 @@ const imports = [
                 [animationSettings]='animation'
                 [items]= 'menuItems'> 
             </ejs-contextmenu> 
-          </mat-drawer-container>
+         </mat-drawer-container>
           
-        </div>
-      </div>
-    </div>
+     </div>
+      
+    
     `,
     styles: `
      .custom-css {  
