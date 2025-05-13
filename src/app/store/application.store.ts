@@ -15,6 +15,7 @@ export interface ApplicationStateInterface {
   error: string | null;
   uid: string | null;
   profile: ProfileModel | null;
+  isPanelLoaded: boolean;
 }
 
 export const ApplicationStore = signalStore(
@@ -26,6 +27,7 @@ export const ApplicationStore = signalStore(
     currentYear: '',
     uid: '',
     profile: null,
+    isPanelLoaded: false,
   }),
   withProps(_ => ({
     _partyStore: inject(PartyStore),
@@ -64,9 +66,14 @@ export const ApplicationStore = signalStore(
 
   withHooks({
     onInit(store) {
-      const uid = store.userID();
-      store.loadProfile(uid);
-      store.loadPanels(uid);            
+      if (store.isPanelLoaded() === false) {
+        const uid = store.userID();
+        store.loadProfile(uid);
+        store.loadPanels(uid); 
+      }
+      if(store._periodStore.isLoaded() === false) {
+         store._periodStore.loadPeriods();              
+      }
     },
   })
 

@@ -1,6 +1,4 @@
 import {
-    FormBuilder,
-    FormGroup,
     FormsModule,
     ReactiveFormsModule,
 } from '@angular/forms';
@@ -12,13 +10,13 @@ import { GridMenubarStandaloneComponent } from '../../grid-components/grid-menub
 import { MatDrawer } from '@angular/material/sidenav';
 import { MaterialModule } from 'app/shared/material.module';
 import { AggregateService, ColumnMenuService, DialogEditEventArgs, EditService, ExcelExportService, FilterService, GridModule, GroupService, PageService, ResizeService, SaveEventArgs, SortService, ToolbarService } from '@syncfusion/ej2-angular-grids';
-import { IAccounts } from 'app/models';
+
 import { GLGridComponent } from '../../grid-components/gl-grid.component';
 import { Store } from '@ngrx/store';
 import { IGLType } from 'app/models/types';
-import { Observable, Subject, take, takeUntil } from 'rxjs';
-import { glTypePageActions } from 'app/features/accounting/static/gltype/gltype.page.actions';
-import { gltypeFeature } from 'app/features/accounting/static/gltype/gltype.state';
+import { Subject, take, takeUntil } from 'rxjs';
+import { glTypePageActions } from 'app/state/gltype/gltype.page.actions';
+import { gltypeFeature } from 'app/state/gltype/gltype.state';
 import { GLTypeDrawerComponent } from './gl.type-drawer.component';
 import { ToastrService } from 'ngx-toastr';
 
@@ -75,13 +73,13 @@ const imports = [
 export class GlTypeComponent implements OnInit {
 
     protected onDestroyLoading = new Subject<void>();
-    
+
     store = inject(Store);
     bDirty: boolean = false;
     sTitle = 'Financial Statement Mapping';
     drawer = viewChild<MatDrawer>('drawer');
     toast = inject(ToastrService);
-    
+
 
     private fuseConfirmationService = inject(FuseConfirmationService);
 
@@ -98,13 +96,13 @@ export class GlTypeComponent implements OnInit {
         { field: 'update_date', headerText: 'Update Date', width: '100', textAlign: 'Left' },
         { field: 'update_user', headerText: 'Update User', width: '100', textAlign: 'Left' },
     ];
-    
-    
+
+
     ngOnInit() {
         this.isLoaded$.pipe(take(1), takeUntil(this.onDestroyLoading)).subscribe((loaded) => {
             if (loaded === false) {
                 this.store.dispatch(glTypePageActions.load());
-            }   
+            }
         });
     }
 

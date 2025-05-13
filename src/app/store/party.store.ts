@@ -18,6 +18,7 @@ import { IParty } from 'app/models/party';
 export interface PartyStateInterface {
   party: IParty[];
   isLoading: boolean;
+  isLoaded: boolean;
   error: string | null;
 }
 
@@ -27,6 +28,7 @@ export const PartyStore = signalStore(
     party: [],
     error: null,
     isLoading: false,
+    isLoaded: false,
 
   }),
   withComputed((state) => ({
@@ -119,7 +121,7 @@ export const PartyStore = signalStore(
             tapResponse({
               next: (fund) => patchState(state, { party: fund }),
               error: console.error,
-              finalize: () => patchState(state, { isLoading: false }),
+              finalize: () => patchState(state, { isLoading: false, isLoaded: true }),
             })
           );
         })
@@ -128,7 +130,9 @@ export const PartyStore = signalStore(
   })),
   withHooks({
     onInit(store) {
-      store.readParty();
+      if (store.isLoaded() === false) {
+        store.readParty();
+      }      
     },
   })
 );

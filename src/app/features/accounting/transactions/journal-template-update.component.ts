@@ -13,7 +13,7 @@ import { AUTH } from "app/app.config";
 import { MatSelect } from "@angular/material/select";
 import { NgxMatSelectSearchModule } from "ngx-mat-select-search";
 import { IDropDown, IDropDownAccounts, IDropDownAccountsGridList } from "app/models";
-import * as fromFunds from "app/features/accounting/static/funds/Funds.Selector";
+import * as fromFunds from "app/state/funds/Funds.Selector";
 import * as fromTemplates from "app/state/template/Template.Selector";
 
 import {
@@ -58,11 +58,11 @@ import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from "@angular/material/form-field";
 import { ISubType } from "app/models/subtypes";
 import { ToastrService } from "ngx-toastr";
 
-import { accountsFeature } from "../static/accts/Accts.state";
-import { accountPageActions } from "../static/accts/Accts-page.actions";
+import { accountsFeature } from "../../../state/account-type/Accts.state";
+import { accountPageActions } from "../../../state/account-type/Accts-page.actions";
 import { DropDownAccountComponent } from "../grid-components/drop-down-account.component";
 import { Store } from '@ngrx/store';
-import { FundsActions } from "../static/funds/Funds.Action";
+import { FundsActions } from "../../../state/funds/Funds.Action";
 import { subtypeFeature } from "../static/subtype/sub-type.state";
 import { SubtypeDropDownComponent } from "../grid-components/drop-down.subtype.component";
 import { MaterialModule } from "app/shared/material.module";
@@ -481,15 +481,15 @@ export class JournalTemplateUpdateComponent
     subtypeDropDown = viewChild<SubtypeDropDownComponent>("subtypeDropDown");
 
     private _fuseConfirmationService = inject(FuseConfirmationService);
-    
+
     private auth = inject(AUTH);
     private toastr = inject(ToastrService);
 
     public fuseConfirmationService = inject(FuseConfirmationService);
 
     public matDialog = inject(MatDialog);
-    
-    public bDetailDirty = false;    
+
+    public bDetailDirty = false;
     public partyId: string = '';
 
     public bDirty = false;
@@ -579,8 +579,8 @@ export class JournalTemplateUpdateComponent
 
     Store = inject(Store);
     toast = inject(ToastrService);
-    
-    
+
+
     accounts$ = this.Store.select(accountsFeature.selectChildren);
     isLoading$ = this.Store.select(accountsFeature.selectIsLoading);
 
@@ -595,13 +595,13 @@ export class JournalTemplateUpdateComponent
 
     ngOnInit(): void {
         this.Store.dispatch(accountPageActions.children());
-        this.Store.dispatch(FundsActions.loadFunds());                        
+        this.Store.dispatch(FundsActions.loadFunds());
         this.Store.dispatch(templateActions.TemplateActions.loadTemplates());
 
         this.isTemplatesLoading$.subscribe((loading) => {
             this.bTemplateDetails = loading;
         });
-        
+
         this.initialDatagrid();
     }
 
@@ -609,7 +609,7 @@ export class JournalTemplateUpdateComponent
         this.onUpdate();
     }
 
-        
+
     detailForm = new FormGroup({
         accounts: new FormGroup({
             dropdown: new FormControl(0, Validators.required),
@@ -625,16 +625,16 @@ export class JournalTemplateUpdateComponent
     });
 
     headerTemplateForm = new FormGroup({
-        template_ref : new FormControl(0, Validators.required),
-        template_name: new FormControl('', Validators.required),        
+        template_ref: new FormControl(0, Validators.required),
+        template_name: new FormControl('', Validators.required),
         description: new FormControl('', Validators.required),
         journal_type: new FormControl('', Validators.required),
-        journal_no: new FormControl(0, Validators.required),            
+        journal_no: new FormControl(0, Validators.required),
         create_date: new FormControl('', Validators.required),
         create_user: new FormControl('', Validators.required),
     });
 
-    
+
 
     public menuItems: MenuItemModel[] = [{
         id: 'edit',
@@ -671,9 +671,9 @@ export class JournalTemplateUpdateComponent
     public updateData() {
 
         const updateDate = new Date().toISOString().split('T')[0];
-        const inputs = { ...this.headerTemplateForm.value }        
+        const inputs = { ...this.headerTemplateForm.value }
         const email = '@' + this.auth.currentUser?.email.split('@')[0];
-        
+
         var journalDetails: IJournalDetailTemplate[] = [];
         let count: number = 1;
 
@@ -728,7 +728,7 @@ export class JournalTemplateUpdateComponent
     public onUpdate() {
 
         const inputs = { ...this.headerTemplateForm.value }
-        
+
         // var detail: Detail[] = this.journalDetailSignal();
         // var journalArray: IJournalTransactions = {
 
@@ -839,7 +839,7 @@ export class JournalTemplateUpdateComponent
         if (value === null || value === undefined) {
             return;
         }
-        this.transactionType = value.journal_type;        
+        this.transactionType = value.journal_type;
         this.templateStore.readTemplateDetails(value.journal_no.toString());
         this.bHeaderDirty = false;
     }
@@ -929,7 +929,7 @@ export class JournalTemplateUpdateComponent
     }
 
     public OnDetailSelected(data: IJournalDetailTemplate): void {
-        
+
         const JournalTemplateDetail = {
             template_ref: data.template_ref,
             journal_no: data.journal_no,
@@ -949,28 +949,28 @@ export class JournalTemplateUpdateComponent
 
     private updateDetailForm(journalTemplateDetail: IJournalDetailTemplate) {
         const accountString = journalTemplateDetail.child.toString();
-        
+
         if (journalTemplateDetail.sub_type === undefined || journalTemplateDetail.sub_type === null) {
             journalTemplateDetail.sub_type = '';
-        }   
+        }
 
-        const subtypeString = journalTemplateDetail.sub_type;        
+        const subtypeString = journalTemplateDetail.sub_type;
 
-        this.detailForm.patchValue({            
+        this.detailForm.patchValue({
             description: journalTemplateDetail.description,
             fund: journalTemplateDetail.fund,
             debit: journalTemplateDetail.debit,
             credit: journalTemplateDetail.credit,
         });
-        
+
         if (accountString !== undefined || accountString !== null) {
             this.accountDropDown().setDropdownValue(accountString);
         }
-        
+
         if (subtypeString !== undefined || subtypeString !== null) {
             this.subtypeDropDown().setDropdownValue(subtypeString);
         }
-        
+
         this.bHeaderDirty = false;
         this.openDrawer();
     }
@@ -1058,14 +1058,14 @@ export class JournalTemplateUpdateComponent
     public refreshHeader(header: IJournalTemplate) {
 
         this.templateHeader = header;
-        
+
         this.headerTemplateForm.patchValue({
             description: header.description,
             template_name: header.template_name,
             journal_type: header.journal_type,
             create_date: header.create_date,
             create_user: header.create_user,
-            journal_no: header.journal_no,              
+            journal_no: header.journal_no,
         });
 
         this.templateStore.readTemplateDetails(header.journal_no.toString());
@@ -1101,7 +1101,7 @@ export class JournalTemplateUpdateComponent
                 this.templateStore.addTemplate(this.templateHeader);
                 this.toastr.success("New Template Created", "Success");
             }
-        });        
+        });
     }
 
     public onClone(e: any) {
@@ -1255,8 +1255,8 @@ export class JournalTemplateUpdateComponent
         //this.store.renumberJournalDetail(inputs.journal_id);
     }
 
-    public onHeaderDateChanged(event: any): void {        
-        this.bHeaderDirty = true;    
+    public onHeaderDateChanged(event: any): void {
+        this.bHeaderDirty = true;
     }
 
     // Update template header
@@ -1264,15 +1264,15 @@ export class JournalTemplateUpdateComponent
 
         let header = this.headerTemplateForm.getRawValue();
 
-        const journalTemplateHeader = {            
+        const journalTemplateHeader = {
             journal_no: this.templateHeader.journal_no,
             description: header.description,
             template_name: header.template_name,
-            template_ref: this.templateHeader.template_ref,            
+            template_ref: this.templateHeader.template_ref,
             journal_type: this.templateHeader.journal_type
         } as IJournalTemplate;
-                
-        this.templateStore.updateTemplate(header);            
+
+        this.templateStore.updateTemplate(header);
         this.toastr.success(`Journal header updated : ${this.templateHeader.template_ref}`);
         this.bHeaderDirty = false;
     }
@@ -1325,10 +1325,10 @@ export class JournalTemplateUpdateComponent
             create_date: updateDate,
             create_user: name,
         } as IJournalTemplate;
-        
+
         this.templateStore.updateTemplate(templateHeader);
         this.templateStore.updateTemplateDetail(journalTemplateDetail);
-        
+
         this.toastr.success('Journal details updated');
 
         this.bHeaderDirty = false;

@@ -104,12 +104,12 @@ interface IValue {
                         </div>
 
                         <!-- role -->
-                        <div class="flex flex-col grow">
+                        <!-- <div class="flex flex-col grow">
                             <mat-form-field class="m-1 flex-start">                                
                                 <input #myInput matInput placeholder="Role" formControlName="role" type="role"/>
                                     <mat-icon class="icon-size-5 text-teal-800" matPrefix [svgIcon]="'mat_outline:supervised_user_circle'"></mat-icon>
                             </mat-form-field>
-                        </div>
+                        </div> -->
                     
                     </section>
                 </div>
@@ -139,10 +139,7 @@ interface IValue {
                             <span class="e-icons e-circle-close"></span>
                     </button>   
                 </div>
-            
-            <section class="text-xl text-gray-700" [formGroup]="teamForm">                        
-                {{store.team() | json}}  
-            </section>
+                        
         </mat-card>
     </mat-drawer>
     <mat-drawer-container class="flex-col">        
@@ -156,11 +153,11 @@ interface IValue {
                 (notifyParentUpdate)="onUpdateSelection()">
              </grid-menubar>                         
              
-            @if (store.isLoading() === false) 
+            @if (teamStore.isLoading() === false) 
             {                            
                 <gl-grid 
                     (onUpdateSelection)="selectedRow($event)"
-                    [data]="store.team()"
+                    [data]="teamStore.team()"
                     [columns]="columns">
                 </gl-grid>                        
             }
@@ -176,18 +173,16 @@ interface IValue {
   `,
     selector: 'team',
     imports: [imports],
-    providers: [TeamStore, SortService, GroupService, PageService, ResizeService, FilterService, ToolbarService, EditService, AggregateService, ColumnMenuService]
+    providers: [SortService, GroupService, PageService, ResizeService, FilterService, ToolbarService, EditService, AggregateService, ColumnMenuService]
 })
 export class TeamsComponent implements OnInit {
 
 
-    private fuseConfirmationService = inject(FuseConfirmationService);
     private fb = inject(FormBuilder);
-    teamService = inject(TeamService);
+    teamStore = inject(TeamStore);
 
     public bDirty = false;
 
-    store = inject(TeamStore);
     title = "Team Maintenance"
 
     columns = [

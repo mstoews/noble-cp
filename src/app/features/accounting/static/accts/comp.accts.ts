@@ -1,9 +1,6 @@
 import { Component, inject, viewChild } from "@angular/core";
-
 import { CommonModule } from "@angular/common";
 import { FuseConfirmationService } from "@fuse/services/confirmation";
-
-
 import { MatDrawer } from "@angular/material/sidenav";
 import { MaterialModule } from "app/shared/material.module";
 import {
@@ -23,7 +20,7 @@ import {
 import { IAccounts } from "app/models";
 import { AuthService } from "app/features/auth/auth.service";
 import { GLGridComponent } from "../../grid-components/gl-grid.component";
-import { MenuEventArgs, MenuItemModel } from "@syncfusion/ej2-navigations";
+import { MenuItemModel } from "@syncfusion/ej2-navigations";
 import { ContextMenuAllModule } from "@syncfusion/ej2-angular-navigations";
 import { ToastrService } from "ngx-toastr";
 import { SettingsComponent } from "./comp.accts.settings";
@@ -98,8 +95,7 @@ const keyExpr = ["account", "child"];
     AggregateService,
     ColumnMenuService,
   ],
-  styles: [
-    `
+  styles: [`
       .e-grid {
         font-family: cursive;
         border: 1px solid #f0f0f0;
@@ -117,11 +113,6 @@ export class GlAccountsComponent {
   selectedAccount: IAccounts | null;
 
   store = inject(AccountsStore);
-
-  // store = inject(Store);
-  // accounts$ = this.store.select(accountsFeature.selectAccounts);
-  // selectedAccount$ = this.store.select(accountsFeature.selectSelectedAccount);
-  // isLoading$ = this.store.select(accountsFeature.selectIsLoading);
   toast = inject(ToastrService);
 
   public selectedItemKeys: any[] = [];
@@ -164,9 +155,7 @@ export class GlAccountsComponent {
     this.settingsDrawer().open();
   }
 
-
-  selectedRow(account: any) {
-    
+  selectedRow(account: any) {  
     const rawData = {
       account: account.account,
       child: account.child,
@@ -228,19 +217,14 @@ export class GlAccountsComponent {
     this.selectedAccount = rawData;
     this.openEditDrawer();
   }
-
   onAdd($event: any) {
     this.openEditDrawer();
   }
-
   onCancel() {
     this.editDrawer().toggle();
   }
-
-
   addAccount(account: IAccounts) {
-    this.store.addAccounts(account);
-    
+    this.store.addAccounts(account);    
   }
 
   updateAccount(account: IAccounts) {
@@ -250,7 +234,6 @@ export class GlAccountsComponent {
   deleteAccount(child: number) {
     this.store.removeAccounts(child);    
   }
-
 
   onUpdate(account: IAccounts) {
     const dDate = new Date();
@@ -282,8 +265,6 @@ export class GlAccountsComponent {
     });
     this.closeEditDrawer();
   }
-
-
   onClose() {
     this.closeEditDrawer();
   }

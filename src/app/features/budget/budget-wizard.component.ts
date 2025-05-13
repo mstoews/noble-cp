@@ -19,7 +19,7 @@ import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 import { IDropDownAccounts } from 'app/models';
 import { filter } from 'lodash';
 import { IJournalDetail, IJournalHeader, ITransactionDate } from 'app/models/journals';
-import { FundsService } from '../accounting/static/funds/funds.service';
+import { FundsService } from '../../services/funds.service';
 
 
 

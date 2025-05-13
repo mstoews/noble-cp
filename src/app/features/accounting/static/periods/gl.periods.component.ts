@@ -12,13 +12,14 @@ import { FuseConfirmationService } from '@fuse/services/confirmation';
 import { MatDrawer } from '@angular/material/sidenav';
 import { MaterialModule } from 'app/shared/material.module';
 import { GridMenubarStandaloneComponent } from '../../grid-components/grid-menubar.component';
-import { AggregateService, ColumnMenuService, EditService, FilterService, FilterSettingsModel, GridComponent, GridModule, GroupService, PageService, ResizeService, SearchSettingsModel, SelectionSettingsModel, SortService, ToolbarItems, ToolbarService } from '@syncfusion/ej2-angular-grids';
+import { AggregateService, ColumnMenuService, EditService, FilterService, FilterSettingsModel, GridComponent, GridModule, GroupService, PageService, PdfExportService, ResizeService, SearchSettingsModel, SelectionSettingsModel, SortService, ToolbarItems, ToolbarService } from '@syncfusion/ej2-angular-grids';
 import { GLGridComponent } from '../../grid-components/gl-grid.component';
 import { IPeriod } from 'app/models/period';
 import { Store } from '@ngrx/store';
-import { periodsPageActions } from 'app/features/accounting/static/periods/periods-page.actions';
-import { periodsFeature } from 'app/features/accounting/static/periods/periods.state';
+import { periodsPageActions } from 'app/state/periods/periods-page.actions';
+import { periodsFeature } from 'app/state/periods/periods.state';
 import { PeriodStore } from 'app/store/periods.store';
+import { PrintService } from '@syncfusion/ej2-angular-schedule';
 
 
 const imports = [
@@ -26,7 +27,6 @@ const imports = [
     MaterialModule,
     ReactiveFormsModule,
     FormsModule,
-    // GridMenubarStandaloneComponent,
     GridMenubarStandaloneComponent,
     GLGridComponent
 ];
@@ -50,7 +50,7 @@ const imports = [
                                         
                                         <mat-form-field class="m-1 form-element grow" appearance="fill">
                                             <mat-label class="ml-2 text-base dark:text-gray-200">Period</mat-label>
-                                            <input matInput placeholder="Period" formControlName="period_id" />
+                                            <input matInput placeholder="Period" formControlName="period" />
                                             <mat-icon class="icon-size-5" matPrefix
                                             [svgIcon]="'heroicons_solid:calendar-days'"></mat-icon>
                                         </mat-form-field>
@@ -121,8 +121,7 @@ const imports = [
                 <grid-menubar [showPeriod]="false"  [inTitle]="sTitle" (onCreate)="onCreate($event)"> </grid-menubar>                         
                  <ng-container>                                         
                         @if (periodStore.isLoading()  === false) {
-                            <gl-grid   
-                                                      
+                            <gl-grid                                                         
                                 (onUpdateSelection)="onSelection($event)"
                                 [data]="periodStore.periods()"
                                 [columns]="columns">
@@ -137,42 +136,42 @@ const imports = [
             </mat-drawer-container>
         </div>
     `,
-    providers: [SortService, GroupService, PageService, ResizeService, FilterService, ToolbarService, EditService, AggregateService, ColumnMenuService,]
+    providers: [SortService, PdfExportService, GroupService, PageService, PrintService, ResizeService, FilterService, ToolbarService, EditService, AggregateService, ColumnMenuService,]
 })
 export class PeriodsComponent implements OnInit {
-    
-    public  periodsForm!: FormGroup;
-    public  bDirty: boolean = false;    
-    public  sTitle = 'General Ledger Periods';
-    public  drawer = viewChild<MatDrawer>("drawer");            
-    public  grid = viewChild<GridComponent>('grid');    
-    public  periodStore = inject(PeriodStore);
+
+    public periodsForm!: FormGroup;
+    public bDirty: boolean = false;
+    public sTitle = 'General Ledger Periods';
+    public drawer = viewChild<MatDrawer>("drawer");
+    public grid = viewChild<GridComponent>('grid');
+    public periodStore = inject(PeriodStore);
     private fuseConfirmationService = inject(FuseConfirmationService);
     private fb = inject(FormBuilder);
-    
+
     ngOnInit() {
         this.loadPeriods();
-        this.createEmptyForm();        
+        this.createEmptyForm();
         this.onChanges();
     }
 
-    public loadPeriods () {
+    public loadPeriods() {
         if (this.periodStore.isActiveLoaded() === false)
-          this.periodStore.loadActivePeriods();
-        
-        
+            this.periodStore.loadActivePeriods();
+
+
         if (this.periodStore.isLoaded() === false) {
-          this.periodStore.loadPeriods();
+            this.periodStore.loadPeriods();
         }
-        
+
         if (this.periodStore.currentPeriod() === '') {
-          this.periodStore.loadCurrentPeriod();
-        }   
+            this.periodStore.loadCurrentPeriod();
+        }
     }
-    
 
 
-    
+
+
     selectPeriod(period: any) {
         var pd = {
             ...period,
@@ -211,7 +210,7 @@ export class PeriodsComponent implements OnInit {
     onSelection(period: IPeriod) {
         this.periodsForm.patchValue(period);
         this.openDrawer();
-        this.selectPeriod(period);        
+        this.selectPeriod(period);
     }
 
     onCancel() {
@@ -235,7 +234,7 @@ export class PeriodsComponent implements OnInit {
             update_user: '@admin',
             status: periods.status
         };
-       this.periodStore.updatePeriod(rawData)
+        this.periodStore.updatePeriod(rawData)
     }
 
 

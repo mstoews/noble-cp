@@ -15,7 +15,7 @@ import { ReplaySubject, Subject, take, takeUntil } from 'rxjs';
   @if (dropdownFilter | async; as items ) {
     <fieldset [formGroupName]="controlKey">                
         <mat-form-field class="flex flex-col grow ml-2 mr-2 mt-1 "> 
-          <mat-label class="text-md ml-2" for="dropdown">{{label}}</mat-label>
+          <mat-label class="text-lg ml-2" for="dropdown">{{label}}</mat-label>
               <mat-select [formControl]="dropdownCtrl" placeholder="Account" #singleDropdownSelect required>
                 <mat-option>
                   <ngx-mat-select-search [formControl]="dropdownFilterCtrl" [noEntriesFoundLabel]="'No entries found'" [placeholderLabel]="'Search'">

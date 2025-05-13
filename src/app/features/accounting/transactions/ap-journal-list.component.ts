@@ -54,7 +54,7 @@ const imports = [
     encapsulation: ViewEncapsulation.None,
     template: `    
     <div id="target" class="flex flex-col w-full filter-article filter-interactive text-gray-700 ">
-        <div class="sm:hide md:visible ml-5 mr-5">
+        <div class="sm:hide md:visible sm:ml-1 mr-1 ">
         <grid-menubar class="pl-5 pr-5"            
             [showBack]="true"             
             [showPeriod]="true"

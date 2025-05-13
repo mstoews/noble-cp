@@ -3,7 +3,7 @@ import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { exhaustMap, pipe, switchMap, tap } from 'rxjs';
 import { computed, inject } from '@angular/core';
 import { tapResponse } from '@ngrx/operators';
-import { FundsService } from '../features/accounting/static/funds/funds.service';
+import { FundsService } from '../services/funds.service';
 import { IFunds } from 'app/models';
 export interface FundStateInterface {
   funds: IFunds[];
@@ -91,7 +91,7 @@ export const FundsStore = signalStore(
 
   withHooks({
     onInit(store) {
-      if (!store.isLoaded() === false) {
+      if (store.isLoaded() === false) {
         store.loadFunds();
       }
     },

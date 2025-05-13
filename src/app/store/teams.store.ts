@@ -16,14 +16,17 @@ import { ITeam } from 'app/models/team';
 export interface TeamStateInterface {
   team: ITeam[];
   isLoading: boolean;
+  isTeamLoaded: boolean;
   error: string | null;
 }
 
 export const TeamStore = signalStore(
-  { protectedState: false }, withState<TeamStateInterface>({
+  { providedIn: 'root' },
+    withState<TeamStateInterface>({
     team: [],
     error: null,
     isLoading: false,
+    isTeamLoaded: false,
   }),
   withMethods((state, teamService = inject(TeamService)) => ({
     removeMember: rxMethod<ITeam>(
@@ -81,9 +84,11 @@ export const TeamStore = signalStore(
         exhaustMap(() => {
           return teamService.read().pipe(
             tapResponse({
-              next: (team) => patchState(state, { team: team }),
+              next: (team) =>  { 
+                patchState(state, { team: team, isTeamLoaded: true });
+              },
               error: console.error,
-              finalize: () => patchState(state, { isLoading: false }),
+              finalize: () => patchState(state, { isLoading: false  }),
             })
           );
         })
@@ -92,7 +97,10 @@ export const TeamStore = signalStore(
   })),
   withHooks({
     onInit(store) {
-      store.loadTeam();
+      console.debug ('TeamStore initialized : ', store.isTeamLoaded());
+      if (store.isTeamLoaded() === false) {
+        store.loadTeam();
+      }      
     },
   })
 );

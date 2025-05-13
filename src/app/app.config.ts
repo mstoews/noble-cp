@@ -19,11 +19,11 @@ import { provideStoreDevtools } from '@ngrx/store-devtools';
 
 import * as fromPriority from 'app/state/kanban-state/priority/priority.state';
 import * as fromKanban from 'app/state/kanban-state/kanban/kanban.state';
-import * as fromPeriods from 'app/features/accounting/static/periods/periods.state';
+import * as fromPeriods from 'app/state/periods/periods.state';
 import * as fromSubtype from 'app/features/accounting/static/subtype/sub-type.state';
-import * as fromParty from 'app/features/accounting/static/party/party.state';
-import * as fromAccounts from 'app/features/accounting/static/accts/Accts.state'
-import * as fromGlType from 'app/features/accounting/static/gltype/gltype.state';
+import * as fromParty from 'app/state/party/party.state';
+import * as fromAccounts from 'app/state/account-type/Accts.state'
+import * as fromGlType from 'app/state/gltype/gltype.state';
 import * as fromProjects from 'app/state/kanban-state/projects/projects.state';
 
 
@@ -54,23 +54,23 @@ import { journalHeaderEffects } from './state/journal/Journal.Effects';
 
 
 import { provideRouterStore } from '@ngrx/router-store';
-import { FundsReducer } from './features/accounting/static/funds/Funds.Reducer';
+import { FundsReducer } from './state/funds/Funds.Reducer';
 
 
 
 
-import { periodEffects } from './features/accounting/static/periods/periods.effects';
+import { periodEffects } from './state/periods/periods.effects';
 import { subTypeEffects } from './features/accounting/static/subtype/sub-type.effects';
 
 
 import { AppService } from "./store/main.panel.store";
 import { kanbanEffects } from './state/kanban-state/kanban/kanban.effects';
-import { partyEffects } from './features/accounting/static/party/party.effects';
-import { accountEffects } from './features/accounting/static/accts/Accts.effects';
-import { glTypeEffects } from './features/accounting/static/gltype/gltype.effects';
+import { partyEffects } from './state/party/party.effects';
+import { accountEffects } from './state/account-type/Accts.effects';
+import { glTypeEffects } from './state/gltype/gltype.effects';
 import { projectEffects } from './state/kanban-state/projects/projects.effects';
 import { TemplateReducer } from 'app/state/template/Template.Reducer';
-import { fundsEffects } from './features/accounting/static/funds/Funds.Effects';
+import { fundsEffects } from './state/funds/Funds.Effects';
 import { templateEffects } from 'app/state/template/Template.Effects';
 
 

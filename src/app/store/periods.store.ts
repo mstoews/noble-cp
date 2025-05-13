@@ -22,6 +22,7 @@ export interface PeriodStateInterface {
   currentPeriod: string;
   isLoading: boolean;
   isLoaded: boolean;
+  isCurrentLoaded: boolean;
   isActiveLoaded: boolean;
   error: string | null;
 }
@@ -35,6 +36,7 @@ export const PeriodStore = signalStore(
     currentPeriod: '',
     isLoading: false,
     isLoaded: false,
+    isCurrentLoaded: false, 
     isActiveLoaded: false,
   }),
   withComputed((state) => ({
@@ -165,9 +167,16 @@ export const PeriodStore = signalStore(
   })),
   withHooks({
     onInit(store) {
-      store.loadCurrentPeriod();
-      store.loadPeriods();
-      store.loadActivePeriods();      
+      console.log('PeriodStore initialized isLoaded :  ', store.isLoaded() );
+      if (store.isLoaded() === false) {        
+        store.loadPeriods();        
+      } 
+      if (store.isCurrentLoaded() === false) {
+        store.loadCurrentPeriod();
+      }
+      if (store.isActiveLoaded() === false) {
+        store.loadActivePeriods();
+      }       
     },
   })
 );

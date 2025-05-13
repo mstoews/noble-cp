@@ -19,9 +19,12 @@ export interface DistributionStateInterface {
   details: IJournalSummary[],
   periodParam: IDistributionParams,
   accountParam: IJournalParams,
+  journalId: number,
   isLoading: boolean;
   error: string | null;
   accountCount: number;
+  isHeaderLoaded: boolean;
+  isDetailLoaded: boolean;
 }
 
 export const TrialBalanceStore = signalStore(
@@ -33,6 +36,9 @@ export const TrialBalanceStore = signalStore(
     accountParam: null,
     error: null,
     isLoading: false,
+    isHeaderLoaded: false,
+    isDetailLoaded: false,
+    journalId: 0,
     accountCount: 0
   }),
 
@@ -44,7 +50,7 @@ export const TrialBalanceStore = signalStore(
             tapResponse({
               next: (header) => patchState(state, { header: header }),
               error: console.error,
-              finalize: () => patchState(state, { isLoading: false }),
+              finalize: () => patchState(state, { isLoading: false, isHeaderLoaded: true }),
             })
           );
         })
@@ -57,7 +63,7 @@ export const TrialBalanceStore = signalStore(
             tapResponse({
               next: (detail) => patchState(state, { details: detail }),
               error: console.error,
-              finalize: () => patchState(state, { isLoading: false }),
+              finalize: () => patchState(state, { isLoading: false, isDetailLoaded: true }),
             })
           );
         })

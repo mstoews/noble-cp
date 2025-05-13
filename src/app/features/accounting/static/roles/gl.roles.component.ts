@@ -126,7 +126,7 @@ export class RolesComponent implements OnInit {
     store = inject(RolesStore);
 
     columns = [
-        { field: 'role', headerText: 'Role', width: 100 },
+        { field: 'role', headerText: 'Role', width: 100 , isPrimaryKey: true },
         { field: 'description', headerText: 'Description', width: 100 },
         { field: 'permission', headerText: 'Permission', width: 100 },
         { field: 'update_date', headerText: 'Update Date', width: 100 },

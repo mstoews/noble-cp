@@ -41,15 +41,15 @@ let modules = [MatToolbarModule, MatIconModule, MatButtonModule, CommonModule, M
     <span class="flex-1"></span>      
     
     @if (showPeriod()) {
-      <mat-form-field class="rounded-lg w-[200px] mt-5 mr-10">              
-              <mat-select [value]="_currentPeriod" #periodDropdownSelection (selectionChange)="onSelectionChange($event)">
+            <div class="flex flex-row items-center w-[180px] text-white border-gray-200">        
+              <mat-select class="w-[180px] text-white border-gray-200" [value]="_currentPeriod" #periodDropdownSelection (selectionChange)="onSelectionChange($event)">
                   @for ( period of _currentActivePeriods ; track period.description ) {
                     <mat-option [value]="period.description">
                         {{ period.description }}
                     </mat-option>
                   }             
               </mat-select>                        
-      </mat-form-field>  
+              </div>      
       }
     
       

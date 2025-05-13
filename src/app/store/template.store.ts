@@ -17,7 +17,7 @@ import { IParty } from 'app/models/party';
 import { ISubType } from 'app/models/subtypes';
 import { IGLType, IType } from 'app/models/types';
 import { PartyService } from 'app/services/party.service';
-import { FundsService } from 'app/features/accounting/static/funds/funds.service';
+import { FundsService } from 'app/services/funds.service';
 import { SubTypeService } from 'app/services/subtype.service';
 import { TypeService } from 'app/services/type.service';
 import { AccountsService } from 'app/services/accounts.service';
@@ -44,7 +44,7 @@ export const TemplateStore = signalStore(
     accounts: [],
     funds: [],
     sub_type: [],
-    account_type: [],    
+    account_type: [],
     type: [],
     error: null,
     isLoading: false,
@@ -57,7 +57,7 @@ export const TemplateStore = signalStore(
     subTypeService = inject(SubTypeService),
     typeService = inject(TypeService),
     templateService = inject(TemplateService)) => ({
-    // template
+      // template
       readTemplate: rxMethod<void>(
         pipe(
           tap(() => patchState(state, { isLoading: true })),
@@ -72,7 +72,7 @@ export const TemplateStore = signalStore(
           })
         )
       ),
-    // template details
+      // template details
       readTemplateDetails: rxMethod<string>(
         pipe(
           tap(() => patchState(state, { isLoading: true })),
@@ -108,13 +108,13 @@ export const TemplateStore = signalStore(
         exhaustMap(() => {
           return accountService.readAccountDropdown().pipe(
             tapResponse({
-              next: (account) => patchState(state, { accounts : account }),
+              next: (account) => patchState(state, { accounts: account }),
               error: console.error,
               finalize: () => patchState(state, { isLoading: false }),
             })
           );
         })
-       )
+      )
       ),
       // funds
       readFunds: rxMethod<void>(pipe(
@@ -233,11 +233,12 @@ export const TemplateStore = signalStore(
           switchMap((value) => {
             return templateService.delete(value).pipe(
               tapResponse({
-                next: (ref) => { patchState(state, 
-                  {                    
-                    tmp: state.tmp().filter((template) => template.template_ref !== ref.template_ref) 
-                  });
-                   },
+                next: (ref) => {
+                  patchState(state,
+                    {
+                      tmp: state.tmp().filter((template) => template.template_ref !== ref.template_ref)
+                    });
+                },
                 error: console.error,
                 finalize: () => patchState(state, { isLoading: false }),
               })
@@ -245,16 +246,16 @@ export const TemplateStore = signalStore(
           })
         )
       ),
-      
+
     })),
-    withHooks({
-      onInit(store) {
+  withHooks({
+    onInit(store) {
       store.readTemplate();
       store.readDropDownAccounts();
       store.readParty();
       store.readFunds();
       store.readSubType();
-      store.readAccountType();      
+      store.readAccountType();
     },
   })
 );

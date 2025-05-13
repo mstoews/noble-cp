@@ -36,9 +36,9 @@ import { MatDrawer } from '@angular/material/sidenav';
 import { AUTH } from 'app/app.config';
 import { DropDownAccountComponent } from "../../accounting/grid-components/drop-down-account.component";
 import { Store } from '@ngrx/store';
-import { accountsFeature } from 'app/features/accounting/static/accts/Accts.state';
+import { accountsFeature } from 'app/state/account-type/Accts.state';
 import { ToastrService } from 'ngx-toastr';
-import { accountPageActions } from 'app/features/accounting/static/accts/Accts-page.actions';
+import { accountPageActions } from 'app/state/account-type/Accts-page.actions';
 
 
 const imp = [

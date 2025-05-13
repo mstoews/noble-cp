@@ -10,6 +10,7 @@ export interface SettingStateInterface {
   settings: ISettings[];
   isLoading: boolean;
   error: string | null;
+  isLoaded: boolean;
 }
 
 export const SettingsStore = signalStore(
@@ -17,6 +18,7 @@ export const SettingsStore = signalStore(
     settings: [],
     error: null,
     isLoading: false,
+    isLoaded: false,
   }),
   withMethods((state, 
     settingService = inject(SettingsService)) => ({
@@ -88,7 +90,9 @@ export const SettingsStore = signalStore(
   
   withHooks({
     onInit(store) {
-      store.readSettings();
+      if (store.isLoaded() === false) {
+        store.readSettings();
+      }
     },
   })
 );

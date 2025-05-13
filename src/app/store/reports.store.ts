@@ -22,15 +22,20 @@ export interface ReportStateInterface {
   tb: any[];
   settings: IGridSettingsModel[];
   isLoading: boolean;
+  isLoaded: boolean;
+  isSettingsLoaded: boolean;
   error: string | null;
 }
 
-export const ReportStore = signalStore({ protectedState: false },
+export const ReportStore = signalStore(
+  { providedIn: 'root' },
   withState<ReportStateInterface>({
-    tb: [],
+    tb: [],    
     settings: [],
     error: null,
     isLoading: false,
+    isLoaded: false,
+    isSettingsLoaded: false,
   }),
   withComputed((state) => ({})),
   withMethods((state,
@@ -63,8 +68,13 @@ export const ReportStore = signalStore({ protectedState: false },
   })),
   withHooks({
     onInit(store) {
+      if (store.isLoaded() === false) {
+        store.loadTB({ period: 1, year: 2025 });
+      }
+      if (store.isSettingsLoaded() === false) {        
       store.loadSettings();
-      store.loadTB({ period: 1, year: 2025 });
+      }
+      
     },
   })
 );

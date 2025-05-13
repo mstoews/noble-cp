@@ -1,3 +1,4 @@
+
 import { Component, inject, viewChild } from '@angular/core';
 import { FormsModule,  ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
@@ -17,13 +18,12 @@ import { PrintService } from '@syncfusion/ej2-angular-schedule';
 
 const imports = [
     CommonModule,
+    FormsModule,    
     MaterialModule,
-    ReactiveFormsModule,
-    FormsModule,
-    GridMenubarStandaloneComponent,
+    ReactiveFormsModule,    
     GLGridComponent,
-    GridModule,
-    PartyDrawerComponent
+    PartyDrawerComponent,
+    GridMenubarStandaloneComponent,
 ];
 
 @Component({
@@ -41,7 +41,7 @@ const imports = [
             </party-drawer>                 
         </mat-drawer>
         <grid-menubar [showPeriod]="false"  [inTitle]="sTitle" [showNew]=true (new)="onAddNew()" (print)="onPrint()" [showSettings]="false"/>
-          <mat-drawer-container class="flex-col h-screen">                
+        <mat-drawer-container class="flex-col h-screen">                
                 <ng-container>
                     <div class="border-1 border-gray-500">                                                              
                         @if(store.isLoading() === false) {                          
@@ -60,24 +60,24 @@ const imports = [
                     </div>       
                 </ng-container> 
           
-          </mat-drawer-container>                     
+        </mat-drawer-container>                     
     `,
-    providers: [SortService, PdfExportService,  GroupService, PageService, PrintService, ResizeService, FilterService, ToolbarService, EditService, AggregateService, ColumnMenuService,]
+    providers: [SortService, PdfExportService, GroupService, PageService, PrintService, ResizeService, FilterService, ToolbarService, EditService, AggregateService, ColumnMenuService,]
 })
 export class PartyComponent  {
 
-    public sTitle = 'Vendor/Customer Party';
-    private _fuseConfirmationService = inject(FuseConfirmationService);
-    public drawer = viewChild<MatDrawer>("drawer");
+    sTitle = 'Vendor/Customer Party';    
+    drawer = viewChild<MatDrawer>("drawer");
     grid = viewChild<GLGridComponent>('party_grid');
     bDirty = false;
+    selectedParty: IParty | null;
+    store = inject(PartyStore);
+    toast = inject(ToastrService);
     
 
-    store = inject(PartyStore);
-    selectedParty: IParty | null;
-
-    toast = inject(ToastrService);
-
+    private _fuseConfirmationService = inject(FuseConfirmationService);
+    
+    
     columns = [
         { field: 'party_id', headerText: 'Party', width: 100, textAlign: 'Left', isPrimaryKey: true },
         { field: 'name', headerText: 'Name', width: 150, textAlign: 'Left' },
@@ -155,8 +155,7 @@ export class PartyComponent  {
               this.toast.success('Party Deleted');
             }
         });
-        this.closeDrawer();
-        
+        this.closeDrawer();        
     }
 
     openDrawer() {

@@ -1,5 +1,5 @@
 import { Actions, createEffect, ofType } from "@ngrx/effects";
-import { FundsService } from "./funds.service";
+import { FundsService } from "../../services/funds.service";
 import { exhaustMap, map, catchError, of, concatMap, mergeMap, switchMap } from "rxjs";
 import * as fromFunds from "./Funds.Action";
 import { inject } from "@angular/core";
@@ -17,9 +17,9 @@ export class fundsEffects {
         catchError((error) => of(fromFunds.loadFundsFailure({ error })))
       )
     })
-   ));
+  ));
 
-   _loadFundsDropdown = createEffect(() => this.actions.pipe(
+  _loadFundsDropdown = createEffect(() => this.actions.pipe(
     ofType(fromFunds.loadFundsDropdown),
     exhaustMap(() => {
       return this.fundsService.readDropdown().pipe(
@@ -27,11 +27,11 @@ export class fundsEffects {
         catchError((error) => of(fromFunds.loadFundsFailure({ error })))
       )
     })
-   ));
+  ));
 
-   // delete is mergeMap
+  // delete is mergeMap
 
-   _deleteFunds = createEffect(() =>
+  _deleteFunds = createEffect(() =>
     this.actions.pipe(
       ofType(fromFunds.deleteFunds),
       mergeMap((action) => {
@@ -50,7 +50,7 @@ export class fundsEffects {
       ofType(fromFunds.addFunds),
       concatMap((action) => {
         return this.fundsService.create(action.funds).pipe(
-          map(() => fromFunds.addFundsSuccess({ funds : action.funds })),
+          map(() => fromFunds.addFundsSuccess({ funds: action.funds })),
           catchError((error) => of(fromFunds.loadFundsFailure({ error })))
         );
       })

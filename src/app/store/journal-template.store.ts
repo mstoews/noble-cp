@@ -19,6 +19,7 @@ import {
     templates: IJournalTemplate[];
     templateDetails: IJournalDetailTemplate[];    
     isLoading: boolean;
+    isTemplateLoaded: boolean;
     error: string | null;
   }
   
@@ -28,6 +29,7 @@ import {
       templateDetails: [],
       error: null,
       isLoading: false,
+      isTemplateLoaded: false,
     }),
     withComputed((state) => ({
     })),
@@ -50,7 +52,9 @@ import {
     })),  
     withHooks({
       onInit(store) {
-        store.loadTemplates();        
+        if (store.isTemplateLoaded() === false) {
+          store.loadTemplates();        
+        }
       },
     })
   );

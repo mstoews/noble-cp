@@ -16,8 +16,8 @@ import { EditService, FilterService, GridComponent, GridModule, PageService, Sor
 import { GLGridComponent } from "../../grid-components/gl-grid.component";
 
 import { Store } from '@ngrx/store';
-import { ImageActions } from 'app/features/accounting/static/images/Images.Action';
-import { selectImages } from 'app/features/accounting/static/images/Images.Selector';
+import { ImageActions } from 'app/state/images/Images.Action';
+import { selectImages } from 'app/state/images/Images.Selector';
 import { MenuEventArgs, MenuItemModel } from '@syncfusion/ej2-navigations';
 import { ImageItem } from 'app/models/imageItem';
 

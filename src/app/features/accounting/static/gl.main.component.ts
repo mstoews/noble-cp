@@ -102,8 +102,7 @@ import { GLTransactionGridComponent } from '../transactions/transaction-grid.com
                             @case ('periods') { <periods></periods> }
                             @case ('team') { <team></team> }
                             @case ('roles') { <roles></roles> }
-                            @case ('app-settings') { <app-settings></app-settings> }
-                            @case ('tp')    { <journal-template></journal-template>  } 
+                            @case ('app-settings') { <app-settings></app-settings> }                            
                             @case ('at')    { <app-file-manager></app-file-manager>}
                             @case ('tmp')   { <gl-journal-template></gl-journal-template>}
                             @case ('grid')  { <gl-grid-transactions></gl-grid-transactions> }            
@@ -130,8 +129,7 @@ import { GLTransactionGridComponent } from '../transactions/transaction-grid.com
         TeamsComponent,
         GlAccountsComponent,
         CdkScrollable,
-        AppSettingsComponent,
-        JournalTemplateComponent,
+        AppSettingsComponent,        
         JournalTemplateUpdateComponent,
         GLTransactionGridComponent,
         SpreadsheetViewComponent
@@ -218,13 +216,7 @@ export class GlMainComponent {
                 title: 'Application Settings',
                 description: 'Settings for the application',
             },
-            {
-                id: 'entry',
-                icon: 'heroicons_outline:document-plus',
-                title: 'Transaction Wizard',
-                description: 'Create transactions and append digital artifacts for each transaction',
-            },
-
+            
             {
                 id: 'tmp',
                 icon: 'heroicons_outline:document-duplicate',

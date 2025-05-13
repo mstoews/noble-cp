@@ -49,9 +49,9 @@ const imports = [
     selector: 'gl-journal-list',
     imports: [imports, GridMenubarStandaloneComponent, SummaryCardComponent],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    encapsulation: ViewEncapsulation.None,
+    encapsulation: ViewEncapsulation.None,    
     template: `    
-    <div id="target" class="flex flex-col w-full filter-article filter-interactive text-gray-700 ">
+    <div id="target" class="flex flex-col w-full filter-article filter-interactive ">
         <div class="sm:hide md:visible ml-5 mr-5">
             <grid-menubar class="pl-5 pr-5"            
                 [showBack]="true"             
@@ -60,7 +60,7 @@ const imports = [
                 (back)="onBack()"  
                 (clone)="onClone()"  
                 (period)="onPeriod($event)"         
-                [inTitle]="'General Ledger Journals Update'" 
+                [inTitle]="'Journal List'" 
                 [prd]="journalStore.currentPeriod()"
                 [prd_year]="journalStore.currentYear()">
             </grid-menubar>
@@ -104,7 +104,8 @@ const imports = [
                                         <ejs-grid #grid id="grid"
                                             [dataSource]="journalStore.gl() | filterType : transactionType()"                                    
                                             [height]='gridHeight' 
-                                            [rowHeight]='30'                                  
+                                            [rowHeight]='30'         
+                                            [enableStickyHeader]='true'                         
                                             [allowSorting]='true'                                    
                                             [showColumnMenu]='false'                
                                             [gridLines]="lines"
@@ -343,6 +344,8 @@ export class GLJournalListComponent implements OnInit, AfterViewInit {
         throw new Error('Method not implemented.');
     }
 
+
+
     initGrid() {
         this.toolbarTitle = "Journal Transactions by Period ";        
         this.formatoptions = { type: 'dateTime', format: 'M/dd/yyyy' }
@@ -356,11 +359,20 @@ export class GLJournalListComponent implements OnInit, AfterViewInit {
 
     onPeriod(event: any) {
         this.currentPeriod = event;
-        localStorage.setItem('currentPeriod', this.currentPeriod);
-        this.journalStore.getJournalListByPeriod({current_period: event})                
+        localStorage.setItem('currentPeriod', this.currentPeriod);        
         this.journalStore.getJournalListByPeriod({current_period: this.currentPeriod})
         this.toast.info(event, 'Period changed to: ');
-        this.changeDetectorRef.detectChanges();
+        this.changeDetectorRef.detectChanges();        
+    }
+
+    
+    
+    loadData() {        
+        localStorage.setItem('currentPeriod', this.currentPeriod);        
+        this.journalStore.getJournalListByPeriod({current_period: this.currentPeriod})
+    }
+
+    resetLoaded() {
         
     }
 

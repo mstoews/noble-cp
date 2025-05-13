@@ -145,8 +145,6 @@ export class FundsComponent implements OnInit {
         this.createEmptyForm();
         this.onChanges();
     }
-
-
     onSelection(data: IFunds) {
         const dDate = new Date();
         const updateDate = dDate.toISOString().split('T')[0];

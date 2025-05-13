@@ -58,6 +58,7 @@ export interface IJournalTransactions {
   party_id: string
   subtype: string
   status: string
+  tempalate_name?: string
   details: Details
  
 }
@@ -188,5 +189,4 @@ export interface IJournalViewDetails {
   fund: string,
   reference: string,
 }
-
 

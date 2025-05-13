@@ -17,14 +17,17 @@ import { IRole, RoleService } from '../services/roles.service';
 export interface RoleStateInterface {
   roles: IRole[];
   isLoading: boolean;
+  isLoaded: boolean;
   error: string | null;
 }
 
 export const RolesStore = signalStore(
-  { protectedState: false }, withState<RoleStateInterface>({
+  { providedIn: 'root' },
+  withState<RoleStateInterface>({
     roles: [],
     error: null,
     isLoading: false,
+    isLoaded: false,
   }),
   withComputed((state) => ({
     selected: computed(() => state.roles().filter((t) => state.roles()[t.role])),
@@ -79,25 +82,30 @@ export const RolesStore = signalStore(
         })
       )
     ),
-
     loadRoles: rxMethod<void>(
       pipe(
         tap(() => patchState(state, { isLoading: true })),
         exhaustMap(() => {
           return roleService.read().pipe(
             tapResponse({
-              next: (role) => patchState(state, { roles: role }),
+              next: (role) => patchState(state, { roles: role, isLoaded: true }),
               error: console.error,
               finalize: () => patchState(state, { isLoading: false }),
             })
           );
         })
       )
-    ),
+    ),    
+    resetLoaded: () => {
+          patchState(state, { isLoaded: false });
+    }
   })),
   withHooks({
     onInit(store) {
-      store.loadRoles();
+      console.debug('RolesStore onInit is loaded: ' , store.isLoaded());
+      if (store.isLoaded() === false) {
+        store.loadRoles();
+      }      
     },
   })
 );

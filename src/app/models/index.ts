@@ -6,8 +6,14 @@ import { AcroFormButton } from "jspdf";
 export interface IDashboardFund {
   fund: string,
   amount: number;
-  updatedTime: Timestamp;  
+  updatedTime: Timestamp;
   description: string
+}
+
+
+export interface IJournalDetailParam {
+  journal_id: number,
+  journal_subid: number
 }
 
 
@@ -104,16 +110,16 @@ export interface IDropDown {
 
 
 export interface IBudget {
-    child : number;
-    period_year : number; 
-    sub_type : string;
-    description : string;
-    amount : number;
-    reference : string;
-    create_date : string;
-    create_user : string;
-    update_date : string;
-    update_user : string;
+  child: number;
+  period_year: number;
+  sub_type: string;
+  description: string;
+  amount: number;
+  reference: string;
+  create_date: string;
+  create_user: string;
+  update_date: string;
+  update_user: string;
 }
 
 export interface IDistributionReport {
@@ -128,17 +134,17 @@ export interface IDistributionReport {
   credit: number,
   closing: number,
   update_user: string,
-  update_date: Date    
+  update_date: Date
 }
 
-export interface IJournalParams {    
+export interface IJournalParams {
   child: number,
   period: number,
   period_year: number
 }
 
 export interface IDistributionParams {
-  period : number,
+  period: number,
   period_year: number
 
 }
@@ -158,18 +164,18 @@ export interface IDistributionLedger {
 }
 
 export interface IDistributionLedgerRpt {
- 
+
   child: number;
   description: string;
   opening_balance: number;
   debit_balance: number;
   credit_balance: number;
   closing_balance: number;
- 
+
 }
 
 export interface IDistributionComparisonRpt {
- 
+
   child: number;
   description: string;
   opening_balance: number;
@@ -180,38 +186,38 @@ export interface IDistributionComparisonRpt {
 
 
 export interface IJournalSummary {
-  journal_id      : number,
-  journal_subid   : number,
-  account         : number,
-  child           : number,
-  fund?           : string,
-  sub_type?       : string,
-  description     : string,
-  debit           : number,
-  credit          : number,
-  create_date     : string,
-  create_user     : string,
-  reference       :string,
-  period          : number,
-  period_year     : number
+  journal_id: number,
+  journal_subid: number,
+  account: number,
+  child: number,
+  fund?: string,
+  sub_type?: string,
+  description: string,
+  debit: number,
+  credit: number,
+  create_date: string,
+  create_user: string,
+  reference: string,
+  period: number,
+  period_year: number
 }
 
 
 
 export interface IDistributionLedgerReport {
-  account:             number; 
-  child:               number; 
-  account_description: string; 
-  period:              number; 
-  period_year:         number; 
-  journal_id:          number; 
-  description:         string; 
-  opening_balance:     number;
-  debit:               number;
-  credit:              number;
-  closing_balance:     number;
-  create_date:         Date;
-  create_user:         string;
+  account: number;
+  child: number;
+  account_description: string;
+  period: number;
+  period_year: number;
+  journal_id: number;
+  description: string;
+  opening_balance: number;
+  debit: number;
+  credit: number;
+  closing_balance: number;
+  create_date: Date;
+  create_user: string;
 }
 
 
@@ -225,8 +231,8 @@ export interface IFunds {
 
 
 export interface ITrialBalance {
-  account : number;
-  child : number;
+  account: number;
+  child: number;
   account_description: string;
   transaction_date: Date;
   id: string;
@@ -254,8 +260,46 @@ export interface IAccounts {
   sub_type: string;
   description: string;
   status?: string;
-  balance: number;
   comments: string;
+  balance: number;
+  current_balance?: number;
+  opening_balance?: number;
+  period_1?: number;
+  period_2?: number;
+  period_3?: number;
+  period_4?: number;
+  period_5?: number;
+  period_6?: number;
+  period_7?: number;
+  period_8?: number;
+  period_9?: number;
+  period_10?: number;
+  period_11?: number;
+  period_12?: number;
+  previous_1?: number;
+  previous_2?: number;
+  previous_3?: number;
+  previous_4?: number;
+  previous_5?: number;
+  previous_6?: number;
+  previous_7?: number;
+  previous_8?: number;
+  previous_9?: number;
+  previous_10?: number;
+  previous_11?: number;
+  previous_12?: number;
+  budget_1?: number;
+  budget_2?: number;
+  budget_3?: number;
+  budget_4?: number;
+  budget_5?: number;
+  budget_6?: number;
+  budget_7?: number;
+  budget_8?: number;
+  budget_9?: number;
+  budget_10?: number;
+  budget_11?: number;
+  budget_12?: number;
   create_date: string;
   create_user: string;
   update_date: string;
@@ -264,9 +308,9 @@ export interface IAccounts {
 
 
 export interface ISettings {
-  id:          number;
-  setting:     string;
-  value:       string;
+  id: number;
+  setting: string;
+  value: string;
   description: string;
   create_date: string;
   create_user: string;
@@ -279,7 +323,7 @@ export interface IAccountSettings {
   ap: string;
   apc: string;
   arc: string;
-} 
+}
 
 
 export interface imageItem {

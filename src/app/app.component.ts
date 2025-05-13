@@ -39,7 +39,6 @@ import { ApplicationStore } from './store/application.store';
 })
 export class AppComponent  {
     authService = inject(AuthService);
-   
     getState(outlet: any) {
         return outlet.activatedRouteData.state;
     }

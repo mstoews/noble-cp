@@ -8,7 +8,7 @@ import {
 } from '@ngrx/signals';
 
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
-import { exhaustMap, pipe, switchMap, tap } from 'rxjs';
+import { exhaustMap, map, pipe, switchMap, tap } from 'rxjs';
 import { computed, inject } from '@angular/core';
 import { tapResponse } from '@ngrx/operators';
 
@@ -21,6 +21,7 @@ export interface AccountsStateInterface {
   dropDownAccounts: IDropDownAccounts[];
   isLoading: boolean;
   isLoaded: boolean;
+  isDropDownLoaded: boolean;
   error: string | null;
 }
 
@@ -32,14 +33,25 @@ export const AccountsStore = signalStore(
     error: null,
     isLoading: false,
     isLoaded: false,
+    isDropDownLoaded: false,
 
   }),
   withComputed((state) => ({
     selected: computed(() => state.accounts().filter((t) => state.accounts()[t.child])),
   })),
   withMethods((state, accountsService = inject(AccountsService)) => ({
-
-    removeAccounts: rxMethod<number>(
+    
+    resetLoaded: rxMethod<number>(
+      pipe(  map(() => {
+          patchState(state, { isLoaded: false });          
+        }))
+     ),    
+     resetDownload: rxMethod<number>(
+      pipe(  map(() => {
+          patchState(state, { isDropDownLoaded: false });          
+        }))
+     ),    
+     removeAccounts: rxMethod<number>(
       pipe(
         switchMap((account) => {
           patchState(state, { isLoading: true });
@@ -96,7 +108,7 @@ export const AccountsStore = signalStore(
             tapResponse({
               next: accounts => patchState(state, { dropDownAccounts: accounts }),
               error: console.error,
-              finalize: () => patchState(state, { isLoading: false }),
+              finalize: () => patchState(state, { isLoading: false, isDropDownLoaded: true }),
             })
           );
         })
@@ -116,11 +128,16 @@ export const AccountsStore = signalStore(
         })
       )
     ),
+    
   })),
   withHooks({
     onInit(store) {
-      store.readAccounts();
-      store.readDropAccounts();
+      if (store.isLoaded() === false) {
+        store.readAccounts();
+      }
+      if (store.isDropDownLoaded() === false) {
+        store.readDropAccounts();
+      }
     },
   })
 );

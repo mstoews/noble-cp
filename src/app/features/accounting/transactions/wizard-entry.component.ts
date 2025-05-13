@@ -481,7 +481,7 @@ const mods = [
                             </mat-tab>
                             <mat-tab label="Artifacts">
                                 <mat-card>
-                                    @if (store.artifacts().length > 0) {
+                                    @if (store.readArtifacts().length > 0) {
                                         <ul>
                                             <li class="grid grid-cols-1 gap-y-10 gap-x-6 ">
                                                 @for (evidence of store.artifacts(); track evidence.id) {
@@ -1138,7 +1138,7 @@ export class EntryWizardComponent implements OnInit, OnDestroy, AfterViewInit {
 
         this.journalHeader = journalHeader;
 
-        this.store.templateDetails().forEach((templateDetail) => {
+        this.store.readTemplateDetails().forEach((templateDetail) => {
             let journalDetail: IJournalDetailUpdate = {
                 journal_id: this.journal_id,
                 journal_subid: count,

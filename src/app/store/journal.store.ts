@@ -4,6 +4,7 @@ import {
   withComputed,
   withHooks,
   withMethods,
+  withProps,
   withState,
 } from '@ngrx/signals';
 
@@ -12,47 +13,37 @@ import { debounceTime, exhaustMap, pipe, switchMap, tap } from 'rxjs';
 import { inject } from '@angular/core';
 import { tapResponse } from '@ngrx/operators';
 import {
-  IArtifacts,
   IJournalTransactions,
   IJournalDetail,
-  IJournalDetailDelete,
-  IJournalDetailTemplate,
   IJournalHeader,
-  IJournalTemplate,
   ITemplateParams,
-
+  IArtifacts,
+  IJournalTemplate,
+  IReadJournalDetailsParams,
+  IJournalDetailDelete
 } from 'app/models/journals';
-import { JournalService } from '../services/journal.service';
-import { IParty } from 'app/models/party';
 
-import { IAccounts, IFunds } from 'app/models';
-import { IType } from 'app/models/types';
-import { ICurrentPeriod, ICurrentPeriodParam, IPeriod, IPeriodParam } from 'app/models/period';
-import { ISubType } from 'app/models/subtypes';
-import { FundsService } from 'app/features/accounting/static/funds/funds.service';
-import { EvidenceService } from 'app/services/evidence.service';
-import { SettingsService } from 'app/services/settings.service';
+import { JournalService } from '../services/journal.service';
+
+import { ICurrentPeriod, ICurrentPeriodParam, IPeriodParam } from 'app/models/period';
+import { FundsStore } from './funds.store';
+import { PartyStore } from './party.store';
+import { TemplateStore } from './template.store';
+import { AccountsStore } from './accounts.store';
+import { PeriodStore } from './periods.store';
+import { EvidenceStore } from './evidence.store';
 
 export interface JournalStateInterface {
   currentJournal: IJournalHeader;
   maxJournal: number | null;
   gl: IJournalHeader[];
-  open_transactions: IJournalHeader[];
   details: IJournalDetail[];
-  templates: IJournalTemplate[];
-  templateDetails: IJournalDetailTemplate[];
-  accounts: IAccounts[];
-  account_type: IType[];
-  party: IParty[];
-  period: IPeriod[];
-  sub_type: ISubType[];
-  funds: IFunds[];
-  artifacts: IArtifacts[];  
   currentPeriod: number;
   currentYear: number;
   isLoading: boolean;
   prd: ICurrentPeriod;
   error: string | null;
+  isTransactionLoaded : boolean;  
 }
 
 export const JournalStore = signalStore(
@@ -61,37 +52,73 @@ export const JournalStore = signalStore(
     currentJournal: null,
     maxJournal: 0,
     gl: [],
-    open_transactions: [],
-    details: [],
-    accounts: [],
-    account_type: [],
-    templateDetails: [],
-    templates: [],
-    party: [],
-    period: [],
-    sub_type: [],
-    funds: [],
-    artifacts: [],
+    details: [],    
     error: null,
     isLoading: false,
     prd: null,
     currentPeriod: 0,
     currentYear: 0,
-
+    isTransactionLoaded: false,
   }),
+  withProps(_ => ({
+      _partyStore: inject(PartyStore),
+      _evidenceStore: inject(EvidenceStore),
+      _templateStore: inject(TemplateStore),
+      _accountsStore: inject(AccountsStore),
+      _periodStore: inject(PeriodStore),
+      _fundsStore: inject(FundsStore),      
+    })),
   withComputed((state) => ({
+    
   })),
   withMethods((state,
-    
-    fundsService = inject(FundsService),
-    settingsService = inject(SettingsService),
-    evidenceService = inject(EvidenceService),
-    journalService = inject(JournalService)) => ({
-      removeJournalHeader: rxMethod<IJournalHeader>(
+       journalService = inject(JournalService)) => ({      
+       // load
+       loadTemplates: state._templateStore.readTemplate,       
+       loadDropDownAccounts: state._accountsStore.readDropAccounts,
+       loadParties: state._partyStore.readParty,
+       loadPeriod: state._periodStore.loadPeriods,
+       loadFunds: state._fundsStore.loadFunds,       
+       loadTemplateDetails: (detailParam: string) => state._templateStore.readTemplateDetails(detailParam),     
+       loadArtifactsById: (id: string) => state._templateStore.readTemplateDetails(id),
+       loadArtifacts: () => state._templateStore.readTemplate,
+       
+       // read
+       readTemplates: () => state._templateStore.tmp(),
+       readFunds: () => state._fundsStore.funds(),
+       readParties: () => state._partyStore.party(),
+       readAccounts: () => state._accountsStore.dropDownAccounts(),
+       readArtifacts: () => state._evidenceStore.evidence(),
+       readTemplateDetails: () => state._templateStore.tmp_details(),
+
+       // update
+       updateArtifacts: (artifact: IArtifacts) => state._evidenceStore.updateEvidence(artifact), 
+
+       // create 
+       createJournalTemplate: (template: IJournalTemplate) => state._templateStore.addTemplate(template),
+       createEvidence: (evidence: IArtifacts) => state._evidenceStore.addEvidence(evidence),
+                     
+       removeJournalHeader: rxMethod<IJournalHeader>(
         pipe(
           switchMap((value) => {
             patchState(state, { isLoading: true });
             return journalService.deleteJournalHeader(value.journal_id).pipe(
+              tapResponse({
+                next: () => {
+                  patchState(state, { gl: state.gl().filter((prd) => prd.journal_id !== value.journal_id) });
+                },
+                error: console.error,
+                finalize: () => patchState(state, { isLoading: false }),
+              })
+            );
+          })
+        )
+      ),
+      deleteJournalDetail: rxMethod<IJournalDetailDelete>(
+        pipe(
+          switchMap((value) => {
+            patchState(state, { isLoading: true });
+            return journalService.deleteHttpJournalDetail(value).pipe(            
               tapResponse({
                 next: () => {
                   patchState(state, { gl: state.gl().filter((prd) => prd.journal_id !== value.journal_id) });
@@ -229,39 +256,7 @@ export const JournalStore = signalStore(
           })
         )
       ),
-      createJournalTemplate: rxMethod<ITemplateParams>(
-        pipe(
-          tap(() => patchState(state, { isLoading: true })),
-          switchMap((value) => {
-            return journalService.createJournalTemplate(value).pipe(
-              tapResponse({
-                next: (template) => {
-                  patchState(state, { templates: [...state.templates(), template] });
-                },
-                error: console.error,
-                finalize: () => patchState(state, { isLoading: false }),
-              })
-            );
-          })
-        )
-      ),
-      deleteJournalDetail: rxMethod<IJournalDetailDelete>(
-        pipe(
-          tap(() => patchState(state, { isLoading: true })),
-          switchMap((value) => {
-            return journalService.deleteHttpJournalDetail(value).pipe(
-              tapResponse({
-                next: (journal) => {
-                  const updatedDetail = state.details().filter((jnl) => journal.journal_subid !== jnl.journal_subid);
-                  patchState(state, { details: updatedDetail });
-                },
-                error: console.error,
-                finalize: () => patchState(state, { isLoading: false }),
-              })
-            );
-          })
-        )
-      ),
+      
       loadDetails: rxMethod<number>(
         pipe(
           tap(() => patchState(state, { isLoading: true })),
@@ -284,55 +279,13 @@ export const JournalStore = signalStore(
               tapResponse({
                 next: (period) => patchState(state, { prd: period[0] }),
                 error: console.error,
-                finalize: () => patchState(state, { isLoading: false }),
+                finalize: () => patchState(state, { isLoading: false}),
               })
             );
           })
         )
       ),
-
-      loadFunds: rxMethod<void>(
-        pipe(
-          tap(() => patchState(state, { isLoading: true })),
-          exhaustMap(() => {
-            return fundsService.read().pipe(
-              tapResponse({
-                next: (funds) => patchState(state, { funds }),
-                error: console.error,
-                finalize: () => patchState(state, { isLoading: false }),
-              })
-            );
-          })
-        )
-      ),
-      loadTemplates: rxMethod<void>(
-        pipe(
-          tap(() => patchState(state, { isLoading: true })),
-          exhaustMap(() => {
-            return journalService.readJournalTemplate().pipe(
-              tapResponse({
-                next: (templates) => patchState(state, { templates: templates }),
-                error: console.error,
-                finalize: () => patchState(state, { isLoading: false }),
-              })
-            );
-          })
-        )
-      ),
-      loadTemplateDetails: rxMethod<string>(
-        pipe(
-          tap(() => patchState(state, { isLoading: true })),
-          switchMap((value) => {
-            return journalService.getTemplateDetails(value).pipe(
-              tapResponse({
-                next: (templateDetails) => patchState(state, { templateDetails: templateDetails }),
-                error: console.error,
-                finalize: () => patchState(state, { isLoading: false }),
-              })
-            );
-          })
-        )
-      ),
+            
       loadJournals: rxMethod<void>(
         pipe(
           tap(() => patchState(state, { isLoading: true })),
@@ -341,7 +294,7 @@ export const JournalStore = signalStore(
               tapResponse({
                 next: (journal) => patchState(state, { gl: journal }),
                 error: console.error,
-                finalize: () => patchState(state, { isLoading: false }),
+                finalize: () => patchState(state, { isLoading: false,  isTransactionLoaded: true }),
               })
             );
           })
@@ -356,28 +309,14 @@ export const JournalStore = signalStore(
               tapResponse({                
                 next: (journal) => patchState(state, { gl: journal.filter((jrn) => jrn.status === 'OPEN') }),
                 error: console.error,
-                finalize: () => patchState(state, { isLoading: false }),
+                finalize: () => patchState(state, { isLoading: false, isTransactionLoaded: true }),
               })
             );
           })
         )
       ),
       
-      loadOpenJournalsByPeriod: rxMethod<IPeriodParam>(
-        pipe(
-          tap(() => patchState(state, { isLoading: true })),
-          switchMap((value) => {
-            return journalService.getJournalHeaderByPeriod(value).pipe(
-              tapResponse({                
-                next: (journal) => patchState(state, { open_transactions: journal.filter((jrn) => jrn.status === 'OPEN') }),
-                error: console.error,
-                finalize: () => patchState(state, { isLoading: false }),
-              })
-            );
-          })
-        )
-      ),
-      
+  
       getJournalListByPeriod: rxMethod<ICurrentPeriodParam>(
         pipe(
           tap(() => patchState(state, { isLoading: true })),
@@ -386,7 +325,7 @@ export const JournalStore = signalStore(
               tapResponse({
                 next: (journal) => patchState(state, { gl: journal }),
                 error: console.error,
-                finalize: () => patchState(state, { isLoading: false }),
+                finalize: () => patchState(state, { isLoading: false, isTransactionLoaded: true }),
               })
             );
           })
@@ -438,95 +377,7 @@ export const JournalStore = signalStore(
           })
         )
       ),
-
-      loadAccounts: rxMethod<void>(
-        pipe(
-          tap(() => patchState(state, { isLoading: true })),
-          exhaustMap(() => {
-            return journalService.readHttpAccounts().pipe(
-              tapResponse({
-                next: (accounts) => patchState(state, { accounts: accounts }),
-                error: console.error,
-                finalize: () => patchState(state, { isLoading: false }),
-              })
-            );
-          })
-        )
-      ),
-      loadArtifactsByJournalId: rxMethod<number>(
-        pipe(
-          tap(() => patchState(state, { isLoading: true })),
-          switchMap((value) => {
-            return evidenceService.readById(value).pipe(
-              tapResponse({
-                next: (artifacts) => patchState(state, { isLoading: false  }),
-                error: console.error,
-                finalize: () => patchState(state, { isLoading: false }),
-              })
-            );
-          })
-        )
-      ),
-      updateArtifacts: rxMethod<IArtifacts>(
-        pipe(
-          tap(() => patchState(state, { isLoading: true })),
-          switchMap((value) => {
-            return evidenceService.update(value).pipe(
-              tapResponse({
-                next: (evidence) => {
-                  patchState(state, { artifacts : [...state.artifacts(), evidence ]})
-                },
-                error: console.error,
-                finalize: () => patchState(state, { isLoading: false }),
-              })
-            );
-          })
-        )
-      ),
-      createArtifacts: rxMethod<IArtifacts>(
-        pipe(
-          tap(() => patchState(state, { isLoading: true })),
-          switchMap((value) => {
-            return evidenceService.create(value).pipe(
-              tapResponse({
-                next: (artifact) => {
-                  patchState(state, { artifacts: [...state.artifacts(), artifact] });
-                },
-                error: console.error,
-                finalize: () => patchState(state, { isLoading: false }),
-              })
-            );
-          })
-        )
-      ),
-      loadPeriod: rxMethod(
-        pipe(
-          tap(() => patchState(state, { isLoading: true })),
-          exhaustMap(() => {
-            return journalService.getSettings('Period').pipe(
-              tapResponse({
-                next: (period) => patchState(state, { currentPeriod: Number(period) }),
-                error: console.error,
-                finalize: () => patchState(state, { isLoading: false }),
-              })
-            );
-          })
-        )
-      ),
-      loadYear: rxMethod(
-        pipe(
-          tap(() => patchState(state, { isLoading: true })),
-          exhaustMap(() => {
-            return journalService.getSettings('Year').pipe(
-              tapResponse({
-                next: (year) => patchState(state, { currentYear: Number(year) }),
-                error: console.error,
-                finalize: () => patchState(state, { isLoading: false }),
-              })
-            );
-          })
-        )
-      ),
+      
       loadMaxJournal: rxMethod<void>(
         pipe(
           tap(() => patchState(state, { isLoading: true })),
@@ -597,13 +448,14 @@ export const JournalStore = signalStore(
       ),
     })),
   withHooks(store => ({
-    onInit: () => {
-      store.loadTemplates();      
-      store.loadAccounts();
-      store.loadFunds();
-      store.loadPeriod('Period');
-      store.loadYear('Year');
-      store.loadMaxJournal();      
+    onInit: () => {    
+      store.loadMaxJournal();  
+      if (store.isTransactionLoaded() === false) {
+        store.loadJournals();
+      }
+      if (store._periodStore.isLoaded() === false) {
+        store.loadPeriod();
+      }
     },
   }))
 

@@ -10,15 +10,17 @@ export interface EvidenceStateInterface {
   evidence: IArtifacts[];
   isLoading: boolean;
   error: string | null;
+  isLoaded: boolean;
 }
 
 export const EvidenceStore = signalStore(
-  { protectedState: false },
+  { providedIn: 'root' },
   
   withState<EvidenceStateInterface>({
     evidence: [],
     error: null,
     isLoading: false,
+    isLoaded: false,
   }),
   
   withComputed((state) => ({
@@ -26,6 +28,13 @@ export const EvidenceStore = signalStore(
   })),
   
   withMethods((state, evidenceService = inject(EvidenceService)) => ({
+    resetLoaded: rxMethod<number>(
+      pipe(
+        tap(() => {
+          patchState(state, { isLoaded: false });
+        })
+      )
+    ),
     addEvidence: rxMethod<IArtifacts>(
       pipe(
         switchMap((value) => {
@@ -75,7 +84,7 @@ export const EvidenceStore = signalStore(
             tapResponse({
               next: evidence => patchState(state, { evidence }),
               error: console.error,
-              finalize: () => patchState(state, { isLoading: false }),
+              finalize: () => patchState(state, { isLoading: false, isLoaded: true }),
             })
           );
         })
@@ -84,7 +93,9 @@ export const EvidenceStore = signalStore(
   })),
   withHooks({
     onInit(store) {
-      store.readEvidence();
+      if (store.isLoaded() === false) {
+        store.readEvidence();
+      }
     },
   })
 );
