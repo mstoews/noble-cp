@@ -17,6 +17,7 @@ import { SettingsService } from 'app/services/settings.service';
 import { GridMenubarStandaloneComponent } from '../grid-components/grid-menubar.component';
 import { PeriodStore } from 'app/store/periods.store';
 import { SummaryCardComponent } from "../../admin/dashboard/summary-card.component";
+import { Location } from "@angular/common";
 
 const providers = [
     ReorderService,
@@ -68,8 +69,8 @@ const imports = [
             </grid-menubar>
         </div>
 
-        <div class="flex-auto border-t -mt-px pt-4 sm:pt-6">
-            <div class="w-full max-w-screen-xl mx-auto m-4">
+        <div class="flex-auto border-t pt-4 sm:pt-6">
+            <div class="w-full max-w-screen-xl mx-auto m-2">
                 <!-- Tabs -->                    
                 <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 w-full min-w-0">
                     <!-- Summary -->
@@ -98,7 +99,7 @@ const imports = [
         
         </div>   
 
-        <mat-drawer-container id="target" class="flex flex-col min-w-0 overflow-y-auto -px-10 h-[calc(100vh-30rem)] mr-4 ml-4">     
+        <mat-drawer-container id="target" class="flex flex-col min-w-0 overflow-y-auto -px-10 h-[calc(100vh-30rem)] mr-10 ml-10">     
             <mat-card>            
                     <div class="flex-auto">                                            
                                 @if(journalStore.isLoading() === false) { 
@@ -106,7 +107,7 @@ const imports = [
                                         <ejs-grid #gl_grid id="gl_grid"
                                             [dataSource]="journalStore.gl() | filterType : transactionType()"                                    
                                             [height]='gridHeight' 
-                                            [rowHeight]='30'         
+                                            [rowHeight]='20'         
                                             [enableStickyHeader]='true'                         
                                             [allowSorting]='true'                                    
                                             [showColumnMenu]='false'                
@@ -218,14 +219,14 @@ const imports = [
                                             <e-aggregates>
                                                     <e-aggregate>
                                                         <e-columns>
-                                                            <e-column type="Sum" field="amount" class="customcss" format="N2">
+                                                            <e-column type="Sum" field="amount" format="N2">
                                                                 <ng-template #groupFooterTemplate let-data >{{data.Sum}}</ng-template>
                                                             </e-column>
                                                         </e-columns>
                                                     </e-aggregate>
                                                     <e-aggregate>
                                                         <e-columns>
-                                                            <e-column type="Sum" field="amount" format="N2" class="customcss">
+                                                            <e-column type="Sum" field="amount" format="N2">
                                                                 <ng-template #footerTemplate let-data >{{data.Sum}}</ng-template>
                                                             </e-column>                                                    
                                                         </e-columns>
@@ -264,7 +265,7 @@ const imports = [
 
 
 export class GLJournalListComponent implements OnInit, AfterViewInit {
-
+    private GRID_HEIGHT_ADJ = 670;
     public route = inject(Router);
     public toast = inject(ToastrService);
     public journalStore = inject(JournalStore);
@@ -301,6 +302,8 @@ export class GLJournalListComponent implements OnInit, AfterViewInit {
     public periodParam: IPeriodParam;
     public gridHeight: number;
     public groupSettings: { [x: string]: Object } = { showDropArea: true };
+    
+    private _location = inject(Location);
     
     // periods$ = this.store.select(periodsFeature.selectPeriods);
 
@@ -354,22 +357,25 @@ export class GLJournalListComponent implements OnInit, AfterViewInit {
         this.searchOptions = { operator: 'contains', ignoreCase: true, ignoreAccent: true };
         this.toolbarOptions = ['Search'];
         this.filterSettings = { type: 'Excel' };
-        this.lines = 'Both';
+        this.lines = 'Both';        
+        this.gridHeight = (window.innerHeight - this.GRID_HEIGHT_ADJ) ; // Adjust as needed        
     }
 
     onPeriod(event: any) {
         this.currentPeriod = event;
         localStorage.setItem('currentPeriod', this.currentPeriod);        
-        this.journalStore.getJournalListByPeriod({current_period: this.currentPeriod})
+        this.journalStore.getJournalListByPeriod({current_period: this.currentPeriod})        
         this.toast.info(event, 'Period changed to: ');
-        this.changeDetectorRef.detectChanges();        
+        this.changeDetectorRef.detectChanges();         
+        this.gridHeight = (window.innerHeight - this.GRID_HEIGHT_ADJ) ; // Adjust as needed
+        
     }
 
-    
     
     loadData() {        
         localStorage.setItem('currentPeriod', this.currentPeriod);        
         this.journalStore.getJournalListByPeriod({current_period: this.currentPeriod})
+        
     }
 
     resetLoaded() {
@@ -551,15 +557,14 @@ export class GLJournalListComponent implements OnInit, AfterViewInit {
     }
 
     adjustHeight() {
-        if (this.grid()) {
-            this.grid().height = (window.innerHeight - 550) + 'px'; // Adjust as needed
-        }
+        this.gridHeight = (window.innerHeight - this.GRID_HEIGHT_ADJ)
+            //this.grid().height = (window.innerHeight - this.GRID_HEIGHT_ADJ) + 'px'; // Adjust as needed
     }
 
     
 
       onBack() {
-        throw new Error('Method not implemented.');
+        this._location.back();
       }
       onReceipts() {
         throw new Error('Method not implemented.');

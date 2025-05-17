@@ -63,7 +63,7 @@ const keyExpr = ["account", "child"];
           <settings-drawer></settings-drawer>      
     </mat-drawer> -->
 
-        <mat-drawer  class="w-[400px]" id="drawer" #drawer  [opened]="false"  mode="side" position="end" [disableClose]="false" >
+        <mat-drawer  class="w-[400px]" id="drawer" #drawer  [opened]="false"  mode="side" position="end" [disableClose]="false" class="bg-gray-100" >
             <accts-drawer
               [account] = "selectedAccount"
               (Cancel)="onClose()"
@@ -440,11 +440,11 @@ export class GlAccountsComponent implements OnInit {
 
   @HostListener('window:resize', ['$event'])
     onResize(event: any) {
-        this.gridHeight = event.target.innerHeight - 500;
+        this.gridHeight = event.target.innerHeight - 480;
     }
 
     constructor() {
-        this.gridHeight = window.innerHeight - 540;
+        this.gridHeight = window.innerHeight - 480;
     }
 
 }

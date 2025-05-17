@@ -4,6 +4,7 @@ import { ReplaySubject, Subject, Subscription, take, takeUntil } from "rxjs";
 import { CommonModule, NgTemplateOutlet } from "@angular/common";
 import { DndComponent } from "app/features/drag-n-drop/loaddnd/dnd.component";
 import { GridMenubarStandaloneComponent } from "../grid-components/grid-menubar.component";
+import { Location } from  "@angular/common"
 
 import { MatDialog } from "@angular/material/dialog";
 import { NgxMaskDirective, provideNgxMask } from "ngx-mask";
@@ -644,6 +645,7 @@ export class JournalUpdateComponent implements OnInit, OnDestroy, AfterViewInit 
     subtypeDropDown = viewChild<SubtypeDropDownComponent>("subtypeDropDown");
 
     private _fuseConfirmationService = inject(FuseConfirmationService);
+    private _location = inject(Location);
 
 
     private readonly destroyJournalForm$ = new Subject<void>();
@@ -990,7 +992,7 @@ export class JournalUpdateComponent implements OnInit, OnDestroy, AfterViewInit 
     onBack() {
         var rc = false;
         if (this.bHeaderDirty === false || this.bDetailDirty === false) {
-            this.router.navigate(["/journals"]);
+            this._location.back();
         } else {
             const confirmation = this.fuseConfirmationService.open({
                 title: "Unsaved Changes",
@@ -1007,7 +1009,7 @@ export class JournalUpdateComponent implements OnInit, OnDestroy, AfterViewInit 
                 if (result === "confirmed") {
                     this.onUpdateJournalHeader(this.journalHeader.journal_id);
                 }
-                this.router.navigate(["/journals"]);
+                this.onBack()
             });
         }
 
