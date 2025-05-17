@@ -6,9 +6,10 @@ import { ToastrService } from "ngx-toastr";
 import { ICurrentPeriod, ICurrentPeriodParam, IPeriod } from 'app/models/period';
 import { IAccounts } from 'app/models';
 import { IPeriodParam } from 'app/models/period';
+import { IAPTransaction, IInvoice, IVendors } from 'app/models/ap';
 
 import {
-  IArtifacts,
+  IArtifacts,    
   IJournalTransactions,
   IJournalDetail,
   IJournalDetailDelete,
@@ -25,74 +26,15 @@ import {
 @Injectable({
   providedIn: 'root'
 })
-export class JournalService implements OnDestroy {
+export class APService implements OnDestroy {
 
   httpClient = inject(HttpClient)
   toastr = inject(ToastrService);
   private baseUrl = environment.baseUrl;
 
-  readJournalTemplate() {
-    var url = this.baseUrl + '/v1/read_journal_template';
-    return this.httpClient.get<IJournalTemplate[]>(url).pipe(
-      catchError(err => {
-        const message = "Failed to read journals templates ...";
-        this.ShowAlert(message, 'failed');
-        return throwError(() => new Error(`${JSON.stringify(err)}`));
-      }),
-      shareReplay({ bufferSize: 1, refCount: true }));
-  }
-
-  updateCurrentPeriod(period: IPeriodParam) {
-    var url = this.baseUrl + '/v1/update_current_period';
-    return this.httpClient.post<IPeriodParam>(url, period).pipe(
-      catchError(err => {
-        const message = "Failed to read journals templates ...";
-        this.ShowAlert(message, 'failed');
-        return throwError(() => new Error(`${JSON.stringify(err)}`));
-      }),
-      shareReplay({ bufferSize: 1, refCount: true }))
-  }
-  createJournalTemplate(params: ITemplateParams) {
-    var url = this.baseUrl + '/v1/create_journal_template';
-    this.nocache(url);
-    return this.httpClient.post<IJournalTemplate>(url, params).pipe(
-      catchError(err => {
-        const message = "Failed to connect to server for templates ...";
-        this.ShowAlert(message, 'failed');
-        return throwError(() => new Error(`${JSON.stringify(err)}`));
-      }),
-      shareReplay({ bufferSize: 1, refCount: true }));
-  }
-
-  getCurrentPeriod() {
-    var url = this.baseUrl + '/v1/get_current_period';
-    this.nocache(url);
-    return this.httpClient.get<ICurrentPeriod[]>(url).pipe(
-      debounce(() => timer(2000)),
-      catchError(err => {
-        const message = "Failed to read current period ...";
-        this.ShowAlert(message, 'failed');
-        return throwError(() => new Error(`${JSON.stringify(err)}`));
-      }),
-      shareReplay({ bufferSize: 1, refCount: true }));
-  }
-
-  updateFirebaseTrialBalance(period: IPeriodParam) {
-    var url = this.baseUrl + '/v1/update_firebase_trial_balance';
-    return this.httpClient.post(url, period).pipe(
-      catchError(err => {
-        const message = "Failed to complete - firebase trial balance  ...";
-        this.ShowAlert(message, 'failed');
-        return throwError(() => new Error(`${JSON.stringify(err)}`));
-      }),
-      shareReplay({ bufferSize: 1, refCount: true }));
-  }
-
-  // Journal Params Arrays
-
-  createJournal(params: IJournalTransactions) {
-    var url = this.baseUrl + '/v1/create_journal';
-    this.nocache(url);
+  
+  createAPTransaction(params: IJournalTransactions) {
+    var url = this.baseUrl + '/v1/create_ap_transaction';    
     return this.httpClient.post<IJournalTransactions>(url, params).pipe(
       catchError(err => {
         if (err.status === 200) {

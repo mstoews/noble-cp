@@ -103,7 +103,7 @@ const imports = [
                 <div class="flex-auto">                                            
                             @if(journalStore.isLoading() === false) { 
                                 <ng-container>                     
-                                    <ejs-grid #grid id="grid"
+                                    <ejs-grid #ar_grid id="ar_grid"
                                         [dataSource]="journalStore.gl() | filterType : transactionType()"                                    
                                         [height]='gridHeight' 
                                         [rowHeight]='30'                                  
@@ -113,7 +113,7 @@ const imports = [
                                         [allowFiltering]='false'                 
                                         [toolbar]='toolbarOptions'                                             
                                         [editSettings]='editSettings'
-                                        [enablePersistence]='false'                                    
+                                        [enablePersistence]='true'                                    
                                         [allowGrouping]="true"
                                         [allowResizing]='true' 
                                         [allowReordering]='true' 
@@ -307,7 +307,7 @@ export class ARJournalListComponent implements OnInit, AfterViewInit {
     // periods$ = this.store.select(periodsFeature.selectPeriods);
 
     drawer = viewChild<MatDrawer>("drawer");
-    grid = viewChild<GridComponent>('grid');
+    grid = viewChild<GridComponent>('ar_grid');
     toolbar = viewChild<GridMenubarStandaloneComponent>('toolbar');
     onCloseDrawer = output();
 

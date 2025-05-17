@@ -1,37 +1,41 @@
 import { CommonModule } from "@angular/common";
-import { Component, ChangeDetectionStrategy, output, input, inject, OnInit, viewChild } from "@angular/core";
+import { Component, ChangeDetectionStrategy, output, input, inject, OnInit, viewChild, signal } from "@angular/core";
 import { MatButtonModule } from "@angular/material/button";
 import { MatIconModule } from "@angular/material/icon";
 import { MatToolbarModule } from "@angular/material/toolbar";
 import { MatTooltipModule } from "@angular/material/tooltip";
 import { ICurrentPeriod } from "app/models/period";
 
-import { FormControl, FormGroup } from "@angular/forms";
 import { MatMenuModule } from '@angular/material/menu';
 import { MatSelect, MatSelectChange, MatSelectModule } from '@angular/material/select';
 import { PeriodStore } from "app/store/periods.store";
+import { CalendarModule } from "@syncfusion/ej2-angular-calendars";
+import { MatDatepickerInputEvent, MatDatepickerModule } from "@angular/material/datepicker";
+import { MatFormFieldModule } from "@angular/material/form-field";
+import { MatInputModule } from "@angular/material/input";
+import { FormControl, FormGroup } from "@angular/forms";
 
 
-let modules = [MatToolbarModule, MatIconModule, MatButtonModule, CommonModule, MatTooltipModule, MatSelectModule, MatMenuModule];
+let modules = [
+  CalendarModule, 
+  MatFormFieldModule, 
+  MatInputModule, 
+  MatDatepickerModule,
+  MatToolbarModule, 
+  MatIconModule, 
+  MatButtonModule, 
+  CommonModule, 
+  MatTooltipModule, 
+  MatSelectModule, 
+  MatMenuModule];
 
 @Component({
   standalone: true,
   selector: "grid-menubar",
-  styles: [` 
-      :host ::ng-deep .mdc-text-field--outlined ng-deep.mdc-notched-outline__leading {        
-        border-color: #ffffff  !important;
-        color: red !important;
-      }
-      
-      :host ::ng-deep .mdc-text-field--outlined ng-deep.mdc-notched-outline__notch {        
-        border-color: #ffffff  !important;
-        color: red !important;
-      }
-      
-      :host ::ng-deep .mdc-text-field--outlined ng-deep.mdc-notched-outline__trailing {        
-        border-color: #ffffff  !important;
-        color: red !important;
-      }
+  styles: [`       
+      :host ::ng-deep .mat-datepicker-toggle {
+        color: green !important;
+      }      
     `,
   ],
 
@@ -41,17 +45,40 @@ let modules = [MatToolbarModule, MatIconModule, MatButtonModule, CommonModule, M
     <span class="flex-1"></span>      
     
     @if (showPeriod()) {
-            <div class="flex flex-row items-center w-[180px] text-white border-gray-200">        
+           <div class="flex flex-row items-center w-[180px] text-white border-gray-200">        
               <mat-select class="w-[180px] text-white border-gray-200" [value]="_currentPeriod" #periodDropdownSelection (selectionChange)="onSelectionChange($event)">
                   @for ( period of _currentActivePeriods ; track period.description ) {
                     <mat-option [value]="period.description">
                         {{ period.description }}
                     </mat-option>
                   }             
-              </mat-select>                        
-              </div>      
-      }
+              </mat-select>           
+           </div>      
+    }
+
+
+      @if (showCalendar()) {
+        <mat-form-field color="primary" class="w-[200px] mt-5 mr-3 p-1 text-green-800 ">         
+          <mat-date-range-input color="primary" [formGroup]="range" [rangePicker]="picker"  >
+              <input (dateChange)="setStartDate('change', $event)"  color="primary" matStartDate formControlName="start" placeholder="Start date">
+              <input (dateChange)="setEndDate('change', $event)" matEndDate formControlName="end" placeholder="End date">
+          </mat-date-range-input>          
+              <!-- <mat-datepicker-toggle color="primary" [for]="picker" class="text-green-800"> </mat-datepicker-toggle>  -->
+          <mat-date-range-picker   #picker></mat-date-range-picker>
+        </mat-form-field> 
+        <button mat-icon-button  (click)="picker.open()" color="primary" class="m-1 bg-gray-200 md:visible" matTooltip="Save"  aria-label="Save" >
+        <mat-icon [svgIcon]="'feather:calendar'"></mat-icon>
+        </button>      
+            
+      } 
+
     
+
+      @if (showSave()) {
+        <button mat-icon-button  (click)="onSave()" color="primary" class="m-1 bg-gray-200 md:visible" matTooltip="Save"  aria-label="Save" >
+          <span class="e-icons text-bold e-save"></span>
+        </button>
+      }
       
       @if (showSave()) {
         <button mat-icon-button  (click)="onSave()" color="primary" class="m-1 bg-gray-200 md:visible" matTooltip="Save"  aria-label="Save" >
@@ -143,9 +170,8 @@ export class GridMenubarStandaloneComponent implements OnInit {
   prd_year = input<string>();
 
   periods = input<ICurrentPeriod[]>();
-
   showBack = input<boolean>(true);
-  showPeriod = input<boolean>(true);
+  showPeriod = input<boolean>(false);
   showExportXL = input<boolean>(true);
   showExportPDF = input<boolean>(false);
   showExportCSV = input<boolean>(false);
@@ -154,8 +180,16 @@ export class GridMenubarStandaloneComponent implements OnInit {
   showNew = input<boolean>(false);
   showClone = input<boolean>(false);
   showTemplate = input<boolean>(false);
-  showDelete = input<boolean>(false);
+  showDelete = input<boolean>(false);  
   showSave = input<boolean>(false);
+  showCalendar = input<boolean>(false);
+  showCalendarButton = input<boolean>(false);
+
+  readonly range = new FormGroup({
+    start: new FormControl<Date | null>(null),
+    end: new FormControl<Date | null>(null),
+  });
+  
 
   period = output<string>();
   selectedPeriod = output<string>();
@@ -164,11 +198,7 @@ export class GridMenubarStandaloneComponent implements OnInit {
   periodsDropdown = viewChild<MatSelect>("periodDropdownSelection");
 
   _currentPeriod: string;
-
-
   _currentActivePeriods: ICurrentPeriod[];
-
-
   periodDropdownSelect = viewChild<MatSelect>("periodDropdownSelection");
 
   ngOnInit() {
@@ -184,12 +214,32 @@ export class GridMenubarStandaloneComponent implements OnInit {
         
   }
 
+  setStartDate(type: string, event: MatDatepickerInputEvent<Date>) {    
+    if (event.value === null) {
+      return;
+    }
+    console.debug("addEvent", type, event.value.toISOString().slice(0, 10));
+  }
+
+  setEndDate(type: string, event: MatDatepickerInputEvent<Date>) {  
+    if (event.value === null) {
+      return;
+    }
+    console.debug("addEvent", type, event.value.toISOString().slice(0, 10));
+  }
+
+  public openCalendar() {  
+    this.range.setValue({
+      start: new Date(this.range.value.start),
+      end: new Date(this.range.value.end)
+    });    
+    console.debug("openCalendar", this.range.value);
+  }
 
   public loadPeriods () {
     if (this.periodStore.isActiveLoaded() === false)
       this.periodStore.loadActivePeriods();
-    
-    
+     
     if (this.periodStore.isLoaded() === false) {
       this.periodStore.loadPeriods();
     }
@@ -197,14 +247,17 @@ export class GridMenubarStandaloneComponent implements OnInit {
     if (this.periodStore.currentPeriod() === '') {
       this.periodStore.loadCurrentPeriod();
     }   
+  
   }
 
   public onSelectionChange(event: MatSelectChange) {
     var currentPrd = event.value as string;
-    localStorage.setItem('currentPeriod', currentPrd);
-    
-    
+    localStorage.setItem('currentPeriod', currentPrd);        
     this.period.emit(currentPrd);
+  }
+
+  public onCalendar() {
+      
   }
 
   public onNew() {

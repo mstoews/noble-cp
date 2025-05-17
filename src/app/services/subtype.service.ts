@@ -1,7 +1,7 @@
 import { Injectable, computed, inject, signal } from '@angular/core';
 import { shareReplay, Subject } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
-import { environment } from 'environments/environment.prod';
+import { environment } from 'environments/environment';
 import { ISubType, ISubtypeDropDown } from 'app/models/subtypes';
 
 interface SubtypeState {

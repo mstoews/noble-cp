@@ -106,12 +106,14 @@ const mods = [
                               (exportXL)="exportXL()"
                               (exportPRD)="exportPDF()"
                               (exportCSV)="exportCSV()"
+                              [showCalendar]=true
+                              [showCalendarButton]=true
                               [showPrint]=false
                               [showExportXL]=true
                               [showExportPDF]=false
                               [showExportCSV]=false
-                              [showSettings]=true
-                              [showBack]=false>
+                              [showSettings]=false
+                              [showBack]=true>
                         </grid-menubar>  
                                                                                                     
                         @if (store.isLoading() === false)                           
@@ -350,9 +352,8 @@ throw new Error('Method not implemented.');
       // this.router.navigate(['journals/gl', args.rowData]);
     }
   }
-
   ngOnInit() {
-    this.store.loadTB(this.periodParams);
+    //this.store.loadTB(this.periodParams);
     this.periodsService.read().pipe(takeUntil(this._onDestroy)).subscribe((period) => {
       this.periodList = period;
       this.periodFilter.next(this.periodList.slice());
@@ -364,7 +365,19 @@ throw new Error('Method not implemented.');
           this.singlePeriodSelect.compareWith = (a: IPeriod, b: IPeriod) => a && b && a.period_id === b.period_id;
       });
     this.createEmptyForm();
+    this.refreshReport();
   }
+
+  refreshReport() 
+    {
+      const tbParams = {
+        start_date: '05/10/2025',
+        end_date: '05/05/2025',
+        status: 'OPEN'
+      };
+      this.store.loadTBByStartAndEndDate(tbParams)
+
+    }
 
   createEmptyForm() {
     this.gridForm = this.fb.group({

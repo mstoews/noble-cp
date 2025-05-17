@@ -3,8 +3,8 @@ import { inject, Injectable } from "@angular/core";
 import { IType } from "app/models/types";
 import { IJournalDetailTemplate, IJournalTemplate } from "app/models/journals";
 import { IParty } from "app/models/party";
-import { environment } from "environments/environment.prod";
-import {shareReplay} from "rxjs";
+import { environment } from "environments/environment";
+import { shareReplay } from "rxjs";
 import { IAccounts } from "app/models";
 
 @Injectable({
@@ -20,9 +20,9 @@ export class JournalTemplateService {
     return this.httpClient.get<IJournalTemplate[]>(url).pipe(shareReplay({ bufferSize: 1, refCount: true }));
   }
 
-  getTemplateDetails(reference: string)  {
+  getTemplateDetails(reference: string) {
     var url = this.baseUrl + "/v1/read_template_details:/" + reference;
-    return this.httpClient.get<IJournalDetailTemplate[]>(url).pipe(shareReplay({ bufferSize: 1, refCount: true }));  
+    return this.httpClient.get<IJournalDetailTemplate[]>(url).pipe(shareReplay({ bufferSize: 1, refCount: true }));
   }
 
   readAccounts() {
@@ -40,5 +40,5 @@ export class JournalTemplateService {
     return this.httpClient.get<IParty[]>(url).pipe(shareReplay({ bufferSize: 1, refCount: true }));
   }
 
-  
+
 }

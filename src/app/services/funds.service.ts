@@ -1,7 +1,7 @@
 import { Injectable, computed, inject, signal } from '@angular/core';
 import { Subject, shareReplay } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
-import { environment } from 'environments/environment.prod';
+import { environment } from 'environments/environment';
 import { IFunds } from 'app/models';
 
 

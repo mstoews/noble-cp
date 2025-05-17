@@ -93,6 +93,11 @@ export interface ITBParams {
   year: number
 }
 
+export interface ITBStartEndDate {
+  start_date: string,
+  end_date: string
+  status: string
+}
 export interface IJournalDetail {
   journal_id: number,
   journal_subid: number,

@@ -101,7 +101,7 @@ const imp = [
             (period)="onPeriod($event)"
             (back)="onBack()"  
             (clone)="onClone('GL')"           
-            [inTitle]="'General Ledger Transactions Update'" 
+            [inTitle]="'General Ledger Transactions Update somestuff '" 
             [prd]="journalStore.currentPeriod()"
             [prd_year]="journalStore.currentYear()">
         </grid-menubar>

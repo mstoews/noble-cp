@@ -1,7 +1,7 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable, OnDestroy, inject } from '@angular/core';
 import { Observable, TimeoutError, catchError, debounce, debounceTime, distinctUntilChanged, interval, retry, shareReplay, take, takeUntil, tap, throwError, timeout, timer } from 'rxjs';
-import { environment } from 'environments/environment.prod';
+import { environment } from 'environments/environment';
 import { ToastrService } from "ngx-toastr";
 
 
@@ -12,7 +12,7 @@ export interface IFinancialData {
   amount: number;
   period: number;
   period_year: number;
-  date: Date;   
+  date: Date;
 }
 
 @Injectable({
@@ -41,7 +41,7 @@ export class FinancialServiceService {
         catchError(this.handleError('Retrieving financial data by ID')),
       );
   }
-  handleError(handleError: any){
+  handleError(handleError: any) {
     return (error: HttpErrorResponse) => {
       if (error.error instanceof ErrorEvent) {
         // A client-side or network error occurred. Handle it accordingly.
@@ -54,5 +54,5 @@ export class FinancialServiceService {
       return throwError(() => new Error('Something bad happened; please try again later.'));
     };
   }
-  
+
 }

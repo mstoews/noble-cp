@@ -28,16 +28,15 @@ interface IJournalData {
   periods: IPeriod[];
 }
 
-
 export const StaticResolver: ResolveFn<IJournalData> = (
   route: ActivatedRouteSnapshot,
   state: RouterStateSnapshot) => {
   return inject(AccountsService).readAccounts().pipe(combineLatestWith([
-    inject(FundsService).read(),
-    // inject(TypeService).read(),
-    inject(TemplateService).read(),
-    inject(PartyService).read(),
-    inject(PeriodsService).read()
+    // inject(FundsService).read(),
+    // // inject(TypeService).read(),
+    // inject(TemplateService).read(),
+    // inject(PartyService).read(),
+    // inject(PeriodsService).read()
   ]
   )) as any as Observable<IJournalData>;
 };

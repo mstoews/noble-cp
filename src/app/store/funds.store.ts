@@ -79,9 +79,9 @@ export const FundsStore = signalStore(
         exhaustMap(() => {
           return state._fundsService.read().pipe(
             tapResponse({
-              next: fund => patchState(state, { funds: fund }),
+              next: fund => patchState(state, { funds: fund, isLoaded: true }),
               error: console.error,
-              finalize: () => patchState(state, { isLoading: false, isLoaded: true }),
+              finalize: () => patchState(state, { isLoading: false}),
             })
           );
         })

@@ -34,7 +34,7 @@ const imports = [
     selector: 'funds',
     imports: [imports],
     template: `
-        <mat-drawer class="lg:w-1/3 sm:w-full bg-white-100" #drawer [opened]="false" mode="over" [position]="'end'"  [disableClose]="false">
+        <mat-drawer class="lg:w-1/3 sm:w-full bg-white-100" #drawer [opened]="false" mode="side" [position]="'end'"  [disableClose]="false">
         <mat-card class="m-2 p-2 mat-elevation-z8">
                 <div class="flex flex-col w-full text-gray-700 max-w-140 filter-article filter-interactive">
                     <div class="h-12 m-2 rounded-lg p-2 text-2xl text-justify text-gray-200 bg-slate-600" mat-dialog-title> {{ sTitle }} </div>

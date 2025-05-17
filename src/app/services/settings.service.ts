@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
-import { environment } from 'environments/environment.prod';
+import { environment } from 'environments/environment';
 import { IGridSettingsModel } from './grid.settings.service';
 import { ISettings } from 'app/models';
 import { shareReplay } from 'rxjs';
@@ -18,7 +18,7 @@ export class SettingsService {
     return this.httpClient.post<ISettings>(url, setting).pipe(shareReplay({ bufferSize: 1, refCount: true }))
   }
 
-  update_current_period(period_description : string) {
+  update_current_period(period_description: string) {
     var url = this.baseUrl + '/v1/update_period_by_description';
     const period_param = {
       description: period_description
@@ -45,7 +45,7 @@ export class SettingsService {
     return this.httpClient.post<ISettings[]>(url, setting).pipe(shareReplay({ bufferSize: 1, refCount: true }))
   }
 
-  updateCurrentPeriod(prdParm: IPeriodParam ) {
+  updateCurrentPeriod(prdParm: IPeriodParam) {
     const prd = {
       period: prdParm.period,
       year: prdParm.period_year

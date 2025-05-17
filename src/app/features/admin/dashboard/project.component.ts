@@ -105,7 +105,9 @@ export class ProjectComponent implements OnInit, OnDestroy {
 
     constructor() {
         
-        this._periodStore.loadActivePeriods();
+        if (this._periodStore.isCurrentLoaded()=== false) {
+            this._periodStore.loadActivePeriods();
+        }
 
         effect(() => {
             if (!this.authService.user()) {

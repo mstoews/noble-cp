@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { tapResponse } from '@ngrx/operators';
 import { Faq, FaqCategory, Guide, GuideCategory } from 'app/features/help-center/help-center.type';
-import { environment } from 'environments/environment.prod';
+import { environment } from 'environments/environment';
 import { Observable, ReplaySubject, tap } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })

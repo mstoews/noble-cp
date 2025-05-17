@@ -56,6 +56,8 @@ const imports = [
             <grid-menubar class="pl-5 pr-5"            
                 [showBack]="true"             
                 [showPeriod]="true"
+                [showCalendar]="false"
+                [showCalendarButton]="false"
                 (print)="onPrint()"
                 (back)="onBack()"  
                 (clone)="onClone()"  
@@ -101,7 +103,7 @@ const imports = [
                     <div class="flex-auto">                                            
                                 @if(journalStore.isLoading() === false) { 
                                     <ng-container>                     
-                                        <ejs-grid #grid id="grid"
+                                        <ejs-grid #gl_grid id="gl_grid"
                                             [dataSource]="journalStore.gl() | filterType : transactionType()"                                    
                                             [height]='gridHeight' 
                                             [rowHeight]='30'         
@@ -112,7 +114,7 @@ const imports = [
                                             [allowFiltering]='false'                 
                                             [toolbar]='toolbarOptions'                                             
                                             [editSettings]='editSettings'
-                                            [enablePersistence]='false'                                    
+                                            [enablePersistence]='true'                                    
                                             [allowGrouping]="true"
                                             [allowResizing]='true' 
                                             [allowReordering]='true' 
@@ -253,11 +255,9 @@ const imports = [
     
     `,
     styles: `
-     .custom-css {  
-        background: #093d16;
-        font-style: sans-serif;        
-        color: white;
-    }
+       .reset-element {
+             all: revert;
+       }     
     `,
     providers: [providers]
 })
@@ -305,7 +305,7 @@ export class GLJournalListComponent implements OnInit, AfterViewInit {
     // periods$ = this.store.select(periodsFeature.selectPeriods);
 
     drawer = viewChild<MatDrawer>("drawer");
-    grid = viewChild<GridComponent>('grid');
+    grid = viewChild<GridComponent>('gl_grid');
     toolbar = viewChild<GridMenubarStandaloneComponent>('toolbar');
     onCloseDrawer = output();
 

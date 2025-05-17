@@ -124,6 +124,9 @@ throw new Error('Method not implemented.');
       party_id: new FormControl('', Validators.required),
       name: new FormControl('', Validators.required),
       party_type: new FormControl('', Validators.required)
+
+
+
     });
   }
   ngOnChanges() {
@@ -164,3 +167,5 @@ throw new Error('Method not implemented.');
   }
 
 }
+
+

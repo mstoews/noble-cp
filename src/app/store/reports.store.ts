@@ -13,7 +13,7 @@ import { inject } from '@angular/core';
 import { tapResponse } from '@ngrx/operators';
 import { ITrialBalance } from 'app/models';
 import { ReportService } from '../services/reports.service';
-import { ITBParams } from 'app/models/journals';
+import { ITBParams, ITBStartEndDate } from 'app/models/journals';
 import { GridSettingsService, IGridSettingsModel } from '../services/grid.settings.service';
 import { IDataSet } from '@syncfusion/ej2-angular-pivotview';
 
@@ -53,6 +53,20 @@ export const ReportStore = signalStore(
             }));
         }))
     ),
+
+    loadTBByStartAndEndDate: rxMethod<ITBStartEndDate>(
+      pipe(
+        tap(() => patchState(state, { isLoading: true })),
+        concatMap((value) => {
+          return reportService.readTBByStartAndEndDate(value).pipe(
+            tapResponse({
+              next: (tb) => patchState(state, { tb: tb }),
+              error: console.error,
+              finalize: () => patchState(state, { isLoading: false }),
+            }));
+        }))
+    ),
+
     loadSettings: rxMethod<void>(
       pipe(
         tap(() => patchState(state, { isLoading: true })),

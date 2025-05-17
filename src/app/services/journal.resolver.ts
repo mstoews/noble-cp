@@ -28,7 +28,7 @@ export const JournalResolver: ResolveFn <IJournalData> = (
       templateService.read(),      
       partyService.read(),
       journalService.getHttpJournalDetails(Number(route.paramMap.get('id'))),
-      periodService.getActivePeriods(),
+      // periodService.getActivePeriods(),
      ]
   )) as any as Observable<IJournalData>;    
 };

@@ -1,5 +1,5 @@
 import { HttpContextToken, HttpHandlerFn, HttpInterceptorFn, HttpRequest, HttpResponse } from '@angular/common/http';
-import { environment } from 'environments/environment.prod';
+import { environment } from 'environments/environment';
 import { retry, timer } from 'rxjs';
 
 export const API_RETRY_COUNT = new HttpContextToken(() => environment.apiRetryCount);

@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { environment } from 'environments/environment.prod';
+import { environment } from 'environments/environment';
 import { catchError, debounceTime, distinctUntilChanged, shareReplay, throwError } from 'rxjs';
 import { IArtifacts } from 'app/models/journals';
 import { ToastrService } from 'ngx-toastr';

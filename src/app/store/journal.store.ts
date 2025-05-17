@@ -292,9 +292,9 @@ export const JournalStore = signalStore(
           exhaustMap(() => {
             return journalService.readHttpJournalHeader().pipe(
               tapResponse({
-                next: (journal) => patchState(state, { gl: journal }),
+                next: (journal) => patchState(state, { gl: journal, isTransactionLoaded: true }),
                 error: console.error,
-                finalize: () => patchState(state, { isLoading: false,  isTransactionLoaded: true }),
+                finalize: () => patchState(state, { isLoading: false   }),
               })
             );
           })

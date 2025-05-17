@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
-import { environment } from 'environments/environment.prod';
+import { environment } from 'environments/environment';
 import { shareReplay } from 'rxjs';
 
 import {
@@ -33,7 +33,7 @@ export class TemplateService {
         var url = this.baseUrl + '/v1/delete_detail_template';
         return this.httpClient.post<IJournalDetailTemplate>(url, update).pipe(shareReplay({ bufferSize: 1, refCount: true }))
     }
-    
+
     delete(template_ref: string) {
         const del = {
             template_ref: template_ref,

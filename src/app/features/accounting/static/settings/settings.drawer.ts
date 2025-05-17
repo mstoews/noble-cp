@@ -2,7 +2,7 @@ import { Component, inject, input, output } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { IAccounts } from 'app/models';
 import { MaterialModule } from 'app/shared/material.module';
-import { TypeStore } from 'app/services/type.service';
+import { GLTypeStore } from 'app/store/gltype.store';
 
 @Component({
   selector: 'setting-drawer',
@@ -70,7 +70,7 @@ import { TypeStore } from 'app/services/type.service';
                     <mat-form-field class="m-1 grow">
                       <mat-label class="text-md ml-2">Type</mat-label>
                       <mat-select placeholder="Type" formControlName="acct_type"  (selectionChange)="changeType($event)">
-                        @for (item of typeStore.type(); track item) {
+                        @for (item of typeStore.types(); track item) {
                           <mat-option [value]="item.type"> {{ item.type }}  </mat-option>
                         }
                       </mat-select>
@@ -128,7 +128,8 @@ export class SettingsDrawerComponent {
   Add = output<IAccounts>();
   Delete = output<IAccounts>();
   Cancel = output();
-  typeStore = inject(TypeStore);
+  
+  typeStore = inject(GLTypeStore);
 
   bAccountsDirty: boolean = false;
   private fb = inject(FormBuilder);

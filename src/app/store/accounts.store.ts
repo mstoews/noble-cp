@@ -14,6 +14,7 @@ import { tapResponse } from '@ngrx/operators';
 
 import { IAccounts, IDropDownAccounts } from 'app/models'
 import { AccountsService } from '../services/accounts.service';
+import { update } from 'lodash';
 
 
 export interface AccountsStateInterface {
@@ -87,11 +88,14 @@ export const AccountsStore = signalStore(
     updateAccounts: rxMethod<IAccounts>(
       pipe(
         switchMap((value) => {
+          patchState(state, { isLoading: true });
           return accountsService.update(value).pipe(
             tapResponse({
-              next: (accounts) => {
-                const updatedAccounts = state.accounts().filter((accounts) => accounts.child !== accounts.child);
-                patchState(state, { accounts: updatedAccounts });
+              next: (accts) => {
+                const updatedAccounts = state.accounts().filter((accounts) => accounts.child !== accts.child);
+                updatedAccounts.push(accts);
+                updatedAccounts.sort((a, b) => a.child - b.child);
+                patchState(state, { accounts: updatedAccounts });                              
               },
               error: console.error,
               finalize: () => patchState(state, { isLoading: false }),

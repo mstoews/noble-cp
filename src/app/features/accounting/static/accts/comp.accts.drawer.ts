@@ -1,9 +1,8 @@
 import { Component, inject, input, output } from '@angular/core';
-
 import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { IAccounts } from 'app/models';
 import { MaterialModule } from 'app/shared/material.module';
-import { TypeStore } from 'app/services/type.service';
+import { GLTypeStore } from 'app/store/gltype.store';
 
 @Component({
   selector: 'accts-drawer',
@@ -49,15 +48,8 @@ import { TypeStore } from 'app/services/type.service';
                       </mat-form-field>
                     </div>
     
-                    <div class="flex flex-col grow">
-                      <mat-checkbox
-                        color="primary"
-                        class="mt-5"
-                        formControlName="parent_account">
-                        Parent
-                      </mat-checkbox>
-                    </div>
                   </section>
+                  
     
                   <div class="flex flex-col grow">
                     <mat-form-field class="m-1 flex-start">
@@ -71,13 +63,22 @@ import { TypeStore } from 'app/services/type.service';
                     <mat-form-field class="m-1 grow">
                       <mat-label class="text-md ml-2">Type</mat-label>
                       <mat-select placeholder="Type" formControlName="acct_type"  (selectionChange)="changeType($event)">
-                        @for (item of typeStore.type(); track item) {
+                        @for (item of typeStore.types(); track item) {
                           <mat-option [value]="item.type"> {{ item.type }}  </mat-option>
                         }
                       </mat-select>
-                      <span class="e-icons e-notes text-lime-700 m-2 " matPrefix></span>
+                      <mat-icon class="icon-size-5 text-lime-700" matPrefix [svgIcon]="'heroicons_outline:document-check'"></mat-icon>
                     </mat-form-field>
                   </section>
+
+                  <div class="flex flex-col grow">                      
+                      <mat-slide-toggle
+                           class="ml-3 mb-2" color="primary"                           
+                           [checked]="accountsForm.controls.parent_account"
+                           formControlName="parent_account" >
+                          Group
+                      </mat-slide-toggle>
+                   </div>
     
                   <div class="flex flex-col grow">
                     <mat-form-field class="m-1 flex-start">
@@ -91,12 +92,12 @@ import { TypeStore } from 'app/services/type.service';
     
                   <div mat-dialog-actions class="gap-2 mb-3">
                         @if (bAccountsDirty === true) {
-                          <button mat-icon-button color="primary" class="bg-slate-200 hover:bg-slate-400 ml-1" (click)="onUpdateJournalEntry()"
+                          <button mat-icon-button color="primary" class="bg-slate-200 hover:bg-slate-400 ml-1" (click)="onUpdate()"
                             matTooltip="Save" aria-label="hovered over">
                             <span class="e-icons e-save"></span>
                           </button>
                         }
-                        @if (bAccountsDirty === false) {
+                        @if (bAccountsDirty === true) {
                           <button mat-icon-button color="primary" 
                                   class=" hover:bg-slate-400 ml-1" (click)="onAdd()" matTooltip="New" aria-label="hovered over">                        
                               <span class="e-icons e-circle-add"></span>
@@ -130,7 +131,7 @@ export class DrawerComponent {
   Add = output<IAccounts>();
   Delete = output<IAccounts>();
   Cancel = output();
-  typeStore = inject(TypeStore);
+  typeStore = inject(GLTypeStore);
 
   bAccountsDirty: boolean = false;
   private fb = inject(FormBuilder);

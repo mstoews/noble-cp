@@ -7,7 +7,7 @@ import {
 } from '../models';
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { environment } from 'environments/environment.prod';
+import { environment } from 'environments/environment';
 import { shareReplay } from 'rxjs';
 
 @Injectable({
@@ -18,6 +18,8 @@ export class DistributionLedgerService {
     rootUrl = environment.baseUrl;
     private bLoading = false;
 
+
+    
     getDistributionReportByPrdAndYear(params: IDistributionParams) {
         return this.http.post<IDistributionLedger[]>(`${this.rootUrl}/v1/dist_list_by_prd`, params).pipe(shareReplay({ bufferSize: 1, refCount: true }));
     }

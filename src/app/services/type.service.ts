@@ -1,30 +1,14 @@
-import { Injectable, computed, inject, signal } from '@angular/core';
-import { Subject, catchError, of, shareReplay, take, tap, throwError } from 'rxjs';
-
+import { Injectable, inject } from '@angular/core';
+import { Subject, shareReplay } from 'rxjs';
 import { AUTH } from 'app/app.config';
 import { HttpClient } from '@angular/common/http';
-import { environment } from 'environments/environment.prod';
-import {
-  patchState,
-  signalStore,
-  withComputed,
-  withHooks,
-  withMethods,
-  withState,
-} from '@ngrx/signals';
-
-import { rxMethod } from '@ngrx/signals/rxjs-interop';
-import { exhaustMap, pipe, switchMap } from 'rxjs';
-import { tapResponse } from '@ngrx/operators';
+import { environment } from 'environments/environment';
 import { IGLType } from 'app/models/types';
-
 
 @Injectable({
   providedIn: 'root',
 })
-export class TypeService {
-
-  // imageItemIndexService: ImageItemIndexService = inject(ImageItemIndexService);
+export class TypeService {  
 
   private httpClient = inject(HttpClient);
   private authService = inject(AUTH);
@@ -32,13 +16,13 @@ export class TypeService {
 
   error$ = new Subject<string>();
 
+  // create
   create(t: IGLType) {
     var url = this.baseUrl + '/v1/type_create';
     t.create_date = new Date().toISOString().split('T')[0];
     t.update_date = new Date().toISOString().split('T')[0];
     t.create_user = '@' + this.authService.currentUser.email.split('@')[0];
-    t.update_user = '@' + this.authService.currentUser.email.split('@')[0];
-
+    t.update_user = '@' + this.authService.currentUser.email.split('@')[0]
     return this.httpClient.post<IGLType>(url, t).pipe(shareReplay({ bufferSize: 1, refCount: true }))
   }
 
@@ -48,11 +32,9 @@ export class TypeService {
     return this.httpClient.get<IGLType[]>(url).pipe(shareReplay({ bufferSize: 1, refCount: true }));
   }
 
-
   // Update
   update(t: IGLType) {
     var url = this.baseUrl + '/v1/type_update';
-
     var data: IGLType = {
       gltype: t.gltype,
       description: t.description,
@@ -66,6 +48,7 @@ export class TypeService {
       shareReplay({ bufferSize: 1, refCount: true }))
   }
 
+  
   // Delete
   delete(id: string) {
     var data = {
@@ -78,38 +61,3 @@ export class TypeService {
 
 }
 
-export interface TypeStateInterface {
-  type: IGLType[];
-  isLoading: boolean;
-  error: string | null;
-}
-
-export const TypeStore = signalStore(
- { providedIn: 'root' },
-  withState<TypeStateInterface>({
-    type: [],
-    error: null,
-    isLoading: false,
-  }),
-  withMethods((state, typeService = inject(TypeService)) => ({
-    loadType: rxMethod<void>(
-      pipe(
-        tap(() => patchState(state, { isLoading: true })),
-        exhaustMap(() => {
-          return typeService.read().pipe(
-            tapResponse({
-              next: (type) => patchState(state, { type: type }),
-              error: console.error,
-              finalize: () => patchState(state, { isLoading: false }),
-            })
-          );
-        })
-      )
-    ),
-  })),
-  withHooks({
-    onInit(store) {
-      store.loadType();
-    },
-  })
-);

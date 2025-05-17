@@ -7,7 +7,7 @@ import { IUser, User } from './user'
 import { CacheService } from 'app/common/cache.service'
 import { transformError } from 'app/common/common'
 
-import { environment } from 'environments/environment.prod'
+import { environment } from 'environments/environment'
 import { AuthService } from 'app/features/auth/auth.service'
 
 export interface IUsers {

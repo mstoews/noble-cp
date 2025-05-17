@@ -1,6 +1,6 @@
 import { HttpInterceptorFn } from '@angular/common/http';
 import { TokenService } from './token.service';
-import { environment } from 'environments/environment.prod'
+import { environment } from 'environments/environment';
 import { inject } from '@angular/core';
 
 import { Observable, catchError, debounceTime, of, switchMap, take } from 'rxjs';

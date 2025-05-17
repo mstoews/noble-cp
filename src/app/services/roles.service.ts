@@ -6,7 +6,7 @@ import { tapResponse } from '@ngrx/operators';
 
 import { AUTH } from 'app/app.config';
 import { HttpClient } from '@angular/common/http';
-import { environment } from 'environments/environment.prod';
+import { environment } from 'environments/environment';
 
 export interface IRole {
   role: string,

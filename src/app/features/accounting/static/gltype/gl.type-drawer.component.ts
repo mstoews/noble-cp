@@ -75,6 +75,7 @@ export class GLTypeDrawerComponent implements OnInit {
   Add = output<IGLType>();
   Delete = output<IGLType>();
   Cancel = output();
+  SelectedType = output<IGLType>();
 
   bDirty: boolean = false;
   private fb = inject(FormBuilder);
@@ -110,9 +111,10 @@ export class GLTypeDrawerComponent implements OnInit {
       create_date: updateDate,
       create_user: '@admin'
     } as IGLType;
-
   }
-
+  onSelectedType() {
+    this.SelectedType.emit(this.updateGLType());    
+  }
   onUpdate() {
     this.Update.emit(this.updateGLType());
   }

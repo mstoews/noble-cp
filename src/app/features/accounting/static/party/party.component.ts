@@ -30,16 +30,7 @@ const imports = [
     selector: 'party',
     imports: [imports],
     template: `        
-        <mat-drawer class="lg:w-1/3 sm:w-full bg-white-100" #drawer [opened]="false" mode="over" [position]="'end'" [disableClose]="false">
-            <party-drawer 
-              [party]="selectedParty" 
-              [bDirty]=bDirty               
-              (Cancel)="onClose()" 
-              (Update)="onUpdate($event)" 
-              (Add)="onAdd($event)" 
-              (Delete)="onDelete($event)">
-            </party-drawer>                 
-        </mat-drawer>
+        
         <grid-menubar [showPeriod]="false"  [inTitle]="sTitle" [showNew]=true (new)="onAddNew()" (print)="onPrint()" [showSettings]="false"/>
         <mat-drawer-container class="flex-col h-screen">                
                 <ng-container>
@@ -59,7 +50,12 @@ const imports = [
                         }                    
                     </div>       
                 </ng-container> 
-          
+
+                <mat-drawer class="lg:w-1/3 sm:w-full bg-white-100" #drawer [opened]="false" mode="over" [position]="'end'" [disableClose]="false">
+                    <party-drawer  [party]="selectedParty" [bDirty]=bDirty (Cancel)="onClose()"  (Update)="onUpdate($event)" (Add)="onAdd($event)" 
+                        (Delete)="onDelete($event)">
+                    </party-drawer>                 
+                </mat-drawer>          
         </mat-drawer-container>                     
     `,
     providers: [SortService, PdfExportService, GroupService, PageService, PrintService, ResizeService, FilterService, ToolbarService, EditService, AggregateService, ColumnMenuService,]

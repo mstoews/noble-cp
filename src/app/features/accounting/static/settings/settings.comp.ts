@@ -193,7 +193,7 @@ export class AppSettingsComponent {
   onUpdate(account: IAccounts) {
     const dDate = new Date();
     const updateDate = dDate.toISOString().split("T")[0];
-    const user = '@' + this.auth.user().email.split("T")[0];
+    const user = '@' + this.auth.user().email.split("@")[0];
   }
 
   onDeleteSelection() {

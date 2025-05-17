@@ -19,7 +19,8 @@ build:
 .PHONY: deploy
 deploy:
 	@echo "Deploy hosting"
-	ng build --optimization --aot
+	ng build --optimization --aot --configuration production 
+	@echo "Deploy hosting"
 	firebase deploy --only hosting
 
 
@@ -29,10 +30,16 @@ functions:
 	firebase deploy --only functions
 
 
-.PHONY: start
-start:
+.PHONY: prod
+prod:
 	@echo "start web app"
-	ng serve --watch=false --no-hmr
+	ng serve --watch=false --no-hmr --configuration production 
+
+
+.PHONY: dev
+dev:
+	@echo "start web app"
+	ng serve --watch=false --no-hmr 
 
 
 .PHONY: open

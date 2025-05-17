@@ -54,6 +54,7 @@ const keyExpr = ["account", "child"];
                     [height]='gridHeight'
                     [rowHeight]='30'               
                     [dataSource]="data()" 
+                    [sortSettings]="sortSettings()"
                     [columns]="columns()"
                     [allowSorting]='true'
                     [showColumnMenu]='true'                
@@ -110,6 +111,7 @@ export class GLGridComponent implements OnInit {
 
     readonly data = input<Object[]>(undefined);
     readonly columns = input<Object[]>(undefined);
+    readonly sortSettings = input<Object[]>(undefined);
 
     public onUpdateSelection = output<Object>();
     public onFocusChanged = output<Object>();

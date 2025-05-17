@@ -1,7 +1,7 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable, inject } from "@angular/core";
 import { ITeam } from "app/models/team";
-import { environment } from "environments/environment.prod";
+import { environment } from "environments/environment";
 import { retry, shareReplay } from "rxjs";
 
 

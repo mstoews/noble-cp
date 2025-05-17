@@ -1,5 +1,5 @@
 export interface IInvoice {
-    invoice_id: number,
+    invoice_id: string,
     invoice_no: string,
     invoice_date: Date,
     invoice_due_date: Date,
@@ -18,47 +18,34 @@ export interface IInvoice {
     invoice_period: number,
 }
 
-
-export interface IVendors {
-    vendor_id: number,
-    vendor_name: string,
-    vendor_type: string,
-    vendor_status: string,
-    vendor_address: string,
-    vendor_city: string,
-    vendor_state: string,
-    vendor_zip: string,
-    vendor_country: string,
-    vendor_phone: string,
-    vendor_fax: string,
-    vendor_email: string,
-    vendor_website: string,
-    vendor_contact: string,
-    vendor_contact_phone: string,
-    vendor_contact_email: string,
-    vendor_contact_fax: string,
-    vendor_contact_cell: string,
-    vendor_contact_title: string,
-    vendor_contact_address: string,
-    vendor_contact_city: string,
-    vendor_contact_state: string,
-    vendor_contact_zip: string,
-    vendor_contact_country: string,
-    vendor_contact_website: string,
-    vendor_contact_notes: string,
-    vendor_contact_status: string,
-    vendor_contact_type: string,
-    vendor_contact_id: number,
-    vendor_contact_create_date: Date,
-    vendor_contact_create_user: string,
-    vendor_contact_update_date: Date,
-    vendor_contact_update_user: string,
+export interface IAPVendor {
+    vendor_id           : string,
+    vendor_name         : string,
+    vendor_short_name   : string,
+    vendor_address1     : string,
+    vendor_address2     : string,
+    vendor_address3     : string,
+    vendor_postal_code  : string,
+    vendor_phone        : string,
+    vendor_fax          : string,
+    vendor_account      : number,
+    vendor_child        : number,
+    vendor_vat_account  : number,
+    vendor_vat_child    : number,
+    vendor_ap_account   : number,
+    vendor_ap_child     : number,
+    vendor_description  : string,
+    vendor_contact      : string,
+    vendor_type         : string,
+    vendor_status       : string,
+    vendor_terms        : number,
+    create_date         : Date,
+    create_user         : string,
+    update_date         : Date,
+    update_user         : string,
 }
 
-
-
-
-export interface IAPTransactions {
+export interface IAPTransaction {
     transaction_id   : number,
     account          : number,
     child            : number,
@@ -69,7 +56,8 @@ export interface IAPTransactions {
     period_year      : number,
     transaction_date : Date,
     due_date         : Date,
-    invoice_no       : string,
+    invoice_id       : string,
+    vendor_id        : string,
     payment          : number,
     order_no         : string,
     check_no         : string,
@@ -86,5 +74,17 @@ export interface IAPTransactions {
     create_date      : Date,
     create_user      : string,
     update_date      : Date,
-    update_user      : string,
+    update_user      : string
   }
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  

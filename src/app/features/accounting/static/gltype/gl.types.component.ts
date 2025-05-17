@@ -12,13 +12,14 @@ import { MaterialModule } from 'app/shared/material.module';
 import { AggregateService, ColumnMenuService, DialogEditEventArgs, EditService, ExcelExportService, FilterService, GridModule, GroupService, PageService, ResizeService, SaveEventArgs, SortService, ToolbarService } from '@syncfusion/ej2-angular-grids';
 
 import { GLGridComponent } from '../../grid-components/gl-grid.component';
-import { Store } from '@ngrx/store';
+
 import { IGLType } from 'app/models/types';
 import { Subject, take, takeUntil } from 'rxjs';
-import { glTypePageActions } from 'app/state/gltype/gltype.page.actions';
-import { gltypeFeature } from 'app/state/gltype/gltype.state';
+
 import { GLTypeDrawerComponent } from './gl.type-drawer.component';
 import { ToastrService } from 'ngx-toastr';
+import { GLTypeStore } from 'app/store/gltype.store';
+
 
 const imports = [
     CommonModule,
@@ -33,36 +34,37 @@ const imports = [
 @Component({
     template: `
     <grid-menubar [showPeriod]="false"  [inTitle]="sTitle"> </grid-menubar>                         
-     
-    
+
+    <mat-drawer class="lg:w-[400px] h-screen md:w-full bg-white-100" id="gltype"  #gltype [opened]="false" mode="over" [position]="'end'" [disableClose]="false">  
+        <gltype-drawer
+            [gltype] = "selectedType"
+            (Cancel)="onClose()"
+            (Update)="onUpdate($event)"
+            (Add)="onAdd($event)"
+            (Delete)="onDelete($event)">
+        </gltype-drawer>                         
+    </mat-drawer>
+
      <mat-drawer-container class="flex-col h-screen">    
+     
         <ng-container>         
-            @if ((isLoading$ | async) === false)  {
-                @if(glTypes$ | async; as glTypes) {                          
+            @if ((glTypeStore.isLoading()) === false)  {                
                     <gl-grid                             
-                        (onUpdateSelection)="onSelection($event)"
-                        [data]="glTypes" 
+                        (onUpdateSelection)="selectedType"
+                        [data]="glTypeStore.types()" 
                         [columns]="columns">
                     </gl-grid>                        
-                    }
+                }
                 @else
                     {
                     <div class="flex justify-center items-center mt-20">
                         <mat-spinner></mat-spinner>
                     </div>
-                }
-            }                                              
+             }
+                                                          
         </ng-container> 
     
-        <mat-drawer class="lg:w-[400px] h-screen md:w-full bg-white-100" #drawer [opened]="false" mode="over" [position]="'end'" [disableClose]="false">         
-                <gltype-drawer
-                        [gltype] = "selectedTypes$ | async"
-                        (Cancel)="onClose()"
-                        (Update)="onUpdate($event)"
-                        (Add)="onAdd($event)"
-                        (Delete)="onDelete($event)">
-                 </gltype-drawer>                         
-        </mat-drawer>
+        
     </mat-drawer-container>
     
     `,
@@ -72,22 +74,17 @@ const imports = [
 })
 export class GlTypeComponent implements OnInit {
 
-    protected onDestroyLoading = new Subject<void>();
+    glTypeStore = inject(GLTypeStore); 
 
-    store = inject(Store);
     bDirty: boolean = false;
-    sTitle = 'Financial Statement Mapping';
-    drawer = viewChild<MatDrawer>('drawer');
+    sTitle = 'Mapping';
+    drawer = viewChild<MatDrawer>('type');
     toast = inject(ToastrService);
 
+    public selectedType: IGLType;
 
     private fuseConfirmationService = inject(FuseConfirmationService);
-
-    isLoading$ = this.store.select(gltypeFeature.selectIsLoading);
-    isLoaded$ = this.store.select(gltypeFeature.selectIsLoaded);
-    glTypes$ = this.store.select(gltypeFeature.selectGltype);
-    selectedTypes$ = this.store.select(gltypeFeature.selectSelectedGLType);
-
+    
     columns = [
         { field: 'type', headerText: 'FS Type', width: '100', textAlign: 'Left', isPrimaryKey: true },
         { field: 'description', headerText: 'Statement Type', width: '100', textAlign: 'Left' },
@@ -98,14 +95,9 @@ export class GlTypeComponent implements OnInit {
     ];
 
 
-    ngOnInit() {
-        this.isLoaded$.pipe(take(1), takeUntil(this.onDestroyLoading)).subscribe((loaded) => {
-            if (loaded === false) {
-                this.store.dispatch(glTypePageActions.load());
-            }
-        });
+    ngOnInit(): void {
+        // this.glTypeStore.isLoaded() === true ? console.log('Types : ', this.glTypeStore.types()) : console.log('Loading Types');
     }
-
     onDelete(e: any) {
         console.debug(`onDelete ${JSON.stringify(e)}`);
         const confirmation = this.fuseConfirmationService.open({
@@ -123,13 +115,14 @@ export class GlTypeComponent implements OnInit {
             // If the confirm button pressed...
             if (result === 'confirmed') {
                 // Delete the list
-                // this.typeApiService.delete(e.type);
+                this.glTypeStore.removeType(e);
             }
         });
         this.onClose();
     }
 
-    selectedRow(e: any) {
+    selectedRow(e: IGLType) {
+        this.selectedType = e;        
         this.openDrawer();
     }
 
@@ -141,20 +134,16 @@ export class GlTypeComponent implements OnInit {
             return;
         }
     }
-
     onSelection(gltype: IGLType) {
-        this.store.dispatch(glTypePageActions.select(gltype));
+        this.selectedType = gltype;
         this.openDrawer();
     }
-
-
     onAdd(gltype: IGLType) {
-        this.store.dispatch(glTypePageActions.add({ gltype: gltype }));
+        this.glTypeStore.addType(gltype); 
         this.toast.success('Mapping Added');
     }
-
-    onUpdate(gltype: IGLType) {
-        this.store.dispatch(glTypePageActions.update({ gltype: gltype }));
+    onUpdate(gltype: IGLType) {     
+        this.glTypeStore.updateType(gltype);
         this.toast.success('Mapping Updated');
         this.onClose();
     }

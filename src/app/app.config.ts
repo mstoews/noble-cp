@@ -9,7 +9,7 @@ import { appRoutes } from 'app/app.routing';
 import { provideIcons } from 'app/fuse/core/icons/icons.provider';
 import { provideTransloco } from 'app/fuse/core/transloco/transloco.provider';
 import { MockApiService } from 'app/fuse/mock-api';
-import { environment } from 'environments/environment.prod';
+import { environment } from 'environments/environment';
 import { InjectionToken } from '@angular/core';
 import { authTokenInterceptor } from './auth.token.interceptor';
 import { provideState, provideStore } from '@ngrx/store';

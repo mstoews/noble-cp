@@ -6,8 +6,8 @@ import { tapResponse } from '@ngrx/operators';
 
 import { HttpClient, httpResource } from '@angular/common/http';
 import { IDropDownAccounts } from '../models';
-import { environment } from 'environments/environment.prod';
-import { IAccounts} from 'app/models'
+import { environment } from 'environments/environment';
+import { IAccounts } from 'app/models'
 
 type AccountState = {
     account: IAccounts[],
@@ -25,7 +25,7 @@ const initialState: AccountState = {
 export class AccountsService {
 
     public httpClient = inject(HttpClient);
-    
+
     private parentAccounts = signal<IAccounts[]>([])
     private dropDownList = signal<IDropDownAccounts[]>([])
     private childrenOfParents = signal<IAccounts[]>([])
@@ -34,12 +34,12 @@ export class AccountsService {
 
     private accountState = signalState(initialState);
     private baseUrl = environment.baseUrl;
-    
+
     // readonly accountList = this.accountState.account;
     readonly isLoading = this.accountState.isLoading;
 
     readAccounts() {
-        const readUrl = this.baseUrl + '/v1/account_list'; 
+        const readUrl = this.baseUrl + '/v1/account_list';
         return this.httpClient.get<IAccounts[]>(readUrl).pipe(shareReplay({ bufferSize: 1, refCount: true }));
     }
 
@@ -57,24 +57,6 @@ export class AccountsService {
         var url = this.baseUrl + '/v1/account_delete/:' + child.toString();
         return this.httpClient.delete<IAccounts[]>(url).pipe(shareReplay({ bufferSize: 1, refCount: true }));
     }
-
-
-    readonly read = rxMethod<void>(
-        pipe(
-            tap(() => patchState(this.accountState, { isLoading: true })),
-            exhaustMap(() => {
-                return this.readAccounts().pipe(
-                    tapResponse({
-                        // next: (account) => patchState(this.accountState, { account }),
-                        next: (account) => this.accountList.set(account),
-                        error: console.error,
-                        finalize: () => patchState(this.accountState, { isLoading: false }),
-                    })
-                );
-            })
-        )
-    );
-
 
     // account and description only
     public readDropDownChild() {
@@ -169,33 +151,8 @@ export class AccountsService {
 
     // Update
     public update(accounts: IAccounts) {
-
         var url = this.baseUrl + '/v1/account_update';
-
-        var data: any = {
-            account: Number(accounts.account),
-            child: Number(accounts.child),
-            parent_account: accounts.parent_account,
-            acct_type: accounts.acct_type,
-            sub_type: accounts.sub_type,
-            balance: 0.0,
-            description: accounts.description,
-            comments: accounts.comments,
-            status: accounts.status,
-            create_date: accounts.create_date,
-            create_user: accounts.create_user,
-            update_date: accounts.update_date,
-            update_user: accounts.update_user
-        }
-        return this.httpClient.post(url, data).pipe(
-            tap(data => this.updateAccountList(data)),
-            take(1),
-            catchError(err => {
-                const message = "Could not save journal header ...";
-                console.debug(message, err);
-                return throwError(() => new Error(`Invalid time ${err}`));
-            }), shareReplay({ bufferSize: 1, refCount: true })
-        );
+        return this.httpClient.post<IAccounts>(url, accounts).pipe(shareReplay({ bufferSize: 1, refCount: true }))
     }
     // Delete
 
@@ -208,9 +165,9 @@ export class AccountsService {
             acct_type: data.acct_type,
             sub_type: data.sub_type,
             balance: data.balance,
-            status: data.status,    
+            status: data.status,
             description: data.description,
-            comments: data.comments,            
+            comments: data.comments,
             create_date: data.create_date,
             create_user: data.create_user,
             update_date: data.update_date,

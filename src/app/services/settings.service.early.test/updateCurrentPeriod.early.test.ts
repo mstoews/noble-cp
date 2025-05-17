@@ -1,6 +1,6 @@
 
 import { IPeriodParam } from 'app/models/period';
-import { environment } from 'environments/environment.prod';
+import { environment } from 'environments/environment';
 import { SettingsService } from '../settings.service';
 
 

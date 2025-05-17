@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { ICurrentPeriod, IPeriod } from 'app/models/period';
-import { environment } from 'environments/environment.prod';
+import { environment } from 'environments/environment';
 import { catchError, shareReplay, throwError } from 'rxjs';
 
 @Injectable({
@@ -37,11 +37,12 @@ export class PeriodsService {
   }
   getActivePeriods() {
     var url = this.baseUrl + '/v1/get_active_periods';
-      return this.httpClient.get<ICurrentPeriod[]>(url).pipe(
-        catchError(err => {const message = "Failed to read journals templates ...";          
-          return throwError(() => new Error(`${JSON.stringify(err)}`));
-        }),
-        shareReplay({ bufferSize: 1, refCount: true }))
-   }
-  
+    return this.httpClient.get<ICurrentPeriod[]>(url).pipe(
+      catchError(err => {
+        const message = "Failed to read journals templates ...";
+        return throwError(() => new Error(`${JSON.stringify(err)}`));
+      }),
+      shareReplay({ bufferSize: 1, refCount: true }))
+  }
+
 }

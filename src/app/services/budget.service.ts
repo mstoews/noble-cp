@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { environment } from 'environments/environment.prod';
+import { environment } from 'environments/environment';
 import { Timestamp } from 'firebase/firestore';
 import { AUTH } from 'app/app.config';
 import { IAccounts } from 'app/models';
@@ -29,7 +29,7 @@ export class BudgetService {
     }
 
     return this.httpClient.post<IBudget>(url, budget)
-    .pipe(shareReplay({ bufferSize: 1, refCount: true }));
+      .pipe(shareReplay({ bufferSize: 1, refCount: true }));
   }
 
   // Read
