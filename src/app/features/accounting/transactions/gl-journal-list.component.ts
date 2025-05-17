@@ -219,15 +219,16 @@ const imports = [
                                             <e-aggregates>
                                                     <e-aggregate>
                                                         <e-columns>
-                                                            <e-column type="Sum" field="amount" format="N2">
-                                                                <ng-template #groupFooterTemplate let-data >{{data.Sum}}</ng-template>
+                                                            <e-column type="Sum" field="amount" format="N2">                                                                
+                                                                <ng-template #groupFooterTemplate let-data><span class="customcss">{{data.Sum}}</span> </ng-template>
                                                             </e-column>
                                                         </e-columns>
                                                     </e-aggregate>
                                                     <e-aggregate>
                                                         <e-columns>
                                                             <e-column type="Sum" field="amount" format="N2">
-                                                                <ng-template #footerTemplate let-data >{{data.Sum}}</ng-template>
+                                                                
+                                                                <ng-template #footerTemplate let-data><span class=".customcss">{{data.Sum}}</span> </ng-template>
                                                             </e-column>                                                    
                                                         </e-columns>
                                                     </e-aggregate>
