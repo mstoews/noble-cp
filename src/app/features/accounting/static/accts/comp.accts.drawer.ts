@@ -11,69 +11,49 @@ import { GLTypeStore } from 'app/store/gltype.store';
     <mat-card class="m-2">
             <div class="flex flex-col w-full text-gray-700 max-w-140 filter-article filter-interactive">
               <div class="h-12 m-2 rounded-lg p-2 text-2xl text-justify text-gray-200 bg-slate-600" mat-dialog-title> {{ sTitle }} </div>
-              <form [formGroup]="accountsForm" class="form">
-                <div class="div flex flex-col grow">
-                  <section class="flex flex-col md:flex-row m-1">
-                    <div class="flex flex-col grow">
-                      <mat-form-field class="m-1 flex-start">
-                        <mat-label class="text-md ml-2">Group</mat-label>
-                        <input
-                          #myInput
-                          matInput
-                          placeholder="Account"
-                          formControlName="account"
-                        />
-                        <mat-icon
-                          class="icon-size-5 text-lime-700"
-                          matPrefix
-                          [svgIcon]="'heroicons_outline:document'"
-                        ></mat-icon>
-                      </mat-form-field>
-                    </div>
-    
-                    <div class="flex flex-col grow">
-                      <mat-form-field class="m-1 flex-start">
-                        <mat-label class="text-md ml-2">Account</mat-label>
-                        <input
-                          #myInput
-                          matInput
-                          placeholder="Child Account"
-                          formControlName="child"
-                        />
-                        <mat-icon
-                          class="icon-size-5 text-lime-700"
-                          matPrefix
-                          [svgIcon]="'heroicons_outline:clipboard-document'"
-                        ></mat-icon>
-                      </mat-form-field>
-                    </div>
-    
-                  </section>
+              <form [formGroup]="accountsForm" class="form w-[400px]">
+                <div class="div flex flex-col">
                   
+                  <div class="flex flex-col grow">
+                  <mat-form-field class="flex-start ml-1 mr-1" appearance="outline">
+                              <mat-label class="text-lg ml-2">Group</mat-label>
+                              <input   #myInput matInput placeholder="Account" formControlName="account" />
+                              <mat-icon class="icon-size-5 text-green-800" matPrefix [svgIcon]="'heroicons_outline:document'" ></mat-icon>
+                          </mat-form-field>
+                      </div>
+                  
+      
+                      <div class="flex flex-col grow">
+                      <mat-form-field class="flex-start ml-1 mr-1" appearance="outline">
+                          <mat-label class="text-lg">Account</mat-label>
+                          <input  #myInput  matInput  placeholder="Child Account" formControlName="child" />
+                          <mat-icon  class="icon-size-5 text-lime-700" matPrefix [svgIcon]="'heroicons_outline:clipboard-document'"></mat-icon>
+                        </mat-form-field>
+                      </div>
     
                   <div class="flex flex-col grow">
-                    <mat-form-field class="m-1 flex-start">
-                      <mat-label class="text-md ml-2">Description</mat-label>
+                    <mat-form-field class="flex-start ml-1 mr-1" appearance="outline">
+                      <mat-label class="text-lg ml-2">Description</mat-label>
                       <input #myInput matInput placeholder="Description" formControlName="description" />
                       <mat-icon class="icon-size-5 text-lime-700" matPrefix [svgIcon]="'heroicons_outline:document-text'"></mat-icon>
                     </mat-form-field>
                   </div>
     
-                  <section class="flex flex-col md:flex-row">
-                    <mat-form-field class="m-1 grow">
-                      <mat-label class="text-md ml-2">Type</mat-label>
-                      <mat-select placeholder="Type" formControlName="acct_type"  (selectionChange)="changeType($event)">
-                        @for (item of typeStore.types(); track item) {
-                          <mat-option [value]="item.type"> {{ item.type }}  </mat-option>
-                        }
-                      </mat-select>
-                      <mat-icon class="icon-size-5 text-lime-700" matPrefix [svgIcon]="'heroicons_outline:document-check'"></mat-icon>
-                    </mat-form-field>
-                  </section>
+                  <div class="flex flex-col grow">
+                    <mat-form-field class="flex-start ml-1 mr-1" appearance="outline">
+                        <mat-label class="text-lg ml-2">Type</mat-label>
+                        <mat-select placeholder="Type" formControlName="acct_type"  (selectionChange)="changeType($event)">
+                          @for (item of typeStore.types(); track item) {
+                            <mat-option [value]="item.type"> {{ item.type }}  </mat-option>
+                          }
+                        </mat-select>
+                        <mat-icon class="icon-size-5 text-lime-700" matPrefix [svgIcon]="'heroicons_outline:document-check'"></mat-icon>
+                      </mat-form-field>
+                  </div>
 
                   <div class="flex flex-col grow">                      
                       <mat-slide-toggle
-                           class="ml-3 mb-2" color="primary"                           
+                           class="ml-2 mb-5" color="primary"                           
                            [checked]="accountsForm.controls.parent_account"
                            formControlName="parent_account" >
                           Group
@@ -81,8 +61,8 @@ import { GLTypeStore } from 'app/store/gltype.store';
                    </div>
     
                   <div class="flex flex-col grow">
-                    <mat-form-field class="m-1 flex-start">
-                      <mat-label class="text-md ml-2">Comments</mat-label>
+                    <mat-form-field class="flex-start ml-1 mr-1" appearance="outline">
+                      <mat-label class="text-lg ml-2">Comments</mat-label>
                       <input #myInput matInput placeholder="Comments" formControlName="comments" />
                       <span class="e-icons e-comment-show text-lime-700 m-2" matPrefix></span>
                     </mat-form-field>
@@ -134,8 +114,7 @@ export class DrawerComponent {
   typeStore = inject(GLTypeStore);
 
   bAccountsDirty: boolean = false;
-  private fb = inject(FormBuilder);
-
+  
   accountsForm = new FormGroup({
     account: new FormControl(0, Validators.required),
     child: new FormControl(0, Validators.required),
