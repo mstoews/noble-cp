@@ -46,36 +46,36 @@ export interface IAPVendor {
 }
 
 export interface IAPTransaction {
-    transaction_id   : number,
-    account          : number,
-    child            : number,
-    status           : string,
-    ap_account       : number,
-    ap_child         : number,
-    period           : number,
-    period_year      : number,
-    transaction_date : Date,
-    due_date         : Date,
-    invoice_id       : string,
-    vendor_id        : string,
-    payment          : number,
-    order_no         : string,
-    check_no         : string,
-    reference        : string,
-    description      : string,
-    amount           : number,
-    amount_paid      : number,
-    date_paid        : Date,
-    gst_amount       : number,
-    pst_amount       : number,
-    adjustment_amt   : number,
-    rebate_amt       : number,
-    remainder_amt    : number,
-    create_date      : Date,
-    create_user      : string,
-    update_date      : Date,
-    update_user      : string
-  }
+    transaction_id: number
+    account: number
+    child: number
+    status: string
+    ap_account: number
+    ap_child: number
+    period: number
+    transaction_date: string
+    due_date: string
+    invoice_id: string
+    vendor_id: string
+    payment: number
+    order_no: string
+    check_no: string
+    reference: string
+    description: string
+    amount: number
+    amount_paid: number
+    date_paid: string
+    gst_amount: number
+    pst_amount: number
+    adjustment_amt: number
+    rebate_amt: number
+    remainder_amt: number
+    create_date: string
+    create_user: string
+    update_date: string
+    update_user: string
+ }
+  
 
   
   

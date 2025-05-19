@@ -55,10 +55,13 @@ const imports = [
     <div id="target" class="flex flex-col w-full filter-article filter-interactive ">
         <div class="sm:hide md:visible ml-5 mr-5">
             <grid-menubar class="pl-5 pr-5"            
-                [showBack]="true"             
+                [showBack]="true" 
+                [showExportPDF]="true"                
                 [showPeriod]="true"
                 [showCalendar]="false"
                 [showCalendarButton]="false"
+                (exportXL)="exportXL()"                
+                (exportPRF)="exportPDF()"
                 (print)="onPrint()"
                 (back)="onBack()"  
                 (clone)="onClone()"  
@@ -74,25 +77,48 @@ const imports = [
                 <!-- Tabs -->                    
                 <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 w-full min-w-0">
                     <!-- Summary -->
-                    <div class="flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden m-2">                                
-                    <summary-card (click)="onReceipts()" class="min-h-30" [mainValue]="1526.00" [caption]="'Receipts'" [title]="'Funds'" [chart]="'1'" [subtitle]="currentPeriod" [subtitle_value]="">                  </summary-card>
+                    <div  (click)="onReceipts()" class="flex flex-col flex-auto p-6 bg-card shadow rounded-2xl  hover:cursor-pointer overflow-hidden m-2">                                
+                        <summary-card 
+                            class="min-h-30 " 
+                            [mainValue]="1626.00" 
+                            [caption]="'Receipts'" 
+                            [title]="'Funds'" 
+                            [chart]="'1'" 
+                            [subtitle]="currentPeriod" 
+                            [subtitle_value]="">  
+                        </summary-card>
                     </div>
                     <!-- Overdue -->
-                    <div class="flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden m-2">
-                    <summary-card class="min-h-32" (click)="onReceipts()" [mainValue]="24000.00" [caption]="'Outstanding'" [title]="'30 Days'"
-                    [subtitle]="currentPeriod" [subtitle_value]="" [chart]="'4'">
-                    </summary-card> 
+                    <div (click)="onReceipts()" class="flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden m-2 hover:cursor-pointer" >
+                        <summary-card class="min-h-32 "  
+                            [mainValue]="2400.00" 
+                            [caption]="'Outstanding'" 
+                            [title]="'30 Days'"
+                            [subtitle]="currentPeriod" 
+                            [subtitle_value]="" 
+                            [chart]="'4'">
+                        </summary-card> 
                     </div>
-                    <div class="flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden m-2">
-                    <summary-card  class="min-h-32" (click)="onReceipts()" [mainValue]="45050.00" [caption]="'Current Receivables'" [title]="'Capital'"
-                    [subtitle]="currentPeriod" [subtitle_value]="" [chart]="'5'">
-                    </summary-card> 
+                    <!-- Receivables -->
+                    <div (click)="onReceipts()"  class="flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden m-2 hover:cursor-pointer">
+                        <summary-card  class="min-h-32 "                             
+                            [mainValue]="4150.96" 
+                            [caption]="'Current Receivables'" 
+                            [title]="'Capital'"
+                            [subtitle]="currentPeriod" 
+                            [subtitle_value]="" [chart]="'3'">
+                        </summary-card> 
                     </div>
                     <!-- Issues -->
-                    <div class="flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden m-2">
-                    <summary-card  class="min-h-32" (click)="onReceipts()"  [mainValue]="15000.00" [caption]="'Past Due Receipts'" [title]="'Capital'"
-                        [subtitle]="currentPeriod" [subtitle_value]="" [chart]="'3'">
-                    </summary-card> 
+                    <div (click)="onReceipts()"  class="flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden m-2 hover:cursor-pointer">
+                        <summary-card  class="min-h-32 hover:cursor-pointer"                             
+                           [mainValue]="15000.00" 
+                           [caption]="'Past Due Receipts'" 
+                           [title]="'Capital'"
+                           [subtitle]="currentPeriod" 
+                           [subtitle_value]="" 
+                           [chart]="'7'">
+                        </summary-card> 
                     </div>
                 </div>
             </div>
@@ -107,7 +133,7 @@ const imports = [
                                         <ejs-grid #gl_grid id="gl_grid"
                                             [dataSource]="journalStore.gl() | filterType : transactionType()"                                    
                                             [height]='gridHeight' 
-                                            [rowHeight]='20'         
+                                            [rowHeight]='25'         
                                             [enableStickyHeader]='true'                         
                                             [allowSorting]='true'                                    
                                             [showColumnMenu]='false'                
@@ -274,6 +300,7 @@ export class GLJournalListComponent implements OnInit, AfterViewInit {
     public settingsService = inject(SettingsService);
     public changeDetectorRef = inject(ChangeDetectorRef);
     public periodStore = inject(PeriodStore);
+    private _location = inject(Location);
 
     private fb = inject(FormBuilder);
 
@@ -304,7 +331,7 @@ export class GLJournalListComponent implements OnInit, AfterViewInit {
     public gridHeight: number;
     public groupSettings: { [x: string]: Object } = { showDropArea: true };
     
-    private _location = inject(Location);
+    
     
     // periods$ = this.store.select(periodsFeature.selectPeriods);
 
@@ -417,18 +444,18 @@ export class GLJournalListComponent implements OnInit, AfterViewInit {
         this.onCloseDrawer.emit();
     }
 
-    exportLX() {
-        this.grid().excelExport
+    exportXL() {
+        this.grid().excelExport(this.getExcelExportProperties());
     }
     exportPDF() {
-        this.grid().pdfExport();
+        this.grid().pdfExport(this.getPdfExportProperties());        
     }
     exportCSV() {
         this.grid().csvExport
     }
 
     onPrint() {
-        this.grid().print();
+        this.grid().print();        
     }
 
     public dateValidator() {
@@ -562,13 +589,23 @@ export class GLJournalListComponent implements OnInit, AfterViewInit {
             //this.grid().height = (window.innerHeight - this.GRID_HEIGHT_ADJ) + 'px'; // Adjust as needed
     }
 
+    private getDate(): string {
+        let date: string = '';
+        date += ((new Date()).getMonth().toString()) + '/' + ((new Date()).getDate().toString());
+        return date += '/' + ((new Date()).getFullYear().toString());
+    }
+
+    getPrintColor(): string {
+        // dark blue
+        return '#0f0857';
+    }
     
 
       onBack() {
         this._location.back();
       }
       onReceipts() {
-        throw new Error('Method not implemented.');
+        this.toast.info('Receipts');
       }
     
       onOpenSettings() {
@@ -577,8 +614,108 @@ export class GLJournalListComponent implements OnInit, AfterViewInit {
       onPrinting() {
         throw new Error('Method not implemented.');
       }
+
+      private getExcelExportProperties(): any {
+        return {
+            
+            header: {
+                headerRows: 7,
+                rows: [
+                    {
+                        index: 1,
+                        cells: [
+                            /* tslint:disable-next-line:max-line-length */
+                            { index: 1, colSpan: 5, value: 'Transaction Listing', style: { fontColor: '#180e75', fontSize: 25, hAlign: 'Left', bold: true } }
+                        ]
+                    },
+                    {
+                        index: 3,
+                        cells: [
+                            /* tslint:disable-next-line:max-line-length */
+                            { index: 1, colSpan: 2, value: 'Noble Ledger Ltd.', style: { fontColor: this.getPrintColor(), fontSize: 15, bold: true } },
+                            { index: 4, value: 'Transactions', style: { fontColor: this.getPrintColor(), bold: true } },
+                            { index: 5, value: 'by Type', style: { fontColor: this.getPrintColor(), bold: true }, width: 150 }
+                        ]
+                    },
+                    {
+                        index: 4,
+                        cells: [
+                            { index: 1, colSpan: 2, value: 'Saskatoon, Saskatchewan' },                            
+                            { index: 4, value: this.getDate(), width: 150 }
+                        ]
+                    },
+                    
+                ]
+            },
+
+            footer: {
+                footerRows: 5,
+                rows: [
+                    /* tslint:disable-next-line:max-line-length */
+                    { cells: [{ colSpan: 6, value: 'Transaction Listing from Query', style: { fontColor: this.getPrintColor(), hAlign: 'Center', bold: true } }] },                    
+                ]
+            },
+            
+            fileName: "TransactionListing_" + this.getDate()+ ".xlsx"
+        };
+    }
     
+    private getPdfExportProperties(): any {
+        return {
+            pageOrientation: 'Landscape',
+            pdfPageSize: 'A4',            
+            pdfTheme: 'default',
+            pdfExportMode: 'AllPages',            
+            header: {
+                fromTop: 0,
+                height: 120,
+                contents: [
+                    {
+                        type: 'Text',
+                        value: 'Transaction Listing',
+                        position: { x: 280, y: 0 },
+                        style: { textBrushColor: this.getPrintColor(), fontSize: 25 },
+                    },
+                    {
+                        type: 'Text',
+                        value: 'Date',
+                        position: { x: 600, y: 30 },
+                        style: { textBrushColor: this.getPrintColor(), fontSize: 10 },
+                    },                    
+                    {
+                        type: 'Text',
+                        value: this.getDate(),
+                        position: { x: 600, y: 50 },
+                        style: { textBrushColor: '#000000', fontSize: 10 },
+                    },                    
+                    {
+                        type: 'Text',
+                        value: 'Noble Ledgers Ltd.',
+                        position: { x: 20, y: 30 },
+                        style: { textBrushColor: this.getPrintColor(), fontSize: 20 }
+                    },                    
+                ]
+            },
+            footer: {
+                fromBottom: 160,
+                height: 100,
+                contents: [
+                    {
+                        type: 'Text',
+                        value: 'Transaction Listing',
+                        position: { x: 250, y: 20 },
+                        style: { textBrushColor: this.getPrintColor(), fontSize: 14 }
+                    },
+                    
+                ]
+            },            
+            fileName: "TransactionListing_" + this.getDate()+ ".pdf"
+        };
+    }
 }
+
+    
+
 
 
 

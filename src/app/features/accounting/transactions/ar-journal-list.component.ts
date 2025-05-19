@@ -17,7 +17,7 @@ import { SettingsService } from 'app/services/settings.service';
 import { GridMenubarStandaloneComponent } from '../grid-components/grid-menubar.component';
 import { PeriodStore } from 'app/store/periods.store';
 import { SummaryCardComponent } from "../../admin/dashboard/summary-card.component";
-import { take } from 'rxjs';
+import {Location}  from '@angular/common';
 
 
 const providers = [
@@ -98,7 +98,7 @@ const imports = [
             
         </div>   
  
-        <mat-drawer-container id="target" class="flex flex-col min-w-0 overflow-y-auto -px-10 h-[calc(100vh-30rem)] mr-4 ml-4">     
+        <mat-drawer-container id="target" class="flex flex-col min-w-0 overflow-y-auto -px-10 h-[calc(100vh-30rem)] md:mr-20 md:ml-20">     
            <mat-card>            
                 <div class="flex-auto">                                            
                             @if(journalStore.isLoading() === false) { 
@@ -106,7 +106,7 @@ const imports = [
                                     <ejs-grid #ar_grid id="ar_grid"
                                         [dataSource]="journalStore.gl() | filterType : transactionType()"                                    
                                         [height]='gridHeight' 
-                                        [rowHeight]='30'                                  
+                                        [rowHeight]='25'                                  
                                         [allowSorting]='true'                                    
                                         [showColumnMenu]='false'                
                                         [gridLines]="lines"
@@ -266,7 +266,7 @@ const imports = [
 
 
 export class ARJournalListComponent implements OnInit, AfterViewInit {
-
+    private GRID_HEIGHT_ADJ = 670;
     public route = inject(Router);
     public toast = inject(ToastrService);
     public journalStore = inject(JournalStore);
@@ -274,6 +274,7 @@ export class ARJournalListComponent implements OnInit, AfterViewInit {
     public settingsService = inject(SettingsService);
     public changeDetectorRef = inject(ChangeDetectorRef);
     public periodStore = inject(PeriodStore);
+    private _location = inject(Location);
 
     private fb = inject(FormBuilder);
 
@@ -539,15 +540,11 @@ export class ARJournalListComponent implements OnInit, AfterViewInit {
     }
 
     adjustHeight() {
-        if (this.grid()) {
-            this.grid().height = (window.innerHeight - 700) + 'px'; // Adjust as needed
-        }
+        this.gridHeight = (window.innerHeight - this.GRID_HEIGHT_ADJ)
     }
 
-
-
     onBack() {
-        throw new Error('Method not implemented.');
+        this._location.back();
     }
     onReceipts() {
         throw new Error('Method not implemented.');

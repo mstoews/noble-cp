@@ -145,9 +145,7 @@ export class FundsComponent implements OnInit {
         this.createEmptyForm();
         this.onChanges();
     }
-    onSelection(data: IFunds) {
-        const dDate = new Date();
-        const updateDate = dDate.toISOString().split('T')[0];
+    onSelection(data: IFunds) {                
         this.bDirty = false;
         this.fundsForm.patchValue({
             id: [data.id],
@@ -242,7 +240,7 @@ export class FundsComponent implements OnInit {
 
 
     public onUpdate() {
-        const updateDate = new Date().toISOString().split('T')[0];
+        
         const fund = this.fundsForm.value;
         const rawData = {            
             fund: fund.fund,

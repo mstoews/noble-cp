@@ -10,12 +10,8 @@ import { GridMenubarStandaloneComponent } from '../../grid-components/grid-menub
 import { MatDrawer } from '@angular/material/sidenav';
 import { MaterialModule } from 'app/shared/material.module';
 import { AggregateService, ColumnMenuService, DialogEditEventArgs, EditService, ExcelExportService, FilterService, GridModule, GroupService, PageService, ResizeService, SaveEventArgs, SortService, ToolbarService } from '@syncfusion/ej2-angular-grids';
-
 import { GLGridComponent } from '../../grid-components/gl-grid.component';
-
 import { IGLType } from 'app/models/types';
-import { Subject, take, takeUntil } from 'rxjs';
-
 import { GLTypeDrawerComponent } from './gl.type-drawer.component';
 import { ToastrService } from 'ngx-toastr';
 import { GLTypeStore } from 'app/store/gltype.store';
@@ -33,40 +29,33 @@ const imports = [
 
 @Component({
     template: `
-    <grid-menubar [showPeriod]="false"  [inTitle]="sTitle"> </grid-menubar>                         
-
-    <mat-drawer class="lg:w-[400px] h-screen md:w-full bg-white-100" id="gltype"  #gltype [opened]="false" mode="over" [position]="'end'" [disableClose]="false">  
-        <gltype-drawer
-            [gltype] = "selectedType"
-            (Cancel)="onClose()"
-            (Update)="onUpdate($event)"
-            (Add)="onAdd($event)"
-            (Delete)="onDelete($event)">
-        </gltype-drawer>                         
-    </mat-drawer>
-
-     <mat-drawer-container class="flex-col h-screen">    
-     
+     <grid-menubar [showPeriod]="false"  [inTitle]="sTitle"> </grid-menubar>                         
+     <mat-drawer-container class="flex-col h-screen">         
+        <mat-drawer class="lg:w-[400px] h-screen md:w-full bg-white-100" id="gl_type"  #gl_type [opened]="false" mode="side" [position]="'end'" [disableClose]="false">  
+            <gltype-drawer
+                [gltype]="selectedType"
+                (Cancel)="onClose()"
+                (Update)="onUpdate($event)"
+                (Add)="onAdd($event)"
+                (Delete)="onDelete($event)">
+            </gltype-drawer>                         
+        </mat-drawer>
         <ng-container>         
             @if ((glTypeStore.isLoading()) === false)  {                
-                    <gl-grid                             
-                        (onUpdateSelection)="selectedType"
-                        [data]="glTypeStore.types()" 
-                        [columns]="columns">
-                    </gl-grid>                        
+                <gl-grid                                                 
+                    (onUpdateSelection)="onSelection($event)"
+                    (onSelection)="selectedRow($event)"                    
+                    [data]="glTypeStore.types()" 
+                    [columns]="columns">
+                </gl-grid>                        
                 }
-                @else
-                    {
-                    <div class="flex justify-center items-center mt-20">
-                        <mat-spinner></mat-spinner>
-                    </div>
-             }
-                                                          
-        </ng-container> 
-    
-        
-    </mat-drawer-container>
-    
+                @else {
+                <div class="flex justify-center items-center mt-20">
+                    <mat-spinner></mat-spinner>
+                </div>
+                 }                                                          
+        </ng-container>         
+    </mat-drawer-container>    
     `,
     selector: 'gl-types',
     imports: [imports],
@@ -75,15 +64,13 @@ const imports = [
 export class GlTypeComponent implements OnInit {
 
     glTypeStore = inject(GLTypeStore); 
+    toast = inject(ToastrService);
+    fuseConfirmationService = inject(FuseConfirmationService);
 
     bDirty: boolean = false;
     sTitle = 'Mapping';
-    drawer = viewChild<MatDrawer>('type');
-    toast = inject(ToastrService);
-
-    public selectedType: IGLType;
-
-    private fuseConfirmationService = inject(FuseConfirmationService);
+    drawer = viewChild<MatDrawer>('gl_type');
+    selectedType: IGLType;
     
     columns = [
         { field: 'type', headerText: 'FS Type', width: '100', textAlign: 'Left', isPrimaryKey: true },
@@ -125,7 +112,10 @@ export class GlTypeComponent implements OnInit {
         this.selectedType = e;        
         this.openDrawer();
     }
-
+    onSelection(gltype: IGLType) {
+        this.selectedType = gltype;
+        this.openDrawer();
+    }
     openDrawer() {
         const opened = this.drawer().opened;
         if (opened !== true) {
@@ -134,10 +124,7 @@ export class GlTypeComponent implements OnInit {
             return;
         }
     }
-    onSelection(gltype: IGLType) {
-        this.selectedType = gltype;
-        this.openDrawer();
-    }
+    
     onAdd(gltype: IGLType) {
         this.glTypeStore.addType(gltype); 
         this.toast.success('Mapping Added');
