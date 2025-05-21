@@ -106,9 +106,8 @@ const mods = [
                               (exportXL)="exportXL()"
                               (exportPRD)="exportPDF()"
                               (exportCSV)="exportCSV()"
-                              [showCalendar]=false
-                              [showCalendarButton]=false
-                              [showPeriod]=true
+                              [showCalendar]=true
+                              [showCalendarButton]=true
                               [showPrint]=false
                               [showExportXL]=true
                               [showExportPDF]=false
@@ -137,70 +136,23 @@ const mods = [
                                 [dataSource]="store.tb()"
                                 [rowHeight]='30'>                                
                                 <e-columns>                                     
-                                      <e-column field='trans_type' headerText='Account' width='140' [visible]=true>
-                                                  <ng-template #template let-data>                                                                
-                                                          @switch (data.trans_type) 
-                                                          {                                    
-                                                              @case ('TB Summary') {                                        
-                                                                  <span class="e-badge flex text-md gap-1 items-center w-max bg-transparent">
-                                                                      {{data.description}}
-                                                                  </span>
-                                                              }
-                                                              @case ('Transaction') {
-                                                                <span class="e-badge flex text-md  gap-1 items-center w-max bg-transparent"> 
-                                                                </span>                                                            
-                                                          }
-                                                        }
-                                                      </ng-template>
-                                      </e-column> 
-                                      <e-column field='account' headerText='Grp' width='90' [visible]=false>
-                                              <ng-template #template let-data>                                                                
-                                                  @switch (data.trans_type) 
-                                                  {                                    
-                                                      @case ('TB Summary') {                                        
-                                                            <span class="e-badge flex text-md gap-1 items-center w-max bg-transparent">                                                                                                                                      
-                                                              {{data.account}}                                                                    
-                                                          </span>
-                                                      }
-                                                      @case ('Transaction') {
-                                                      <span class="e-badge flex text-md  gap-1 items-center w-max bg-transparent">                                                
-                                                      </span>                                                            
-                                                  }
-                                                }
-                                              </ng-template>
-                                      </e-column>
-                                      <e-column field='child' headerText='Acct' width='60' [visible]=true  isPrimaryKey=true isIdentity=true>
-                                      <ng-template #template let-data>                                                                
-                                                  @switch (data.trans_type) 
-                                                  {                                    
-                                                      @case ('TB Summary') {                                        
-                                                        <span class="e-badge flex text-md gap-1 items-center w-max bg-transparent">                                                                                                                                      
-                                                              {{data.child}}                                                                    
-                                                        </span>
-                                                      }
-                                                      @case ('Transaction') {
-                                                      <span class="e-badge flex text-md  gap-1 items-center w-max bg-transparent">                                                
-                                                      </span>                                                            
-                                                  }
-                                                }
-                                              </ng-template>
-                                      </e-column>
-                                      <e-column field='id' headerText='Transaction' width='50' [visible]=true textAlign='Right'> 
+                                      <e-column field='parent_account' headerText='Parent' width='140' [visible]=true>
                                         <ng-template #template let-data>                                                                
-                                                    @switch (data.trans_type) 
-                                                    {                                    
-                                                        @case ('TB Summary') {                                        
-                                                          <span class="e-badge flex text-md gap-1 items-center w-max bg-transparent">                                                                                                                                                                                                    
-                                                          </span>
-                                                        }
-                                                        @case ('Transaction') {
-                                                          <span class="e-badge flex text-md  gap-1 items-center w-max bg-transparent">                                                
-                                                              {{data.id}} - {{data.description}} 
-                                                          </span>                                                            
-                                                        }
-                                                  }
+                                          @switch (data.parent_account) 
+                                          {                                    
+                                              @case ('true') {                                        
+                                                  <span class="e-badge flex text-md gap-1 items-center w-max bg-transparent">
+                                                      {{data.description}}
+                                                  </span>
+                                              }
+                                              @case ('false') {
+                                                <span class="e-badge flex text-md  gap-1 items-center w-max bg-transparent"> 
+                                                </span>                                                            
+                                          }
+                                        }
                                         </ng-template>
-                                      </e-column>
+                                      </e-column>                                 
+                                      
                                       <e-column field='account_description' headerText='Description'width='100' [visible]=false></e-column>                                     
                                       <e-column field='trans_date'          headerText='Tr Date'    width='80'  [visible]=false type='Date' displayAsCheckbox=true></e-column> 
                                       <e-column field='amount'              headerText='Amount'     width='100' [visible]=false format='N2' textAlign='Right'> </e-column>

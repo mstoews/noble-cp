@@ -1,0 +1,9 @@
+
+services:
+ spreadsheet-server:
+    image: syncfusion/spreadsheet-server:latest
+    environment:
+      #Provide your license key for activation
+      SYNCFUSION_LICENSE_KEY: Ngo9BigBOggjHTQxAR8/V1NNaF5cXmBCf1FpRmJGdld5fUVHYVZUTXxaS00DNHVRdkdmWXtfeXRcQmBfUEV2X0dWYUA=
+    ports:
+    - "6002:8080"

@@ -15,6 +15,7 @@ import { ApplicationStore } from "../../store/application.store";
 import { GridTemplateComponent } from './grid-template/grid-template.component';
 import { CdkScrollable } from '@angular/cdk/scrolling';
 import { TbPivotComponent } from './tb-grid/tb-pivot.component';
+import { ExpenseRptComponent } from './expense/expense-rpt.component';
 
 
 
@@ -25,6 +26,7 @@ const mods = [
     BalanceSheetStatementRptComponent,
     IncomeStatementRptComponent,
     IncomeStatementComparisonRptComponent,
+    ExpenseRptComponent,
     DistributedTbComponent,
     TbGridComponent,
     GridTemplateComponent,
@@ -107,6 +109,7 @@ const mods = [
                                 @case ('income-statement') { <income-statement-rpt></income-statement-rpt> }
                                 @case ('income-statement-comparison') {  <income-statement-comparison-rpt></income-statement-comparison-rpt> }                                
                                 @case ('grid-template') { <grid-template></grid-template> }
+                                @case ('expense-rpt') {<expense-rpt></expense-rpt> }
                             }
                         </div>
                     </div>
@@ -208,6 +211,12 @@ export class ReportingPanelComponent {
                 icon: 'feather:image',
                 title: 'Reconciliation Reporting',
                 description: 'Bank, expense and financial reconciliation reporting',
+            },
+            {
+                id: 'expense-rpt',
+                icon: 'feather:image',
+                title: 'Expense Reporting',
+                description: 'Expenses',
             },
             // {
             //     id: 'grid-template',

@@ -1,47 +1,37 @@
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { Injectable, OnDestroy, inject } from '@angular/core';
-import { Observable, map, filter, TimeoutError, catchError, debounce, debounceTime, distinctUntilChanged, interval, shareReplay, throwError, timer } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
+import { Injectable, inject } from '@angular/core';
 import { environment } from 'environments/environment';
-import { ToastrService } from "ngx-toastr";
-import { ICurrentPeriod, ICurrentPeriodParam, IPeriod } from 'app/models/period';
-import { IAccounts } from 'app/models';
-import { IPeriodParam } from 'app/models/period';
-import { IAPTransaction, IInvoice } from 'app/models/ap';
-
-
+import { IAPTransaction } from 'app/models/ap';
+import { ICurrentPeriodParam} from 'app/models/period';
+import { shareReplay } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
-export class APService implements OnDestroy {
+export class APService  {
 
   httpClient = inject(HttpClient)
-  toastr = inject(ToastrService);
   private baseUrl = environment.baseUrl;
-  
+  readAPTransaction() {
+    var url = this.baseUrl + '/v1/read_ap_transaction';    
+    return this.httpClient.get<IAPTransaction[]>(url).pipe(shareReplay());    
+  }
+  deleteAPTransaction(params: IAPTransaction) {
+    var url = this.baseUrl + '/v1/delete_ap_transaction';    
+    return this.httpClient.post<IAPTransaction[]>(url, params).pipe(shareReplay());    
+  }
+  updateAPTransaction(params: IAPTransaction) {
+    var url = this.baseUrl + '/v1/update_ap_transaction';    
+    return this.httpClient.post<IAPTransaction[]>(url, params).pipe(shareReplay());    
+  }
+  readAPTransactionByPeriod(params: ICurrentPeriodParam) {
+    var url = this.baseUrl + '/v1/read_ap_transaction_by_current_period';    
+    return this.httpClient.post<IAPTransaction[]>(url, params).pipe(shareReplay());    
+  }
   createAPTransaction(params: IAPTransaction) {
     var url = this.baseUrl + '/v1/create_ap_transaction';    
-    return this.httpClient.post<IAPTransaction>(url, params).pipe(
-      catchError(err => {
-        if (err.status === 200) {
-          this.showAlert(JSON.stringify(err.message), 'pass');
-        } else {
-          const message = err.error;
-          this.showAlert(JSON.stringify(message), 'failed');
-          return throwError(() => new Error(`${JSON.stringify(err)}`));
-        }
-      }),
-      shareReplay({ bufferSize: 1, refCount: true }));
+    return this.httpClient.post<IAPTransaction[]>(url, params).pipe(shareReplay());    
   }
-
-  showAlert(message: string, response: string) {
-    if (response == "pass") {
-      this.toastr.success(message);
-    } else {
-      this.toastr.error(message);
-    }
-  }
-  ngOnDestroy(): void { }
-
+  
 }
 
