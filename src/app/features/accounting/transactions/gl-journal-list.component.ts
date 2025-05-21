@@ -117,7 +117,7 @@ const imports = [
                            [title]="'Capital'"
                            [subtitle]="currentPeriod" 
                            [subtitle_value]="" 
-                           [chart]="'7'">
+                           [chart]="'5'">
                         </summary-card> 
                     </div>
                 </div>
