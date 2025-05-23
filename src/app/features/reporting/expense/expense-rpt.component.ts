@@ -60,8 +60,6 @@ export class ExpenseRptComponent implements OnInit, AfterViewInit, OnDestroy {
 
   spreadSheetView = viewChild<SpreadsheetComponent>('spreadsheet');
 
-  
-
   distributionLedgerService = inject(DistributionLedgerService)
   START_DETAIL = 5;
   GRID_HEIGHT_ADJ = 450;
