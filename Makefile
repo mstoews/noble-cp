@@ -55,7 +55,7 @@ add:
 	@echo "update\n" 
 	git commit -m '$(comment)' 
 	@echo "push to v18\n" 
-	git push origin v18 --force 
+	git push origin main  
 	
 .PHONY: push
 push:
